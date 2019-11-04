@@ -1,0 +1,10 @@
+{
+	"entity":
+	[
+		["StorageTankMK1", "StorageTank1MK1"]
+	],
+	"technology":
+	[
+		["StorageTankMK1-1", "StorageTankMK1_1"]
+	]
+}

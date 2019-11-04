@@ -1,0 +1,476 @@
+---------------------------------------------------------------------------------------------------
+Version: 0.0.44
+Date: 3/11/2019
+  Changes:
+    - Added 30 tiles to all Mobile Factory Weapons
+    - The Power Drain Pole can now be used when the Internal Distribution is activated
+    - Changed the Dimensional Accumulator, it now have a buffer capacity of 5MJ (was 1MJ), an input/output flow limite of 1MW (was 300kW)
+  Bugfixes:
+    - Fixed grid content was removed when the Mobile Factory was teleported between surface
+  Scripting:
+    - Massive code rewritting for future features (part2 - Power Drain Pole)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.43
+Date: 1/11/2019
+  Major Features:
+    - Added the Energy Shield for the Mobile Factory, rechargeable Shield with visual
+    - Unlocked via a technology, protect the Mobile Factory from incoming damages
+    - Weak for the moment, will be upgradable
+    - Added new Technology, Mobile Factory Energy Shield
+  Features:
+    - Resources are now highlighted when you hold a mining drill or a pump
+  Changes:
+    - Little changes for the techtree
+  Bugfixes:
+    - Fixed crash related to the Ore Cleaner
+    - Fixed crash when the Fluid Extractor is destroyed
+    - No more Coal icon for Dimensional Ore
+---------------------------------------------------------------------------------------------------
+Version: 0.0.42
+Date: 27/10/2019
+  Features:
+    - Added Ore Silo 5
+    - New Technology: Ore silot 5, unlock the Ore Silo 5 inside de Control Center
+  Balancing:
+    - The Pollution inside the Factory is now sended outside
+  Scripting:
+    - Massive code rewritting for future features (part1 - Mobile Factory)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.41
+Date: 19/10/2019
+  Bugfixes:
+    - The Mobile Factory will no lounger drain Energy from Ore Cleaner, Fluid Extractor, ...
+    - The Mobile Factory can no lounger be called inside Factorissimo Structures
+    - Fixed sometime items were not Transfered to Requester Pad
+    - Fixed a problem where sometime, player were not teleported inside or outside the Factory
+  Optimisations:
+    - Fixed the performances issue with the Logistic Laser
+---------------------------------------------------------------------------------------------------
+Version: 0.0.40
+Date: 16/10/2019
+  Features:
+    - Added Ore Silo 4
+    - New Technology: Ore silot 4, unlock the Ore Silo 4 inside de Control Center
+    - The Mobile Factory has now an Equipment Grid
+  Balancing:
+    - Dimmensional Crystal now cost 300 Dimmensional Fluid (Instead of 1000)
+    - Boosted Fluid Extractor
+    - Coal, Copper Ore, Iron Ore, Unanium Ore and stone stack size is now 1000 (Up from 50)
+  Bugfixes:
+    - Fixed an error with the Tank Filter
+    - Fixed an error with the Tank Frame
+---------------------------------------------------------------------------------------------------
+Version: 0.0.39
+Date: 13/10/2019
+  Bugfixes:
+    - Fixed GUI error
+    - You will be teleported outside even if the Mobile Factory were destroyed
+---------------------------------------------------------------------------------------------------
+Version: 0.0.38
+Date: 13/10/2019
+  Major Features:
+    - Constructible Area inside the Control Center, will be used to place upgrade and other things
+    - New Technology: Constructible Area 1, unlock the first Contructible Area
+  Features:
+    - Added Inventory Pad: Expend the Internal Inventory, must be placed inside the Constructible Area
+    - New Technology: Inventory Pad, unlock the Inventory Pad
+  Bugfixes:
+    - Fixed the GUI Filter error
+---------------------------------------------------------------------------------------------------
+Version: 0.0.37
+Date: 12/10/2019
+  Features:
+    - Added Ore Silo 3
+    - New Technology: Ore silot 3, unlock the Ore Silo 3 inside de Control Center
+  Bugfixes:
+    - Fixed a GUI error with tanks display
+---------------------------------------------------------------------------------------------------
+Version: 0.0.36
+Date: 12/10/2019
+  Bugfixes:
+    - Fixed an error with Recipe Explorer and FNEI
+    - Fixed the Liquid Extractor that were to slow
+    - Fixed the desynchronization issue in multiplayer caused by the GUI
+    - The Mobile Factory can no longer be teleported inside the Control Room
+---------------------------------------------------------------------------------------------------
+Version: 0.0.35
+Date: 09/10/2019
+  Major Features:
+    - Added Fluid Extractor: Work like a PumpJack but send the fluid via Laser
+    - Use Quatron Charge like the Ore Cleaner
+    - More the Quatron Charge is pure, more fluid will be extracted
+    - You have to select the Inside Tank with a Module ID
+    - New Technology: Fluid Extraction, unlock the Fluid Extractor
+---------------------------------------------------------------------------------------------------
+Version: 0.0.34
+Date: 09/10/2019
+  Features:
+    - Filters for Ore Silo Pads now work like Requester Pads
+  Bugfixes:
+    - Fixed a bug with Tank Filters inside the Info GUI
+    - Second attempt to fix the multiplayer issue
+---------------------------------------------------------------------------------------------------
+Version: 0.0.33
+Date: 08/10/2019
+  Features:
+    - Added Salt
+    - Added Chlorine
+    - Added Sodium
+    - Added Sodium Hydroxide
+    - Added Liquide Uranium
+    - New Technology: Stone Crushing, Allow the Dimensional Plant to crush Stone to get Salt
+    - New Technology: Salt Decomposition, Allow the Dimensional Plant to decompose Salt into Chlorine and Sodium
+    - New Technology: Sodium Hydration, Allow the Dimensional Plant to create Sodium Hydroxide
+    - New Technology: Uranium Liquefaction, Allow the Dimensional Plant to liquefy Uranium
+    - Added Ore Silos to the Info GUI
+    - Added Ore Silo 2
+    - Added Quatron 13/15/20
+    - New Technology: Ore silot 2, unlock the Ore Silo 2 inside de Control Center
+    - New Technology: Quatron 13/15/20
+    - New Technology: Logistic Science Pack, Allow the Dimensional Plant to create Logistic Science Pack
+    - New Technology: Automation Science Pack, Allow the Dimensional Plant to create Automation Science Pack
+  Changes:
+    - Mobile Factory now use first the fuel inside its inventory before draining energy
+    - DimensionalLab can now be placed outside
+    - DimensionalSubstation can now be placed outside
+    - DimensionalFurnace can now be placed outside
+    - PowerDrainPole can now be placed outside
+    - LogisticFluidPole can now be placed outside
+    - ProviderPad can now be placed outside
+    - RequesterPad can now be placed outside
+    - OreSilotPad can now be placed outside
+  Bugfixes:
+    - Fixed a multiplayer error on joint
+    - Items Laser now work with Logistic Chest
+    - Ore Cleaner can now extract Uranium Ore
+  Optimisations:
+    - Greatly improved performances of Silo Pad Chest
+---------------------------------------------------------------------------------------------------
+Version: 0.0.32
+Date: 07/10/2019
+  Bugfixes:
+    - Fixed Quatron Recipe
+---------------------------------------------------------------------------------------------------
+Version: 0.0.31
+Date: 07/10/2019
+  Major Features:
+    - Ore Cleaner: Mining laser that work with Quatron, more the Quatron is pure, more the Ore Cleaner will extract
+    - Ore is send directly to the Ore Silo
+    - Quatrons are send via the Internal Storage
+    - The Ore Cleaner is showed in the Info GUI
+    - New Technology: Ore Cleaning, unlock the ore Cleaner    
+  Features:
+    - Dimensional Plant: A chemical plant that allow you to decompose and recompose Molecules
+    - New Technology: Matter manipulation, unlock the Dimensional Plant
+    - New Fluid: Oxygen
+    - New Fluid: Hydrogen
+    - Added Oxygen, Hydrogen and Water Recipe
+    - New Item: Oxycoal, infused Coal with Oxygen (Fuel Value: 15MJ)
+    - New Item: Quatron 1/3/5/7/10, massive energy cell, will be used for next Dimensional Stuff tier
+    - New Thechnology: Electrolysis, allow the Dimensional Plan to perform the Electrolysis of Water
+    - New Thechnology: Coal Oxygenation: Unlock Oxycoal
+    - New Thechnology: Quatron 1/3/5/7/10, unlock Quatron 1/3/5/7/10
+  Bugfixes:
+    - Fixed an error when generating the Control Room
+    - Fixed Dimensional Ore wrong graphics in normal sprite resolution
+---------------------------------------------------------------------------------------------------
+Version: 0.0.30
+Date: 06/10/2019
+  Bugfixes:
+    - Fixed a Worldgen bug Inside the Mobile Factory with new world
+---------------------------------------------------------------------------------------------------
+Version: 0.0.29
+Date: 06/10/2019
+  Changes:
+    - Removed Tiles Capsules
+    - Mobile Factory heal is now 100000(Instead of 20000)
+    - Mobile Factory now consume 5MW (Instead of 600 KW)
+    - Mobile Factory now weights 100000kg (Instead of 20000kg)
+    - Mobile Factory brake force is now 2000kw (Instead of 400kw)
+  Features:
+    - Added Lab Tiles: Expend you Factory with this Tile
+    - Added Void Tiles: Remove Tiles
+    - New Technology: Surface Expansion, unlock the Lab Tile
+    - New Technology: Surface Destruction, unlock the Void Tile
+  Bugfixes:
+    - Fixed a crash with AAI Vehicles
+---------------------------------------------------------------------------------------------------
+Version: 0.0.28
+Date: 05/10/2019
+  Features:
+    - Added Ore Silo: Big storage in the Control Center for Ores. Will be used later for planed mining technology
+    - Ore Silo Pad 1: Retrieve content from Ore Silo 1
+    - New Technology: Internal Ore Silo 1, unlock the Ore Silo 1, the Ore Silo Pad 1 and the Module ID 1
+---------------------------------------------------------------------------------------------------
+Version: 0.0.27
+Date: 04/10/2019
+  Bugfixes:
+    - Fixed a migration error when loading a save
+    - Reajusted Dimensional Ore recipe
+    - Basic Solar Panel now give the right item when mined
+---------------------------------------------------------------------------------------------------
+Version: 0.0.26
+Date: 03/10/2019
+  Major Features:
+    - New Dimensional Logistic System: Your Mobile Factory have now an Internal Inventory
+    - Complexe advanced logistic system to transfer object inside de Factory
+    - You can see your Internal Inventory with the Information GUI
+  Features:
+    - New Item: Requester Pad, retrieve requested items from the Internal Inventory (Also act as a buffer chest)
+    - New Item: Provider Pad, provide item inside to the Internal Inventory (Can also be used like a requester chest)
+    - New technology: Internal Tank 5, unlock the Tank 5 inside the Control Center
+    - New technology: Dimensional Logistic, unlock the Requester/Provider Chest and the Internal Storage
+    - New technology: Logistic Laser, the Mobile Factory laser has now the ability to drain Item from surrounding Chest
+    - Added: Module Id 5 (Unlocked with Internal Tank 5 technology)
+    - Added outside teleportation platform in the center of the Factory
+  Bugfixes:
+    - Fixed leaving vehicle teleportation
+    - Fixed crash when a ghost is placed but you don't have the object
+    - Fixed a bug where a big number of little stacks of the same object was too slowly transfered to the Factory Chest
+  Optimisations:
+    - Improved player teleportation
+---------------------------------------------------------------------------------------------------
+Version: 0.0.25
+Date: 02/10/2019
+  Changes:
+    - Factory Chest can no longer teleport you outside, use the button
+  Features:
+    - Added Factory Chest Item
+    - Added Factory Chest Recipe
+    - The Factory Chest can now be mined and placed anywhere inside the Factory
+  Bugfixes:
+    - Fixed teleportation will sometimes send you into another entity
+---------------------------------------------------------------------------------------------------
+Version: 0.0.24
+Date: 02/10/2019
+  Bugfixes:
+    - Fixed crash when loading a save before 0.0.21 version
+---------------------------------------------------------------------------------------------------
+Version: 0.0.23
+Date: 02/10/2019
+  Features:
+    - Added Tank Fluid filter to the GUI
+    - Added Fake Fluid Any (To set filter to any fluid)
+    - Added Basic Solar Panel, capture light to make energy (5kw)
+    - New technology: Internal Tank 4, unlock the Tank 4 inside the Control Center
+    - Added: Module Id 4 (Unlocked with Internal Tank 4 technology)
+  Balancing:
+    - Jump Drive now drain 1MJ/s to recharge
+  Bugfixes:
+    - Created entities by the Mobile Factory are now set to player
+    - Fixed a crash when placing a Ghost in certain situation
+---------------------------------------------------------------------------------------------------
+Version: 0.0.22
+Date: 02/10/2019
+  Major Features:
+    - New Mobile Factory Information GUI
+    - Added a button to Show/Hide the information GUI
+  Bugfixes:
+    - Fixed Tank placement in the Control Center
+    - Fixed Mobile Factory sometimes can belong to the enemy force
+    - Mod compatibility: Fixed game crash when mods are creating fake Players
+---------------------------------------------------------------------------------------------------
+Version: 0.0.21
+Date: 02/10/2019
+  Bugfixes:
+    - Fixed Control Center ground tiles and entities diseapering
+---------------------------------------------------------------------------------------------------
+Version: 0.0.20
+Date: 01/10/2019
+  Features:
+    - Added Crystallizer: Purify fluids to crystals
+    - Added Dimensional Crystal: Purified crystal with hight density
+    - New technology: Fluids Crystalisation, Unlock the Crystallizer
+    - New technology: Dimensional Fluid Purification, allow the purification of Dimensional Fluid, will use a lot of energy and fluid
+    - New technology: Internal Tank 3, unlock the Tank 3 inside the Control Center
+    - New technology: Internal Tank 1, 2, 3 MK2 Upgrade, Increase the tank Capacity
+    - Added: Module Id 3 (Unlocked with Internal Tank 3 technology)
+  Balancing:
+    - Multiplied Fluid Lasers Drain efficiency by 10
+    - Divided Fluid Lasers Drain Power Consumption by 100
+  Bugfixes:
+    - Fixed compatibility with Factorio World (Dirt should not spawn in the Control Center anymore)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.19
+Date: 01/10/2019
+  Features:
+    - New Technology: Internal Tank 2, unlock the Tank 2 inside the Control Center
+    - Added: Module Id 2 (Unlocked with Internal Tank 2 technology)
+  Minor Features:
+    - Added a technology for the Mobile Factory Fluid Drain Lasers
+    - Added a button for the Fluid Drain Lasers
+---------------------------------------------------------------------------------------------------
+Version: 0.0.18
+Date: 30.09.2019
+  Balancing:
+    - Increased Internal Battery of the Mobile factory to 30MJ (10MJ Before)
+    - Fluid Drain/Distribution now consumes energy, 10KJ/u (10KJ for 1 fluid unit)
+  Changes:
+    - Another Technology tree reorganization
+    - Tooltips for Energy Drain and Energy Distribution are now more intuitive
+  Minor Features:
+    - Added Technology: Beginning, fake auto-unlocked technology to make all technology in one tree
+  Bugfixes:
+    - Fixed a rendering bug when sometimes machines was wrong displayed
+    - Fixed that Factory Chest could make overflow items disappearing
+    - Fixe: Logistic Fluid Poles will not transfer fluid to Factorissimo building anymore
+    - Potential fixe for Logistic Fluid Poles sometimes fill modded empty pipes
+  Translation:
+    - The GUI is now localized
+---------------------------------------------------------------------------------------------------
+Version: 0.0.17
+Date: 29.09.2019
+  Features:
+    - The Mobile Factory has now an Internal Fluid Tank
+    - If you unlock the Energy Drain technology and Internal Storage Tank, the Mobile Factory will drain Fluid from tanks around
+    - Added Logistic Fluid Pole: Drain or Send fluid to surrounding structures
+    - Added Distribution Module: Set the host structure to Distribution mode
+    - Added Drain Module: Set the host structure to Drain mode
+    - New Technology: Fluid Transmission, unlock the Logistic Power Pole
+    - New Technology: Unlock the Fluid Tank inside the Mobile Factory
+  Scripting:
+    - Massive code cleaning and performances checking
+  Changes:
+    - Technology tree reorganization
+  Graphics:
+    - Dimensional ores will now display correctly on belt
+---------------------------------------------------------------------------------------------------
+Version: 0.0.16
+Date: 28.09.2019
+  Features:
+    - Added Power Drain Pole: Drain surrounding structures energy and store it in the Mobile Factory Internal Battery
+    - New Technology: Power Drain Pole: Unlock the Power Drain Pole
+---------------------------------------------------------------------------------------------------
+Version: 0.0.15
+Date: 28.09.2019
+  Bugfixes:
+    - Fixed Tile capsules sometimes do nothing
+---------------------------------------------------------------------------------------------------
+Version: 0.0.14
+Date: 28.09.2019
+  Bugfixes:
+    - Loaders should now work again with the Factory Chest
+  Translation:
+    - Added polish translation (Thanks to MikroPik for all the work he's doing)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.13
+Date: 28.09.2019
+  Major Features:
+    - Mobile Factory Modules Upgrade
+    - For now, they are three and are used to upgrade the Mobile Factory Vehicle
+    - New floor: The Control Center, nothing can be build here, reserved for technical machine of the Mobile Factory
+  Features:
+    - Added Equalizer: Placed on the Control Center floor when unlocked, this is where you put your Upgrade Modules
+    - Added Energy Power Module: Increase the radius of the Energy Drain laser
+    - Added Energy Efficiency Module: Increase the Drained Energy amount of the Energy Drain laser
+    - Added Energy Focus Mobule: Increase the number of laser that can be fired
+    - New technology: Control Center, this technology unlock the Control Center floor
+    - New technology: Upgrade modules, unlock the Equalizer
+    - New technology: Energy Power Module, unlock the Energy Power Module
+    - New technology: Energy Efficiency Module, unlock the Energy Efficiency Module
+    - New technology: Energy Focus Mobule, unlock the Energy Focus Mobule
+---------------------------------------------------------------------------------------------------
+Version: 0.0.12
+Date: 28.09.2019
+  Features:
+    - Added compatibility with Omnimatter mod
+---------------------------------------------------------------------------------------------------
+Version: 0.0.11
+Date: 27.09.2019
+  Features:
+    - If the Mobile Factory, the Factory Chest or the Factory surface is lost, a new button will appear in the GUI
+    - If you click, it will scan every surfaces to find what's lost
+    - Can make lags or freeze the game during the process if you have a big map
+---------------------------------------------------------------------------------------------------
+Version: 0.0.10
+Date: 27.09.2019
+  Bugfixes:
+    - Fixed a crash when loading the Mobile Factory surface (Thanks MikroPik!)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.9
+Date: 27.09.2019
+  Bugfixes:
+    - Fixed a crash with loaded save (Thanks MikroPik!)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.8
+Date: 27.09.2019
+  Bugfixes:
+    - Mobile Factory inside chest have now a good collision box
+    - Mobile Factory outside/inside broken link should be fixed
+    - Fixed sample in analyzer not beeing used (Thanks MikroPik!)
+  Graphics:
+    - Changed the room central chest graphic
+  Features:
+    - Added Dimensional Plate: Made from Dimensional Ore, used to build things
+    - Added Dimensional Furnace: Only this infused furnace can smelt Dimensional Ore
+    - Added Dimensional Accumulator, a basic accumulator for the beginning
+    - Added Dimensional Substation: 64 tiles raduis substation (128x128)
+    - ALL Dimensional structures must be placed inside the Mobile Factory (Can't be placed outside)
+    - You can now teleport you outside the Mobile Factory with the Gui
+    - Internal energy reservoir: The mobile Factory has it own internal energy reserve
+    - New Technology: Dimensional Smelting, unlock the Dimensional Furnace and the Dimensional Plate
+    - New Technology: Electricity Compression, unlock the Dimensional accumulator
+    - New Technology: Electricity infusion, unlock the Dimensional Subtsation
+    - New Technology: Energy drain, the Mobile Factory will steal the energy from surrounding structures
+    - New Technology: Internal recharge, the Mobile Factory will auto-recharge Dimensional Accumulators inside the room
+    - Add a button to Enable/Disable the Mobile Factory Energy Drain
+    - Add a button to Enable/Disable the Mobile Factory Internal Recharge
+    - The factory will try to charge his fuel burner energy with his internal energy to run
+  Minor Features:
+    - Added Heal bar, Jump drive recharge bar and energy bar
+  Sounds:
+    - Added sound when you enter inside the Mobile Factory
+    - Added sound when you teleport outside the Mobile Factory
+---------------------------------------------------------------------------------------------------
+Version: 0.0.7
+Date: 26.09.2019
+  Major Features:
+    - Science!
+    - Added Dimensional Analyzer
+    - Dimensional Sample can be analyzed to discover new sciences
+    - Atomic Reconstitution Science: Needed to make Tile Capsules
+  Features:
+    - Analyzer: Lab that can analyze Dimensional resources to discover new sciences
+    - Tile Capsules: Used to expand the room of your Mobile Factory, three different type of size
+    - Dimensional Sample: Created from Dimensional Ore
+---------------------------------------------------------------------------------------------------
+Version: 0.0.6
+Date: 25.09.2019
+  Major Features:
+    - GUI Overall!
+    - A GUI is now available for the mobile factory, ready to receive many things
+    - Show health, positions, and jump charge for now
+  Features:
+    - You can now call the Mobile Factory, it will teleport next to you
+    - This features is free, no technologies needed (For the moment, enjoy! this will change in the futur)
+    - Accessible through the new GUI
+    - There is a cooldown (Jump charge), 300 seconds for now
+    - Useful if you've lost or destroy your Mobile Factory
+---------------------------------------------------------------------------------------------------
+Version: 0.0.5
+Date: 25.09.2019
+  Features:
+    - Added Dimensional Fluid, future special fuel
+---------------------------------------------------------------------------------------------------
+Version: 0.0.4
+Date: 25.09.2019
+  Bugfixes:
+    - Fixed unwanted teleportation when you leave the vehicule
+    - Partial fix with AAI Vehicle that make the Mobile Factory lose its abilities (Just disable the AI on the vehicle manualy) (Thanks to Matrix13player)
+  Features:
+    - Added Dimensional Ore, will be used for futures technologies. Prepare to extract a lot!
+---------------------------------------------------------------------------------------------------
+Version: 0.0.3
+Date: 24.09.2019
+  Bugfixes:
+    - Added compatibility with Warptorio2
+---------------------------------------------------------------------------------------------------
+Version: 0.0.2
+Date: 24.09.2019
+  Bugfixes:
+    - Fixed bug with placement of blueprit with robots (Thanks to MikroPik)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.1
+Date: 24.09.2019
+  Major Features:
+    - Initial release
