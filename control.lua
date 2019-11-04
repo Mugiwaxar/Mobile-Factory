@@ -16,7 +16,7 @@ function onInit()
 	global.MF = nil
 	-- Module ID --
 	global.IDModule = 0
-	-- Ore Silo Pad Chest update --
+	-- Current Entities Update --
 	global.currentSilotPadChestUpdate = 1
 	-- Ore Cleaner --
 	global.oreCleaner = nil
@@ -54,7 +54,7 @@ function onLoad()
 	MF:rebuild(global.MF)
 	-- Set PDP Metatables --
 	for k, pdp in  pairs(global.pdpTable) do
-		PDP:rebuild(pdpTable)
+		PDP:rebuild(pdp)
 	end
 end
 

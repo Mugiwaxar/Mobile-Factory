@@ -34,16 +34,19 @@ function updateEntities(event)
 	if global.MF == nil then return end
 	if global.MF.ent.valid == false then return end
 	-- Update --
+	for k, j in pairs(global.MF) do
+		log(k)
+	end
 	if event.tick%_eventTick5 == 0 then factoryTeleportBox() end
 	if event.tick%_eventTick60 == 0 then global.MF:updateLasers() end
 	if event.tick%1 == 0 then global.MF:updateShield(event.tick) end
 	if event.tick%_eventTick38 == 0 then updateAccumulators() end
-	if event.tick%_eventTick63 == 0 then updatePowerDrainPole() end
 	if event.tick%_eventTick64 == 0 then updateLogisticFluidPoles() end
 	if event.tick%_eventTick110 == 0 then updateProvidersPad() end
 	if event.tick%_eventTick115 == 0 then updateRequesterPad() end
 	if event.tick%_eventTick120 == 0 then updateOreCleaner() end
 	if event.tick%_eventTick59 == 0 then updateFluidExtractor() end
+	updatePowerDrainPole(event)
 	updateOreSilotPad()
 end
 
@@ -62,6 +65,7 @@ function updateValues()
 	-- Ore Silot --
 	if global.oreSilotTable == nil then global.oreSilotTable = {} end
 	if global.oreSilotPadTable == nil then global.oreSitolPadTable = {} end
+	-- Entities Update --
 	if global.currentSilotPadChestUpdate == nil then global.currentSilotPadChestUpdate = 1 end
 	-- Inventory --
 	if global.inventoryTable == nil then global.inventoryTable = {} end

@@ -114,17 +114,48 @@ function updateLogisticFluidPoles()
 end
 
 -- Update the Power Drain Pole --
-function updatePowerDrainPole()
-	-- Test if the technology is unlocked and if the Mobile Factory need energy --
-	if technologyUnlocked("PowerDrainPole") and global.MF.internalEnergy < global.MF.maxInternalEnergy then
+function updatePowerDrainPole(event)
+	-- Test if the technology is unlocked, if the PDP table is not empty and if the Mobile Factory need energy --
+	if technologyUnlocked("PowerDrainPole") and table_size(global.pdpTable) > 0 and global.MF.internalEnergy < global.MF.maxInternalEnergy then
+		-- Create updated variable --
+		local updated = 0
 		-- Itinerate all Power Drain Pole --
 		for k, pdp in pairs(global.pdpTable) do
-			-- Test if the Power Drain Pole Still exist else remove it from the table --
+			-- dprint(pdp.ent.pos)
+			-- Test if the Power Drain Pole still exist else remove it from the table --
 			if pdp.ent == nil or pdp.ent.valid == false then 
 				global.pdpTable[k] = nil
 			else
-				pdp:updateModules()
-				pdp:update()
+				-- dprint("LU:" .. event.tick - pdp.lastUpdate)
+				-- dprint("UP:" .. updated)
+				-- Initialise a new Power Drain Pole --
+				if pdp.lastUpdate == 0 then
+					pdp.lastUpdate = event.tick
+					dprint("a:" .. pdp.lastUpdate)
+				-- Try to update a Power Drain Pole --
+				elseif pdp.lastUpdate + 60 <= event.tick then
+					-- If there are less than 10 updates --
+					if updated < 10 then
+						-- Update the Power Drain Pole and add 1 update --
+						pdp:update(event)
+						updated = updated + 1
+					-- If there are 10 or more updates and the Power Drain Pole need to update --
+					elseif updated >= 10 and event.tick - pdp.lastUpdate == 61 then
+						-- Update the Power Drain Pole and add 1 update --
+						pdp:update(event)
+						updated = updated + 1
+					-- If there are more than 20 updates and the Power Drain Pole realy need to update --
+					elseif updated >= 20 and event.tick - pdp.lastUpdate == 62 then
+						-- Update the Power Drain Pole and add 1 update --
+						pdp:update(event)
+						updated = updated + 1
+					-- If the Power Drain Pole update is mandatory --
+					elseif event.tick - pdp.lastUpdate >= 63 then
+						-- Update the Power Drain Pole and add 1 update --
+						pdp:update(event)
+						updated = updated + 1
+					end
+				end
 			end
 		end
 	end

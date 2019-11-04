@@ -5,7 +5,8 @@ PDP = {
 	ent = nil,
 	laserRadius = _pdpEnergyRadius,
 	laserDrain = _pdpEnergyDrain,
-	laserNumber = _pdpEnergyLaser
+	laserNumber = _pdpEnergyLaser,
+	lastUpdate = 0
 }
 
 -- Constructor --
@@ -13,22 +14,22 @@ function PDP:new(object)
 	if object == nil then return end
 	t = {}
 	mt = {}
-	for k, j in pairs(PDP) do
-		mt[k] = j
-	end
+	-- for k, j in pairs(PDP) do
+		-- mt[k] = j
+	-- end
 	setmetatable(t, mt)
 	mt.__index = PDP
-	mt.ent = object
-	return mt
+	t.ent = object
+	return t
 end
 
 -- Reconstructor --
 function PDP:rebuild(object)
 	if object == nil then return end
 	mt = {}
-	for k, j in pairs(PDP) do
-		mt[k] = j
-	end
+	-- for k, j in pairs(PDP) do
+		-- mt[k] = j
+	-- end
 	mt.__index = PDP
 	setmetatable(object, mt)
 end
@@ -51,7 +52,11 @@ function PDP:updateModules()
 end
 
 -- Update the PDP --
-function PDP:update()
+function PDP:update(event)
+	-- Update Modules --
+	self:updateModules()
+	-- Update lastUpdate variable --
+	self.lastUpdate = event.tick
 	-- Look for all Entities around --
 	local entities = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=self.laserRadius}
 	-- Number of lasers variable --
