@@ -30,25 +30,25 @@ function MF:new(object)
 	if object == nil then return end
 	t = {}
 	mt = {}
-	for k, j in pairs(MF) do
-		mt[k] = j
-	end
+	-- for k, j in pairs(MF) do
+		-- mt[k] = j
+	-- end
 	setmetatable(t, mt)
 	mt.__index = MF
-	mt.ent = object
-	mt.lastSurface = object.surface
-	mt.lastPosX = object.position.x
-	mt.lastPosY = object.position.y
-	return mt
+	t.ent = object
+	t.lastSurface = object.surface
+	t.lastPosX = object.position.x
+	t.lastPosY = object.position.y
+	return t
 end
 
 -- Reconstructor --
 function MF:rebuild(object)
 	if object == nil then return end
 	mt = {}
-	for k, j in pairs(MF) do
-		mt[k] = j
-	end
+	-- for k, j in pairs(MF) do
+		-- mt[k] = j
+	-- end
 	mt.__index = MF
 	setmetatable(object, mt)
 end
@@ -103,7 +103,7 @@ function MF:updateLasers()
 			-- Missing Internal Energy or Structure Energy --
 			local energyDrain = math.min(self.maxInternalEnergy - self.internalEnergy, entity.energy)
 			-- EnergyDrain or LaserDrain Caparity --
-			local drainedEnergy = math.min(self.getLaserEnergyDrain, energyDrain)
+			local drainedEnergy = math.min(self:getLaserEnergyDrain(), energyDrain)
 			-- Test if some Energy was drained --
 			if drainedEnergy > 0 then
 				-- Add the Energy to the Mobile Factory Batteries --
