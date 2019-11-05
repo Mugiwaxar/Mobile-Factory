@@ -142,7 +142,7 @@ function MF:updateLasers()
 						end
 							if name ~= nil and name == filter and self.internalEnergy > _lfpFluidConsomption * math.min(amount, self:getLaserFluidDrain()) then
 								-- Add fluid to the Internal Tank --
-								local amountRm = ccTank.insert_fluid({name=name, amount=math.min(amount, getLaserFluidDrain())})
+								local amountRm = ccTank.insert_fluid({name=name, amount=math.min(amount, self:getLaserFluidDrain())})
 								-- Remove fluid from the focused Tank --
 								pTank.remove_fluid{name=name, amount=amountRm}
 								if amountRm > 0 then
