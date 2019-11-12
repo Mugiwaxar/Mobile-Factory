@@ -5,6 +5,25 @@ local dlP = table.deepcopy(data.raw.lab.lab)
 dlP.name = "DimensionalLab"
 dlP.minable = {mining_time = 0.2, result = "DimensionalLab"}
 dlP.order = "d"
+--[[
+dlP.on_animation =
+{
+	filename = "__Mobile_Factory__/graphics/animations/DimensionalLab.png",
+	width = 200,
+	height = 200,
+	frame_count = 100,
+	line_length = 10,
+	animation_speed = 1/5
+}
+dlP.off_animation =
+{
+	filename = "__Mobile_Factory__/graphics/animations/DimensionalLab.png",
+	width = 200,
+	height = 200,
+	frame_count = 1,
+	animation_speed = 1/5
+}
+--]]
 dlP.on_animation =
     {
       layers =
