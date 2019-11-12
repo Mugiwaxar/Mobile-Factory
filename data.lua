@@ -37,6 +37,7 @@ require("prototypes/beam/PurpleBeam.lua")
 require("prototypes/beam/GreenBeam.lua")
 require("prototypes/beam/BigGreenBeam.lua")
 require("prototypes/beam/BigPurpleBeam.lua")
+require("prototypes/beam/OCBeam.lua")
 require("prototypes/technology/energy-laser.lua")
 require("prototypes/technology/fluid-laser.lua")
 require("prototypes/technology/control-center.lua")
@@ -44,6 +45,7 @@ require("prototypes/technology/dimensional-logistic.lua")
 require("prototypes/technology/shield.lua")
 require("prototypes/gun/tank-guns.lua")
 require("prototypes/effect/shield.lua")
+require("prototypes/animation/red-energy-orb.lua")
 if mods["omnimatter"] then require("utils/omnimatter.lua") end
 		
 
