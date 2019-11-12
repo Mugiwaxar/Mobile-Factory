@@ -34,9 +34,6 @@ function updateEntities(event)
 	if global.MF == nil then return end
 	if global.MF.ent.valid == false then return end
 	-- Update --
-	for k, j in pairs(global.MF) do
-		log(k)
-	end
 	if event.tick%_eventTick5 == 0 then factoryTeleportBox() end
 	if event.tick%_eventTick60 == 0 then global.MF:updateLasers() end
 	if event.tick%1 == 0 then global.MF:updateShield(event.tick) end
@@ -44,8 +41,9 @@ function updateEntities(event)
 	if event.tick%_eventTick64 == 0 then updateLogisticFluidPoles() end
 	if event.tick%_eventTick110 == 0 then updateProvidersPad() end
 	if event.tick%_eventTick115 == 0 then updateRequesterPad() end
-	if event.tick%_eventTick120 == 0 then updateOreCleaner() end
 	if event.tick%_eventTick59 == 0 then updateFluidExtractor() end
+	global.MF:SendQuatronToOC(event)
+	if global.oreCleaner ~= nil then global.oreCleaner:update(event) end
 	updatePowerDrainPole(event)
 	updateOreSilotPad()
 end
@@ -76,10 +74,6 @@ function updateValues()
 	if global.providerPadTable == nil then global.providerPadTable = {} end
 	if global.requesterPadTable == nil then global.requesterPadTable = {} end
 	if global.inventoryPadTable == nil then global.inventoryPadTable = {} end
-	-- Ore Cleaner --
-	if global.oreCleanerCharge == nil then global.oreCleanerCharge = 0 end
-	if global.oreCleanerPurity == nil then global.oreCleanerPurity = 0 end
-	if global.oreTable == nil then global.oreTable = {} end
 	-- Fluid Extractor --
 	if global.fluidExtractorCharge == nil then global.fluidExtractorCharge = 0 end
 	if global.fluidExtractorPurity == nil then global.fluidExtractorPurity = 0 end
@@ -300,7 +294,7 @@ function onPlayerBuildSomething(event)
 	end
 	-- Save the Ore Cleaner --
 	if event.created_entity.name == "OreCleaner" then
-		if global.oreCleaner ~= nil then
+		if global.oreCleaner ~= nil and global.oreCleaner.ent ~= nil then
 			game.print("Unable to place more than one Ore Cleaner")
 			event.created_entity.destroy()
 			if event.stack ~= nil and event.stack.valid_for_read == true then
@@ -308,10 +302,9 @@ function onPlayerBuildSomething(event)
 			end
 			return
 		else
-			global.oreCleaner = event.created_entity	
-			global.oreCleanerCharge = 0
-			global.oreCleanerPurity = 0
-			scanOre(event.created_entity)
+			if global.oreCleaner == nil then global.oreCleaner = OC:new(event.created_entity)
+			else global.oreCleaner.ent = event.created_entity end
+			global.oreCleaner:scanOres(event.created_entity)
 		end
 	end
 	-- Save the Fluid Extractor --
@@ -370,15 +363,14 @@ function onRobotBuildSomething(event)
 	end
 	-- Save the Ore Cleaner --
 	if event.created_entity.name == "OreCleaner" then
-		if global.oreCleaner ~= nil then
+		if global.oreCleaner ~= nil and global.oreCleaner.ent ~= nil then
 			game.print("Unable to place more than one Ore Cleaner")
 			event.created_entity.destroy()
 			return
 		else
-			global.oreCleaner = event.created_entity	
-			global.oreCleanerCharge = 0
-			global.oreCleanerPurity = 0
-			scanOre(event.created_entity)
+			if global.oreCleaner == nil then global.oreCleaner = OC:new(event.created_entity)
+			else global.oreCleaner.ent = event.created_entity end
+			global.oreCleaner:scanOres(event.created_entity)
 		end
 	end
 	-- Save the Fluid Extractor --
@@ -432,10 +424,8 @@ function onPlayerRemoveSomethings(event)
 	end
 	-- Remove the Ore Cleaner --
 	if event.entity.name == "OreCleaner" then
-		global.oreCleaner = nil	
-		global.oreCleanerCharge = 0
-		global.oreCleanerPurity = 0
-		global.oreTable = {}
+		global.oreCleaner:remove()
+		return
 	end
 	-- Remove the Fluid Extractor --
 	if event.entity.name == "FluidExtractor" then
@@ -482,10 +472,8 @@ function onRobotRemoveSomething(event)
 	end
 	-- Remove the Ore Cleaner --
 	if event.entity.name == "OreCleaner" then
-		global.oreCleaner = nil
-		global.oreCleanerCharge = 0
-		global.oreCleanerPurity = 0
-		global.oreTable = {}
+		global.oreCleaner:remove()
+		return
 	end
 	-- Remove the Fluid Extractor --
 	if event.entity.name == "FluidExtractor" then

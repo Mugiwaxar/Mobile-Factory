@@ -234,7 +234,39 @@ function MF:updateShield(tick)
 end
 
 
-
+-- Send Quatron Charge to the Ore Cleaner --
+function MF:SendQuatronToOC(event)
+	-- Test if the Ore Cleaner is valid --
+	if global.oreCleaner == nil then return end
+	if global.oreCleaner.ent == nil or global.oreCleaner.ent.valid == false then return end
+	-- Send Charge only every 10 ticks --
+	if event.tick%10 ~= 0 then return end
+	-- Test if there are space inside the Ore Cleaner for Quatron Charge --
+	if global.oreCleaner.charge > _mfOreCleanerMaxCharge - 100 then return end
+	
+	------------------------------------- TO MODIFY -----------------------
+	-- Create the Level variable --
+		local level = 0
+		-- Look for Quatron Charge in the Internal Inventory --
+		for i = 100, 0, -1 do
+			-- Look for the best Charge --
+			local amount = countItemFromII("Quatron" .. i)
+			if amount > 0 then
+			level = i
+			-- Remove the Charge from the Internal Inventory --
+			directRemoveItemFromII("Quatron" .. i, 1)
+			-- Create the Laser --
+			self.ent.surface.create_entity{name="GreenBeam", duration=30, position=self.ent.position, target={global.oreCleaner.ent.position.x, global.oreCleaner.ent.position.y - 2}, source=self.ent}
+			break
+			end
+		end
+	--------------------------------------------------------------------------
+	
+	-- Test if they are a Quatron Charge --
+	if level <= 0 then return end
+	-- Add the Charge --
+	global.oreCleaner:addQuatron(level)
+end
 
 
 

@@ -53,10 +53,15 @@ _mfBaseMaxItems = 10000
 _mfBaseMaxTypes = 20
 
 -- Ore Cleaner settings --
-_mfOCMinLasers = 10
-_mfOCOrePerLaser = 1
 _mfOreCleanerMaxCharge = 1000
 _mfOreCleanerRadius = 10
+_mfOreCleanerOrePerExtraction = 10
+_mfOreCleanerExtractionTicks = 5
+_mfOreCleanerInventorySize = 12000
+
+-- To Remove (OC) --
+_mfOCMinLasers = 10
+_mfOCOrePerLaser = 1
 
 -- Fluid Extractor settings --
 _mfFEFluidPerExtraction = 100
@@ -80,7 +85,6 @@ _eventTick64=64
 _eventTick75=75
 _eventTick110=110
 _eventTick115=115
-_eventTick120=120
 _eventTick125=125
 _eventTick130=130
 _eventTick300=300

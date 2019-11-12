@@ -99,18 +99,6 @@ function createEntity(surface, posX, posY, entityName, force)
 end
 
 
--- Scan ores path and fill the oreTable --
-function scanOre(entity)
-	if entity == nil or entity.valid == false then return end
-	if entity.surface == nil then return end
-	-- Get the Ore name the Ore Cleaner are on --
-	local resource = entity.surface.find_entities_filtered{position=entity.position, radius=1, type="resource", limit=1}
-	if resource[1] == nil or resource[1].valid == false then return end
-	-- Scan all ores around the entity position --
-	global.oreTable = entity.surface.find_entities_filtered{position=entity.position, radius=_mfOreCleanerRadius, name=resource[1].name}
-end
-
-
 
 
 

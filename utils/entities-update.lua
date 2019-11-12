@@ -265,10 +265,17 @@ function updateOreSilotPad()
 end
 
 -- Update the Ore Cleaner --
-function updateOreCleaner ()
+function updateOreCleaner (event)
 	if global.oreCleaner == nil or global.MF == nil then return end
 	if global.oreCleaner.valid == false then global.oreCleaner = nil return end
 	if global.oreTable == nil or table_size(global.oreTable) < 1 then return end
+	-- Send Energy to the Ore Cleaner --
+	global.oreCleaner.energy = 60
+	if event.tick%480 == 0 then
+		rendering.draw_animation{animation="RedEnergyOrb", target={global.oreCleaner.position.x,global.oreCleaner.position.y - 3.25}, surface=global.oreCleaner.surface}
+	end
+	if event.tick%_eventTick120 ~= 0 then return end
+	--[[
 	-- Send Quatron Charge to the Ore Cleaner --
 	if global.oreCleanerCharge <= _mfOreCleanerMaxCharge - 100 then
 		-- Create the Level variable --
@@ -298,6 +305,7 @@ function updateOreCleaner ()
 			end
 		end
 	end
+	--]]
 	-- Get the Module ID --
 	if global.oreCleaner.get_inventory == nil then return end
 	local moduleID
@@ -333,7 +341,7 @@ function updateOreCleaner ()
 					-- Remove a Quatron Charge --
 					global.oreCleanerCharge = global.oreCleanerCharge - 2
 					-- Make a Beam --
-					global.oreCleaner.surface.create_entity{name="BlueBeam", duration=120, position=global.oreCleaner.position, target=orePath.position, source=global.oreCleaner.position}
+					global.oreCleaner.surface.create_entity{name="OCBeam", duration=120, position=global.oreCleaner.position, target=orePath.position, source={global.oreCleaner.position.x,global.oreCleaner.position.y-2}}
 					-- Remove amount from the OrePath --
 					orePath.amount = math.max(orePath.amount - oreSend, 1)
 					-- Remove the OrPath if amount == 0 --
@@ -348,7 +356,7 @@ function updateOreCleaner ()
 	end
 	-- Make a return laser --
 	if sended == true then
-		global.MF.ent.surface.create_entity{name="BigGreenBeam", duration=120, position=global.oreCleaner.position, target=global.MF.ent.position, source=global.oreCleaner.position}
+		global.MF.ent.surface.create_entity{name="OCBeam", duration=120, position=global.oreCleaner.position, target=global.MF.ent.position, source={global.oreCleaner.position.x,global.oreCleaner.position.y-4}}
 	end
 end
 

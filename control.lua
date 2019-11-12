@@ -8,6 +8,7 @@ require("utils/game-update.lua")
 require("utils/warptorio.lua")
 require("scripts/mobile-factory.lua")
 require("scripts/power-drain-pole.lua")
+require("scripts/ore-cleaner.lua")
 
 
 -- When the mod init --
@@ -20,9 +21,6 @@ function onInit()
 	global.currentSilotPadChestUpdate = 1
 	-- Ore Cleaner --
 	global.oreCleaner = nil
-	global.oreTable = {}
-	global.oreCleanerCharge = 0
-	global.oreCleanerPurity = 0
 	-- Fluid Extractor --
 	global.fluidExtractor = nil
 	global.fluidExtractorCharge = 0

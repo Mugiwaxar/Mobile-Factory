@@ -624,16 +624,16 @@ function updateStructuresFrame(gui)
 	ocFrame.visible = false
 	ocFrame.style.width = 205
 	-- Make the Ore Cleaner Frame visible if Ore Cleaner is placed --
-	if global.oreCleaner ~= nil then
+	if global.oreCleaner ~= nil and global.oreCleaner.ent ~= nil then
 		ocFrame.visible = true
 		
 		-- Create Labels and Bares --
 		local nameLabel = ocFrame.add{type="label", caption={"", {"gui-description.OreCleaner"}}}
-		local SpeedLabel = ocFrame.add{type="label", caption={"", {"gui-description.Speed"}, ": ", math.floor((_mfOCMinLasers + global.oreCleanerPurity) * (_mfOCOrePerLaser * global.oreCleanerPurity)), " ores/s"}}
-		local ChargeLabel = ocFrame.add{type="label", caption={"", {"gui-description.Charge"}, ": ", global.oreCleanerCharge}}
-		local ChargeBar = ocFrame.add{type="progressbar", value=global.oreCleanerCharge/_mfOreCleanerMaxCharge}
-		local PurityLabel = ocFrame.add{type="label", caption={"", {"gui-description.Purity"}, ": ", math.floor(global.oreCleanerPurity*100)/100}}
-		local PurityBar = ocFrame.add{type="progressbar", value=global.oreCleanerPurity/100}
+		local SpeedLabel = ocFrame.add{type="label", caption={"", {"gui-description.Speed"}, ": ", math.floor((_mfOCMinLasers + global.oreCleaner.purity) * (_mfOCOrePerLaser * global.oreCleaner.purity)), " ores/s"}}
+		local ChargeLabel = ocFrame.add{type="label", caption={"", {"gui-description.Charge"}, ": ", global.oreCleaner.charge}}
+		local ChargeBar = ocFrame.add{type="progressbar", value=global.oreCleaner.charge/_mfOreCleanerMaxCharge}
+		local PurityLabel = ocFrame.add{type="label", caption={"", {"gui-description.Purity"}, ": ", math.floor(global.oreCleaner.purity*100)/100}}
+		local PurityBar = ocFrame.add{type="progressbar", value=global.oreCleaner.purity/100}
 		
 		-- Update Style --
 		nameLabel.style.font = "LabelFont"
