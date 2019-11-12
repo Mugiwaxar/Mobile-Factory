@@ -192,6 +192,8 @@ function OC:collectOres(event)
 		self.ent.surface.create_entity{name="OCBeam", duration=60, position=self.ent.position, target=orePath.position, source={self.ent.position.x,self.ent.position.y-3.2}}
 		-- Set the lastExtractionTick variable --
 		self.lastExtractionTick = event.tick
+		-- Remove a charge --
+		self.charge = self.charge - 1
 	end
 	-- Remove the Ore Path if it is empty --
 	if orePath.amount <= 1 then
