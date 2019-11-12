@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.44
-Date: 3/11/2019
+Date: 12/11/2019
+  Graphics:
+    - Massive graphics change for the Ore Cleaner
   Changes:
     - Added 30 tiles to all Mobile Factory Weapons
     - The Power Drain Pole can now be used when the Internal Distribution is activated
@@ -8,7 +10,7 @@ Date: 3/11/2019
   Bugfixes:
     - Fixed grid content was removed when the Mobile Factory was teleported between surface
   Scripting:
-    - Massive code rewritting for future features (part2 - Power Drain Pole)
+    - Massive code rewritting for future features (part2 - Power Drain Pole, Ore Cleaner)
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.43
 Date: 1/11/2019

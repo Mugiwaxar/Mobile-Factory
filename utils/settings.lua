@@ -59,10 +59,6 @@ _mfOreCleanerOrePerExtraction = 10
 _mfOreCleanerExtractionTicks = 5
 _mfOreCleanerInventorySize = 12000
 
--- To Remove (OC) --
-_mfOCMinLasers = 10
-_mfOCOrePerLaser = 1
-
 -- Fluid Extractor settings --
 _mfFEFluidPerExtraction = 100
 _mfFEMaxCharge = 1000
@@ -78,6 +74,7 @@ _eventTick20=20
 _eventTick38=38
 _eventTick50=50
 _eventTick55=55
+_eventTick57=57
 _eventTick59=59
 _eventTick60=60
 _eventTick63=63

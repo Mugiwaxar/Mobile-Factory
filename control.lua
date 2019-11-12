@@ -54,6 +54,8 @@ function onLoad()
 	for k, pdp in  pairs(global.pdpTable) do
 		PDP:rebuild(pdp)
 	end
+	-- Set Ore Cleaner Metatables --
+	OC:rebuild(global.oreCleaner)
 end
 
 -- When a player joint the game --

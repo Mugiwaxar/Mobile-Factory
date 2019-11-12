@@ -629,7 +629,7 @@ function updateStructuresFrame(gui)
 		
 		-- Create Labels and Bares --
 		local nameLabel = ocFrame.add{type="label", caption={"", {"gui-description.OreCleaner"}}}
-		local SpeedLabel = ocFrame.add{type="label", caption={"", {"gui-description.Speed"}, ": ", math.floor((_mfOCMinLasers + global.oreCleaner.purity) * (_mfOCOrePerLaser * global.oreCleaner.purity)), " ores/s"}}
+		local SpeedLabel = ocFrame.add{type="label", caption={"", {"gui-description.Speed"}, ": ", global.oreCleaner:orePerExtraction() * (60/_mfOreCleanerExtractionTicks), " ores/s"}}
 		local ChargeLabel = ocFrame.add{type="label", caption={"", {"gui-description.Charge"}, ": ", global.oreCleaner.charge}}
 		local ChargeBar = ocFrame.add{type="progressbar", value=global.oreCleaner.charge/_mfOreCleanerMaxCharge}
 		local PurityLabel = ocFrame.add{type="label", caption={"", {"gui-description.Purity"}, ": ", math.floor(global.oreCleaner.purity*100)/100}}
