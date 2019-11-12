@@ -100,14 +100,14 @@ function updatePlayerGUI(player)
 	-- Update the Mobile Factory Internal Energy Charge --
 	if global.MF ~= nil and global.MF.ent.valid then
 		local chargePercent = math.floor(100 - global.MF.internalEnergy / global.MF.maxInternalEnergy * 100)
-		player.gui.screen.mfGUI.mfGUICenterFrame.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": ", math.floor(global.MF.internalEnergy/1000000), "/", math.floor(global.MF.maxInternalEnergy/100000), "MJ"}
+		player.gui.screen.mfGUI.mfGUICenterFrame.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": ", math.floor(global.MF.internalEnergy/1000000), "/", math.floor(global.MF.maxInternalEnergy/1000000), "MJ"}
 		player.gui.screen.mfGUI.mfGUICenterFrame.InternalEnergyBar.value = 1 - chargePercent / 100
 	else
 		player.gui.screen.mfGUI.mfGUICenterFrame.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": Unknow"}
 	end
 	if global.MF ~= nil and global.MF.ent.valid then
 		local chargePercent = math.floor(100 - global.MF.internalEnergy / global.MF.maxInternalEnergy * 100)
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": ", math.floor(global.MF.internalEnergy/1000000), "/", math.floor(global.MF.maxInternalEnergy/100000), "MJ"}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": ", math.floor(global.MF.internalEnergy/1000000), "/", math.floor(global.MF.maxInternalEnergy/1000000), "MJ"}
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.InternalEnergyBar.value = 1 - chargePercent / 100
 	else
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": Unknow"}
