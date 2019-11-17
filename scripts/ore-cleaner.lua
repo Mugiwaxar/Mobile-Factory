@@ -238,7 +238,7 @@ function OC:updateAnimation(event)
 		rendering.destroy(self.animID)
 		self.animID = 0
 		-- Make the transfer Beam --
-		self.ent.surface.create_entity{name="BigPurpleBeam", duration=30, position=self.ent.position, target=global.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
+		self.ent.surface.create_entity{name="OCBigBeam", duration=16, position=self.ent.position, target=global.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
 		return
 	-- If they was extraction but the animation doesn't exist --
 	elseif event.tick - self.lastExtractionTick <= 10 and self.animID == 0 then
@@ -250,7 +250,7 @@ function OC:updateAnimation(event)
 	-- Make the Beam if the animation ended --
 	elseif (event.tick - self.animTick)%240 == 0 and self.animID ~= 0 then
 	-- Make the transfer Beam --
-		self.ent.surface.create_entity{name="BigPurpleBeam", duration=30, position=self.ent.position, target=global.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
+		self.ent.surface.create_entity{name="OCBigBeam", duration=16, position=self.ent.position, target=global.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
 	end
 end
 
