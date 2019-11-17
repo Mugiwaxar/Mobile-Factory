@@ -80,7 +80,7 @@ ocBB.tail =
 ocBB.body =
     {
       {
-      filename = "__Mobile_Factory__/graphics/beams/OCBigbeam.png",
+      filename = "__Mobile_Factory__/graphics/beams/OCBigBeam.png",
       width = 8,
       height = 12,
 	  line_length = 16,
