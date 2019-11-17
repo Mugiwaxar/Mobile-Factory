@@ -241,27 +241,6 @@ function onEntityDamaged(event)
 
 end
 
---[[
--- When player use a Capsule --
-function onPlayerUseCapsule(event)
-	-- Tile Capsule --
-	if event.item.name == "TileCapsule1" or event.item.name == "TileCapsule2" or event.item.name == "TileCapsule3" then
-			local player = getPlayer(event.player_index)
-	if player.surface.name ~= _mfSurfaceName then
-		player.print("Tile capsule can only be used inside the Mobile Factory room")
-		return
-	end
-	if event.item.name == "TileCapsule1" then
-		createTilesAtPosition(event.position, 1, player.surface)
-	elseif event.item.name == "TileCapsule2" then
-		createTilesAtPosition(event.position, 3, player.surface)
-	elseif event.item.name == "TileCapsule3" then
-		createTilesAtPosition(event.position, 5, player.surface)
-	end
-	end
-end
---]]
-
 -- Upgrade a Tank to MK2 --
 function upgradeTank(id)
 	if global.MF.ccS == nil or global.tankTable == nil  then return end

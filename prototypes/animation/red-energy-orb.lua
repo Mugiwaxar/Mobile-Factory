@@ -10,5 +10,4 @@ reo.line_length = 16
 reo.animation_speed = 1
 reo.scale = 0.65
 reo.flags = {"terrain"}
-
 data:extend{reo}

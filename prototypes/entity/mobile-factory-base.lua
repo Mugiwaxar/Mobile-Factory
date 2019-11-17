@@ -11,6 +11,7 @@ mf.max_health = 2500
 mf.consumption = "700KW"
 mf.weight = 25000
 mf.braking_power = "600kW"
+mf.rotation_speed = 0.30 / 60
 mf.guns = {"mfTank-machine-gun"}
 mf.collision_box = {{-1.4, -2.5}, {1.1, 1.7}}
 mf.selection_box = mf.collision_box

@@ -233,7 +233,8 @@ function MF:updateShield(tick)
 	if self.ent == nil or self.ent.valid == false or technologyUnlocked("MFShield") == false then return end
 	-- Create the visual --
 	if self.shield > 0 then
-		self.ent.surface.create_trivial_smoke{name="mfShield", position=self.ent.position}
+		-- self.ent.surface.create_trivial_smoke{name="mfShield", position=self.ent.position}
+		rendering.draw_animation{animation="mfShield", target={self.ent.position.x-0.25, self.ent.position.y-0.3}, time_to_live=2, x_scale=0.4, y_scale=0.4, surface=self.ent.surface}
 	end
 	-- Charge the Shield --
 	if tick%60 == 0 and self.internalEnergy*_mfShieldChargeRate > _mfShieldComsuption and self.shield < self.maxShield then

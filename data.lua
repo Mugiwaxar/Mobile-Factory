@@ -43,7 +43,7 @@ require("prototypes/technology/control-center.lua")
 require("prototypes/technology/dimensional-logistic.lua")
 require("prototypes/technology/shield.lua")
 require("prototypes/gun/tank-guns.lua")
-require("prototypes/effect/shield.lua")
+require("prototypes/animation/shield.lua")
 require("prototypes/animation/red-energy-orb.lua")
 if mods["omnimatter"] then require("utils/omnimatter.lua") end
 		
@@ -208,8 +208,8 @@ data:extend{
 		type="equipment-grid",
 		equipment_categories={"armor"},
 		name="MFEquipmentGrid",
-		height=8,
-		width=8
+		height=6,
+		width=4
 	}
 }
 

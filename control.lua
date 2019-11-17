@@ -1,3 +1,4 @@
+require("utils/profiler.lua")
 require("utils/settings.lua")
 require("utils/functions.lua")
 require("utils/surface.lua")
