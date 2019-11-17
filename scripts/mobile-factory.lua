@@ -99,21 +99,21 @@ function MF:updateLasers()
 			-- Energy Laser --
 			if i > self:getLaserNumber() then break end
 			-- Exclude Character, Power Drain Pole and Entities with 0 energy --
-			if entity.type ~= "character" and entity.name ~= "PowerDrainPole" and entity.energy > 0 then
-			-- Missing Internal Energy or Structure Energy --
-			local energyDrain = math.min(self.maxInternalEnergy - self.internalEnergy, entity.energy)
-			-- EnergyDrain or LaserDrain Caparity --
-			local drainedEnergy = math.min(self:getLaserEnergyDrain(), energyDrain)
-			-- Test if some Energy was drained --
-			if drainedEnergy > 0 then
-				-- Add the Energy to the Mobile Factory Batteries --
-				global.MF.internalEnergy = global.MF.internalEnergy + drainedEnergy
-				-- Remove the Energy from the Structure --
-				entity.energy = entity.energy - drainedEnergy
-				-- Create the Beam --
-				self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y-4}}
-				-- One less Beam to the Beam capacity --
-				i = i + 1
+			if entity.type == "accumulator" or entity.type == "electric-energy-interface" then
+				-- Missing Internal Energy or Structure Energy --
+				local energyDrain = math.min(self.maxInternalEnergy - self.internalEnergy, entity.energy)
+				-- EnergyDrain or LaserDrain Caparity --
+				local drainedEnergy = math.min(self:getLaserEnergyDrain(), energyDrain)
+				-- Test if some Energy was drained --
+				if drainedEnergy > 0 then
+					-- Add the Energy to the Mobile Factory Batteries --
+					global.MF.internalEnergy = global.MF.internalEnergy + drainedEnergy
+					-- Remove the Energy from the Structure --
+					entity.energy = entity.energy - drainedEnergy
+					-- Create the Beam --
+					self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y-4}}
+					-- One less Beam to the Beam capacity --
+					i = i + 1
 			end
 		end
 			-- Fluid Laser --
