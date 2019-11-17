@@ -88,7 +88,7 @@ function updateFactoryFloorForCC()
 	end
 	global.MF.fS.set_tiles(tilesTable)
 	-- Create Control Center surface --
-	createControlRoom()
+	if global.MF.ccS == nil then createControlRoom() end
 end
 
 -- Create a new Entity --

@@ -33,7 +33,6 @@ end
 function updateEntities(event)
 	-- Verify Mobile Factory --
 	if global.MF == nil then return end
-	if global.MF.ent.valid == false then return end
 	-- Update --
 	if event.tick%_eventTick5 == 0 then factoryTeleportBox() end
 	if event.tick%_eventTick60 == 0 then global.MF:updateLasers() end
@@ -104,6 +103,9 @@ end
 
 -- Update teleportation box --
 function factoryTeleportBox()
+	-- Check the Mobile Factory --
+	if global.MF.ent == nil then return end
+	if global.MF.ent.valid == false then return end
 	-- Mobile Factory Vehicule --
 	local mfB = global.MF.ent.bounding_box
 	local entities = global.MF.ent.surface.find_entities_filtered{area={{mfB.left_top.x-0.5,mfB.left_top.y-0.5},{mfB.right_bottom.x+0.5, mfB.right_bottom.y+0.5}}, type="character"}
@@ -297,9 +299,10 @@ end
 
 -- Send all Pollution outside --
 function updatePollution()
-	-- Test if Mobile Factory Surfaces exist --
+	-- Test if the Mobile Factory is valid --
 	if global.MF == nil or global.MF.fS == nil or global.MF.ent == nil then return end
-        if global.MF.ent.surface == nil then return end
+	if global.MF.ent.valid == false then return end
+	if global.MF.ent.surface == nil then return end
 	-- Get the total amount of Pollution --
 	local totalPollution = global.MF.fS.get_total_pollution()
 	if totalPollution ~= nil then

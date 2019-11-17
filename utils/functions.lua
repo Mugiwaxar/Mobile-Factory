@@ -98,9 +98,11 @@ function findMF()
 	local lastMFFound = nil
 	-- Look for the Tank in all the surface --
 	for k, surface in pairs(game.surfaces) do
-		for k, entity in pairs(surface.find_entities_filtered{name="MobileFactory"}) do
-			mfFound = mfFound + 1
-			lastMFFound = entity
+		for k, entity in pairs(surface.find_entities_filtered{type="car"}) do
+			if string.match(entity.name, "MobileFactory") then
+				mfFound = mfFound + 1
+				lastMFFound = entity
+			end
 		end
 	end
 	-- Print the number of Tank found --
@@ -132,8 +134,10 @@ function newMobileFactory(mf)
 	-- Test if the Mobile Factory doesn't already exist --
 	if global.MF ~= nil and global.MF.ent ~= nil then global.MF.ent.destroy() end
 	-- Set the new one --
-	global.MF = MF:new(mf)
-	if global.MF.fS == nil then createMFSurface() end
+	if global.MF == nil then
+		global.MF = MF:new()
+	end
+	global.MF:contruct(mf)
 end
 
 -- Add a Mobile Factory to a player inventory --
@@ -156,7 +160,7 @@ end
 -- If Mobile Factory or his surfaces are broken, try to fix them --
 function fixMB(event)
 	-- If Mobile Factory is lost --
-	if global.MF == nil or global.MF.ent.valid == false then
+	if global.MF == nil or global.MF.ent == nil or global.MF.ent.valid == false then
 		-- Try to find it --
 		tempMf = findMF()
 		if tempMf ~= nil and tempMf.valid == true then
@@ -164,9 +168,8 @@ function fixMB(event)
 			game.print("Mobile Factory found!")
 			newMobileFactory(tempMf)
 		else
-			-- Unable to find, send a new one to the Player Inventory --
-			game.print("Unable to find the Mobile Factory, new one is placed in your inventory")
-			addMobileFactory(event)
+			-- Unable to find --
+			game.print("Unable to find the Mobile Factory, try to place a new one")
 		end
 	end
 	-- If Factory Surface is lost --
