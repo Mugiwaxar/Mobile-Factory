@@ -264,6 +264,7 @@ function updateOreSilotPad()
 	end
 end
 
+--[[
 -- Update the Ore Cleaner --
 function updateOreCleaner (event)
 	if global.oreCleaner == nil or global.MF == nil then return end
@@ -275,7 +276,6 @@ function updateOreCleaner (event)
 		rendering.draw_animation{animation="RedEnergyOrb", target={global.oreCleaner.position.x,global.oreCleaner.position.y - 3.25}, surface=global.oreCleaner.surface}
 	end
 	if event.tick%_eventTick120 ~= 0 then return end
-	--[[
 	-- Send Quatron Charge to the Ore Cleaner --
 	if global.oreCleanerCharge <= _mfOreCleanerMaxCharge - 100 then
 		-- Create the Level variable --
@@ -305,7 +305,6 @@ function updateOreCleaner (event)
 			end
 		end
 	end
-	--]]
 	-- Get the Module ID --
 	if global.oreCleaner.get_inventory == nil then return end
 	local moduleID
@@ -359,7 +358,7 @@ function updateOreCleaner (event)
 		global.MF.ent.surface.create_entity{name="OCBeam", duration=120, position=global.oreCleaner.position, target=global.MF.ent.position, source={global.oreCleaner.position.x,global.oreCleaner.position.y-4}}
 	end
 end
-
+]]--
 
 
 -- Update the Fluid Extractor --
