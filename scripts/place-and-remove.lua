@@ -148,6 +148,7 @@ function somethingWasPlaced(event, isRobot)
 	end
 end
 
+-- When something is removed or destroyed --
 function somethingWasRemoved(event)
 	-- Check if the Entity is valid --
 	if event.entity == nil or event.entity.valid == false then return end
