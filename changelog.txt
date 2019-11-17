@@ -1,14 +1,17 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.44
-Date: 12/11/2019
+Date: 17/11/2019
   Graphics:
     - Massive graphics change for the Ore Cleaner
   Changes:
     - Added 30 tiles to all Mobile Factory Weapons
+    - Tweaked the Ore Cleaner extraction (Now it's 10/s multiplied per the purity)
     - The Power Drain Pole can now be used when the Internal Distribution is activated
     - Changed the Dimensional Accumulator, it now have a buffer capacity of 5MJ (was 1MJ), an input/output flow limite of 1MW (was 300kW)
+    - To avoid problems, the Mobile Factory Energy Drain Laser will only drain energy from accumulators
   Bugfixes:
     - Fixed grid content was removed when the Mobile Factory was teleported between surface
+    - Fixed a crash related to the polution extraction
   Scripting:
     - Massive code rewritting for future features (part2 - Power Drain Pole, Ore Cleaner)
 ---------------------------------------------------------------------------------------------------
