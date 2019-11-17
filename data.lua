@@ -208,8 +208,8 @@ data:extend{
 		type="equipment-grid",
 		equipment_categories={"armor"},
 		name="MFEquipmentGrid",
-		height=30,
-		width=30
+		height=8,
+		width=8
 	}
 }
 

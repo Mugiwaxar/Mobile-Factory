@@ -6,12 +6,14 @@ mf.name = "MobileFactory"
 mf.order = "a"
 mf.equipment_grid = "MFEquipmentGrid"
 mf.minable = {mining_time = 1.5, result = "MobileFactory"}
-mf.inventory_size = 20
-mf.max_health = 100000
-mf.consumption = "3MW"
-mf.weight = 100000
-mf.braking_power = "400kW"
-mf.guns = {"mfTank-cannon","mfTank-flamethrower","mfTank-machine-gun"}
+mf.inventory_size = 10
+mf.max_health = 2500
+mf.consumption = "700KW"
+mf.weight = 25000
+mf.braking_power = "600kW"
+mf.guns = {"mfTank-machine-gun"}
+mf.collision_box = {{-1.4, -2.5}, {1.1, 1.7}}
+mf.selection_box = mf.collision_box
 mf.animation =
 {
 	priority = "low",
@@ -22,7 +24,7 @@ mf.animation =
 	shift = util.by_pixel(-4.75, -10),
 	animation_speed = 8,
 	max_advance = 1,
-	scale = 1.3,
+	scale = 0.7,
 	stripes =
 	{
 		{
@@ -58,7 +60,7 @@ mf.turret_animation =
 	direction_count = 64,
 	shift = util.by_pixel(-4.75, -50),
 	animation_speed = 8,
-	scale = 1.3
+	scale = 0.7
 }
 data:extend{mf}
 
@@ -73,3 +75,16 @@ mfI.subgroup = "MobileFactory"
 mfI.order = "a"
 mfI.stack_size = 1
 data:extend{mfI}
+
+-- Create the Mobile Factory Recipe --
+local mfR = {}
+mfR.type = "recipe"
+mfR.name = "MobileFactory"
+mfR.energy_required = 10
+mfR.ingredients =
+    {
+      {"copper-plate", 10},
+      {"iron-plate", 10},
+    }
+mfR.result = "MobileFactory"
+data:extend{mfR}
