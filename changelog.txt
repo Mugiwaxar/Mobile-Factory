@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.45
 Date: 17/11/2019
+  Changes:
+    - The Mobile Factory can now be removed and replaced, but it will lose all it's Shield, Energy and Jump Drive charge
   Scripting:
     - Rewrite for the placed/removed/destroyed Entities
     - Rewrite for the Mobile Factory object
@@ -8,6 +10,7 @@ Date: 17/11/2019
     - Energy lasers are now correctly Activated/Desactivated
     - Fixed a crash when all technologies were unlocked in the same time in sandbox mod
     - Fixed a crash that occurred when Mobile Factory surfaces technologies were unlocked but the Mobile Factory was not yet placed
+    - Fixed the "Factory surface lost" bug
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.44
 Date: 17/11/2019

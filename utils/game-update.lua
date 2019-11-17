@@ -120,7 +120,7 @@ function factoryTeleportBox()
 		end
 	end
 	-- Factory to Control Center --
-	if global.MF.fS ~= nil and global.MF.fS ~= nil then
+	if technologyUnlocked("ControlCenter") == true and global.MF.fS ~= nil and global.MF.fS ~= nil then
 		local entities = global.MF.fS.find_entities_filtered{area={{-3,-34},{3,-31}}, type="character"}
 		for k, entity in pairs(entities) do
 			teleportPlayerToControlCenter(entity.player)
