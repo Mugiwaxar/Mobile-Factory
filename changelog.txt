@@ -9,6 +9,7 @@ Date: 17/11/2019
   Scripting:
     - Rewrite for the placed/removed/destroyed Entities
     - Rewrite for the Mobile Factory object
+    - Rewrite of the Control Center Tank table
   Bugfixes:
     - Energy lasers are now correctly Activated/Desactivated
     - Fixed a crash when all technologies were unlocked in the same time in sandbox mod
