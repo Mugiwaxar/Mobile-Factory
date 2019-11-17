@@ -12,6 +12,7 @@ Date: 17/11/2019
   Bugfixes:
     - Fixed grid content was removed when the Mobile Factory was teleported between surface
     - Fixed a crash related to the polution extraction
+    - Fixed Angel's infinite Ore crash
   Scripting:
     - Massive code rewritting for future features (part2 - Power Drain Pole, Ore Cleaner)
 ---------------------------------------------------------------------------------------------------
