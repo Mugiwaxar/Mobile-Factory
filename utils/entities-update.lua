@@ -121,17 +121,13 @@ function updatePowerDrainPole(event)
 		local updated = 0
 		-- Itinerate all Power Drain Pole --
 		for k, pdp in pairs(global.pdpTable) do
-			-- dprint(pdp.ent.pos)
 			-- Test if the Power Drain Pole still exist else remove it from the table --
 			if pdp.ent == nil or pdp.ent.valid == false then 
 				global.pdpTable[k] = nil
 			else
-				-- dprint("LU:" .. event.tick - pdp.lastUpdate)
-				-- dprint("UP:" .. updated)
 				-- Initialise a new Power Drain Pole --
 				if pdp.lastUpdate == 0 then
 					pdp.lastUpdate = event.tick
-					dprint("a:" .. pdp.lastUpdate)
 				-- Try to update a Power Drain Pole --
 				elseif pdp.lastUpdate + 60 <= event.tick then
 					-- If there are less than 10 updates --
