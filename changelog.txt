@@ -6,6 +6,8 @@ Date: 17/11/2019
     - Rewrite for the Mobile Factory object
   Bugfixes:
     - Energy lasers are now correctly Activated/Desactivated
+    - Fixed a crash when all technologies were unlocked in the same time in sandbox mod
+    - Fixed a crash that occurred when Mobile Factory surfaces technologies were unlocked but the Mobile Factory was not yet placed
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.44
 Date: 17/11/2019

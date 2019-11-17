@@ -15,6 +15,8 @@ require("scripts/objects/ore-cleaner.lua")
 function onInit()
 	-- Mobile Factory Object --
 	global.MF = MF:new()
+	createMFSurface()
+	createControlRoom()
 	-- Module ID --
 	global.IDModule = 0
 	-- Current Entities Update --

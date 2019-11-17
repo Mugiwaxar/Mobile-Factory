@@ -32,8 +32,6 @@ function MF:new()
 	setmetatable(t, mt)
 	mt.__index = MF
 	t.ent = object
-	createMFSurface()
-	createControlRoom()
 	return t
 end
 
