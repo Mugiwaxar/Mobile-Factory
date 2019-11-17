@@ -568,7 +568,8 @@ end
 -- Send all Pollution outside --
 function updatePollution()
 	-- Test if Mobile Factory Surfaces exist --
-	if global.MF == nil or global.MF.fS == nil or global.MF.ent.surface == nil then return end
+	if global.MF == nil or global.MF.fS == nil or global.MF.ent == nil then return end
+        if global.MF.ent.surface == nil then return end
 	-- Get the total amount of Pollution --
 	local totalPollution = global.MF.fS.get_total_pollution()
 	if totalPollution ~= nil then
