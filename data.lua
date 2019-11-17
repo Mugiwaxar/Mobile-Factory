@@ -20,7 +20,6 @@ require("prototypes/entity/ore-cleaner.lua")
 require("prototypes/entity/fluid-extractor.lua")
 require("prototypes/resource/dimensional-ore.lua")
 require("prototypes/resource/dimensional-fluid.lua")
---require("prototypes/item/tile-capsule.lua")
 require("prototypes/item/dimensional-sample.lua")
 require("prototypes/item/dimensional-plate.lua")
 require("prototypes/item/dimmensional-crystal.lua")
@@ -73,9 +72,18 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
-		name="Resources",
+		name="MobileFactory",
 		group="MobileFactory",
 		order="a"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="Resources",
+		group="MobileFactory",
+		order="a2"
 	}
 }
 
