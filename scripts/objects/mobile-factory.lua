@@ -26,29 +26,40 @@ MF = {
 }
 
 -- Constructor --
-function MF:new(object)
-	if object == nil then return end
+function MF:new()
 	t = {}
 	mt = {}
-	-- for k, j in pairs(MF) do
-		-- mt[k] = j
-	-- end
 	setmetatable(t, mt)
 	mt.__index = MF
 	t.ent = object
-	t.lastSurface = object.surface
-	t.lastPosX = object.position.x
-	t.lastPosY = object.position.y
+	createMFSurface()
+	createControlRoom()
 	return t
+end
+
+-- Contructor for a placed Mobile Factory --
+function MF:contruct(object)
+	if object == nil then return end
+	if self.fS == nil then createMFSurface() end
+	if self.ccS == nil then createControlRoom() end
+	self.ent = object
+	self.lastSurface = object.surface
+	self.lastPosX = object.position.x
+	self.lastPosY = object.position.y
+end
+
+-- Destructor --
+function MF:remove()
+	self.ent = nil
+	self.shield = 0
+	self.internalEnergy = 0
+	self.jumpTimer = _mfBaseJumpTimer
 end
 
 -- Reconstructor --
 function MF:rebuild(object)
 	if object == nil then return end
 	mt = {}
-	-- for k, j in pairs(MF) do
-		-- mt[k] = j
-	-- end
 	mt.__index = MF
 	setmetatable(object, mt)
 end
@@ -87,6 +98,9 @@ end
 
 -- Search energy sources near Mobile Factory and update the burning fuel --
 function MF:updateLasers()
+	-- Check the Mobile Factory --
+	if global.MF == nil or global.MF.ent == nil then return end
+	if global.MF.ent.valid == false then return end
 	-- Search Energy sources"
 	if technologyUnlocked("EnergyDrain1") or technologyUnlocked("FluidDrain1") then
 		-- Get Bounding Box --
@@ -96,10 +110,11 @@ function MF:updateLasers()
 		i = 1
 		-- Look each entity --
 		for k, entity in pairs(entities) do
-			-- Energy Laser --
+			-- Stop if they are to much lasers --
 			if i > self:getLaserNumber() then break end
+			-- Energy Laser --
 			-- Exclude Character, Power Drain Pole and Entities with 0 energy --
-			if entity.type == "accumulator" or entity.type == "electric-energy-interface" then
+			if self.energyLaserActivated == true and (entity.type == "accumulator" or entity.type == "electric-energy-interface") then
 				-- Missing Internal Energy or Structure Energy --
 				local energyDrain = math.min(self.maxInternalEnergy - self.internalEnergy, entity.energy)
 				-- EnergyDrain or LaserDrain Caparity --
@@ -114,8 +129,8 @@ function MF:updateLasers()
 					self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y-4}}
 					-- One less Beam to the Beam capacity --
 					i = i + 1
+				end
 			end
-		end
 			-- Fluid Laser --
 			if self.fluidLaserActivated == true and entity.type == "storage-tank" and global.IDModule > 0 then
 				if self.ccS ~= nil then
