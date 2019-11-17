@@ -34,13 +34,6 @@ function split(str, char)
    return parts
 end
 
--- Return false if the item can't be placed outside the Mobile Factory --
-function canBePlacedOutside(name)
-	if name == "FactoryChest" then return false end
-	if name == "DimensionalAccumulator" then return false end
-	return true
-end
-
 -- Test if Mobile Factory can be placed near a player --
 function mfPlaceable(player)
 	-- Make the Mobile Factory unable to be placed inside it --
@@ -140,6 +133,7 @@ function newMobileFactory(mf)
 	if global.MF ~= nil and global.MF.ent ~= nil then global.MF.ent.destroy() end
 	-- Set the new one --
 	global.MF = MF:new(mf)
+	if global.MF.fS == nil then createMFSurface() end
 end
 
 -- Add a Mobile Factory to a player inventory --
