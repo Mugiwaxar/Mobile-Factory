@@ -11,14 +11,17 @@ function somethingWasPlaced(event, isRobot)
 	else
 		creator = event.robot
 	end
-	-- Check if the all are valid --
+	-- Check if all are valid --
 	if event.created_entity == nil or event.created_entity.valid == false or creator == nil or creator.valid == false then return end
 	-- If the Mobile Factory is placed --
-	if event.created_entity.name == "MobileFactory" then
+	if string.match(event.created_entity.name, "MobileFactory") then
 		-- If the Mobile Factory already exist --
-		if global.MF.ent ~= nil then
+		if global.MF.ent ~= nil and global.MF.ent.valid == true then
 			if isPlayer == true then creator.print("Unable to place more than one Mobile Factory ") end
 			event.created_entity.destroy()
+			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
+				creator.get_main_inventory().insert(event.stack)
+			end
 			return
 		-- Else, create a new one --
 		else
@@ -152,6 +155,10 @@ end
 function somethingWasRemoved(event)
 	-- Check if the Entity is valid --
 	if event.entity == nil or event.entity.valid == false then return end
+	-- The Mobile Factory was removed --
+	if string.match(event.entity.name, "MobileFactory") then
+		global.MF:remove(event.entity)
+	end
 	-- Remove the Factory Chest --
 	if event.entity.name == "FactoryChest" then
 		global.MF.fChest = nil

@@ -147,7 +147,7 @@ end
 -- Collect surrounding Ores --
 function OC:collectOres(event)
 	-- Test if the Ore Cleaner and the Mobile Factory are valid --
-	if global.oreCleaner == nil or global.MF == nil then return end
+	if global.oreCleaner == nil or global.MF == nil or global.MF.ent == nil then return end
 	if global.MF.ent.valid == false then return end
 	-- Set the Ore Cleaner to nil if the Entity is no longer valid --
 	if global.oreCleaner.ent ~= nil and global.oreCleaner.ent.valid == false then global.oreCleaner:remove() return end
