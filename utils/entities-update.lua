@@ -58,17 +58,12 @@ function updateLogisticFluidPoles()
 					if pTank.type == "storage-tank" then
 						if pTank.fluidbox.get_capacity(1) > 1000 then
 							local ccTank
-							local name
-							local pos
 							local filter
 							if global.tankTable ~= nil and global.tankTable[tankMD] ~= nil then 
-								name = global.tankTable[tankMD].name
-								pos = global.tankTable[tankMD].position
 								filter = global.tankTable[tankMD].filter
+								ccTank = global.tankTable[tankMD].ent
 							end
-							if name ~= nil and pos ~= nil and filter ~= nil then
-								ccTank = global.MF.ccS.find_entity(name, pos)
-								if ccTank == nil then game.print("Tank " .. tankMD .. " doesn't exist") return end
+							if filter ~= nil and ccTank ~= nil then
 								if methodMD == "DistributionModule" then
 									local name
 									local amount
@@ -312,18 +307,11 @@ function updateFluidExtractor()
 	-- Calcule the amount that can be extracted --
 	local amount = math.min(resource.amount, global.fluidExtractorPurity*_mfFEFluidPerExtraction)
 	amount = math.min(amount, global.fluidExtractorCharge*10)
-	-- Find the Focused Tank --
-	local ccTank
-	local name
-	local pos
-	local filter
+	-- Find the Focused Tank and filter --
 	if global.tankTable == nil or global.tankTable[moduleID] == nil then return end
-	name = global.tankTable[moduleID].name
-	pos = global.tankTable[moduleID].position
-	filter = global.tankTable[moduleID].filter
-	if name == nil or pos == nil or filter == nil then return end
-	local tank = global.MF.ccS.find_entity(name, pos)
-	if tank == nil then game.print("Tank " .. moduleID .. " doesn't exist") return end
+	local filter = global.tankTable[moduleID].filter
+	local tank = global.tankTable[moduleID].ent
+	if filter == nil or tank == nil then return end
 	-- Test if the Filter accept this Fluid --
 	if resource.name ~= filter then return end
 	-- Send the Fluid to the Tank --

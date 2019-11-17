@@ -134,17 +134,12 @@ function MF:updateLasers()
 				if self.ccS ~= nil then
 					-- Get the Internal Tank --
 					local name
-					local pos
-					local filter
+					local ccTank
 					if global.tankTable ~= nil and global.tankTable[global.IDModule] ~= nil then
 						name = global.tankTable[global.IDModule].name
-						pos = global.tankTable[global.IDModule].position
-						filter = global.tankTable[global.IDModule].filter
+						ccTank = global.tankTable[global.IDModule].ent
 					end
-					if name ~= nil and pos ~= nil and filter ~= nil then
-					-- Get the Internal Tank entity --
-					local ccTank = self.ccS.find_entity(name, pos)
-					if ccTank ~= nil then
+					if name ~= nil and ccTank ~= nil then
 						-- Get the focused Tank --
 						local name
 						local amount
@@ -153,19 +148,18 @@ function MF:updateLasers()
 							name = k
 							amount = i
 						end
-							if name ~= nil and name == filter and self.internalEnergy > _lfpFluidConsomption * math.min(amount, self:getLaserFluidDrain()) then
-								-- Add fluid to the Internal Tank --
-								local amountRm = ccTank.insert_fluid({name=name, amount=math.min(amount, self:getLaserFluidDrain())})
-								-- Remove fluid from the focused Tank --
-								pTank.remove_fluid{name=name, amount=amountRm}
-								if amountRm > 0 then
-									-- Create the Laser --
-									self.ent.surface.create_entity{name="PurpleBeam", duration=60, position=self.ent.position, target=pTank.position, source=self.ent.position}
-									-- Drain Energy --
-									self.internalEnergy = self.internalEnergy - (_mfFluidConsomption*amountRm)
-									-- One less Beam to the Beam capacity --
-									i = i + 1
-								end
+						if name ~= nil and name == filter and self.internalEnergy > _lfpFluidConsomption * math.min(amount, self:getLaserFluidDrain()) then
+							-- Add fluid to the Internal Tank --
+							local amountRm = ccTank.insert_fluid({name=name, amount=math.min(amount, self:getLaserFluidDrain())})
+							-- Remove fluid from the focused Tank --
+							pTank.remove_fluid{name=name, amount=amountRm}
+							if amountRm > 0 then
+								-- Create the Laser --
+								self.ent.surface.create_entity{name="PurpleBeam", duration=60, position=self.ent.position, target=pTank.position, source=self.ent.position}
+								-- Drain Energy --
+								self.internalEnergy = self.internalEnergy - (_mfFluidConsomption*amountRm)
+								-- One less Beam to the Beam capacity --
+								i = i + 1
 							end
 						end
 					end
@@ -235,8 +229,7 @@ function MF:updateShield(tick)
 	if self.shield > 0 then
 		-- Calcule the shield tint --
 		local tint = self.shield / self.maxShield
-		-- self.ent.surface.create_trivial_smoke{name="mfShield", position=self.ent.position}
-		rendering.draw_animation{animation="mfShield", target={self.ent.position.x-0.25, self.ent.position.y-0.3}, tint={1,tint,tint,1}, time_to_live=2, x_scale=0.4, y_scale=0.4, surface=self.ent.surface}
+		rendering.draw_animation{animation="mfShield", target={self.ent.position.x-0.25, self.ent.position.y-0.3}, tint={1,tint,tint}, time_to_live=2, x_scale=0.4, y_scale=0.4, surface=self.ent.surface}
 	end
 	-- Charge the Shield --
 	if tick%60 == 0 and self.internalEnergy*_mfShieldChargeRate > _mfShieldComsuption and self.shield < self.maxShield then

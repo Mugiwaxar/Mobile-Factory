@@ -8,14 +8,12 @@ require("scripts/place-and-remove.lua")
 -- One each game tick --
 function onTick(event)
 	if global.MF == nil then return end
-	-- Update all Variables --
-	if event.tick%_eventTick4 == 0 then updateValues() end
-	-- Update all entities --
-	updateEntities(event)
 	-- Synchronize Tank chest with Factory Chest --
 	if event.tick%_eventTick20 == 0 and global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid == true then
 		global.MF:syncFChest()
 	end
+	-- Update all entities --
+	updateEntities(event)
 	-- Update all GUI --
 	if event.tick%_eventTick55 == 0 then updateAllGUIs() end
 	-- Update Modules Variable inside de Equalizer --
@@ -50,6 +48,8 @@ end
 
 -- Update base Mobile Factory Values --
 function updateValues()
+	-- Mobile Factory --
+	if global.MF == nil then global.MF = MF:new() end
 	-- Energy Lasers --
 	if global.IDModule == nil then global.IDModule = 0 end
 	-- Accumulators table --
@@ -248,7 +248,7 @@ function upgradeTank(id)
 	local tankId = global.tankTable[id]
 	if tankId == nil then return end
 	-- Get The Tank --
-	local tank = global.MF.ccS.find_entity(tankId.name, tankId.position)
+	local tank = global.tankTable[id].ent
 	-- Test if there are fluid inside --
 	if tank.get_fluid_count() > 0 then 
 		local fluid = tank.get_fluid_contents()
@@ -265,12 +265,12 @@ function upgradeTank(id)
 		-- Fill the fluid --
 		newTank.insert_fluid({name=name, amount=amount})
 		-- Save the tank --
-		global.tankTable[id].name = newTank.name
+		global.tankTable[id].ent = newTank
 	else
 		-- Create the new tank --
 		local newTank = global.MF.ccS.create_entity{name="StorageTank".. id .."MK2", position=tankId.position, force="player"}
 		-- Save the tank --
-		global.tankTable[id].name = newTank.name
+		global.tankTable[id].ent = newTank
 	end
 	-- Destroy the old Tank --
 	tank.destroy()

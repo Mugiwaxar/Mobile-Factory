@@ -106,35 +106,35 @@ end
 function createMK1Tank1()
 	createLeftPassage1(global.MF.ccS)
 	local entity = createEntity(global.MF.ccS, -17, -9, "StorageTank1MK1", "player")
-	global.tankTable[1] = {name="StorageTank1MK1", position={-17,-9}}
+	global.tankTable[1] = {ent=entity}
 end
 
 -- Create MK1 tank 2 --
 function createMK1Tank2()
 	createLeftPassage2(global.MF.ccS)
 	local entity = createEntity(global.MF.ccS, -35, -9, "StorageTank2MK1", "player")
-	global.tankTable[2] = {name="StorageTank2MK1", position={-35,-9}}
+	global.tankTable[2] = {ent=entity}
 end
 
 -- Create MK1 tank 3 --
 function createMK1Tank3()
 	createLeftPassage3(global.MF.ccS)
 	local entity = createEntity(global.MF.ccS, -53, -9, "StorageTank3MK1", "player")
-	global.tankTable[3] = {name="StorageTank3MK1", position={-53,-9}}
+	global.tankTable[3] = {ent=entity}
 end
 
 -- Create MK1 tank 4 --
 function createMK1Tank4()
 	createLeftPassage4(global.MF.ccS)
 	local entity = createEntity(global.MF.ccS, -71, -9, "StorageTank4MK1", "player")
-	global.tankTable[4] = {name="StorageTank4MK1", position={-71,-9}}
+	global.tankTable[4] = {ent=entity}
 end
 
 -- Create MK1 tank 5 --
 function createMK1Tank5()
 	createLeftPassage5(global.MF.ccS)
 	local entity = createEntity(global.MF.ccS, -89, -9, "StorageTank5MK1", "player")
-	global.tankTable[5] = {name="StorageTank5MK1", position={-89,-9}}
+	global.tankTable[5] = {ent=entity}
 end
 
 -- Create Ore Silot 1 --

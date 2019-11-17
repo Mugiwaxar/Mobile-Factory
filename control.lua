@@ -69,9 +69,12 @@ end
 
 -- When the configuration have changed --
 function onConfigurationChanged()
+	-- Update all GUI --
 	for k, player in pairs(game.players) do
 		createPlayerGui(player)
 	end
+	-- Update all Variables --
+	if event.tick%_eventTick4 == 0 then updateValues() end
 end
 
 -- Event --

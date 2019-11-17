@@ -295,7 +295,7 @@ function onGuiElemChanged(event)
 	if event.element.type == "choose-elem-button" then
 		if event.element.elem_value ~= nil then
 			local id = tonumber(event.element.name)
-			if global.tankTable[id] == nil or global.tankTable[id].valid == false then return end
+			if global.tankTable[id] == nil then return end
 			global.tankTable[id].filter = event.element.elem_value
 		end
 		local player = getPlayer(event.player_index)
@@ -457,7 +457,7 @@ function updateTankFrame(player)
 	-- Look for all Tanks --
 	for k, id in pairs(global.tankTable) do
 		-- Get the Tank --
-		local tank = global.MF.ccS.find_entity(id.name, id.position)
+		local tank = id.ent
 		if tank ~= nil then
 			-- Get the Tank capacity --
 			local tCapacity = math.floor(tank.fluidbox.get_capacity(1))
