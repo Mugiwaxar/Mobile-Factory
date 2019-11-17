@@ -1,6 +1,11 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.45
 Date: 17/11/2019
+  Scripting:
+    - Rewrite for the placed/removed/destroyed Entities
+    - Rewrite for the Mobile Factory object
+  Bugfixes:
+    - Energy lasers are now correctly Activated/Desactivated
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.44
 Date: 17/11/2019
