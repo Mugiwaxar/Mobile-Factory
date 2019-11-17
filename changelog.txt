@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.45
 Date: 17/11/2019
+  Graphics:
+    - The color of the Mobile Factory Shield is determined by it's charge
   Changes:
     - The Mobile Factory can now be removed and replaced, but it will lose all it's Shield, Energy and Jump Drive charge
     - Changed the base Mobile Factory vehicle weapon, health, weight, energy consumption, brake power, inventory size, equipment grid size, ...
