@@ -229,7 +229,10 @@ function MF:updateShield(tick)
 	if self.shield > 0 then
 		-- Calcule the shield tint --
 		local tint = self.shield / self.maxShield
-		rendering.draw_animation{animation="mfShield", target={self.ent.position.x-0.25, self.ent.position.y-0.3}, tint={1,tint,tint}, time_to_live=2, x_scale=0.4, y_scale=0.4, surface=self.ent.surface}
+		-- Calcule the shield size --
+		local mfB = global.MF.ent.bounding_box
+		local size = (mfB.right_bottom.y - mfB.left_top.y) / 12
+		rendering.draw_animation{animation="mfShield", target={self.ent.position.x-0.25, self.ent.position.y-0.3}, tint={1,tint,tint}, time_to_live=2, x_scale=size, y_scale=size, surface=self.ent.surface}
 	end
 	-- Charge the Shield --
 	if tick%60 == 0 and self.internalEnergy*_mfShieldChargeRate > _mfShieldComsuption and self.shield < self.maxShield then
