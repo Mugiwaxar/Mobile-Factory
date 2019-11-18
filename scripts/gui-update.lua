@@ -1,5 +1,5 @@
 require("utils/functions.lua")
-require("utils/gui.lua")
+require("utils/scripts.lua")
 
 -- Update the GUI of all player --
 function updateAllGUIs()

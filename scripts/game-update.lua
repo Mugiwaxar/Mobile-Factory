@@ -2,8 +2,8 @@ require("utils/players-teleportation.lua")
 require("utils/surface")
 require("utils/saved-tables.lua")
 require("utils/functions.lua")
-require("utils/entities-update.lua")
-require("scripts/place-and-remove.lua")
+require("scripts/entities-update.lua")
+require("utils/place-and-remove.lua")
 
 -- One each game tick --
 function onTick(event)
