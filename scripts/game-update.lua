@@ -34,14 +34,14 @@ function updateEntities(event)
 	-- Update --
 	if event.tick%_eventTick5 == 0 then factoryTeleportBox() end
 	if event.tick%_eventTick60 == 0 then global.MF:updateLasers() end
-	if event.tick%1 == 0 then global.MF:updateShield(event.tick) end
 	if event.tick%_eventTick38 == 0 then updateAccumulators() end
 	if event.tick%_eventTick64 == 0 then updateLogisticFluidPoles() end
 	if event.tick%_eventTick110 == 0 then updateProvidersPad() end
 	if event.tick%_eventTick115 == 0 then updateRequesterPad() end
 	if event.tick%_eventTick59 == 0 then updateFluidExtractor() end
-	global.MF:SendQuatronToOC(event)
 	if global.oreCleaner ~= nil then global.oreCleaner:update(event) end
+	global.MF:SendQuatronToOC(event)
+	global.MF:updateShield(event.tick)
 	updatePowerDrainPole(event)
 	updateOreSilotPad()
 end
@@ -220,11 +220,11 @@ function onEntityDamaged(event)
 	-- Test if this is the Mobile Factory --
 	if event.entity.name == "MobileFactory" then
 		-- Drain Shield --
-		if global.MF.shield > 0 and global.MF.ent ~= nil and global.MF.ent.valid == true then
-			local drain = math.min(global.MF.shield, event.final_damage_amount)
-			global.MF.shield = global.MF.shield - drain
-			global.MF.ent.health = global.MF.ent.health + drain
-		end
+		-- if global.MF.shield > 0 and global.MF.ent ~= nil and global.MF.ent.valid == true then
+			-- local drain = math.min(global.MF.shield, event.final_damage_amount)
+			-- global.MF.shield = global.MF.shield - drain
+			-- global.MF.ent.health = global.MF.ent.health + drain
+		-- end
 		-- Heal Low message --
 		if event.entity.health < 1000 then
 			game.print("Mobile Factory heal low")

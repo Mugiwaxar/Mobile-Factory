@@ -7,8 +7,6 @@ MF = {
 	lastSurface = nil,
 	lastPosX = 0,
 	lastPosY = 0,
-	shield = 0,
-	maxShield = _mfMaxShield,
 	fS = nil,
 	ccS = nil,
 	fChest = nil,
@@ -49,7 +47,6 @@ end
 -- Destructor --
 function MF:remove()
 	self.ent = nil
-	self.shield = 0
 	self.internalEnergy = 0
 	self.jumpTimer = _mfBaseJumpTimer
 end
@@ -92,6 +89,18 @@ end
 -- Return the number of Lasers --
 function MF:getLaserNumber()
 	return _mfBaseLaserNumber + self.laserNumberMultiplier
+end
+
+-- Return the Shield --
+function MF:shield()
+	if self.ent.grid == nil then return 0 end
+	return self.ent.grid.shield
+end
+
+-- Return the max Shield --
+function MF:maxShield()
+	if self.ent.grid == nil then return 0 end
+	return self.ent.grid.max_shield
 end
 
 -- Search energy sources near Mobile Factory and update the burning fuel --
@@ -224,25 +233,44 @@ end
 
 -- Update the Shield --
 function MF:updateShield(tick)
-	if self.ent == nil or self.ent.valid == false or technologyUnlocked("MFShield") == false then return end
+	if self.ent == nil or self.ent.valid == false then return end
 	-- Create the visual --
-	if self.shield > 0 then
+	if self:shield() > 0 then
 		-- Calcule the shield tint --
-		local tint = self.shield / self.maxShield
+		local tint = self:shield() / self:maxShield()
 		-- Calcule the shield size --
 		local mfB = global.MF.ent.bounding_box
 		local size = (mfB.right_bottom.y - mfB.left_top.y) / 12
 		rendering.draw_animation{animation="mfShield", target={self.ent.position.x-0.25, self.ent.position.y-0.3}, tint={1,tint,tint}, time_to_live=2, x_scale=size, y_scale=size, surface=self.ent.surface}
 	end
 	-- Charge the Shield --
-	if tick%60 == 0 and self.internalEnergy*_mfShieldChargeRate > _mfShieldComsuption and self.shield < self.maxShield then
-		-- Charge rate or Shield charge missing --
-		local charge = math.min(self.maxShield - self.shield, _mfShieldChargeRate)
-		-- Add the charge --
-		self.shield = self.shield + charge
-		-- Remove the energy --
-		self.internalEnergy = self.internalEnergy - _mfShieldComsuption*charge
+	local chargeSpeed = 10
+	if tick%60 == 0 and self.internalEnergy > 0 then
+		-- Get the Shield --
+		for k, equipment in pairs(self.ent.grid.equipment) do
+			-- Check if this is a Shield --
+			if equipment.name == "mfShieldEquipment" then
+				local missingCharge = equipment.max_shield - equipment.shield
+				local chargeAmount = math.min(missingCharge, chargeSpeed)
+				-- Check if the Shield can be charged --
+				if chargeAmount > 0 and chargeAmount*_mfShieldComsuption <= self.internalEnergy then
+					 -- Charge the Shield --
+					 equipment.shield = equipment.shield + chargeAmount
+					 -- Remove the energy --
+					 self.internalEnergy = self.internalEnergy - chargeAmount*_mfShieldComsuption
+				end
+			end
+		end
 	end
+	
+	-- if tick%60 == 0 and self.internalEnergy*_mfShieldChargeRate > _mfShieldComsuption and self.shield < self.maxShield then
+		-- Charge rate or Shield charge missing --
+		-- local charge = math.min(self.maxShield - self.shield, _mfShieldChargeRate)
+		-- Add the charge --
+		-- self.shield = self.shield + charge
+		-- Remove the energy --
+		-- self.internalEnergy = self.internalEnergy - _mfShieldComsuption*charge
+	-- end
 end
 
 

@@ -62,23 +62,28 @@ function updatePlayerGUI(player)
 	end
 	
 	-- Update the Mobile Factory Shield --
-	if technologyUnlocked("MFShield") == true then
+	if global.MF:maxShield() > 0 then
 		player.gui.screen.mfGUI.mfGUICenterFrame.mfShield.visible = true
 		player.gui.screen.mfGUI.mfGUICenterFrame.ShieldBar.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfShield.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ShieldBar.visible = true
 		if global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid then
-			player.gui.screen.mfGUI.mfGUICenterFrame.mfShield.caption = {"", {"gui-description.mfShield"}, ": ", math.floor(global.MF.shield), "/", global.MF.maxShield}
-			player.gui.screen.mfGUI.mfGUICenterFrame.ShieldBar.value = global.MF.shield / global.MF.maxShield
+			player.gui.screen.mfGUI.mfGUICenterFrame.mfShield.caption = {"", {"gui-description.mfShield"}, ": ", math.floor(global.MF:shield()), "/", global.MF:maxShield()}
+			player.gui.screen.mfGUI.mfGUICenterFrame.ShieldBar.value = global.MF:shield() / global.MF:maxShield()
 		else
 			player.gui.screen.mfGUI.mfGUICenterFrame.mfShield.caption = {"", {"gui-description.mfShield"}, ": Unknow"}
 		end
 		if global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid then
-			player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfShield.caption = {"", {"gui-description.mfShield"}, ": ", math.floor(global.MF.shield), "/", global.MF.maxShield}
-			player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ShieldBar.value = global.MF.shield / global.MF.maxShield
+			player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfShield.caption = {"", {"gui-description.mfShield"}, ": ", math.floor(global.MF:shield()), "/", global.MF:maxShield()}
+			player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ShieldBar.value = global.MF:shield() / global.MF:maxShield()
 		else
 			player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfShield.caption = {"", {"gui-description.mfShield"}, ": Unknow"}
 		end
+	else
+		player.gui.screen.mfGUI.mfGUICenterFrame.mfShield.visible = false
+		player.gui.screen.mfGUI.mfGUICenterFrame.ShieldBar.visible = false
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfShield.visible = false
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ShieldBar.visible = false
 	end
 	
 	-- Update the Mobile Factory Jump Charge --

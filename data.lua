@@ -26,6 +26,7 @@ require("prototypes/item/dimmensional-crystal.lua")
 require("prototypes/item/oxycoal.lua")
 require("prototypes/item/elements.lua")
 require("prototypes/item/quatron.lua")
+require("prototypes/item/shield.lua")
 require("prototypes/tile/lab-tile.lua")
 require("prototypes/tile/void-tile.lua")
 require("prototypes/module/energy-module.lua")
@@ -41,7 +42,6 @@ require("prototypes/technology/energy-laser.lua")
 require("prototypes/technology/fluid-laser.lua")
 require("prototypes/technology/control-center.lua")
 require("prototypes/technology/dimensional-logistic.lua")
-require("prototypes/technology/shield.lua")
 require("prototypes/gun/tank-guns.lua")
 require("prototypes/animation/shield.lua")
 require("prototypes/animation/red-energy-orb.lua")
@@ -81,9 +81,18 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
-		name="Resources",
+		name="Equipments",
 		group="MobileFactory",
 		order="a2"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="Resources",
+		group="MobileFactory",
+		order="a3"
 	}
 }
 
@@ -202,14 +211,23 @@ data:extend{
 	}
 }
 
+------------------ ADD EQUIPMENT CATEGORY ----------------
+data:extend{
+	{
+		type="equipment-category",
+		name="mfEquipments",
+		order="a"
+	}
+}
+
 -------------------- ADD EQUIPMENT GRID ------------------
 data:extend{
 	{
 		type="equipment-grid",
-		equipment_categories={"armor"},
+		equipment_categories={"armor", "mfEquipments"},
 		name="MFEquipmentGrid",
-		height=6,
-		width=4
+		height=30,
+		width=30
 	}
 }
 

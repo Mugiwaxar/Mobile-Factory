@@ -7,9 +7,8 @@ _mfInternalEnergy = 1500000000
 _mfInternalEnergyMax = 3000000000
 
 -- Mobile Factory Shield --
-_mfMaxShield = 1000
 _mfShieldChargeRate = 10
-_mfShieldComsuption = 10000
+_mfShieldComsuption = 25000
 
 -- Mobile Factory Lasers settings --
 _mfBaseLaserRadius = 10
@@ -67,7 +66,6 @@ _mfFEMaxCharge = 1000
 _GUIButtonsSize = 25
 
 -- Event Tick --
-_eventTick4=4
 _eventTick5=5
 _eventTick8=8
 _eventTick20=20

@@ -74,7 +74,7 @@ function onConfigurationChanged()
 		createPlayerGui(player)
 	end
 	-- Update all Variables --
-	if event.tick%_eventTick4 == 0 then updateValues() end
+	updateValues()
 end
 
 -- Event --

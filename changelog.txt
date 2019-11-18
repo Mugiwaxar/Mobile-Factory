@@ -1,15 +1,19 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.45
-Date: 17/11/2019
+Date: 18/11/2019
+  Features:
+    - Added the Mobile Factory Shield equipment, used to add shield charge to the Mobile Factory Shield
   Graphics:
     - The color of the Mobile Factory Shield is determined by it's charge
   Changes:
-    - The Mobile Factory can now be removed and replaced, but it will lose all it's Shield, Energy and Jump Drive charge
-    - Changed the base Mobile Factory vehicle weapon, health, weight, energy consumption, brake power, inventory size, equipment grid size, ...
+    - The Mobile Factory can now be removed and replaced, but it will lose all it's Energy and Jump Drive charge
+    - Changed the base Mobile Factory vehicle weapon, health, weight, energy consumption, brake power, inventory size, ...
+    - The Mobile Factory Shield is now depends on the Mobile Factory Shield equipment
   Scripting:
     - Rewrite for the placed/removed/destroyed Entities
     - Rewrite for the Mobile Factory object
     - Rewrite of the Control Center Tank table
+    - The Mobile Factory Shield size is now calculated according to the Mobile Factory size
   Bugfixes:
     - Energy lasers are now correctly Activated/Desactivated
     - Fixed a crash when all technologies were unlocked in the same time in sandbox mod
