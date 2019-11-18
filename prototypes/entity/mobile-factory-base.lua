@@ -13,7 +13,7 @@ mf.weight = 25000
 mf.braking_power = "600kW"
 mf.rotation_speed = 0.30 / 60
 mf.guns = {"mfTank-machine-gun"}
-mf.collision_box = {{-1.4, -2.5}, {1.1, 1.7}}
+mf.collision_box = {{-2, -3.5}, {1.6, 2.5}}
 mf.selection_box = mf.collision_box
 mf.animation =
 {
@@ -28,7 +28,7 @@ mf.animation =
 			shift = util.by_pixel(-4.75, -10),
 			animation_speed = 8,
 			max_advance = 1,
-			scale = 0.7,
+			scale = 1,
 			stripes =
 			{
 				{
@@ -80,7 +80,7 @@ mf.animation =
 			height_in_frames = 20
 		  }
 		}),
-		scale = 0.7
+		scale = 1
 		},
 		{
 			priority = "low",
@@ -114,7 +114,7 @@ mf.animation =
 			  height_in_frames = 16
 			 }
 			}),
-			scale = 0.7
+			scale = 1
 		}
 	}
 }
@@ -132,7 +132,7 @@ mf.turret_animation =
 			direction_count = 64,
 			shift = util.by_pixel(-4.75, -50),
 			animation_speed = 8,
-			scale = 0.7
+			scale = 1
 		},
 		{
 			filename = "__base__/graphics/entity/tank/hr-tank-turret-mask.png",
@@ -143,7 +143,7 @@ mf.turret_animation =
             frame_count = 1,
             direction_count = 64,
             shift = util.by_pixel(-5, -50),
-            scale = 0.7
+            scale = 1
 		},
 		{
 			filename = "__base__/graphics/entity/tank/hr-tank-turret-shadow.png",
@@ -155,7 +155,7 @@ mf.turret_animation =
             draw_as_shadow = true,
             direction_count = 64,
             shift = util.by_pixel(51.25, 6.5),
-            scale = 0.7
+            scale = 1
 		}
 	}
 }
@@ -199,10 +199,10 @@ function createNewMF(name, color, size, order, icon)
 	nMFE.turret_animation.layers[2].scale = size
 	nMFE.animation.layers[3].scale = size
 	nMFE.turret_animation.layers[3].scale = size
-	nMFE.turret_animation.layers[1].shift = util.by_pixel(-4.75, -50/0.7*size)
-	nMFE.turret_animation.layers[2].shift = util.by_pixel(-5, -50/0.7*size)
-	nMFE.turret_animation.layers[3].shift = util.by_pixel(51.25, 6.5/0.7*size)
-	nMFE.collision_box = {{-1.4/0.7*size, -2.5/0.7*size}, {1.1/0.7*size, 1.7/0.7*size}}
+	nMFE.turret_animation.layers[1].shift = util.by_pixel(-4.75, -50*size)
+	nMFE.turret_animation.layers[2].shift = util.by_pixel(-5, -50*size)
+	nMFE.turret_animation.layers[3].shift = util.by_pixel(51.25, 6.5*size)
+	nMFE.collision_box = {{-2*size, -3.5*size}, {1.6*size, 2.5*size}}
 	nMFE.selection_box = nMFE.collision_box
 	data:extend{nMFE}
 	
