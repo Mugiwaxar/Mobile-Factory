@@ -231,6 +231,16 @@ data:extend{
 	}
 }
 
+data:extend{
+	{
+		type="equipment-grid",
+		equipment_categories={"armor", "mfEquipments"},
+		name="MFEquipmentGridGT",
+		height=4,
+		width=4
+	}
+}
+
 
 ----------------------- ADD SPRITES -----------------------
 data:extend{

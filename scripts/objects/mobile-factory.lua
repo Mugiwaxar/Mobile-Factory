@@ -93,13 +93,13 @@ end
 
 -- Return the Shield --
 function MF:shield()
-	if self.ent.grid == nil then return 0 end
+	if self.ent == nil or self.ent.valid == false or self.ent.grid == nil then return 0 end
 	return self.ent.grid.shield
 end
 
 -- Return the max Shield --
 function MF:maxShield()
-	if self.ent.grid == nil then return 0 end
+	if self.ent == nil or self.ent.valid == false or self.ent.grid == nil then return 0 end
 	return self.ent.grid.max_shield
 end
 
@@ -133,7 +133,7 @@ function MF:updateLasers()
 					-- Remove the Energy from the Structure --
 					entity.energy = entity.energy - drainedEnergy
 					-- Create the Beam --
-					self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y-4}}
+					self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
 					-- One less Beam to the Beam capacity --
 					i = i + 1
 				end
