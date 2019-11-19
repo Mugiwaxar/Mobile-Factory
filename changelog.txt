@@ -1,14 +1,17 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.45
 Date: 18/11/2019
+  Major Features:
+    - Added the Mobile Factory GT, an optimised and lighter Mobile Factory for more speed and control
   Features:
     - Added the Mobile Factory Shield equipment, used to add shield charge to the Mobile Factory Shield
+    - New Technology: Mobile Factory weight and engine optimisation, unlock the Mobile Factory GT
   Graphics:
     - The color of the Mobile Factory Shield is determined by it's charge
   Changes:
     - The Mobile Factory can now be removed and replaced, but it will lose all it's Energy and Jump Drive charge
     - Changed the base Mobile Factory vehicle weapon, health, weight, energy consumption, brake power, inventory size, ...
-    - The Mobile Factory Shield is now depends on the Mobile Factory Shield equipment
+    - The Mobile Factory Shield now depends on the Mobile Factory Shield equipment
   Scripting:
     - Rewrite for the placed/removed/destroyed Entities
     - Rewrite for the Mobile Factory object
