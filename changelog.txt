@@ -2,14 +2,15 @@
 Version: 0.0.45
 Date: 18/11/2019
   Major Features:
-    - Added the Mobile Factory GT, an optimised and lighter Mobile Factory for more speed and control
+    - The Mobile Factory can now be removed and replaced by another one, but it will lose all it's Energy and Jump Drive charge
+    - This allow to create upgraded version of the Mobile Factory
   Features:
-    - Added the Mobile Factory Shield equipment, used to add shield charge to the Mobile Factory Shield
+    - Added the Mobile Factory GT, an optimised and lighter Mobile Factory for more speed and control
     - New Technology: Mobile Factory weight and engine optimisation, unlock the Mobile Factory GT
+    - Added the Mobile Factory Shield equipment, used to add shield charge to the Mobile Factory Shield
   Graphics:
     - The color of the Mobile Factory Shield is determined by it's charge
   Changes:
-    - The Mobile Factory can now be removed and replaced, but it will lose all it's Energy and Jump Drive charge
     - Changed the base Mobile Factory vehicle weapon, health, weight, energy consumption, brake power, inventory size, ...
     - The Mobile Factory Shield now depends on the Mobile Factory Shield equipment
   Scripting:
@@ -22,6 +23,7 @@ Date: 18/11/2019
     - Fixed a crash when all technologies were unlocked in the same time in sandbox mod
     - Fixed a crash that occurred when Mobile Factory surfaces technologies were unlocked but the Mobile Factory was not yet placed
     - Fixed the "Factory surface lost" bug
+    - Fixed a crash with the Ore Cleaner
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.44
 Date: 17/11/2019
@@ -30,6 +32,7 @@ Date: 17/11/2019
   Changes:
     - Added 30 tiles to all Mobile Factory Weapons
     - Tweaked the Ore Cleaner extraction (Now it's 10/s multiplied per the purity)
+    - The Ore Cleaner no longer lose it's Quatron Charges and it's Purity when it is removed
     - The Power Drain Pole can now be used when the Internal Distribution is activated
     - Changed the Dimensional Accumulator, it now have a buffer capacity of 5MJ (was 1MJ), an input/output flow limite of 1MW (was 300kW)
     - To avoid problems, the Mobile Factory Energy Drain Laser will only drain energy from accumulators

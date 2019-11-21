@@ -5,7 +5,7 @@ OC = {
 	purity = 0,
 	charge = 0,
 	totalCharge = 0,
-	oreTable = nil,
+	oreTable = {},
 	inventory = {},
 	animID = 0,
 	animTick = 0,
@@ -26,7 +26,7 @@ end
 -- Remover --
 function OC:remove()
 	self.ent = nil
-	self.oreTable = nil
+	self.oreTable = {}
 	animID = 0
 	animTick = 0
 	lastExtractionTick = 0
