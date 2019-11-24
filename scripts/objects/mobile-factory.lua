@@ -232,6 +232,8 @@ end
 
 -- Update the Fuel --
 function MF:updateFuel()
+	-- Check if the Mobile Factory is valid --
+	if self.ent == nil or self.ent.valid == false then return end
 	-- Recharge the tank fuel --
 	if self.internalEnergy > 0 and self.ent.get_inventory(defines.inventory.fuel).get_item_count() < 2 then
 		if self.ent.burner.remaining_burning_fuel == 0 and self.ent.get_inventory(defines.inventory.fuel).is_empty() == true then
@@ -254,6 +256,7 @@ end
 function MF:updateShield(event)
 	-- Get the current tick --
 	local tick = event.tick
+	-- Check if the Mobile Factory is valid --
 	if self.ent == nil or self.ent.valid == false then return end
 	-- Create the visual --
 	if self:shield() > 0 then
