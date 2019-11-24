@@ -261,14 +261,14 @@ function upgradeTank(id)
 		end
 		if name == nil or amount == nil then game.print("upgradeTank() error for id: " .. id) return end
 		-- Create the new tank --
-		local newTank = global.MF.ccS.create_entity{name="StorageTank".. id .."MK2", position=tankId.position, force="player"}
+		local newTank = global.MF.ccS.create_entity{name="StorageTank".. id .."MK2", position=tank.position, force="player"}
 		-- Fill the fluid --
 		newTank.insert_fluid({name=name, amount=amount})
 		-- Save the tank --
 		global.tankTable[id].ent = newTank
 	else
 		-- Create the new tank --
-		local newTank = global.MF.ccS.create_entity{name="StorageTank".. id .."MK2", position=tankId.position, force="player"}
+		local newTank = global.MF.ccS.create_entity{name="StorageTank".. id .."MK2", position=tank.position, force="player"}
 		-- Save the tank --
 		global.tankTable[id].ent = newTank
 	end

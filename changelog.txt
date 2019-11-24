@@ -3,11 +3,13 @@ Version: 0.0.46
 Date: 24/11/2019
   Features:
     - Added a new Button to the Main GUI: Enable/Disable the teleportation inside the Mobile Factory
+    - Added a new Button to the Main GUI: Reduce/Show the Main GUI
   Graphics:
     - The Dimensional Fluid is now correctly displayed (Icon, tank frame, bars, ...)
   Bugfixes:
     - Fixed crash with the Fluid Extractor
     - Players are no longer able to place Lab Tile inside the Control Center
+    - Fixed crash with CC Tanks Upgrade
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.45
 Date: 18/11/2019
