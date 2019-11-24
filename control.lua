@@ -97,6 +97,7 @@ script.on_event(defines.events.on_robot_mined_tile, onRobotRemoveSomething)
 script.on_event(defines.events.on_entity_died, onEntityIsDestroyed)
 script.on_event(defines.events.on_gui_click, buttonClicked)
 script.on_event(defines.events.on_gui_elem_changed, onGuiElemChanged)
+script.on_event(defines.events.on_gui_checked_state_changed, onGuiElemChanged)
 script.on_event(defines.events.on_research_finished, technologyFinished)
 
 -- Add command to insert Mobile Factory to the player inventory --

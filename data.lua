@@ -306,6 +306,26 @@ data:extend{
 data:extend{
     {
         type = "sprite",
+        name = "OptionIcon",
+        filename = "__Mobile_Factory__/graphics/icones/OptionIcon.png",
+        size = 32,
+        flags = {"icon"}
+    }
+}
+
+data:extend{
+    {
+        type = "sprite",
+        name = "CloseIcon",
+        filename = "__Mobile_Factory__/graphics/icones/CloseIcon.png",
+        size = 32,
+        flags = {"icon"}
+    }
+}
+
+data:extend{
+    {
+        type = "sprite",
         name = "MFIcon",
         filename = "__Mobile_Factory__/graphics/icones/MFIcon.png",
         size = 32,

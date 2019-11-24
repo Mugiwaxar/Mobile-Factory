@@ -1,5 +1,6 @@
 require("utils/functions.lua")
 require("scripts/gui.lua")
+require("scripts/options.lua")
 
 -- Update the GUI of all player --
 function updateAllGUIs()
@@ -63,8 +64,12 @@ function updatePlayerGUI(player)
 	
 	-- Update the Mobile Factory Shield --
 	if global.MF:maxShield() > 0 then
-		player.gui.screen.mfGUI.mfGUICenterFrame.mfShield.visible = true
-		player.gui.screen.mfGUI.mfGUICenterFrame.ShieldBar.visible = true
+		if player.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab1Frame.mfOptTab1Pane.GUIShieldOpt.state == true then
+			player.gui.screen.mfGUI.mfGUICenterFrame.mfShield.visible = true
+		end
+		if player.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab1Frame.mfOptTab1Pane.GUIShieldBarOpt.state == true then
+			player.gui.screen.mfGUI.mfGUICenterFrame.ShieldBar.visible = true
+		end
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfShield.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ShieldBar.visible = true
 		if global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid then
@@ -236,6 +241,19 @@ function buttonClicked(event)
 		end
 	end
 	
+	-- Reduce GUI Button --
+	if event.element.name == "ReduceButton" then
+		if player.gui.screen.mfGUI.mfGUICenterFrame.visible == false then
+			player.gui.screen.mfGUI.mfGUICenterFrame.visible = true
+			player.gui.screen.mfGUI.mfGUITopFrame.ReduceButton.sprite = "ArrowIconUp"
+			player.gui.screen.mfGUI.mfGUITopFrame.ReduceButton.hovered_sprite = "ArrowIconUpOv"
+		else
+			player.gui.screen.mfGUI.mfGUICenterFrame.visible = false
+			player.gui.screen.mfGUI.mfGUITopFrame.ReduceButton.sprite = "ArrowIconDown"
+			player.gui.screen.mfGUI.mfGUITopFrame.ReduceButton.hovered_sprite = "ArrowIconDownOv"
+		end
+	end
+	
 	-- Extend GUI Button --
 	if event.element.name == "ArrowButton" then
 		if player.gui.screen.mfGUI.mfGUIExtendedFrame.visible == false then
@@ -305,20 +323,44 @@ function buttonClicked(event)
 		elseif global.MF.internalEnergyDistributionActivated == false then global.MF.internalEnergyDistributionActivated = true end
 	end
 	
+	-- Open Options GUI Button --
+	if event.element.name == "optionButton" then
+		player.gui.screen.mfOptionGUI.visible = true
+	end
+	
+	-- Close Info GUI Button --
+	if event.element.name == "CloseButton" then
+		player.gui.screen.mfInfoGUI.visible = false
+		setPlayerVariable(player.name, "GUIUpdateInfoGUI", false)
+	end
+	
+	-- Close Options GUI Button --
+	if event.element.name == "OptCloseButton" then
+		player.gui.screen.mfOptionGUI.visible = false
+	end
+	
 	updatePlayerGUI(player)
 end
 
--- Enable the Info GUI Tanks Update if a player have chose a filter --
+-- Called when a GUI Element have changed it's state --
 function onGuiElemChanged(event)
-	if global.tankTable == nil or global.tankTable == {} or event.element == nil or event.element.valid == false then return end	
+	-- Return if this is not a Mobile Factory element -
 	if event.element.get_mod() ~= "Mobile_Factory" then return end
+	-- Get the Player --
+	local player = getPlayer(event.player_index)
+	-- Return if the Player is not valid --
+	if player == nil then return end
+	-- Read if the Element came from the Option GUI --
+	readOptions(event.element, player, player.gui)
+	-- Save the filter --
+	if global.tankTable == nil or global.tankTable == {} or event.element == nil or event.element.valid == false then return end	
 	if event.element.type == "choose-elem-button" then
 		if event.element.elem_value ~= nil then
 			local id = tonumber(event.element.name)
 			if global.tankTable[id] == nil then return end
 			global.tankTable[id].filter = event.element.elem_value
 		end
-		local player = getPlayer(event.player_index)
+		-- Re-enable the GUI --
 		if player ~= nil then
 			setPlayerVariable(player.name, "GUIUpdateInfoGUI", true)
 		end

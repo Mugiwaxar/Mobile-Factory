@@ -1,15 +1,22 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.46
 Date: 24/11/2019
+  Major Features:
+    - Added an Options GUI, reachable via an Button inside the Info GUI
+    - Will be used for all the Mod options in the future (GUI, gameplay, graphics, ...)
   Features:
     - Added a new Button to the Main GUI: Enable/Disable the teleportation inside the Mobile Factory
     - Added a new Button to the Main GUI: Reduce/Show the Main GUI
+	- Added a new Button to the Info GUI: Option Button
+    - Added a new Button to the Info GUI: Close the GUI
+    - The Main GUI can now be personalized
   Graphics:
     - The Dimensional Fluid is now correctly displayed (Icon, tank frame, bars, ...)
   Bugfixes:
     - Fixed crash with the Fluid Extractor
     - Players are no longer able to place Lab Tile inside the Control Center
     - Fixed crash with CC Tanks Upgrade
+    - Fixed a compatibility error with Space Exploration
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.45
 Date: 18/11/2019

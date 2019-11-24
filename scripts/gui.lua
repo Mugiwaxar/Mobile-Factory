@@ -1,6 +1,6 @@
-
-
--- Create the GUI --
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------- MAIN GUI -------------------------------------------
+---------------------------------------------------------------------------------------------------------
 function createPlayerGui(player)
 
 	-- Get the GUI --
@@ -31,10 +31,11 @@ function createPlayerGui(player)
 	local mfGUI = gui.screen.add{type="frame", name="mfGUI", direction="vertical"}
 	-- Set the GUI position end style --
 	mfGUI.location = {posX, posY}
-	mfGUI.style.padding = 5
+	mfGUI.style.padding = 0
 	mfGUI.style.horizontal_align = "center"
 	
 	createInfosWindows(gui, iPosX, iPosY)
+	createOptionGUI(gui, player)
 	
 	---------------------------------------------------- TOP FLOW ---------------------------------------------------
 	
@@ -42,6 +43,7 @@ function createPlayerGui(player)
 	local mfGUITopFrame = mfGUI.add{type="flow", name="mfGUITopFrame", direction="horizontal"}
 	-- Set Style --
 	mfGUITopFrame.style.padding = 0
+	mfGUITopFrame.style.margin = 0
 	
 	-- Add Title to top Flow  --
 	mfGUITopFrame.add{
@@ -51,7 +53,9 @@ function createPlayerGui(player)
 	}
 	-- Set style --
 	mfGUITopFrame.guiTitle.style.font = "TitleFont"
-	mfGUITopFrame.guiTitle.style.right_margin = 10
+	mfGUITopFrame.guiTitle.style.padding = 0
+	mfGUITopFrame.guiTitle.style.right_margin = 0
+	mfGUITopFrame.guiTitle.style.top_margin = 0
 	--mfGUITopFrame.guiTitle.style.font_color = {135,25,20}
 
 	-- Add the move Button to top Flow --
@@ -67,6 +71,21 @@ function createPlayerGui(player)
 	mfGUITopFrame.MoveButton.style.maximal_width = 15
 	mfGUITopFrame.MoveButton.style.maximal_height = 15
 	mfGUITopFrame.MoveButton.style.padding = 0
+	
+	-- Add the reduce Button to top Flow --
+	mfGUITopFrame.add{
+		type="sprite-button",
+		name="ReduceButton",
+		sprite="ArrowIconDown",
+		hovered_sprite="ArrowIconDownOv",
+		resize_to_sprite=false,
+		tooltip={"gui-description.reduceButton"}
+	}
+	-- Set style --
+	mfGUITopFrame.ReduceButton.style.maximal_width = 15
+	mfGUITopFrame.ReduceButton.style.maximal_height = 15
+	mfGUITopFrame.ReduceButton.style.right_margin = 0
+	mfGUITopFrame.ReduceButton.style.padding = 0
 
 
 ---------------------------------------------- CENTER FLOW --------------------------------------------
@@ -165,7 +184,6 @@ function createPlayerGui(player)
 	-- Set Style --
 	mfGUIExtendedFrame.style.horizontally_stretchable = true
 	
-	
 	----------- FLOWS ------------
 	
 	-- Create the extended frame first flow --
@@ -175,6 +193,7 @@ function createPlayerGui(player)
 	mfGUIExtFF1.style.margin = 0
 	mfGUIExtFF1.style.horizontal_align = "left"
 	mfGUIExtFF1.style.vertical_align = "top"
+	
 	-- Create the extended frame second flow --
 	local mfGUIExtFF2 = mfGUIExtendedFrame.add{type="flow", name="mfGUIExtFF2", direction="horizontal"}
 	-- Set Style --
@@ -312,7 +331,9 @@ function createPlayerGui(player)
 	
 end
 
-
+---------------------------------------------------------------------------------------------------------
+----------------------------------------------- INFORMATIONS GUI ----------------------------------------
+---------------------------------------------------------------------------------------------------------
 function createInfosWindows(gui, posX, posY)
 	-- Create the GUI --
 	local mfInfoGUI = gui.screen.add{type="frame", name="mfInfoGUI", direction="vertical"}
@@ -322,6 +343,43 @@ function createInfosWindows(gui, posX, posY)
 	mfInfoGUI.location = {posX, posY}
 	mfInfoGUI.style.padding = 5
 	mfInfoGUI.visible = false
+	
+	-- Create the Menu Bar --
+	local mfGUIMenuBar = mfInfoGUI.add{type="flow", name="mfGUIMenuBar", direction="horizontal"}
+	-- Set Style --
+	mfGUIMenuBar.style.width = 1173
+	mfGUIMenuBar.style.padding = 0
+	mfGUIMenuBar.style.margin = 0
+	mfGUIMenuBar.style.horizontal_align = "right"
+	mfGUIMenuBar.style.vertical_align = "top"
+	
+	-- Add the Option Button to top Flow --
+	mfGUIMenuBar.add{
+		type="sprite-button",
+		name="optionButton",
+		sprite="OptionIcon",
+		resize_to_sprite=false,
+		tooltip={"gui-description.optionButton"}
+	}
+	-- Set style --
+	mfGUIMenuBar.optionButton.style.maximal_width = 15
+	mfGUIMenuBar.optionButton.style.maximal_height = 15
+	mfGUIMenuBar.optionButton.style.padding = 0
+	mfGUIMenuBar.optionButton.style.margin = 0
+	
+	-- Add the close Button to top Flow --
+	mfGUIMenuBar.add{
+		type="sprite-button",
+		name="CloseButton",
+		sprite="CloseIcon",
+		resize_to_sprite=false,
+		tooltip={"gui-description.closeButton"}
+	}
+	-- Set style --
+	mfGUIMenuBar.CloseButton.style.maximal_width = 15
+	mfGUIMenuBar.CloseButton.style.maximal_height = 15
+	mfGUIMenuBar.CloseButton.style.padding = 0
+	mfGUIMenuBar.CloseButton.style.margin = 0
 	
 	-- Create the Main Flow --
 	local mfInfoMainFlow = gui.screen.mfInfoGUI.add{type="frame", name="mfInfoMainFlow", direction="horizontal"}
@@ -594,6 +652,121 @@ function createInfosWindows(gui, posX, posY)
 	-- Create the Structures Flow --
 	local mfStructureFlow = mfInfoFlow4.add{type="flow", name = "mfStructureFlow", direction="vertical"}
 	mfStructureFlow.style.width = 205
-	
-	
 end
+
+---------------------------------------------------------------------------------------------------------
+-------------------------------------------------- OPTIONS GUI ------------------------------------------
+---------------------------------------------------------------------------------------------------------
+function createOptionGUI(gui, player)
+	-- Create the GUI --
+	local mfOptionGUI = gui.screen.add{type="frame", name="mfOptionGUI", direction="vertical"}
+	
+	-- Calcule the position --
+	local resolutionWidth = player.display_resolution.width  / player.display_scale
+	local resolutionHeight = player.display_resolution.height  / player.display_scale
+	local posX = resolutionWidth / 100 * 45
+	local posY = resolutionHeight / 100 * 18
+	local width = 350
+	local height = 600
+	dprint(player.display_scale)
+	
+	-- Set the GUI position end style --
+	mfOptionGUI.caption = {"gui-description.options"}
+	mfOptionGUI.location = {posX, posY}
+	mfOptionGUI.style.padding = 5
+	mfOptionGUI.style.width = width
+	mfOptionGUI.style.height = height
+	mfOptionGUI.style.padding = 0
+	mfOptionGUI.style.margin = 0
+	mfOptionGUI.visible = true
+	
+	-- Create the Menu Bar --
+	local mfOptGUIMenuBar = mfOptionGUI.add{type="flow", name="mfOptGUIMenuBar", direction="horizontal"}
+	-- Set Style --
+	mfOptGUIMenuBar.style.width = width - 15
+	mfOptGUIMenuBar.style.padding = 0
+	mfOptGUIMenuBar.style.margin = 0
+	mfOptGUIMenuBar.style.horizontal_align = "right"
+	mfOptGUIMenuBar.style.vertical_align = "top"
+	
+	-- Add the close Button to top Flow --
+	mfOptGUIMenuBar.add{
+		type="sprite-button",
+		name="OptCloseButton",
+		sprite="CloseIcon",
+		resize_to_sprite=false,
+		tooltip={"gui-description.closeButton"}
+	}
+	-- Set style --
+	mfOptGUIMenuBar.OptCloseButton.style.maximal_width = 15
+	mfOptGUIMenuBar.OptCloseButton.style.maximal_height = 15
+	mfOptGUIMenuBar.OptCloseButton.style.padding = 0
+	mfOptGUIMenuBar.OptCloseButton.style.margin = 0
+	
+	-- Create the Tabbed-pane --
+	local mfOptTabbedPane = mfOptionGUI.add{type="tabbed-pane", name="mfOptTabbedPane"}
+	mfOptTabbedPane.style.width = width - 8
+	mfOptTabbedPane.style.height = height - 62
+	mfOptTabbedPane.style.padding = 0
+	mfOptTabbedPane.style.margin = 0
+	
+	------------------------------------------- TAB 1 --------------------------------
+	-- Create the Tab --
+	local mfOptTab1 = mfOptTabbedPane.add{type="tab", name="mfOptTab1"}
+	mfOptTab1.caption = {"gui-description.tab1"}
+	mfOptTab1.style.padding = 0
+	mfOptTab1.style.margin = 0
+	
+	-- Create the Frame --
+	local mfOptTab1Frame = mfOptTabbedPane.add{type="frame", name="mfOptTab1Frame"}
+	mfOptTab1Frame.style.width = width - 16
+	mfOptTab1Frame.style.height = height - 100
+	mfOptTab1Frame.style.padding = 0
+	mfOptTab1Frame.style.margin = 0
+	
+	-- Create the Scroll-pane --
+	local mfOptTab1Pane = mfOptTab1Frame.add{type="frame", name="mfOptTab1Pane", direction="vertical"}
+	mfOptTab1Pane.style.width = width - 24
+	mfOptTab1Pane.style.height = height - 107
+	mfOptTab1Pane.style.padding = 0
+	mfOptTab1Pane.style.margin = 0
+	mfOptTab1Pane.style.horizontal_align = "left"
+	mfOptTab1Pane.style.vertical_align = "top"
+	
+	-- Add all Tabs to the Tabbed-pane --
+	mfOptTabbedPane.add_tab(mfOptTab1, mfOptTab1Frame)
+	mfOptTabbedPane.selected_tab_index = mfOptTab1.index
+	
+	-- Create the Tab 1 --
+	createOptTab1(mfOptTab1Pane)
+end
+
+---------------------- OPTIONS GUI TAB 1 --------------------------
+function createOptTab1(tab)
+	local GUIMainGuiOpt = tab.add{type="label", name="GUIMainGuiOpt", caption={"gui-description.GUIMainGuiOpt"}}
+	GUIMainGuiOpt.style.font = "TitleFont"
+	tab.add{type="checkbox", name="GUIPosOpt", caption={"gui-description.GUIPosOpt"}, state=true}
+	tab.add{type="checkbox", name="GUIHealthOpt", caption={"gui-description.GUIHealthOpt"}, state=true}
+	tab.add{type="checkbox", name="GUIHealthBarOpt", caption={"gui-description.GUIHealthBarOpt"}, state=true}
+	tab.add{type="checkbox", name="GUIShieldOpt", caption={"gui-description.GUIShieldOpt"}, state=true}
+	tab.add{type="checkbox", name="GUIShieldBarOpt", caption={"gui-description.GUIShieldBarOpt"}, state=true}
+	tab.add{type="checkbox", name="GUIJumpDriveOpt", caption={"gui-description.GUIJumpDriveOpt"}, state=true}
+	tab.add{type="checkbox", name="GUIJumpDriveBarOpt", caption={"gui-description.GUIJumpDriveBarOpt"}, state=true}
+	tab.add{type="checkbox", name="GUIEnergyOpt", caption={"gui-description.GUIEnergyOpt"}, state=true}
+	tab.add{type="checkbox", name="GUIEnergyBarOpt", caption={"gui-description.GUIEnergyBarOpt"}, state=true}
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
