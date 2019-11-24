@@ -11,6 +11,13 @@ function somethingWasPlaced(event, isRobot)
 	else
 		creator = event.robot
 	end
+	-- Prevent to place Lab/Void Tiles outside the Factory --
+	if event.tiles ~= nil and (event.tile.name == "tutorial-grid") and creator.surface.name == _mfControlSurfaceName  then
+		if isPlayer == true then creator.print("Unable to place " .. event.tile.name .. " outside the Factory") end
+		for k, tile in pairs(event.tiles) do
+			createTilesAtPosition(tile.position, 1, creator.surface, tile.old_tile.name)
+		end
+	end
 	-- Check if all are valid --
 	if event.created_entity == nil or event.created_entity.valid == false or creator == nil or creator.valid == false then return end
 	-- If the Mobile Factory is placed --
@@ -140,7 +147,7 @@ function somethingWasPlaced(event, isRobot)
 			if isPlayer== true then creator.print("Unable to place more than one Fluid Extractor") end
 			event.created_entity.destroy()
 			if isPlayer== true and event.stack ~= nil and event.stack.valid_for_read == true then
-				player.get_main_inventory().insert(event.stack)
+				creator.get_main_inventory().insert(event.stack)
 			end
 			return
 		else

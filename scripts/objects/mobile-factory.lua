@@ -14,6 +14,7 @@ MF = {
 	maxInternalEnergy = _mfInternalEnergyMax,
 	jumpTimer = _mfBaseJumpTimer,
 	baseJumpTimer = _mfBaseJumpTimer,
+	tpEnabled = true,
 	laserRadiusMultiplier = 0,
 	laserDrainMultiplier = 0,
 	laserNumberMultiplier = 0,
@@ -101,6 +102,20 @@ end
 function MF:maxShield()
 	if self.ent == nil or self.ent.valid == false or self.ent.grid == nil then return 0 end
 	return self.ent.grid.max_shield
+end
+
+-- Update the Mobile Factory --
+function MF:update(event)
+	-- Get the current tick --
+	local tick = event.tick
+	--Update all lasers --
+	if tick%_eventTick60 == 0 then self:updateLasers() end
+	-- Update the Fuel --
+	if tick%_eventTick27 == 0 then self:updateFuel() end
+	-- Update the Shield --
+	self:updateShield(event)
+	-- Send Quatron Charge --
+	self:SendQuatron(event)
 end
 
 -- Search energy sources near Mobile Factory and update the burning fuel --
@@ -213,6 +228,10 @@ function MF:updateLasers()
 			end
 		end
 	end
+end
+
+-- Update the Fuel --
+function MF:updateFuel()
 	-- Recharge the tank fuel --
 	if self.internalEnergy > 0 and self.ent.get_inventory(defines.inventory.fuel).get_item_count() < 2 then
 		if self.ent.burner.remaining_burning_fuel == 0 and self.ent.get_inventory(defines.inventory.fuel).is_empty() == true then
@@ -232,7 +251,9 @@ function MF:updateLasers()
 end
 
 -- Update the Shield --
-function MF:updateShield(tick)
+function MF:updateShield(event)
+	-- Get the current tick --
+	local tick = event.tick
 	if self.ent == nil or self.ent.valid == false then return end
 	-- Create the visual --
 	if self:shield() > 0 then
@@ -275,7 +296,7 @@ end
 
 
 -- Send Quatron Charge to the Ore Cleaner --
-function MF:SendQuatronToOC(event)
+function MF:SendQuatron(event)
 	-- Test if the Ore Cleaner is valid --
 	if global.oreCleaner == nil then return end
 	if global.oreCleaner.ent == nil or global.oreCleaner.ent.valid == false then return end

@@ -1,5 +1,5 @@
 -- Ore Cleaner Migration --
-require("scripts/ore-cleaner.lua")
+require("scripts/objects/ore-cleaner.lua")
 
 if global.oreCleaner ~= nil then
 	game.print("Update Ore Cleaner")

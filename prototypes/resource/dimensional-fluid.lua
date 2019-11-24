@@ -1,9 +1,16 @@
 -- Create the Dimensional Fluid resource --
 
-local dmFR = table.deepcopy(data.raw.resource["crude-oil"])
+local dmFR = {}
 dmFR.name = "DimensionalFluid"
+dmFR.type = "resource"
 dmFR.icon = "__Mobile_Factory__/graphics/icones/DimensionalFluid.png"
+dmFR.icon_size = 32
+dmFR.stages = data.raw.resource["crude-oil"].stages
 dmFR.stages["sheet"]["filename"] = "__Mobile_Factory__/graphics/entity/DimensionalFluid.png"
+dmFR.stage_counts = data.raw.resource["crude-oil"].stage_counts
+dmFR.map_color = {102, 0, 102}
+dmFR.collision_box = data.raw.resource["crude-oil"].collision_box
+dmFR.selection_box = data.raw.resource["crude-oil"].selection_box
 dmFR.minable = {
 	mining_time = 1,
 	results = {
@@ -16,7 +23,6 @@ dmFR.minable = {
 	  }
 	}
 }
-dmFR.map_color = {102, 0, 102}
 dmFR.autoplace = resource_autoplace.resource_autoplace_settings{
       name = "DimensionalFluid",
       order = "c", -- Other resources are "b"; oil won't get placed if something else is already there.
@@ -31,6 +37,19 @@ dmFR.autoplace = resource_autoplace.resource_autoplace_settings{
     }
 data:extend{dmFR}
 
+local dmFF = {}
+dmFF.name = "DimensionalFluid"
+dmFF.type = "fluid"
+dmFF.icon = "__Mobile_Factory__/graphics/icones/DimensionalFluidIcon.png"
+dmFF.icon_size = 32
+dmFF.default_temperature = 20
+dmFF.max_temperature = 100
+dmFF.base_color={151,0,147}
+dmFF.flow_color={151,0,147}
+dmFF.subgroup = "Resources"
+dmFF.order = "b"
+data:extend{dmFF}
+
 local dmFAPC = {}
 dmFAPC.type = "autoplace-control"
 dmFAPC.category = "resource"
@@ -38,18 +57,17 @@ dmFAPC.name = "DimensionalFluid"
 dmFAPC.richness = true
 data:extend{dmFAPC}
 
-local dmFI = table.deepcopy(data.raw.fluid["crude-oil"])
+--[[
+local dmFI = {}
 dmFI.name = "DimensionalFluid"
+dmFI.type= "item"
 dmFI.icon = "__Mobile_Factory__/graphics/icones/DimensionalFluidIcon.png"
+dmFI.icon_size = 32
+dmFI.stack_size = 1000
 dmFI.subgroup = "Resources"
 dmFI.order = "b"
-dmFI.fuel_category = nil
-dmFI.fuel_value = nil
-dmFI.fuel_acceleration_multiplier = nil
-dmFI.fuel_top_speed_multiplier = nil
-dmFI.fuel_emissions_multiplier = nil
-dmFI.fuel_glow_color = nil
 data:extend{dmFI}
+]]--
 
 local dmFNL = {}
 dmFNL.name = "DimensionalFluid"

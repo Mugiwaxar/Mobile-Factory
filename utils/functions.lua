@@ -137,6 +137,7 @@ function newMobileFactory(mf)
 	if global.MF == nil then
 		global.MF = MF:new()
 	end
+	-- ReContruct the MF Object --
 	global.MF:contruct(mf)
 end
 
@@ -242,7 +243,10 @@ function callMobileFactory(player)
 end
 
 -- Create Tiles at the given position and radius --
-function createTilesAtPosition(position, radius, surface)
+function createTilesAtPosition(position, radius, surface, tileName)
+	-- Check all variables --
+	if position == nil or radius == nil or surface == nil then return end
+	if tileName == nil then tileName = "tutorial-grid" end
 	-- Ajust the radius --
 	radius = radius - 1
 	-- Create all tiles --
@@ -254,12 +258,12 @@ function createTilesAtPosition(position, radius, surface)
 			tilesFind = surface.find_tiles_filtered{area={{posX, posY},{posX+1, posY+1}}}
 			local replace = true
 			for k, tile in pairs(tilesFind) do
-				if tile.name ~= "out-of-map" then
+				if tileName == "tutorial-grid" and tile.name ~= "out-of-map" then
 					replace = false
 				end
 			end
 			if replace == true then
-				table.insert(tilesTable, {name="tutorial-grid", position={posX, posY}})
+				table.insert(tilesTable, {name=tileName, position={posX, posY}})
 			end
 		end
 	end

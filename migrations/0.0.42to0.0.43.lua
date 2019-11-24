@@ -1,5 +1,5 @@
 -- Power Drain Pole Migration --
-require("scripts/power-drain-pole.lua")
+require("scripts/objects/power-drain-pole.lua")
 
 if table_size(global.pdpTable) > 0 then
 	game.print("Updating all Power Drain Poles")

@@ -228,6 +228,19 @@ function createPlayerGui(player)
 	mfGUIExtFF1.FindMF.style.maximal_height = _GUIButtonsSize
 	mfGUIExtFF1.FindMF.style.maximal_width = _GUIButtonsSize
 	
+	-- Add MFTPInside Button --
+	mfGUIExtFF1.add{
+		type="sprite-button",
+		name="MFTPInside",
+		sprite="MFTPIcon",
+		hovered_sprite="MFTPIcon",
+		resize_to_sprite=false,
+		tooltip={"gui-description.MFTPInside"}
+	}
+	-- Set Style --
+	mfGUIExtFF1.MFTPInside.style.maximal_height = _GUIButtonsSize
+	mfGUIExtFF1.MFTPInside.style.maximal_width = _GUIButtonsSize
+	
 	-- Add MFInfos Button --
 	mfGUIExtFF1.add{
 		type="sprite-button",

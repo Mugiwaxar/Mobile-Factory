@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.46
+Date: 24/11/2019
+  Features:
+    - Added a new Button to the Main GUI: Enable/Disable the teleportation inside the Mobile Factory
+  Graphics:
+    - The Dimensional Fluid is now correctly displayed (Icon, tank frame, bars, ...)
+  Bugfixes:
+    - Fixed crash with the Fluid Extractor
+    - Players are no longer able to place Lab Tile inside the Control Center
+---------------------------------------------------------------------------------------------------
 Version: 0.0.45
 Date: 18/11/2019
   Major Features:
@@ -72,8 +82,8 @@ Date: 27/10/2019
 Version: 0.0.41
 Date: 19/10/2019
   Bugfixes:
-    - The Mobile Factory will no lounger drain Energy from Ore Cleaner, Fluid Extractor, ...
-    - The Mobile Factory can no lounger be called inside Factorissimo Structures
+    - The Mobile Factory will no longer drain Energy from Ore Cleaner, Fluid Extractor, ...
+    - The Mobile Factory can no longer be called inside Factorissimo Structures
     - Fixed sometime items were not Transfered to Requester Pad
     - Fixed a problem where sometime, player were not teleported inside or outside the Factory
   Optimisations:

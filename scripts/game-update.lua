@@ -33,15 +33,13 @@ function updateEntities(event)
 	if global.MF == nil then return end
 	-- Update --
 	if event.tick%_eventTick5 == 0 then factoryTeleportBox() end
-	if event.tick%_eventTick60 == 0 then global.MF:updateLasers() end
 	if event.tick%_eventTick38 == 0 then updateAccumulators() end
 	if event.tick%_eventTick64 == 0 then updateLogisticFluidPoles() end
 	if event.tick%_eventTick110 == 0 then updateProvidersPad() end
 	if event.tick%_eventTick115 == 0 then updateRequesterPad() end
 	if event.tick%_eventTick59 == 0 then updateFluidExtractor() end
+	global.MF:update(event)
 	if global.oreCleaner ~= nil then global.oreCleaner:update(event) end
-	global.MF:SendQuatronToOC(event)
-	global.MF:updateShield(event.tick)
 	updatePowerDrainPole(event)
 	updateOreSilotPad()
 end
@@ -107,10 +105,12 @@ function factoryTeleportBox()
 	if global.MF.ent == nil then return end
 	if global.MF.ent.valid == false then return end
 	-- Mobile Factory Vehicule --
-	local mfB = global.MF.ent.bounding_box
-	local entities = global.MF.ent.surface.find_entities_filtered{area={{mfB.left_top.x-0.5,mfB.left_top.y-0.5},{mfB.right_bottom.x+0.5, mfB.right_bottom.y+0.5}}, type="character"}
-	for k, entity in pairs(entities) do
-		teleportPlayerInside(entity.player)
+	if global.MF.tpEnabled == true then
+		local mfB = global.MF.ent.bounding_box
+		local entities = global.MF.ent.surface.find_entities_filtered{area={{mfB.left_top.x-0.5,mfB.left_top.y-0.5},{mfB.right_bottom.x+0.5, mfB.right_bottom.y+0.5}}, type="character"}
+		for k, entity in pairs(entities) do
+			teleportPlayerInside(entity.player)
+		end
 	end
 	-- Factory to Outside --
 	if global.MF.fS ~= nil then

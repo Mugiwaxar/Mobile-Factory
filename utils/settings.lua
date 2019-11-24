@@ -69,6 +69,7 @@ _GUIButtonsSize = 25
 _eventTick5=5
 _eventTick8=8
 _eventTick20=20
+_eventTick27=27
 _eventTick38=38
 _eventTick50=50
 _eventTick55=55

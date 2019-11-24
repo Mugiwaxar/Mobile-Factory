@@ -139,6 +139,15 @@ function updatePlayerGUI(player)
 	if global.MF.ent ~= nil and global.MF.ent.valid == false then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
 	if global.MF.fS == nil or global.MF.fS.valid == false then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
 	if (global.MF.ccS == nil or global.MF.ccS.valid == false) and technologyUnlocked("ControlCenter") then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
+	
+	-- Update the MFTPInside Icone --
+	if global.MF.tpEnabled == true then
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFTPInside.sprite = "MFTPIcon"
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFTPInside.hovered_sprite = "MFTPIconDisabled"
+	else
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFTPInside.sprite = "MFTPIconDisabled"
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFTPInside.hovered_sprite = "MFTPIcon"
+	end
 
 	-- Update Energy Drain Button --
 	if technologyUnlocked("EnergyDrain1") then
@@ -248,6 +257,12 @@ function buttonClicked(event)
 	-- Fix Mobile Factory Button --
 	if event.element.name == "FindMF" then
 		fixMB(event)
+	end
+	
+	-- MFTPInside button --
+	if event.element.name == "MFTPInside" then
+		if global.MF.tpEnabled == true then global.MF.tpEnabled = false
+		elseif global.MF.tpEnabled == false then global.MF.tpEnabled = true end
 	end
 	
 	-- Show/Hide the Mobile Factory Info GUI --

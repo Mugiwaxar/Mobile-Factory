@@ -324,6 +324,26 @@ data:extend{
 }
 
 data:extend{
+	{
+		type = "sprite",
+		name = "MFTPIcon",
+		filename = "__Mobile_Factory__/graphics/icones/MFTPIcon.png",
+		size = 32,
+		flags = {"icon"}
+	}
+}
+
+data:extend{
+	{
+		type = "sprite",
+		name = "MFTPIconDisabled",
+		filename = "__Mobile_Factory__/graphics/icones/MFTPIconDisabled.png",
+		size = 32,
+		flags = {"icon"}
+	}
+}
+
+data:extend{
     {
         type = "sprite",
         name = "MFIconI",
