@@ -54,7 +54,7 @@ function onLoad()
 	-- Set MF Metatables --
 	MF:rebuild(global.MF)
 	-- Set PDP Metatables --
-	for k, pdp in  pairs(global.pdpTable) do
+	for k, pdp in  pairs(global.pdpTable or {}) do
 		PDP:rebuild(pdp)
 	end
 	-- Set Ore Cleaner Metatables --

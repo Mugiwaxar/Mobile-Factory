@@ -1,13 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.47
+Date: 25/11/2019
+  Bugfixes:
+    - Dimensional fluid is a fluid again
+---------------------------------------------------------------------------------------------------
 Version: 0.0.46
 Date: 24/11/2019
   Major Features:
     - Added an Options GUI, reachable via an Button inside the Info GUI
-    - Will be used for all the Mod options in the future (GUI, gameplay, graphics, ...)
+    - Will be used for all Mod options in the future (GUI, gameplay, graphics, ...)
   Features:
     - Added a new Button to the Main GUI: Enable/Disable the teleportation inside the Mobile Factory
     - Added a new Button to the Main GUI: Reduce/Show the Main GUI
-	- Added a new Button to the Info GUI: Option Button
+    - Added a new Button to the Info GUI: Option Button
     - Added a new Button to the Info GUI: Close the GUI
     - The Main GUI can now be personalized
   Graphics:

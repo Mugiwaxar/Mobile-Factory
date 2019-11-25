@@ -1,7 +1,7 @@
 -- Power Drain Pole Migration --
 require("scripts/objects/power-drain-pole.lua")
 
-if table_size(global.pdpTable) > 0 then
+if global.pdpTable ~= nil and table_size(global.pdpTable) > 0 then
 	game.print("Updating all Power Drain Poles")
 	for k, pdp in pairs(global.pdpTable) do
 		global.pdpTable[k] = PDP:new(pdp)

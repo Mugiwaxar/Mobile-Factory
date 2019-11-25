@@ -14,17 +14,23 @@ function createPlayerGui(player)
 	local iPosX = 200
 	local iPosY = 200
 
-	-- Verify if the GUI exist, save the positions and destroy it --
+	-- Verify if the Main GUI exist, save the positions and destroy it --
 	if gui.screen.mfGUI ~= nil and gui.screen.mfGUI.valid == true then
 		posX = gui.screen.mfGUI.location.x
 		posY = gui.screen.mfGUI.location.y
 		gui.screen.mfGUI.destroy()
 	end
 	
+	-- Verify if the Info GUI exist, save the positions and destroy it --
 	if gui.screen.mfInfoGUI ~= nil and gui.screen.mfInfoGUI.valid == true then
 		iPosX = gui.screen.mfInfoGUI.location.x
 		iPosY = gui.screen.mfInfoGUI.location.y
 		gui.screen.mfInfoGUI.destroy()
+	end
+	
+	-- Verify if the Option GUI exist, else destroy it --
+	if gui.screen.mfOptionGUI ~= nil and gui.screen.mfOptionGUI.valid == true then
+		gui.screen.mfOptionGUI.destroy()
 	end
 
 	-- Create the GUI --
@@ -678,7 +684,7 @@ function createOptionGUI(gui, player)
 	mfOptionGUI.style.height = height
 	mfOptionGUI.style.padding = 0
 	mfOptionGUI.style.margin = 0
-	mfOptionGUI.visible = true
+	mfOptionGUI.visible = false
 	
 	-- Create the Menu Bar --
 	local mfOptGUIMenuBar = mfOptionGUI.add{type="flow", name="mfOptGUIMenuBar", direction="horizontal"}
