@@ -15,6 +15,28 @@ mf.rotation_speed = 0.30 / 60
 mf.guns = {"mfTank-machine-gun"}
 mf.collision_box = {{-2, -3.5}, {1.6, 2.5}}
 mf.selection_box = mf.collision_box
+--[[
+mf.animation =
+{
+	priority = "low",
+			width = 300,
+			height = 300,
+			frame_count = 1,
+			direction_count = 71,
+			shift = util.by_pixel(-4.75, -10),
+			animation_speed = 8,
+			max_advance = 1,
+			scale = 1,
+			stripes =
+			{
+				{
+				filename = "__Mobile_Factory__/graphics/mobile- factory/mobile-factory.png",
+				width_in_frames = 10,
+				height_in_frames = 8
+				}
+			}
+}
+--]]
 mf.animation =
 {
 	layers =
@@ -165,7 +187,7 @@ data:extend{mf}
 local mfI = {}
 mfI.type = "item-with-entity-data"
 mfI.name = "MobileFactory"
-mfI.icon = "__Mobile_Factory__/graphics/mobileFactory/tank.png"
+mfI.icon = "__Mobile_Factory__/graphics/mobile- factory/tank.png"
 mfI.icon_size = 32
 mfI.place_result = "MobileFactory"
 mfI.subgroup = "MobileFactory"

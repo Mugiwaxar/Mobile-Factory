@@ -2,7 +2,7 @@
 require("prototypes/entity/mobile-factory-base.lua")
 
 -- Mobile Factory GT --
-createNewMF("GTMobileFactory", {1,0.2,0.2}, 0.7, "b", "__Mobile_Factory__/graphics/mobileFactory/QuickMF.png")
+createNewMF("GTMobileFactory", {1,0.2,0.2}, 0.7, "b", "__Mobile_Factory__/graphics/mobile- factory/QuickMF.png")
 data.raw.car.GTMobileFactory.max_health = 1000
 data.raw.car.GTMobileFactory.consumption = "800KW"
 data.raw.car.GTMobileFactory.weight = 8000
