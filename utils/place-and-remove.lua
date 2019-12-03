@@ -64,22 +64,22 @@ function somethingWasPlaced(event, isRobot)
 		end
 	end
 	-- Allow to place things in the Control Center --
-	if event.created_entity.name == "InventoryPad" and creator.surface.name == _mfControlSurfaceName then
+	if event.created_entity.name == "DataStorage" and creator.surface.name == _mfControlSurfaceName then
 		local tile = creator.surface.find_tiles_filtered{position=event.created_entity.position, radius=1, limit=1}
 		if tile[1] ~= nil and tile[1].valid == true and tile[1].name == "BuildTile" then
-			placedInventoryPad(event)
+			placedDataStorage(event)
 			return
 		end
 	end
-	-- Prevent to place InventoryPad --
-	if event.created_entity.name == "InventoryPad" then
-		if isPlayer == true then creator.print("You can only place the " .. event.created_entity.name .. " inside the Control Center Constructible area") end
-		event.created_entity.destroy()
-		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
-			creator.get_main_inventory().insert(event.stack)
-		end
-		return
-	end
+	-- Prevent to place DataStorage --
+	-- if event.created_entity.name == "DataStorage" then
+		-- if isPlayer == true then creator.print("You can only place the " .. event.created_entity.name .. " inside the Control Center Constructible area") end
+		-- event.created_entity.destroy()
+		-- if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
+			-- creator.get_main_inventory().insert(event.stack)
+		-- end
+		-- return
+	-- end
 	-- Prevent to place things in the Control Center --
 	if creator.surface.name == _mfControlSurfaceName then
 		if isPlayer == true then creator.print("You can place that here") end
@@ -114,13 +114,21 @@ function somethingWasPlaced(event, isRobot)
 	if event.created_entity.name == "LogisticFluidPole" then
 		placedLogisticPowerPole(event)
 	end
-	-- Save the Provider Pad --
-	if event.created_entity.name == "ProviderPad" then
-		placedProviderPad(event)
+	-- Save the Matter Serializer --
+	if event.created_entity.name == "MatterSerializer" then
+		placedMatterSerializer(event)
 	end
-	-- Save the Requester Pad --
-	if event.created_entity.name == "RequesterPad" then
-		placedRequesterPad(event)
+	-- Save the Matter Printer --
+	if event.created_entity.name == "MatterPrinter" then
+		placedMatterPrinter(event)
+	end
+	-- Save the Data Center --
+	if event.created_entity.name == "DataCenter" then
+		placedDataCenter(event)
+	end
+	-- Save the Data Storage --
+	if event.created_entity.name == "DataStorage" then
+		placedDataStorage(event)
 	end
 	-- Save the Ore Silot Pad --
 	if string.match(event.created_entity.name, "OreSilotPad") then
@@ -186,15 +194,19 @@ function somethingWasRemoved(event)
 		removedLogisticPowerPole(event)
 		return
 	end
-	-- Remove the Provider Pad --
-	if event.entity.name == "ProviderPad" then
-		removedProviderPad(event)
+	-- Remove the Matter Serializer --
+	if event.entity.name == "MatterSerializer" then
+		removedMatterSerializer(event)
 		return
 	end
-	-- Remove the Requester Pad --
-	if event.entity.name == "RequesterPad" then
-		removedRequesterPad(event)
+	-- Remove the Matter Printer --
+	if event.entity.name == "MatterPrinter" then
+		removedMatterPrinter(event)
 		return
+	end
+	-- Remove the Data Center --
+	if event.entity.name == "DataCenter" then
+		removedDataCenter(event)
 	end
 	-- Remove the Ore Silot Pad --
 	if string.match(event.entity.name, "OreSilotPad") then
@@ -202,8 +214,8 @@ function somethingWasRemoved(event)
 		return
 	end
 	-- Remove the Inventory Pad --
-	if event.entity.name == "InventoryPad" then
-		removedInventoryPad(event)
+	if event.entity.name == "DataStorage" then
+		removedDataStorage(event)
 		return
 	end
 	-- Remove the Ore Cleaner --

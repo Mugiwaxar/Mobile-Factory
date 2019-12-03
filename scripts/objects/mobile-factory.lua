@@ -10,6 +10,7 @@ MF = {
 	fS = nil,
 	ccS = nil,
 	fChest = nil,
+	II = nil,
 	internalEnergy = _mfInternalEnergy,
 	maxInternalEnergy = _mfInternalEnergyMax,
 	jumpTimer = _mfBaseJumpTimer,
@@ -26,11 +27,10 @@ MF = {
 
 -- Constructor --
 function MF:new()
-	t = {}
-	mt = {}
+	local t = {}
+	local mt = {}
 	setmetatable(t, mt)
 	mt.__index = MF
-	t.ent = object
 	return t
 end
 
@@ -55,9 +55,10 @@ end
 -- Reconstructor --
 function MF:rebuild(object)
 	if object == nil then return end
-	mt = {}
+	local mt = {}
 	mt.__index = MF
 	setmetatable(object, mt)
+	II:rebuild(global.MF.II)
 end
 
 -- Synchronize Factory Chest --
@@ -160,10 +161,10 @@ function MF:updateLasers()
 					local name
 					local ccTank
 					if global.tankTable ~= nil and global.tankTable[global.IDModule] ~= nil then
-						name = global.tankTable[global.IDModule].name
+						filter = global.tankTable[global.IDModule].filter
 						ccTank = global.tankTable[global.IDModule].ent
 					end
-					if name ~= nil and ccTank ~= nil then
+					if filter ~= nil and ccTank ~= nil then
 						-- Get the focused Tank --
 						local name
 						local amount

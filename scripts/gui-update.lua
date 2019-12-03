@@ -606,69 +606,14 @@ end
 	
 -- Update the Inventory GUI Frame --
 function updateInventoryFrame(gui)
-	if global.inventoryTable == nil then return end
+	if global.MF.II == nil then return end
 	-- Make the frame visible if the technology is unlocked --
-	if technologyUnlocked("DimensionalLogistic") == false then return end
+	if technologyUnlocked("MatterSerialization") == false then return end
 	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.visible = true
-	
-	-- Clear all the frames --
-	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.InventoryPane.clear()
-	-- Set the number of Items and type of Items text --
-	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.mfInventoryAmountLabel.caption = {"", {"gui-description.mfInventoryAmount"}, ": ", global.mfInventoryItems, "/", global.mfInventoryMaxItem}
-	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.mfInventoryTypeLabel.caption = {"", {"gui-description.mfInventoryType"}, ": ", global.mfInventoryTypes, "/" , global.mfInventoryMaxTypes}
-	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.mfInventoryPadLabel.caption = {"", {"gui-description.mfInventoryPadLabel"}, ": ", table_size(global.inventoryPadTable)}
-	-- Create a Table with all Items --
-	local allItemsTable = {}
-	-- Insert all Items from the Internal Inventory --
-	for k, item in pairs(global.inventoryTable) do
-		allItemsTable[item.name] = item.amount
-	end
-	-- Insert all Items from Inventory Pad --
-	for k, chest in pairs(global.inventoryPadTable) do
-		-- Get the Inventory --
-		local inv = chest.get_inventory(defines.inventory.chest)
-		-- Test if the Inventory is valid --
-		if inv ~= nil and inv.valid == true then
-			-- Get Inventory content --
-			local items = inv.get_contents()
-			-- Test if items is valid --
-			if items ~= nil then
-				-- Look for ItemStack --
-				for item, amount in pairs(items) do
-					-- Test if the item is valid --
-					if item ~= nil and amount > 1 then
-						-- Look if the Item Already exist --
-						if allItemsTable[item] ~= nil then
-							-- Change the item amount --
-							allItemsTable[item] = allItemsTable[item] + amount
-						else
-							-- Add the Item to the Table --
-							allItemsTable[item] = amount
-						end
-					end
-				end
-			end
-		end
-	end
-	-- Look for all Items --
-	for item, amount in pairs(allItemsTable) do
-			-- Test if Item is valid --
-			if item ~= nil and amount ~= nil then
-			-- Create the Frame --
-			local frame = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.InventoryPane.add{type="frame", direction="horizontal"}
-			frame.style.minimal_width = 100
-			frame.style.margin = 0
-			frame.style.padding = 0
-			-- Add the Icon and the Tooltip to the frame --
-			local sprite = frame.add{type="sprite", tooltip=item, sprite="item/" .. item}
-			sprite.style.padding = 0
-			sprite.style.margin = 0
-			-- Add the amount label --
-			local label = frame.add{type="label", caption=tonumber(amount)}
-			label.style.padding = 0
-			label.style.margin = 0
-		end
-	end
+	-- Clear the frame --
+	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.clear()
+	-- Add the Inventory Frame --
+	global.MF.II:getFrame(gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3)
 end
 	
 	

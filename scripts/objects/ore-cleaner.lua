@@ -5,8 +5,8 @@ OC = {
 	purity = 0,
 	charge = 0,
 	totalCharge = 0,
-	oreTable = {},
-	inventory = {},
+	oreTable = nil,
+	inventory = nil,
 	animID = 0,
 	animTick = 0,
 	lastExtractionTick = 0
@@ -15,8 +15,8 @@ OC = {
 -- Constructor --
 function OC:new(object)
 	if object == nil then return end
-	t = {}
-	mt = {}
+	local t = {}
+	local mt = {}
 	setmetatable(t, mt)
 	mt.__index = OC
 	t.ent = object
@@ -36,7 +36,7 @@ end
 -- Reconstructor --
 function OC:rebuild(object)
 	if object == nil then return end
-	mt = {}
+	local mt = {}
 	mt.__index = OC
 	setmetatable(object, mt)
 end
@@ -54,6 +54,8 @@ end
 
 -- Get the Inventory items number --
 function OC:inventoryItemNumber()
+	-- Check if the Inventory Table is valid --
+	if self.inventory == nil then self.inventory = {} end
 	-- Create the number variable --
 	local number = 0
 	-- Look for all items --
@@ -249,7 +251,7 @@ function OC:updateAnimation(event)
 		self.animTick = event.tick
 	-- Make the Beam if the animation ended --
 	elseif (event.tick - self.animTick)%240 == 0 and self.animID ~= 0 then
-	-- Make the transfer Beam --
+		-- Make the transfer Beam --
 		self.ent.surface.create_entity{name="OCBigBeam", duration=16, position=self.ent.position, target=global.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
 	end
 end

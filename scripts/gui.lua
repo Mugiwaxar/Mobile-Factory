@@ -614,33 +614,6 @@ function createInfosWindows(gui, posX, posY)
 	mfInfoFlow3.style.width = 150
 	mfInfoFlow3.visible = false
 	
-	-- Create Inventory Title Label --
-	mfInfoFlow3.add{type="label", name="mfInventoryTitle"}
-	mfInfoFlow3.mfInventoryTitle.style.font = "TitleFont"
-	mfInfoFlow3.mfInventoryTitle.caption = {"gui-description.mfInventoryTitle"}
-	
-	-- Create Inventory Amount Label --
-	mfInfoFlow3.add{type="label", name="mfInventoryAmountLabel"}
-	mfInfoFlow3.mfInventoryAmountLabel.style.font = "LabelFont"
-	mfInfoFlow3.mfInventoryAmountLabel.caption = {"gui-description.mfInventoryAmount"}
-	mfInfoFlow3.mfInventoryAmountLabel.style.font_color = {108, 114, 229}
-	
-	-- Create Inventory Type Label --
-	mfInfoFlow3.add{type="label", name="mfInventoryTypeLabel"}
-	mfInfoFlow3.mfInventoryTypeLabel.style.font = "LabelFont"
-	mfInfoFlow3.mfInventoryTypeLabel.caption = {"gui-description.mfInventoryType"}
-	mfInfoFlow3.mfInventoryTypeLabel.style.font_color = {108, 114, 229}
-	
-	-- Create Inventory Pad Label --
-	mfInfoFlow3.add{type="label", name="mfInventoryPadLabel"}
-	mfInfoFlow3.mfInventoryPadLabel.style.font = "LabelFont"
-	mfInfoFlow3.mfInventoryPadLabel.caption = {"gui-description.mfInventoryPadLabel"}
-	mfInfoFlow3.mfInventoryPadLabel.style.font_color = {108, 114, 229}
-	mfInfoFlow3.mfInventoryPadLabel.style.bottom_margin = 7
-	
-	-- Create Inventory ScrollPane --
-	local InventoryPane = mfInfoFlow3.add{type="scroll-pane", name="InventoryPane"}
-	InventoryPane.style.width = 130
 	
 	------------------------------------------ FLOW 4 -------------------------------------
 		
@@ -674,7 +647,6 @@ function createOptionGUI(gui, player)
 	local posY = resolutionHeight / 100 * 18
 	local width = 350
 	local height = 600
-	dprint(player.display_scale)
 	
 	-- Set the GUI position end style --
 	mfOptionGUI.caption = {"gui-description.options"}

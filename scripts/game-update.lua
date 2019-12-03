@@ -46,35 +46,21 @@ end
 
 -- Update base Mobile Factory Values --
 function updateValues()
-	-- Mobile Factory --
 	if global.MF == nil then global.MF = MF:new() end
-	-- Energy Lasers --
 	if global.IDModule == nil then global.IDModule = 0 end
-	-- Accumulators table --
 	if global.accTable == nil then global.accTable = {} end
-	-- Power Drain Poles table --
 	if global.pdpTable == nil then global.pdpTable = {} end
-	-- Logistic Fluid Pole --
 	if global.lfpTable == nil then global.lfpTable = {} end
-	-- Tanks --
 	if global.tankTable == nil then global.tankTable = {} end
-	-- Ore Silot --
 	if global.oreSilotTable == nil then global.oreSilotTable = {} end
 	if global.oreSilotPadTable == nil then global.oreSitolPadTable = {} end
-	-- Entities Update --
 	if global.currentSilotPadChestUpdate == nil then global.currentSilotPadChestUpdate = 1 end
-	-- Inventory --
-	if global.inventoryTable == nil then global.inventoryTable = {} end
-	if global.mfInventoryItems == nil then global.mfInventoryItems = 0 end
-	if global.mfInventoryTypes == nil then global.mfInventoryTypes = 0 end
-	if global.mfInventoryMaxItem == nil then global.mfInventoryMaxItem = _mfBaseMaxItems end
-	if global.mfInventoryMaxTypes == nil then global.mfInventoryMaxTypes = _mfBaseMaxTypes end
-	if global.providerPadTable == nil then global.providerPadTable = {} end
-	if global.requesterPadTable == nil then global.requesterPadTable = {} end
-	if global.inventoryPadTable == nil then global.inventoryPadTable = {} end
-	-- Fluid Extractor --
 	if global.fluidExtractorCharge == nil then global.fluidExtractorCharge = 0 end
 	if global.fluidExtractorPurity == nil then global.fluidExtractorPurity = 0 end
+	if global.matterSerializerTable == nil then global.matterSerializerTable = {} end
+	if global.matterPrinterTable == nil then global.matterPrinterTable = {} end
+	if global.dataCenterTable == nil then global.dataCenterTable = {} end
+	if global.dataStorageTable == nil then global.dataStorageTable = {} end
 end
 
 -- When a technology is finished --

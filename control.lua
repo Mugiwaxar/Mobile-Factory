@@ -10,12 +10,16 @@ require("utils/warptorio.lua")
 require("scripts/objects/mobile-factory.lua")
 require("scripts/objects/power-drain-pole.lua")
 require("scripts/objects/ore-cleaner.lua")
+require("scripts/objects/inventory.lua")
+require("scripts/objects/data-center.lua")
+require("scripts/objects/data-storage.lua")
 
 
 -- When the mod init --
 function onInit()
 	-- Mobile Factory Object --
 	global.MF = MF:new()
+	global.MF.II = II:new("Internal Inventory")
 	createMFSurface()
 	createControlRoom()
 	-- Module ID --
@@ -28,36 +32,31 @@ function onInit()
 	global.fluidExtractor = nil
 	global.fluidExtractorCharge = 0
 	global.fluidExtractorPurity = 0
-	-- Internal Inventory --
-	global.mfInventoryItems = 0
-	global.mfInventoryTypes = 0
-	global.mfInventoryMaxItem = _mfBaseMaxItems
-	global.mfInventoryMaxTypes = _mfBaseMaxTypes
 	-- Tables --
 	global.playersTable = {}
 	global.accTable = {}
 	global.pdpTable = {}
 	global.tankTable = {}
+	global.dataCenterTable = {}
+	global.matterSerializerTable = {}
+	global.matterPrinterTable = {}
+	global.dataStorageTable = {}
 	global.oreSilotTable = {}
 	global.oreSilotPadTable = {}
 	global.lfpTable = {}
-	global.inventoryTable = {}
-	global.providerPadTable = {}
-	global.requesterPadTable = {}
-	global.inventoryPadTable = {}
 end
 
 -- When a save is loaded --
 function onLoad()
 	-- Add Warptorio Compatibility --
 	warptorio()
-	-- Set MF Metatables --
+	-- Set MF Metatable --
 	MF:rebuild(global.MF)
 	-- Set PDP Metatables --
 	for k, pdp in  pairs(global.pdpTable or {}) do
 		PDP:rebuild(pdp)
 	end
-	-- Set Ore Cleaner Metatables --
+	-- Set Ore Cleaner Metatable --
 	OC:rebuild(global.oreCleaner)
 end
 

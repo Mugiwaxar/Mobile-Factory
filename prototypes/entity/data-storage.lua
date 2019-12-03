@@ -1,0 +1,105 @@
+---------------------------------- DATA STORAGE ---------------------------
+
+-- Entity --
+dsE = {}
+dsE.type = "container"
+dsE.name = "DataStorage"
+dsE.icon = "__Mobile_Factory__/graphics/matter-serialization/DataStorage.png"
+dsE.icon_size = 295
+dsE.flags = {"placeable-neutral", "player-creation"}
+dsE.minable = {mining_time = 0.2, result = "DataStorage"}
+dsE.max_health = 100
+dsE.corpse = "small-remnants"
+dsE.render_not_in_network_icon = false
+dsE.collision_box = {{-0.8, -0.5}, {0.8, 0.9}}
+dsE.selection_box = {{-0.8, -0.5}, {0.8, 1}}
+dsE.inventory_size = 0
+dsE.open_sound = { filename = "__base__/sound/wooden-chest-open.ogg" }
+dsE.close_sound = { filename = "__base__/sound/wooden-chest-close.ogg" }
+dsE.vehicle_impact_sound =  { filename = "__base__/sound/car-wood-impact.ogg", volume = 1.0 }
+dsE.picture =
+    {
+      layers =
+      {
+        {
+            filename = "__Mobile_Factory__/graphics/matter-serialization/DataStorage.png",
+            priority = "extra-high",
+            width = 400,
+            height = 400,
+            -- shift = {-0.5,-1},
+            scale = 1/200*30
+        },
+        {
+            filename = "__Mobile_Factory__/graphics/matter-serialization/DataStorageS.png",
+            priority = "high",
+            width = 400,
+            height = 400,
+            shift = {0.5,0.7},
+            draw_as_shadow = true,
+            scale = 1/200*45
+        }
+      }
+    }
+dsE.circuit_wire_connection_point = circuit_connector_definitions["chest"].points
+dsE.circuit_connector_sprites = circuit_connector_definitions["chest"].sprites
+dsE.circuit_wire_max_distance = default_circuit_wire_max_distance
+data:extend{dsE}
+
+-- Item --
+local dsI = {}
+dsI.type = "item"
+dsI.name = "DataStorage"
+dsI.icon = "__Mobile_Factory__/graphics/matter-serialization/DataStorage.png"
+dsI.icon_size = 400
+dsI.place_result = "DataStorage"
+dsI.subgroup = "Pad"
+dsI.order = "c"
+dsI.stack_size = 20
+data:extend{dsI}
+
+
+-- Recipe --
+local dsR = {}
+dsR.type = "recipe"
+dsR.name = "DataStorage"
+dsR.energy_required = 4
+dsR.enabled = false
+dsR.ingredients =
+    {
+      {"iron-chest", 1},
+      {"DimensionalPlate", 15},
+      {"DimensionalCrystal", 1}
+    }
+dsR.result = "DataStorage"
+data:extend{dsR}
+
+-- Animation --
+sdA = {}
+sdA.name = "DataStorageA"
+sdA.type = "animation"
+sdA.frame_count = 120
+sdA.filename = "__Mobile_Factory__/graphics/matter-serialization/DataStorageAn.png"
+sdA.size = 200
+sdA.line_length = 10
+sdA.animation_speed = 1/4
+sdA.scale = 1/5
+sdA.flags = {"terrain"}
+data:extend{sdA}
+
+-- Technologie --
+-- local dpT = {}
+-- dpT.name = "InventoryPad"
+-- dpT.type = "technology"
+-- dpT.icon = "__Mobile_Factory__/graphics/icones/InventoryPad.png"
+-- dpT.icon_size = 32
+-- dpT.unit = {
+	-- count=5,
+	-- time=60,
+	-- ingredients={
+		-- {"DimensionalSample", 200},
+		-- {"DimensionalCrystal", 1}
+	-- }
+-- }
+-- dpT.prerequisites = {"DimensionalLogistic", "ConstructibleArea1"}
+-- dpT.effects = {{type="unlock-recipe", recipe="InventoryPad"}}
+-- data:extend{dpT}

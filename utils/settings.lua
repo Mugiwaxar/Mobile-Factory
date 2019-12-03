@@ -49,7 +49,6 @@ _lfpFluidConsomption = 10
 
 -- Internal Inventory settings --
 _mfBaseMaxItems = 10000
-_mfBaseMaxTypes = 20
 
 -- Ore Cleaner settings --
 _mfOreCleanerMaxCharge = 1000

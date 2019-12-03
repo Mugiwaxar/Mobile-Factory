@@ -12,8 +12,8 @@ PDP = {
 -- Constructor --
 function PDP:new(object)
 	if object == nil then return end
-	t = {}
-	mt = {}
+	local t = {}
+	local mt = {}
 	-- for k, j in pairs(PDP) do
 		-- mt[k] = j
 	-- end
@@ -26,7 +26,7 @@ end
 -- Reconstructor --
 function PDP:rebuild(object)
 	if object == nil then return end
-	mt = {}
+	local mt = {}
 	-- for k, j in pairs(PDP) do
 		-- mt[k] = j
 	-- end
