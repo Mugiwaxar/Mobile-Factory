@@ -23,17 +23,61 @@ dcE.sprites.sheets =
 			frames = 4
 		},
 		{
-			filename = "__Mobile_Factory__/graphics/matter-serialization/DataCenterShadow.png",
+			filename = "__Mobile_Factory__/graphics/matter-serialization/DataCenterS.png",
 			draw_as_shadow = true,
-			width = 80,
-			height = 80,
-			scale = 2,
-			shift = {1.8,0.4},
+			width = 400,
+			height = 400,
+			scale = 1/3,
+			shift = {2,0.9},
 			frames = 1
 		}
 	}
 dcE.vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 }
+dcE.circuit_wire_connection_points =
+{
+	{
+		wire = {red={-0.2,0.2}, green={0.1,0.2}},
+		shadow = {red={-0.2,0.3}, green={0.1,0.3}}
+	},
+	{
+		wire = {red={-2.1,-0.9}, green={-2.1,-0.8}},
+		shadow = {red={-2.1,-0.8}, green={-2.1,-0.7}}
+	},
+		{
+		wire = {red={0.1,-1.9}, green={-0.2,-1.9}},
+		shadow = {red={0.1,-1.8}, green={-0.2,-1.8}}
+	},
+	{
+		wire = {red={2.1,-0.8}, green={2.1,-0.9}},
+		shadow = {red={2.1,-0.7}, green={2.1,-0.8}}
+	}
+}
 data:extend{dcE}
+
+-- Entity MF --
+dcEMF = table.deepcopy(data.raw["constant-combinator"].DataCenter)
+dcEMF.name = "DataCenterMF"
+dcEMF.icon = "__Mobile_Factory__/graphics/matter-serialization/DataCenterMFI.png"
+dcEMF.minable = {mining_time = 0.5, result = "DataCenterMF"}
+dcEMF.sprites.sheets =
+	{	{
+			filename = "__Mobile_Factory__/graphics/matter-serialization/DataCenterMFE.png",
+			width = 600,
+			height = 600,
+			scale = 1/4,
+			frames = 4
+		},
+		{
+			filename = "__Mobile_Factory__/graphics/matter-serialization/DataCenterS.png",
+			draw_as_shadow = true,
+			width = 400,
+			height = 400,
+			scale = 1/3,
+			shift = {2,1.1},
+			frames = 1
+		}
+	}
+data:extend{dcEMF}
 
 -- Item --
 local dcI = {}
@@ -42,10 +86,39 @@ dcI.name = "DataCenter"
 dcI.icon = "__Mobile_Factory__/graphics/matter-serialization/DataCenterI.png"
 dcI.icon_size = 64
 dcI.place_result = "DataCenter"
-dcI.subgroup = "Pad"
-dcI.order = "a"
+dcI.subgroup = "DataSerialization"
+dcI.order = "a2"
 dcI.stack_size = 10
 data:extend{dcI}
+
+-- Item MF --
+dcIMF = table.deepcopy(data.raw.item.DataCenter)
+dcIMF.name = "DataCenterMF"
+dcIMF.icon = "__Mobile_Factory__/graphics/matter-serialization/DataCenterMFI.png"
+dcIMF.place_result = "DataCenterMF"
+dcIMF.order = "a"
+data:extend{dcIMF}
+
+-- Recipe --
+dcR = {}
+dcR.type = "recipe"
+dcR.name = "DataCenter"
+dcR.energy_required = 30
+dcR.enabled = false
+dcR.ingredients =
+    {
+      {"DimensionalPlate", 20},
+      {"DimensionalCrystal", 10},
+      {"electronic-circuit", 10}
+    }
+dcR.result = "DataCenter"
+data:extend{dcR}
+
+-- Recipe MF --
+dcRMF = table.deepcopy(data.raw.recipe.DataCenter)
+dcRMF.name = "DataCenterMF"
+dcRMF.result = "DataCenterMF"
+data:extend{dcRMF}
 
 -- Animation --
 dcA = {}

@@ -1,5 +1,6 @@
 require("scripts/objects/inventory.lua")
 
+-- Print update message --
 if global.inventoryTable ~= nil and table_size(global.inventoryTable) > 0 then
 	game.print("#################################################################################################################")
 	game.print("In the Mobile Factory 0.0.49 Update, all the Internal Inventory logistic was changed.")
@@ -8,6 +9,16 @@ if global.inventoryTable ~= nil and table_size(global.inventoryTable) > 0 then
 	game.print("################################################################################################################# ")
 	game.print(" ")
 	game.print("  ")
+end
+
+-- Unlock Matter Serialization recipes --
+if technologyUnlocked("MFShield") then
+	game.forces["player"].recipes["DataCenter"].enabled = true
+	game.forces["player"].recipes["DataCenterMF"].enabled = true
+	game.forces["player"].recipes["DataStorage"].enabled = true
+	game.forces["player"].recipes["MatterSerializer"].enabled = true
+	game.forces["player"].recipes["MatterPrinter"].enabled = true
+	
 end
 
 -- Set MF surface to day and alway day --
@@ -23,7 +34,7 @@ end
 -- Internal Inventory to OOP --
 if global.MF.II == nil then
 	-- Create II and tables --
-	global.MF.II = II:new("Internal Inventory")
+	global.MF.II = INV:new("Internal Inventory")
 	global.MF.II.inventory = {}
 	global.MF.II.inventory = {}
 	global.MF.II.dataStoragesTable = {}

@@ -1,7 +1,7 @@
 -- INVENTORY OBJECT --
 
 -- Create the Inventory base object --
-II = {
+INV = {
 	name = "",
 	usedCapacity = 0,
 	maxCapacity = _mfBaseMaxItems,
@@ -10,26 +10,26 @@ II = {
 }
 
 -- Constructor --
-function II:new(name)
+function INV:new(name)
 	if name == nil then return end
 	local t = {}
 	local mt = {}
 	setmetatable(t, mt)
-	mt.__index = II
+	mt.__index = INV
 	t.name = name
 	return t
 end
 
 -- Reconstructor --
-function II:rebuild(object)
+function INV:rebuild(object)
 	if object == nil then return end
 	local mt = {}
-	mt.__index = II
+	mt.__index = INV
 	setmetatable(object, mt)
 end
 
 -- Rescan Inventory --
-function II:rescan()
+function INV:rescan()
 
 	-- Check if the Inventory Table is valid --
 	if self.inventory == nil then self.inventory = {} end
@@ -46,14 +46,14 @@ function II:rescan()
 end
 
 -- Return remaining capacity --
-function II:remCap()
+function INV:remCap()
 	-- Rescan the Inventory --
 	self:rescan()
 	return self.maxCapacity - self.usedCapacity
 end
 
 -- Return the number of requested Item --
-function II:hasItem(item)
+function INV:hasItem(item)
 	-- Check if the Inventory Table is valid --
 	if self.inventory == nil then self.inventory = {} end
 	
@@ -69,7 +69,7 @@ function II:hasItem(item)
 end
 
 -- Request to add an Item and return the amount added --
-function II:addItem(item, amount)
+function INV:addItem(item, amount)
 	-- Check if the Inventory Table is valid --
 	if self.inventory == nil then self.inventory = {} end
 
@@ -95,7 +95,7 @@ function II:addItem(item, amount)
 end
 
 -- Request to remove an Item and return the amount removed --
-function II:getItem(item, amount)
+function INV:getItem(item, amount)
 	-- Check if the Inventory Table is valid --
 	if self.inventory == nil then self.inventory = {} end
 	
@@ -124,7 +124,7 @@ function II:getItem(item, amount)
 end
 
 -- Return the Inventory Frame --
-function II:getFrame(guiElement)
+function INV:getFrame(guiElement)
 	-- Check if the Inventory Table is valid --
 	if self.inventory == nil then self.inventory = {} end
 	
@@ -154,13 +154,13 @@ function II:getFrame(guiElement)
 	invList.style.width = 205
 	-- Create the list --
 	for item, count in pairs(self.inventory) do
-		II:itemToFrame(item, count, invList)
+		INV:itemToFrame(item, count, invList)
 	end
 	
 end
 
 -- Create a frame from an Item --
-function II:itemToFrame(item, amount, guiElement)
+function INV:itemToFrame(item, amount, guiElement)
 
 	-- Create the Frame --
 	local frame = guiElement.add{type="frame", direction="horizontal"}

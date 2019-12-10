@@ -4,8 +4,8 @@
 mpE = {}
 mpE.type = "logistic-container"
 mpE.name = "MatterPrinter"
-mpE.icon = "__Mobile_Factory__/graphics/icones/RequesterPad.png"
-mpE.icon_size = 32
+mpE.icon = "__Mobile_Factory__/graphics/matter-serialization/MatterPrinterI.png"
+mpE.icon_size = 64
 mpE.flags = {"placeable-neutral", "player-creation"}
 mpE.minable = {mining_time = 0.5, result = "MatterPrinter"}
 mpE.max_health = 100
@@ -24,21 +24,21 @@ mpE.picture =
       layers =
       {
         {
-            filename = "__Mobile_Factory__/graphics/entity/RequesterPad.png",
+            filename = "__Mobile_Factory__/graphics/matter-serialization/MatterPrinterE.png",
             priority = "extra-high",
-            width = 62,
-            height = 72,
-            shift = util.by_pixel(0.5, -2),
-            scale = 0.5
+            width = 400,
+            height = 400,
+            shift = {0,0},
+            scale = 1/400*33
         },
         {
-            filename = "__base__/graphics/entity/wooden-chest/hr-wooden-chest-shadow.png",
-            priority = "extra-high",
-            width = 104,
-            height = 40,
-            shift = util.by_pixel(10, 6.5),
+            filename = "__Mobile_Factory__/graphics/matter-serialization/MatterPrinterS.png",
+            priority = "high",
+            width = 400,
+            height = 400,
+            shift = {1.3,0.1},
             draw_as_shadow = true,
-            scale = 0.5
+            scale = 1/200*30
         }
       }
     }
@@ -48,28 +48,44 @@ mpE.circuit_wire_max_distance = default_circuit_wire_max_distance
 data:extend{mpE}
 
 -- Item --
-local rcI = {}
-rcI.type = "item"
-rcI.name = "MatterPrinter"
-rcI.icon = "__Mobile_Factory__/graphics/icones/RequesterPad.png"
-rcI.icon_size = 32
-rcI.place_result = "MatterPrinter"
-rcI.subgroup = "Pad"
-rcI.order = "a"
-rcI.stack_size = 20
-data:extend{rcI}
+local mpI = {}
+mpI.type = "item"
+mpI.name = "MatterPrinter"
+mpI.icon = "__Mobile_Factory__/graphics/matter-serialization/MatterPrinterI.png"
+mpI.icon_size = 64
+mpI.place_result = "MatterPrinter"
+mpI.subgroup = "DataSerialization"
+mpI.order = "d"
+mpI.stack_size = 20
+data:extend{mpI}
 
 
 -- Recipe --
-local rcI = {}
-rcI.type = "recipe"
-rcI.name = "MatterPrinter"
-rcI.energy_required = 2
-rcI.enabled = false
-rcI.ingredients =
+local mpR = {}
+mpR.type = "recipe"
+mpR.name = "MatterPrinter"
+mpR.energy_required = 2
+mpR.enabled = false
+mpR.ingredients =
     {
-      {"iron-chest", 1},
-      {"DimensionalPlate", 10},
+	  {"iron-chest", 1},
+      {"DimensionalCrystal", 1},
+      {"DimensionalPlate", 5},
+      {"electronic-circuit", 2}
     }
-rcI.result = "MatterPrinter"
-data:extend{rcI}
+mpR.result = "MatterPrinter"
+data:extend{mpR}
+
+-- Animation --
+mpA = {}
+mpA.name = "MatterPrinterA"
+mpA.type = "animation"
+mpA.frame_count = 80
+mpA.filename = "__Mobile_Factory__/graphics/matter-serialization/MatterPrinterAn.png"
+mpA.width = 340
+mpA.height = 380
+mpA.line_length = 10
+mpA.animation_speed = 1/4
+mpA.scale = 1/400*33
+mpA.flags = {"terrain"}
+data:extend{mpA}

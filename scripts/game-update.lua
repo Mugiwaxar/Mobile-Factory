@@ -31,6 +31,8 @@ end
 function updateEntities(event)
 	-- Verify Mobile Factory --
 	if global.MF == nil then return end
+	-- Update System --
+	UpSys:scanEnts()
 	-- Update --
 	if event.tick%_eventTick5 == 0 then factoryTeleportBox() end
 	if event.tick%_eventTick38 == 0 then updateAccumulators() end

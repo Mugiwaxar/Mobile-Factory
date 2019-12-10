@@ -126,6 +126,10 @@ function somethingWasPlaced(event, isRobot)
 	if event.created_entity.name == "DataCenter" then
 		placedDataCenter(event)
 	end
+	-- Save the Data Center MF --
+	if event.created_entity.name == "DataCenterMF" then
+		placedDataCenterMF(event)
+	end
 	-- Save the Data Storage --
 	if event.created_entity.name == "DataStorage" then
 		placedDataStorage(event)
@@ -207,6 +211,10 @@ function somethingWasRemoved(event)
 	-- Remove the Data Center --
 	if event.entity.name == "DataCenter" then
 		removedDataCenter(event)
+	end
+	-- Remove the Data Center MF --
+	if event.entity.name == "DataCenterMF" then
+		removedDataCenterMF(event)
 	end
 	-- Remove the Ore Silot Pad --
 	if string.match(event.entity.name, "OreSilotPad") then

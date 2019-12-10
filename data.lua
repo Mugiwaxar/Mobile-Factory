@@ -118,6 +118,15 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
+		name="DataSerialization",
+		group="MobileFactory",
+		order="b3"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
 		name="Modules1",
 		group="MobileFactory",
 		order="c"
@@ -150,15 +159,6 @@ data:extend{
 		order="b4"
 	}
 }
-	
-data:extend{
-	{
-		type="item-subgroup",
-		name="Quatrons",
-		group="MobileFactory",
-		order="z"
-	}
-}
 
 data:extend{
 	{
@@ -184,6 +184,15 @@ data:extend{
 		name="SciencePack",
 		group="Elements",
 		order="c"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="Quatrons",
+		group="Elements",
+		order="z"
 	}
 }
 

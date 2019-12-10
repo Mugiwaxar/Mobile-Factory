@@ -4,8 +4,8 @@
 dsE = {}
 dsE.type = "container"
 dsE.name = "DataStorage"
-dsE.icon = "__Mobile_Factory__/graphics/matter-serialization/DataStorage.png"
-dsE.icon_size = 295
+dsE.icon = "__Mobile_Factory__/graphics/matter-serialization/DataStorageI.png"
+dsE.icon_size = 64
 dsE.flags = {"placeable-neutral", "player-creation"}
 dsE.minable = {mining_time = 0.2, result = "DataStorage"}
 dsE.max_health = 100
@@ -22,7 +22,7 @@ dsE.picture =
       layers =
       {
         {
-            filename = "__Mobile_Factory__/graphics/matter-serialization/DataStorage.png",
+            filename = "__Mobile_Factory__/graphics/matter-serialization/DataStorageE.png",
             priority = "extra-high",
             width = 400,
             height = 400,
@@ -40,20 +40,24 @@ dsE.picture =
         }
       }
     }
-dsE.circuit_wire_connection_point = circuit_connector_definitions["chest"].points
-dsE.circuit_connector_sprites = circuit_connector_definitions["chest"].sprites
-dsE.circuit_wire_max_distance = default_circuit_wire_max_distance
+dsE.circuit_wire_connection_point =
+{
+	wire = {red={-0.05,-0.1}, green={0.05,-0.1}},
+	shadow = {red={-0.05,0}, green={0.05,0}}
+}
+dsE.circuit_connector_sprites = nil
+dsE.circuit_wire_max_distance = 20
 data:extend{dsE}
 
 -- Item --
 local dsI = {}
 dsI.type = "item"
 dsI.name = "DataStorage"
-dsI.icon = "__Mobile_Factory__/graphics/matter-serialization/DataStorage.png"
-dsI.icon_size = 400
+dsI.icon = "__Mobile_Factory__/graphics/matter-serialization/DataStorageI.png"
+dsI.icon_size = 64
 dsI.place_result = "DataStorage"
-dsI.subgroup = "Pad"
-dsI.order = "c"
+dsI.subgroup = "DataSerialization"
+dsI.order = "b"
 dsI.stack_size = 20
 data:extend{dsI}
 
@@ -66,9 +70,9 @@ dsR.energy_required = 4
 dsR.enabled = false
 dsR.ingredients =
     {
-      {"iron-chest", 1},
       {"DimensionalPlate", 15},
-      {"DimensionalCrystal", 1}
+      {"DimensionalCrystal", 4},
+      {"electronic-circuit", 10}
     }
 dsR.result = "DataStorage"
 data:extend{dsR}

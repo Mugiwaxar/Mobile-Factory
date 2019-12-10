@@ -3,7 +3,11 @@
 -- Create the Data Storage base object --
 DS = {
 	ent = nil,
-	animID = 0
+	animID = 0,
+	active = false,
+	linkedDC = nil,
+	updateTick = nil,
+	lastUpdate = 0
 }
 
 -- Constructor --
@@ -14,8 +18,6 @@ function DS:new(object)
 	setmetatable(t, mt)
 	mt.__index = DS
 	t.ent = object
-	-- Create the Animation --
-	t.animID = rendering.draw_animation{animation="DataStorageA", target={object.position.x,object.position.y-1.2}, surface=object.surface}
 	return t
 end
 
@@ -32,3 +34,34 @@ function DS:remove()
 	-- Destroy the Animation --
 	rendering.destroy(self.animID)
 end
+
+-- Is valid --
+function valid()
+	if self.ent ~= nil and self.ent.valid then return true end
+end
+
+-- Set Active --
+function DS:setActive(set)
+	self.active = set
+	if set == true then
+		-- Create the Animation --
+		self.animID = rendering.draw_animation{animation="DataStorageA", target={self.ent.position.x,self.ent.position.y-1.2}, surface=self.ent.surface}
+	else
+		-- Destroy the Animation --
+		rendering.destroy(self.animID)
+	end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+

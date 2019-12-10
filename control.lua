@@ -12,14 +12,17 @@ require("scripts/objects/power-drain-pole.lua")
 require("scripts/objects/ore-cleaner.lua")
 require("scripts/objects/inventory.lua")
 require("scripts/objects/data-center.lua")
+require("scripts/objects/data-center-mf.lua")
 require("scripts/objects/data-storage.lua")
+require("scripts/objects/matter-serializer.lua")
+require("scripts/objects/matter-printer.lua")
 
 
 -- When the mod init --
 function onInit()
 	-- Mobile Factory Object --
 	global.MF = MF:new()
-	global.MF.II = II:new("Internal Inventory")
+	global.MF.II = INV:new("Internal Inventory")
 	createMFSurface()
 	createControlRoom()
 	-- Module ID --
@@ -55,6 +58,26 @@ function onLoad()
 	-- Set PDP Metatables --
 	for k, pdp in  pairs(global.pdpTable or {}) do
 		PDP:rebuild(pdp)
+	end
+	-- Set DataCenter Metatables --
+	for k, dc in  pairs(global.dataCenterTable or {}) do
+		DC:rebuild(dc)
+	end
+	-- Set DataCenterMF Metatable --
+	if global.MF.dataCenter ~= nil then
+		DCMF:rebuild(global.MF.dataCenter)
+	end
+	-- Set DataStorage Metatables --
+	for k, ds in  pairs(global.dataStorageTable or {}) do
+		DS:rebuild(ds)
+	end
+	-- Set MatterSerializer Metatables --
+	for k, ms in pairs(global.matterSerializerTable or {}) do
+		MS:rebuild(ms)
+	end
+	-- Set MatterPrinter Metatables --
+	for k, mp in pairs(global.matterPrinterTable or {}) do
+		MP:rebuild(mp)
 	end
 	-- Set Ore Cleaner Metatable --
 	OC:rebuild(global.oreCleaner)

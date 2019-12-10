@@ -4,7 +4,11 @@
 DC = {
 	ent = nil,
 	invObj = nil,
-	animID = 0
+	animID = 0,
+	active = false,
+	dataStorages = nil,
+	updateTick = 60,
+	lastUpdate = 0
 }
 
 -- Contructor --
@@ -15,9 +19,9 @@ function DC:new(object)
 	setmetatable(t, mt)
 	mt.__index = DC
 	t.ent = object
-	t.invObj = II:new("Inventory " .. tostring(object.unit_number))
-	-- Create the Animation --
-	t.animID = rendering.draw_animation{animation="DataCenterA", target={object.position.x,object.position.y-1.35}, surface=object.surface}
+	t.invObj = INV:new("Inventory " .. tostring(object.unit_number))
+	t:setActive(true)
+	t.dataStorages = {}
 	return t
 end
 
@@ -28,7 +32,7 @@ function DC:rebuild(object)
 	mt.__index = DC
 	setmetatable(object, mt)
 	-- Recreate the Inventory Metatable --
-	II:rebuild(object.invObj)
+	INV:rebuild(object.invObj)
 end
 
 -- Destructor --
@@ -39,7 +43,22 @@ function DC:remove()
 	rendering.destroy(self.animID)
 end
 
+-- Is valid --
+function valid()
+	if self.ent ~= nil and self.ent.valid then return true end
+end
 
+-- Set Active --
+function DC:setActive(set)
+	self.active = set
+	if set == true then
+		-- Create the Animation --
+		self.animID = rendering.draw_animation{animation="DataCenterA", target={self.ent.position.x,self.ent.position.y-1.35}, surface=self.ent.surface}
+	else
+		-- Destroy the Animation --
+		rendering.destroy(self.animID)
+	end
+end
 
 
 

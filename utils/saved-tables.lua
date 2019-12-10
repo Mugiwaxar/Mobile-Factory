@@ -19,19 +19,26 @@ end
 -- Save the Matter Serializer in a table --
 function placedMatterSerializer(event)
 	if global.matterSerializerTable == nil then global.matterSerializerTable = {} end
-	global.matterSerializerTable[event.created_entity.unit_number] = event.created_entity
+	global.matterSerializerTable[event.created_entity.unit_number] = MS:new(event.created_entity)
 end
 
 -- Save the Matter Printer in a table --
 function placedMatterPrinter(event)
 	if global.matterPrinterTable == nil then global.matterPrinterTable = {} end
-	global.matterPrinterTable[event.created_entity.unit_number] = event.created_entity
+	global.matterPrinterTable[event.created_entity.unit_number] = MP:new(event.created_entity)
 end
 
 -- Save the Data Center in a table --
 function placedDataCenter(event)
 	if global.dataCenterTable == nil then global.dataCenterTable = {} end
 	global.dataCenterTable[event.created_entity.unit_number] = DC:new(event.created_entity)
+end
+
+-- Save the Data Center MF --
+function placedDataCenterMF(event)
+	if global.MF.dataCenter == nil then
+		global.MF.dataCenter = DCMF:new(event.created_entity)
+	end
 end
 
 -- Save Data Storage in a table --
@@ -68,12 +75,14 @@ end
 -- Remove the Matter Serializer from the table --
 function removedMatterSerializer(event)
 	if global.matterSerializerTable == nil then global.matterSerializerTable = {} return end
+	if global.matterSerializerTable[event.entity.unit_number] ~= nil then global.matterSerializerTable[event.entity.unit_number]:remove() end
 	global.matterSerializerTable[event.entity.unit_number] = nil
 end
 
 -- Remove the Matter Printer from the table --
 function removedMatterPrinter(event)
 	if global.matterPrinterTable == nil then global.matterPrinterTable = {} return end
+	if global.matterPrinterTable[event.entity.unit_number] ~= nil then global.matterPrinterTable[event.entity.unit_number]:remove() end
 	global.matterPrinterTable[event.entity.unit_number] = nil
 end
 
@@ -82,6 +91,14 @@ function removedDataCenter(event)
 	if global.dataCenterTable == nil then global.dataCenterTable = {} return end
 	if global.dataCenterTable[event.entity.unit_number] ~= nil then global.dataCenterTable[event.entity.unit_number]:remove() end
 	global.dataCenterTable[event.entity.unit_number] = nil
+end
+
+-- Remove the Data Center MF --
+function removedDataCenterMF(event)
+	if global.MF.dataCenter ~= nil and global.MF.dataCenter.ent == event.entity then
+		global.MF.dataCenter:remove()
+		global.MF.dataCenter = nil
+	end
 end
 
 -- Remove Data Storage from the table --

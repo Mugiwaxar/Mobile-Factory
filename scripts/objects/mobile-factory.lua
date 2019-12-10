@@ -11,6 +11,7 @@ MF = {
 	ccS = nil,
 	fChest = nil,
 	II = nil,
+	dataCenter = nil,
 	internalEnergy = _mfInternalEnergy,
 	maxInternalEnergy = _mfInternalEnergyMax,
 	jumpTimer = _mfBaseJumpTimer,
@@ -58,7 +59,7 @@ function MF:rebuild(object)
 	local mt = {}
 	mt.__index = MF
 	setmetatable(object, mt)
-	II:rebuild(global.MF.II)
+	INV:rebuild(global.MF.II)
 end
 
 -- Synchronize Factory Chest --

@@ -1,5 +1,14 @@
 require("utils/functions.lua")
 
+-- Create Update System --
+UpSys = {}
+
+-- Update System: Scan Entities --
+function UpSys:scanEnts()
+
+end
+
+
 -- Recharge inroom Dimensional Accumulator --
 function updateAccumulators()
 	-- Factory --

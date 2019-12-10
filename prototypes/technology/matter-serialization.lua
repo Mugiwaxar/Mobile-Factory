@@ -1,10 +1,10 @@
 ---------------- DIMENSIONAL LOGISTIC -------------------
 
--- Dimensional Logisctic --
+-- Matter Serialization --
 local msT = {}
 msT.name = "MatterSerialization"
 msT.type = "technology"
-msT.icon = "__Mobile_Factory__/graphics/icones/TechDimensionalLogistic.png"
+msT.icon = "__Mobile_Factory__/graphics/matter-serialization/MatterSerializationI.png"
 msT.icon_size = 32
 msT.unit = {
 	count=15,
@@ -15,7 +15,15 @@ msT.unit = {
 	}
 }
 msT.prerequisites = {"DimensionalCrystal"}
-msT.effects = {{type="nothing", effect_description={"description.MatterSerialization"}}, {type="unlock-recipe", recipe="MatterSerializer"}, {type="unlock-recipe", recipe="MatterPrinter"}, {type="unlock-recipe", recipe="DataStorage"}}
+msT.effects = 
+{
+	{type="nothing", effect_description={"description.MatterSerialization"}},
+	{type="unlock-recipe", recipe="MatterSerializer"},
+	{type="unlock-recipe", recipe="MatterPrinter"},
+	{type="unlock-recipe", recipe="DataStorage"},
+	{type="unlock-recipe", recipe="DataCenter"},
+	{type="unlock-recipe", recipe="DataCenterMF"}
+}
 data:extend{msT}
 
 
