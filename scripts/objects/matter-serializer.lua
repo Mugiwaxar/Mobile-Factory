@@ -47,6 +47,10 @@ function MS:update()
 	self.lastUpdate = game.tick
 end
 
+-- Tooltip Infos --
+function MS:getTooltipInfos(GUI)
+end
+
 -- Set Active --
 function MS:setActive(set)
 	self.active = set

@@ -1,9 +1,11 @@
+GUI = {}
+UpSys = {}
+
 require("utils/profiler.lua")
 require("utils/settings.lua")
 require("utils/functions.lua")
 require("utils/surface.lua")
-require("scripts/gui.lua")
-require("scripts/gui-update.lua")
+require("scripts/GUI/gui.lua")
 require("utils/cc-extension.lua")
 require("scripts/game-update.lua")
 require("utils/warptorio.lua")
@@ -16,7 +18,6 @@ require("scripts/objects/data-center-mf.lua")
 require("scripts/objects/data-storage.lua")
 require("scripts/objects/matter-serializer.lua")
 require("scripts/objects/matter-printer.lua")
-
 
 -- When the mod init --
 function onInit()
@@ -96,12 +97,12 @@ end
 
 -- When the configuration have changed --
 function onConfigurationChanged()
-	-- Update all GUI --
-	for k, player in pairs(game.players) do
-		createPlayerGui(player)
-	end
 	-- Update all Variables --
 	updateValues()
+	-- Update all GUI --
+	for k, player in pairs(game.players) do
+		GUI.createPlayerGui(player)
+	end
 end
 
 -- Event --
@@ -122,10 +123,12 @@ script.on_event(defines.events.on_player_mined_tile, onPlayerRemoveSomethings)
 script.on_event(defines.events.on_robot_mined_entity, onRobotRemoveSomething)
 script.on_event(defines.events.on_robot_mined_tile, onRobotRemoveSomething)
 script.on_event(defines.events.on_entity_died, onEntityIsDestroyed)
-script.on_event(defines.events.on_gui_click, buttonClicked)
-script.on_event(defines.events.on_gui_elem_changed, onGuiElemChanged)
-script.on_event(defines.events.on_gui_checked_state_changed, onGuiElemChanged)
+script.on_event(defines.events.on_gui_click, GUI.buttonClicked)
+script.on_event(defines.events.on_gui_elem_changed, GUI.onGuiElemChanged)
+script.on_event(defines.events.on_gui_checked_state_changed, GUI.onGuiElemChanged)
+script.on_event(defines.events.on_gui_text_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_research_finished, technologyFinished)
+script.on_event(defines.events.on_selected_entity_changed, GUI.updateTooltip)
 
 -- Add command to insert Mobile Factory to the player inventory --
 commands.add_command("GetMobileFactory", "Add the Mobile Factory to the player inventory", addMobileFactory)

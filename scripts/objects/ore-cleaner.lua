@@ -48,8 +48,10 @@ function OC:valid()
 	return false
 end
 
--- Update the Ore Cleaner --
+-- Update --
 function OC:update(event)
+	-- Set the lastUpdate variable --
+	self.lastUpdate = game.tick
 	-- Remove the Ore Cleaner if it no longer exist --
 	if self.ent == nil then self:remove() return end
 	if self.ent.valid == false then self:remove() return end
@@ -66,6 +68,10 @@ function OC:update(event)
 	-- Update Animation --
 	 self:updateAnimation(event)
 	 --
+end
+
+-- Tooltip Infos --
+function OC:getTooltipInfos(GUI)
 end
 
 -- Add a Quatron Charge --

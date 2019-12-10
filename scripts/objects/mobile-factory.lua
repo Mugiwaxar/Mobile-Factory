@@ -69,8 +69,14 @@ function MF:valid()
 	return true
 end
 
+-- Tooltip Infos --
+function MF:getTooltipInfos(GUI)
+end
+
 -- Update the Mobile Factory --
 function MF:update(event)
+	-- Set the lastUpdate variable --
+	self.lastUpdate = game.tick
 	-- Get the current tick --
 	local tick = event.tick
 	--Update all lasers --

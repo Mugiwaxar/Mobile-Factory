@@ -15,7 +15,7 @@ function onTick(event)
 	-- Update all entities --
 	updateEntities(event)
 	-- Update all GUI --
-	if event.tick%_eventTick55 == 0 then updateAllGUIs() end
+	if event.tick%_eventTick55 == 0 then GUI.updateAllGUIs() end
 	-- Update Modules Variable inside de Equalizer --
 	if event.tick%_eventTick125 == 0 then scanModules(event) end
 	-- Update the Jump Drives --
@@ -32,7 +32,7 @@ function updateEntities(event)
 	-- Verify Mobile Factory --
 	if global.MF == nil then return end
 	-- Update System --
-	UpSys:update(event)
+	UpSys.update(event)
 	-- Update --
 	if event.tick%_eventTick5 == 0 then factoryTeleportBox() end
 	if event.tick%_eventTick38 == 0 then updateAccumulators() end

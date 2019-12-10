@@ -1,30 +1,27 @@
 require("utils/functions.lua")
 
--- Create Update System --
-UpSys = {}
-
 -- Update System: Scan Entities --
-function UpSys:scanEnts()
+function UpSys.scanEnts()
 	-- Clear the Entities Table --
 	global.entsTable = {}
 		
 	-- Add Entities --
-	UpSys:addEntity(global.MF)
-	if UpSys:addEntity(global.MF.dataCenter) == false then global.MF.dataCenter = nil end
-	UpSys:addEntity(global.oreCleaner)
+	UpSys.addEntity(global.MF)
+	if UpSys.addEntity(global.MF.dataCenter) == false then global.MF.dataCenter = nil end
+	UpSys.addEntity(global.oreCleaner)
 	
 	-- Add Array --
-	UpSys:addTable(global.dataCenterTable)
-	UpSys:addTable(global.matterSerializerTable)
-	UpSys:addTable(global.matterPrinterTable)
-	UpSys:addTable(global.dataStorageTable)
+	UpSys.addTable(global.dataCenterTable)
+	UpSys.addTable(global.matterSerializerTable)
+	UpSys.addTable(global.matterPrinterTable)
+	UpSys.addTable(global.dataStorageTable)
 	
 	-- Shuffle the MF Entities Table --
-	UpSys:shuffle(global.entsTable)
+	UpSys.shuffle(global.entsTable)
 end
 
 -- Update System: Add an Entity to the MF Entities Table --
-function UpSys:addEntity(entity)
+function UpSys.addEntity(entity)
 	-- Check if the Entity is not null --
 	if entity ~= nil then
 		if entity:valid() ~= true then
@@ -39,16 +36,16 @@ function UpSys:addEntity(entity)
 end
 
 -- Update System: Add a Table to the MF Entities Table --
-function UpSys:addTable(array)
+function UpSys.addTable(array)
 	-- Itinerate the Table --
 	for k, ent in pairs(array) do
 		-- Add the Entity --
-		if UpSys:addEntity(ent) == false then array[k] = nil end
+		if UpSys.addEntity(ent) == false then array[k] = nil end
 	end
 end
 
 -- Update System: Randomize Table --
-function UpSys:shuffle(array)
+function UpSys.shuffle(array)
 	math.randomseed(game.tick)
 	for i = table_size(array), 2, -1 do
 		local j = math.random(i)
@@ -58,7 +55,7 @@ function UpSys:shuffle(array)
 end
 
 -- Update System: Update Entities --
-function UpSys:update(event)
+function UpSys.update(event)
 	-- Check the Entities Table --
 	if global.entsTable == nil then global.entsTable = {} end
 	-- Check the Index --
@@ -73,7 +70,7 @@ function UpSys:update(event)
 	-- Begin the Update of Entities --
 	while updated <= global.entsUpPerTick and global.upSysIndex <= maxIndex do
 		-- Check if the Entity need an update --
-		if game.tick - global.entsTable[global.upSysIndex].lastUpdate >= global.entsTable[global.upSysIndex].updateTick then
+		if global.entsTable[global.upSysIndex].updateTick > 0 and game.tick - global.entsTable[global.upSysIndex].lastUpdate >= global.entsTable[global.upSysIndex].updateTick then
 			-- Update the Entity --
 			global.entsTable[global.upSysIndex]:update(event)
 			-- Increment the number of Entities updated --
@@ -92,7 +89,7 @@ function UpSys:update(event)
 		-- Save the last scan tick --
 		global.upSysLastScan = game.tick
 		-- Rescan all Entities --
-		UpSys:scanEnts()
+		UpSys.scanEnts()
 	elseif global.upSysIndex > maxIndex then
 		global.upSysIndex = 1
 	end

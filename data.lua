@@ -384,6 +384,16 @@ data:extend{
 }
 
 data:extend{
+    {
+        type = "sprite",
+        name = "InspectI",
+        filename = "__Mobile_Factory__/graphics/icones/MGlass.png",
+        size = 32,
+        flags = {"icon"}
+    }
+}
+
+data:extend{
 	{
 		type = "sprite",
 		name = "PortIcon",

@@ -53,6 +53,10 @@ function DCMF:update()
 	self.lastUpdate = game.tick
 end
 
+-- Tooltip Infos --
+function DCMF:getTooltipInfos(GUI)
+end
+
 -- Set Active --
 function DCMF:setActive(set)
 	self.active = set

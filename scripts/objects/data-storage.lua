@@ -6,7 +6,7 @@ DS = {
 	animID = 0,
 	active = false,
 	linkedDC = nil,
-	updateTick = nil,
+	updateTick = 0,
 	lastUpdate = 0
 }
 
@@ -45,6 +45,10 @@ end
 function DS:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
+end
+
+-- Tooltip Infos --
+function DS:getTooltipInfos(GUI)
 end
 
 -- Set Active --

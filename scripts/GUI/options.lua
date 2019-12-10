@@ -1,5 +1,5 @@
 -- Read changed Options from the Options GUI --
-function readOptions(option, player, gui)
+function GUI.readOptions(option, player, gui)
 	local name = option.name
 	-- Main GUI --
 	if name == "GUIPosOpt" then
@@ -28,5 +28,14 @@ function readOptions(option, player, gui)
 	end
 	if name == "GUIEnergyBarOpt" then
 		player.gui.screen.mfGUI.mfGUICenterFrame.InternalEnergyBar.visible = player.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab1Frame.mfOptTab1Pane.GUIEnergyBarOpt.state
+	end
+	-- Performances --
+	if name == "SystemPerfEntsPerTick" then
+		local number = tonumber(option.text)
+		if number == nil then return end
+		number = math.max(number, 10)
+		number = math.min(number, 10000)
+		global.entsUpPerTick = number
+		option.text = number
 	end
 end

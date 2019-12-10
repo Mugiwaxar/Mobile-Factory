@@ -55,6 +55,12 @@ function DC:update()
 	self.lastUpdate = game.tick
 end
 
+-- Tooltip Infos --
+function DC:getTooltipInfos(GUI)
+	-- Return Circuit name --
+	GUI.add{type="label", caption=self.invObj.name}
+end
+
 -- Set Active --
 function DC:setActive(set)
 	self.active = set

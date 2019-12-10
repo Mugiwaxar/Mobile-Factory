@@ -45,7 +45,10 @@ end
 function MP:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
-	dprint("update")
+end
+
+-- Tooltip Infos --
+function MP:getTooltipInfos(GUI)
 end
 
 -- Set Active --
