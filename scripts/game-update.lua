@@ -2,7 +2,7 @@ require("utils/players-teleportation.lua")
 require("utils/surface")
 require("utils/saved-tables.lua")
 require("utils/functions.lua")
-require("scripts/entities-update.lua")
+require("scripts/update-system.lua")
 require("utils/place-and-remove.lua")
 
 -- One each game tick --
@@ -32,16 +32,14 @@ function updateEntities(event)
 	-- Verify Mobile Factory --
 	if global.MF == nil then return end
 	-- Update System --
-	UpSys:scanEnts()
+	UpSys:update(event)
 	-- Update --
 	if event.tick%_eventTick5 == 0 then factoryTeleportBox() end
 	if event.tick%_eventTick38 == 0 then updateAccumulators() end
 	if event.tick%_eventTick64 == 0 then updateLogisticFluidPoles() end
-	if event.tick%_eventTick110 == 0 then updateProvidersPad() end
-	if event.tick%_eventTick115 == 0 then updateRequesterPad() end
+	-- if event.tick%_eventTick110 == 0 then updateProvidersPad() end
+	-- if event.tick%_eventTick115 == 0 then updateRequesterPad() end
 	if event.tick%_eventTick59 == 0 then updateFluidExtractor() end
-	global.MF:update(event)
-	if global.oreCleaner ~= nil then global.oreCleaner:update(event) end
 	updatePowerDrainPole(event)
 	updateOreSilotPad()
 end
@@ -49,6 +47,10 @@ end
 -- Update base Mobile Factory Values --
 function updateValues()
 	if global.MF == nil then global.MF = MF:new() end
+	if global.entsTable == nil then global.entsTable = {} end
+	if global.entsUpPerTick == nil then global.entsUpPerTick = _mfBaseUpdatePerTick end
+	if global.upSysIndex == nil then global.upSysIndex = 1 end
+	if global.upSysLastScan == nil then global.upSysLastScan = 0 end
 	if global.IDModule == nil then global.IDModule = 0 end
 	if global.accTable == nil then global.accTable = {} end
 	if global.pdpTable == nil then global.pdpTable = {} end

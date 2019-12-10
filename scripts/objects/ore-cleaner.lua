@@ -9,7 +9,8 @@ OC = {
 	inventory = nil,
 	animID = 0,
 	animTick = 0,
-	lastExtractionTick = 0
+	updateTick = 1,
+	lastUpdate = 0
 }
 
 -- Constructor --
@@ -23,22 +24,48 @@ function OC:new(object)
 	return t
 end
 
--- Remover --
-function OC:remove()
-	self.ent = nil
-	self.oreTable = {}
-	animID = 0
-	animTick = 0
-	lastExtractionTick = 0
-	rendering.destroy(self.animID)
-end
-
 -- Reconstructor --
 function OC:rebuild(object)
 	if object == nil then return end
 	local mt = {}
 	mt.__index = OC
 	setmetatable(object, mt)
+end
+
+-- Destructor --
+function OC:remove()
+	self.ent = nil
+	self.oreTable = {}
+	animID = 0
+	animTick = 0
+	lastUpdate = 0
+	rendering.destroy(self.animID)
+end
+
+-- Is valid --
+function OC:valid()
+	if self.ent ~= nil and self.ent.valid then return true end
+	return false
+end
+
+-- Update the Ore Cleaner --
+function OC:update(event)
+	-- Remove the Ore Cleaner if it no longer exist --
+	if self.ent == nil then self:remove() return end
+	if self.ent.valid == false then self:remove() return end
+	-- Set the Ore Cleaner Energy --
+	global.oreCleaner.ent.energy = 60
+	-- Collect Ores --
+	if event.tick%_mfOreCleanerExtractionTicks == 0 then
+		self:collectOres(event)
+	end
+	-- Send ores to the Ore Silo --
+	if event.tick%_eventTick57 == 0 then
+		self:sendToSilo()
+	end
+	-- Update Animation --
+	 self:updateAnimation(event)
+	 --
 end
 
 -- Add a Quatron Charge --
@@ -126,26 +153,6 @@ function OC:scanOres(entity)
 	self.oreTable = entity.surface.find_entities_filtered{position=entity.position, radius=_mfOreCleanerRadius, name=resource[1].name}
 end
 
--- Update the Ore Cleaner --
-function OC:update(event)
-	-- Remove the Ore Cleaner if it no longer exist --
-	if self.ent == nil then self:remove() return end
-	if self.ent.valid == false then self:remove() return end
-	-- Set the Ore Cleaner Energy --
-	global.oreCleaner.ent.energy = 60
-	-- Collect Ores --
-	if event.tick%_mfOreCleanerExtractionTicks == 0 then
-		self:collectOres(event)
-	end
-	-- Send ores to the Ore Silo --
-	if event.tick%_eventTick57 == 0 then
-		self:sendToSilo()
-	end
-	-- Update Animation --
-	 self:updateAnimation(event)
-	 --
-end
-
 -- Collect surrounding Ores --
 function OC:collectOres(event)
 	-- Test if the Ore Cleaner and the Mobile Factory are valid --
@@ -192,8 +199,8 @@ function OC:collectOres(event)
 	if oreExtracted > 0 then
 		-- Make the Beam --
 		self.ent.surface.create_entity{name="OCBeam", duration=60, position=self.ent.position, target=orePath.position, source={self.ent.position.x,self.ent.position.y-3.2}}
-		-- Set the lastExtractionTick variable --
-		self.lastExtractionTick = event.tick
+		-- Set the lastUpdate variable --
+		self.lastUpdate = event.tick
 		-- Remove a charge --
 		self.charge = self.charge - 1
 	end
@@ -235,7 +242,7 @@ end
 -- Update the Animation --
 function OC:updateAnimation(event)
 	-- Test if they was any extraction since the last tick --
-	if event.tick - self.lastExtractionTick > 10 and self.animID ~= 0 then
+	if event.tick - self.lastUpdate > 10 and self.animID ~= 0 then
 		-- Destroy the Animation --
 		rendering.destroy(self.animID)
 		self.animID = 0
@@ -243,7 +250,7 @@ function OC:updateAnimation(event)
 		self.ent.surface.create_entity{name="OCBigBeam", duration=16, position=self.ent.position, target=global.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
 		return
 	-- If they was extraction but the animation doesn't exist --
-	elseif event.tick - self.lastExtractionTick <= 10 and self.animID == 0 then
+	elseif event.tick - self.lastUpdate <= 10 and self.animID == 0 then
 		-- Create the Orb Animation --
 		self.animID = rendering.draw_animation{animation="RedEnergyOrb", target={self.ent.position.x,self.ent.position.y - 3.25}, surface=self.ent.surface}
 		-- I don't know what this do, but it work (reset the animation) --

@@ -44,8 +44,15 @@ function DC:remove()
 end
 
 -- Is valid --
-function valid()
+function DC:valid()
 	if self.ent ~= nil and self.ent.valid then return true end
+	return false
+end
+
+-- Update --
+function DC:update()
+	-- Set the lastUpdate variable --
+	self.lastUpdate = game.tick
 end
 
 -- Set Active --

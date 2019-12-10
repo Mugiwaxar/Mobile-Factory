@@ -36,8 +36,15 @@ function DS:remove()
 end
 
 -- Is valid --
-function valid()
+function DS:valid()
 	if self.ent ~= nil and self.ent.valid then return true end
+	return false
+end
+
+-- Update --
+function DS:update()
+	-- Set the lastUpdate variable --
+	self.lastUpdate = game.tick
 end
 
 -- Set Active --

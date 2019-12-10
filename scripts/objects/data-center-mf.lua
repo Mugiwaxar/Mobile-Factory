@@ -42,8 +42,15 @@ function DCMF:remove()
 end
 
 -- Is valid --
-function valid()
+function DCMF:valid()
 	if self.ent ~= nil and self.ent.valid then return true end
+	return false
+end
+
+-- Update --
+function DCMF:update()
+	-- Set the lastUpdate variable --
+	self.lastUpdate = game.tick
 end
 
 -- Set Active --

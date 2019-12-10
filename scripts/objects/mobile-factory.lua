@@ -4,6 +4,8 @@ require("utils/functions")
 -- Create the Mobile Factory Object --
 MF = {
 	ent = nil,
+	updateTick = 1,
+	lastUpdate = 0,
 	lastSurface = nil,
 	lastPosX = 0,
 	lastPosY = 0,
@@ -46,13 +48,6 @@ function MF:contruct(object)
 	self.lastPosY = object.position.y
 end
 
--- Destructor --
-function MF:remove()
-	self.ent = nil
-	self.internalEnergy = 0
-	self.jumpTimer = _mfBaseJumpTimer
-end
-
 -- Reconstructor --
 function MF:rebuild(object)
 	if object == nil then return end
@@ -60,6 +55,32 @@ function MF:rebuild(object)
 	mt.__index = MF
 	setmetatable(object, mt)
 	INV:rebuild(global.MF.II)
+end
+
+-- Destructor --
+function MF:remove()
+	self.ent = nil
+	self.internalEnergy = 0
+	self.jumpTimer = _mfBaseJumpTimer
+end
+
+-- Is valid --
+function MF:valid()
+	return true
+end
+
+-- Update the Mobile Factory --
+function MF:update(event)
+	-- Get the current tick --
+	local tick = event.tick
+	--Update all lasers --
+	if tick%_eventTick60 == 0 then self:updateLasers() end
+	-- Update the Fuel --
+	if tick%_eventTick27 == 0 then self:updateFuel() end
+	-- Update the Shield --
+	self:updateShield(event)
+	-- Send Quatron Charge --
+	self:SendQuatron(event)
 end
 
 -- Synchronize Factory Chest --
@@ -104,20 +125,6 @@ end
 function MF:maxShield()
 	if self.ent == nil or self.ent.valid == false or self.ent.grid == nil then return 0 end
 	return self.ent.grid.max_shield
-end
-
--- Update the Mobile Factory --
-function MF:update(event)
-	-- Get the current tick --
-	local tick = event.tick
-	--Update all lasers --
-	if tick%_eventTick60 == 0 then self:updateLasers() end
-	-- Update the Fuel --
-	if tick%_eventTick27 == 0 then self:updateFuel() end
-	-- Update the Shield --
-	self:updateShield(event)
-	-- Send Quatron Charge --
-	self:SendQuatron(event)
 end
 
 -- Search energy sources near Mobile Factory and update the burning fuel --

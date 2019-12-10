@@ -25,6 +25,11 @@ function onInit()
 	global.MF.II = INV:new("Internal Inventory")
 	createMFSurface()
 	createControlRoom()
+	-- Update System --
+	global.entsTable = {}
+	global.entsUpPerTick = _mfBaseUpdatePerTick
+	global.upSysIndex = 1
+	global.upSysLastScan = 0
 	-- Module ID --
 	global.IDModule = 0
 	-- Current Entities Update --

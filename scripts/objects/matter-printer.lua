@@ -36,8 +36,16 @@ function MP:remove()
 end
 
 -- Is valid --
-function valid()
+function MP:valid()
 	if self.ent ~= nil and self.ent.valid then return true end
+	return false
+end
+
+-- Update --
+function MP:update()
+	-- Set the lastUpdate variable --
+	self.lastUpdate = game.tick
+	dprint("update")
 end
 
 -- Set Active --

@@ -36,8 +36,15 @@ function MS:remove()
 end
 
 -- Is valid --
-function valid()
+function MS:valid()
 	if self.ent ~= nil and self.ent.valid then return true end
+	return false
+end
+
+-- Update --
+function MS:update()
+	-- Set the lastUpdate variable --
+	self.lastUpdate = game.tick
 end
 
 -- Set Active --
