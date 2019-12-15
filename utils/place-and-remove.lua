@@ -11,9 +11,9 @@ function somethingWasPlaced(event, isRobot)
 	else
 		creator = event.robot
 	end
-	-- Prevent to place Lab/Void Tiles outside the Factory --
-	if event.tiles ~= nil and (event.tile.name == "tutorial-grid") and creator.surface.name == _mfControlSurfaceName  then
-		if isPlayer == true then creator.print("Unable to place " .. event.tile.name .. " outside the Factory") end
+	-- Prevent to place Lab/Void Tiles inside the Control Center --
+	if event.tiles ~= nil and (event.tile.name == "tutorial-grid" or event.tile.name == "out-of-map") and creator.surface.name == _mfControlSurfaceName  then
+		if isPlayer == true then creator.print({"", "Unable to place ", {"item-name." .. event.stack.name }, " outside the Factory"}) end
 		for k, tile in pairs(event.tiles) do
 			createTilesAtPosition(tile.position, 1, creator.surface, tile.old_tile.name)
 		end
@@ -24,7 +24,7 @@ function somethingWasPlaced(event, isRobot)
 	if string.match(event.created_entity.name, "MobileFactory") then
 		-- If the Mobile Factory already exist --
 		if global.MF.ent ~= nil and global.MF.ent.valid == true then
-			if isPlayer == true then creator.print("Unable to place more than one Mobile Factory ") end
+			if isPlayer == true then creator.print({"", "Unable to place more than one ", {"item-name." .. event.stack.name }}) end
 			event.created_entity.destroy()
 			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
 				creator.get_main_inventory().insert(event.stack)
@@ -39,7 +39,7 @@ function somethingWasPlaced(event, isRobot)
 	-- Item --
 	if creator.surface.name ~= _mfSurfaceName then
 		if canBePlacedOutside(event.created_entity.name) == false then
-			if isPlayer == true then creator.print("You can only place the " .. event.created_entity.name .. " inside the Mobile Factory") end
+			if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"}) end
 			event.created_entity.destroy()
 			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
 				creator.get_main_inventory().insert(event.stack)
@@ -50,7 +50,7 @@ function somethingWasPlaced(event, isRobot)
 	-- Ghost --
 	if isPlayer == true and creator.surface.name ~= _mfSurfaceName and event.stack ~= nil and event.stack.valid_for_read == true and event.created_entity.name == "entity-ghost" then
 		if canBePlacedOutside(event.stack.name) == false then
-			creator.print("You can only place this " .. event.stack.name .. " inside the Mobile Factory")
+			creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"})
 			event.created_entity.destroy()
 			return
 		end
@@ -58,31 +58,31 @@ function somethingWasPlaced(event, isRobot)
 	-- Blueprint --
 	if isPlayer == true and creator.surface.name ~= _mfSurfaceName and event.stack ~= nil and event.stack.valid_for_read == true and event.stack.is_blueprint then
 		if canBePlacedOutside(event.created_entity.ghost_name) == false then
-			creator.print("You can only place this " .. event.stack.name .. " inside the Mobile Factory")
+			creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"})
 			event.created_entity.destroy()
 			return
 		end
 	end
 	-- Allow to place things in the Control Center --
-	if event.created_entity.name == "InventoryPad" and creator.surface.name == _mfControlSurfaceName then
+	if event.created_entity.name == "DataStorage" and creator.surface.name == _mfControlSurfaceName then
 		local tile = creator.surface.find_tiles_filtered{position=event.created_entity.position, radius=1, limit=1}
 		if tile[1] ~= nil and tile[1].valid == true and tile[1].name == "BuildTile" then
-			placedInventoryPad(event)
+			placedDataStorage(event)
 			return
 		end
 	end
-	-- Prevent to place InventoryPad --
-	if event.created_entity.name == "InventoryPad" then
-		if isPlayer == true then creator.print("You can only place the " .. event.created_entity.name .. " inside the Control Center Constructible area") end
-		event.created_entity.destroy()
-		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
-			creator.get_main_inventory().insert(event.stack)
-		end
-		return
-	end
+	-- Prevent to place DataStorage --
+	-- if event.created_entity.name == "DataStorage" then
+		-- if isPlayer == true then creator.print("You can only place the " .. event.created_entity.name .. " inside the Control Center Constructible area") end
+		-- event.created_entity.destroy()
+		-- if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
+			-- creator.get_main_inventory().insert(event.stack)
+		-- end
+		-- return
+	-- end
 	-- Prevent to place things in the Control Center --
 	if creator.surface.name == _mfControlSurfaceName then
-		if isPlayer == true then creator.print("You can place that here") end
+		if isPlayer == true then creator.print("You can't build inside the Control Center") end
 		event.created_entity.destroy()
 		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
 			creator.get_main_inventory().insert(event.stack)
@@ -91,8 +91,8 @@ function somethingWasPlaced(event, isRobot)
 	end
 	-- Save the Factory Chest --
 	if event.created_entity.name == "FactoryChest" then
-		if global.MF.fChest ~= nil then
-			if isPlayer == true then creator.print("Unable to place more than one Factory Chest") end
+		if global.MF.fChest ~= nil and global.MF.fChest.valid == true then
+			if isPlayer == true then creator.print({"", "Unable to place more than one ", {"item-name." .. event.stack.name }}) end
 			event.created_entity.destroy()
 			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
 				creator.get_main_inventory().insert(event.stack)
@@ -114,13 +114,38 @@ function somethingWasPlaced(event, isRobot)
 	if event.created_entity.name == "LogisticFluidPole" then
 		placedLogisticPowerPole(event)
 	end
-	-- Save the Provider Pad --
-	if event.created_entity.name == "ProviderPad" then
-		placedProviderPad(event)
+	-- Save the Matter Serializer --
+	if event.created_entity.name == "MatterSerializer" then
+		placedMatterSerializer(event)
 	end
-	-- Save the Requester Pad --
-	if event.created_entity.name == "RequesterPad" then
-		placedRequesterPad(event)
+	-- Save the Matter Printer --
+	if event.created_entity.name == "MatterPrinter" then
+		placedMatterPrinter(event)
+	end
+	-- Save the Data Center --
+	if event.created_entity.name == "DataCenter" then
+		placedDataCenter(event)
+	end
+	-- Save the Energy Cube --
+	if string.match(event.created_entity.name, "EnergyCube") then
+		placedEnergyCube(event)
+	end
+	-- Save the Data Center MF --
+	if event.created_entity.name == "DataCenterMF" then
+		if global.MF.dataCenter ~= nil and global.MF.dataCenter:valid() == true then
+			if isPlayer == true then creator.print({"", "Unable to place more than one ", {"item-name." .. event.stack.name }}) end
+			event.created_entity.destroy()
+			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
+				creator.get_main_inventory().insert(event.stack)
+			end
+			return
+		else
+			placedDataCenterMF(event)
+		end
+	end
+	-- Save the Data Storage --
+	if event.created_entity.name == "DataStorage" then
+		placedDataStorage(event)
 	end
 	-- Save the Ore Silot Pad --
 	if string.match(event.created_entity.name, "OreSilotPad") then
@@ -129,7 +154,7 @@ function somethingWasPlaced(event, isRobot)
 	-- Save the Ore Cleaner --
 	if event.created_entity.name == "OreCleaner" then
 		if global.oreCleaner ~= nil and global.oreCleaner.ent ~= nil then
-			if isPlayer== true then creator.print("Unable to place more than one Ore Cleaner") end
+			if isPlayer== true then creator.print({"", "Unable to place more than one ", {"item-name." .. event.stack.name }}) end
 			event.created_entity.destroy()
 			if isPlayer== true and event.stack ~= nil and event.stack.valid_for_read == true then
 				creator.get_main_inventory().insert(event.stack)
@@ -144,7 +169,7 @@ function somethingWasPlaced(event, isRobot)
 	-- Save the Fluid Extractor --
 	if event.created_entity.name == "FluidExtractor" then
 		if global.fluidExtractor ~= nil then
-			if isPlayer== true then creator.print("Unable to place more than one Fluid Extractor") end
+			if isPlayer== true then creator.print({"", "Unable to place more than one ", {"item-name." .. event.stack.name }}) end
 			event.created_entity.destroy()
 			if isPlayer== true and event.stack ~= nil and event.stack.valid_for_read == true then
 				creator.get_main_inventory().insert(event.stack)
@@ -186,15 +211,27 @@ function somethingWasRemoved(event)
 		removedLogisticPowerPole(event)
 		return
 	end
-	-- Remove the Provider Pad --
-	if event.entity.name == "ProviderPad" then
-		removedProviderPad(event)
+	-- Remove the Matter Serializer --
+	if event.entity.name == "MatterSerializer" then
+		removedMatterSerializer(event)
 		return
 	end
-	-- Remove the Requester Pad --
-	if event.entity.name == "RequesterPad" then
-		removedRequesterPad(event)
+	-- Remove the Matter Printer --
+	if event.entity.name == "MatterPrinter" then
+		removedMatterPrinter(event)
 		return
+	end
+	-- Remove the Data Center --
+	if event.entity.name == "DataCenter" then
+		removedDataCenter(event)
+	end
+	-- Remove the Data Center MF --
+	if event.entity.name == "DataCenterMF" then
+		removedDataCenterMF(event)
+	end
+	-- Remove the Energy Cube --
+	if string.match(event.entity.name, "EnergyCube") then
+		removedEnergyCube(event)
 	end
 	-- Remove the Ore Silot Pad --
 	if string.match(event.entity.name, "OreSilotPad") then
@@ -202,8 +239,8 @@ function somethingWasRemoved(event)
 		return
 	end
 	-- Remove the Inventory Pad --
-	if event.entity.name == "InventoryPad" then
-		removedInventoryPad(event)
+	if event.entity.name == "DataStorage" then
+		removedDataStorage(event)
 		return
 	end
 	-- Remove the Ore Cleaner --

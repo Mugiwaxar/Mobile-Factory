@@ -4,12 +4,16 @@ require("utils/functions")
 -- Create the Mobile Factory Object --
 MF = {
 	ent = nil,
+	updateTick = 1,
+	lastUpdate = 0,
 	lastSurface = nil,
 	lastPosX = 0,
 	lastPosY = 0,
 	fS = nil,
 	ccS = nil,
 	fChest = nil,
+	II = nil,
+	dataCenter = nil,
 	internalEnergy = _mfInternalEnergy,
 	maxInternalEnergy = _mfInternalEnergyMax,
 	jumpTimer = _mfBaseJumpTimer,
@@ -26,11 +30,10 @@ MF = {
 
 -- Constructor --
 function MF:new()
-	t = {}
-	mt = {}
+	local t = {}
+	local mt = {}
 	setmetatable(t, mt)
 	mt.__index = MF
-	t.ent = object
 	return t
 end
 
@@ -45,6 +48,15 @@ function MF:contruct(object)
 	self.lastPosY = object.position.y
 end
 
+-- Reconstructor --
+function MF:rebuild(object)
+	if object == nil then return end
+	local mt = {}
+	mt.__index = MF
+	setmetatable(object, mt)
+	INV:rebuild(global.MF.II)
+end
+
 -- Destructor --
 function MF:remove()
 	self.ent = nil
@@ -52,12 +64,29 @@ function MF:remove()
 	self.jumpTimer = _mfBaseJumpTimer
 end
 
--- Reconstructor --
-function MF:rebuild(object)
-	if object == nil then return end
-	mt = {}
-	mt.__index = MF
-	setmetatable(object, mt)
+-- Is valid --
+function MF:valid()
+	return true
+end
+
+-- Tooltip Infos --
+function MF:getTooltipInfos(GUI)
+end
+
+-- Update the Mobile Factory --
+function MF:update(event)
+	-- Set the lastUpdate variable --
+	self.lastUpdate = game.tick
+	-- Get the current tick --
+	local tick = event.tick
+	--Update all lasers --
+	if tick%_eventTick60 == 0 then self:updateLasers() end
+	-- Update the Fuel --
+	if tick%_eventTick27 == 0 then self:updateFuel() end
+	-- Update the Shield --
+	self:updateShield(event)
+	-- Send Quatron Charge --
+	self:SendQuatron(event)
 end
 
 -- Synchronize Factory Chest --
@@ -104,20 +133,6 @@ function MF:maxShield()
 	return self.ent.grid.max_shield
 end
 
--- Update the Mobile Factory --
-function MF:update(event)
-	-- Get the current tick --
-	local tick = event.tick
-	--Update all lasers --
-	if tick%_eventTick60 == 0 then self:updateLasers() end
-	-- Update the Fuel --
-	if tick%_eventTick27 == 0 then self:updateFuel() end
-	-- Update the Shield --
-	self:updateShield(event)
-	-- Send Quatron Charge --
-	self:SendQuatron(event)
-end
-
 -- Search energy sources near Mobile Factory and update the burning fuel --
 function MF:updateLasers()
 	-- Check the Mobile Factory --
@@ -160,10 +175,10 @@ function MF:updateLasers()
 					local name
 					local ccTank
 					if global.tankTable ~= nil and global.tankTable[global.IDModule] ~= nil then
-						name = global.tankTable[global.IDModule].name
+						filter = global.tankTable[global.IDModule].filter
 						ccTank = global.tankTable[global.IDModule].ent
 					end
-					if name ~= nil and ccTank ~= nil then
+					if filter ~= nil and ccTank ~= nil then
 						-- Get the focused Tank --
 						local name
 						local amount
@@ -193,35 +208,34 @@ function MF:updateLasers()
 			if self.itemLaserActivated == true and self.internalEnergy > _mfBaseItemEnergyConsumption * self:getLaserItemDrain() and (entity.type == "container" or entity.type == "logistic-container") then
 				-- Get Chest Inventory --
 				local inv = entity.get_inventory(defines.inventory.chest)
+				-- Get the Internal Inventory --
+				local dataInv = self.II
 				if inv ~= nil and inv.valid == true then
 					-- Create the Laser Capacity variable --
 					local capItems = self:getLaserItemDrain()
 					-- Get all Items --
 					local invItems = inv.get_contents()
-					-- Retrieve items from the Inventory --
+					-- Retrieve Items from the Inventory --
 					for iName, iCount in pairs(invItems) do
-						-- Retrieve item --
-						local removedItems = inv.remove({name=iName, count=capItems})
-						-- Add items to the Internal Inventory --
-						local added = addItemStackToII({name=iName, count=removedItems})
-						-- Test if not all amount was added --
-						if added ~= removedItems then
-							-- Send back to the Chest --
-							inv.insert({name=iName, count=removedItems-added})
-						end
-						-- Recalcule the capItems --
-						capItems = capItems - added
-						-- Create the laser and remove energy --
+						local added = dataInv:addItem(iName, math.min(iCount, capItems))
+						-- Check if Items was added --
 						if added > 0 then
-							self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target=entity.position, source=self.ent.position}
-							self.internalEnergy = self.internalEnergy - _mfBaseItemEnergyConsumption * removedItems
-							-- One less Beam to the Beam capacity --
-							i = i + 1
-						end
-						-- Test if capItems is empty --
-						if capItems <= 0 then
-							-- Stop --
-							break
+							-- Remove Items from the Chest --
+							local removedItems = inv.remove({name=iName, count=added})
+							-- Recalcule the capItems --
+							capItems = capItems - added
+							-- Create the laser and remove energy --
+							if added > 0 then
+								self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target=entity.position, source=self.ent.position}
+								self.internalEnergy = self.internalEnergy - _mfBaseItemEnergyConsumption * removedItems
+								-- One less Beam to the Beam capacity --
+								i = i + 1
+							end
+							-- Test if capItems is empty --
+							if capItems <= 0 then
+								-- Stop --
+								break
+							end
 						end
 					end
 				end

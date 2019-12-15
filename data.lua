@@ -12,9 +12,11 @@ require("prototypes/entity/dimensional-tank-MK2.lua")
 require("prototypes/entity/crystallizer.lua")
 require("prototypes/entity/dimensional-plant.lua")
 require("prototypes/entity/basic-solar-panel.lua")
-require("prototypes/entity/provider-pad.lua")
-require("prototypes/entity/requester-pad.lua")
-require("prototypes/entity/inventory-pad.lua")
+require("prototypes/entity/data-center.lua")
+require("prototypes/entity/matter-serializer.lua")
+require("prototypes/entity/matter-printer.lua")
+require("prototypes/entity/data-storage.lua")
+require("prototypes/entity/energy-cube-mk1.lua")
 require("prototypes/entity/ore-silot.lua")
 require("prototypes/entity/ore-cleaner.lua")
 require("prototypes/entity/fluid-extractor.lua")
@@ -41,7 +43,7 @@ require("prototypes/beam/OCBeam.lua")
 require("prototypes/technology/energy-laser.lua")
 require("prototypes/technology/fluid-laser.lua")
 require("prototypes/technology/control-center.lua")
-require("prototypes/technology/dimensional-logistic.lua")
+require("prototypes/technology/matter-serialization.lua")
 require("prototypes/gun/tank-guns.lua")
 require("prototypes/animation/shield.lua")
 require("prototypes/animation/red-energy-orb.lua")
@@ -117,6 +119,15 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
+		name="DataSerialization",
+		group="MobileFactory",
+		order="b3"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
 		name="Modules1",
 		group="MobileFactory",
 		order="c"
@@ -149,15 +160,6 @@ data:extend{
 		order="b4"
 	}
 }
-	
-data:extend{
-	{
-		type="item-subgroup",
-		name="Quatrons",
-		group="MobileFactory",
-		order="z"
-	}
-}
 
 data:extend{
 	{
@@ -183,6 +185,15 @@ data:extend{
 		name="SciencePack",
 		group="Elements",
 		order="c"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="Quatrons",
+		group="Elements",
+		order="z"
 	}
 }
 
@@ -258,6 +269,26 @@ data:extend{
         type = "sprite",
         name = "MoveIconOv",
         filename = "__Mobile_Factory__/graphics/icones/moveIconOv.png",
+        size = 32,
+        flags = {"icon"}
+    }
+}
+
+data:extend{
+    {
+        type = "sprite",
+        name = "LockIcon",
+        filename = "__Mobile_Factory__/graphics/icones/LockI.png",
+        size = 32,
+        flags = {"icon"}
+    }
+}
+
+data:extend{
+    {
+        type = "sprite",
+        name = "LockIconReed",
+        filename = "__Mobile_Factory__/graphics/icones/LockIReed.png",
         size = 32,
         flags = {"icon"}
     }
@@ -368,6 +399,16 @@ data:extend{
         type = "sprite",
         name = "MFIconI",
         filename = "__Mobile_Factory__/graphics/icones/MFIconI.png",
+        size = 32,
+        flags = {"icon"}
+    }
+}
+
+data:extend{
+    {
+        type = "sprite",
+        name = "InspectI",
+        filename = "__Mobile_Factory__/graphics/icones/MGlass.png",
         size = 32,
         flags = {"icon"}
     }

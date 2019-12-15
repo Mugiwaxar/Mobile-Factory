@@ -1,3 +1,6 @@
+-- Update System --
+_mfBaseUpdatePerTick = 100
+
 -- Mobile Factory Surfaces name --
 _mfSurfaceName = "mfSurface"
 _mfControlSurfaceName = "ControlRoom"
@@ -47,9 +50,13 @@ _lfpFluidDrain = 10000
 _lfpFluidLaser = 1
 _lfpFluidConsomption = 10
 
--- Internal Inventory settings --
+-- Matter Serialization settings --
 _mfBaseMaxItems = 10000
-_mfBaseMaxTypes = 20
+_mfDataStorageCapacity = 1000
+_mfDCEnergyDrainPerUpdate = 100000
+_mfDSEnergyDrainPerUpdate = 8000
+_mfMSEnergyDrainPerUpdate = 3000
+_mfMPEnergyDrainPerUpdate = 3000
 
 -- Ore Cleaner settings --
 _mfOreCleanerMaxCharge = 1000
@@ -79,8 +86,7 @@ _eventTick60=60
 _eventTick63=63
 _eventTick64=64
 _eventTick75=75
-_eventTick110=110
-_eventTick115=115
+_eventTick100=100
 _eventTick125=125
 _eventTick130=130
 _eventTick300=300

@@ -2,7 +2,7 @@ require("utils/players-teleportation.lua")
 require("utils/surface")
 require("utils/saved-tables.lua")
 require("utils/functions.lua")
-require("scripts/entities-update.lua")
+require("scripts/update-system.lua")
 require("utils/place-and-remove.lua")
 
 -- One each game tick --
@@ -15,7 +15,7 @@ function onTick(event)
 	-- Update all entities --
 	updateEntities(event)
 	-- Update all GUI --
-	if event.tick%_eventTick55 == 0 then updateAllGUIs() end
+	if event.tick%_eventTick55 == 0 then GUI.updateAllGUIs() end
 	-- Update Modules Variable inside de Equalizer --
 	if event.tick%_eventTick125 == 0 then scanModules(event) end
 	-- Update the Jump Drives --
@@ -31,50 +31,41 @@ end
 function updateEntities(event)
 	-- Verify Mobile Factory --
 	if global.MF == nil then return end
+	-- Update System --
+	UpSys.update(event)
 	-- Update --
 	if event.tick%_eventTick5 == 0 then factoryTeleportBox() end
 	if event.tick%_eventTick38 == 0 then updateAccumulators() end
 	if event.tick%_eventTick64 == 0 then updateLogisticFluidPoles() end
-	if event.tick%_eventTick110 == 0 then updateProvidersPad() end
-	if event.tick%_eventTick115 == 0 then updateRequesterPad() end
+	-- if event.tick%_eventTick110 == 0 then updateProvidersPad() end
+	-- if event.tick%_eventTick115 == 0 then updateRequesterPad() end
 	if event.tick%_eventTick59 == 0 then updateFluidExtractor() end
-	global.MF:update(event)
-	if global.oreCleaner ~= nil then global.oreCleaner:update(event) end
 	updatePowerDrainPole(event)
 	updateOreSilotPad()
 end
 
 -- Update base Mobile Factory Values --
 function updateValues()
-	-- Mobile Factory --
 	if global.MF == nil then global.MF = MF:new() end
-	-- Energy Lasers --
+	if global.entsTable == nil then global.entsTable = {} end
+	if global.entsUpPerTick == nil then global.entsUpPerTick = _mfBaseUpdatePerTick end
+	if global.upSysIndex == nil then global.upSysIndex = 1 end
+	if global.upSysLastScan == nil then global.upSysLastScan = 0 end
 	if global.IDModule == nil then global.IDModule = 0 end
-	-- Accumulators table --
 	if global.accTable == nil then global.accTable = {} end
-	-- Power Drain Poles table --
 	if global.pdpTable == nil then global.pdpTable = {} end
-	-- Logistic Fluid Pole --
 	if global.lfpTable == nil then global.lfpTable = {} end
-	-- Tanks --
 	if global.tankTable == nil then global.tankTable = {} end
-	-- Ore Silot --
 	if global.oreSilotTable == nil then global.oreSilotTable = {} end
 	if global.oreSilotPadTable == nil then global.oreSitolPadTable = {} end
-	-- Entities Update --
 	if global.currentSilotPadChestUpdate == nil then global.currentSilotPadChestUpdate = 1 end
-	-- Inventory --
-	if global.inventoryTable == nil then global.inventoryTable = {} end
-	if global.mfInventoryItems == nil then global.mfInventoryItems = 0 end
-	if global.mfInventoryTypes == nil then global.mfInventoryTypes = 0 end
-	if global.mfInventoryMaxItem == nil then global.mfInventoryMaxItem = _mfBaseMaxItems end
-	if global.mfInventoryMaxTypes == nil then global.mfInventoryMaxTypes = _mfBaseMaxTypes end
-	if global.providerPadTable == nil then global.providerPadTable = {} end
-	if global.requesterPadTable == nil then global.requesterPadTable = {} end
-	if global.inventoryPadTable == nil then global.inventoryPadTable = {} end
-	-- Fluid Extractor --
 	if global.fluidExtractorCharge == nil then global.fluidExtractorCharge = 0 end
 	if global.fluidExtractorPurity == nil then global.fluidExtractorPurity = 0 end
+	if global.matterSerializerTable == nil then global.matterSerializerTable = {} end
+	if global.matterPrinterTable == nil then global.matterPrinterTable = {} end
+	if global.dataCenterTable == nil then global.dataCenterTable = {} end
+	if global.dataStorageTable == nil then global.dataStorageTable = {} end
+	if global.energyCubesTable == nil then global.energyCubesTable = {} end
 end
 
 -- When a technology is finished --
@@ -97,6 +88,21 @@ function technologyFinished(event)
 	if event.research.name == "OreSilot4" then createOreSilot4() end
 	if event.research.name == "OreSilot5" then createOreSilot5() end
 	if event.research.name == "ConstructibleArea1" then createConstructibleArea1() end
+end
+
+function selectedEntityChanged(event)
+	-- Get the Player --
+	local player = getPlayer(event.player_index)
+	-- Check the Player and the Entity --
+	if player == nil or player.selected == nil or player.selected.valid == false then return end
+	-- Check if the Tooltip GUI exist --
+	if player.gui.screen.mfTooltipGUI == nil or player.gui.screen.mfTooltipGUI.valid == false then return end
+	-- Check if the Tooltip GUI is not locked --
+	if player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite == "LockIconReed" then return end
+	-- Save the Entity ID --
+	setPlayerVariable(player.name, "lastEntitySelected", player.selected.unit_number)
+	-- Update the Tooltip GUI --
+	GUI.updateTooltip(player, player.selected.unit_number)
 end
 
 -- Update teleportation box --
