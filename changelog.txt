@@ -1,4 +1,31 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.49
+Date: 15/12/2019
+  Major Features:
+    - Matter Serialization:
+    - Replace the Inventory Pad technology, a new way to transfer items between the Circuit Network via Matter Serialization and Deserialization
+    - Tooltip GUI:
+    - Display informations about the Mobile Factory mod Structures
+  Features:
+    - Added the Data Storage: The main structure for the Data Serialization
+    - Added the Internal Inventory Data Storage: Same as the Data Storage but have the Mobile Factory Internal Inventory inside
+    - Added the Data Storage: Expend the Inventory it is linked to
+    - Added the Matter Serializer: Transform Items to Data and send them inside the linked Data Center
+    - Added the Matter Printer: Take Data from the linked Data Center and transform it to Items
+    - Added the Energy Cube MK1: Store 100MJ of Energy
+  Optimisations:
+    - A new Update System was released to improve the performances of the game
+    - You can now select how many entities from the Mobile Factory mod you want to update per ticks (Option GUI)
+  Changes:
+    - Removed the Inventory Pad
+    - Removed the Provider Pad
+    - Removed the Requestion Pad
+    - Removed the Inventory Pad Technology
+    - Changed the Dimensional Logistic Technology to Matter Serialization
+  Scripting:
+    - Massive code rewritting for future features (part2 - Inventory, Matter Serialization)
+    - The GUI is now separated in several files
+---------------------------------------------------------------------------------------------------
 Version: 0.0.48
 Date: 26/11/2019
   Bugfixes:

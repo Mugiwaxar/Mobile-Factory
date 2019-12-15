@@ -208,35 +208,34 @@ function MF:updateLasers()
 			if self.itemLaserActivated == true and self.internalEnergy > _mfBaseItemEnergyConsumption * self:getLaserItemDrain() and (entity.type == "container" or entity.type == "logistic-container") then
 				-- Get Chest Inventory --
 				local inv = entity.get_inventory(defines.inventory.chest)
+				-- Get the Internal Inventory --
+				local dataInv = self.II
 				if inv ~= nil and inv.valid == true then
 					-- Create the Laser Capacity variable --
 					local capItems = self:getLaserItemDrain()
 					-- Get all Items --
 					local invItems = inv.get_contents()
-					-- Retrieve items from the Inventory --
+					-- Retrieve Items from the Inventory --
 					for iName, iCount in pairs(invItems) do
-						-- Retrieve item --
-						local removedItems = inv.remove({name=iName, count=capItems})
-						-- Add items to the Internal Inventory --
-						local added = addItemStackToII({name=iName, count=removedItems})
-						-- Test if not all amount was added --
-						if added ~= removedItems then
-							-- Send back to the Chest --
-							inv.insert({name=iName, count=removedItems-added})
-						end
-						-- Recalcule the capItems --
-						capItems = capItems - added
-						-- Create the laser and remove energy --
+						local added = dataInv:addItem(iName, math.min(iCount, capItems))
+						-- Check if Items was added --
 						if added > 0 then
-							self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target=entity.position, source=self.ent.position}
-							self.internalEnergy = self.internalEnergy - _mfBaseItemEnergyConsumption * removedItems
-							-- One less Beam to the Beam capacity --
-							i = i + 1
-						end
-						-- Test if capItems is empty --
-						if capItems <= 0 then
-							-- Stop --
-							break
+							-- Remove Items from the Chest --
+							local removedItems = inv.remove({name=iName, count=added})
+							-- Recalcule the capItems --
+							capItems = capItems - added
+							-- Create the laser and remove energy --
+							if added > 0 then
+								self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target=entity.position, source=self.ent.position}
+								self.internalEnergy = self.internalEnergy - _mfBaseItemEnergyConsumption * removedItems
+								-- One less Beam to the Beam capacity --
+								i = i + 1
+							end
+							-- Test if capItems is empty --
+							if capItems <= 0 then
+								-- Stop --
+								break
+							end
 						end
 					end
 				end

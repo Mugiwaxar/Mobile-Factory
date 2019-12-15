@@ -16,6 +16,7 @@ require("prototypes/entity/data-center.lua")
 require("prototypes/entity/matter-serializer.lua")
 require("prototypes/entity/matter-printer.lua")
 require("prototypes/entity/data-storage.lua")
+require("prototypes/entity/energy-cube-mk1.lua")
 require("prototypes/entity/ore-silot.lua")
 require("prototypes/entity/ore-cleaner.lua")
 require("prototypes/entity/fluid-extractor.lua")
@@ -268,6 +269,26 @@ data:extend{
         type = "sprite",
         name = "MoveIconOv",
         filename = "__Mobile_Factory__/graphics/icones/moveIconOv.png",
+        size = 32,
+        flags = {"icon"}
+    }
+}
+
+data:extend{
+    {
+        type = "sprite",
+        name = "LockIcon",
+        filename = "__Mobile_Factory__/graphics/icones/LockI.png",
+        size = 32,
+        flags = {"icon"}
+    }
+}
+
+data:extend{
+    {
+        type = "sprite",
+        name = "LockIconReed",
+        filename = "__Mobile_Factory__/graphics/icones/LockIReed.png",
         size = 32,
         flags = {"icon"}
     }

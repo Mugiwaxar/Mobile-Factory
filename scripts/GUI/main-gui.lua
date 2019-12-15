@@ -25,27 +25,30 @@ function GUI.createMainGUI(player, gui)
 	
 	---------------------------------------------------- TOP FLOW ---------------------------------------------------
 	
-	-- Create the top Flow --
-	local mfGUITopFrame = mfGUI.add{type="flow", name="mfGUITopFrame", direction="horizontal"}
+	-- Create the Menu Flow --
+	local mfGUIMenuFrame = mfGUI.add{type="flow", name="mfGUIMenuFrame", direction="horizontal"}
 	-- Set Style --
-	mfGUITopFrame.style.padding = 0
-	mfGUITopFrame.style.margin = 0
-	
-	-- Add Title to top Flow  --
-	mfGUITopFrame.add{
-		type="label",
-		name="guiTitle",
-		caption={"gui-description.MobileFactoryTitle"}
+	mfGUIMenuFrame.style.padding = 0
+	mfGUIMenuFrame.style.margin = 0
+	mfGUIMenuFrame.style.horizontal_align = "right"
+	mfGUIMenuFrame.style.minimal_width = 150
+
+	-- Add the Option Button to top Flow --
+	mfGUIMenuFrame.add{
+		type="sprite-button",
+		name="optionButton",
+		sprite="OptionIcon",
+		resize_to_sprite=false,
+		tooltip={"gui-description.optionButton"}
 	}
 	-- Set style --
-	mfGUITopFrame.guiTitle.style.font = "TitleFont"
-	mfGUITopFrame.guiTitle.style.padding = 0
-	mfGUITopFrame.guiTitle.style.right_margin = 0
-	mfGUITopFrame.guiTitle.style.top_margin = 0
-	--mfGUITopFrame.guiTitle.style.font_color = {135,25,20}
+	mfGUIMenuFrame.optionButton.style.maximal_width = 15
+	mfGUIMenuFrame.optionButton.style.maximal_height = 15
+	mfGUIMenuFrame.optionButton.style.padding = 0
+	mfGUIMenuFrame.optionButton.style.margin = 0
 
 	-- Add the move Button to top Flow --
-	mfGUITopFrame.add{
+	mfGUIMenuFrame.add{
 		type="sprite-button",
 		name="MoveButton",
 		sprite="MoveIcon",
@@ -54,12 +57,12 @@ function GUI.createMainGUI(player, gui)
 		tooltip={"gui-description.moveGuiFrameButton"}
 	}
 	-- Set style --
-	mfGUITopFrame.MoveButton.style.maximal_width = 15
-	mfGUITopFrame.MoveButton.style.maximal_height = 15
-	mfGUITopFrame.MoveButton.style.padding = 0
+	mfGUIMenuFrame.MoveButton.style.maximal_width = 15
+	mfGUIMenuFrame.MoveButton.style.maximal_height = 15
+	mfGUIMenuFrame.MoveButton.style.padding = 0
 	
 	-- Add the reduce Button to top Flow --
-	mfGUITopFrame.add{
+	mfGUIMenuFrame.add{
 		type="sprite-button",
 		name="ReduceButton",
 		sprite="ArrowIconDown",
@@ -68,11 +71,10 @@ function GUI.createMainGUI(player, gui)
 		tooltip={"gui-description.reduceButton"}
 	}
 	-- Set style --
-	mfGUITopFrame.ReduceButton.style.maximal_width = 15
-	mfGUITopFrame.ReduceButton.style.maximal_height = 15
-	mfGUITopFrame.ReduceButton.style.right_margin = 0
-	mfGUITopFrame.ReduceButton.style.padding = 0
-
+	mfGUIMenuFrame.ReduceButton.style.maximal_width = 15
+	mfGUIMenuFrame.ReduceButton.style.maximal_height = 15
+	mfGUIMenuFrame.ReduceButton.style.right_margin = 0
+	mfGUIMenuFrame.ReduceButton.style.padding = 0
 
 ---------------------------------------------- CENTER FLOW --------------------------------------------
 	-- Create the center Flow --

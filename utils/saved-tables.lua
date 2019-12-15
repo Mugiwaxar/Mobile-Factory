@@ -47,10 +47,16 @@ function placedDataStorage(event)
 	global.dataStorageTable[event.created_entity.unit_number] = DS:new(event.created_entity)
 end
 
+-- Save Energy Cube in a table --
+function placedEnergyCube(event)
+	if global.energyCubesTable == nil then global.energyCubesTable = {} end
+	global.energyCubesTable[event.created_entity.unit_number] = EC:new(event.created_entity)
+end
+
 -- Save Ore Silot Pads in a table --
 function placedOreSilotPad(event)
-	if global.oreSilotPadTable == nil then global.oreSilotPadTable = {} end
-	global.oreSilotPadTable[event.created_entity.unit_number] = event.created_entity
+	if global.energyCubesTable == nil then global.energyCubesTable = {} end
+	global.energyCubesTable[event.created_entity.unit_number] = event.created_entity
 end
 
 
@@ -93,7 +99,7 @@ function removedDataCenter(event)
 	global.dataCenterTable[event.entity.unit_number] = nil
 end
 
--- Remove the Data Center MF --
+-- Remove the Data Center MF from the table --
 function removedDataCenterMF(event)
 	if global.MF.dataCenter ~= nil and global.MF.dataCenter.ent == event.entity then
 		global.MF.dataCenter:remove()
@@ -101,13 +107,20 @@ function removedDataCenterMF(event)
 	end
 end
 
--- Remove Data Storage from the table --
+-- Remove Data Storage from the table from the table --
 function removedDataStorage(event)
 	if global.dataStorageTable == nil then global.dataStorageTable = {} return end
 	if global.dataStorageTable[event.entity.unit_number] ~= nil then global.dataStorageTable[event.entity.unit_number]:remove() end
 	global.dataStorageTable[event.entity.unit_number] = nil
 end
 
+-- Remove the Energy Cube from the table --
+function removedEnergyCube(event)
+	if global.MF.energyCubesTable ~= nil and global.MF.energyCubesTable.ent == event.entity then
+		global.MF.energyCubesTable:remove()
+		global.MF.energyCubesTable = nil
+	end
+end
 -- Remove Ore Silot Pad from the table --
 function removedOreSilotPad(event)
 	if global.oreSilotPadTable == nil then global.oreSilotPadTable = {} return end

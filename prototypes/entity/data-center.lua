@@ -28,7 +28,7 @@ dcE.sprites.sheets =
 			width = 400,
 			height = 400,
 			scale = 1/3,
-			shift = {2,0.9},
+			shift = {2,0.8},
 			frames = 1
 		}
 	}
@@ -65,6 +65,7 @@ dcEMF.sprites.sheets =
 			width = 600,
 			height = 600,
 			scale = 1/4,
+			shift = {0,-0.1},
 			frames = 4
 		},
 		{
@@ -73,7 +74,7 @@ dcEMF.sprites.sheets =
 			width = 400,
 			height = 400,
 			scale = 1/3,
-			shift = {2,1.1},
+			shift = {2,0.8},
 			frames = 1
 		}
 	}

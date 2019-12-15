@@ -5,8 +5,8 @@ INV = {
 	name = "",
 	usedCapacity = 0,
 	maxCapacity = _mfBaseMaxItems,
-	inventory = nil, -- [name]{count}
-	dataStoragesTable = nil
+	dataStoragesCount = 0,
+	inventory = nil -- [name]{count}
 }
 
 -- Constructor --
@@ -17,6 +17,7 @@ function INV:new(name)
 	setmetatable(t, mt)
 	mt.__index = INV
 	t.name = name
+	t.inventory = {}
 	return t
 end
 
@@ -30,9 +31,6 @@ end
 
 -- Rescan Inventory --
 function INV:rescan()
-
-	-- Check if the Inventory Table is valid --
-	if self.inventory == nil then self.inventory = {} end
 	
 	local totalItem = 0
 	-- Itinerate the Invernal Inventory --
@@ -54,8 +52,6 @@ end
 
 -- Return the number of requested Item --
 function INV:hasItem(item)
-	-- Check if the Inventory Table is valid --
-	if self.inventory == nil then self.inventory = {} end
 	
 	-- Rescan the Inventory --
 	self:rescan()
@@ -70,8 +66,6 @@ end
 
 -- Request to add an Item and return the amount added --
 function INV:addItem(item, amount)
-	-- Check if the Inventory Table is valid --
-	if self.inventory == nil then self.inventory = {} end
 
 	-- Rescan the Inventory --
 	self:rescan()
@@ -90,14 +84,12 @@ function INV:addItem(item, amount)
 	end
 	
 	-- Return the amount inserted --
-	return amount - capableAmount	
+	return capableAmount	
 	
 end
 
 -- Request to remove an Item and return the amount removed --
 function INV:getItem(item, amount)
-	-- Check if the Inventory Table is valid --
-	if self.inventory == nil then self.inventory = {} end
 	
 	-- Rescan the Inventory --
 	self:rescan()
@@ -125,9 +117,7 @@ end
 
 -- Return the Inventory Frame --
 function INV:getFrame(guiElement)
-	-- Check if the Inventory Table is valid --
-	if self.inventory == nil then self.inventory = {} end
-	
+
 	-- Rescan the Inventory --
 	self:rescan()
 
@@ -145,13 +135,13 @@ function INV:getFrame(guiElement)
 	-- Create the Data Storage Label --
 	local dataStorage = guiElement.add{type="label"}
 	dataStorage.style.font = "LabelFont"
-	dataStorage.caption = {"", {"gui-description.dataStorage"}, ": ", table_size(self.dataStoragesTable)}
+	dataStorage.caption = {"", {"gui-description.dataStorage"}, ": ", self.dataStoragesCount}
 	dataStorage.style.font_color = {108, 114, 229}
 	dataStorage.style.bottom_margin = 7
 	
 	-- Create the Inventory List Flow --
 	local invList = guiElement.add{type="flow", direction="vertical"}
-	invList.style.width = 205
+	-- invList.style.width = 205
 	-- Create the list --
 	for item, count in pairs(self.inventory) do
 		INV:itemToFrame(item, count, invList)

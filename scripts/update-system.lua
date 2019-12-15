@@ -15,6 +15,7 @@ function UpSys.scanEnts()
 	UpSys.addTable(global.matterSerializerTable)
 	UpSys.addTable(global.matterPrinterTable)
 	UpSys.addTable(global.dataStorageTable)
+	UpSys.addTable(global.energyCubesTable)
 	
 	-- Shuffle the MF Entities Table --
 	UpSys.shuffle(global.entsTable)
@@ -69,12 +70,15 @@ function UpSys.update(event)
 	local maxIndex = table_size(global.entsTable)
 	-- Begin the Update of Entities --
 	while updated <= global.entsUpPerTick and global.upSysIndex <= maxIndex do
-		-- Check if the Entity need an update --
-		if global.entsTable[global.upSysIndex].updateTick > 0 and game.tick - global.entsTable[global.upSysIndex].lastUpdate >= global.entsTable[global.upSysIndex].updateTick then
-			-- Update the Entity --
-			global.entsTable[global.upSysIndex]:update(event)
-			-- Increment the number of Entities updated --
-			updated = updated + 1
+		-- Check if the Entity is valid --
+		if getmetatable(global.entsTable[global.upSysIndex]) ~= nil and global.entsTable[global.upSysIndex]:valid() == true then
+			-- Check if the Entity need an update --
+			if global.entsTable[global.upSysIndex].updateTick > 0 and game.tick - global.entsTable[global.upSysIndex].lastUpdate >= global.entsTable[global.upSysIndex].updateTick then
+				-- Update the Entity --
+				global.entsTable[global.upSysIndex]:update(event)
+				-- Increment the number of Entities updated --
+				updated = updated + 1
+			end
 		end
 		
 		-- Increment the Global Index --

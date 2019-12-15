@@ -13,13 +13,14 @@ function GUI.createTooltipGUI(gui, player)
 	local resolutionHeight = player.display_resolution.height  / player.display_scale
 	local posX = resolutionWidth / 100 * 80
 	local posY = resolutionHeight / 100 * 25
-	local width = 161
-	-- local height = 300
+	local width = 157
+	local height = 300
 	
 	-- Set the GUI position end style --
 	mfTooltipGUI.caption = {"gui-description.tooltipGUI"}
 	mfTooltipGUI.location = {posX, posY}
 	mfTooltipGUI.style.minimal_width = width
+	mfTooltipGUI.style.maximal_height = height
 	-- mfTooltipGUI.style.height = height
 	mfTooltipGUI.style.padding = 0
 	mfTooltipGUI.style.margin = 0
@@ -33,6 +34,19 @@ function GUI.createTooltipGUI(gui, player)
 	mfTTGUIMenuBar.style.margin = 0
 	mfTTGUIMenuBar.style.horizontal_align = "right"
 	mfTTGUIMenuBar.style.vertical_align = "top"
+	
+	-- Add the lock Button to top Flow --
+	mfTTGUIMenuBar.add{
+		type="sprite-button",
+		name="TTLockButton",
+		sprite="LockIcon",
+		resize_to_sprite=false,
+		tooltip={"gui-description.TTLockButton"}
+	}
+	-- Set style --
+	mfTTGUIMenuBar.TTLockButton.style.maximal_width = 15
+	mfTTGUIMenuBar.TTLockButton.style.maximal_height = 15
+	mfTTGUIMenuBar.TTLockButton.style.padding = 0
 	
 	-- Add the move Button to top Flow --
 	mfTTGUIMenuBar.add{
@@ -79,21 +93,19 @@ function GUI.createTooltipGUI(gui, player)
 end
 
 -- Update the tooltip with a new Entity --
-function GUI.updateTooltip(event)
-	-- Get the Player --
-	local player = getPlayer(event.player_index)
-	-- Check if the Entity is valid --
-	if player.selected == nil or player.selected == false then return end
+function GUI.updateTooltip(player, objID)
+	-- Check the variables --
+	if player == nil or objID == nil then return end
 	-- Check if the Player Tooltip GUI is not null and visible --
 	if player.gui.screen.mfTooltipGUI == nil or player.gui.screen.mfTooltipGUI.visible == false then return end
+	-- Clear the Tooltip GUI --
+	player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.clear()
 	-- Look for the Object associated with the Entity --
 	for k, obj in pairs(global.entsTable) do
 		-- Check the Object --
-		if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and obj.ent.unit_number == player.selected.unit_number then
+		if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and obj.ent.unit_number == objID then
 			-- Check if the Object can return a Frame --
 			if obj.getTooltipInfos ~= nil then
-				-- Clear the Tooltip GUI --
-				player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.clear()
 				-- Update the GUI --
 				obj:getTooltipInfos(player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane)
 			end

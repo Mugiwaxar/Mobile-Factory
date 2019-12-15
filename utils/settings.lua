@@ -50,8 +50,13 @@ _lfpFluidDrain = 10000
 _lfpFluidLaser = 1
 _lfpFluidConsomption = 10
 
--- Internal Inventory settings --
+-- Matter Serialization settings --
 _mfBaseMaxItems = 10000
+_mfDataStorageCapacity = 1000
+_mfDCEnergyDrainPerUpdate = 100000
+_mfDSEnergyDrainPerUpdate = 8000
+_mfMSEnergyDrainPerUpdate = 3000
+_mfMPEnergyDrainPerUpdate = 3000
 
 -- Ore Cleaner settings --
 _mfOreCleanerMaxCharge = 1000

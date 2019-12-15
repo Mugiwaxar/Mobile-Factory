@@ -65,6 +65,7 @@ function updateValues()
 	if global.matterPrinterTable == nil then global.matterPrinterTable = {} end
 	if global.dataCenterTable == nil then global.dataCenterTable = {} end
 	if global.dataStorageTable == nil then global.dataStorageTable = {} end
+	if global.energyCubesTable == nil then global.energyCubesTable = {} end
 end
 
 -- When a technology is finished --
@@ -87,6 +88,21 @@ function technologyFinished(event)
 	if event.research.name == "OreSilot4" then createOreSilot4() end
 	if event.research.name == "OreSilot5" then createOreSilot5() end
 	if event.research.name == "ConstructibleArea1" then createConstructibleArea1() end
+end
+
+function selectedEntityChanged(event)
+	-- Get the Player --
+	local player = getPlayer(event.player_index)
+	-- Check the Player and the Entity --
+	if player == nil or player.selected == nil or player.selected.valid == false then return end
+	-- Check if the Tooltip GUI exist --
+	if player.gui.screen.mfTooltipGUI == nil or player.gui.screen.mfTooltipGUI.valid == false then return end
+	-- Check if the Tooltip GUI is not locked --
+	if player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite == "LockIconReed" then return end
+	-- Save the Entity ID --
+	setPlayerVariable(player.name, "lastEntitySelected", player.selected.unit_number)
+	-- Update the Tooltip GUI --
+	GUI.updateTooltip(player, player.selected.unit_number)
 end
 
 -- Update teleportation box --

@@ -18,6 +18,7 @@ require("scripts/objects/data-center-mf.lua")
 require("scripts/objects/data-storage.lua")
 require("scripts/objects/matter-serializer.lua")
 require("scripts/objects/matter-printer.lua")
+require("scripts/objects/energy-cube.lua")
 
 -- When the mod init --
 function onInit()
@@ -50,6 +51,7 @@ function onInit()
 	global.matterSerializerTable = {}
 	global.matterPrinterTable = {}
 	global.dataStorageTable = {}
+	global.energyCubesTable = {}
 	global.oreSilotTable = {}
 	global.oreSilotPadTable = {}
 	global.lfpTable = {}
@@ -84,6 +86,10 @@ function onLoad()
 	-- Set MatterPrinter Metatables --
 	for k, mp in pairs(global.matterPrinterTable or {}) do
 		MP:rebuild(mp)
+	end
+	-- Set EnergyCube Metatables --
+	for k, ec in pairs(global.energyCubesTable or {}) do
+		EC:rebuild(ec)
 	end
 	-- Set Ore Cleaner Metatable --
 	OC:rebuild(global.oreCleaner)
@@ -128,7 +134,7 @@ script.on_event(defines.events.on_gui_elem_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_gui_checked_state_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_gui_text_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_research_finished, technologyFinished)
-script.on_event(defines.events.on_selected_entity_changed, GUI.updateTooltip)
+script.on_event(defines.events.on_selected_entity_changed, selectedEntityChanged)
 
 -- Add command to insert Mobile Factory to the player inventory --
 commands.add_command("GetMobileFactory", "Add the Mobile Factory to the player inventory", addMobileFactory)

@@ -50,6 +50,8 @@ function GUI.updatePlayerGUI(player)
 	GUI.mainGUIUpdate(player)
 	-- Update the Player Info GUI --
 	GUI.updatePlayerInfoGUI(player)
+	-- Update the Tooltip GUI --
+	GUI.updateTooltip(player, getPlayerVariable(player.name, "lastEntitySelected"))
 end
 
 
@@ -67,7 +69,7 @@ function GUI.buttonClicked(event)
 	-- Move GUI Button --
 	if event.element.name == "MoveButton" then
 		if player.gui.screen.mfGUI.caption == "" then
-			player.gui.screen.mfGUI.caption = " "
+			player.gui.screen.mfGUI.caption = "Mobile Factory"
 			player.gui.screen.mfGUI.location.y = player.gui.screen.mfGUI.location.y + 10
 		else
 			player.gui.screen.mfGUI.caption = ""
@@ -79,12 +81,12 @@ function GUI.buttonClicked(event)
 	if event.element.name == "ReduceButton" then
 		if player.gui.screen.mfGUI.mfGUICenterFrame.visible == false then
 			player.gui.screen.mfGUI.mfGUICenterFrame.visible = true
-			player.gui.screen.mfGUI.mfGUITopFrame.ReduceButton.sprite = "ArrowIconUp"
-			player.gui.screen.mfGUI.mfGUITopFrame.ReduceButton.hovered_sprite = "ArrowIconUpOv"
+			player.gui.screen.mfGUI.mfGUIMenuFrame.ReduceButton.sprite = "ArrowIconUp"
+			player.gui.screen.mfGUI.mfGUIMenuFrame.ReduceButton.hovered_sprite = "ArrowIconUpOv"
 		else
 			player.gui.screen.mfGUI.mfGUICenterFrame.visible = false
-			player.gui.screen.mfGUI.mfGUITopFrame.ReduceButton.sprite = "ArrowIconDown"
-			player.gui.screen.mfGUI.mfGUITopFrame.ReduceButton.hovered_sprite = "ArrowIconDownOv"
+			player.gui.screen.mfGUI.mfGUIMenuFrame.ReduceButton.sprite = "ArrowIconDown"
+			player.gui.screen.mfGUI.mfGUIMenuFrame.ReduceButton.hovered_sprite = "ArrowIconDownOv"
 		end
 	end
 	
@@ -184,18 +186,23 @@ function GUI.buttonClicked(event)
 		player.gui.screen.mfOptionGUI.visible = false
 	end
 	
+	-- Lock Tooltip GUI button --
+	if event.element.name == "TTLockButton" then
+		if player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite == "LockIcon" then
+			player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite = "LockIconReed"
+		else
+			player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite = "LockIcon"
+		end
+	end
+	
 	-- Move Tooltip GUI Button --
 	if event.element.name == "TTMoveButton" then
 		if player.gui.screen.mfTooltipGUI.caption == "" then
 			player.gui.screen.mfTooltipGUI.caption = {"gui-description.tooltipGUI"}
 			player.gui.screen.mfTooltipGUI.location.y = player.gui.screen.mfTooltipGUI.location.y + 10
-			-- player.gui.screen.mfTooltipGUI.mainTooltipFrame.style.height = player.gui.screen.mfTooltipGUI.mainTooltipFrame.style.minimal_height - 32
-			-- player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.style.height = player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.style.minimal_height - 32
 		else
 			player.gui.screen.mfTooltipGUI.caption = ""
 			player.gui.screen.mfTooltipGUI.location.y = player.gui.screen.mfTooltipGUI.location.y - 10
-			-- player.gui.screen.mfTooltipGUI.mainTooltipFrame.style.height = player.gui.screen.mfTooltipGUI.mainTooltipFrame.style.minimal_height + 32
-			-- player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.style.height = player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.style.minimal_height + 32
 		end
 	end
 	

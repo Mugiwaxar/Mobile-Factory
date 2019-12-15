@@ -42,9 +42,13 @@ msE.picture =
         }
       }
     }
-msE.circuit_wire_connection_point = circuit_connector_definitions["chest"].points
-msE.circuit_connector_sprites = circuit_connector_definitions["chest"].sprites
-msE.circuit_wire_max_distance = default_circuit_wire_max_distance
+msE.circuit_wire_connection_point =
+{
+	wire = {red={0,0.08}, green={0,0.08}},
+	shadow = {red={0,0.08}, green={0,0.08}}
+}
+msE.circuit_connector_sprites = nil
+msE.circuit_wire_max_distance = 20
 data:extend{msE}
 
 -- Item --
