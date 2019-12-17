@@ -19,7 +19,8 @@ dcE.sprites.sheets =
 			filename = "__Mobile_Factory__/graphics/matter-serialization/DataCenterE.png",
 			width = 600,
 			height = 600,
-			scale = 1/4,
+			scale = 1/4.05,
+			shift = {0,-0.1},
 			frames = 4
 		},
 		{
@@ -36,20 +37,20 @@ dcE.vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", 
 dcE.circuit_wire_connection_points =
 {
 	{
-		wire = {red={-0.2,0.2}, green={0.1,0.2}},
-		shadow = {red={-0.2,0.3}, green={0.1,0.3}}
+		wire = {green={-0.1,0.2}, red={0.1,0.2}},
+		shadow = {green={-0.1,0.3}, red={0.1,0.3}}
 	},
 	{
-		wire = {red={-2.1,-0.9}, green={-2.1,-0.8}},
-		shadow = {red={-2.1,-0.8}, green={-2.1,-0.7}}
+		wire = {green={-2.1,-0.9}, red={-2.1,-0.8}},
+		shadow = {green={-2.1,-0.8}, red={-2.1,-0.7}}
 	},
 		{
-		wire = {red={0.1,-1.9}, green={-0.2,-1.9}},
-		shadow = {red={0.1,-1.8}, green={-0.2,-1.8}}
+		wire = {green={0.1,-1.9}, red={-0.2,-1.9}},
+		shadow = {green={0.1,-1.8}, red={-0.2,-1.8}}
 	},
 	{
-		wire = {red={2.1,-0.8}, green={2.1,-0.9}},
-		shadow = {red={2.1,-0.7}, green={2.1,-0.8}}
+		wire = {green={2.1,-0.8}, red={2.1,-0.9}},
+		shadow = {green={2.1,-0.7}, red={2.1,-0.8}}
 	}
 }
 data:extend{dcE}
@@ -127,9 +128,10 @@ dcA.name = "DataCenterA"
 dcA.type = "animation"
 dcA.frame_count = 120
 dcA.filename = "__Mobile_Factory__/graphics/matter-serialization/DataCenterAn.png"
-dcA.size = 400
+dcA.width = 400
+dcA.height = 320
 dcA.line_length = 10
 dcA.animation_speed = 1/4
-dcA.scale = 1/4
+dcA.scale = 1/3.5
 dcA.flags = {"terrain"}
 data:extend{dcA}

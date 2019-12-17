@@ -60,7 +60,7 @@ _mfMPEnergyDrainPerUpdate = 3000
 
 -- Ore Cleaner settings --
 _mfOreCleanerMaxCharge = 1000
-_mfOreCleanerRadius = 10
+_mfOreCleanerRadius = 25
 _mfOreCleanerOrePerExtraction = 10
 _mfOreCleanerExtractionTicks = 5
 _mfOreCleanerInventorySize = 12000
