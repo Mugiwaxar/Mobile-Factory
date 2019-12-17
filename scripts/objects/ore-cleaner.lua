@@ -99,7 +99,7 @@ function OC:inventoryItemNumber()
 	return number
 end
 
--- Add itemsStack to the Inventory --
+-- Add ItemsStack to the Inventory --
 function OC:addItemStack(item)
 	-- Test if the Ore Cleaner is valid --
 	if self.ent == nil then return 0 end
@@ -214,7 +214,7 @@ function OC:collectOres(event)
 	-- Remove the Ore Path if it is empty --
 	if orePath.amount <= 1 then
 		orePath.destroy()
-		self.oreTable[randomNum] = nil
+		table.remove(self.oreTable, randomNum)
 	end
 end
 
