@@ -13,8 +13,8 @@ mf.weight = 25000
 mf.braking_power = "600kW"
 mf.rotation_speed = 0.30 / 60
 mf.guns = {"mfTank-machine-gun"}
-mf.collision_box = {{-2, -3.5}, {1.6, 2.5}}
-mf.selection_box = mf.collision_box
+mf.collision_box = {{-2, -2.5}, {1.6, 2.5}}
+mf.selection_box = {{-2, -3.5}, {1.6, 2.5}}
 --[[
 mf.animation =
 {
