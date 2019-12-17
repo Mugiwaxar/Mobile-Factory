@@ -10,7 +10,8 @@ OC = {
 	animID = 0,
 	animTick = 0,
 	updateTick = 1,
-	lastUpdate = 0
+	lastUpdate = 0,
+	lastExtraction = 0
 }
 
 -- Constructor --
@@ -206,7 +207,7 @@ function OC:collectOres(event)
 		-- Make the Beam --
 		self.ent.surface.create_entity{name="OCBeam", duration=60, position=self.ent.position, target=orePath.position, source={self.ent.position.x,self.ent.position.y-3.2}}
 		-- Set the lastUpdate variable --
-		self.lastUpdate = event.tick
+		self.lastExtraction = event.tick
 		-- Remove a charge --
 		self.charge = self.charge - 1
 	end
@@ -248,7 +249,7 @@ end
 -- Update the Animation --
 function OC:updateAnimation(event)
 	-- Test if they was any extraction since the last tick --
-	if event.tick - self.lastUpdate > 10 and self.animID ~= 0 then
+	if event.tick - self.lastExtraction > 10 and self.animID ~= 0 then
 		-- Destroy the Animation --
 		rendering.destroy(self.animID)
 		self.animID = 0
@@ -256,7 +257,7 @@ function OC:updateAnimation(event)
 		self.ent.surface.create_entity{name="OCBigBeam", duration=16, position=self.ent.position, target=global.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
 		return
 	-- If they was extraction but the animation doesn't exist --
-	elseif event.tick - self.lastUpdate <= 10 and self.animID == 0 then
+	elseif event.tick - self.lastExtraction <= 10 and self.animID == 0 then
 		-- Create the Orb Animation --
 		self.animID = rendering.draw_animation{animation="RedEnergyOrb", target={self.ent.position.x,self.ent.position.y - 3.25}, surface=self.ent.surface}
 		-- I don't know what this do, but it work (reset the animation) --

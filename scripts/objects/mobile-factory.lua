@@ -328,11 +328,11 @@ function MF:SendQuatron(event)
 		-- Look for Quatron Charge in the Internal Inventory --
 		for i = 100, 0, -1 do
 			-- Look for the best Charge --
-			local amount = countItemFromII("Quatron" .. i)
+			local amount = global.MF.II:hasItem("Quatron" .. i)
 			if amount > 0 then
 			level = i
 			-- Remove the Charge from the Internal Inventory --
-			directRemoveItemFromII("Quatron" .. i, 1)
+			global.MF.II:getItem("Quatron" .. i, 1)
 			-- Create the Laser --
 			self.ent.surface.create_entity{name="GreenBeam", duration=30, position=self.ent.position, target={global.oreCleaner.ent.position.x, global.oreCleaner.ent.position.y - 2}, source=self.ent}
 			break

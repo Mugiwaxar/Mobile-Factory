@@ -104,7 +104,7 @@ function INV:getItem(item, amount)
 		self.inventory[item] = self.inventory[item] - itemAmount
 		
 		-- Remove the Item it doesn't exist anymore inside the Inventory --
-		if self.inventory[item] >= 0 then
+		if self.inventory[item] <= 0 then
 			self.inventory[item] = nil
 		end
 		

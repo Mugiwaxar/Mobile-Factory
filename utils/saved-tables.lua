@@ -55,8 +55,8 @@ end
 
 -- Save Ore Silot Pads in a table --
 function placedOreSilotPad(event)
-	if global.energyCubesTable == nil then global.energyCubesTable = {} end
-	global.energyCubesTable[event.created_entity.unit_number] = event.created_entity
+	if global.oreSilotPadTable == nil then global.oreSilotPadTable = {} end
+	global.oreSilotPadTable[event.created_entity.unit_number] = event.created_entity
 end
 
 
