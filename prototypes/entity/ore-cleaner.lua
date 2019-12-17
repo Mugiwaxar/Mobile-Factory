@@ -113,8 +113,8 @@ data:extend{ocR}
 local ocT = {}
 ocT.name = "OreCleaner"
 ocT.type = "technology"
-ocT.icon = "__Mobile_Factory__/graphics/icones/OreCleaner.png"
-ocT.icon_size = 64
+ocT.icon = "__Mobile_Factory__/graphics/icones/OreCleanerTech.png"
+ocT.icon_size = 128
 ocT.unit = {
 	count=15,
 	time=60,

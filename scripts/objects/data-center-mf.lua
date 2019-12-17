@@ -183,7 +183,7 @@ function DCMF:setActive(set)
 	if set == true then
 		-- Create the Animation if it doesn't exist --
 		if self.animID == 0 then
-			self.animID = rendering.draw_animation{animation="DataCenterA", target={self.ent.position.x,self.ent.position.y-1.35}, surface=self.ent.surface}
+			self.animID = rendering.draw_animation{animation="DataCenterA", target={self.ent.position.x,self.ent.position.y-1.22}, surface=self.ent.surface}
 		end
 	else
 		-- Destroy the Animation --
