@@ -5,7 +5,7 @@ dmFR.name = "DimensionalFluid"
 dmFR.type = "resource"
 dmFR.icon = "__Mobile_Factory__/graphics/icones/DimensionalFluid.png"
 dmFR.icon_size = 32
-dmFR.stages = data.raw.resource["crude-oil"].stages
+dmFR.stages = table.deepcopy(data.raw.resource["crude-oil"].stages)
 dmFR.stages["sheet"]["filename"] = "__Mobile_Factory__/graphics/entity/DimensionalFluid.png"
 dmFR.stage_counts = data.raw.resource["crude-oil"].stage_counts
 dmFR.map_color = {102, 0, 102}
@@ -30,13 +30,13 @@ dmFR.minable = {
 }
 dmFR.autoplace = resource_autoplace.resource_autoplace_settings{
       name = "DimensionalFluid",
-      order = "c", -- Other resources are "b"; oil won't get placed if something else is already there.
+      order = "c",
       base_density = 8.2,
       base_spots_per_km2 = 1.8,
       random_probability = 1/48,
       random_spot_size_minimum = 1,
-      random_spot_size_maximum = 1, -- don't randomize spot size
-      additional_richness = 220000, -- this increases the total everywhere, so base_density needs to be decreased to compensate
+      random_spot_size_maximum = 1,
+      additional_richness = 220000,
       has_starting_area_placement = true,
       regular_rq_factor_multiplier = 1
     }
