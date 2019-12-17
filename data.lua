@@ -546,18 +546,18 @@ data:extend{
 
 
 ------------------------ ADD REDCROSS ----------------------
-local RC = table.deepcopy(data.raw.fluid["crude-oil"])
-RC.name = "RedCross"
-RC.icon = "__Mobile_Factory__/graphics/icones/RedCross.png"
-RC.subgroup = "Resources"
-RC.order = "zzz"
-RC.fuel_category = nil
-RC.fuel_value = nil
-RC.fuel_acceleration_multiplier = nil
-RC.fuel_top_speed_multiplier = nil
-RC.fuel_emissions_multiplier = nil
-RC.fuel_glow_color = nil
-data:extend{RC}
+-- local RC = table.deepcopy(data.raw.fluid["crude-oil"])
+-- RC.name = "RedCross"
+-- RC.icon = "__Mobile_Factory__/graphics/icones/RedCross.png"
+-- RC.subgroup = "Resources"
+-- RC.order = "zzz"
+-- RC.fuel_category = nil
+-- RC.fuel_value = nil
+-- RC.fuel_acceleration_multiplier = nil
+-- RC.fuel_top_speed_multiplier = nil
+-- RC.fuel_emissions_multiplier = nil
+-- RC.fuel_glow_color = nil
+-- data:extend{RC}
 
 
 -------------------- SET ORES STACK TO 1000 --------------------
