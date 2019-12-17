@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.50
+Date: 16/12/2019
+  Bugfixes:
+    - Fixed Ore Silo Pad crash
+    - Fixed a Item count error with Data Inventories
+    - Fixed an incorrect animation with the Ore Cleaner
+    - Fixed Quatron Charges not sended to the Ore Cleaner
+    - Fixed Quatron Charges not sended to the Fluid Extractor
+---------------------------------------------------------------------------------------------------
 Version: 0.0.49
 Date: 15/12/2019
   Major Features:

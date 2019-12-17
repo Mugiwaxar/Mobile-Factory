@@ -366,11 +366,11 @@ function updateFluidExtractor()
 		local level = 0
 		-- Look for Quatron Charge in the Internal Inventory --
 		for i = 100, 0, -1 do
-			local amount = countItemFromII("Quatron" .. i)
+			local amount = global.MF.II:hasItem("Quatron" .. i)
 			if amount > 0 then
 			level = i
 			-- Remove the Charge from the Internal Inventory --
-			directRemoveItemFromII("Quatron" .. i, 1)
+			global.MF.II:getItem("Quatron" .. i, 1)
 			-- Create the Laser --
 			global.MF.ent.surface.create_entity{name="GreenBeam", duration=30, position=global.MF.ent.position, target=global.fluidExtractor.position, source=global.MF.ent}
 			break
