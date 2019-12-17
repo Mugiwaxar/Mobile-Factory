@@ -3,6 +3,12 @@ Version: 0.0.51
 Date: 17/12/2019
   Graphics:
     - Little adjustments to Matter Serialization Structures
+  Changes:
+    - Removed the Fictive Red Cross Fluid
+  Bugfixes:
+    - Reduced a little the Mobile Factory Vehicle collision box to allow the Player to leave the drive seat in all directions
+    - Corrected the Ore Cleaner code to make it extract the correct radius of Ore Path
+    - The Crude Oil no longer look like Dimensional Fluid
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.50
 Date: 16/12/2019
