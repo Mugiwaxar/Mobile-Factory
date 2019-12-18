@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.52
 Date: 18/12/2019
+  Changes:
+    - Dimensional Lab now accept all research materials to improve to compatibility with other Mods
   Bugfixes:
     - All structures of the Matter Serialization Technology are now correctly unlocked																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											
 ---------------------------------------------------------------------------------------------------
