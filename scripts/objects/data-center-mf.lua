@@ -124,6 +124,19 @@ function DCMF:update()
 	self.invObj.dataStoragesCount = self.dataStorages
 	self.invObj.maxCapacity = _mfBaseMaxItems + (_mfDataStorageCapacity * self.dataStorages)
 	
+	-- Create the Inventory Signal --
+	self.ent.get_control_behavior().parameters = nil
+	local i = 1
+	for name, count in pairs(self.invObj.inventory) do
+		-- Create and send the Signal --
+		local signal = {signal={type="item", name=name},count=count}
+		self.ent.get_control_behavior().set_signal(i, signal)
+		-- Increament the Slot --
+		i = i + 1
+		-- Stop if there are to much Items --
+		if i > 999 then break end
+	end
+	
 	-- Remove Needed Energy --
 	if self:removeEnergy(self.currentCircuitNetworkConsumption) > 0 then
 		-- Set the Data Center to active --

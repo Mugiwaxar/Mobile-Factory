@@ -12,7 +12,7 @@ dcE.corpse = "big-remnants"
 dcE.dying_explosion = "medium-explosion"
 dcE.collision_box = {{-2.35, -2.2}, {2.35, 2.2}}
 dcE.selection_box = dcE.collision_box
-dcE.item_slot_count = 0
+dcE.item_slot_count = 999
 dcE.circuit_wire_max_distance = 20
 dcE.sprites.sheets =
 	{	{
