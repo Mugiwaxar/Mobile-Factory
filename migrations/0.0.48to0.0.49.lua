@@ -12,14 +12,13 @@ if global.inventoryTable ~= nil and table_size(global.inventoryTable) > 0 then
 end
 
 -- Unlock Matter Serialization recipes --
-if technologyUnlocked("MFShield") then
+if technologyUnlocked("MatterSerialization") then
 	game.forces["player"].recipes["DataCenter"].enabled = true
 	game.forces["player"].recipes["DataCenterMF"].enabled = true
 	game.forces["player"].recipes["DataStorage"].enabled = true
 	game.forces["player"].recipes["MatterSerializer"].enabled = true
 	game.forces["player"].recipes["MatterPrinter"].enabled = true
 	game.forces["player"].recipes["EnergyCubeMK1"].enabled = true
-	
 end
 
 -- Set MF surface to day and alway day --

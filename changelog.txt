@@ -1,10 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.52
+Date: 18/12/2019
+  Bugfixes:
+    - All structures of the Matter Serialization Technology are now correctly unlocked																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											
+---------------------------------------------------------------------------------------------------
 Version: 0.0.51
 Date: 17/12/2019
   Graphics:
     - Little adjustments to Matter Serialization Structures
   Changes:
-    - Removed the Fictive Red Cross Fluid
+    - Removed the fictive Red Cross Fluid
   Bugfixes:
     - Reduced a little the Mobile Factory Vehicle collision box to allow the Player to leave the drive seat in all directions
     - Corrected the Ore Cleaner code to make it extract the correct radius of Ore Path
