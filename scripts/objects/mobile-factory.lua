@@ -321,29 +321,14 @@ function MF:SendQuatron(event)
 	if event.tick%10 ~= 0 then return end
 	-- Test if there are space inside the Ore Cleaner for Quatron Charge --
 	if global.oreCleaner.charge > _mfOreCleanerMaxCharge - 100 then return end
-	
-	------------------------------------- TO MODIFY -----------------------
-	-- Create the Level variable --
-		local level = 0
-		-- Look for Quatron Charge in the Internal Inventory --
-		for i = 100, 0, -1 do
-			-- Look for the best Charge --
-			local amount = global.MF.II:hasItem("Quatron" .. i)
-			if amount > 0 then
-			level = i
-			-- Remove the Charge from the Internal Inventory --
-			global.MF.II:getItem("Quatron" .. i, 1)
-			-- Create the Laser --
-			self.ent.surface.create_entity{name="GreenBeam", duration=30, position=self.ent.position, target={global.oreCleaner.ent.position.x, global.oreCleaner.ent.position.y - 2}, source=self.ent}
-			break
-			end
-		end
-	--------------------------------------------------------------------------
-	
-	-- Test if they are a Quatron Charge --
-	if level <= 0 then return end
-	-- Add the Charge --
-	global.oreCleaner:addQuatron(level)
+	-- Get the Best Quatron Change --
+	local charge = global.MF.II:getBestQuatron()
+	if charge > 0 then
+		-- Add the Charge --
+		global.oreCleaner:addQuatron(charge)
+		-- Create the Laser --
+		self.ent.surface.create_entity{name="GreenBeam", duration=30, position=self.ent.position, target={global.oreCleaner.ent.position.x, global.oreCleaner.ent.position.y - 2}, source=self.ent}
+	end
 end
 
 

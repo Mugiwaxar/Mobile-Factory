@@ -115,6 +115,24 @@ function INV:getItem(item, amount)
 	return 0
 end
 
+-- Return the Best Quatron Charge --
+function INV:getBestQuatron()
+	-- Create the Level variable --
+	local level = 0
+	-- Look for Quatron Charge in the Internal Inventory --
+	for i = 100, 0, -1 do
+		-- Look for the best Charge --
+		local amount = self:hasItem("Quatron" .. i)
+		if amount > 0 then
+			level = i
+			-- Remove the Charge from the Internal Inventory --
+			self:getItem("Quatron" .. i, 1)
+			return level
+		end
+	end
+	return 0
+end
+
 -- Return the Inventory Frame --
 function INV:getFrame(guiElement)
 

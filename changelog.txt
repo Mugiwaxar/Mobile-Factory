@@ -1,6 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.53
 Date: 18/12/2019
+  Scripting:
+    - Minor rewrite for Quatron Charge sended by the Mobile Factory
+  Bugfixes:
+    - Fixed crash related to Internal Tanks Filter
+---------------------------------------------------------------------------------------------------
+Version: 0.0.53
+Date: 18/12/2019
   Features:
     - Data Center and Internal Inventory Data Center now send Circuit Network Signals based on the content of their Inventory
 ---------------------------------------------------------------------------------------------------
