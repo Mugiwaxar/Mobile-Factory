@@ -105,30 +105,37 @@ function somethingWasPlaced(event, isRobot)
 	-- Save the Dimensional Accumulator --
 	if event.created_entity.name == "DimensionalAccumulator" then
 		placedDimensionalAccumulator(event)
+		return
 	end
 	-- Save the Power Drain Pole --
 	if event.created_entity.name == "PowerDrainPole" then
 		placedPowerDrainPole(event)
+		return
 	end
 	-- Save the Logistic Fluid Pole --
 	if event.created_entity.name == "LogisticFluidPole" then
 		placedLogisticPowerPole(event)
+		return
 	end
 	-- Save the Matter Serializer --
 	if event.created_entity.name == "MatterSerializer" then
 		placedMatterSerializer(event)
+		return
 	end
 	-- Save the Matter Printer --
 	if event.created_entity.name == "MatterPrinter" then
 		placedMatterPrinter(event)
+		return
 	end
 	-- Save the Data Center --
 	if event.created_entity.name == "DataCenter" then
 		placedDataCenter(event)
+		return
 	end
 	-- Save the Energy Cube --
 	if string.match(event.created_entity.name, "EnergyCube") then
 		placedEnergyCube(event)
+		return
 	end
 	-- Save the Data Center MF --
 	if event.created_entity.name == "DataCenterMF" then
@@ -141,15 +148,18 @@ function somethingWasPlaced(event, isRobot)
 			return
 		else
 			placedDataCenterMF(event)
+			return
 		end
 	end
 	-- Save the Data Storage --
 	if event.created_entity.name == "DataStorage" then
 		placedDataStorage(event)
+		return
 	end
 	-- Save the Ore Silot Pad --
 	if string.match(event.created_entity.name, "OreSilotPad") then
 		placedOreSilotPad(event)
+		return
 	end
 	-- Save the Ore Cleaner --
 	if event.created_entity.name == "OreCleaner" then
@@ -164,22 +174,13 @@ function somethingWasPlaced(event, isRobot)
 			if global.oreCleaner == nil then global.oreCleaner = OC:new(event.created_entity)
 			else global.oreCleaner.ent = event.created_entity end
 			global.oreCleaner:scanOres(event.created_entity)
+			return
 		end
 	end
 	-- Save the Fluid Extractor --
 	if event.created_entity.name == "FluidExtractor" then
-		if global.fluidExtractor ~= nil then
-			if isPlayer== true then creator.print({"", "Unable to place more than one ", {"item-name." .. event.stack.name }}) end
-			event.created_entity.destroy()
-			if isPlayer== true and event.stack ~= nil and event.stack.valid_for_read == true then
-				creator.get_main_inventory().insert(event.stack)
-			end
-			return
-		else
-			global.fluidExtractor = event.created_entity	
-			global.fluidExtractorCharge = 0
-			global.fluidExtractorPurity = 0
-		end
+		placedFluidExtractor(event)
+		return
 	end
 end
 
@@ -190,6 +191,7 @@ function somethingWasRemoved(event)
 	-- The Mobile Factory was removed --
 	if string.match(event.entity.name, "MobileFactory") then
 		global.MF:remove(event.entity)
+		return
 	end
 	-- Remove the Factory Chest --
 	if event.entity.name == "FactoryChest" then
@@ -224,14 +226,17 @@ function somethingWasRemoved(event)
 	-- Remove the Data Center --
 	if event.entity.name == "DataCenter" then
 		removedDataCenter(event)
+		return
 	end
 	-- Remove the Data Center MF --
 	if event.entity.name == "DataCenterMF" then
 		removedDataCenterMF(event)
+		return
 	end
 	-- Remove the Energy Cube --
 	if string.match(event.entity.name, "EnergyCube") then
 		removedEnergyCube(event)
+		return
 	end
 	-- Remove the Ore Silot Pad --
 	if string.match(event.entity.name, "OreSilotPad") then
@@ -250,9 +255,7 @@ function somethingWasRemoved(event)
 	end
 	-- Remove the Fluid Extractor --
 	if event.entity.name == "FluidExtractor" then
-		global.fluidExtractor = nil	
-		global.fluidExtractorCharge = 0
-		global.fluidExtractorPurity = 0
+		removedFluidExtractor(event)
 		return
 	end
 end

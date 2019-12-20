@@ -41,22 +41,28 @@ function placedDataCenterMF(event)
 	end
 end
 
--- Save Data Storage in a table --
+-- Save the Data Storage in a table --
 function placedDataStorage(event)
 	if global.dataStorageTable == nil then global.dataStorageTable = {} end
 	global.dataStorageTable[event.created_entity.unit_number] = DS:new(event.created_entity)
 end
 
--- Save Energy Cube in a table --
+-- Save the Energy Cube in a table --
 function placedEnergyCube(event)
 	if global.energyCubesTable == nil then global.energyCubesTable = {} end
 	global.energyCubesTable[event.created_entity.unit_number] = EC:new(event.created_entity)
 end
 
--- Save Ore Silot Pads in a table --
+-- Save the Ore Silot Pads in a table --
 function placedOreSilotPad(event)
 	if global.oreSilotPadTable == nil then global.oreSilotPadTable = {} end
 	global.oreSilotPadTable[event.created_entity.unit_number] = event.created_entity
+end
+
+-- Save the Fluid Extractor --
+function placedFluidExtractor(event)
+	if global.fluidExtractorTable == nil then global.fluidExtractorTable = {} end
+	global.fluidExtractorTable[event.created_entity.unit_number] = event.created_entity
 end
 
 
@@ -107,7 +113,7 @@ function removedDataCenterMF(event)
 	end
 end
 
--- Remove Data Storage from the table from the table --
+-- Remove the Data Storage from the table --
 function removedDataStorage(event)
 	if global.dataStorageTable == nil then global.dataStorageTable = {} return end
 	if global.dataStorageTable[event.entity.unit_number] ~= nil then global.dataStorageTable[event.entity.unit_number]:remove() end
@@ -121,11 +127,21 @@ function removedEnergyCube(event)
 		global.MF.energyCubesTable = nil
 	end
 end
--- Remove Ore Silot Pad from the table --
+
+-- Remove the Ore Silot Pad from the table --
 function removedOreSilotPad(event)
 	if global.oreSilotPadTable == nil then global.oreSilotPadTable = {} return end
 	global.oreSilotPadTable[event.entity.unit_number] = nil
 end
+
+-- Remove the Fluid Extractor from the table --
+function removedFluidExtractor(event)
+	if global.fluidExtractorTable == nil then global.fluidExtractorTable = {} return end
+	global.fluidExtractorTable[event.entity.unit_number] = nil
+end
+
+
+
 
 
 

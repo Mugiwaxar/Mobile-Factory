@@ -59,13 +59,12 @@ function updateValues()
 	if global.oreSilotTable == nil then global.oreSilotTable = {} end
 	if global.oreSilotPadTable == nil then global.oreSitolPadTable = {} end
 	if global.currentSilotPadChestUpdate == nil then global.currentSilotPadChestUpdate = 1 end
-	if global.fluidExtractorCharge == nil then global.fluidExtractorCharge = 0 end
-	if global.fluidExtractorPurity == nil then global.fluidExtractorPurity = 0 end
 	if global.matterSerializerTable == nil then global.matterSerializerTable = {} end
 	if global.matterPrinterTable == nil then global.matterPrinterTable = {} end
 	if global.dataCenterTable == nil then global.dataCenterTable = {} end
 	if global.dataStorageTable == nil then global.dataStorageTable = {} end
 	if global.energyCubesTable == nil then global.energyCubesTable = {} end
+	if global.fluidExtractorTable == nil then global.fluidExtractorTable = {} end
 end
 
 -- When a technology is finished --

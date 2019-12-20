@@ -12,6 +12,7 @@ require("utils/warptorio.lua")
 require("scripts/objects/mobile-factory.lua")
 require("scripts/objects/power-drain-pole.lua")
 require("scripts/objects/ore-cleaner.lua")
+require("scripts/objects/fluid-extractor.lua")
 require("scripts/objects/inventory.lua")
 require("scripts/objects/data-center.lua")
 require("scripts/objects/data-center-mf.lua")
@@ -36,12 +37,6 @@ function onInit()
 	global.IDModule = 0
 	-- Current Entities Update --
 	global.currentSilotPadChestUpdate = 1
-	-- Ore Cleaner --
-	global.oreCleaner = nil
-	-- Fluid Extractor --
-	global.fluidExtractor = nil
-	global.fluidExtractorCharge = 0
-	global.fluidExtractorPurity = 0
 	-- Tables --
 	global.playersTable = {}
 	global.accTable = {}
@@ -55,6 +50,7 @@ function onInit()
 	global.oreSilotTable = {}
 	global.oreSilotPadTable = {}
 	global.lfpTable = {}
+	global.fluidExtractorTable = {}
 end
 
 -- When a save is loaded --
