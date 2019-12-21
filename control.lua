@@ -89,6 +89,10 @@ function onLoad()
 	end
 	-- Set Ore Cleaner Metatable --
 	OC:rebuild(global.oreCleaner)
+	-- Set Fluid Extractor Metatables --
+	for k, fe in pairs(global.fluidExtractorTable or {}) do
+		FE:rebuild(fe)
+	end
 end
 
 -- When a player joint the game --

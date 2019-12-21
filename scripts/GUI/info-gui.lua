@@ -601,34 +601,4 @@ function GUI.updateStructuresFrame(gui)
 		PurityLabel.style.font_color = {39,239,0}
 		PurityBar.style.color = {255, 255, 255}
 	end
-	
-	--------------- Make the Fluid Extractor Frame ----------------
-	local feFrame = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow4.mfStructureFlow.add{type="frame", direction="vertical"}
-	feFrame.visible = false
-	feFrame.style.width = 205
-	-- Make the Fluid Extractor Frame visible if Fluid Extractor is placed --
-	if global.fluidExtractor ~= nil then
-		feFrame.visible = true
-		
-		-- Create Labels and Bares --
-		local nameLabel = feFrame.add{type="label", caption={"", {"gui-description.FluidExtractor"}}}
-		local SpeedLabel = feFrame.add{type="label", caption={"", {"gui-description.Speed"}, ": ", _mfFEFluidPerExtraction*global.fluidExtractorPurity, " u/s"}}
-		local ChargeLabel = feFrame.add{type="label", caption={"", {"gui-description.Charge"}, ": ", global.fluidExtractorCharge}}
-		local ChargeBar = feFrame.add{type="progressbar", value=global.fluidExtractorCharge/_mfFEMaxCharge}
-		local PurityLabel = feFrame.add{type="label", caption={"", {"gui-description.Purity"}, ": ", math.floor(global.fluidExtractorPurity*100)/100}}
-		local PurityBar = feFrame.add{type="progressbar", value=global.fluidExtractorPurity/100}
-	
-		-- Update Style --
-		nameLabel.style.font = "LabelFont"
-		nameLabel.style.bottom_margin = 7
-		SpeedLabel.style.font = "LabelFont"
-		ChargeLabel.style.font = "LabelFont"
-		PurityLabel.style.font = "LabelFont"
-		nameLabel.style.font_color = {108, 114, 229}
-		SpeedLabel.style.font_color = {39,239,0}
-		ChargeLabel.style.font_color = {39,239,0}
-		ChargeBar.style.color = {176,50,176}
-		PurityLabel.style.font_color = {39,239,0}
-		PurityBar.style.color = {255, 255, 255}
-	end
 end

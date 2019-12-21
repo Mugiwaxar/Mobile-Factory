@@ -16,6 +16,7 @@ function UpSys.scanEnts()
 	UpSys.addTable(global.matterPrinterTable)
 	UpSys.addTable(global.dataStorageTable)
 	UpSys.addTable(global.energyCubesTable)
+	UpSys.addTable(global.fluidExtractorTable)
 	
 	-- Shuffle the MF Entities Table --
 	UpSys.shuffle(global.entsTable)
@@ -408,7 +409,7 @@ function updateFluidExtractor()
 	-- Calcule the amount that can be extracted --
 	local amount = math.min(resource.amount, global.fluidExtractorPurity*_mfFEFluidPerExtraction)
 	amount = math.min(amount, global.fluidExtractorCharge*10)
-	-- Find the Focused Tank and filter --
+	-- Find the Focused Tank and Filter --
 	if global.tankTable == nil or global.tankTable[moduleID] == nil then return end
 	local filter = global.tankTable[moduleID].filter
 	local tank = global.tankTable[moduleID].ent
@@ -427,7 +428,7 @@ function updateFluidExtractor()
 		resource.amount = math.max(resource.amount - amountAdded, 1)
 		-- Remove the FluidPath if amount == 0 --
 		if resource.amount < 2 then
-		resource.destroy()
+			resource.destroy()
 		end
 	end
 end

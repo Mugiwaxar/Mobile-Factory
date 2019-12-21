@@ -1,4 +1,5 @@
 require("scripts/objects/fluid-extractor.lua")
+game.print("Mobile Factory: The Fluid Extractor can now be placed multiple time")
 
 -- Remove the RedCross Fluid --
 for k, tank in pairs(global.tankTable) do

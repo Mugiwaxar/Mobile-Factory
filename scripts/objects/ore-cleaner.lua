@@ -77,8 +77,9 @@ end
 
 -- Add a Quatron Charge --
 function OC:addQuatron(level)
+	self.totalCharge = self.totalCharge + 1
 	self.charge = self.charge + 100
-	self.purity = ((self.purity * self.totalCharge) + level) / (self.totalCharge + 1)
+	self.purity = math.ceil(((self.purity * self.totalCharge) + level) / (self.totalCharge + 1))
 end
 
 -- Get the number of Ores per extraction --
@@ -120,10 +121,9 @@ end
 -- Get the module ID inside --
 function OC:getModuleID()
 	-- Test if the Ore Cleaner is valid --
-	if self.ent == nil then return 0 end
-	if self.ent.valid == false then return 0 end
+	if self:valid() == false then return end
 	-- Get the Inventory --
-	local inventory = global.oreCleaner.ent.get_module_inventory()
+	local inventory = self.ent.get_module_inventory()
 	-- Test if the Inventory is valid --
 	if inventory == nil then return 0 end
 	-- Look for the Module --
@@ -134,7 +134,7 @@ function OC:getModuleID()
 	if moduleID.valid_for_read == false then return 0 end
 	-- Look for the Module name --
 	local moduleName = moduleID.name
-	-- Test if the Module Name is valid --
+	-- Test if the Module name is valid --
 	if moduleName == nil then return 0 end
 	-- Look for the ID --
 	if string.match(moduleName, "ModuleID") then

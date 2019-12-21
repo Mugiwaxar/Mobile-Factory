@@ -66,7 +66,7 @@ _mfOreCleanerExtractionTicks = 5
 _mfOreCleanerInventorySize = 12000
 
 -- Fluid Extractor settings --
-_mfFEFluidPerExtraction = 100
+_mfFEFluidPerExtraction = 30
 _mfFEMaxCharge = 1000
 
 -- GUI Settings --

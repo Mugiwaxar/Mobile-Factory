@@ -62,7 +62,7 @@ end
 -- Save the Fluid Extractor --
 function placedFluidExtractor(event)
 	if global.fluidExtractorTable == nil then global.fluidExtractorTable = {} end
-	global.fluidExtractorTable[event.created_entity.unit_number] = event.created_entity
+	global.fluidExtractorTable[event.created_entity.unit_number] = FE:new(event.created_entity)
 end
 
 

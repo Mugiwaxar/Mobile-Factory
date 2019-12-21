@@ -1,6 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.54
 Date: 20/12/2019
+  Changes:
+    - The Fluid Extractor can now be placed multiple time
+    - The base Fluid Extractor extraction rate is now 30 u/s (Instead of 100 u/s) multiplied per the Quatron Purity
+  Scripting:
+    - The Fluid Extractor is now OOP
+  Bugfixes:
+    - The Ore Cleaner Purity is now correctly calculated
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.53
 Date: 18/12/2019
