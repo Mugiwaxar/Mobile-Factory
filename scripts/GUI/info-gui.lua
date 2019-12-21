@@ -287,8 +287,8 @@ function GUI.createInfoGui(gui, player)
 	mfInfoFlow3.style.width = 150
 	mfInfoFlow3.visible = false
 	
-	
-	------------------------------------------ FLOW 4 -------------------------------------
+	--[[
+	-------------------------------------- FLOW 4 -------------------------------------
 		
 	-- Create fourth Flow --
 	local mfInfoFlow4 = mfInfoMainFlow.add{type="frame", name="mfInfoFlow4", direction="vertical"}
@@ -304,6 +304,7 @@ function GUI.createInfoGui(gui, player)
 	-- Create the Structures Flow --
 	local mfStructureFlow = mfInfoFlow4.add{type="flow", name = "mfStructureFlow", direction="vertical"}
 	mfStructureFlow.style.width = 205
+	--]]
 	
 end
 
@@ -443,7 +444,7 @@ function GUI.updatePlayerInfoGUI(player)
 	GUI.updateInventoryFrame(player.gui)
 	
 	-- Update Structures Frame --
-	GUI.updateStructuresFrame(player.gui)
+	-- GUI.updateStructuresFrame(player.gui)
 	
 end
 	
@@ -561,7 +562,7 @@ function GUI.updateInventoryFrame(gui)
 	global.MF.II:getFrame(gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3)
 end
 	
-	
+--[[
 -- Update the Structure Frame --
 function GUI.updateStructuresFrame(gui)
 	-- Return if OreCleaner Technology is not unlocked --
@@ -571,34 +572,5 @@ function GUI.updateStructuresFrame(gui)
 	
 	-- Make the frame visible --
 	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow4.visible = true
-	
-	--------------- Make the Ore Cleaner Frame ----------------
-	local ocFrame = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow4.mfStructureFlow.add{type="frame", direction="vertical"}
-	ocFrame.visible = false
-	ocFrame.style.width = 205
-	-- Make the Ore Cleaner Frame visible if Ore Cleaner is placed --
-	if global.oreCleaner ~= nil and global.oreCleaner.ent ~= nil then
-		ocFrame.visible = true
-		
-		-- Create Labels and Bares --
-		local nameLabel = ocFrame.add{type="label", caption={"", {"gui-description.OreCleaner"}}}
-		local SpeedLabel = ocFrame.add{type="label", caption={"", {"gui-description.Speed"}, ": ", global.oreCleaner:orePerExtraction() * (60/_mfOreCleanerExtractionTicks), " ores/s"}}
-		local ChargeLabel = ocFrame.add{type="label", caption={"", {"gui-description.Charge"}, ": ", global.oreCleaner.charge}}
-		local ChargeBar = ocFrame.add{type="progressbar", value=global.oreCleaner.charge/_mfOreCleanerMaxCharge}
-		local PurityLabel = ocFrame.add{type="label", caption={"", {"gui-description.Purity"}, ": ", math.floor(global.oreCleaner.purity*100)/100}}
-		local PurityBar = ocFrame.add{type="progressbar", value=global.oreCleaner.purity/100}
-		
-		-- Update Style --
-		nameLabel.style.font = "LabelFont"
-		nameLabel.style.bottom_margin = 7
-		SpeedLabel.style.font = "LabelFont"
-		ChargeLabel.style.font = "LabelFont"
-		PurityLabel.style.font = "LabelFont"
-		nameLabel.style.font_color = {108, 114, 229}
-		SpeedLabel.style.font_color = {39,239,0}
-		ChargeLabel.style.font_color = {39,239,0}
-		ChargeBar.style.color = {176,50,176}
-		PurityLabel.style.font_color = {39,239,0}
-		PurityBar.style.color = {255, 255, 255}
-	end
 end
+--]]

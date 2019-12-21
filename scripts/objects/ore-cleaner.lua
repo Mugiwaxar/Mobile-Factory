@@ -73,6 +73,29 @@ end
 
 -- Tooltip Infos --
 function OC:getTooltipInfos(GUI)
+	local ocFrame = GUI.add{type="frame", direction="vertical"}
+	ocFrame.style.width = 150
+		
+	-- Create Labels and Bares --
+	local nameLabel = ocFrame.add{type="label", caption={"", {"gui-description.OreCleaner"}}}
+	local SpeedLabel = ocFrame.add{type="label", caption={"", {"gui-description.Speed"}, ": ", global.oreCleaner:orePerExtraction() * (60/_mfOreCleanerExtractionTicks), " ores/s"}}
+	local ChargeLabel = ocFrame.add{type="label", caption={"", {"gui-description.Charge"}, ": ", global.oreCleaner.charge}}
+	local ChargeBar = ocFrame.add{type="progressbar", value=global.oreCleaner.charge/_mfOreCleanerMaxCharge}
+	local PurityLabel = ocFrame.add{type="label", caption={"", {"gui-description.Purity"}, ": ", math.floor(global.oreCleaner.purity*100)/100}}
+	local PurityBar = ocFrame.add{type="progressbar", value=global.oreCleaner.purity/100}
+	
+	-- Update Style --
+	nameLabel.style.font = "LabelFont"
+	nameLabel.style.bottom_margin = 7
+	SpeedLabel.style.font = "LabelFont"
+	ChargeLabel.style.font = "LabelFont"
+	PurityLabel.style.font = "LabelFont"
+	nameLabel.style.font_color = {108, 114, 229}
+	SpeedLabel.style.font_color = {39,239,0}
+	ChargeLabel.style.font_color = {39,239,0}
+	ChargeBar.style.color = {176,50,176}
+	PurityLabel.style.font_color = {39,239,0}
+	PurityBar.style.color = {255, 255, 255}
 end
 
 -- Add a Quatron Charge --

@@ -39,7 +39,7 @@ function updateEntities(event)
 	if event.tick%_eventTick64 == 0 then updateLogisticFluidPoles() end
 	-- if event.tick%_eventTick110 == 0 then updateProvidersPad() end
 	-- if event.tick%_eventTick115 == 0 then updateRequesterPad() end
-	if event.tick%_eventTick59 == 0 then updateFluidExtractor() end
+	-- if event.tick%_eventTick59 == 0 then updateFluidExtractor() end
 	updatePowerDrainPole(event)
 	updateOreSilotPad()
 end
