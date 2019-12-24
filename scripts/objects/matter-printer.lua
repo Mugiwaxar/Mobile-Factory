@@ -87,8 +87,8 @@ function MP:updateInv()
 	-- Return if there are no filter --
 	if filter == nil then return end
 	
-	-- Get Items from the Data Inventory --
-	local returnedItems = dataInv:getItem(filter.name, game.item_prototypes[filter.name].stack_size)
+	-- Get Items count from the Data Inventory --
+	local returnedItems = dataInv:hasItem(filter.name)
 	
 	-- Stop if they are any Item --
 	if returnedItems <= 0 then return end
@@ -96,10 +96,9 @@ function MP:updateInv()
 	-- Insert requested Item inside the local Inventory --
 	local addedItems = inv.insert({name=filter.name, count=returnedItems})
 	
-	-- Reinsert back Items inside the Data Inventory if needed --
-	if returnedItems - addedItems > 0 then
-		dataInv:addItem(filter.name, returnedItems - addedItems)
-	end
+	-- Remove Item from the Inventory --
+	dataInv:getItem(filter.name, addedItems)
+	
 end
 
 -- Tooltip Infos --

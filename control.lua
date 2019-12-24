@@ -26,6 +26,7 @@ function onInit()
 	-- Mobile Factory Object --
 	global.MF = MF:new()
 	global.MF.II = INV:new("Internal Inventory")
+	global.MF.II.isII = true
 	createMFSurface()
 	createControlRoom()
 	-- Update System --

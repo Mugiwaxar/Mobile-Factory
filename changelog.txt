@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.55
+Date: 24/12/2019
+  Changes:
+    - The Internal Inventory Data Center can now transfer Items from Ore Silos inside the Control Center
+    - The content of the Control Center Ore Silos is added to the Internal Inventory Data Center Signals
+---------------------------------------------------------------------------------------------------
 Version: 0.0.54
 Date: 21/12/2019
   Changes:
