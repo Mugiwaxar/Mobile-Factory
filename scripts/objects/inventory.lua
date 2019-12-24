@@ -38,7 +38,12 @@ function INV:rescan()
 	local totalItem = 0
 	-- Itinerate the Invernal Inventory --
 	for item, count in pairs(self.inventory) do
-		totalItem = totalItem + count
+		-- Check if the Item still exist --
+		if game.item_prototypes[item] == nil then
+			self.inventory[item] = nil
+		else
+			totalItem = totalItem + count
+		end
 	end
 	
 	-- Save the used Capacity --

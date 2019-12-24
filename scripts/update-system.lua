@@ -311,7 +311,6 @@ function updateRequesterPad()
 		end
 	end	
 end
-]]--
 
 -- Update Ore Silot Pads --
 function updateOreSilotPad()
@@ -359,7 +358,6 @@ function updateOreSilotPad()
 	end
 end
 
---[[
 -- Update the Fluid Extractor --
 function updateFluidExtractor()
 	if global.fluidExtractor == nil or global.MF == nil then return end

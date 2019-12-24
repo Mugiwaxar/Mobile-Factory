@@ -49,7 +49,6 @@ function onInit()
 	global.dataStorageTable = {}
 	global.energyCubesTable = {}
 	global.oreSilotTable = {}
-	global.oreSilotPadTable = {}
 	global.lfpTable = {}
 	global.fluidExtractorTable = {}
 end

@@ -41,7 +41,7 @@ function updateEntities(event)
 	-- if event.tick%_eventTick115 == 0 then updateRequesterPad() end
 	-- if event.tick%_eventTick59 == 0 then updateFluidExtractor() end
 	updatePowerDrainPole(event)
-	updateOreSilotPad()
+	-- updateOreSilotPad()
 end
 
 -- Update base Mobile Factory Values --
@@ -57,7 +57,6 @@ function updateValues()
 	if global.lfpTable == nil then global.lfpTable = {} end
 	if global.tankTable == nil then global.tankTable = {} end
 	if global.oreSilotTable == nil then global.oreSilotTable = {} end
-	if global.oreSilotPadTable == nil then global.oreSitolPadTable = {} end
 	if global.currentSilotPadChestUpdate == nil then global.currentSilotPadChestUpdate = 1 end
 	if global.matterSerializerTable == nil then global.matterSerializerTable = {} end
 	if global.matterPrinterTable == nil then global.matterPrinterTable = {} end

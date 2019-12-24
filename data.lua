@@ -107,14 +107,14 @@ data:extend{
 	}
 }
 
-data:extend{
-	{
-		type="item-subgroup",
-		name="Pad",
-		group="MobileFactory",
-		order="b2"
-	}
-}
+-- data:extend{
+	-- {
+		-- type="item-subgroup",
+		-- name="Pad",
+		-- group="MobileFactory",
+		-- order="b2"
+	-- }
+-- }
 
 data:extend{
 	{

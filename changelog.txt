@@ -4,6 +4,11 @@ Date: 24/12/2019
   Changes:
     - The Internal Inventory Data Center can now transfer Items from Ore Silos inside the Control Center
     - The content of the Control Center Ore Silos is added to the Internal Inventory Data Center Signals
+    - Removed Ore Silo Pad 1/2/3/4/5, replaced by Iron Chest when placed on the Map
+  Bugfixes:
+    - Fixed a game crash when an Item from a removed Mod still exist inside the Internal Inventory
+  Scripting:
+    - Rework of all Migrations game.print()
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.54
 Date: 21/12/2019

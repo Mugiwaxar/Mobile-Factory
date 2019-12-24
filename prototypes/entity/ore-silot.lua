@@ -41,6 +41,7 @@ function createOreSilot(id)
 	osE.circuit_wire_max_distance = default_circuit_wire_max_distance
 	data:extend{osE}
 	
+	--[[
 	-- Pad Entity --
 	osPE = {}
 	osPE.type = "logistic-container"
@@ -115,6 +116,8 @@ function createOreSilot(id)
 	osPR.result = "OreSilotPad" .. tonumber(id)
 	data:extend{osPR}
 	
+	--]]
+	
 	
 	-- Ore Silot Technologie --
 	local osT = {}
@@ -132,8 +135,8 @@ function createOreSilot(id)
 	osT.prerequisites = {"ControlCenter"}
 	osT.effects = {
 	{type="nothing", effect_description={"description.OreSilot" .. tonumber(id)}},
-	{type="unlock-recipe", recipe="ModuleID" .. tonumber(id)},
-	{type="unlock-recipe", recipe="OreSilotPad" .. tonumber(id)}
+	{type="unlock-recipe", recipe="ModuleID" .. tonumber(id)}
+	-- {type="unlock-recipe", recipe="OreSilotPad" .. tonumber(id)}
 	}
 	data:extend{osT}
 end
