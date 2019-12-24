@@ -3,7 +3,7 @@ require("scripts/objects/inventory.lua")
 -- Print update message --
 if global.inventoryTable ~= nil and table_size(global.inventoryTable) > 0 then
 	game.print("#################################################################################################################")
-	game.print("In the Mobile Factory 0.0.49 Update, all the Internal Inventory logistic was changed.")
+	game.print("Mobile Factory: In this Update, all the Internal Inventory logistic was changed.")
 	game.print("The Inventory/Provider/Requester Pad was removed, and replaced by Matter Serializer/Printer and Data Storage.")
 	game.print("Replaced all Inventory/Provider/Requester Pads by Iron Chests")
 	game.print("################################################################################################################# ")

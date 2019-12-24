@@ -1,8 +1,7 @@
--- Loader unable to work anymore on the FactoryChest, place a new one --
+-- Loaders are unable to work anymore on the FactoryChest, place a new one --
 if global.MobileFactory ~= nil and global.MobileFactory.valid == true
 	and global.mfInsideSurface ~= nil and global.mfInsideSurface.valid == true 
 	and global.FactoryChest ~= nil and global.FactoryChest.valid == true then
-	game.print("0.0.14 migration")
 	local inventory1 = global.FactoryChest.get_inventory(defines.inventory.chest)
 	itemsTable = {}
 	

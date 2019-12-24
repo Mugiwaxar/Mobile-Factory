@@ -4,7 +4,6 @@ if global.mobileFactory ~= nil then
 end
 
 if global.controlSurface ~= nil then
-	game.print("Migration 0.0.21 to 0.0.22 ")
 	local tanks = global.controlSurface.find_entities({{-65,-17},{-9,-3}})
 	local tank1Fname
 	local tank1Famount = 0

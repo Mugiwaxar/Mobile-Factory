@@ -1,7 +1,6 @@
 -- MF Shield Update --
 if global.MF ~= nil then
-	game.print("Update MF Table ...")
+	game.print("Mobile Factory: Update Shield")
 	global.MF.shield = nil
 	global.MF.maxShield = nil
-	game.print("Done!")
 end

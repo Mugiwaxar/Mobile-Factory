@@ -1,5 +1,4 @@
 require("utils/functions.lua")
-game.print("0.0.20 to 0.0.21 migration")
 if global.controlSurface ~= nil then
 	newTiles = global.controlSurface.find_tiles_filtered{area={{-100,-100},{100,100}}}
 	for k, tile in pairs(newTiles) do
@@ -15,11 +14,11 @@ end
 
 if technologyUnlocked("ControlCenter") then
 	if global.controlSurface.find_entity("DimensionalSubstation", {-2,10}) == nil then
-		game.print("Recreated Dimensional Substation")
+		game.print("Mobile Factory: Recreated Dimensional Substation")
 		createEntity(global.controlSurface, -2, 10, "DimensionalSubstation", "player").minable = nil
 	end
 	if global.controlSurface.find_entity("DimensionalAccumulator", {2,12}) == nil then
-		game.print("Recreated Dimensional Accumulator")
+		game.print("Mobile Factory: Recreated Dimensional Accumulator")
 		createEntity(global.controlSurface, 2, 12, "DimensionalAccumulator", "player").minable = nil
 	end
 	createTilesSurface(global.controlSurface, -10, -10, 10, 10, "tutorial-grid")
@@ -30,7 +29,7 @@ if technologyUnlocked("UpgradeModules") then
 		createTilesSurface(global.controlSurface, -6, -20, 6, -10, "tutorial-grid")
 	if global.controlSurface.find_entity("Equalizer", {1,-16}) == nil then
 		createEntity(global.controlSurface, 1, -16, "Equalizer", "player").minable = nil
-		game.print("Recreated Equalizer")
+		game.print("Mobile Factory: Recreated Equalizer")
 	end
 end
 if technologyUnlocked("StorageTankMK1_1") then

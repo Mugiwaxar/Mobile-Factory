@@ -1,6 +1,6 @@
 require("utils/functions.lua")
 if technologyUnlocked("StorageTankMK1-1") then
-	game.print("0.0.17 to 0.0.18B migration")
+	game.print("Mobile Factory: Storage Tank FIX")
 	local ModuleID1 = game.forces["player"].recipes["ModuleID1"]
 	ModuleID1.enabled = true
 	if game.forces["player"].recipes["Tank1Module"] ~= nil then

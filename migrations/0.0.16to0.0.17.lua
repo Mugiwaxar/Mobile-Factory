@@ -1,6 +1,6 @@
 require("utils/functions.lua")
 if technologyUnlocked("EnergyPowerModule") then
-	game.print("0.0.16 to 0.0.17 migration")
+	game.print("Mobile Factory: Unlocked all Modules")
 	local DistributionModule = game.forces["player"].recipes["DistributionModule"]
 	DistributionModule.enabled = true
 	local DrainModule = game.forces["player"].recipes["DrainModule"]

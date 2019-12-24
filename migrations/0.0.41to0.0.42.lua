@@ -1,6 +1,6 @@
 -- Create the MF object --
 if global.mobileFactory ~= nil then
-	game.print("0.0.41 to 0.0.42 Migration")
+	game.print("Mobile Factory to OOP Update")
 	-- Copy all variables --
 	global.MF = MF:new(global.mobileFactory)
 	local MF = global.MF

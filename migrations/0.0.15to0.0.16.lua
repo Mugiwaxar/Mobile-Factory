@@ -1,5 +1,3 @@
-game.print("0.0.16 migration")
-
 -- Restore Mobile Factory --
 if global.MobileFactory ~= nil and global.MobileFactory.valid == true then
 	global.mobileFactory = global.MobileFactory
