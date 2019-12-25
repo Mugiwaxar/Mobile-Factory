@@ -129,7 +129,7 @@ function DCMF:update()
 	local i = 1
 	for name, count in pairs(self.invObj.inventory) do
 		-- Create and send the Signal --
-		if game.item_prototypes[item] ~= nil then
+		if game.item_prototypes[name] ~= nil then
 			local signal = {signal={type="item", name=name},count=count}
 			self.ent.get_control_behavior().set_signal(i, signal)
 			-- Increament the Slot --
@@ -138,9 +138,10 @@ function DCMF:update()
 			if i > 999 then break end
 		end
 	end
+	-- Create the Ore Silos Signal --
 	for name, count in pairs(self.invObj.CCInventory) do
 		-- Create and send the Signal --
-		if game.item_prototypes[item] ~= nil then
+		if game.item_prototypes[name] ~= nil then
 			local signal = {signal={type="item", name=name},count=count}
 			self.ent.get_control_behavior().set_signal(i, signal)
 			-- Increament the Slot --

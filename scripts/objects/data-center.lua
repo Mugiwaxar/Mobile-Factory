@@ -130,7 +130,7 @@ function DC:update()
 	local i = 1
 	for name, count in pairs(self.invObj.inventory) do
 		-- Create and send the Signal --
-		if game.item_prototypes[item] ~= nil then
+		if game.item_prototypes[name] ~= nil then
 			local signal = {signal={type="item", name=name},count=count}
 			self.ent.get_control_behavior().set_signal(i, signal)
 			-- Increament the Slot --
