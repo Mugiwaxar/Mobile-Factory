@@ -10,6 +10,8 @@ if table_size(global.oreSilotPadTable or {}) > 0 then
 	game.print("Mobile Factory: The Ore Silo Pad Item was removed from the mod, and replaced by Iron Chest if placed on the Map")
 	game.print("Now, you have to use the Internal Storage Data Center to access the Ore Silos inside the Control Center")
 	game.print("################################################################################################################## ")
+	game.print(" ")
+	game.print("  ")
 end
 
 -- Remove the Ore Silo Pad Table --
