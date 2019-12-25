@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.56
+Date: 25/12/2019
+  Features:
+    - Added compatibility with Bob's Vehicle Equipment
+    - Added compatibility with Schall Gun Pod
+  Bugfixes:
+    - The Data Center and the Internal Inventory Data Center now correctly send Signals
+---------------------------------------------------------------------------------------------------
 Version: 0.0.55
 Date: 24/12/2019
   Changes:
