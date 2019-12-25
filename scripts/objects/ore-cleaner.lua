@@ -22,6 +22,7 @@ function OC:new(object)
 	setmetatable(t, mt)
 	mt.__index = OC
 	t.ent = object
+	t.oreTable = {}
 	return t
 end
 
