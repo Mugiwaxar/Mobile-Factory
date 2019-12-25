@@ -232,10 +232,24 @@ data:extend{
 }
 
 -------------------- ADD EQUIPMENT GRID ------------------
+local equipments = {"armor", "mfEquipments"}
+if mods["SchallGunPod"] then
+	table.insert(equipments, "vehicle")
+	table.insert(equipments, "armoured-vehicle")
+	table.insert(equipments, "tank")
+	table.insert(equipments, "tank-M")
+	table.insert(equipments, "tank-H")
+end
+if mods["bobvehicleequipment"] then
+	table.insert(equipments, "armoured-vehicle")
+	table.insert(equipments, "vehicle")
+	table.insert(equipments, "car")
+	table.insert(equipments, "tank")
+end
 data:extend{
 	{
 		type="equipment-grid",
-		equipment_categories={"armor", "mfEquipments"},
+		equipment_categories=equipments,
 		name="MFEquipmentGrid",
 		height=30,
 		width=30
