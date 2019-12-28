@@ -44,6 +44,8 @@ function FE:update(event)
 	self.lastUpdate = game.tick
 	-- Check if the Fluid Extractor is valid --
 	if self:valid() == false then return end
+	-- The Fluid Extractor can work only if the Mobile Factory Entity is valid --
+	if global.MF.ent == nil or global.MF.ent.valid == false then return end
 	-- Extract Fluid --
 	self:extractFluids(event)
 end

@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.58
+Date: 28/12/2019
+  Bugfixes:
+    - Fixed a crash that occurred when the Mobile Factory is removed while the Ore Cleaner or the Fluid Extractor is working
+---------------------------------------------------------------------------------------------------
 Version: 0.0.57
 Date: 26/12/2019
   Bugfixes:

@@ -57,6 +57,8 @@ function OC:update(event)
 	-- Remove the Ore Cleaner if it no longer exist --
 	if self.ent == nil then self:remove() return end
 	if self.ent.valid == false then self:remove() return end
+	-- The Ore Cleaner can work only if the Mobile Factory Entity is valid --
+	if global.MF.ent == nil or global.MF.ent.valid == false then return end
 	-- Set the Ore Cleaner Energy --
 	global.oreCleaner.ent.energy = 60
 	-- Collect Ores --
