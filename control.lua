@@ -14,6 +14,7 @@ require("scripts/objects/power-drain-pole.lua")
 require("scripts/objects/ore-cleaner.lua")
 require("scripts/objects/fluid-extractor.lua")
 require("scripts/objects/inventory.lua")
+require("scripts/objects/data-network.lua")
 require("scripts/objects/data-center.lua")
 require("scripts/objects/data-center-mf.lua")
 require("scripts/objects/data-storage.lua")
@@ -36,6 +37,8 @@ function onInit()
 	global.upSysLastScan = 0
 	-- Module ID --
 	global.IDModule = 0
+	-- Data Network --
+	global.dataNetworkID = 0
 	-- Current Entities Update --
 	global.currentSilotPadChestUpdate = 1
 	-- Tables --
@@ -43,6 +46,7 @@ function onInit()
 	global.accTable = {}
 	global.pdpTable = {}
 	global.tankTable = {}
+	global.dataNetworkTable = {}
 	global.dataCenterTable = {}
 	global.matterSerializerTable = {}
 	global.matterPrinterTable = {}

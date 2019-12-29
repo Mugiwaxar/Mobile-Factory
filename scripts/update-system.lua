@@ -5,10 +5,10 @@ function UpSys.scanEnts()
 	-- Clear the Entities Table --
 	global.entsTable = {}
 		
-	-- Add Entities --
-	UpSys.addEntity(global.MF)
-	if UpSys.addEntity(global.MF.dataCenter) == false then global.MF.dataCenter = nil end
-	UpSys.addEntity(global.oreCleaner)
+	-- Add Object --
+	UpSys.addObj(global.MF)
+	if UpSys.addObj(global.MF.dataCenter) == false then global.MF.dataCenter = nil end
+	UpSys.addObj(global.oreCleaner)
 	
 	-- Add Array --
 	UpSys.addTable(global.dataCenterTable)
@@ -17,32 +17,33 @@ function UpSys.scanEnts()
 	UpSys.addTable(global.dataStorageTable)
 	UpSys.addTable(global.energyCubesTable)
 	UpSys.addTable(global.fluidExtractorTable)
+	UpSys.addTable(global.dataNetworkTable)
 	
 	-- Shuffle the MF Entities Table --
 	UpSys.shuffle(global.entsTable)
 end
 
--- Update System: Add an Entity to the MF Entities Table --
-function UpSys.addEntity(entity)
-	-- Check if the Entity is not null --
-	if entity ~= nil then
-		if entity:valid() ~= true then
+-- Update System: Add an Object to the MF Entities Table --
+function UpSys.addObj(obj)
+	-- Check if the Object is not null --
+	if obj ~= nil then
+		if obj:valid() ~= true then
 			-- Delete the Entity --
-			entity:remove()
-			return false
+			obj:remove()
 		else
-			table.insert(global.entsTable, entity)
+			table.insert(global.entsTable, obj)
+			return true
 		end
 	end
-	return true
+	return false
 end
 
 -- Update System: Add a Table to the MF Entities Table --
 function UpSys.addTable(array)
 	-- Itinerate the Table --
-	for k, ent in pairs(array) do
-		-- Add the Entity --
-		if UpSys.addEntity(ent) == false then array[k] = nil end
+	for k, obj in pairs(array) do
+		-- Add the Object --
+		if UpSys.addObj(obj) == false then table.remove(array, k) end
 	end
 end
 

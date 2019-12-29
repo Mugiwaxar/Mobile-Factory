@@ -5,9 +5,10 @@ MS = {
 	ent = nil,
 	animID = 0,
 	active = false,
-	linkedDC = nil,
+	consumption = _mfMSEnergyDrainPerUpdate,
 	updateTick = 60,
 	lastUpdate = 0,
+	dataNetwork = nil,
 	GCNID = 0,
 	RCNID = 0
 }
@@ -65,18 +66,24 @@ function MS:update()
 		self.RCNID = 0
 	end
 	
-	-- Check if a Data Center was Found --
-	if self.linkedDC ~= nil and self.linkedDC.active and self.linkedDC:sameCN(self) then
-		self:updateInv()
-		self:setActive(true)
-	else
-		self:setActive(false)
+	-- Check if the Matter Serializer is linked with a live Data Network --
+	local active = false
+	for k, obj in pairs(global.dataNetworkTable) do
+		if obj:isLinked(self) == true then
+			self.dataNetwork = obj
+			if obj:isLive() == true then
+				active = true
+			else
+				active = false
+			end
+		end
 	end
+	self:setActive(active)
 end
 
 function MS:updateInv()
 	-- Get the Linked Inventory --
-	local dataInv = self.linkedDC.invObj
+	local dataInv = self.dataNetwork.dataCenter.invObj
 	
 	-- Get the Local Inventory --
 	local inv = self.ent.get_inventory(defines.inventory.chest)
@@ -96,12 +103,26 @@ end
 
 -- Tooltip Infos --
 function MS:getTooltipInfos(GUI)
+	-- Create the Data Network label --
+	local DNText = {"", {"gui-description.DataNetwork"}, ": Unknow"}
+	if self.dataNetwork ~= nil then
+		if self.dataNetwork:isLive() == true then
+			DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
+		else
+			DNText = {"", {"gui-description.DataNetwork"}, ": Invalid"}
+		end
+	end
+	local dataNetworkL = GUI.add{type="label"}
+	dataNetworkL.style.font = "LabelFont"
+	dataNetworkL.caption = DNText
+	dataNetworkL.style.font_color = {155, 0, 168}
+	
 	-- Create the text and style variables --
 	local text = ""
 	local style = {}
 	-- Check if the Data Storage is linked with a Data Center --
-	if self.linkedDC ~= nil and getmetatable(self.linkedDC) ~= nil and self.linkedDC:valid() == true and self.linkedDC.active then
-		text = {"", {"gui-description.LinkedTo"}, ": ", self.linkedDC.invObj.name}
+	if self.dataNetwork ~= nil and getmetatable(self.dataNetwork) ~= nil and self.dataNetwork.dataCenter ~= nil then
+		text = {"", {"gui-description.LinkedTo"}, ": ", self.dataNetwork.dataCenter.invObj.name}
 		style = {92, 232, 54}
 	else
 		text = {"gui-description.Unlinked"}

@@ -6,15 +6,12 @@ DCMF = {
 	invObj = nil,
 	animID = 0,
 	active = false,
-	dataStorages = nil,
+	consumption = _mfDCEnergyDrainPerUpdate,
 	updateTick = 60,
 	lastUpdate = 0,
+	dataNetwork = nil,
 	GCNID = 0,
-	RCNID = 0,
-	CNEntitiesTable = nil,
-	CNEnergyCubesTable = nil,
-	totalCircuitNetworkEnergy = 0,
-	currentCircuitNetworkConsumption = 0
+	RCNID = 0
 }
 
 -- Contructor --
@@ -26,9 +23,7 @@ function DCMF:new(object)
 	mt.__index = DCMF
 	t.ent = object
 	t.invObj = global.MF.II
-	t.dataStorages = {}
-	t.CNEntitiesTable = {}
-	t.CNEnergyCubesTable = {}
+	t.dataNetwork = DN:new(t)
 	return t
 end
 
@@ -38,12 +33,14 @@ function DCMF:rebuild(object)
 	local mt = {}
 	mt.__index = DCMF
 	setmetatable(object, mt)
+	-- Recreate the DataNetwork Metatable --
+	DN:rebuild(object.dataNetwork)
 end
 
 -- Destructor --
 function DCMF:remove()
-	-- Destroy the Inventory --
-	self.invObj = nil
+	-- Destroy the Data Network --
+	self.dataNetwork = nil
 	-- Destroy the Animation --
 	rendering.destroy(self.animID)
 end
@@ -76,53 +73,19 @@ function DCMF:update()
 		self.RCNID = 0
 	end
 	
-	-- Reinitialize the Tables and Variables --
-	self.CNEntitiesTable = {}
-	self.CNEnergyCubesTable = {}
-	self.dataStorages = 0
-	self.currentCircuitNetworkConsumption = _mfDCEnergyDrainPerUpdate
-	
-	-- Look for all connected Entities --
-	self:getAllCNEntities()
-
-	-- Itinerate the Entities Table --
-	for ID, object in pairs(self.CNEntitiesTable) do
-		-- Check the Entity --
-		if object.ent ~= nil and object.ent.valid == true then
-			-- Stop if another Data Center is Found --
-			if object.ent.name == "DataCenter" or object.ent.name == "DataCenterMF" then
-				if object.ent.unit_number ~= self.ent.unit_number then
-					self:setActive(false)
-					return
-				end
-			end
-			-- Add the Data Storage --
-			if object.ent.name == "DataStorage" then
-				object.linkedDC = self
-				self.dataStorages = self.dataStorages + 1
-				self.currentCircuitNetworkConsumption = self.currentCircuitNetworkConsumption + _mfDSEnergyDrainPerUpdate
-			end
-			-- Add the Matter Serializer --
-			if object.ent.name == "MatterSerializer" then
-				object.linkedDC = self
-				self.currentCircuitNetworkConsumption = self.currentCircuitNetworkConsumption + _mfMSEnergyDrainPerUpdate
-			end
-			-- Add the Matter Printer --
-			if object.ent.name == "MatterPrinter" then
-				object.linkedDC = self
-				self.currentCircuitNetworkConsumption = self.currentCircuitNetworkConsumption + _mfMPEnergyDrainPerUpdate
-			end
-			-- Add the Energy Cube --
-			if string.match(object.ent.name, "EnergyCube") then
-				object.linkedDC = self
-				self.CNEnergyCubesTable[object.ent.unit_number] = object
-			end
-		end
+	-- Check if the Data Network is live --
+	if self.dataNetwork:isLive() == true then
+		self:setActive(true)
+	else
+		self:setActive(false)
 	end
 	
-	-- Update the Data Storages Numbers --
-	self.invObj.dataStoragesCount = self.dataStorages
-	self.invObj.maxCapacity = _mfBaseMaxItems + (_mfDataStorageCapacity * self.dataStorages)
+	-- Save the Data Storage count --
+	self.invObj.dataStoragesCount = self.dataNetwork:dataStoragesCount()
+	
+	-- Add both Circuit Network to the Data Network --
+	self.dataNetwork.GCNTable[self.GCNID] = self
+	self.dataNetwork.RCNTable[self.RCNID] = self
 	
 	-- Create the Inventory Signal --
 	self.ent.get_control_behavior().parameters = nil
@@ -138,66 +101,34 @@ function DCMF:update()
 			if i > 999 then break end
 		end
 	end
-	-- Create the Ore Silos Signal --
-	for name, count in pairs(self.invObj.CCInventory) do
-		-- Create and send the Signal --
-		if game.item_prototypes[name] ~= nil then
-			local signal = {signal={type="item", name=name},count=count}
-			self.ent.get_control_behavior().set_signal(i, signal)
-			-- Increament the Slot --
-			i = i + 1
-			-- Stop if there are to much Items --
-			if i > 999 then break end
-		end
-	end
 	
-	-- Remove Needed Energy --
-	if self:removeEnergy(self.currentCircuitNetworkConsumption) > 0 then
-		-- Set the Data Center to active --
-		self:setActive(true)
-	else
-		-- Set the Data Center to inactive --
-		self:setActive(false)
-	end
 end
-
--- Add all Entities connected to the circuit network to a table --
-function DCMF:getAllCNEntities()
-	-- Look at the Entities Table --
-	for k, object in pairs(global.entsTable) do
-		-- Check the Entity --
-		if object.ent ~= nil and object.ent.valid == true then
-			-- Check if the object is inside the same Circuit Network --
-			if self:sameCN(object) then
-				self.CNEntitiesTable[object.ent.unit_number] = object
-			end
-		end
-	end
-end
-
--- Return true if two the value object is in the same Circuit Network than this Object --
-function DCMF:sameCN(object)
-	if self.GCNID ~= nil and self.GCNID ~= 0 and self.GCNID == object.GCNID then
-		return true
-	end
-	if self.RCNID ~= nil and self.RCNID ~= 0 and self.RCNID == object.RCNID then
-		return true
-	end
-	return false
-end
-
 -- Tooltip Infos --
 function DCMF:getTooltipInfos(GUI)
+	-- Create the Data Network label --
+	local DNText = {"", {"gui-description.DataNetwork"}, ": Unknow"}
+	if self.dataNetwork ~= nil then
+		if self.dataNetwork:isLive() == true then
+			DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
+		else
+			DNText = {"", {"gui-description.DataNetwork"}, ": Invalid"}
+		end
+	end
+	local dataNetworkL = GUI.add{type="label"}
+	dataNetworkL.style.font = "LabelFont"
+	dataNetworkL.caption = DNText
+	dataNetworkL.style.font_color = {155, 0, 168}
+	
 	-- Create the Total Energy label --
 	local totalEnergy = GUI.add{type="label"}
 	totalEnergy.style.font = "LabelFont"
-	totalEnergy.caption = {"", {"gui-description.CNTotalEnergy"}, ": ", self.totalCircuitNetworkEnergy/1000000, " MJ"}
+	totalEnergy.caption = {"", {"gui-description.CNTotalEnergy"}, ": ", math.floor(self.dataNetwork:availablePower()/10000) / 100, " MJ"}
 	totalEnergy.style.font_color = {92, 232, 54}
 	
 	-- Create the Consumption label --
 	local consumption = GUI.add{type="label"}
 	consumption.style.font = "LabelFont"
-	consumption.caption = {"", {"gui-description.CNConsumption"}, ": ", self.currentCircuitNetworkConsumption/1000, " kW"}
+	consumption.caption = {"", {"gui-description.CNConsumption"}, ": ", self.dataNetwork:powerConsumption()/1000, " kW"}
 	consumption.style.font_color = {231, 5, 5}
 	
 	-- Return Inventory Frame --
@@ -219,30 +150,8 @@ function DCMF:setActive(set)
 	end
 end
 
--- Remove Energy from Energy Cube Inside the Circuit Network and return the amount removed --
-function DCMF:removeEnergy(energy)
-	-- Count the total Energy --
-	self.totalCircuitNetworkEnergy = 0
-	for k, ec in pairs(self.CNEnergyCubesTable) do
-		self.totalCircuitNetworkEnergy = self.totalCircuitNetworkEnergy + math.floor(ec.ent.energy)
-	end
-	-- Return if they are not enought Energy --
-	if energy > self.totalCircuitNetworkEnergy then return 0 end
-	-- Remove the Energy from Energy Cube --
-	local energyLeft = energy
-	local i = 0
-	local energyToRemovePerCube = math.floor(energy/table_size(self.CNEnergyCubesTable))
-	while energyLeft > 0 do
-		for k, ec in pairs(self.CNEnergyCubesTable) do
-			local removedEnergy = math.min(ec.ent.energy, energyToRemovePerCube)
-			ec.ent.energy = ec.ent.energy - removedEnergy
-			energyLeft = energyLeft - removedEnergy
-		end
-		i = i + 1
-		if i > 100 then break end
-	end
-	return energy
-end
+
+
 
 
 

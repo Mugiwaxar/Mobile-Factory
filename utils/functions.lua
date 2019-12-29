@@ -89,6 +89,12 @@ function setPlayerVariable(playerName, variable, value)
 	global.playersTable[playerName][variable] = value
 end
 
+-- Get a Data Network ID --
+function getDataNetworkID()
+	if global.dataNetworkID == nil then dataNetworkID = 0 end
+	global.dataNetworkID = global.dataNetworkID + 1
+	return global.dataNetworkID
+end
 
 -- Try to find a lost Mobile Factory --
 function findMF()
@@ -111,25 +117,7 @@ function findMF()
 	return lastMFFound
 end
 
-------------------------------------- TO DELETE ? The FC can now be removed --------------------------------
--- Try to find a lost Mobile Factory Chest --
--- function findFMChest(surfaceName)
-	-- local chestFound = 0
-	-- local lastChestFound = nil
-	-- local surface = game.get_surface(surfaceName)
-	-- if surface == nil then
-		-- return nil
-	-- end
-	-- for k, entity in pairs(surface.find_entities_filtered{name="FactoryChest"}) do
-		-- chestFound = chestFound + 1
-		-- lastChestFound = entity
-	-- end
-	-- game.print("Found " .. chestFound .. " Factory Chest")
-	-- return lastChestFound
--- end
--------------------------------------------------------------------------------------------------------------
-
--- Define the Main Mobile Factory global variable--
+-- Define the Main Mobile Factory global variable --
 function newMobileFactory(mf)
 	-- Test if the Mobile Factory doesn't already exist --
 	if global.MF ~= nil and global.MF.ent ~= nil then global.MF.ent.destroy() end

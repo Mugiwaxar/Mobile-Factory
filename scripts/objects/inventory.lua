@@ -34,6 +34,9 @@ end
 
 -- Rescan Inventory --
 function INV:rescan()
+
+	-- Calcule the max capacity --
+	self.maxCapacity = _mfBaseMaxItems + (_mfDataStorageCapacity*self.dataStoragesCount)
 	
 	local totalItem = 0
 	-- Itinerate the Invernal Inventory --

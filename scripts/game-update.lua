@@ -52,12 +52,14 @@ function updateValues()
 	if global.upSysIndex == nil then global.upSysIndex = 1 end
 	if global.upSysLastScan == nil then global.upSysLastScan = 0 end
 	if global.IDModule == nil then global.IDModule = 0 end
+	if global.dataNetworkID == nil then global.dataNetworkID = 0 end
 	if global.accTable == nil then global.accTable = {} end
 	if global.pdpTable == nil then global.pdpTable = {} end
 	if global.lfpTable == nil then global.lfpTable = {} end
 	if global.tankTable == nil then global.tankTable = {} end
 	if global.oreSilotTable == nil then global.oreSilotTable = {} end
 	if global.currentSilotPadChestUpdate == nil then global.currentSilotPadChestUpdate = 1 end
+	if global.dataNetworkTable == nil then global.dataNetworkTable = {} end
 	if global.matterSerializerTable == nil then global.matterSerializerTable = {} end
 	if global.matterPrinterTable == nil then global.matterPrinterTable = {} end
 	if global.dataCenterTable == nil then global.dataCenterTable = {} end

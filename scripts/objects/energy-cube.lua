@@ -4,9 +4,10 @@
 EC = {
 	ent = nil,
 	spriteID = 0,
-	linkedDC = nil,
+	consumption = 0,
 	updateTick = 60,
 	lastUpdate = 0,
+	dataNetwork = nil,
 	GCNID = 0,
 	RCNID = 0
 }
@@ -66,6 +67,13 @@ function EC:update()
 		self.RCNID = 0
 	end
 	
+	-- Check if the Energy Cube is linked with a live Data Network --
+	for k, obj in pairs(global.dataNetworkTable) do
+		if obj:isLinked(self) == true then
+			self.dataNetwork = obj
+		end
+	end
+	
 	-- Update the Sprite --
 	local spriteNumber = math.ceil(self.ent.energy/self.ent.prototype.electric_energy_source_prototype.buffer_capacity*10)
 	rendering.destroy(self.spriteID)
@@ -75,22 +83,19 @@ end
 
 -- Tooltip Infos --
 function EC:getTooltipInfos(GUI)
-	-- Create the text and style variables --
-	local text = ""
-	local style = {}
-	-- Check if the Data Storage is linked with a Data Center --
-	if self.linkedDC ~= nil and getmetatable(self.linkedDC) ~= nil and self.linkedDC:valid() == true and self.linkedDC.active then
-		text = {"", {"gui-description.LinkedTo"}, ": ", self.linkedDC.invObj.name}
-		style = {92, 232, 54}
-	else
-		text = {"gui-description.Unlinked"}
-		style = {231, 5, 5}
+	-- Create the Data Network label --
+	local DNText = {"", {"gui-description.DataNetwork"}, ": Unknow"}
+	if self.dataNetwork ~= nil then
+		if self.dataNetwork:isLive() == true then
+			DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
+		else
+			DNText = {"", {"gui-description.DataNetwork"}, ": Invalid"}
+		end
 	end
-	-- Create the Link label --
-	local link = GUI.add{type="label"}
-	link.style.font = "LabelFont"
-	link.caption = text
-	link.style.font_color = style
+	local dataNetworkL = GUI.add{type="label"}
+	dataNetworkL.style.font = "LabelFont"
+	dataNetworkL.caption = DNText
+	dataNetworkL.style.font_color = {155, 0, 168}
 end
 
 
