@@ -89,7 +89,7 @@ dcI.icon = "__Mobile_Factory__/graphics/matter-serialization/DataCenterI.png"
 dcI.icon_size = 64
 dcI.place_result = "DataCenter"
 dcI.subgroup = "DataSerialization"
-dcI.order = "a2"
+dcI.order = "a"
 dcI.stack_size = 10
 data:extend{dcI}
 
@@ -98,7 +98,7 @@ dcIMF = table.deepcopy(data.raw.item.DataCenter)
 dcIMF.name = "DataCenterMF"
 dcIMF.icon = "__Mobile_Factory__/graphics/matter-serialization/DataCenterMFI.png"
 dcIMF.place_result = "DataCenterMF"
-dcIMF.order = "a"
+dcIMF.order = "a2"
 data:extend{dcIMF}
 
 -- Recipe --

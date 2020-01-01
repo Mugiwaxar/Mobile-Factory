@@ -47,6 +47,12 @@ function placedDataStorage(event)
 	global.dataStorageTable[event.created_entity.unit_number] = DS:new(event.created_entity)
 end
 
+-- Save the Wireless Data Transmitter in a table --
+function placedWirelessDataTransmitter(event)
+	if global.wirelessDataTrasmitterTable == nil then global.wirelessDataTrasmitterTable = {} end
+	global.wirelessDataTrasmitterTable[event.created_entity.unit_number] = WDT:new(event.created_entity)
+	end
+
 -- Save the Energy Cube in a table --
 function placedEnergyCube(event)
 	if global.energyCubesTable == nil then global.energyCubesTable = {} end
@@ -54,10 +60,10 @@ function placedEnergyCube(event)
 end
 
 -- Save the Ore Silot Pads in a table --
-function placedOreSilotPad(event)
-	if global.oreSilotPadTable == nil then global.oreSilotPadTable = {} end
-	global.oreSilotPadTable[event.created_entity.unit_number] = event.created_entity
-end
+-- function placedOreSilotPad(event)
+	-- if global.oreSilotPadTable == nil then global.oreSilotPadTable = {} end
+	-- global.oreSilotPadTable[event.created_entity.unit_number] = event.created_entity
+-- end
 
 -- Save the Fluid Extractor --
 function placedFluidExtractor(event)
@@ -120,6 +126,13 @@ function removedDataStorage(event)
 	global.dataStorageTable[event.entity.unit_number] = nil
 end
 
+-- Remove the Wireless Data Transmitter from the table --
+function removedWirelessDataTransmitter(event)
+	if global.wirelessDataTrasmitterTable == nil then global.wirelessDataTrasmitterTable = {} return end
+	if global.wirelessDataTrasmitterTable[event.entity.unit_number] ~= nil then global.wirelessDataTrasmitterTable[event.entity.unit_number]:remove() end
+	global.wirelessDataTrasmitterTable[event.entity.unit_number] = nil
+end
+
 -- Remove the Energy Cube from the table --
 function removedEnergyCube(event)
 	if global.MF.energyCubesTable ~= nil and global.MF.energyCubesTable.ent == event.entity then
@@ -129,10 +142,10 @@ function removedEnergyCube(event)
 end
 
 -- Remove the Ore Silot Pad from the table --
-function removedOreSilotPad(event)
-	if global.oreSilotPadTable == nil then global.oreSilotPadTable = {} return end
-	global.oreSilotPadTable[event.entity.unit_number] = nil
-end
+-- function removedOreSilotPad(event)
+	-- if global.oreSilotPadTable == nil then global.oreSilotPadTable = {} return end
+	-- global.oreSilotPadTable[event.entity.unit_number] = nil
+-- end
 
 -- Remove the Fluid Extractor from the table --
 function removedFluidExtractor(event)

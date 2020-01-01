@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.59
+Date: 01/01/2020
+  Features:
+    - Added the Wireless Data Transmitter
+    - New Technology: Wireless Data Transmission, Unlock the Wireless Data Transmitter and Receiver
+---------------------------------------------------------------------------------------------------
 Version: 0.0.58
 Date: 01/01/2020
   Scripting:

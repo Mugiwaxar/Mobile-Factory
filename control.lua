@@ -20,6 +20,7 @@ require("scripts/objects/data-center-mf.lua")
 require("scripts/objects/data-storage.lua")
 require("scripts/objects/matter-serializer.lua")
 require("scripts/objects/matter-printer.lua")
+require("scripts/objects/wireless-data-transmitter.lua")
 require("scripts/objects/energy-cube.lua")
 
 -- When the mod init --
@@ -51,6 +52,7 @@ function onInit()
 	global.matterSerializerTable = {}
 	global.matterPrinterTable = {}
 	global.dataStorageTable = {}
+	global.wirelessDataTrasmitterTable = {}
 	global.energyCubesTable = {}
 	global.oreSilotTable = {}
 	global.lfpTable = {}
@@ -86,6 +88,10 @@ function onLoad()
 	-- Set MatterPrinter Metatables --
 	for k, mp in pairs(global.matterPrinterTable or {}) do
 		MP:rebuild(mp)
+	end
+	-- Set Wireless Data Transmitter Metatables --
+	for k, wdt in pairs(global.wirelessDataTrasmitterTable or {}) do
+		WDT:rebuild(wdt)
 	end
 	-- Set EnergyCube Metatables --
 	for k, ec in pairs(global.energyCubesTable or {}) do

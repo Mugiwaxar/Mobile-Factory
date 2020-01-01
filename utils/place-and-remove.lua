@@ -132,6 +132,11 @@ function somethingWasPlaced(event, isRobot)
 		placedDataCenter(event)
 		return
 	end
+	-- Save the Wireless Data Transmitter --
+	if event.created_entity.name == "WirelessDataTransmitter" then
+		placedWirelessDataTransmitter(event)
+		return
+	end
 	-- Save the Energy Cube --
 	if string.match(event.created_entity.name, "EnergyCube") then
 		placedEnergyCube(event)
@@ -157,10 +162,10 @@ function somethingWasPlaced(event, isRobot)
 		return
 	end
 	-- Save the Ore Silot Pad --
-	if string.match(event.created_entity.name, "OreSilotPad") then
-		placedOreSilotPad(event)
-		return
-	end
+	-- if string.match(event.created_entity.name, "OreSilotPad") then
+		-- placedOreSilotPad(event)
+		-- return
+	-- end
 	-- Save the Ore Cleaner --
 	if event.created_entity.name == "OreCleaner" then
 		if global.oreCleaner ~= nil and global.oreCleaner.ent ~= nil then
@@ -233,21 +238,26 @@ function somethingWasRemoved(event)
 		removedDataCenterMF(event)
 		return
 	end
+	-- Remove the Wireless Data Transmitter --
+	if event.entity.name == "WirelessDataTransmitter" then
+		removedWirelessDataTransmitter(event)
+		return
+	end
 	-- Remove the Energy Cube --
 	if string.match(event.entity.name, "EnergyCube") then
 		removedEnergyCube(event)
 		return
 	end
 	-- Remove the Ore Silot Pad --
-	if string.match(event.entity.name, "OreSilotPad") then
-		removedOreSilotPad(event)
-		return
-	end
+	-- if string.match(event.entity.name, "OreSilotPad") then
+		-- removedOreSilotPad(event)
+		-- return
+	-- end
 	-- Remove the Inventory Pad --
-	if event.entity.name == "DataStorage" then
-		removedDataStorage(event)
-		return
-	end
+	-- if event.entity.name == "DataStorage" then
+		-- removedDataStorage(event)
+		-- return
+	-- end
 	-- Remove the Ore Cleaner --
 	if event.entity.name == "OreCleaner" then
 		global.oreCleaner:remove()

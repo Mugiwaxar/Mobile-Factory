@@ -18,6 +18,7 @@ function UpSys.scanEnts()
 	UpSys.addTable(global.energyCubesTable)
 	UpSys.addTable(global.fluidExtractorTable)
 	UpSys.addTable(global.dataNetworkTable)
+	UpSys.addTable(global.wirelessDataTrasmitterTable)
 	
 	-- Shuffle the MF Entities Table --
 	UpSys.shuffle(global.entsTable)

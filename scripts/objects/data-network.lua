@@ -7,6 +7,7 @@ DN = {
 	RCNTable = nil,
 	entitiesTable = nil,
 	dataCenter = nil,
+	wirelessDataTransmitter = nil,
 	energyCubeTable = nil,
 	dataStorageTable = nil,
 	totalEnergy = 0,
@@ -121,6 +122,7 @@ end
 -- Sort all Entities inside they respective Tables --
 function DN:sortEntities()
 	-- Clear Tables and initialize Variables --
+	self.wirelessDataTransmitter = nil
 	self.energyCubeTable = {}
 	self.dataStorageTable = {}
 	self.inConflict = false
@@ -142,6 +144,10 @@ function DN:sortEntities()
 		-- Data Storage --
 		if obj.ent.name == "DataStorage" then
 			self.dataStorageTable[k] = obj
+		end
+		-- Wireless Data Transmitter --
+		if obj.ent.name == "WirelessDataTransmitter" then
+			self.wirelessDataTransmitter = obj
 		end
 	end
 	
