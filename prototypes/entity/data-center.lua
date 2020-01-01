@@ -5,7 +5,7 @@ dcE = table.deepcopy(data.raw["constant-combinator"]["constant-combinator"])
 dcE.type = "constant-combinator"
 dcE.name = "DataCenter"
 dcE.icon = "__Mobile_Factory__/graphics/matter-serialization/DataCenterI.png"
-dcE.icon_size = 32
+dcE.icon_size = 64
 dcE.minable = {mining_time = 0.5, result = "DataCenter"}
 dcE.max_health = 200
 dcE.corpse = "big-remnants"
@@ -44,7 +44,7 @@ dcE.circuit_wire_connection_points =
 		wire = {green={-2.1,-0.9}, red={-2.1,-0.8}},
 		shadow = {green={-2.1,-0.8}, red={-2.1,-0.7}}
 	},
-		{
+	{
 		wire = {green={0.1,-1.9}, red={-0.2,-1.9}},
 		shadow = {green={0.1,-1.8}, red={-0.2,-1.8}}
 	},

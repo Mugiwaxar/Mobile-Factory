@@ -58,6 +58,7 @@ _mfDSEnergyDrainPerUpdate = 8000
 _mfMSEnergyDrainPerUpdate = 3000
 _mfMPEnergyDrainPerUpdate = 3000
 _mfWDTEnergyDrainPerUpdate = 70000
+_mfWDREnergyDrainPerUpdate = 30000
 
 -- Ore Cleaner settings --
 _mfOreCleanerMaxCharge = 1000

@@ -44,7 +44,8 @@ dtT.unit = {
 dtT.prerequisites = {"MatterSerialization"}
 dtT.effects = 
 {
-	{type="unlock-recipe", recipe="WirelessDataTransmitter"}
+	{type="unlock-recipe", recipe="WirelessDataTransmitter"},
+	{type="unlock-recipe", recipe="WirelessDataReceiver"}
 }
 data:extend{dtT}
 

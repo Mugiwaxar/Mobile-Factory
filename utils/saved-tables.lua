@@ -51,7 +51,13 @@ end
 function placedWirelessDataTransmitter(event)
 	if global.wirelessDataTrasmitterTable == nil then global.wirelessDataTrasmitterTable = {} end
 	global.wirelessDataTrasmitterTable[event.created_entity.unit_number] = WDT:new(event.created_entity)
-	end
+end
+
+-- Save the Wireless Data Receiver in a table --
+function placedWirelessDataReceiver(event)
+	if global.wirelessDataReceiverTable == nil then global.wirelessDataReceiverTable = {} end
+	global.wirelessDataReceiverTable[event.created_entity.unit_number] = WDR:new(event.created_entity)
+end
 
 -- Save the Energy Cube in a table --
 function placedEnergyCube(event)
@@ -131,6 +137,13 @@ function removedWirelessDataTransmitter(event)
 	if global.wirelessDataTrasmitterTable == nil then global.wirelessDataTrasmitterTable = {} return end
 	if global.wirelessDataTrasmitterTable[event.entity.unit_number] ~= nil then global.wirelessDataTrasmitterTable[event.entity.unit_number]:remove() end
 	global.wirelessDataTrasmitterTable[event.entity.unit_number] = nil
+end
+
+-- Remove the Wireless Data Receiver from the table --
+function removedWirelessDataReceiver(event)
+	if global.wirelessDataReceiverTable == nil then global.wirelessDataReceiverTable = {} return end
+	if global.wirelessDataReceiverTable[event.entity.unit_number] ~= nil then global.wirelessDataReceiverTable[event.entity.unit_number]:remove() end
+	global.wirelessDataReceiverTable[event.entity.unit_number] = nil
 end
 
 -- Remove the Energy Cube from the table --

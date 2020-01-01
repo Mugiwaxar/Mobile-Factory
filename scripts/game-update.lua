@@ -65,6 +65,7 @@ function updateValues()
 	if global.dataCenterTable == nil then global.dataCenterTable = {} end
 	if global.dataStorageTable == nil then global.dataStorageTable = {} end
 	if global.wirelessDataTrasmitterTable == nil then global.wirelessDataTrasmitterTable = {} end
+	if global.wirelessDataReceiverTable == nil then global.wirelessDataReceiverTable = {} end
 	if global.energyCubesTable == nil then global.energyCubesTable = {} end
 	if global.fluidExtractorTable == nil then global.fluidExtractorTable = {} end
 end

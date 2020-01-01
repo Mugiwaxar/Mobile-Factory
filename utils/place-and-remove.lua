@@ -137,6 +137,11 @@ function somethingWasPlaced(event, isRobot)
 		placedWirelessDataTransmitter(event)
 		return
 	end
+	-- Save the Wireless Data Receiver --
+	if event.created_entity.name == "WirelessDataReceiver" then
+		placedWirelessDataReceiver(event)
+		return
+	end
 	-- Save the Energy Cube --
 	if string.match(event.created_entity.name, "EnergyCube") then
 		placedEnergyCube(event)
@@ -241,6 +246,11 @@ function somethingWasRemoved(event)
 	-- Remove the Wireless Data Transmitter --
 	if event.entity.name == "WirelessDataTransmitter" then
 		removedWirelessDataTransmitter(event)
+		return
+	end
+	-- Remove the Wireless Data Receiver --
+	if event.entity.name == "WirelessDataReceiver" then
+		removedWirelessDataReceiver(event)
 		return
 	end
 	-- Remove the Energy Cube --
