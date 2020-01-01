@@ -68,6 +68,7 @@ function DS:update()
 	
 	-- Check if the Matter Serializer is linked with a live Data Network --
 	local active = false
+	self.dataNetwork = nil
 	for k, obj in pairs(global.dataNetworkTable) do
 		if obj:isLinked(self) == true then
 			self.dataNetwork = obj

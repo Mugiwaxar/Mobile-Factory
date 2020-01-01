@@ -68,6 +68,7 @@ function EC:update()
 	end
 	
 	-- Check if the Energy Cube is linked with a live Data Network --
+	self.dataNetwork = nil
 	for k, obj in pairs(global.dataNetworkTable) do
 		if obj:isLinked(self) == true then
 			self.dataNetwork = obj

@@ -1,6 +1,10 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.58
-Date: 28/12/2019
+Date: 01/01/2020
+  Scripting:
+    - Total rewrite of the Data Network for futures updates
+  Changes:
+    - The Matter Printer now request the number of Items set in the filter (Not an entire Stack)
   Bugfixes:
     - Fixed a crash that occurred when the Mobile Factory is removed while the Ore Cleaner or the Fluid Extractor is working
 ---------------------------------------------------------------------------------------------------

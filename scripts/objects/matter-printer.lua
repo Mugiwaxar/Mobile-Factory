@@ -68,6 +68,7 @@ function MP:update()
 	
 	-- Check if the Matter Serializer is linked with a live Data Network --
 	local active = false
+	self.dataNetwork = nil
 	for k, obj in pairs(global.dataNetworkTable) do
 		if obj:isLinked(self) == true then
 			self.dataNetwork = obj
@@ -79,6 +80,11 @@ function MP:update()
 		end
 	end
 	self:setActive(active)
+	
+	-- Update the Inventory --
+	if self.active == true then
+		self:updateInv()
+	end
 end
 
 function MP:updateInv()
@@ -97,13 +103,19 @@ function MP:updateInv()
 	-- Get Items count from the Data Inventory --
 	local returnedItems = dataInv:hasItem(filter.name)
 	
+	-- Get the number of Items present inside the local Inventory --
+	local currentItems = inv.get_contents()[filter.name]
+	
+	-- Calcule the number of Items that must be requested --	
+	returnedItems = math.min(returnedItems, filter.count - (currentItems or 0))
+	
 	-- Stop if they are any Item --
 	if returnedItems <= 0 then return end
 	
 	-- Insert requested Item inside the local Inventory --
 	local addedItems = inv.insert({name=filter.name, count=returnedItems})
 	
-	-- Remove Item from the Inventory --
+	-- Remove Item from the Data Inventory --
 	dataInv:getItem(filter.name, addedItems)
 	
 end
