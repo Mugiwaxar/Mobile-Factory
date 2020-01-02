@@ -28,26 +28,26 @@ msT.effects =
 data:extend{msT}
 
 -- Data Transmission --
-local dtT = {}
-dtT.name = "DataTransmission"
-dtT.type = "technology"
-dtT.icon = "__Mobile_Factory__/graphics/matter-serialization/MatterSerializationI.png"
-dtT.icon_size = 64
-dtT.unit = {
-	count=20,
-	time=60,
-	ingredients={
-		{"DimensionalSample", 100},
-		{"DimensionalCrystal", 1}
-	}
-}
-dtT.prerequisites = {"MatterSerialization"}
-dtT.effects = 
-{
-	{type="unlock-recipe", recipe="WirelessDataTransmitter"},
-	{type="unlock-recipe", recipe="WirelessDataReceiver"}
-}
-data:extend{dtT}
+-- local dtT = {}
+-- dtT.name = "DataTransmission"
+-- dtT.type = "technology"
+-- dtT.icon = "__Mobile_Factory__/graphics/matter-serialization/MatterSerializationI.png"
+-- dtT.icon_size = 64
+-- dtT.unit = {
+	-- count=20,
+	-- time=60,
+	-- ingredients={
+		-- {"DimensionalSample", 100},
+		-- {"DimensionalCrystal", 1}
+	-- }
+-- }
+-- dtT.prerequisites = {"MatterSerialization"}
+-- dtT.effects = 
+-- {
+	-- {type="unlock-recipe", recipe="WirelessDataTransmitter"},
+	-- {type="unlock-recipe", recipe="WirelessDataReceiver"}
+-- }
+-- data:extend{dtT}
 
 
 -- Item Drain --

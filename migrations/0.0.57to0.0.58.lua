@@ -14,5 +14,5 @@ end
 -- Check the Data Center MF --
 if global.MF.dataCenter ~= nil then
 	-- Create the new Data Network --
-	global.MF.dataCenter.dataNetwork = DN:new(global.MF.dataCenter.ent)
+	global.MF.dataCenter.dataNetwork = DN:new(global.MF.dataCenter)
 end
