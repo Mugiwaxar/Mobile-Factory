@@ -92,7 +92,7 @@ end
 -- Get a Data Network ID --
 function getDataNetworkID()
 	if global.dataNetworkID == nil then dataNetworkID = 0 end
-	global.dataNetworkID = global.dataNetworkID + 1
+	global.dataNetworkID = (global.dataNetworkID or 0) + 1
 	return global.dataNetworkID
 end
 
