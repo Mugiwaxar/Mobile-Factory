@@ -151,7 +151,6 @@ function MF:updateLasers()
 			-- Stop if they are to much lasers --
 			if i > self:getLaserNumber() then break end
 			-- Energy Laser --
-			dprint(entity.type)
 			-- Exclude Character, Power Drain Pole and Entities with 0 energy --
 			if entity.type ~= "character" and entity.name ~= "PowerDrainPole" and entity.name ~= "OreCleaner" and entity.name ~= "FluidExtractor" and entity.energy > 0 then
 				-- Missing Internal Energy or Structure Energy --
