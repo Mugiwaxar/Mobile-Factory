@@ -150,7 +150,7 @@ function MF:updateLasers()
 		for k, entity in pairs(entities) do
 			-- Stop if they are to much lasers --
 			if i > self:getLaserNumber() then break end
-			-- Energy Laser --
+			-------------------------------------------- Energy Laser --------------------------------------------
 			-- Exclude Character, Power Drain Pole and Entities with 0 energy --
 			if entity.type ~= "character" and entity.name ~= "PowerDrainPole" and entity.name ~= "OreCleaner" and entity.name ~= "FluidExtractor" and entity.energy > 0 then
 				-- Missing Internal Energy or Structure Energy --
@@ -169,7 +169,7 @@ function MF:updateLasers()
 					i = i + 1
 				end
 			end
-			-- Fluid Laser --
+			-------------------------------------------- Fluid Laser --------------------------------------------
 			if self.fluidLaserActivated == true and entity.type == "storage-tank" and global.IDModule > 0 then
 				if self.ccS ~= nil then
 					-- Get the Internal Tank --
@@ -205,7 +205,7 @@ function MF:updateLasers()
 					end
 				end
 			end
-			-- Logistic Laser --
+			-------------------------------------------- Logistic Laser --------------------------------------------
 			if self.itemLaserActivated == true and self.internalEnergy > _mfBaseItemEnergyConsumption * self:getLaserItemDrain() and (entity.type == "container" or entity.type == "logistic-container") then
 				-- Get Chest Inventory --
 				local inv = entity.get_inventory(defines.inventory.chest)
