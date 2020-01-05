@@ -53,7 +53,7 @@ function onInit()
 	global.matterSerializerTable = {}
 	global.matterPrinterTable = {}
 	global.dataStorageTable = {}
-	global.wirelessDataTrasmitterTable = {}
+	global.wirelessDataTransmitterTable = {}
 	global.wirelessDataReceiverTable = {}
 	global.energyCubesTable = {}
 	global.oreSilotTable = {}
@@ -92,7 +92,7 @@ function onLoad()
 		MP:rebuild(mp)
 	end
 	-- Set Wireless Data Transmitter Metatables --
-	for k, wdt in pairs(global.wirelessDataTrasmitterTable or {}) do
+	for k, wdt in pairs(global.wirelessDataTransmitterTable or {}) do
 		WDT:rebuild(wdt)
 	end
 	-- Set Wireless Data Receiver Metatables --
@@ -148,6 +148,7 @@ script.on_event(defines.events.on_entity_died, onEntityIsDestroyed)
 script.on_event(defines.events.on_gui_click, GUI.buttonClicked)
 script.on_event(defines.events.on_gui_elem_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_gui_checked_state_changed, GUI.onGuiElemChanged)
+script.on_event(defines.events.on_gui_selection_state_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_gui_text_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_research_finished, technologyFinished)
 script.on_event(defines.events.on_selected_entity_changed, selectedEntityChanged)

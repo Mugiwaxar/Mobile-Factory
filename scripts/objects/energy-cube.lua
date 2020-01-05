@@ -85,12 +85,12 @@ end
 -- Tooltip Infos --
 function EC:getTooltipInfos(GUI)
 	-- Create the Data Network label --
-	local DNText = {"", {"gui-description.DataNetwork"}, ": Unknow"}
+	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
 	if self.dataNetwork ~= nil then
 		if self.dataNetwork:isLive() == true then
 			DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
 		else
-			DNText = {"", {"gui-description.DataNetwork"}, ": Invalid"}
+			DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Invalid"}}
 		end
 	end
 	local dataNetworkL = GUI.add{type="label"}

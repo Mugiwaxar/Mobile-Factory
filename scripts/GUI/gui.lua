@@ -220,6 +220,8 @@ end
 function GUI.onGuiElemChanged(event)
 	-- Return if this is not a Mobile Factory element -
 	if event.element.get_mod() ~= "Mobile_Factory" then return end
+	-- Return if the Element is not valid --
+	if event.element == nil or event.element.valid == false then return end	
 	-- Get the Player --
 	local player = getPlayer(event.player_index)
 	-- Return if the Player is not valid --
@@ -227,7 +229,6 @@ function GUI.onGuiElemChanged(event)
 	-- Read if the Element came from the Option GUI --
 	GUI.readOptions(event.element, player, player.gui)
 	-- Save the filter --
-	if global.tankTable == nil or global.tankTable == {} or event.element == nil or event.element.valid == false then return end	
 	if event.element.type == "choose-elem-button" then
 		if event.element.elem_value ~= nil then
 			local id = tonumber(event.element.name)
@@ -238,5 +239,24 @@ function GUI.onGuiElemChanged(event)
 		if player ~= nil then
 			setPlayerVariable(player.name, "GUIUpdateInfoGUI", true)
 		end
+	end
+	-- Read if the Element came from an Wireless Data Receiver --
+	if string.match(event.element.name, "WDR") then
+		-- Find the Receiver ID --
+		local ID = split(event.element.name, "WDR")
+		ID = tonumber(ID[1])
+		-- Check the ID --
+		if ID == nil then return end
+		-- Find the Receiver --
+		local receiver = nil
+		for k, WDR in pairs(global.wirelessDataReceiverTable) do
+			if WDR.ent.unit_number == ID then
+				receiver = WDR
+			end
+		end
+		-- Check if a Receiver was found --
+		if receiver == nil then return end
+		-- Change the Receiver Data Network --
+		receiver:changeTransmitter(tonumber(event.element.items[event.element.selected_index]))
 	end
 end

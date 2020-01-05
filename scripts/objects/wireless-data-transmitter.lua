@@ -10,7 +10,9 @@ WDT = {
 	lastUpdate = 0,
 	dataNetwork = nil,
 	GCNID = 0,
-	RCNID = 0
+	RCNID = 0,
+	localCN = nil,
+	lastSignal = nil
 }
 
 -- Constructor --
@@ -21,6 +23,8 @@ function WDT:new(object)
 	setmetatable(t, mt)
 	mt.__index = WDT
 	t.ent = object
+	t.localCN = {}
+	t.lastSignal = {}
 	return t
 end
 
@@ -80,23 +84,101 @@ function WDT:update()
 		end
 	end
 	self:setActive(active)
+	
+	-- Add Wireless Data Network Signals --
+	self.ent.get_control_behavior().parameters = nil
+	if self.dataNetwork ~= nil and self.active == true then
+		local wirelessNetwork = {}
+		local localNetwork = {}
+		if self.localCN == nil then self.localCN = {} end
+		if self.lastSignal == nil then self.lastSignal = {} end
+		
+		-- Get GREEN Signals from this Network --
+		if self.ent.get_circuit_network(defines.wire_type.green) ~= nil then
+			local Gsignals = self.ent.get_circuit_network(defines.wire_type.green).signals
+			for k, signal in pairs(Gsignals or {}) do
+				localNetwork[signal.signal.name] = {type=signal.signal.type, count=signal.count}
+			end
+		end
+		-- Get RED Signals from this Network --
+		if self.ent.get_circuit_network(defines.wire_type.red) ~= nil then
+			local Rsignals = self.ent.get_circuit_network(defines.wire_type.red).signals
+			for k, signal in pairs(Rsignals or {}) do
+				localNetwork[signal.signal.name] = {type=signal.signal.type, count=signal.count}
+			end
+		end
+		
+		for k, obj in pairs(self.dataNetwork.wirelessReceiverTable) do
+			if obj ~= nil and obj:valid() == true then
+				if obj.linkedTransmitter == self then
+					if obj ~= nil and obj:valid() == true then
+						for k, signal in pairs(obj.localCN) do
+							wirelessNetwork[k] = signal
+						end
+					end
+				end
+			end
+		end
+		
+		-- Calcul Local Signal --
+		for k, signal in pairs(localNetwork) do
+			if self.lastSignal[k] ~= nil then
+				localNetwork[k].count = localNetwork[k].count - signal.count
+				if localNetwork[k].count <= 0 then
+					localNetwork[k] = nil
+				end
+			end
+		end
+		
+		-- Remove Local from Wireless --
+		for k, signal in pairs(wirelessNetwork) do
+			if localNetwork[k] ~= nil then
+				wirelessNetwork[k].count = wirelessNetwork[k].count - signal.count
+				if wirelessNetwork[k].count <= 0 then
+					wirelessNetwork[k] = nil
+				end
+			end
+		end
+		
+		-- Save the Local Network and the Signal --
+		self.localCN = localNetwork
+		self.lastSignal = wirelessNetwork
+		
+		-- Send Signals --
+		local i = 1
+		for k, signal in pairs(wirelessNetwork) do
+			self.ent.get_control_behavior().set_signal(i, {signal={type=signal.type, name=k}, count=signal.count})
+			-- Increament the Slot --
+			i = i + 1
+			-- Stop if there are to much Items --
+			if i > 999 then break end
+		end
+		
+	end
+	
 end
 
 -- Tooltip Info --
 function WDT:getTooltipInfos(GUI)
 	-- Create the Data Network label --
-	local DNText = {"", {"gui-description.DataNetwork"}, ": Unknow"}
+	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
 	if self.dataNetwork ~= nil then
 		if self.dataNetwork:isLive() == true then
 			DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
 		else
-			DNText = {"", {"gui-description.DataNetwork"}, ": Invalid"}
+			DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Invalid"}}
 		end
 	end
 	local dataNetworkL = GUI.add{type="label"}
 	dataNetworkL.style.font = "LabelFont"
 	dataNetworkL.caption = DNText
 	dataNetworkL.style.font_color = {155, 0, 168}
+	
+	-- Create the ID label --
+	local IDL = GUI.add{type="label"}
+	IDL.style.font = "LabelFont"
+	IDL.caption = {"", {"gui-description.TransmitterID"}, ": ", tostring(self.ent.unit_number)}
+	IDL.style.font_color = {92, 232, 54}
 end
 
 -- Set Active --

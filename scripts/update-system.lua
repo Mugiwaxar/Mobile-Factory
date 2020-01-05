@@ -18,7 +18,7 @@ function UpSys.scanEnts()
 	UpSys.addTable(global.energyCubesTable)
 	UpSys.addTable(global.fluidExtractorTable)
 	UpSys.addTable(global.dataNetworkTable)
-	UpSys.addTable(global.wirelessDataTrasmitterTable)
+	UpSys.addTable(global.wirelessDataTransmitterTable)
 	UpSys.addTable(global.wirelessDataReceiverTable)
 	
 	-- Shuffle the MF Entities Table --
@@ -43,7 +43,7 @@ end
 -- Update System: Add a Table to the MF Entities Table --
 function UpSys.addTable(array)
 	-- Itinerate the Table --
-	for k, obj in pairs(array) do
+	for k, obj in pairs(array or {}) do
 		-- Add the Object --
 		if UpSys.addObj(obj) == false then table.remove(array, k) end
 	end

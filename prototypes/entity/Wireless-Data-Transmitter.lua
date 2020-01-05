@@ -1,52 +1,57 @@
 ----------------------------------------------------- WIRELESS DATA TRANSMITTER ---------------------------------
 
 -- Entity --
-wdtE = {}
-wdtE.type = "container"
+wdtE = table.deepcopy(data.raw["constant-combinator"]["constant-combinator"])
+wdtE.type = "constant-combinator"
 wdtE.name = "WirelessDataTransmitter"
 wdtE.icon = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataTransmitterI.png"
 wdtE.icon_size = 64
-wdtE.flags = {"placeable-neutral", "player-creation"}
 wdtE.minable = {mining_time = 0.2, result = "WirelessDataTransmitter"}
-wdtE.max_health = 100
-wdtE.corpse = "small-remnants"
-wdtE.render_not_in_network_icon = false
-wdtE.collision_box = {{-1.8, -1.6}, {1.8, 1.8}}
+wdtE.max_health = 200
+wdtE.corpse = "big-remnants"
+wdtE.collision_box = {{-1.8, -1.8}, {1.8, 1.8}}
 wdtE.selection_box = wdtE.collision_box
-wdtE.inventory_size = 0
-wdtE.open_sound = { filename = "__base__/sound/wooden-chest-open.ogg" }
-wdtE.close_sound = { filename = "__base__/sound/wooden-chest-close.ogg" }
-wdtE.vehicle_impact_sound =  { filename = "__base__/sound/car-wood-impact.ogg", volume = 1.0 }
-wdtE.picture =
-    {
-      layers =
-      {
-        {
+wdtE.item_slot_count = 999
+wdtE.circuit_wire_max_distance = 20
+wdtE.circuit_connector_sprites = nil
+wdtE.sprites.sheets =
+	{	{
             filename = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataTransmitterE.png",
-            priority = "extra-high",
             width = 400,
             height = 400,
             shift = {0,-0.2},
-            scale = 1/10 * 3.2
+            scale = 1/10 * 3.2,
+			frames = 1
         },
         {
             filename = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataTransmitterS.png",
-            priority = "high",
             width = 400,
             height = 400,
             shift = {1.8,0.4},
             draw_as_shadow = true,
-            scale = 1/10 * 3.2
+            scale = 1/10 * 3.2,
+			frames = 1
         }
-      }
     }
-wdtE.circuit_wire_connection_point =
+wdtE.circuit_wire_connection_points =
 {
-	wire = {green={-0.05,0.82}, red={0.05,0.82}},
-	shadow = {green={-0.05,0.85}, red={0.05,0.85}}
+	{
+		wire = {green={-0.05,0.82}, red={0.05,0.82}},
+		shadow = {green={-0.05,0.85}, red={0.05,0.85}}
+	},
+	{
+		wire = {green={-0.05,0.82}, red={0.05,0.82}},
+		shadow = {green={-0.05,0.85}, red={0.05,0.85}}
+	},
+	{
+		wire = {green={-0.05,0.82}, red={0.05,0.82}},
+		shadow = {green={-0.05,0.85}, red={0.05,0.85}}
+	},
+	{
+		wire = {green={-0.05,0.82}, red={0.05,0.82}},
+		shadow = {green={-0.05,0.85}, red={0.05,0.85}}
+	}
 }
-wdtE.circuit_connector_sprites = nil
-wdtE.circuit_wire_max_distance = 20
 data:extend{wdtE}
 
 -- Item --

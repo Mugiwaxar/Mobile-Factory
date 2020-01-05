@@ -49,8 +49,8 @@ end
 
 -- Save the Wireless Data Transmitter in a table --
 function placedWirelessDataTransmitter(event)
-	if global.wirelessDataTrasmitterTable == nil then global.wirelessDataTrasmitterTable = {} end
-	global.wirelessDataTrasmitterTable[event.created_entity.unit_number] = WDT:new(event.created_entity)
+	if global.wirelessDataTransmitterTable == nil then global.wirelessDataTransmitterTable = {} end
+	global.wirelessDataTransmitterTable[event.created_entity.unit_number] = WDT:new(event.created_entity)
 end
 
 -- Save the Wireless Data Receiver in a table --
@@ -134,9 +134,9 @@ end
 
 -- Remove the Wireless Data Transmitter from the table --
 function removedWirelessDataTransmitter(event)
-	if global.wirelessDataTrasmitterTable == nil then global.wirelessDataTrasmitterTable = {} return end
-	if global.wirelessDataTrasmitterTable[event.entity.unit_number] ~= nil then global.wirelessDataTrasmitterTable[event.entity.unit_number]:remove() end
-	global.wirelessDataTrasmitterTable[event.entity.unit_number] = nil
+	if global.wirelessDataTransmitterTable == nil then global.wirelessDataTransmitterTable = {} return end
+	if global.wirelessDataTransmitterTable[event.entity.unit_number] ~= nil then global.wirelessDataTransmitterTable[event.entity.unit_number]:remove() end
+	global.wirelessDataTransmitterTable[event.entity.unit_number] = nil
 end
 
 -- Remove the Wireless Data Receiver from the table --

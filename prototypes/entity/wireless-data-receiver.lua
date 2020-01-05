@@ -9,11 +9,11 @@ wdrE.icon_size = 64
 wdrE.minable = {mining_time = 0.5, result = "WirelessDataReceiver"}
 wdrE.max_health = 200
 wdrE.corpse = "big-remnants"
-wdrE.dying_explosion = "medium-explosion"
 wdrE.collision_box = {{-1, -1}, {1, 1}}
 wdrE.selection_box = wdrE.collision_box
 wdrE.item_slot_count = 999
 wdrE.circuit_wire_max_distance = 20
+wdrE.circuit_connector_sprites = nil
 wdrE.sprites.sheets =
 	{	{
 			filename = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataReceiverE.png",
@@ -33,7 +33,6 @@ wdrE.sprites.sheets =
 			frames = 1
 		}
 	}
-wdrE.vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 }
 wdrE.circuit_wire_connection_points =
 {
 	{

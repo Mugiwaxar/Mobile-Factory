@@ -8,6 +8,7 @@ DN = {
 	entitiesTable = nil,
 	dataCenter = nil,
 	wirelessDataTransmitter = nil,
+	wirelessReceiverTable = nil,
 	energyCubeTable = nil,
 	dataStorageTable = nil,
 	totalEnergy = 0,
@@ -30,6 +31,7 @@ function DN:new(object)
 	t.GCNTable = {}
 	t.RCNTable = {}
 	t.entitiesTable = {}
+	t.wirelessReceiverTable = {}
 	t.energyCubeTable = {}
 	t.dataStorageTable = {}
 	table.insert(global.dataNetworkTable, t)
@@ -85,16 +87,20 @@ end
 function DN:checkNetworkID()
 	-- Check the Green Network Table --
 	for k, obj in pairs(self.GCNTable) do
-		if obj == nil or obj.active == false or k ~= obj.GCNID then
-			table.remove(self.GCNTable, k)
+		if obj == nil or getmetatable(obj) == nil or obj:valid() == false or obj.active == false or k ~= obj.GCNID then
+			self.GCNTable[k] = nil
 		end
 	end
 	-- Check the Red Network Table --
 	for k, obj in pairs(self.RCNTable) do
-		if obj == nil or obj.active == false or k ~= obj.RCNID then
-			table.remove(self.RCNTable, k)
+		if obj == nil or getmetatable(obj) == nil or obj:valid() == false or obj.active == false or k ~= obj.RCNID then
+			self.RCNTable[k] = nil
 		end
 	end
+	
+	-- Add Data Center Circuit Network --
+	self.GCNTable[self.dataCenter.GCNID] = self.dataCenter
+	self.RCNTable[self.dataCenter.RCNID] = self.dataCenter
 end
 
 -- Add all Linked Entities inside the Entities Table --
@@ -123,6 +129,7 @@ end
 function DN:sortEntities()
 	-- Clear Tables and initialize Variables --
 	self.wirelessDataTransmitter = nil
+	self.wirelessReceiverTable = {}
 	self.energyCubeTable = {}
 	self.dataStorageTable = {}
 	self.inConflict = false
@@ -148,6 +155,10 @@ function DN:sortEntities()
 		-- Wireless Data Transmitter --
 		if obj.ent.name == "WirelessDataTransmitter" then
 			self.wirelessDataTransmitter = obj
+		end
+		-- Wireless Data Receiver --
+		if obj.ent.name == "WirelessDataReceiver" then
+			self.wirelessReceiverTable[k] = obj
 		end
 	end
 	
