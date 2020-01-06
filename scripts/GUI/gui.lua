@@ -170,6 +170,12 @@ function GUI.buttonClicked(event)
 		elseif global.MF.internalEnergyDistributionActivated == false then global.MF.internalEnergyDistributionActivated = true end
 	end
 	
+	-- Send Quatron button --
+	if event.element.name == "SendQuatron" then
+		if global.MF.sendQuatronActivated == true then global.MF.sendQuatronActivated = false
+		elseif global.MF.sendQuatronActivated == false then global.MF.sendQuatronActivated = true end
+	end
+	
 	-- Open Options GUI Button --
 	if event.element.name == "optionButton" then
 		player.gui.screen.mfOptionGUI.visible = true

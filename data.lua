@@ -520,6 +520,25 @@ data:extend{
 	}
 }
 
+data:extend{
+	{
+		type = "sprite",
+		name = "QuatronIcon",
+		filename = "__Mobile_Factory__/graphics/icones/Quatron.png",
+		size = 32,
+		flags = {"icon"}
+	}
+}
+
+data:extend{
+	{
+		type = "sprite",
+		name = "QuatronIconDisabled",
+		filename = "__Mobile_Factory__/graphics/icones/QuatronDisabled.png",
+		size = 32,
+		flags = {"icon"}
+	}
+}
 ------------------------- ADD FONTS -------------------
 data:extend{
 	{

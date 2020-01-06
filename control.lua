@@ -58,6 +58,7 @@ function onInit()
 	global.energyCubesTable = {}
 	global.oreSilotTable = {}
 	global.lfpTable = {}
+	global.oreCleanerTable = {}
 	global.fluidExtractorTable = {}
 end
 
@@ -104,7 +105,9 @@ function onLoad()
 		EC:rebuild(ec)
 	end
 	-- Set Ore Cleaner Metatable --
-	OC:rebuild(global.oreCleaner)
+	for k, oc in pairs(global.oreCleanerTable or {}) do
+		OC:rebuild(oc)
+	end
 	-- Set Fluid Extractor Metatables --
 	for k, fe in pairs(global.fluidExtractorTable or {}) do
 		FE:rebuild(fe)

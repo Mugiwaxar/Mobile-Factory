@@ -67,6 +67,7 @@ function updateValues()
 	if global.wirelessDataTransmitterTable == nil then global.wirelessDataTransmitterTable = {} end
 	if global.wirelessDataReceiverTable == nil then global.wirelessDataReceiverTable = {} end
 	if global.energyCubesTable == nil then global.energyCubesTable = {} end
+	if global.oreCleanerTable == nil then global.oreCleanerTable = {} end
 	if global.fluidExtractorTable == nil then global.fluidExtractorTable = {} end
 end
 
@@ -96,7 +97,7 @@ function selectedEntityChanged(event)
 	-- Get the Player --
 	local player = getPlayer(event.player_index)
 	-- Check the Player and the Entity --
-	if player == nil or player.selected == nil or player.selected.valid == false then return end
+	if player == nil or player.selected == nil or player.selected.valid == false or player.selected.unit_number == nil then return end
 	-- Check if the Tooltip GUI exist --
 	if player.gui.screen.mfTooltipGUI == nil or player.gui.screen.mfTooltipGUI.valid == false then return end
 	-- Check if the Tooltip GUI is not locked --
@@ -299,7 +300,6 @@ function updatePollution()
 		global.MF.fS.clear_pollution()
 	end
 end
-
 
 
 

@@ -23,6 +23,7 @@ function OC:new(object)
 	mt.__index = OC
 	t.ent = object
 	t.oreTable = {}
+	t:scanOres(object)
 	return t
 end
 
@@ -36,11 +37,6 @@ end
 
 -- Destructor --
 function OC:remove()
-	self.ent = nil
-	self.oreTable = {}
-	animID = 0
-	animTick = 0
-	lastUpdate = 0
 	rendering.destroy(self.animID)
 end
 
@@ -60,7 +56,7 @@ function OC:update(event)
 	-- The Ore Cleaner can work only if the Mobile Factory Entity is valid --
 	if global.MF.ent == nil or global.MF.ent.valid == false then return end
 	-- Set the Ore Cleaner Energy --
-	global.oreCleaner.ent.energy = 60
+	self.ent.energy = 60
 	-- Collect Ores --
 	if event.tick%_mfOreCleanerExtractionTicks == 0 then
 		self:collectOres(event)
@@ -81,11 +77,11 @@ function OC:getTooltipInfos(GUI)
 		
 	-- Create Labels and Bares --
 	local nameLabel = ocFrame.add{type="label", caption={"", {"gui-description.OreCleaner"}}}
-	local SpeedLabel = ocFrame.add{type="label", caption={"", {"gui-description.Speed"}, ": ", global.oreCleaner:orePerExtraction() * (60/_mfOreCleanerExtractionTicks), " ores/s"}}
-	local ChargeLabel = ocFrame.add{type="label", caption={"", {"gui-description.Charge"}, ": ", global.oreCleaner.charge}}
-	local ChargeBar = ocFrame.add{type="progressbar", value=global.oreCleaner.charge/_mfOreCleanerMaxCharge}
-	local PurityLabel = ocFrame.add{type="label", caption={"", {"gui-description.Purity"}, ": ", math.floor(global.oreCleaner.purity*100)/100}}
-	local PurityBar = ocFrame.add{type="progressbar", value=global.oreCleaner.purity/100}
+	local SpeedLabel = ocFrame.add{type="label", caption={"", {"gui-description.Speed"}, ": ", self:orePerExtraction() * (60/_mfOreCleanerExtractionTicks), " ores/s"}}
+	local ChargeLabel = ocFrame.add{type="label", caption={"", {"gui-description.Charge"}, ": ", self.charge}}
+	local ChargeBar = ocFrame.add{type="progressbar", value=self.charge/_mfOreCleanerMaxCharge}
+	local PurityLabel = ocFrame.add{type="label", caption={"", {"gui-description.Purity"}, ": ", math.floor(self.purity*100)/100}}
+	local PurityBar = ocFrame.add{type="progressbar", value=self.purity/100}
 	
 	-- Update Style --
 	nameLabel.style.font = "LabelFont"
@@ -188,11 +184,8 @@ end
 
 -- Collect surrounding Ores --
 function OC:collectOres(event)
-	-- Test if the Ore Cleaner and the Mobile Factory are valid --
-	if global.oreCleaner == nil or global.MF == nil or global.MF.ent == nil then return end
-	if global.MF.ent.valid == false then return end
-	-- Set the Ore Cleaner to nil if the Entity is no longer valid --
-	if global.oreCleaner.ent ~= nil and global.oreCleaner.ent.valid == false then global.oreCleaner:remove() return end
+	-- Test if the Mobile Factory and the Ore Cleaner are valid --
+	if global.MF:valid() == false or self:valid() == false then return end
 	-- Get the Inventory remaining space --
 	local iRemSpace = _mfOreCleanerInventorySize - self:inventoryItemNumber()
 	-- Return if there are no space remaining --

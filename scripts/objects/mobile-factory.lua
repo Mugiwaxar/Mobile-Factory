@@ -25,7 +25,8 @@ MF = {
 	energyLaserActivated = false,
 	fluidLaserActivated = false,
 	itemLaserActivated = false,
-	internalEnergyDistributionActivated = false
+	internalEnergyDistributionActivated = false,
+	sendQuatronActivated = false
 }
 
 -- Constructor --
@@ -86,8 +87,10 @@ function MF:update(event)
 	-- Update the Shield --
 	self:updateShield(event)
 	-- Send Quatron Charge --
-	self:SendQuatronToOC(event)
-	self:SendQuatronToFE(event)
+	if self.sendQuatronActivated == true then
+		self:SendQuatronToOC(event)
+		self:SendQuatronToFE(event)
+	end
 end
 
 -- Synchronize Factory Chest --
@@ -315,39 +318,42 @@ end
 
 -- Send Quatron Charge to the Ore Cleaner --
 function MF:SendQuatronToOC(event)
-	-- Test if the Ore Cleaner is valid --
-	if global.oreCleaner == nil then return end
-	if global.oreCleaner.ent == nil or global.oreCleaner.ent.valid == false then return end
 	-- Send Charge only every 10 ticks --
 	if event.tick%10 ~= 0 then return end
-	-- Test if there are space inside the Ore Cleaner for Quatron Charge --
-	if global.oreCleaner.charge > _mfOreCleanerMaxCharge - 100 then return end
-	-- Get the Best Quatron Change --
-	local charge = global.MF.II:getBestQuatron()
-	if charge > 0 then
-		-- Add the Charge --
-		global.oreCleaner:addQuatron(charge)
-		-- Create the Laser --
-		self.ent.surface.create_entity{name="GreenBeam", duration=30, position=self.ent.position, target={global.oreCleaner.ent.position.x, global.oreCleaner.ent.position.y - 2}, source=self.ent}
+	for k, oc in pairs(global.oreCleanerTable) do
+		if oc:valid() == true then
+			-- Test if there are space inside the Ore Cleaner for Quatron Charge --
+			if oc.charge <= _mfFEMaxCharge - 100 then
+				-- Get the Best Quatron Change --
+				local charge = global.MF.II:getBestQuatron()
+				if charge > 0 then
+					-- Add the Charge --
+					oc:addQuatron(charge)
+					-- Create the Laser --
+					self.ent.surface.create_entity{name="GreenBeam", duration=30, position=self.ent.position, target={oc.ent.position.x, oc.ent.position.y - 2}, source=self.ent}
+				end
+			end
+		end
 	end
 end
 
 -- Send Quatron Charge to all Fluid Extractors --
 function MF:SendQuatronToFE(event)
--- Send Charge only every 15 ticks --
+	-- Send Charge only every 15 ticks --
 	if event.tick%15 ~= 0 then return end
 	for k, fe in pairs(global.fluidExtractorTable) do
 		-- Check if the Fluid Extractor is valid --
 		if fe:valid() == true then
 			-- Test if there are space inside the Fluid Extractor for Quatron Charge --
-			if fe.charge > _mfFEMaxCharge - 100 then return end
-			-- Get the Best Quatron Change --
-			local charge = global.MF.II:getBestQuatron()
-			if charge > 0 then
-				-- Add the Charge --
-				fe:addQuatron(charge)
-				-- Create the Laser --
-				fe.ent.surface.create_entity{name="GreenBeam", duration=30, position=self.ent.position, target={fe.ent.position.x, fe.ent.position.y - 2}, source=self.ent}
+			if fe.charge <= _mfFEMaxCharge - 100 then
+				-- Get the Best Quatron Change --
+				local charge = global.MF.II:getBestQuatron()
+				if charge > 0 then
+					-- Add the Charge --
+					fe:addQuatron(charge)
+					-- Create the Laser --
+					fe.ent.surface.create_entity{name="GreenBeam", duration=30, position=self.ent.position, target={fe.ent.position.x, fe.ent.position.y - 2}, source=self.ent}
+				end
 			end
 		end
 	end

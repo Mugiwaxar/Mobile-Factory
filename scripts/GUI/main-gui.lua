@@ -190,6 +190,14 @@ function GUI.createMainGUI(player, gui)
 	mfGUIExtFF2.style.horizontal_align = "left"
 	mfGUIExtFF2.style.vertical_align = "top"
 	
+	-- Create the extended frame third flow --
+	-- local mfGUIExtFF3 = mfGUIExtendedFrame.add{type="flow", name="mfGUIExtFF3", direction="horizontal"}
+	-- Set Style --
+	-- mfGUIExtFF3.style.padding = 0
+	-- mfGUIExtFF3.style.margin = 0
+	-- mfGUIExtFF3.style.horizontal_align = "left"
+	-- mfGUIExtFF3.style.vertical_align = "top"
+	
 	
 	------------ BUTTONS ---------
 	
@@ -328,6 +336,20 @@ function GUI.createMainGUI(player, gui)
 	-- Set Style --
 	mfGUIExtFF2.EnergyDistribution.style.maximal_height = _GUIButtonsSize
 	mfGUIExtFF2.EnergyDistribution.style.maximal_width = _GUIButtonsSize
+	
+	-- Add Send Quatron Button --
+	mfGUIExtFF2.add{
+		type="sprite-button",
+		name="SendQuatron",
+		sprite="QuatronIcon",
+		hovered_sprite="QuatronIconDisabled",
+		resize_to_sprite=false,
+		tooltip={"gui-description.mfSendQuatron"},
+		visible=false
+	}
+	-- Set Style --
+	mfGUIExtFF2.SendQuatron.style.maximal_height = _GUIButtonsSize
+	mfGUIExtFF2.SendQuatron.style.maximal_width = _GUIButtonsSize
 
 end
 
@@ -478,6 +500,13 @@ function GUI.mainGUIUpdate(player)
 	else
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDistribution.visible = false 
 	end
+	
+	-- Update Send Quatron Button --
+	if technologyUnlocked("OreCleaner") or technologyUnlocked("FluidExtractor") then
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.visible = true
+	else
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.visible = false 
+	end
 
 	-- Update the Energy Drain Icon --
 	if global.MF.energyLaserActivated == true then
@@ -513,5 +542,14 @@ function GUI.mainGUIUpdate(player)
 	else
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDistribution.sprite = "EnergyDistributionIconDisabled"
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDistribution.hovered_sprite = "EnergyDistributionIcon"
+	end
+	
+	-- Update Send Quatron Icon --
+	if global.MF.sendQuatronActivated == true then
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.sprite = "QuatronIcon"
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.hovered_sprite = "QuatronIconDisabled"
+	else
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.sprite = "QuatronIconDisabled"
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.hovered_sprite = "QuatronIcon"
 	end
 end

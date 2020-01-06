@@ -8,7 +8,6 @@ function UpSys.scanEnts()
 	-- Add Object --
 	UpSys.addObj(global.MF)
 	if UpSys.addObj(global.MF.dataCenter) == false then global.MF.dataCenter = nil end
-	UpSys.addObj(global.oreCleaner)
 	
 	-- Add Array --
 	UpSys.addTable(global.dataCenterTable)
@@ -16,6 +15,7 @@ function UpSys.scanEnts()
 	UpSys.addTable(global.matterPrinterTable)
 	UpSys.addTable(global.dataStorageTable)
 	UpSys.addTable(global.energyCubesTable)
+	UpSys.addTable(global.oreCleanerTable)
 	UpSys.addTable(global.fluidExtractorTable)
 	UpSys.addTable(global.dataNetworkTable)
 	UpSys.addTable(global.wirelessDataTransmitterTable)

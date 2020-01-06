@@ -1,6 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.62
+Date: 06/01/2020
+  Features:
+    - The Automatic Quatron Send of the Mobile Factory can now be Enabled/Disabled
+  Changes:
+    - The Ore Cleaner can now be placed multiple time
+    - Ore Cleaners will lose all its Quatron Charge and Purity when removed
+    - The Ore Cleaner will now extract 30 Ores per seconde by level of Purity (instead of 120)
+  Bugfixes:
+    - The Tooltip GUI will not change when you hover an entity without Tooltip Informations
+    - Corrected a bug that prevented the Mobile Factory to send Quatron Charge to all Fluid Extractor
+---------------------------------------------------------------------------------------------------
 Version: 0.0.61
-Date: 03/01/2020
+Date: 05/01/2020
   Features:
     - Added the Wireless Data Transmitter
     - Added the Wireless Data Receiver

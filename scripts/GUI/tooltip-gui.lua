@@ -98,14 +98,14 @@ function GUI.updateTooltip(player, objID)
 	if player == nil or objID == nil then return end
 	-- Check if the Player Tooltip GUI is not null and visible --
 	if player.gui.screen.mfTooltipGUI == nil or player.gui.screen.mfTooltipGUI.visible == false then return end
-	-- Clear the Tooltip GUI --
-	player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.clear()
 	-- Look for the Object associated with the Entity --
 	for k, obj in pairs(global.entsTable) do
 		-- Check the Object --
 		if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and obj.ent.unit_number == objID then
 			-- Check if the Object can return a Frame --
 			if obj.getTooltipInfos ~= nil then
+				-- Clear the Tooltip GUI --
+				player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.clear()
 				-- Update the GUI --
 				obj:getTooltipInfos(player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane)
 			end

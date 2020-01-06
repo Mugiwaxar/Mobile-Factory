@@ -173,19 +173,8 @@ function somethingWasPlaced(event, isRobot)
 	-- end
 	-- Save the Ore Cleaner --
 	if event.created_entity.name == "OreCleaner" then
-		if global.oreCleaner ~= nil and global.oreCleaner.ent ~= nil then
-			if isPlayer== true then creator.print({"", "Unable to place more than one ", {"item-name." .. event.stack.name }}) end
-			event.created_entity.destroy()
-			if isPlayer== true and event.stack ~= nil and event.stack.valid_for_read == true then
-				creator.get_main_inventory().insert(event.stack)
-			end
-			return
-		else
-			if global.oreCleaner == nil then global.oreCleaner = OC:new(event.created_entity)
-			else global.oreCleaner.ent = event.created_entity end
-			global.oreCleaner:scanOres(event.created_entity)
-			return
-		end
+		placedOreCleaner(event)
+		return
 	end
 	-- Save the Fluid Extractor --
 	if event.created_entity.name == "FluidExtractor" then
@@ -270,7 +259,7 @@ function somethingWasRemoved(event)
 	-- end
 	-- Remove the Ore Cleaner --
 	if event.entity.name == "OreCleaner" then
-		global.oreCleaner:remove()
+		removedOreCleaner(event)
 		return
 	end
 	-- Remove the Fluid Extractor --

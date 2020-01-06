@@ -71,6 +71,12 @@ end
 	-- global.oreSilotPadTable[event.created_entity.unit_number] = event.created_entity
 -- end
 
+-- Save the Ore Cleaner --
+function placedOreCleaner(event)
+	if global.oreCleanerTable == nil then global.oreCleanerTable = {} end
+	global.oreCleanerTable[event.created_entity.unit_number] = OC:new(event.created_entity)
+end
+
 -- Save the Fluid Extractor --
 function placedFluidExtractor(event)
 	if global.fluidExtractorTable == nil then global.fluidExtractorTable = {} end
@@ -149,7 +155,7 @@ end
 -- Remove the Energy Cube from the table --
 function removedEnergyCube(event)
 	if global.MF.energyCubesTable ~= nil and global.MF.energyCubesTable.ent == event.entity then
-		global.MF.energyCubesTable:remove()
+		if global.energyCubesTable[event.entity.unit_number] ~= nil then global.energyCubesTable[event.entity.unit_number]:remove() end
 		global.MF.energyCubesTable = nil
 	end
 end
@@ -160,9 +166,17 @@ end
 	-- global.oreSilotPadTable[event.entity.unit_number] = nil
 -- end
 
+-- Remove the Ore Cleaner from the table --
+function removedOreCleaner(event)
+	if global.oreCleanerTable == nil then global.oreCleanerTable = {} return end
+	if global.oreCleanerTable[event.entity.unit_number] ~= nil then global.oreCleanerTable[event.entity.unit_number]:remove() end
+	global.oreCleanerTable[event.entity.unit_number] = nil
+end
+
 -- Remove the Fluid Extractor from the table --
 function removedFluidExtractor(event)
 	if global.fluidExtractorTable == nil then global.fluidExtractorTable = {} return end
+	if global.fluidExtractorTable[event.entity.unit_number] ~= nil then global.fluidExtractorTable[event.entity.unit_number]:remove() end
 	global.fluidExtractorTable[event.entity.unit_number] = nil
 end
 
