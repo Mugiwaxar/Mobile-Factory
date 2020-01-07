@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.63
+Date: 07/01/2020
+  Changes:
+    - The Ore Cleaner no longer use Modules ID, you have to select the targeted Ore Silo with the Tooltip GUI
+	- The Fluid Extractor no longer use Modules ID, you have to select the targeted Dimensional Tank with the Tooltip GUI
+---------------------------------------------------------------------------------------------------
 Version: 0.0.62
 Date: 06/01/2020
   Features:

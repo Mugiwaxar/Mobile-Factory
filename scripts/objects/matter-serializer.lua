@@ -10,7 +10,8 @@ MS = {
 	lastUpdate = 0,
 	dataNetwork = nil,
 	GCNID = 0,
-	RCNID = 0
+	RCNID = 0,
+	selectedInv = nil
 }
 
 -- Constructor --
@@ -96,12 +97,27 @@ function MS:updateInv()
 	
 	-- Itinerate the Inventory --
 	for item, count in pairs(inv.get_contents()) do
-		-- Add Items to the Data Inventory --
-		local amountAdded = dataInv:addItem(item, count)
-		
-		-- Remove Items from the local Inventory --
-		if amountAdded > 0 then
-			inv.remove({name=item, count=amountAdded})
+		-- Check the targeted Inventory --
+		if self.selectedInv == nil then
+			-- Add Items to the Data Inventory --
+			local amountAdded = dataInv:addItem(item, count)
+			-- Remove Items from the local Inventory --
+			if amountAdded > 0 then
+				inv.remove({name=item, count=amountAdded})
+			end
+		else
+			-- Check the Ore Silo --
+			if self.selectedInv.valid == false then return end
+			-- Get the Silo Inventory --
+			local siloInv = self.selectedInv.get_inventory(defines.inventory.chest)
+			-- Check if the Inventory is valid --
+			if siloInv == nil then return end
+			-- Insert Items --
+			local amountAdded = siloInv.insert({name=item, count=count})
+			-- Remove Items from the local Inventory --
+			if amountAdded > 0 then
+				inv.remove({name=item, count=amountAdded})
+			end
 		end
 	end
 	
@@ -134,11 +150,55 @@ function MS:getTooltipInfos(GUI)
 		text = {"gui-description.Unlinked"}
 		style = {231, 5, 5}
 	end
+	
 	-- Create the Link label --
 	local link = GUI.add{type="label"}
 	link.style.font = "LabelFont"
 	link.caption = text
 	link.style.font_color = style
+	
+
+	
+	-- Create the Inventory Selection --
+	if self.dataNetwork ~= nil and self.dataNetwork.dataCenter ~= nil and self.dataNetwork.dataCenter.invObj.isII == true then
+	
+		-- Create the targeted Inventory label --
+		local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
+		targetLabel.style.top_margin = 7
+		targetLabel.style.font = "LabelFont"
+		targetLabel.style.font_color = {108, 114, 229}
+	
+		local invs = {self.dataNetwork.dataCenter.invObj.name or {"gui-description.Any"}}
+		local selectedIndex = 1
+		local i = 1
+		for k, oreSilo in pairs(global.oreSilotTable) do
+			if oreSilo ~= nil then
+				i = i + 1
+				invs[k+1] = {"", {"gui-description.MSSilo"}, " ", tostring(k)}
+				if self.selectedInv == oreSilo then
+					selectedIndex = i
+				end
+			end
+		end
+		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
+		local invSelection = GUI.add{type="list-box", name="MS" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
+		invSelection.style.width = 70
+	end
+end
+
+-- Change the Targeted Inventory --
+function MS:changeInventory(ID)
+	-- Check the ID --
+	if ID == nil then self.selectedInv = nil end
+	-- Select the Inventory --
+	self.selectedInv = nil
+	for k, oreSilo in pairs(global.oreSilotTable) do
+		if oreSilo ~= nil and oreSilo.valid == true then
+			if ID == k then
+				self.selectedInv = oreSilo
+			end
+		end
+	end
 end
 
 -- Set Active --

@@ -232,21 +232,26 @@ function GUI.onGuiElemChanged(event)
 	local player = getPlayer(event.player_index)
 	-- Return if the Player is not valid --
 	if player == nil then return end
-	-- Read if the Element came from the Option GUI --
+	
+	------- Read if the Element came from the Option GUI -------
 	GUI.readOptions(event.element, player, player.gui)
-	-- Save the filter --
+	
+	------- Save the filter -------
 	if event.element.type == "choose-elem-button" then
+		local id = tonumber(event.element.name)
+		if global.tankTable[id] == nil then return end
 		if event.element.elem_value ~= nil then
-			local id = tonumber(event.element.name)
-			if global.tankTable[id] == nil then return end
 			global.tankTable[id].filter = event.element.elem_value
+		else
+			global.tankTable[id].filter = nil
 		end
 		-- Re-enable the GUI --
 		if player ~= nil then
 			setPlayerVariable(player.name, "GUIUpdateInfoGUI", true)
 		end
 	end
-	-- Read if the Element came from an Wireless Data Receiver --
+	
+	------- Read if the Element comes from an Wireless Data Receiver -------
 	if string.match(event.element.name, "WDR") then
 		-- Find the Receiver ID --
 		local ID = split(event.element.name, "WDR")
@@ -265,4 +270,91 @@ function GUI.onGuiElemChanged(event)
 		-- Change the Receiver Data Network --
 		receiver:changeTransmitter(tonumber(event.element.items[event.element.selected_index]))
 	end
+	
+	------- Read if the Element comes from an Ore Cleaner -------
+	if string.match(event.element.name, "OC") then
+		-- Find the Ore Cleaner ID --
+		local ID = split(event.element.name, "OC")
+		ID = tonumber(ID[1])
+		-- Check the ID --
+		if ID == nil then return end
+		-- Find the Ore Cleaner --
+		local oreCleaner = nil
+		for k, OC in pairs(global.oreCleanerTable) do
+			if OC.ent.unit_number == ID then
+				oreCleaner = OC
+			end
+		end
+		-- Check if a Ore Cleaner was found --
+		if oreCleaner == nil then return end
+		-- Change the Ore Cleaner targeted Ore Silo --
+		oreCleaner:changeOreSilo(tonumber(event.element.items[event.element.selected_index]))
+	end
+	
+	------- Read if the Element comes from an Fluid Extractor -------
+	if string.match(event.element.name, "FE") then
+		-- Find the Fluid Extractor ID --
+		local ID = split(event.element.name, "FE")
+		ID = tonumber(ID[1])
+		-- Check the ID --
+		if ID == nil then return end
+		-- Find the Fluid Extractor --
+		local fluidExtractor = nil
+		for k, FE in pairs(global.fluidExtractorTable) do
+			if FE.ent.unit_number == ID then
+				fluidExtractor = FE
+			end
+		end
+		-- Check if a Fluid Extractor was found --
+		if fluidExtractor == nil then return end
+		-- Change the Fluid Extractor targeted Dimensional Tank --
+		fluidExtractor:changeDimTank(tonumber(event.element.items[event.element.selected_index]))
+	end
+	
+	------- Read if the Element comes from an Matter Serializer -------
+	if string.match(event.element.name, "MS") then
+		-- Find the Matter Serializer ID --
+		local ID = split(event.element.name, "MS")
+		ID = tonumber(ID[1])
+		-- Check the ID --
+		if ID == nil then return end
+		-- Find the Matter Serializer --
+		local matterS = nil
+		for k, MS in pairs(global.matterSerializerTable) do
+			if MS.ent.unit_number == ID then
+				matterS = MS
+			end
+		end
+		-- Check if a Matter Serializer was found --
+		if matterS == nil then return end
+		-- Change the Matter Serializer targeted Inventory --
+		matterS:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
+	end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

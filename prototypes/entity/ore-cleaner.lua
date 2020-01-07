@@ -77,7 +77,7 @@ ocE.energy_source =
     }
 ocE.module_specification =
     {
-      module_slots = 1
+      module_slots = 0
     }
 data:extend{ocE}
 

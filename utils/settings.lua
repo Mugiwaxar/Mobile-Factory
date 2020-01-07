@@ -64,7 +64,7 @@ _mfWDREnergyDrainPerUpdate = 30000
 _mfOreCleanerMaxCharge = 1000
 _mfOreCleanerRadius = 25
 _mfOreCleanerOrePerExtraction = 10
-_mfOreCleanerExtractionTicks = 5
+_mfOreCleanerExtractionTicks = 20
 _mfOreCleanerInventorySize = 12000
 
 -- Fluid Extractor settings --

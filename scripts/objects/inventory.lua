@@ -233,19 +233,21 @@ function INV:getFrame(guiElement)
 		INV:itemToFrame(item, count, invList)
 	end
 	
-	-- Create the Ore Silo Label --
-	local oreSilo = guiElement.add{type="label"}
-	oreSilo.style.font = "LabelFont"
-	oreSilo.caption = {"", {"gui-description.OreSilo"}}
-	oreSilo.style.font_color = {108, 114, 229}
-	oreSilo.style.bottom_margin = 7
-	
-	-- Create the CCInventory List Flow --
-	local invList = guiElement.add{type="flow", direction="vertical"}
-	-- invList.style.width = 205
-	-- Create the list --
-	for item, count in pairs(self.CCInventory) do
-		INV:itemToFrame(item, count, invList)
+	if self.isII then
+		-- Create the Ore Silo Label --
+		local oreSilo = guiElement.add{type="label"}
+		oreSilo.style.font = "LabelFont"
+		oreSilo.caption = {"", {"gui-description.OreSilo"}}
+		oreSilo.style.font_color = {108, 114, 229}
+		oreSilo.style.bottom_margin = 7
+		
+		-- Create the CCInventory List Flow --
+		local invList = guiElement.add{type="flow", direction="vertical"}
+		-- invList.style.width = 205
+		-- Create the list --
+		for item, count in pairs(self.CCInventory) do
+			INV:itemToFrame(item, count, invList)
+		end
 	end
 	
 end

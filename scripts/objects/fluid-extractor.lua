@@ -6,7 +6,8 @@ FE = {
 	charge = 0,
 	totalCharge = 0,
 	updateTick = 60,
-	lastUpdate = 0
+	lastUpdate = 0;
+	selectedDimTank = nil
 }
 
 -- Constructor --
@@ -55,7 +56,6 @@ function FE:getTooltipInfos(GUI)
 	--------------- Make the Frame ----------------
 	local feFrame = GUI.add{type="frame", direction="vertical"}
 	feFrame.style.width = 150
-	-- Make the Fluid Extractor Frame visible if Fluid Extractor is placed --
 		
 	-- Create Labels and Bares --
 	local nameLabel = feFrame.add{type="label", caption={"", {"gui-description.FluidExtractor"}}}
@@ -64,19 +64,54 @@ function FE:getTooltipInfos(GUI)
 	local ChargeBar = feFrame.add{type="progressbar", value=self.charge/_mfFEMaxCharge}
 	local PurityLabel = feFrame.add{type="label", caption={"", {"gui-description.Purity"}, ": ", self.purity}}
 	local PurityBar = feFrame.add{type="progressbar", value=self.purity/100}
+	local targetLabel = feFrame.add{type="label", caption={"", {"gui-description.FETarget"}, ":"}}
 
 	-- Update Style --
-	nameLabel.style.font = "LabelFont"
-	nameLabel.style.bottom_margin = 7
+	nameLabel.style.bottom_margin = 5
 	SpeedLabel.style.font = "LabelFont"
 	ChargeLabel.style.font = "LabelFont"
 	PurityLabel.style.font = "LabelFont"
+	targetLabel.style.top_margin = 7
+	targetLabel.style.font = "LabelFont"
 	nameLabel.style.font_color = {108, 114, 229}
 	SpeedLabel.style.font_color = {39,239,0}
 	ChargeLabel.style.font_color = {39,239,0}
 	ChargeBar.style.color = {176,50,176}
 	PurityLabel.style.font_color = {39,239,0}
 	PurityBar.style.color = {255, 255, 255}
+	targetLabel.style.font_color = {108, 114, 229}
+	
+	-- Create the Dimensional Tank Selection --
+	local dimTanks = {{"gui-description.Any"}}
+	local selectedIndex = 1
+	local i = 1
+	for k, dimTank in pairs(global.tankTable) do
+		if dimTank ~= nil then
+			i = i + 1
+			dimTanks[k+1] = tostring(k)
+			if self.selectedDimTank == dimTank then
+				selectedIndex = i
+			end
+		end
+	end
+	if selectedIndex ~= nil and selectedIndex > table_size(dimTanks) then selectedIndex = nil end
+	local dimTankSelection = feFrame.add{type="list-box", name="FE" .. self.ent.unit_number, items=dimTanks, selected_index=selectedIndex}
+	dimTankSelection.style.width = 50
+end
+
+-- Change the Targeted Dimensional Tank --
+function FE:changeDimTank(ID)
+	-- Check the ID --
+	if ID == nil then self.selectedDimTank = nil end
+	-- Select the Ore Silo --
+	self.selectedDimTank = nil
+	for k, dimTank in pairs(global.tankTable) do
+		if dimTank ~= nil and dimTank.ent ~= nil and dimTank.ent.valid == true then
+			if ID == k then
+				self.selectedDimTank = dimTank
+			end
+		end
+	end
 end
 
 -- Add a Quatron Charge --
@@ -91,6 +126,7 @@ function FE:fluidPerExtraction()
 	return math.floor(self.purity * _mfFEFluidPerExtraction)
 end
 
+--[[
 -- Get the module ID inside --
 function FE:getModuleID()
 	-- Test if the Fluid Extractor is valid --
@@ -118,13 +154,10 @@ function FE:getModuleID()
 	-- Return the ID --
 	return ID
 end
+--]]
 
 -- Extract Fluids --
 function FE:extractFluids(event)
-	-- Get the Module ID --
-	local moduleID = self:getModuleID()
-	-- Check the ModuleID --
-	if moduleID == nil or moduleID == 0 then return end
 	-- Check the Quatron Charge --
 	if self.charge < 10 then return end
 	-- Get the Fluid Path --
@@ -134,9 +167,9 @@ function FE:extractFluids(event)
 	-- Calcule the amount that can be extracted --
 	local amount = math.min(resource.amount, self:fluidPerExtraction())
 	-- Find the Focused Tank and Filter --
-	if global.tankTable == nil or global.tankTable[moduleID] == nil then return end
-	local filter = global.tankTable[moduleID].filter
-	local tank = global.tankTable[moduleID].ent
+	if self.selectedDimTank == nil then return end
+	local filter = self.selectedDimTank.filter
+	local tank = self.selectedDimTank.ent
 	if filter == nil or tank == nil then return end
 	-- Test if the Filter accept this Fluid --
 	if resource.name ~= filter then return end

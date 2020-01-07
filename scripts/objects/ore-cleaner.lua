@@ -7,6 +7,7 @@ OC = {
 	totalCharge = 0,
 	oreTable = nil,
 	inventory = nil,
+	selectedOreSilo = nil,
 	animID = 0,
 	animTick = 0,
 	updateTick = 1,
@@ -67,7 +68,6 @@ function OC:update(event)
 	end
 	-- Update Animation --
 	 self:updateAnimation(event)
-	 --
 end
 
 -- Tooltip Infos --
@@ -82,19 +82,54 @@ function OC:getTooltipInfos(GUI)
 	local ChargeBar = ocFrame.add{type="progressbar", value=self.charge/_mfOreCleanerMaxCharge}
 	local PurityLabel = ocFrame.add{type="label", caption={"", {"gui-description.Purity"}, ": ", math.floor(self.purity*100)/100}}
 	local PurityBar = ocFrame.add{type="progressbar", value=self.purity/100}
+	local targetLabel = ocFrame.add{type="label", caption={"", {"gui-description.OSTarget"}, ":"}}
 	
 	-- Update Style --
-	nameLabel.style.font = "LabelFont"
-	nameLabel.style.bottom_margin = 7
+	nameLabel.style.bottom_margin = 5
 	SpeedLabel.style.font = "LabelFont"
 	ChargeLabel.style.font = "LabelFont"
 	PurityLabel.style.font = "LabelFont"
+	targetLabel.style.top_margin = 7
+	targetLabel.style.font = "LabelFont"
 	nameLabel.style.font_color = {108, 114, 229}
 	SpeedLabel.style.font_color = {39,239,0}
 	ChargeLabel.style.font_color = {39,239,0}
 	ChargeBar.style.color = {176,50,176}
 	PurityLabel.style.font_color = {39,239,0}
 	PurityBar.style.color = {255, 255, 255}
+	targetLabel.style.font_color = {108, 114, 229}
+	
+	-- Create the Ore Silo Selection --
+	local oreSilos = {{"gui-description.Any"}}
+	local selectedIndex = 1
+	local i = 1
+	for k, oreSilo in pairs(global.oreSilotTable) do
+		if oreSilo ~= nil then
+			i = i + 1
+			oreSilos[k+1] = tostring(k)
+			if self.selectedOreSilo == oreSilo then
+				selectedIndex = i
+			end
+		end
+	end
+	if selectedIndex ~= nil and selectedIndex > table_size(oreSilos) then selectedIndex = nil end
+	local oreSiloSelection = ocFrame.add{type="list-box", name="OC" .. self.ent.unit_number, items=oreSilos, selected_index=selectedIndex}
+	oreSiloSelection.style.width = 50
+end
+
+-- Change the Targeted Ore Silo --
+function OC:changeOreSilo(ID)
+	-- Check the ID --
+	if ID == nil then self.selectedOreSilo = nil end
+	-- Select the Ore Silo --
+	self.selectedOreSilo = nil
+	for k, oreSilo in pairs(global.oreSilotTable) do
+		if oreSilo ~= nil and oreSilo.valid == true then
+			if ID == k then
+				self.selectedOreSilo = oreSilo
+			end
+		end
+	end
 end
 
 -- Add a Quatron Charge --
@@ -140,6 +175,8 @@ function OC:addItemStack(item)
 	table.insert(self.inventory, item)
 end
 
+
+--[[
 -- Get the module ID inside --
 function OC:getModuleID()
 	-- Test if the Ore Cleaner is valid --
@@ -167,6 +204,7 @@ function OC:getModuleID()
 	-- Return the ID --
 	return ID	
 end
+--]]
 
 -- Scan surronding Ores --
 function OC:scanOres(entity)
@@ -194,10 +232,8 @@ function OC:collectOres(event)
 	if table_size(self.oreTable) <= 0 then return end
 	-- Return if there are not Quatron Charge remaining --
 	if self.charge <= 0 then return end
-	-- Get the ID of the focused Ore Silo --
-	local oreSiloID = self:getModuleID()
-	-- Test if the ID was found --
-	if oreSiloID == 0 then return end
+	-- Test if an Ore Silo is selected --
+	if self.selectedOreSilo == nil then return end
 	-- Create the OrePath and randomNum variable --
 	local orePath = nil
 	local randomNum  = 0
@@ -239,13 +275,11 @@ end
 
 -- Send to the Ore Silot --
 function OC:sendToSilo()
-	-- Get The Ore Silo --
-	local oreSilo = global.oreSilotTable[self:getModuleID()]
 	-- Test if the Ore Silo is valid --
-	if oreSilo == nil then return end
-	if oreSilo.valid == false then return end
+	if self.selectedOreSilo == nil then return end
+	if self.selectedOreSilo.valid == false then return end
 	-- Get the Silo Inventory --
-	local siloInv = oreSilo.get_inventory(defines.inventory.chest)
+	local siloInv = self.selectedOreSilo.get_inventory(defines.inventory.chest)
 	-- Test if the Inventory is valid --
 	if siloInv == nil then return end
 	-- Try to send things --
@@ -268,7 +302,7 @@ end
 -- Update the Animation --
 function OC:updateAnimation(event)
 	-- Test if they was any extraction since the last tick --
-	if event.tick - self.lastExtraction > 10 and self.animID ~= 0 then
+	if event.tick - self.lastExtraction > _mfOreCleanerExtractionTicks + 10 and self.animID ~= 0 then
 		-- Destroy the Animation --
 		rendering.destroy(self.animID)
 		self.animID = 0
@@ -276,7 +310,7 @@ function OC:updateAnimation(event)
 		self.ent.surface.create_entity{name="OCBigBeam", duration=16, position=self.ent.position, target=global.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
 		return
 	-- If they was extraction but the animation doesn't exist --
-	elseif event.tick - self.lastExtraction <= 10 and self.animID == 0 then
+	elseif event.tick - self.lastExtraction <= _mfOreCleanerExtractionTicks + 10 and self.animID == 0 then
 		-- Create the Orb Animation --
 		self.animID = rendering.draw_animation{animation="RedEnergyOrb", target={self.ent.position.x,self.ent.position.y - 3.25}, surface=self.ent.surface}
 		-- I don't know what this do, but it work (reset the animation) --
