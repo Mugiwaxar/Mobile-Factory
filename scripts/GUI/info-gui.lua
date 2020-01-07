@@ -26,7 +26,7 @@ function GUI.createInfoGui(gui, player)
 	-- Create the Menu Bar --
 	local mfGUIMenuBar = mfInfoGUI.add{type="flow", name="mfGUIMenuBar", direction="horizontal"}
 	-- Set Style --
-	mfGUIMenuBar.style.width = 1173
+	mfGUIMenuBar.style.width = 972
 	mfGUIMenuBar.style.padding = 0
 	mfGUIMenuBar.style.margin = 0
 	mfGUIMenuBar.style.horizontal_align = "right"
@@ -62,7 +62,7 @@ function GUI.createInfoGui(gui, player)
 	
 	-- Create the Main Flow --
 	local mfInfoMainFlow = gui.screen.mfInfoGUI.add{type="frame", name="mfInfoMainFlow", direction="horizontal"}
-	mfInfoMainFlow.style.width = 1173
+	mfInfoMainFlow.style.width = 970
 	mfInfoMainFlow.style.height = 750
 	
 	------------------------------------------ FLOW 1 -------------------------------------
@@ -284,27 +284,13 @@ function GUI.createInfoGui(gui, player)
 	-- Create Third Flow --
 	local mfInfoFlow3 = mfInfoMainFlow.add{type="frame", name="mfInfoFlow3", direction="vertical"}
 	mfInfoFlow3.style.height = 732
-	mfInfoFlow3.style.width = 150
+	mfInfoFlow3.style.natural_width = 180
 	mfInfoFlow3.visible = false
 	
-	--[[
-	-------------------------------------- FLOW 4 -------------------------------------
-		
-	-- Create fourth Flow --
-	local mfInfoFlow4 = mfInfoMainFlow.add{type="frame", name="mfInfoFlow4", direction="vertical"}
-	mfInfoFlow4.style.height = 732
-	mfInfoFlow4.style.width = 230
-	mfInfoFlow4.visible = false
-	
-	-- Create Structures Title Label --
-	mfInfoFlow4.add{type="label", name="mfStructureTitle"}
-	mfInfoFlow4.mfStructureTitle.style.font = "TitleFont"
-	mfInfoFlow4.mfStructureTitle.caption = {"gui-description.mfStructureTitle"}
-	
-	-- Create the Structures Flow --
-	local mfStructureFlow = mfInfoFlow4.add{type="flow", name = "mfStructureFlow", direction="vertical"}
-	mfStructureFlow.style.width = 205
-	--]]
+	-- Create Scrool Pane --
+	local mfInfoFlow3SP = mfInfoFlow3.add{type="scroll-pane", name="mfInfoFlow3SP", horizontal_scroll_policy="never"}
+	mfInfoFlow3SP.style.height = 715
+	mfInfoFlow3SP.style.natural_width = 178
 	
 end
 
@@ -443,9 +429,6 @@ function GUI.updatePlayerInfoGUI(player)
 	-- Update Inventory frame --
 	GUI.updateInventoryFrame(player.gui)
 	
-	-- Update Structures Frame --
-	-- GUI.updateStructuresFrame(player.gui)
-	
 end
 	
 	
@@ -557,20 +540,7 @@ function GUI.updateInventoryFrame(gui)
 	if technologyUnlocked("MatterSerialization") == false then return end
 	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.visible = true
 	-- Clear the frame --
-	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.clear()
+	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.mfInfoFlow3SP.clear()
 	-- Add the Inventory Frame --
-	global.MF.II:getFrame(gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3)
+	global.MF.II:getFrame(gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.mfInfoFlow3SP)
 end
-	
---[[
--- Update the Structure Frame --
-function GUI.updateStructuresFrame(gui)
-	-- Return if OreCleaner Technology is not unlocked --
-	if technologyUnlocked("OreCleaner") == false then return end
-	-- Clear the Frame --
-	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow4.mfStructureFlow.clear()
-	
-	-- Make the frame visible --
-	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow4.visible = true
-end
---]]

@@ -1,12 +1,5 @@
 -- Create the Tooltip GUI --
 function GUI.createTooltipGUI(gui, player)
-	-- Verify if the Tooltip GUI exist, else destroy it --
-	if gui.screen.mfTooltipGUI ~= nil and gui.screen.mfTooltipGUI.valid == true then
-		gui.screen.mfTooltipGUI.destroy()
-	end
-	
-	-- Create the GUI --
-	local mfTooltipGUI = gui.screen.add{type="frame", name="mfTooltipGUI", direction="vertical"}
 	
 	-- Calcule the position --
 	local resolutionWidth = player.display_resolution.width  / player.display_scale
@@ -15,6 +8,18 @@ function GUI.createTooltipGUI(gui, player)
 	local posY = resolutionHeight / 100 * 25
 	local width = 157
 	local height = 300
+	local visible = false
+	
+	-- Verify if the Tooltip GUI exist, else save it values and destroy it --
+	if gui.screen.mfTooltipGUI ~= nil and gui.screen.mfTooltipGUI.valid == true then
+		posX = gui.screen.mfTooltipGUI.location.x
+		posY = gui.screen.mfTooltipGUI.location.y
+		visible = gui.screen.mfTooltipGUI.visible
+		gui.screen.mfTooltipGUI.destroy()
+	end
+	
+	-- Create the GUI --
+	local mfTooltipGUI = gui.screen.add{type="frame", name="mfTooltipGUI", direction="vertical"}
 	
 	-- Set the GUI position end style --
 	mfTooltipGUI.caption = {"gui-description.tooltipGUI"}
@@ -24,7 +29,7 @@ function GUI.createTooltipGUI(gui, player)
 	-- mfTooltipGUI.style.height = height
 	mfTooltipGUI.style.padding = 0
 	mfTooltipGUI.style.margin = 0
-	mfTooltipGUI.visible = false
+	mfTooltipGUI.visible = visible
 	
 	-- Create the Menu Bar --
 	local mfTTGUIMenuBar = mfTooltipGUI.add{type="flow", name="mfTTGUIMenuBar", direction="horizontal"}

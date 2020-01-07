@@ -28,7 +28,7 @@ end
 
 -- Update a Player GUI --
 function GUI.updatePlayerGUI(player)
--- Test if a player got an updated GUI else create --
+	-- Test if a player got an updated GUI else create --
 	if getPlayerVariable(player.name, "VisitedFactory") == true then
 		if getPlayerVariable(player.name, "GUICreated") ~= true then
 			GUI.createPlayerGui(player)
