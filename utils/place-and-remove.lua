@@ -166,11 +166,6 @@ function somethingWasPlaced(event, isRobot)
 		placedDataStorage(event)
 		return
 	end
-	-- Save the Ore Silot Pad --
-	-- if string.match(event.created_entity.name, "OreSilotPad") then
-		-- placedOreSilotPad(event)
-		-- return
-	-- end
 	-- Save the Ore Cleaner --
 	if event.created_entity.name == "OreCleaner" then
 		placedOreCleaner(event)
@@ -247,16 +242,6 @@ function somethingWasRemoved(event)
 		removedEnergyCube(event)
 		return
 	end
-	-- Remove the Ore Silot Pad --
-	-- if string.match(event.entity.name, "OreSilotPad") then
-		-- removedOreSilotPad(event)
-		-- return
-	-- end
-	-- Remove the Inventory Pad --
-	-- if event.entity.name == "DataStorage" then
-		-- removedDataStorage(event)
-		-- return
-	-- end
 	-- Remove the Ore Cleaner --
 	if event.entity.name == "OreCleaner" then
 		removedOreCleaner(event)

@@ -273,7 +273,7 @@ dt2T.unit = {
 		{"DimensionalSample", 1}
 	}
 }
-dt2T.prerequisites = {"ControlCenter"}
+dt2T.prerequisites = {"StorageTankMK1_1"}
 dt2T.effects = {{type="nothing", effect_description={"description.DimensionalTank2"}}, {type="unlock-recipe", recipe="ModuleID2"}}
 data:extend{dt2T}
 
@@ -412,7 +412,7 @@ dt3T.unit = {
 		{"DimensionalSample", 1}
 	}
 }
-dt3T.prerequisites = {"ControlCenter"}
+dt3T.prerequisites = {"StorageTankMK1_2"}
 dt3T.effects = {{type="nothing", effect_description={"description.DimensionalTank3"}}, {type="unlock-recipe", recipe="ModuleID3"}}
 data:extend{dt3T}
 
@@ -552,7 +552,7 @@ dt4T.unit = {
 		{"DimensionalSample", 1}
 	}
 }
-dt4T.prerequisites = {"ControlCenter"}
+dt4T.prerequisites = {"StorageTankMK1_3"}
 dt4T.effects = {{type="nothing", effect_description={"description.DimensionalTank4"}}, {type="unlock-recipe", recipe="ModuleID4"}}
 data:extend{dt4T}
 
@@ -691,6 +691,6 @@ dt5T.unit = {
 		{"DimensionalSample", 1}
 	}
 }
-dt5T.prerequisites = {"ControlCenter"}
+dt5T.prerequisites = {"StorageTankMK1_4"}
 dt5T.effects = {{type="nothing", effect_description={"description.DimensionalTank5"}}, {type="unlock-recipe", recipe="ModuleID5"}}
 data:extend{dt5T}

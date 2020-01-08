@@ -1,11 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.64
+Date: 08/01/2020
+---------------------------------------------------------------------------------------------------
 Version: 0.0.63
 Date: 07/01/2020
   Features:
     - You can now send Items to Ore Silos, the Silo can be selected via the Tooltip GUI by hovering a Matter Serializer
   Changes:
     - The Ore Cleaner no longer use Modules ID, you have to select the targeted Ore Silo with the Tooltip GUI
-	- The Fluid Extractor no longer use Modules ID, you have to select the targeted Dimensional Tank with the Tooltip GUI
+    - The Fluid Extractor no longer use Modules ID, you have to select the targeted Dimensional Tank with the Tooltip GUI
   Bugfixes:
     - The Items list of the Internal Inventory will no longer exceed the Frame inside the Information GUI
     - The Tooltip GUI will now keep its position and visibility after a Mod update

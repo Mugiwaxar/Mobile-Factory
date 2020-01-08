@@ -65,12 +65,6 @@ function placedEnergyCube(event)
 	global.energyCubesTable[event.created_entity.unit_number] = EC:new(event.created_entity)
 end
 
--- Save the Ore Silot Pads in a table --
--- function placedOreSilotPad(event)
-	-- if global.oreSilotPadTable == nil then global.oreSilotPadTable = {} end
-	-- global.oreSilotPadTable[event.created_entity.unit_number] = event.created_entity
--- end
-
 -- Save the Ore Cleaner --
 function placedOreCleaner(event)
 	if global.oreCleanerTable == nil then global.oreCleanerTable = {} end
@@ -159,12 +153,6 @@ function removedEnergyCube(event)
 		global.MF.energyCubesTable = nil
 	end
 end
-
--- Remove the Ore Silot Pad from the table --
--- function removedOreSilotPad(event)
-	-- if global.oreSilotPadTable == nil then global.oreSilotPadTable = {} return end
-	-- global.oreSilotPadTable[event.entity.unit_number] = nil
--- end
 
 -- Remove the Ore Cleaner from the table --
 function removedOreCleaner(event)
