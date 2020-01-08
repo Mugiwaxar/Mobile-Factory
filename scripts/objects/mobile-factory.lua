@@ -26,7 +26,8 @@ MF = {
 	fluidLaserActivated = false,
 	itemLaserActivated = false,
 	internalEnergyDistributionActivated = false,
-	sendQuatronActivated = false
+	sendQuatronActivated = false,
+	selectedPowerLaserMode = 1
 }
 
 -- Constructor --
@@ -72,6 +73,20 @@ end
 
 -- Tooltip Infos --
 function MF:getTooltipInfos(GUI)
+	if technologyUnlocked("EnergyDrain1") then
+		-- Create the Power Laser label --
+		local connectedL = GUI.add{type="label"}
+		connectedL.style.font = "LabelFont"
+		connectedL.caption = "Power Laser Mode:"
+		connectedL.style.font_color = {92, 232, 54}
+
+		-- Create the Power Laser Selection --
+		local laserMode = {{"gui-description.Drain"}, {"gui-description.Send"}}
+		if self.selectedPowerLaserMode ~= nil and self.selectedPowerLaserMode > table_size(laserMode) then selectedIndex = nil end
+		local networkSelection = GUI.add{type="list-box", name="MFPL" .. self.ent.unit_number, items=laserMode, selected_index=self.selectedPowerLaserMode}
+		networkSelection.style.margin = 5
+		networkSelection.style.width = 75
+	end
 end
 
 -- Update the Mobile Factory --
@@ -137,110 +152,153 @@ function MF:maxShield()
 	return self.ent.grid.max_shield
 end
 
+-- Change the Power Laser to Drain or Send mode --
+function MF:changePowerLaserMode(mode)
+	if mode == nil then return end
+	self.selectedPowerLaserMode = mode
+end
+
 -- Search energy sources near Mobile Factory and update the burning fuel --
 function MF:updateLasers()
 	-- Check the Mobile Factory --
-	if global.MF == nil or global.MF.ent == nil then return end
-	if global.MF.ent.valid == false then return end
-	-- Search Energy sources"
-	if technologyUnlocked("EnergyDrain1") or technologyUnlocked("FluidDrain1") then
-		-- Get Bounding Box --
-		local mfB = self.ent.bounding_box
-		-- Get all entities around --
-		local entities = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=self:getLaserRadius()}
-		i = 1
-		-- Look each entity --
-		for k, entity in pairs(entities) do
-			-- Stop if they are to much lasers --
-			if i > self:getLaserNumber() then break end
-			-------------------------------------------- Energy Laser --------------------------------------------
-			-- Exclude Character, Power Drain Pole and Entities with 0 energy --
-			if entity.type ~= "character" and entity.name ~= "PowerDrainPole" and entity.name ~= "OreCleaner" and entity.name ~= "FluidExtractor" and entity.energy > 0 then
-				-- Missing Internal Energy or Structure Energy --
-				local energyDrain = math.min(self.maxInternalEnergy - self.internalEnergy, entity.energy)
-				-- EnergyDrain or LaserDrain Caparity --
-				local drainedEnergy = math.min(self:getLaserEnergyDrain(), energyDrain)
-				-- Test if some Energy was drained --
-				if drainedEnergy > 0 then
-					-- Add the Energy to the Mobile Factory Batteries --
-					global.MF.internalEnergy = global.MF.internalEnergy + drainedEnergy
-					-- Remove the Energy from the Structure --
-					entity.energy = entity.energy - drainedEnergy
-					-- Create the Beam --
-					self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
-					-- One less Beam to the Beam capacity --
-					i = i + 1
+	if self.ent == nil or self.ent.valid == false then return end
+	-- Look for Entities --
+	local entities = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=self:getLaserRadius()}
+	-- Create all Lasers --
+	i = 1
+	for k, entity in pairs(entities) do
+		local laserUsed = false
+		if self:updateEnergyLaser(entity) == true then laserUsed = true end
+		if self:updateFluidLaser(entity) == true then laserUsed = true end
+		if self:updateLogisticLaser(entity) == true then laserUsed = true end
+		if laserUsed == true then i = i + 1 end
+		if i > self:getLaserNumber() then return end
+	end
+end
+
+-------------------------------------------- Energy Laser --------------------------------------------
+function MF:updateEnergyLaser(entity)
+	-- Check if a laser should be created --
+	if technologyUnlocked("EnergyDrain1") == false or self.energyLaserActivated == false then return false end
+	-- Create the Laser --
+	local mobileFactory = false
+	if string.match(entity.name, "MobileFactory") then mobileFactory = true end
+	-- Exclude Mobile Factory, Character, Power Drain Pole and Entities with 0 energy --
+	if mobileFactory == false and entity.type ~= "character" and entity.name ~= "PowerDrainPole" and entity.name ~= "OreCleaner" and entity.name ~= "FluidExtractor" and entity.energy ~= nil and entity.electric_buffer_size ~= nil then
+		----------------------- Drain Power -------------------------
+		if self.selectedPowerLaserMode == 1 and entity.energy > 0 then
+			-- Missing Internal Energy or Structure Energy --
+			local energyDrain = math.min(self.maxInternalEnergy - self.internalEnergy, entity.energy)
+			-- EnergyDrain or LaserDrain Caparity --
+			local drainedEnergy = math.min(self:getLaserEnergyDrain(), energyDrain)
+			-- Test if some Energy was drained --
+			if drainedEnergy > 0 then
+				-- Add the Energy to the Mobile Factory Batteries --
+				global.MF.internalEnergy = global.MF.internalEnergy + drainedEnergy
+				-- Remove the Energy from the Structure --
+				entity.energy = entity.energy - drainedEnergy
+				-- Create the Beam --
+				self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
+				-- One less Beam to the Beam capacity --
+				return true
+			end
+		elseif self.selectedPowerLaserMode == 2 and entity.energy < entity.electric_buffer_size then
+			-- Structure missing Energy or Laser Power --
+			local energySend = math.min(entity.electric_buffer_size , self:getLaserEnergyDrain())
+			-- Energy Send or Mobile Factory Energy --
+			energySend = math.min(self.internalEnergy, energySend)
+			-- Check if Energy can be send --
+			if energySend > 0 then
+				-- Add the Energy to the Entity --
+				entity.energy = entity.energy + energySend
+				-- Remove the Energy from the Mobile Factory --
+				global.MF.internalEnergy = global.MF.internalEnergy - energySend
+				-- Create the Beam --
+				self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
+				-- One less Beam to the Beam capacity --
+				return true
+			end
+		end
+	end
+end
+
+-------------------------------------------- Fluid Laser --------------------------------------------
+function MF:updateFluidLaser(entity)
+	-- Check if a laser should be created --
+	if technologyUnlocked("FluidDrain1") == false or self.fluidLaserActivated == false then return false end 
+	-- Create the Laser --
+	if entity.type == "storage-tank" and global.IDModule > 0 then
+		if self.ccS ~= nil then
+			-- Get the Internal Tank --
+			local name
+			local ccTank
+			if global.tankTable ~= nil and global.tankTable[global.IDModule] ~= nil then
+				filter = global.tankTable[global.IDModule].filter
+				ccTank = global.tankTable[global.IDModule].ent
+			end
+			if filter ~= nil and ccTank ~= nil then
+				-- Get the focused Tank --
+				local name
+				local amount
+				pTank = entity
+				for k, i in pairs(pTank.get_fluid_contents()) do
+					name = k
+					amount = i
+				end
+				if name ~= nil and name == filter and self.internalEnergy > _lfpFluidConsomption * math.min(amount, self:getLaserFluidDrain()) then
+					-- Add fluid to the Internal Tank --
+					local amountRm = ccTank.insert_fluid({name=name, amount=math.min(amount, self:getLaserFluidDrain())})
+					-- Remove fluid from the focused Tank --
+					pTank.remove_fluid{name=name, amount=amountRm}
+					if amountRm > 0 then
+						-- Create the Laser --
+						self.ent.surface.create_entity{name="PurpleBeam", duration=60, position=self.ent.position, target=pTank.position, source=self.ent.position}
+						-- Drain Energy --
+						self.internalEnergy = self.internalEnergy - (_mfFluidConsomption*amountRm)
+						-- One less Beam to the Beam capacity --
+						return true
+					end
 				end
 			end
-			-------------------------------------------- Fluid Laser --------------------------------------------
-			if self.fluidLaserActivated == true and entity.type == "storage-tank" and global.IDModule > 0 then
-				if self.ccS ~= nil then
-					-- Get the Internal Tank --
-					local name
-					local ccTank
-					if global.tankTable ~= nil and global.tankTable[global.IDModule] ~= nil then
-						filter = global.tankTable[global.IDModule].filter
-						ccTank = global.tankTable[global.IDModule].ent
+		end
+	end
+end
+
+-------------------------------------------- Logistic Laser --------------------------------------------
+function MF:updateLogisticLaser(entity)
+	-- Check if a laser should be created --
+	if technologyUnlocked("TechItemDrain") == false or self.itemLaserActivated == false then return false end 
+	-- Create the Laser --
+	if self.itemLaserActivated == true and self.internalEnergy > _mfBaseItemEnergyConsumption * self:getLaserItemDrain() and (entity.type == "container" or entity.type == "logistic-container") then
+		-- Get Chest Inventory --
+		local inv = entity.get_inventory(defines.inventory.chest)
+		-- Get the Internal Inventory --
+		local dataInv = self.II
+		if inv ~= nil and inv.valid == true then
+			-- Create the Laser Capacity variable --
+			local capItems = self:getLaserItemDrain()
+			-- Get all Items --
+			local invItems = inv.get_contents()
+			-- Retrieve Items from the Inventory --
+			for iName, iCount in pairs(invItems) do
+				local added = dataInv:addItem(iName, math.min(iCount, capItems))
+				-- Check if Items was added --
+				if added > 0 then
+					-- Remove Items from the Chest --
+					local removedItems = inv.remove({name=iName, count=added})
+					-- Recalcule the capItems --
+					capItems = capItems - added
+					-- Create the laser and remove energy --
+					if added > 0 then
+						self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target=entity.position, source=self.ent.position}
+						self.internalEnergy = self.internalEnergy - _mfBaseItemEnergyConsumption * removedItems
+						-- One less Beam to the Beam capacity --
+						return true
 					end
-					if filter ~= nil and ccTank ~= nil then
-						-- Get the focused Tank --
-						local name
-						local amount
-						pTank = entity
-						for k, i in pairs(pTank.get_fluid_contents()) do
-							name = k
-							amount = i
-						end
-						if name ~= nil and name == filter and self.internalEnergy > _lfpFluidConsomption * math.min(amount, self:getLaserFluidDrain()) then
-							-- Add fluid to the Internal Tank --
-							local amountRm = ccTank.insert_fluid({name=name, amount=math.min(amount, self:getLaserFluidDrain())})
-							-- Remove fluid from the focused Tank --
-							pTank.remove_fluid{name=name, amount=amountRm}
-							if amountRm > 0 then
-								-- Create the Laser --
-								self.ent.surface.create_entity{name="PurpleBeam", duration=60, position=self.ent.position, target=pTank.position, source=self.ent.position}
-								-- Drain Energy --
-								self.internalEnergy = self.internalEnergy - (_mfFluidConsomption*amountRm)
-								-- One less Beam to the Beam capacity --
-								i = i + 1
-							end
-						end
-					end
-				end
-			end
-			-------------------------------------------- Logistic Laser --------------------------------------------
-			if self.itemLaserActivated == true and self.internalEnergy > _mfBaseItemEnergyConsumption * self:getLaserItemDrain() and (entity.type == "container" or entity.type == "logistic-container") then
-				-- Get Chest Inventory --
-				local inv = entity.get_inventory(defines.inventory.chest)
-				-- Get the Internal Inventory --
-				local dataInv = self.II
-				if inv ~= nil and inv.valid == true then
-					-- Create the Laser Capacity variable --
-					local capItems = self:getLaserItemDrain()
-					-- Get all Items --
-					local invItems = inv.get_contents()
-					-- Retrieve Items from the Inventory --
-					for iName, iCount in pairs(invItems) do
-						local added = dataInv:addItem(iName, math.min(iCount, capItems))
-						-- Check if Items was added --
-						if added > 0 then
-							-- Remove Items from the Chest --
-							local removedItems = inv.remove({name=iName, count=added})
-							-- Recalcule the capItems --
-							capItems = capItems - added
-							-- Create the laser and remove energy --
-							if added > 0 then
-								self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target=entity.position, source=self.ent.position}
-								self.internalEnergy = self.internalEnergy - _mfBaseItemEnergyConsumption * removedItems
-								-- One less Beam to the Beam capacity --
-								i = i + 1
-							end
-							-- Test if capItems is empty --
-							if capItems <= 0 then
-								-- Stop --
-								break
-							end
-						end
+					-- Test if capItems is empty --
+					if capItems <= 0 then
+						-- Stop --
+						break
 					end
 				end
 			end

@@ -26,4 +26,51 @@ data.raw.technology.GTMobileFactory.unit =
 			{"DimensionalSample", 100},
 			{"DimensionalCrystal", 1}
 		}
-}		
+}
+
+-- Hovering Factory --
+createNewMF("HMobileFactory", {49,92,255}, 0.9, "c",  "__Mobile_Factory__/graphics/mobile- factory/HMF.png")
+data.raw.car.HMobileFactory.max_health = 2000
+data.raw.car.HMobileFactory.consumption = "550kW"
+data.raw.car.HMobileFactory.weight = 30000
+data.raw.car.HMobileFactory.braking_power = "400kW"
+data.raw.car.HMobileFactory.rotation_speed = 0.15 / 60
+data.raw.car.HMobileFactory.effectivity = 0.4
+data.raw.car.HMobileFactory.equipment_grid = "MFEquipmentGridH"
+data.raw.car.HMobileFactory.inventory_size = 8
+data.raw.car.HMobileFactory.collision_mask = {}
+data.raw.car.HMobileFactory.animation.layers[3].shift = util.by_pixel(17.75, 80)
+data.raw.recipe.HMobileFactory.ingredients =
+{
+      {"CrystalizedCircuit", 28},
+      {"MachineFrame3", 25},
+}
+data.raw.technology.HMobileFactory.unit =
+{
+	count=10,
+		time=60,
+		ingredients={
+			{"DimensionalSample", 75},
+			{"DimensionalCrystal", 2}
+		}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

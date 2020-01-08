@@ -330,6 +330,11 @@ function GUI.onGuiElemChanged(event)
 		-- Change the Matter Serializer targeted Inventory --
 		matterS:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
 	end
+	------- Read if the Element comes from The Mobile Factory Power Laser -------
+	if string.match(event.element.name, "MFPL") then
+		-- Change the Matter Serializer targeted Inventory --
+		global.MF:changePowerLaserMode(event.element.selected_index)
+	end
 end
 
 

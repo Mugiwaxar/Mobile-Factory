@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.65
+Date: 08/01/2020
+  Features:
+    - Added the Hovering Factory, a Mobile Factory who can fly above Structures and Water
+    - The Mobile Factory can now send Energy outside via its Power Drain Laser (Must be set throught the Tooltip GUI)
+  Bugfixes:
+    - The Mobile Factory will no longer drain its own Power
+---------------------------------------------------------------------------------------------------
 Version: 0.0.64
 Date: 08/01/2020
   Features:
@@ -10,6 +18,7 @@ Date: 08/01/2020
     - Added new Item: Dimensional Circuit
     - Added new Item: Crystalized Circuit
     - New Technology: Dimensional Electronic, unlock the Dimensional Wire and the Dimensional Circuit
+    - New Technology: Coal Hydrogenation, Unlock the Hydrocoal
     - Added Dimensional Ore to Stone Recipe
     - Added Dimensional Fluid to Water Recipe
   Changes:
