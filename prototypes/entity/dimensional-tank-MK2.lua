@@ -31,7 +31,7 @@ dmT.unit = {
 		{"DimensionalCrystal", 1}
 	}
 }
-dmT.prerequisites = {"StorageTankMK1_1"}
+dmT.prerequisites = {"StorageTankMK1_1", "DimensionalCrystal"}
 dmT.effects = {{type="nothing", effect_description={"description.DimensionalTank1MK2"}}}
 data:extend{dmT}
 
@@ -63,7 +63,7 @@ dt2T.unit = {
 		{"DimensionalCrystal", 1}
 	}
 }
-dt2T.prerequisites = {"StorageTankMK1_2"}
+dt2T.prerequisites = {"StorageTankMK1_1", "StorageTankMK1_2"}
 dt2T.effects = {{type="nothing", effect_description={"description.DimensionalTank2MK2"}}}
 data:extend{dt2T}
 
@@ -95,7 +95,7 @@ dt3T.unit = {
 		{"DimensionalCrystal", 1}
 	}
 }
-dt3T.prerequisites = {"StorageTankMK1_3"}
+dt3T.prerequisites = {"StorageTankMK1_2", "StorageTankMK1_3"}
 dt3T.effects = {{type="nothing", effect_description={"description.DimensionalTank3MK2"}}}
 data:extend{dt3T}
 
@@ -127,7 +127,7 @@ dt4T.unit = {
 		{"DimensionalCrystal", 1}
 	}
 }
-dt4T.prerequisites = {"StorageTankMK1_4"}
+dt4T.prerequisites = {"StorageTankMK1_3", "StorageTankMK1_4"}
 dt4T.effects = {{type="nothing", effect_description={"description.DimensionalTank4MK2"}}}
 data:extend{dt4T}
 
@@ -159,6 +159,6 @@ dt5T.unit = {
 		{"DimensionalCrystal", 1}
 	}
 }
-dt5T.prerequisites = {"StorageTankMK1_5"}
+dt5T.prerequisites = {"StorageTankMK1_4", "StorageTankMK1_5"}
 dt5T.effects = {{type="nothing", effect_description={"description.DimensionalTank5MK2"}}}
 data:extend{dt5T}

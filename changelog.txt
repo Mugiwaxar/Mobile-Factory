@@ -1,6 +1,17 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.64
 Date: 08/01/2020
+  Features:
+    - Added new Item: Dimensional Wire
+    - Added new Item: Dimensional Circuit
+    - New Technology: Dimensional Electronic, unlock the Dimensional Wire and the Dimensional Circuit
+  Changes:
+    - Dimensional Plate now require 2 Dimensional Ore (instead of 4)
+    - Massive rewrite of the TechTree
+    - Added new Icon for Wireless Data Transmission Technology
+    - Changed recipe of: Dimensional Furnace, Dimensional Analyzer, Dimensional Accumulator, Crystallizer, 
+  Bugfixes:
+    - Fixed the Icon of the Ore Cleaning Technology
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.63
 Date: 07/01/2020

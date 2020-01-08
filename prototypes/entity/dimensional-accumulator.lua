@@ -110,8 +110,8 @@ daC.energy_required = 5
 daC.enabled = false
 daC.ingredients =
     {
-		{"medium-electric-pole", 1},
-		{"DimensionalPlate", 81}
+		{"DimensionalPlate", 75},
+		{"DimensionalCircuit", 15}
     }
 daC.result = "DimensionalAccumulator"
 data:extend{daC}
@@ -129,6 +129,6 @@ daT.unit = {
 		{"DimensionalSample", 1}
 	}
 }
-daT.prerequisites = {"EnergyDistribution1"}
+daT.prerequisites = {"DimensionalElectronic"}
 daT.effects = {{type="unlock-recipe", recipe="DimensionalAccumulator"}}
 data:extend{daT}

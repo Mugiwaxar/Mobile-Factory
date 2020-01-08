@@ -55,6 +55,6 @@ shT.unit = {
 		{"DimensionalCrystal", 5}
 	}
 }
-shT.prerequisites =  {"DimensionalOre"}
+shT.prerequisites =  {"DimensionalCrystal"}
 shT.effects = {{type="unlock-recipe", recipe="mfShieldEquipment"}}
 data:extend{shT}

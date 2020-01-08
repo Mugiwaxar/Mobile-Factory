@@ -11,6 +11,6 @@ lfT.unit = {
 		{"DimensionalSample", 1}
 	}
 }
-lfT.prerequisites = {"DimensionalOre"}
+lfT.prerequisites = {"StorageTankMK1_1"}
 lfT.effects = {{type="nothing", effect_description={"description.FluidDrain1"}}}
 data:extend{lfT}

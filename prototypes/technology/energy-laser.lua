@@ -31,6 +31,6 @@ etT.unit = {
 		{"DimensionalSample", 1}
 	}
 }
-etT.prerequisites = {"DimensionalOre"}
+etT.prerequisites = {"ElectricityCompression"}
 etT.effects = {{type="nothing", effect_description={"description.EnergyDistribution1"}}}
 data:extend{etT}

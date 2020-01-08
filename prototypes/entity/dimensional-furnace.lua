@@ -124,8 +124,7 @@ dfR.energy_required = 3
 dfR.enabled = false
 dfR.ingredients =
     {
-		{"stone-furnace", 1},
-		{"DimensionalOre", 30}
+		{"DimensionalOre", 35}
     }
 dfR.result = "DimensionalFurnace"
 data:extend{dfR}

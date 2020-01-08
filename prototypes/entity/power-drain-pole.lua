@@ -120,6 +120,6 @@ pdpT.unit = {
 		{"DimensionalSample", 1}
 	}
 }
-pdpT.prerequisites = {"EnergyDistribution1"}
+pdpT.prerequisites = {"DimensionalElectronic"}
 pdpT.effects = {{type="unlock-recipe", recipe="PowerDrainPole"}}
 data:extend{pdpT}

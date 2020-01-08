@@ -70,6 +70,6 @@ dpT.unit = {
 		{"DimensionalSample", 1}
 	}
 }
-dpT.prerequisites = {"DimensionalOreSmelting"}
+dpT.prerequisites = {"DimensionalElectronic"}
 dpT.effects = {{type="unlock-recipe", recipe="DimensionalPlant"}}
 data:extend{dpT}

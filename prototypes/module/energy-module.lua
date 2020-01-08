@@ -101,7 +101,7 @@ pMT.unit = {
 		{"DimensionalSample", 1}
 	}
 }
-pMT.prerequisites = {"EnergyDistribution1"}
+pMT.prerequisites = {"DimensionalElectronic"}
 pMT.effects = {
 	{type="unlock-recipe", recipe="EnergyPowerModule"},
 	{type="unlock-recipe", recipe="EnergyEfficiencyModule"},

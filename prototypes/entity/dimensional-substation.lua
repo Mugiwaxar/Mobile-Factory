@@ -158,6 +158,6 @@ dsT.unit = {
 		{"DimensionalSample", 1}
 	}
 }
-dsT.prerequisites = {"EnergyDistribution1"}
+dsT.prerequisites = {"DimensionalElectronic"}
 dsT.effects = {{type="unlock-recipe", recipe="DimensionalSubstation"}}
 data:extend{dsT}

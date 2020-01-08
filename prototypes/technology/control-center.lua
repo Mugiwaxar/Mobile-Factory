@@ -34,6 +34,6 @@ ca1T.unit = {
 		{"DimensionalCrystal", 1}
 	}
 }
-ca1T.prerequisites = {"ControlCenter"}
+ca1T.prerequisites = {"ControlCenter", "DimensionalCrystal"}
 ca1T.effects = {{type="nothing", effect_description={"description.ConstructibleArea1"}}}
 data:extend{ca1T}

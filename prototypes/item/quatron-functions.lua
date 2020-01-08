@@ -38,7 +38,7 @@ qT.name = "Quatron" .. tonumber(level)
 qT.type = "technology"
 qT.icon = "__Mobile_Factory__/graphics/icones/Quatron.png"
 qT.icon_size = 32
-if level == 1 then qT.prerequisites = {"DimensionalPlant"} else qT.prerequisites = {"Quatron" .. previousLevel} end
+if level == 1 then qT.prerequisites = {"DimensionalPlant", "DimensionalCrystal"} else qT.prerequisites = {"Quatron" .. previousLevel} end
 qT.unit = {
 	count=level,
 	time=2,

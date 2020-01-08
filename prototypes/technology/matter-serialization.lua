@@ -31,7 +31,7 @@ data:extend{msT}
 local dtT = {}
 dtT.name = "DataTransmission"
 dtT.type = "technology"
-dtT.icon = "__Mobile_Factory__/graphics/matter-serialization/MatterSerializationI.png"
+dtT.icon = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataTransmissionI.png"
 dtT.icon_size = 64
 dtT.unit = {
 	count=20,

@@ -126,8 +126,8 @@ cR.energy_required = 5
 cR.enabled = false
 cR.ingredients =
     {
-      {"assembling-machine-2", 1},
       {"DimensionalPlate", 45},
+      {"DimensionalCircuit", 35}
     }
 cR.result = "Crystallizer"
 data:extend{cR}

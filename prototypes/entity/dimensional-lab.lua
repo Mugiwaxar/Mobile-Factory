@@ -116,8 +116,7 @@ dlR.name = "DimensionalLab"
 dlR.energy_required = 5
 dlR.ingredients =
     {
-      {"lab", 1},
-      {"DimensionalOre", 15},
+      {"DimensionalOre", 25},
     }
 dlR.result = "DimensionalLab"
 data:extend{dlR}
