@@ -124,7 +124,7 @@ dfR.energy_required = 3
 dfR.enabled = false
 dfR.ingredients =
     {
-		{"DimensionalOre", 35}
+		{"MachineFrame", 8}
     }
 dfR.result = "DimensionalFurnace"
 data:extend{dfR}
@@ -143,5 +143,5 @@ dfT.unit = {
 	}
 }
 dfT.prerequisites = {"DimensionalOre"}
-dfT.effects = {{type="unlock-recipe", recipe="DimensionalFurnace"},{type="unlock-recipe", recipe="DimensionalPlate"}}
+dfT.effects = {{type="unlock-recipe", recipe="DimensionalFurnace"},{type="unlock-recipe", recipe="DimensionalPlate"},{type="unlock-recipe", recipe="MachineFrame2"}}
 data:extend{dfT}

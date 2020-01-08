@@ -74,9 +74,8 @@ wdtR.energy_required = 6
 wdtR.enabled = false
 wdtR.ingredients =
     {
-      {"DimensionalPlate", 15},
-      {"DimensionalCrystal", 8},
-      {"radar", 1}
+      {"CrystalizedCircuit", 18},
+      {"MachineFrame3", 6}
     }
 wdtR.result = "WirelessDataTransmitter"
 data:extend{wdtR}

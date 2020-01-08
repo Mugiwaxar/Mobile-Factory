@@ -88,7 +88,7 @@ pdpI.icon = "__Mobile_Factory__/graphics/icones/PowerDrainPole.png"
 pdpI.icon_size = 32
 pdpI.place_result = "PowerDrainPole"
 pdpI.subgroup = "Poles"
-pdpI.order = "p"
+pdpI.order = "c"
 pdpI.stack_size = 5
 pdpI.enable = false
 data:extend{pdpI}
@@ -101,8 +101,8 @@ dpdR.energy_required = 5
 dpdR.enabled = false
 dpdR.ingredients =
     {
-      {"big-electric-pole", 1},
-      {"DimensionalPlate", 20}
+      {"DimensionalCircuit", 10},
+      {"MachineFrame2", 7}
     }
 dpdR.result = "PowerDrainPole"
 data:extend{dpdR}

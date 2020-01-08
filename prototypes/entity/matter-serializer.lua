@@ -72,10 +72,8 @@ msR.energy_required = 2
 msR.enabled = false
 msR.ingredients =
     {
-	  {"iron-chest", 1},
-      {"DimensionalCrystal", 1},
-      {"DimensionalPlate", 5},
-      {"electronic-circuit", 2}
+      {"CrystalizedCircuit", 8},
+      {"MachineFrame3", 2}
     }
 msR.result = "MatterSerializer"
 data:extend{msR}

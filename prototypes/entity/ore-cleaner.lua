@@ -102,9 +102,8 @@ ocR.energy_required = 10
 ocR.enabled = false
 ocR.ingredients =
     {
-      {"electric-mining-drill", 1},
-	  {"DimensionalCrystal", 1},
-      {"DimensionalPlate", 30}
+	  {"CrystalizedCircuit", 12},
+      {"MachineFrame3", 10}
     }
 ocR.result = "OreCleaner"
 data:extend{ocR}

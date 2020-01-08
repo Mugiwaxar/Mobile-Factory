@@ -18,7 +18,7 @@ require("prototypes/entity/matter-printer.lua")
 require("prototypes/entity/data-storage.lua")
 require("prototypes/entity/wireless-data-transmitter.lua")
 require("prototypes/entity/wireless-data-receiver.lua")
-require("prototypes/entity/energy-cube-mk1.lua")
+require("prototypes/entity/energy-cube.lua")
 require("prototypes/entity/ore-silot.lua")
 require("prototypes/entity/ore-cleaner.lua")
 require("prototypes/entity/fluid-extractor.lua")
@@ -28,7 +28,9 @@ require("prototypes/item/dimensional-sample.lua")
 require("prototypes/item/dimensional-plate.lua")
 require("prototypes/item/dimensional-crystal.lua")
 require("prototypes/item/dimensional-electronic.lua")
+require("prototypes/item/machine-frame.lua")
 require("prototypes/item/oxycoal.lua")
+require("prototypes/item/hydrocoal.lua")
 require("prototypes/item/elements.lua")
 require("prototypes/item/quatron.lua")
 require("prototypes/item/shield.lua")
@@ -86,25 +88,7 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
-		name="Equipments",
-		group="MobileFactory",
-		order="a2"
-	}
-}
-
-data:extend{
-	{
-		type="item-subgroup",
 		name="Resources",
-		group="MobileFactory",
-		order="a3"
-	}
-}
-
-data:extend{
-	{
-		type="item-subgroup",
-		name="DimensionalStuff",
 		group="MobileFactory",
 		order="b"
 	}
@@ -113,16 +97,7 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
-		name="DataSerialization",
-		group="MobileFactory",
-		order="b3"
-	}
-}
-
-data:extend{
-	{
-		type="item-subgroup",
-		name="Modules1",
+		name="Intermediate",
 		group="MobileFactory",
 		order="c"
 	}
@@ -131,7 +106,7 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
-		name="Modules2",
+		name="DimensionalStuff",
 		group="MobileFactory",
 		order="d"
 	}
@@ -140,18 +115,54 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
-		name="Poles",
+		name="DataSerialization",
 		group="MobileFactory",
-		order="b3"
+		order="e"
 	}
 }
 
 data:extend{
 	{
 		type="item-subgroup",
-		name="Capsules",
+		name="Equipments",
 		group="MobileFactory",
-		order="b4"
+		order="f"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="Poles",
+		group="MobileFactory",
+		order="g"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="Tiles",
+		group="MobileFactory",
+		order="h"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="Modules1",
+		group="MobileFactory",
+		order="i"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="Modules2",
+		group="MobileFactory",
+		order="j"
 	}
 }
 

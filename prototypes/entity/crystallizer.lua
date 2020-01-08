@@ -126,7 +126,7 @@ cR.energy_required = 5
 cR.enabled = false
 cR.ingredients =
     {
-      {"DimensionalPlate", 45},
+      {"MachineFrame2", 8},
       {"DimensionalCircuit", 35}
     }
 cR.result = "Crystallizer"

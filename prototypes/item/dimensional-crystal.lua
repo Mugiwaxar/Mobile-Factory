@@ -41,5 +41,5 @@ dcT.unit = {
 	}
 }
 dcT.prerequisites = {"Crystallizer"}
-dcT.effects = {{type="unlock-recipe", recipe="DimensionalCrystal"}}
+dcT.effects = {{type="unlock-recipe", recipe="DimensionalCrystal"}, {type="unlock-recipe", recipe="MachineFrame3"}, {type="unlock-recipe", recipe="CrystalizedCircuit"}}
 data:extend{dcT}

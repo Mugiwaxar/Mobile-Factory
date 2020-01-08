@@ -6,8 +6,8 @@ ltI.type = "item"
 ltI.name = "LabTile"
 ltI.icon = "__base__/graphics/terrain/tutorial-grid/tutorial-grid-o.png"
 ltI.icon_size = 32
-ltI.subgroup = "Capsules"
-ltI.order = "b"
+ltI.subgroup = "Tiles"
+ltI.order = "a"
 ltI.stack_size = 1000
 ltI.place_as_tile =
     {

@@ -126,7 +126,7 @@ dsI.place_result = "DimensionalSubstation"
 dsI.icon = "__Mobile_Factory__/graphics/icones/DimensionalSubstation.png"
 dsI.icon_size = 32
 dsI.subgroup = "Poles"
-dsI.order = "d"
+dsI.order = "a"
 dsI.stack_size = 1
 data:extend{dsI}
 
@@ -138,8 +138,8 @@ dsC.energy_required = 5
 dsC.enabled = false
 dsC.ingredients =
     {
-		{"medium-electric-pole", 1},
-		{"DimensionalPlate", 81}
+		{"DimensionalCircuit", 8},
+		{"MachineFrame2", 4}
     }
 dsC.result = "DimensionalSubstation"
 data:extend{dsC}

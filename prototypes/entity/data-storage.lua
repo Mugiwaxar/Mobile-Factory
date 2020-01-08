@@ -70,9 +70,8 @@ dsR.energy_required = 4
 dsR.enabled = false
 dsR.ingredients =
     {
-      {"DimensionalPlate", 15},
-      {"DimensionalCrystal", 4},
-      {"electronic-circuit", 10}
+      {"CrystalizedCircuit", 20},
+      {"MachineFrame3", 5}
     }
 dsR.result = "DataStorage"
 data:extend{dsR}

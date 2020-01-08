@@ -34,9 +34,7 @@ shR.energy_required = 5
 shR.enabled = false
 shR.ingredients =
     {
-		{"DimensionalPlate", 30},
-		{"DimensionalCrystal", 5},
-		{"energy-shield-equipment", 1}
+		{"CrystalizedCircuit", 50}
     }
 shR.result = "mfShieldEquipment"
 data:extend{shR}

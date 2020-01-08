@@ -6,8 +6,8 @@ dwI.type = "item"
 dwI.name = "DimensionalWire"
 dwI.icon = "__Mobile_Factory__/graphics/icones/DimensionalWire.png"
 dwI.icon_size = 32
-dwI.subgroup = "Resources"
-dwI.order = "e"
+dwI.subgroup = "Intermediate"
+dwI.order = "a1"
 dwI.stack_size = 500
 data:extend{dwI}
 
@@ -33,8 +33,8 @@ dcI.type = "item"
 dcI.name = "DimensionalCircuit"
 dcI.icon = "__Mobile_Factory__/graphics/icones/DimensionalCircuit.png"
 dcI.icon_size = 32
-dcI.subgroup = "Resources"
-dcI.order = "f"
+dcI.subgroup = "Intermediate"
+dcI.order = "a2"
 dcI.stack_size = 200
 data:extend{dcI}
 
@@ -71,3 +71,31 @@ deT.unit =
 deT.prerequisites = {"DimensionalOreSmelting"}
 deT.effects = {{type="unlock-recipe", recipe="DimensionalWire"},{type="unlock-recipe", recipe="DimensionalCircuit"}}
 data:extend{deT}
+
+-- CRYSTALIZED CIRCUIT --
+
+-- Item --
+local ccI = {}
+ccI.type = "item"
+ccI.name = "CrystalizedCircuit"
+ccI.icon = "__Mobile_Factory__/graphics/icones/CrystalizedCircuit.png"
+ccI.icon_size = 32
+ccI.subgroup = "Intermediate"
+ccI.order = "a3"
+ccI.stack_size = 200
+data:extend{ccI}
+
+-- Recipe --
+local ccR = {}
+ccR.type = "recipe"
+ccR.name = "CrystalizedCircuit"
+ccR.energy_required = 3
+ccR.enabled = false
+ccR.ingredients =
+{
+	{"DimensionalCircuit", 4},
+	{"DimensionalCrystal", 1}
+}
+ccR.result = "CrystalizedCircuit"
+ccR.result_count = 4
+data:extend{ccR}

@@ -77,9 +77,7 @@ bspR.name = "BasicSolarPanel"
 bspR.energy_required = 10
 bspR.ingredients =
     {
-      {"DimensionalOre", 4},
-      {"copper-plate", 8},
-      {"iron-plate", 15}
+      {"MachineFrame", 8}
     }
 bspR.result = "BasicSolarPanel"
 data:extend{bspR}

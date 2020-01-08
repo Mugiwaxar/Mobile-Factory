@@ -9,7 +9,7 @@ ocI.icon_size = 32
 ocI.fuel_category = "chemical"
 ocI.fuel_value = "15MJ"
 ocI.subgroup = "Resources"
-ocI.order = "d"
+ocI.order = "h"
 ocI.stack_size = 1000
 data:extend{ocI}
 

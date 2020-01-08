@@ -74,9 +74,8 @@ wdrR.energy_required = 5
 wdrR.enabled = false
 wdrR.ingredients =
     {
-      {"DimensionalPlate", 10},
-      {"DimensionalCrystal", 6},
-      {"radar", 1}
+      {"CrystalizedCircuit", 10},
+      {"MachineFrame3", 3}
     }
 wdrR.result = "WirelessDataReceiver"
 data:extend{wdrR}

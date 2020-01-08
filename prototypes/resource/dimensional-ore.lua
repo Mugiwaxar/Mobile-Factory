@@ -94,3 +94,16 @@ dmT.unit = {
 }
 dmT.effects = nil
 data:extend{dmT}
+
+-- Dimensional Ore to Stone Recipe --
+local sR = {}
+sR.type = "recipe"
+sR.name = "mfStone"
+sR.energy_required = 0.3
+sR.ingredients =
+    {
+      {"DimensionalOre", 1}
+    }
+sR.result = "stone"
+sR.result_count = 3
+data:extend{sR}

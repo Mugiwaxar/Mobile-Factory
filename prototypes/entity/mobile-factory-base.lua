@@ -202,8 +202,8 @@ mfR.name = "MobileFactory"
 mfR.energy_required = 10
 mfR.ingredients =
     {
-      {"copper-plate", 10},
-      {"iron-plate", 10}
+      {"DimensionalCircuit", 25},
+      {"MachineFrame2", 6}
     }
 mfR.result = "MobileFactory"
 data:extend{mfR}

@@ -56,7 +56,7 @@ fcR.name = "FactoryChest"
 fcR.energy_required = 5
 fcR.ingredients =
     {
-      {"iron-chest", 4}
+      {"MachineFrame", 5}
     }
 fcR.result = "FactoryChest"
 data:extend{fcR}

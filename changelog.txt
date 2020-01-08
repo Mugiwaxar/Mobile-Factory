@@ -2,14 +2,25 @@
 Version: 0.0.64
 Date: 08/01/2020
   Features:
+    - Added new Item: Hydrocoal
+    - Added new Item: Machine Frame MK1
+    - Added new Item: Machine Frame MK2
+    - Added new Item: Machine Frame MK3
     - Added new Item: Dimensional Wire
     - Added new Item: Dimensional Circuit
+    - Added new Item: Crystalized Circuit
     - New Technology: Dimensional Electronic, unlock the Dimensional Wire and the Dimensional Circuit
+    - Added Dimensional Ore to Stone Recipe
+    - Added Dimensional Fluid to Water Recipe
   Changes:
     - Dimensional Plate now require 2 Dimensional Ore (instead of 4)
     - Massive rewrite of the TechTree
     - Added new Icon for Wireless Data Transmission Technology
-    - Changed recipe of: Dimensional Furnace, Dimensional Analyzer, Dimensional Accumulator, Crystallizer, 
+    - Changed recipe of: Factory Chest, Basic Solar Panel, Dimensional Furnace, Dimensional Analyzer, Dimensional Accumulator, Crystallizer, Dimensional Plan
+    - Changed recipe of: Dimensional Substation, Logistic Fluid Pole, Power Drain Pole, Ore Cleaner, Fluid Extractor, Mobile Factory Shield
+    - Changed recipe of: Data Center, Internal Inventory Data Center, Data Storage, Matter Serializer, Matter Printer, Wireless Data Transmitter, Wireless Data Receiver, Energy Cube MK1
+    - Changed recipe of: Power Module, Efficiency Module, Focus Module, Distribution Module, Drain Module, Module ID 1/2/3/4/5
+    - Changed recipe of: Base Mobile Factory, Mobile Factory GT
   Bugfixes:
     - Fixed the Icon of the Ore Cleaning Technology
 ---------------------------------------------------------------------------------------------------

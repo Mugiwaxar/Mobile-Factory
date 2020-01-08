@@ -110,7 +110,7 @@ daC.energy_required = 5
 daC.enabled = false
 daC.ingredients =
     {
-		{"DimensionalPlate", 75},
+		{"MachineFrame2", 3},
 		{"DimensionalCircuit", 15}
     }
 daC.result = "DimensionalAccumulator"

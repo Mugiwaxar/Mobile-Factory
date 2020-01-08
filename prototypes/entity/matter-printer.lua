@@ -72,10 +72,8 @@ mpR.energy_required = 2
 mpR.enabled = false
 mpR.ingredients =
     {
-	  {"iron-chest", 1},
-      {"DimensionalCrystal", 1},
-      {"DimensionalPlate", 5},
-      {"electronic-circuit", 2}
+      {"CrystalizedCircuit", 8},
+      {"MachineFrame3", 2}
     }
 mpR.result = "MatterPrinter"
 data:extend{mpR}

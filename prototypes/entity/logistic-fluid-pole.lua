@@ -89,7 +89,7 @@ lfpE.icon = "__Mobile_Factory__/graphics/icones/LogisticFluidPole.png"
 lfpE.icon_size = 32
 lfpE.place_result = "LogisticFluidPole"
 lfpE.subgroup = "Poles"
-lfpE.order = "p"
+lfpE.order = "b"
 lfpE.stack_size = 5
 lfpE.enable = false
 data:extend{lfpE}
@@ -102,8 +102,8 @@ lfpR.energy_required = 5
 lfpR.enabled = false
 lfpR.ingredients =
     {
-      {"medium-electric-pole", 1},
-      {"DimensionalPlate", 20},
+      {"DimensionalCircuit", 10},
+      {"MachineFrame2", 7},
     }
 lfpR.result = "LogisticFluidPole"
 data:extend{lfpR}

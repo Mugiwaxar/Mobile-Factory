@@ -15,10 +15,8 @@ data.raw.car.GTMobileFactory.equipment_grid = "MFEquipmentGridGT"
 data.raw.car.GTMobileFactory.inventory_size = 3
 data.raw.recipe.GTMobileFactory.ingredients =
 {
-      {"DimensionalCrystal", 5},
-      {"DimensionalPlate", 10},
-      {"speed-module", 3},
-	  {"car", 1}
+      {"CrystalizedCircuit", 35},
+      {"MachineFrame3", 15},
 }
 data.raw.technology.GTMobileFactory.unit =
 {

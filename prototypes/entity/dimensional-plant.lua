@@ -51,8 +51,8 @@ dpR.energy_required = 5
 dpR.enabled = false
 dpR.ingredients =
     {
-      {"chemical-plant", 1},
-      {"DimensionalPlate", 60},
+      {"DimensionalCircuit", 10},
+      {"MachineFrame2", 6},
     }
 dpR.result = "DimensionalPlant"
 data:extend{dpR}

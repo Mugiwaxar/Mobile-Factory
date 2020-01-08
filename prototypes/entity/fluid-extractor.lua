@@ -83,9 +83,8 @@ feR.energy_required = 10
 feR.enabled = false
 feR.ingredients =
     {
-      {"pumpjack", 1},
-	  {"DimensionalCrystal", 1},
-      {"DimensionalPlate", 30}
+	  {"CrystalizedCircuit", 12},
+      {"MachineFrame3", 10}
     }
 feR.result = "FluidExtractor"
 data:extend{feR}

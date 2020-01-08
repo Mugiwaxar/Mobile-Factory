@@ -109,9 +109,8 @@ dcR.energy_required = 30
 dcR.enabled = false
 dcR.ingredients =
     {
-      {"DimensionalPlate", 20},
-      {"DimensionalCrystal", 10},
-      {"electronic-circuit", 10}
+      {"CrystalizedCircuit", 25},
+      {"MachineFrame3", 8}
     }
 dcR.result = "DataCenter"
 data:extend{dcR}

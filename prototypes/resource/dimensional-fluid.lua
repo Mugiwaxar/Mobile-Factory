@@ -78,3 +78,17 @@ local dmFNL = {}
 dmFNL.name = "DimensionalFluid"
 dmFNL.type = "noise-layer"
 data:extend{dmFNL}
+
+-- Dimensional Fluid to Water --
+local wR = {}
+wR.type = "recipe"
+wR.name = "mfWater"
+wR.energy_required = 0.3
+wR.enabled = true
+wR.category = "crafting-with-fluid"
+wR.ingredients =
+    {
+		{type="fluid", name="DimensionalFluid", amount=1}
+    }
+wR.results = {{type="fluid", name="water", amount=10}}
+data:extend{wR}

@@ -20,8 +20,8 @@ dmR.energy_required = 3
 dmR.enabled = false
 dmR.ingredients =
     {
-      {"DimensionalPlate", 2},
-	  {"copper-cable", 5}
+      {"DimensionalWire", 2},
+	  {"DimensionalCircuit", 3}
     }
 dmR.result = "DistributionModule"
 dmR.result_count = 1
@@ -49,8 +49,8 @@ drmR.energy_required = 3
 drmR.enabled = false
 drmR.ingredients =
     {
-      {"DimensionalPlate", 2},
-	  {"copper-cable", 5}
+      {"DimensionalWire", 2},
+	  {"DimensionalCircuit", 3}
     }
 drmR.result = "DrainModule"
 drmR.result_count = 1
@@ -82,8 +82,8 @@ tm1R.energy_required = 3
 tm1R.enabled = false
 tm1R.ingredients =
     {
-      {"DimensionalPlate", 2},
-	  {"copper-cable", 5}
+      {"DimensionalWire", 2},
+	  {"DimensionalCircuit", 3}
     }
 tm1R.result = "ModuleID1"
 tm1R.result_count = 1
@@ -112,8 +112,8 @@ mID2R.energy_required = 3
 mID2R.enabled = false
 mID2R.ingredients =
     {
-      {"DimensionalPlate", 2},
-	  {"copper-cable", 5}
+      {"DimensionalWire", 2},
+	  {"DimensionalCircuit", 3}
     }
 mID2R.result = "ModuleID2"
 mID2R.result_count = 1
@@ -142,8 +142,8 @@ mID3R.energy_required = 3
 mID3R.enabled = false
 mID3R.ingredients =
     {
-      {"DimensionalPlate", 2},
-	  {"copper-cable", 5}
+      {"DimensionalWire", 2},
+	  {"DimensionalCircuit", 3}
     }
 mID3R.result = "ModuleID3"
 mID3R.result_count = 1
@@ -172,8 +172,8 @@ mID4R.energy_required = 3
 mID4R.enabled = false
 mID4R.ingredients =
     {
-      {"DimensionalPlate", 2},
-	  {"copper-cable", 5}
+      {"DimensionalWire", 2},
+	  {"DimensionalCircuit", 3}
     }
 mID4R.result = "ModuleID4"
 mID4R.result_count = 1
@@ -202,8 +202,8 @@ mID5R.energy_required = 3
 mID5R.enabled = false
 mID5R.ingredients =
     {
-      {"DimensionalPlate", 2},
-	  {"copper-cable", 5}
+      {"DimensionalWire", 2},
+	  {"DimensionalCircuit", 3}
     }
 mID5R.result = "ModuleID5"
 mID5R.result_count = 1

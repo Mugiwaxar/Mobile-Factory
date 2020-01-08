@@ -20,8 +20,8 @@ pMR.energy_required = 3
 pMR.enabled = false
 pMR.ingredients =
     {
-      {"DimensionalPlate", 2},
-	  {"copper-cable", 5}
+      {"DimensionalWire", 3},
+	  {"DimensionalCircuit", 8}
     }
 pMR.result = "EnergyPowerModule"
 pMR.result_count = 1
@@ -50,8 +50,8 @@ eMR.energy_required = 3
 eMR.enabled = false
 eMR.ingredients =
     {
-      {"DimensionalPlate", 2},
-	  {"copper-cable", 5}
+      {"DimensionalWire", 3},
+	  {"DimensionalCircuit", 8}
     }
 eMR.result = "EnergyEfficiencyModule"
 eMR.result_count = 1
@@ -80,8 +80,8 @@ fMR.energy_required = 3
 fMR.enabled = false
 fMR.ingredients =
     {
-      {"DimensionalPlate", 2},
-	  {"copper-cable", 5}
+      {"DimensionalWire", 3},
+	  {"DimensionalCircuit", 8}
     }
 fMR.result = "EnergyFocusModule"
 fMR.result_count = 1
