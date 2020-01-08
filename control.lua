@@ -42,7 +42,7 @@ function onInit()
 	-- Data Network --
 	global.dataNetworkID = 0
 	-- Current Entities Update --
-	global.currentSilotPadChestUpdate = 1
+	-- global.currentSilotPadChestUpdate = 1
 	-- Tables --
 	global.playersTable = {}
 	global.accTable = {}

@@ -89,21 +89,3 @@ sdA.animation_speed = 1/4
 sdA.scale = 1/5
 sdA.flags = {"terrain"}
 data:extend{sdA}
-
--- Technologie --
--- local dpT = {}
--- dpT.name = "InventoryPad"
--- dpT.type = "technology"
--- dpT.icon = "__Mobile_Factory__/graphics/icones/InventoryPad.png"
--- dpT.icon_size = 32
--- dpT.unit = {
-	-- count=5,
-	-- time=60,
-	-- ingredients={
-		-- {"DimensionalSample", 200},
-		-- {"DimensionalCrystal", 1}
-	-- }
--- }
--- dpT.prerequisites = {"DimensionalLogistic", "ConstructibleArea1"}
--- dpT.effects = {{type="unlock-recipe", recipe="InventoryPad"}}
--- data:extend{dpT}

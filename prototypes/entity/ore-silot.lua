@@ -45,7 +45,7 @@ function createOreSilot(id)
 	local osT = {}
 	osT.name = "OreSilot" .. tonumber(id)
 	osT.type = "technology"
-	osT.icon = "__Mobile_Factory__/graphics/icones/OreSilotPad" .. tonumber(id) ..  ".png"
+	osT.icon = "__Mobile_Factory__/graphics/icones/OreSilot" .. tonumber(id) ..  ".png"
 	osT.icon_size = 32
 	osT.unit = {
 		count=300 + 200*id,
