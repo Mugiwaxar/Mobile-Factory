@@ -6,10 +6,10 @@ dsI.type = "tool"
 dsI.name = "DimensionalSample"
 dsI.durability = 1
 dsI.infinite = false
-dsI.icon = "__Mobile_Factory__/graphics/icones/DimensionalSample.png"
-dsI.icon_size = 32
+dsI.icon = "__Mobile_Factory__/graphics/icones/DimensionalSampleI.png"
+dsI.icon_size = 64
 dsI.subgroup = "Resources"
-dsI.order = "c"
+dsI.order = "b"
 dsI.stack_size = 1000
 data:extend{dsI}
 

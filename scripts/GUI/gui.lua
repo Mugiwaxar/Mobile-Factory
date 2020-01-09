@@ -261,7 +261,7 @@ function GUI.onGuiElemChanged(event)
 		-- Find the Receiver --
 		local receiver = nil
 		for k, WDR in pairs(global.wirelessDataReceiverTable) do
-			if WDR.ent.unit_number == ID then
+			if WDR:valid() and WDR.ent.unit_number == ID then
 				receiver = WDR
 			end
 		end
@@ -281,7 +281,7 @@ function GUI.onGuiElemChanged(event)
 		-- Find the Ore Cleaner --
 		local oreCleaner = nil
 		for k, OC in pairs(global.oreCleanerTable) do
-			if OC.ent.unit_number == ID then
+			if OC:valid() and OC.ent.unit_number == ID then
 				oreCleaner = OC
 			end
 		end
@@ -301,7 +301,7 @@ function GUI.onGuiElemChanged(event)
 		-- Find the Fluid Extractor --
 		local fluidExtractor = nil
 		for k, FE in pairs(global.fluidExtractorTable) do
-			if FE.ent.unit_number == ID then
+			if FE:valid() and FE.ent.unit_number == ID then
 				fluidExtractor = FE
 			end
 		end
@@ -321,7 +321,7 @@ function GUI.onGuiElemChanged(event)
 		-- Find the Matter Serializer --
 		local matterS = nil
 		for k, MS in pairs(global.matterSerializerTable) do
-			if MS.ent.unit_number == ID then
+			if MS:valid() and MS.ent.unit_number == ID then
 				matterS = MS
 			end
 		end
