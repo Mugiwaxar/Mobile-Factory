@@ -42,7 +42,7 @@ Date: 08/01/2020
     - Changed recipe of: Power Module, Efficiency Module, Focus Module, Distribution Module, Drain Module, Module ID 1/2/3/4/5
     - Changed recipe of: Base Mobile Factory, Mobile Factory GT
   Graphics:
-     - Added new Icon for Wireless Data Transmission Technology
+    - Added new Icon for Wireless Data Transmission Technology
   Bugfixes:
     - Fixed the Icon of the Ore Cleaning Technology
 ---------------------------------------------------------------------------------------------------
