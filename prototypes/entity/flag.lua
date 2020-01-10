@@ -7,7 +7,7 @@ function createFlag(name, order)
 	local fI = {}
 	fI.type = "item"
 	fI.name = name
-	fI.icon = "__Mobile_Factory__/graphics/Jet/" .. name .. "I.png"
+	fI.icon = "__Mobile_Factory__/graphics/jet/" .. name .. "I.png"
 	fI.icon_size = 64
 	fI.subgroup = "Jet"
 	fI.place_result = name
@@ -32,7 +32,7 @@ function createFlag(name, order)
 	local fE = {}
 	fE.type = "beacon"
 	fE.name = name
-	fE.icon = "__Mobile_Factory__/graphics/Jet/" .. name .. "I.png"
+	fE.icon = "__Mobile_Factory__/graphics/jet/" .. name .. "I.png"
 	fE.icon_size = 64
 	fE.max_health = 250
 	fE.collision_box = {{-1, -1},{1, 1}}
@@ -48,14 +48,14 @@ function createFlag(name, order)
 		layers =
 		{
 			{
-				filename = "__Mobile_Factory__/graphics/Jet/" .. name .. "E.png",
+				filename = "__Mobile_Factory__/graphics/jet/" .. name .. "E.png",
 				width = 450,
 				height = 900,
 				scale = 1/4,
 				shift = {0.35, -2}
 			},
 			{
-				filename = "__Mobile_Factory__/graphics/Jet/" .. name .. "S.png",
+				filename = "__Mobile_Factory__/graphics/jet/" .. name .. "S.png",
 				width = 200,
 				height = 100,
 				scale = 1,

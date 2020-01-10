@@ -7,7 +7,7 @@ function createJet(name, order)
 	local jI = {}
 	jI.type = "item"
 	jI.name = name
-	jI.icon = "__Mobile_Factory__/graphics/Jet/" .. name .. "I.png"
+	jI.icon = "__Mobile_Factory__/graphics/jet/" .. name .. "I.png"
 	jI.icon_size = 64
 	jI.subgroup = "Jet"
     jI.order = order
@@ -33,7 +33,7 @@ function createJet(name, order)
 	local jT = {}
 	jT.name = name
 	jT.type = "technology"
-	jT.icon = "__Mobile_Factory__/graphics/Jet/" .. name .. "T.png"
+	jT.icon = "__Mobile_Factory__/graphics/jet/" .. name .. "T.png"
 	jT.icon_size = 400
 	jT.unit = {
 	count=8,
@@ -50,7 +50,7 @@ function createJet(name, order)
 	local jU = {}
 	jU.name = name
 	jU.type = "unit"
-	jU.icon = "__Mobile_Factory__/graphics/Jet/" .. name .. "I.png"
+	jU.icon = "__Mobile_Factory__/graphics/jet/" .. name .. "I.png"
 	jU.icon_size = 64
 	jU.order = order
 	jU.collision_box = {{-0.65, -0.65},{0.65, 0.65}}
@@ -76,7 +76,7 @@ function createJet(name, order)
 			{
 				frame_count = 1,
 				direction_count = 24,
-				filename = "__Mobile_Factory__/graphics/Jet/" .. name .. "E.png",
+				filename = "__Mobile_Factory__/graphics/jet/" .. name .. "E.png",
 				width = 400,
 				height = 250,
 				shift = {0,0},
@@ -86,7 +86,7 @@ function createJet(name, order)
 			{
 				frame_count = 1,
 				direction_count = 24,
-				filename = "__Mobile_Factory__/graphics/Jet/JetS.png",
+				filename = "__Mobile_Factory__/graphics/jet/JetS.png",
 				width = 400,
 				height = 250,
 				draw_as_shadow = true,
