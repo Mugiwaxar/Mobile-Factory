@@ -24,6 +24,7 @@ function OC:new(object)
 	mt.__index = OC
 	t.ent = object
 	t.oreTable = {}
+	t.inventory = {}
 	t:scanOres(object)
 	return t
 end

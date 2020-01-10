@@ -77,6 +77,13 @@ function placedFluidExtractor(event)
 	global.fluidExtractorTable[event.created_entity.unit_number] = FE:new(event.created_entity)
 end
 
+-- Save the Jet Flag --
+function placedJetFlag(event)
+	if global.jetFlagTable == nil then global.jetFlagTable = {} end
+	global.jetFlagTable[event.created_entity.unit_number] = MJF:new(event.created_entity)
+end
+
+
 
 -- Remove the Dimensional Accumulator from the table --
 function removedDimensionalAccumulator(event)
@@ -168,7 +175,12 @@ function removedFluidExtractor(event)
 	global.fluidExtractorTable[event.entity.unit_number] = nil
 end
 
-
+-- Remove the Jet Flag from the table --
+function removedJetFlag(event)
+	if global.jetFlagTable == nil then global.jetFlagTable = {} return end
+	if global.jetFlagTable[event.entity.unit_number] ~= nil then global.jetFlagTable[event.entity.unit_number]:remove() end
+	global.jetFlagTable[event.entity.unit_number] = nil
+end
 
 
 

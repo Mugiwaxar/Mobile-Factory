@@ -67,6 +67,13 @@ _mfOreCleanerOrePerExtraction = 10
 _mfOreCleanerExtractionTicks = 20
 _mfOreCleanerInventorySize = 12000
 
+-- Mining Jet --
+_mfMiningJetOrePerUpdate = 5
+_mfMiningJetInventorySize = 100
+
+-- Mining Jet Flag --
+_mfMiningJetFlagRadius = 102
+
 -- Fluid Extractor settings --
 _mfFEFluidPerExtraction = 30
 _mfFEMaxCharge = 1000
@@ -93,3 +100,8 @@ _eventTick125=125
 _eventTick130=130
 _eventTick300=300
 _eventTick1200=1200
+
+_mfBlue = {108, 114, 229}
+_mfGreen = {92, 232, 54}
+_mfPurple = {155, 0, 168}
+_mfRed = {231, 5, 5}

@@ -255,6 +255,9 @@ end
 -- Create a frame from an Item --
 function INV:itemToFrame(item, amount, guiElement)
 
+	-- Check value --
+	if item == nil or amount == nil then return end
+
 	-- Create the Frame --
 	local frame = guiElement.add{type="frame", direction="horizontal"}
 	frame.style.minimal_width = 100

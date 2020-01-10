@@ -260,9 +260,9 @@ function GUI.onGuiElemChanged(event)
 		if ID == nil then return end
 		-- Find the Receiver --
 		local receiver = nil
-		for k, WDR in pairs(global.wirelessDataReceiverTable) do
-			if WDR:valid() and WDR.ent.unit_number == ID then
-				receiver = WDR
+		for k, wdr in pairs(global.wirelessDataReceiverTable) do
+			if wdr:valid() and wdr.ent.unit_number == ID then
+				receiver = wdr
 			end
 		end
 		-- Check if a Receiver was found --
@@ -280,9 +280,9 @@ function GUI.onGuiElemChanged(event)
 		if ID == nil then return end
 		-- Find the Ore Cleaner --
 		local oreCleaner = nil
-		for k, OC in pairs(global.oreCleanerTable) do
-			if OC:valid() and OC.ent.unit_number == ID then
-				oreCleaner = OC
+		for k, oc in pairs(global.oreCleanerTable) do
+			if oc:valid() and oc.ent.unit_number == ID then
+				oreCleaner = oc
 			end
 		end
 		-- Check if a Ore Cleaner was found --
@@ -300,9 +300,9 @@ function GUI.onGuiElemChanged(event)
 		if ID == nil then return end
 		-- Find the Fluid Extractor --
 		local fluidExtractor = nil
-		for k, FE in pairs(global.fluidExtractorTable) do
-			if FE:valid() and FE.ent.unit_number == ID then
-				fluidExtractor = FE
+		for k, fe in pairs(global.fluidExtractorTable) do
+			if fe:valid() and fe.ent.unit_number == ID then
+				fluidExtractor = fe
 			end
 		end
 		-- Check if a Fluid Extractor was found --
@@ -320,9 +320,9 @@ function GUI.onGuiElemChanged(event)
 		if ID == nil then return end
 		-- Find the Matter Serializer --
 		local matterS = nil
-		for k, MS in pairs(global.matterSerializerTable) do
-			if MS:valid() and MS.ent.unit_number == ID then
-				matterS = MS
+		for k, ms in pairs(global.matterSerializerTable) do
+			if ms:valid() and ms.ent.unit_number == ID then
+				matterS = ms
 			end
 		end
 		-- Check if a Matter Serializer was found --
@@ -334,6 +334,26 @@ function GUI.onGuiElemChanged(event)
 	if string.match(event.element.name, "MFPL") then
 		-- Change the Matter Serializer targeted Inventory --
 		global.MF:changePowerLaserMode(event.element.selected_index)
+	end
+	
+	------- Read if the Element comes from a Mining Jet Flag -------
+	if string.match(event.element.name, "MJF") then
+		-- Find the Mining Jet Flag ID --
+		local ID = split(event.element.name, "MJF")
+		ID = tonumber(ID[1])
+		-- Check the ID --
+		if ID == nil then return end
+		-- Find the Mining Jet Flag --
+		local mjFlag = nil
+		for k, mjf in pairs(global.jetFlagTable) do
+			if mjf:valid() and mjf.ent.unit_number == ID then
+				mjFlag = mjf
+			end
+		end
+		-- Check if a Mining Jet Flag was found --
+		if mjFlag == nil then return end
+		-- Change the Mining Jet Flag targeted Inventory --
+		mjFlag:changeInventory(tonumber(event.element.items[event.element.selected_index]))
 	end
 end
 

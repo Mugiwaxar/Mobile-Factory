@@ -111,7 +111,7 @@ end
 -- Synchronize Factory Chest --
 function MF:syncFChest()
 	if self.fChest ~= nil and self.fChest.valid == true then
-		synchronizeInventory(self.ent.get_inventory(defines.inventory.car_trunk), self.fChest.get_inventory(defines.inventory.chest))
+		synchronizeInventory(self.ent.get_inventory(defines.inventory.car_trunk), self.fChest.get_inventory(defines.inventory.chest), nil, true)
 	end
 end
 

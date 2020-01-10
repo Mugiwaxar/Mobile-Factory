@@ -1,13 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.10
+Date: 10/01/2020
+  Features:
+    - Added the Mining Jet: A jet that will mine Ore and return it back to the Mobile Factory
+    - Added the Mining Jet Flag: Used to define the Mining Area of Mining Jets
+    - New Technology: Mining Jet, Unlock the Mining Jet and the Mining Jet Flag
+  Bugfixes:
+    - Fixed an Ore Cleaner Crash
+---------------------------------------------------------------------------------------------------
 Version: 0.0.66
 Date: 09/01/2020
   Features:
     - Added new Item: Energy Core
     - New Technology: Crystal Overcharging, Unlock the Energy Core
   Graphics:
-    - Added new icone for the Dimensional Ore
-    - Added new icone for the Dimensional Sample
-    - Added new icone for the Dimensional Crystal
+    - Added new icon for the Dimensional Ore
+    - Added new icon for the Dimensional Sample
+    - Added new icon for the Dimensional Crystal
   Bugfixes:
     - Fixed a crash related to the GUI
 ---------------------------------------------------------------------------------------------------

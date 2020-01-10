@@ -89,16 +89,15 @@ function MS:update()
 end
 
 function MS:updateInv()
-	-- Get the Linked Inventory --
-	local dataInv = self.dataNetwork.dataCenter.invObj
-	
-	-- Get the Local Inventory --
+		-- Get the Local Inventory --
 	local inv = self.ent.get_inventory(defines.inventory.chest)
 	
 	-- Itinerate the Inventory --
 	for item, count in pairs(inv.get_contents()) do
 		-- Check the targeted Inventory --
 		if self.selectedInv == nil then
+			-- Get the Linked Inventory --
+			local dataInv = self.dataNetwork.dataCenter.invObj
 			-- Add Items to the Data Inventory --
 			local amountAdded = dataInv:addItem(item, count)
 			-- Remove Items from the local Inventory --

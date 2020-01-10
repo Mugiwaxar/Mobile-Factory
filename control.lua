@@ -23,6 +23,8 @@ require("scripts/objects/matter-printer.lua")
 require("scripts/objects/wireless-data-transmitter.lua")
 require("scripts/objects/wireless-data-receiver.lua")
 require("scripts/objects/energy-cube.lua")
+require("scripts/objects/mining-jet.lua")
+require("scripts/objects/mining-jet-flag.lua")
 
 -- When the mod init --
 function onInit()
@@ -60,6 +62,8 @@ function onInit()
 	global.lfpTable = {}
 	global.oreCleanerTable = {}
 	global.fluidExtractorTable = {}
+	global.miningJetTable = {}
+	global.jetFlagTable = {}
 end
 
 -- When a save is loaded --
@@ -111,6 +115,14 @@ function onLoad()
 	-- Set Fluid Extractor Metatables --
 	for k, fe in pairs(global.fluidExtractorTable or {}) do
 		FE:rebuild(fe)
+	end
+	-- Set The Jet Metatables --
+	for k, mjf in pairs(global.jetFlagTable or {}) do
+		MJF:rebuild(mjf)
+	end
+	-- Set The Mining Jet Metatables --
+	for k, mj in pairs(global.miningJetTable or {}) do
+		MJ:rebuild(mj)
 	end
 end
 

@@ -64,6 +64,8 @@ function updateValues()
 	if global.energyCubesTable == nil then global.energyCubesTable = {} end
 	if global.oreCleanerTable == nil then global.oreCleanerTable = {} end
 	if global.fluidExtractorTable == nil then global.fluidExtractorTable = {} end
+	if global.miningJetTable == nil then global.miningJetTable = {} end
+	if global.jetFlagTable == nil then global.jetFlagTable = {} end
 end
 
 -- When a technology is finished --
@@ -233,10 +235,6 @@ function onEntityDamaged(event)
 		if event.entity.health < 1000 then
 			game.print("Mobile Factory heal low")
 		end
-	end
-	-- Test if this is the Factory Chest --
-	if event.entity.name == "FactoryChest" then
-		event.entity.health = event.entity.prototype.max_health
 	end
 	-- Test if this is in Control Center --
 	if event.entity.surface.name == _mfControlSurfaceName then

@@ -108,7 +108,7 @@ lfpR.ingredients =
 lfpR.result = "LogisticFluidPole"
 data:extend{lfpR}
 
--- Technologie --
+-- Technology --
 local lfpT = {}
 lfpT.name = "LogisticFluidPole"
 lfpT.type = "technology"

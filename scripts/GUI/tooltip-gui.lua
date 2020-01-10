@@ -113,9 +113,11 @@ function GUI.updateTooltip(player, objID)
 				player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.clear()
 				-- Update the GUI --
 				obj:getTooltipInfos(player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane)
+				return
 			end
 		end
 	end
+	player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.clear()
 end
 
 

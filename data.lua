@@ -22,6 +22,8 @@ require("prototypes/entity/energy-cube.lua")
 require("prototypes/entity/ore-silot.lua")
 require("prototypes/entity/ore-cleaner.lua")
 require("prototypes/entity/fluid-extractor.lua")
+require("prototypes/entity/jet.lua")
+require("prototypes/entity/flag.lua")
 require("prototypes/resource/dimensional-ore.lua")
 require("prototypes/resource/dimensional-fluid.lua")
 require("prototypes/item/dimensional-sample.lua")
@@ -119,6 +121,15 @@ data:extend{
 		name="DataSerialization",
 		group="MobileFactory",
 		order="e"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="Jet",
+		group="MobileFactory",
+		order="e2"
 	}
 }
 

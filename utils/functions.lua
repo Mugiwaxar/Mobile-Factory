@@ -1,18 +1,22 @@
 -- Put all items in inventory1 to inventory2 --
-function synchronizeInventory(inventory1, inventory2, filter)
+function synchronizeInventory(inventory1, inventory2, filter, ignoreDrone)
 	-- Get the content of the Inventory 1 --
 	local allItems = inventory1.get_contents()
 	-- Itinerate all items --
 	for item, amount in pairs(allItems) do
-		-- Test if there are a filter --
-		if filter == nil or (filter ~= nil and filter == item) then 
-			-- Insert items --
-			local count = inventory2.insert({name=item, count=amount})
-			-- Remove items from the Inventory 1 --
-			if count > 0 then
-				inventory1.remove({name=item, count=count})
-			else
-				break
+		-- Check if this is a drone --
+		if ignoreDrone == true and item == "MiningJet" then
+		else
+			-- Test if there are a filter --
+			if filter == nil or (filter ~= nil and filter == item) then 
+				-- Insert items --
+				local count = inventory2.insert({name=item, count=amount})
+				-- Remove items from the Inventory 1 --
+				if count > 0 then
+					inventory1.remove({name=item, count=count})
+				else
+					break
+				end
 			end
 		end
 	end

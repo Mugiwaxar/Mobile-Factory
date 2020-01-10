@@ -176,6 +176,11 @@ function somethingWasPlaced(event, isRobot)
 		placedFluidExtractor(event)
 		return
 	end
+	-- Save the Jet Flag --
+	if string.match(event.created_entity.name, "Flag") then
+		placedJetFlag(event)
+		return
+	end
 end
 
 -- When something is removed or destroyed --
@@ -250,6 +255,11 @@ function somethingWasRemoved(event)
 	-- Remove the Fluid Extractor --
 	if event.entity.name == "FluidExtractor" then
 		removedFluidExtractor(event)
+		return
+	end
+	-- Remove the Jet Flag --
+	if string.match(event.entity.name, "Flag") then
+		removedJetFlag(event)
 		return
 	end
 end
