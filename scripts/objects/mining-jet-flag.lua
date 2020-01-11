@@ -88,8 +88,13 @@ function MJF:scanOres()
 	if self.ent.surface == nil then return end
 	-- Add all surrounding Ores and add them to the oreTable --
 	local area = {{self.ent.position.x - _mfMiningJetFlagRadius, self.ent.position.y - _mfMiningJetFlagRadius},{self.ent.position.x + _mfMiningJetFlagRadius, self.ent.position.y + _mfMiningJetFlagRadius}}
-	dprint(area)
 	self.oreTable = self.ent.surface.find_entities_filtered{area=area, type="resource"}
+	-- Remove Fluid Path from the Table --
+	for k, path in pairs(self.oreTable) do
+		if path.prototype.mineable_properties.products[1].type ~= "item" then
+			self.oreTable[k] = nil
+		end
+	end
 	-- Shuffle the Ore Table --
 	UpSys.shuffle(self.oreTable)
 end

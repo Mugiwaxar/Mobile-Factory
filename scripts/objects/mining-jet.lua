@@ -208,30 +208,34 @@ end
 
 -- Enter the Mobile Factory --
 function MJ:enterMF()
-	-- Check the targeted Inventory --
-	if self.targetedInv == 0 then
-		-- Get the Linked Inventory --
-		local dataInv = global.MF.II
-		-- Add Items to the Data Inventory --
-		local amountAdded = dataInv:addItem(self.inventoryItem, self.inventoryCount)
-		-- Remove Items from the local Inventory --
-		if amountAdded > 0 then
-			self.inventoryCount = self.inventoryCount - amountAdded
-		end
-	else
-		-- Find the Ore Silo --
-		local silo = global.oreSilotTable[self.targetedInv]
-		-- Check the Ore Silo --
-		if silo == nil or silo.valid == false then return end
-		-- Get the Silo Inventory --
-		local siloInv = silo.get_inventory(defines.inventory.chest)
-		-- Check if the Inventory is valid --
-		if siloInv == nil then return end
-		-- Insert Items --
-		local amountAdded = siloInv.insert({name=self.inventoryItem, count=self.inventoryCount})
-		-- Remove Items from the local Inventory --
-		if amountAdded > 0 then
-			self.inventoryCount = self.inventoryCount - amountAdded
+
+	-- Check if the Jet have Items to store --
+	if self.inventoryItem ~= nil and self.inventoryCount > 0 then
+		-- Check the targeted Inventory --
+		if self.targetedInv == 0 then
+			-- Get the Linked Inventory --
+			local dataInv = global.MF.II
+			-- Add Items to the Data Inventory --
+			local amountAdded = dataInv:addItem(self.inventoryItem, self.inventoryCount)
+			-- Remove Items from the local Inventory --
+			if amountAdded > 0 then
+				self.inventoryCount = self.inventoryCount - amountAdded
+			end
+		else
+			-- Find the Ore Silo --
+			local silo = global.oreSilotTable[self.targetedInv]
+			-- Check the Ore Silo --
+			if silo == nil or silo.valid == false then return end
+			-- Get the Silo Inventory --
+			local siloInv = silo.get_inventory(defines.inventory.chest)
+			-- Check if the Inventory is valid --
+			if siloInv == nil then return end
+			-- Insert Items --
+			local amountAdded = siloInv.insert({name=self.inventoryItem, count=self.inventoryCount})
+			-- Remove Items from the local Inventory --
+			if amountAdded > 0 then
+				self.inventoryCount = self.inventoryCount - amountAdded
+			end
 		end
 	end
 	

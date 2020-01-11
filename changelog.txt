@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.68
+Date: 11/01/2020
+  Bugfixes:
+    - Fixed a crash wich appened when a Mining Jet try to mine a Fluid Path
+    - Fixed a crash that appened when a Jet with an empty Inventory return back to the Mobile Factory
+---------------------------------------------------------------------------------------------------
 Version: 0.0.67
 Date: 10/01/2020
   Features:
