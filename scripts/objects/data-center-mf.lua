@@ -79,6 +79,10 @@ function DCMF:update()
 		self.RCNID = 0
 	end
 	
+	-- Add both Circuit Network to the Data Network --
+	self.dataNetwork.GCNTable[self.GCNID] = self
+	self.dataNetwork.RCNTable[self.RCNID] = self
+	
 	-- Check if the Data Network is live --
 	if self.dataNetwork:isLive() == true then
 		self:setActive(true)
@@ -88,10 +92,6 @@ function DCMF:update()
 	
 	-- Save the Data Storage count --
 	self.invObj.dataStoragesCount = self.dataNetwork:dataStoragesCount()
-	
-	-- Add both Circuit Network to the Data Network --
-	self.dataNetwork.GCNTable[self.GCNID] = self
-	self.dataNetwork.RCNTable[self.RCNID] = self
 	
 	-- Create the Inventory Signal --
 	self.ent.get_control_behavior().parameters = nil

@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.70
+Date: 13/01/2020
+  Features:
+    - Added the Construction Jet: It will construct Blueprint or remove marked Structures (Interact with the Internal Inventory)
+    - New Technology: Construction Jet, Unlock the Construction Jet
+---------------------------------------------------------------------------------------------------
 Version: 0.0.69
 Date: 12/01/2020
   Features:

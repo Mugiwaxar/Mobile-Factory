@@ -45,6 +45,7 @@ function UpSys.scanObjs()
   UpSys.addTable(global.wirelessDataReceiverTable)
   UpSys.addTable(global.miningJetTable)
   UpSys.addTable(global.jetFlagTable)
+  UpSys.addTable(global.constructionJetTable)
 	
   -- Save the last scan tick --
   global.upSysLastScan = game.tick

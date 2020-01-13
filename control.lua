@@ -26,6 +26,7 @@ require("scripts/objects/wireless-data-receiver.lua")
 require("scripts/objects/energy-cube.lua")
 require("scripts/objects/mining-jet.lua")
 require("scripts/objects/mining-jet-flag.lua")
+require("scripts/objects/construction-jet.lua")
 
 -- When the mod init --
 function onInit()
@@ -44,6 +45,8 @@ function onInit()
 	global.IDModule = 0
 	-- Data Network --
 	global.dataNetworkID = 0
+	-- Construction Jet Update --
+	global.constructionJetIndex = 1
 	-- Tables --
 	global.playersTable = {}
 	global.accTable = {}
@@ -63,6 +66,8 @@ function onInit()
 	global.fluidExtractorTable = {}
 	global.miningJetTable = {}
 	global.jetFlagTable = {}
+	global.constructionJetTable = {}
+	global.constructionTable = {}
 end
 
 -- When a save is loaded --
@@ -119,9 +124,13 @@ function onLoad()
 	for k, mj in pairs(global.miningJetTable or {}) do
 		MJ:rebuild(mj)
 	end
-	-- Set The Jet Metatables --
+	-- Set The Jet Flag Metatables --
 	for k, mjf in pairs(global.jetFlagTable or {}) do
 		MJF:rebuild(mjf)
+	end
+	-- Set The Construction Jet Metatables --
+	for k, cj in pairs(global.constructionJetTable or {}) do
+		CJ:rebuild(cj)
 	end
 end
 
@@ -152,12 +161,15 @@ script.on_event(defines.events.on_tick, onTick)
 script.on_event(defines.events.on_entity_damaged, onEntityDamaged)
 script.on_event(defines.events.on_built_entity, onPlayerBuildSomething)
 script.on_event(defines.events.on_player_built_tile, onPlayerBuildSomething)
+script.on_event(defines.events.script_raised_built, onPlayerBuildSomething)
+script.on_event(defines.events.script_raised_revive, onPlayerBuildSomething)
 script.on_event(defines.events.on_robot_built_entity, onRobotBuildSomething)
 script.on_event(defines.events.on_robot_built_tile, onRobotBuildSomething)
 script.on_event(defines.events.on_player_mined_entity, onPlayerRemoveSomethings)
 script.on_event(defines.events.on_player_mined_tile, onPlayerRemoveSomethings)
 script.on_event(defines.events.on_robot_mined_entity, onRobotRemoveSomething)
 script.on_event(defines.events.on_robot_mined_tile, onRobotRemoveSomething)
+script.on_event(defines.events.script_raised_destroy, onPlayerRemoveSomethings)
 script.on_event(defines.events.on_entity_died, onEntityIsDestroyed)
 script.on_event(defines.events.on_gui_click, GUI.buttonClicked)
 script.on_event(defines.events.on_gui_elem_changed, GUI.onGuiElemChanged)
@@ -166,6 +178,7 @@ script.on_event(defines.events.on_gui_selection_state_changed, GUI.onGuiElemChan
 script.on_event(defines.events.on_gui_text_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_research_finished, technologyFinished)
 script.on_event(defines.events.on_selected_entity_changed, selectedEntityChanged)
+script.on_event(defines.events.on_marked_for_deconstruction, markedForDeconstruction)
 
 -- Add command to insert Mobile Factory to the player inventory --
 commands.add_command("GetMobileFactory", "Add the Mobile Factory to the player inventory", addMobileFactory)

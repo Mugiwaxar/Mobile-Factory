@@ -141,7 +141,6 @@ function MJF:requestJet()
 	-- Check if there are Ores left --
 	if table_size(self.oreTable) <= 0 then return end
 	
-	
 	-- Check if there are enought space inside the Targeted Inventory --
 	if self.TargetInventoryFull == true then return end
 	

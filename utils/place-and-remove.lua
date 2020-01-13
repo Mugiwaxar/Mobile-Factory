@@ -1,25 +1,30 @@
 -- Called when something is placed --
 function somethingWasPlaced(event, isRobot)
+	-- Get the Entity if needed
+	if event.created_entity == nil and event.entity ~= nil then
+		event.created_entity = event.entity
+	end
 	-- This is a Player or not --
 	local isPlayer = false
 	-- Creator variable --
 	local creator = nil
 	-- Test if this is a Player or a Bot --
-	if isRobot ~= true then 
+	if isRobot == true then
+		creator = event.robot
+	elseif event.player_index ~= nil then
 		isPlayer = true
 		creator = getPlayer(event.player_index)
 	else
-		creator = event.robot
 	end
 	-- Prevent to place Lab/Void Tiles inside the Control Center --
-	if event.tiles ~= nil and (event.tile.name == "tutorial-grid" or event.tile.name == "out-of-map") and creator.surface.name == _mfControlSurfaceName  then
+	if creator ~= nil and event.tiles ~= nil and (event.tile.name == "tutorial-grid" or event.tile.name == "out-of-map") and creator.surface.name == _mfControlSurfaceName  then
 		if isPlayer == true then creator.print({"", "Unable to place ", {"item-name." .. event.stack.name }, " outside the Factory"}) end
 		for k, tile in pairs(event.tiles) do
 			createTilesAtPosition(tile.position, 1, creator.surface, tile.old_tile.name)
 		end
 	end
 	-- Check if all are valid --
-	if event.created_entity == nil or event.created_entity.valid == false or creator == nil or creator.valid == false then return end
+	if event.created_entity == nil or event.created_entity.valid == false then return end
 	-- If the Mobile Factory is placed --
 	if string.match(event.created_entity.name, "MobileFactory") then
 		-- If the Mobile Factory already exist --
@@ -37,7 +42,7 @@ function somethingWasPlaced(event, isRobot)
 	end
 	-- Prevent to place listed entities outside the Mobile Factory --
 	-- Item --
-	if creator.surface.name ~= _mfSurfaceName then
+	if event.created_entity.surface.name ~= _mfSurfaceName then
 		if canBePlacedOutside(event.created_entity.name) == false then
 			if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"}) end
 			event.created_entity.destroy()
@@ -48,9 +53,11 @@ function somethingWasPlaced(event, isRobot)
 		end
 	end
 	-- Ghost --
-	if isPlayer == true and creator.surface.name ~= _mfSurfaceName and event.stack ~= nil and event.stack.valid_for_read == true and event.created_entity.name == "entity-ghost" then
+	if isPlayer == true and event.created_entity.surface.name ~= _mfSurfaceName and event.stack ~= nil and event.stack.valid_for_read == true and event.created_entity.name == "entity-ghost" then
+		-- Add the Gost to the Construction List --
+		table.insert(global.constructionTable,{ent=event.created_entity, item=event.created_entity.ghost_prototype.items_to_place_this[1].name, name=event.created_entity.ghost_name, position=event.created_entity.position, direction=event.created_entity.direction or 1, mission="Construct"})
 		if canBePlacedOutside(event.stack.name) == false then
-			creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"})
+			if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"}) end
 			event.created_entity.destroy()
 			return
 		end
@@ -58,30 +65,21 @@ function somethingWasPlaced(event, isRobot)
 	-- Blueprint --
 	if isPlayer == true and creator.surface.name ~= _mfSurfaceName and event.stack ~= nil and event.stack.valid_for_read == true and event.stack.is_blueprint then
 		if canBePlacedOutside(event.created_entity.ghost_name) == false then
-			creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"})
+			if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"}) end
 			event.created_entity.destroy()
 			return
 		end
 	end
 	-- Allow to place things in the Control Center --
-	if event.created_entity.name == "DataStorage" and creator.surface.name == _mfControlSurfaceName then
-		local tile = creator.surface.find_tiles_filtered{position=event.created_entity.position, radius=1, limit=1}
+	if event.created_entity.name == "DataStorage" and event.created_entity.surface.name == _mfControlSurfaceName then
+		local tile = event.created_entity.surface.find_tiles_filtered{position=event.created_entity.position, radius=1, limit=1}
 		if tile[1] ~= nil and tile[1].valid == true and tile[1].name == "BuildTile" then
 			placedDataStorage(event)
 			return
 		end
 	end
-	-- Prevent to place DataStorage --
-	-- if event.created_entity.name == "DataStorage" then
-		-- if isPlayer == true then creator.print("You can only place the " .. event.created_entity.name .. " inside the Control Center Constructible area") end
-		-- event.created_entity.destroy()
-		-- if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
-			-- creator.get_main_inventory().insert(event.stack)
-		-- end
-		-- return
-	-- end
 	-- Prevent to place things in the Control Center --
-	if creator.surface.name == _mfControlSurfaceName then
+	if event.created_entity.surface.name == _mfControlSurfaceName then
 		if isPlayer == true then creator.print("You can't build inside the Control Center") end
 		event.created_entity.destroy()
 		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
@@ -269,4 +267,10 @@ function canBePlacedOutside(name)
 	if name == "FactoryChest" then return false end
 	if name == "DimensionalAccumulator" then return false end
 	return true
+end
+
+-- Called when a Structure is marked for deconstruction --
+function markedForDeconstruction(event)
+	if event.entity == nil or event.entity.valid == false then return end
+	table.insert(global.constructionTable,{ent=event.entity, name=event.entity.name, position=event.entity.position, direction=event.entity.direction or 1, mission="Deconstruct"})
 end

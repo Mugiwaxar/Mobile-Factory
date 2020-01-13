@@ -113,6 +113,7 @@ end
 	
 	
 createJet("MiningJet", "a")
+createJet("ConstructionJet", "b")
 	
 	
 	

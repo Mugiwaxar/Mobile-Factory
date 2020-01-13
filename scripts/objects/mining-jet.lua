@@ -40,6 +40,8 @@ end
 
 -- Destructor --
 function MJ:remove()
+	-- Remove from the Update System --
+	UpSys.removeObj(self)
 end
 
 -- Is valid --
@@ -58,7 +60,7 @@ function MJ:update()
 		return
 	end
 	
-	-- Give command to the Jet --
+	-- Give a command to the Jet --
 	if self.currentOrder == "Created" then
 		self:goToPath()
 		return
@@ -96,15 +98,15 @@ function MJ:getTooltipInfos(GUI)
 	work.style.font = "LabelFont"
 	work.style.font_color = _mfBlue
 	
+	-- Create the Mobile Factory Full Label --
 	if self.MFFull == true then
-		-- Create the Mobile Factory Full Label --
 		local mfFull = GUI.add{type="label", caption={"", {"gui-description.MFTrunkFull"}}}
 		mfFull.style.font = "LabelFont"
 		mfFull.style.font_color = _mfRed
 	end
 	
+	-- Create the Mobile Factory No Found Label --
 	if self.MFNotFound == true then
-		-- Create the Mobile Factory No Found Label --
 		local mfNoFound = GUI.add{type="label", caption={"", {"gui-description.MFNotFound"}}}
 		mfNoFound.style.font = "LabelFont"
 		mfNoFound.style.font_color = _mfRed
