@@ -24,9 +24,10 @@ function UpSys.scanObjs()
   -- Clear the Tick Table --
   for k, j in pairs(global.upsysTickTable) do
     if k < game.tick then
-      table.remove(global.upsysTickTable, k)
+      global.upsysTickTable[k] = nil
     end
   end
+  dprint(table_size(global.upsysTickTable))
 		
   -- Add Object --
   UpSys.addObject(global.MF)

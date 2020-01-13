@@ -300,6 +300,8 @@ end
 
 -- Update the Contructions Jet --
 function updateConstructionJet()
+	-- Check if the Technology is unlocked --
+	if technologyUnlocked("ConstructionJet") == false then return end
 	-- Check if there are something to do --
 	if table_size(global.constructionTable) <= 0 then return end
 	-- Check the Mobile Factory --

@@ -7,7 +7,6 @@ INV = {
 	maxCapacity = _mfBaseMaxItems,
 	dataStoragesCount = 0,
 	inventory = nil, -- [name]{count}
-	CCInventory = nil,
 	isII = false
 }
 
