@@ -262,3 +262,36 @@ function createTilesAtPosition(position, radius, surface, tileName)
 	-- Set tiles --
 	if table_size(tilesTable) > 0 then surface.set_tiles(tilesTable) end
 end
+
+-- Util: Create a frame from an Item --
+function Util.itemToFrame(item, amount, guiElement)
+
+	-- Check value --
+	if item == nil or amount == nil then return end
+
+	-- Create the Frame --
+	local frame = guiElement.add{type="frame", direction="horizontal"}
+	frame.style.minimal_width = 100
+	frame.style.margin = 0
+	frame.style.padding = 0
+	
+	-- Add the Icon and the Tooltip to the frame --
+	local sprite = frame.add{type="sprite", tooltip=game.item_prototypes[item].localised_name, sprite="item/" .. item}
+	sprite.style.padding = 0
+	sprite.style.margin = 0
+	
+	-- Add the amount label --
+	local label = frame.add{type="label", caption=tonumber(amount)}
+	label.style.padding = 0
+	label.style.margin = 0
+	
+end
+
+-- Util: Randomize Table --
+function Util.shuffle(array)
+	for i = table_size(array), 2, -1 do
+		local j = math.random(i)
+		array[i], array[j] = array[j], array[i]
+	end
+	return array
+end

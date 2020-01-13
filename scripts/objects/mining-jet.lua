@@ -5,20 +5,18 @@ MJ = {
 	ent = nil,
 	updateTick = 60,
 	lastUpdate = 0,
-	lastCommand = 0,
 	targetOre = nil,
-	lastOrder = "Created", -- Created - GoPath - Mine - GoMF - EnterMF --
+	currentOrder = "Created", -- Created - GoPath - Mine - GoFlag - EmptInv - GoMF - EnterMF --
 	inventoryItem = nil,
 	inventoryCount = 0,
 	isMining = false,
-	targetedInv = 0,
-	TargetInventoryFull = false,
+	flag = 0,
 	MFFull = false,
 	MFNotFound = false
 }
 
 -- Constructor --
-function MJ:new(object, targetOre, targetedInv)
+function MJ:new(object, targetOre, flag)
 	if object == nil then return end
 	local t = {}
 	local mt = {}
@@ -26,7 +24,8 @@ function MJ:new(object, targetOre, targetedInv)
 	mt.__index = MJ
 	t.ent = object
 	t.targetOre = targetOre
-	t.targetedInv = targetedInv
+	t.flag = flag
+	UpSys.addObj(t)
 	t:update()
 	return t
 end
@@ -53,80 +52,49 @@ end
 function MJ:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
-	-- Check if the Entity is valid --
-	if self.ent == nil or self.ent.valid == false then return end
+	-- Check the Validity --
+	if self:valid() == false then
+		self:remove()
+		return
+	end
 	
-	-- Check if the Entity has finished its Command --
-	if self.ent.command ~= nil and (self.ent.command.type ~= 6 and self.ent.command.type ~= 9) then return end
-	
-	-- Go to the Targeted Ore Path --
-	if self.lastOrder == "Created" then
+	-- Give command to the Jet --
+	if self.currentOrder == "Created" then
 		self:goToPath()
-		self.lastOrder = "GoPath"
-		self.lastCommand = game.tick
 		return
 	end
-	
-	-- Start to Mine --
-	if self.lastOrder == "GoPath" then
+	if self.currentOrder == "GoPath" and self:isIddle() == true then
 		self:mine()
-		self.lastOrder = "Mine"
-		self.isMining = true
-		self.lastCommand = game.tick
-		-- Stop to move --
-		self.ent.set_command({type=defines.command.stop})
 		return
 	end
-	
-	-- Continue to Mine --
-	if self.lastOrder == "Mine" and self.isMining == true then
+	if self.currentOrder == "Mine" and self.isMining == true then
 		self:mine()
-		self.lastCommand = game.tick
 		return
 	end
-	
-	-- Return to the Mobile Factory --
-	if self.lastOrder == "Mine" and self.isMining == false then
-		-- Check the MF -
-		if global.MF.ent == nil or global.MF.ent.valid == false or global.MF.ent.surface ~= self.ent.surface then 
-			self.MFNotFound = true
-			return
-		else
-			self:goMF()
-			self.lastOrder = "GoMF"
-			self.lastCommand = game.tick
-			return
-		end
+	if self.currentOrder == "Mine" and self:isIddle() == true then
+		self:goToFlag()
+		return
 	end
-	
-	-- Enter the Mobile Factory --
-	if self.lastOrder == "GoMF" or self.lastOrder == "EnterMF" then
-		if global.MF.ent == nil or global.MF.ent.valid == false or global.MF.ent.surface ~= self.ent.surface then 
-			self.MFNotFound = true
-			return
-		else
-			self:enterMF()
-			self.lastOrder = "EnterMF"
-			self.lastCommand = game.tick
-			return
-		end
+	if self.currentOrder == "GoFlag" and self:isIddle() == true then
+		self:emptyInventory()
+		return
 	end
-	
+	if self.currentOrder == "EmptInv" and self:isIddle() == true then
+		self:takeAnotherPath()
+		return
+	end
+	if self.currentOrder == "GoMF" and self:isIddle() == true then
+		self:enterMF()
+		return
+	end
 end
 
 -- Tooltip Infos --
 function MJ:getTooltipInfos(GUI)
 	-- Create the Current Work Label --
-	local work = GUI.add{type="label", caption={"", {"gui-description." .. self.lastOrder}}}
+	local work = GUI.add{type="label", caption={"", {"gui-description." .. self.currentOrder}}}
 	work.style.font = "LabelFont"
 	work.style.font_color = _mfBlue
-	
-	if self.TargetInventoryFull == true then
-		-- Create the Inventory Full Label --
-		local invFull = GUI.add{type="label", caption={"", {"gui-description.TargetInventoryFull"}}}
-		invFull.style.font = "LabelFont"
-		invFull.style.font_color = _mfRed
-	end
 	
 	if self.MFFull == true then
 		-- Create the Mobile Factory Full Label --
@@ -142,26 +110,40 @@ function MJ:getTooltipInfos(GUI)
 		mfNoFound.style.font_color = _mfRed
 	end
 	
+	-- Create the Inventory List --
+	Util.itemToFrame(self.inventoryItem, self.inventoryCount, GUI)
 	
-	-- Create the Inventory Frame --
-	INV:itemToFrame(self.inventoryItem, self.inventoryCount, GUI)
-	
-	
+end
+
+-- Is the Jet Iddle ? --
+function MJ:isIddle()
+	if self.isMining == true or (self.ent.command.type ~= 6 and self.ent.command.type ~= 9) then
+		return false
+	end
+	return true
 end
 
 -- Go to the Ore Path --
 function MJ:goToPath()
 	-- Check if the Ore Path is still valid --
 	if self.targetOre == nil or self.targetOre.valid == false or self.targetOre.amount <= 0 then
-		-- Go back to the Mobile Factory --
-		self.lastOrder = "Mine"
-		self.lastCommand = game.tick
-		self.isMining = false
+		-- Remove the Path --
+		self.flag:removeOrePath(self.targetOre)
+		-- Check if there are Path left --
+		if table_size(self.flag.oreTable) <= 0 then
+			-- Return to the Mobile Factory --
+			self:goToMF()
+			return
+		end
+		
+		-- Take Another Path --
+		self:takeAnotherPath()
 		return
 	end
 	
 	-- Go to the Ore Path --
-	self.ent.set_command({type=defines.command.go_to_location, destination_entity=self.targetOre, radius=4})
+	self.ent.set_command({type=defines.command.go_to_location, destination_entity=self.targetOre, radius=2})
+	self.currentOrder = "GoPath"
 	
 end
 
@@ -169,81 +151,130 @@ end
 function MJ:mine()
 	-- Check if the Ore Path is still valid --
 	if self.targetOre == nil or self.targetOre.valid == false or self.targetOre.amount <= 0 then
-		-- Go back to the Mobile Factory --
-		self.lastOrder = "Mine"
-		self.lastCommand = game.tick
 		self.isMining = false
+		-- Take Another Ore Path or return to the Flag --
+		if self.inventoryCount >= _mfMiningJetInventorySize then
+			self:goToFlag()
+		else
+			self:takeAnotherPath()
+		end
 		return
 	end
+	
+	-- Set the current Order --
+	self.currentOrder = "Mine"
+	self.isMining = true
+	self.ent.set_command({type=defines.command.stop})
+	
 	-- Mine Ore --
 	local oreExtracted = math.min(_mfMiningJetOrePerUpdate, self.targetOre.amount, _mfMiningJetInventorySize - self.inventoryCount)
+	
 	-- Add Ore to the Inventory --
 	self.inventoryItem = self.targetOre.prototype.mineable_properties.products[1].name
 	self.inventoryCount = self.inventoryCount + oreExtracted
+	
 	-- Remove Ores from the Ore Path --
 	self.targetOre.amount = math.max(self.targetOre.amount - oreExtracted, 1)
+	
 	-- Make the Beam --
 	if oreExtracted > 0 then
 		-- Make the Beam --
-		self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target=self.targetOre.position, source=self.ent.position}
+		self.ent.surface.create_entity{name="GreenBeam", duration=self.updateTick, position=self.ent.position, target=self.targetOre.position, source=self.ent.position}
 	end
-	-- Remove the Ore Path if it is empty and Send the Jet to the Mobile Factory --
+	
+	-- Remove the Ore Path if it is empty --
 	if self.targetOre.amount <= 1 then
 		self.targetOre.destroy()
 		self.isMining = false
+		self.flag:removeOrePath(targetOre)
+		-- Take Another Ore Path or return home --
+		if self.inventoryCount >= _mfMiningJetInventorySize then
+			self:goToFlag()
+		else
+			self:takeAnotherPath()
+		end
 		return
 	end
-	-- Go back to the Mobile Factory if the Inventory is full --
+	
+	-- Go back to the Flag if the Inventory is full --
 	if self.inventoryCount >= _mfMiningJetInventorySize then
 		self.isMining = false
+		self:goToFlag()
 		return
 	end
+	
+end
+
+-- Go back to the Flag --
+function MJ:goToFlag()
+	-- Check if the Flag still exist --
+	if self.flag:valid() == false then
+		-- Go to the Mobile Factory --
+		self:goToMF()
+		return
+	end
+	-- Set the current Order --
+	self.ent.set_command({type=defines.command.go_to_location, destination_entity=self.flag.ent, radius=2})
+	self.currentOrder = "GoFlag"
+end
+
+-- Empty the Inventory --
+function MJ:emptyInventory()
+	self.currentOrder = "EmptInv"
+	if self.flag:valid() == false then
+		self:goToMF()
+		return
+	end
+	-- Check if there are something inside the Inventory --
+	if self.inventoryItem ~= nil and self.inventoryCount > 0 then
+		self.flag:addItems(self.inventoryItem, self.inventoryCount)
+		self.inventoryItem = nil
+		self.inventoryCount = 0
+		-- Create the Laser --
+		self.ent.surface.create_entity{name="GreenBeam", duration=10, position=self.ent.position, target=self.flag.ent.position, source=self.ent.position}
+	end
+	self:takeAnotherPath()
+end
+
+-- Take another Ore Path --
+function MJ:takeAnotherPath()
+	-- Check if there are Path left and if the Targeted Inventory is not full --
+	if table_size(self.flag.oreTable) <= 0 or self.flag.TargetInventoryFull == true then
+		-- Return to the Mobile Factory --
+		self:goToMF()
+		return
+	end
+	-- Take a new Ore Path --
+	self.targetOre = self.flag:getOrePath()
+	-- Check the Ore Path --
+	if self.targetOre == nil then return end
+	-- Go to the Path --
+	self:goToPath()
 end
 
 -- Go back to the Mobile Factory --
-function MJ:goMF()
+function MJ:goToMF()
+	-- Check if the Jet have to empty its Inventory --
+	if self.inventoryItem ~= nil and self.inventoryCount > 0 and self.flag:valid() == true then
+		self:goToFlag()
+		return
+	end
+	-- Check if the Mobile Factory is still valid --
+	if global.MF.ent == nil or global.MF.ent.valid == false then
+		-- Say the Mobile Factory is not found --
+		self.MFNotFound = true
+		return
+	else
+		self.MFNotFound = false
+	end
+	-- Set the current Order --
+	self.currentOrder = "GoMF"
 	-- Go to the MF --
 	self.ent.set_command({type=defines.command.go_to_location, destination_entity=global.MF.ent, radius=1})
 end
 
 -- Enter the Mobile Factory --
 function MJ:enterMF()
-
-	-- Check if the Jet have Items to store --
-	if self.inventoryItem ~= nil and self.inventoryCount > 0 then
-		-- Check the targeted Inventory --
-		if self.targetedInv == 0 then
-			-- Get the Linked Inventory --
-			local dataInv = global.MF.II
-			-- Add Items to the Data Inventory --
-			local amountAdded = dataInv:addItem(self.inventoryItem, self.inventoryCount)
-			-- Remove Items from the local Inventory --
-			if amountAdded > 0 then
-				self.inventoryCount = self.inventoryCount - amountAdded
-			end
-		else
-			-- Find the Ore Silo --
-			local silo = global.oreSilotTable[self.targetedInv]
-			-- Check the Ore Silo --
-			if silo == nil or silo.valid == false then return end
-			-- Get the Silo Inventory --
-			local siloInv = silo.get_inventory(defines.inventory.chest)
-			-- Check if the Inventory is valid --
-			if siloInv == nil then return end
-			-- Insert Items --
-			local amountAdded = siloInv.insert({name=self.inventoryItem, count=self.inventoryCount})
-			-- Remove Items from the local Inventory --
-			if amountAdded > 0 then
-				self.inventoryCount = self.inventoryCount - amountAdded
-			end
-		end
-	end
-	
-	-- No enought space inside the Targeted Inventory --
-	if self.inventoryCount > 0 then
-		self.TargetInventoryFull = true
-		return
-	end
 	
 	-- Get the Mobile Factory Trunk --
 	local inv = global.MF.ent.get_inventory(defines.inventory.car_trunk)

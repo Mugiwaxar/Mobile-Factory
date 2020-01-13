@@ -18,6 +18,7 @@ function FE:new(object)
 	setmetatable(t, mt)
 	mt.__index = FE
 	t.ent = object
+	UpSys.addObj(t)
 	return t
 end
 
@@ -31,6 +32,8 @@ end
 
 -- Destructor --
 function FE:remove()
+	-- Remove from the Update System --
+	UpSys.removeObj(self)
 end
 
 -- Is valid --
@@ -43,8 +46,11 @@ end
 function FE:update(event)
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
-	-- Check if the Fluid Extractor is valid --
-	if self:valid() == false then return end
+	-- Check the Validity --
+	if self:valid() == false then
+		self:remove()
+		return
+	end
 	-- The Fluid Extractor can work only if the Mobile Factory Entity is valid --
 	if global.MF.ent == nil or global.MF.ent.valid == false then return end
 	-- Extract Fluid --

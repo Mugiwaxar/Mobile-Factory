@@ -24,6 +24,7 @@ function DC:new(object)
 	t.ent = object
 	t.invObj = INV:new("Inventory " .. tostring(object.unit_number))
 	t.dataNetwork = DN:new(t)
+	UpSys.addObj(t)
 	return t
 end
 
@@ -46,6 +47,8 @@ function DC:remove()
 	self.dataNetwork = nil
 	-- Destroy the Animation --
 	rendering.destroy(self.animID)
+	-- Remove from the Update System --
+	UpSys.removeObj(self)
 end
 
 -- Is valid --
@@ -59,8 +62,11 @@ function DC:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	
-	-- Check the Entity --
-	if self.ent == nil or self.ent.valid == false then return end
+	-- Check the Validity --
+	if self:valid() == false then
+		self:remove()
+		return
+	end
 	
 	-- Check if the Entity is inside a Green Circuit Network --
 	if self.ent.get_circuit_network(defines.wire_type.green) ~= nil and self.ent.get_circuit_network(defines.wire_type.green).valid == true then

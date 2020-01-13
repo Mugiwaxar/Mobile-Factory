@@ -1,7 +1,8 @@
 -------------------- FLAG -------------------
+require("utils/settings.lua")
 
 -- Create a Flag --
-function createFlag(name, order)
+function createFlag(name, order, MachineFrameCount, area, scale)
 
 	-- Item --
 	local fI = {}
@@ -23,10 +24,13 @@ function createFlag(name, order)
 	fR.enabled = false
 	fR.ingredients =
 	{
-      {"MachineFrame", 3}
+      {"MachineFrame", MachineFrameCount}
     }
 	fR.result = name
 	data:extend{fR}
+	
+	-- Technology --
+	table.insert(data.raw.technology.MiningJet.effects, {type="unlock-recipe", recipe=name})
 	
 	-- Entity --
 	local fE = {}
@@ -35,13 +39,13 @@ function createFlag(name, order)
 	fE.icon = "__Mobile_Factory__/graphics/jet/" .. name .. "I.png"
 	fE.icon_size = 64
 	fE.max_health = 250
-	fE.collision_box = {{-1, -1},{1, 1}}
+	fE.collision_box = {{-1*scale, -1*scale},{1*scale, 1*scale}}
 	fE.selection_box = fE.collision_box
 	fE.minable = {mining_time = 0.2, result = name}
 	fE.radius_visualisation_picture = data.raw.beacon.beacon.radius_visualisation_picture
 	fE.radius_visualisation_picture.scale = 2
 	fE.allowed_effects = {}
-	fE.supply_area_distance = 50
+	fE.supply_area_distance = area
 	fE.energy_usage = "1J"
 	fE.base_picture =
 	{
@@ -51,15 +55,15 @@ function createFlag(name, order)
 				filename = "__Mobile_Factory__/graphics/jet/" .. name .. "E.png",
 				width = 450,
 				height = 900,
-				scale = 1/4,
-				shift = {0.35, -2}
+				scale = scale/4,
+				shift = {0.35*scale, -2*scale}
 			},
 			{
-				filename = "__Mobile_Factory__/graphics/jet/" .. name .. "S.png",
+				filename = "__Mobile_Factory__/graphics/jet/MiningJetFlagS.png",
 				width = 200,
 				height = 100,
-				scale = 1,
-				shift = {2, 0.08},
+				scale = scale,
+				shift = {2*scale, 0.08*scale},
 				draw_as_shadow = true
 			}
 		}
@@ -105,4 +109,7 @@ function createFlag(name, order)
 	
 end
 
-createFlag("MiningJetFlag", "za")
+createFlag("MiningJetFlagMK1", "z1", 1, _mfMiningJetFlagMK1Radius/2, 0.3)
+createFlag("MiningJetFlagMK2", "z1", 3, _mfMiningJetFlagMK2Radius/2, 0.5)
+createFlag("MiningJetFlagMK3", "z1", 5, _mfMiningJetFlagMK3Radius/2, 0.7)
+createFlag("MiningJetFlagMK4", "z1", 7, _mfMiningJetFlagMK4Radius/2, 1)

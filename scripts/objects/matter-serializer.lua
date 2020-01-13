@@ -22,6 +22,7 @@ function MS:new(object)
 	setmetatable(t, mt)
 	mt.__index = MS
 	t.ent = object
+	UpSys.addObj(t)
 	return t
 end
 
@@ -37,6 +38,8 @@ end
 function MS:remove()
 	-- Destroy the Animation --
 	rendering.destroy(self.animID)
+	-- Remove from the Update System --
+	UpSys.removeObj(self)
 end
 
 -- Is valid --
@@ -50,8 +53,11 @@ function MS:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	
-	-- Check the Entity --
-	if self.ent == nil or self.ent.valid == false then return end
+	-- Check the Validity --
+	if self:valid() == false then
+		self:remove()
+		return
+	end
 	
 	-- Check if the Entity is inside a Green Circuit Network --
 	if self.ent.get_circuit_network(defines.wire_type.green) ~= nil and self.ent.get_circuit_network(defines.wire_type.green).valid == true then
@@ -142,7 +148,7 @@ function MS:getTooltipInfos(GUI)
 	local text = ""
 	local style = {}
 	-- Check if the Data Storage is linked with a Data Center --
-	if self.dataNetwork ~= nil and getmetatable(self.dataNetwork) ~= nil and self.dataNetwork.dataCenter ~= nil then
+	if self.dataNetwork ~= nil and getmetatable(self.dataNetwork) ~= nil and self.dataNetwork.dataCenter ~= nil and self.dataNetwork.dataCenter:valid() == true then
 		text = {"", {"gui-description.LinkedTo"}, ": ", self.dataNetwork.dataCenter.invObj.name}
 		style = {92, 232, 54}
 	else
@@ -159,7 +165,7 @@ function MS:getTooltipInfos(GUI)
 
 	
 	-- Create the Inventory Selection --
-	if self.dataNetwork ~= nil and self.dataNetwork.dataCenter ~= nil and self.dataNetwork.dataCenter.invObj.isII == true then
+	if self.dataNetwork ~= nil and self.dataNetwork.dataCenter ~= nil and self.dataNetwork.dataCenter:valid() == true and self.dataNetwork.dataCenter.invObj.isII == true then
 	
 		-- Create the targeted Inventory label --
 		local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}

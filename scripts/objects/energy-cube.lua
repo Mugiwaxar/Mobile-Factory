@@ -22,6 +22,7 @@ function EC:new(object)
 	t.ent = object
 	-- Draw the Sprite --
 	t.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite0", x_scale=1/325*(33*3), y_scale=1/325*(33*3), target=object, surface=object.surface, target_offset={0, -0.3}}
+	UpSys.addObj(t)
 	return t
 end
 
@@ -37,6 +38,8 @@ end
 function EC:remove()
 	-- Destroy the Sprite --
 	rendering.destroy(self.spriteID)
+	-- Remove from the Update System --
+	UpSys.removeObj(self)
 end
 
 -- Is valid --
@@ -50,8 +53,11 @@ function EC:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	
-	-- Check if the Entity is valid --
-	if self.ent == nil or self.ent.valid == false then return end
+	-- Check the Validity --
+	if self:valid() == false then
+		self:remove()
+		return
+	end
 
 	-- Check if the Entity is inside a Green Circuit Network --
 	if self.ent.get_circuit_network(defines.wire_type.green) ~= nil and self.ent.get_circuit_network(defines.wire_type.green).valid == true then

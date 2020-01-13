@@ -25,6 +25,7 @@ function OC:new(object)
 	t.ent = object
 	t.oreTable = {}
 	t.inventory = {}
+	UpSys.addObj(t)
 	t:scanOres(object)
 	return t
 end
@@ -39,7 +40,10 @@ end
 
 -- Destructor --
 function OC:remove()
+	-- Destroy the Animation --
 	rendering.destroy(self.animID)
+	-- Remove from the Update System --
+	UpSys.removeObj(self)
 end
 
 -- Is valid --
@@ -52,9 +56,11 @@ end
 function OC:update(event)
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
-	-- Remove the Ore Cleaner if it no longer exist --
-	if self.ent == nil then self:remove() return end
-	if self.ent.valid == false then self:remove() return end
+	-- Check the Validity --
+	if self:valid() == false then
+		self:remove()
+		return
+	end
 	-- The Ore Cleaner can work only if the Mobile Factory Entity is valid --
 	if global.MF.ent == nil or global.MF.ent.valid == false then return end
 	-- Set the Ore Cleaner Energy --

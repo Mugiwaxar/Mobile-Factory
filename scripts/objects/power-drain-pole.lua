@@ -14,12 +14,10 @@ function PDP:new(object)
 	if object == nil then return end
 	local t = {}
 	local mt = {}
-	-- for k, j in pairs(PDP) do
-		-- mt[k] = j
-	-- end
 	setmetatable(t, mt)
 	mt.__index = PDP
 	t.ent = object
+	UpSys.addObj(t)
 	return t
 end
 
@@ -32,6 +30,18 @@ function PDP:rebuild(object)
 	-- end
 	mt.__index = PDP
 	setmetatable(object, mt)
+end
+
+-- Destructor --
+function PDP:remove()
+	-- Remove from the Update System --
+	UpSys.removeObj(self)
+end
+
+-- Is valid --
+function PDP:valid()
+	if self.ent ~= nil and self.ent.valid then return true end
+	return false
 end
 
 -- Update the PDP modules --
@@ -53,10 +63,15 @@ end
 
 -- Update the PDP --
 function PDP:update(event)
-	-- Update Modules --
-	self:updateModules()
 	-- Update lastUpdate variable --
 	self.lastUpdate = event.tick
+	-- Check the Validity --
+	if self:valid() == false then
+		self:remove()
+		return
+	end
+	-- Update Modules --
+	self:updateModules()
 	-- Look for all Entities around --
 	local entities = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=self.laserRadius}
 	-- Number of lasers variable --

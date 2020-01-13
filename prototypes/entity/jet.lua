@@ -43,7 +43,7 @@ function createJet(name, order)
 		{"DimensionalCrystal", 1}
 	}}
 	jT.prerequisites = {"EnergyCore"}
-	jT.effects = {{type="unlock-recipe", recipe=name},{type="unlock-recipe", recipe=name.."Flag"}}
+	jT.effects = {{type="unlock-recipe", recipe=name}}
 	data:extend{jT}
 	
 	-- Unit --

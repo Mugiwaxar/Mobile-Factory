@@ -44,8 +44,8 @@ end
 function updateValues()
 	if global.MF == nil then global.MF = MF:new() end
 	if global.entsTable == nil then global.entsTable = {} end
+	if global.upsysTickTable == nil then global.upsysTickTable = {} end
 	if global.entsUpPerTick == nil then global.entsUpPerTick = _mfBaseUpdatePerTick end
-	if global.upSysIndex == nil then global.upSysIndex = 1 end
 	if global.upSysLastScan == nil then global.upSysLastScan = 0 end
 	if global.IDModule == nil then global.IDModule = 0 end
 	if global.dataNetworkID == nil then global.dataNetworkID = 0 end

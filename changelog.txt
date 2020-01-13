@@ -1,4 +1,23 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.69
+Date: 12/01/2020
+  Features:
+    - Added the Mining Jet Flag MK1: 1 Tile Radius
+    - Added the Mining Jet Flag MK2: 16 Tiles Radius
+    - Added the Mining Jet Flag MK3: 50 Tiles Radius
+    - Added the Mining Jet Flag MK4: 100 Tiles Radius
+  Changes:
+    - Removed the Mining Jet Flag
+    - Mining Jet will now dump Ores inside the Flag (Not the Mobile Factory
+    - The Mining Jet Flag will now send its content to the targeted Inventory
+  Graphics:
+    - Reworked the Jet Mining Flag Shadow
+  Scripting:
+    - Massive Performance improvement of the Mining Jet
+    - Massive rewrite for improvement of the Update System
+  Bugfixes:
+    - Fixed a crash when the Data Center was removed
+---------------------------------------------------------------------------------------------------
 Version: 0.0.68
 Date: 11/01/2020
   Bugfixes:

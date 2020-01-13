@@ -3,11 +3,13 @@
 -- Create the Mining Jet Flag base Object --
 MJF = {
 	ent = nil,
-	updateTick = 15,
+	updateTick = 60,
 	lastUpdate = 0,
+	lastInventorySend = 0,
 	oreTable = nil,
-	targetedOre = 1,
-	targetedInv = 0
+	targetedInv = 0,
+	inventory = nil, -- [item]{count}
+	TargetInventoryFull = false
 }
 
 -- Constructor --
@@ -19,6 +21,8 @@ function MJF:new(object)
 	mt.__index = MJF
 	t.ent = object
 	t.oreTable = {}
+	t.inventory = {}
+	UpSys.addObj(t)
 	t:scanOres()
 	return t
 end
@@ -37,7 +41,7 @@ end
 
 -- Is valid --
 function MJF:valid()
-	if self.ent ~= nil and self.ent.valid then return true end
+	if self.ent ~= nil and self.ent.valid == true then return true end
 	return false
 end
 
@@ -45,10 +49,18 @@ end
 function MJF:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
-	-- Check if the Entity is valid --
-	if self.ent == nil or self.ent.valid == false then return end
+	-- Check the Validity --
+	if self:valid() == false then
+		self:remove()
+		return
+	end
 	-- Request a Jet --
 	self:requestJet()
+	-- Send Inventory to the Targed --
+	if game.tick - self.lastInventorySend > 300 then
+		self:sendInventory()
+		self.lastInventorySend = game.tick
+	end
 end
 
 -- Tooltip Infos --
@@ -63,6 +75,18 @@ function MJF:getTooltipInfos(GUI)
 	local targetLabel = GUI.add{type="label", caption={"", {"gui-description.TargetedInventory"}, ":"}}
 	targetLabel.style.font = "LabelFont"
 	targetLabel.style.font_color = _mfBlue
+	
+	-- Create the Inventory Full Label --
+	if self.TargetInventoryFull == true then
+		local invFull = GUI.add{type="label", caption={"", {"gui-description.TargetInventoryFull"}}}
+		invFull.style.font = "LabelFont"
+		invFull.style.font_color = _mfRed
+	end
+	
+	-- Create the Inventory Frame --
+	for name, count in pairs(self.inventory) do
+		Util.itemToFrame(name, count, GUI)
+	end
 
 	-- Create the Ore Silo Selection --
 	local inventories = {{"gui-description.InternalInventory"}}
@@ -87,7 +111,17 @@ function MJF:scanOres()
 	-- Test if the Surface is valid --
 	if self.ent.surface == nil then return end
 	-- Add all surrounding Ores and add them to the oreTable --
-	local area = {{self.ent.position.x - _mfMiningJetFlagRadius, self.ent.position.y - _mfMiningJetFlagRadius},{self.ent.position.x + _mfMiningJetFlagRadius, self.ent.position.y + _mfMiningJetFlagRadius}}
+	local radius = 0
+	if self.ent.name == "MiningJetFlagMK1" then
+		radius = _mfMiningJetFlagMK1Radius
+	elseif self.ent.name == "MiningJetFlagMK2" then
+		radius = _mfMiningJetFlagMK2Radius
+	elseif self.ent.name == "MiningJetFlagMK3" then
+		radius = _mfMiningJetFlagMK3Radius
+	elseif self.ent.name == "MiningJetFlagMK4" then
+		radius = _mfMiningJetFlagMK4Radius
+	end
+	local area = {{self.ent.position.x - radius, self.ent.position.y - radius},{self.ent.position.x + radius, self.ent.position.y + radius}}
 	self.oreTable = self.ent.surface.find_entities_filtered{area=area, type="resource"}
 	-- Remove Fluid Path from the Table --
 	for k, path in pairs(self.oreTable) do
@@ -95,8 +129,7 @@ function MJF:scanOres()
 			self.oreTable[k] = nil
 		end
 	end
-	-- Shuffle the Ore Table --
-	UpSys.shuffle(self.oreTable)
+	
 end
 
 -- Request a Mining Jet --
@@ -108,18 +141,9 @@ function MJF:requestJet()
 	-- Check if there are Ores left --
 	if table_size(self.oreTable) <= 0 then return end
 	
-	-- Check if the Targeted Ore value isn't too high --
-	if self.targetedOre > table_size(self.oreTable) then
-		self.targetedOre = 1
-	end
 	
-	-- Take an Ore Path --
-	local orePath = self.oreTable[self.targetedOre]
-	
-	-- Check the Ore Path --
-	if orePath == nil or orePath.valid == false or orePath.amount <= 0 then
-		table.remove(self.oreTable, self.targetedOre)
-	end
+	-- Check if there are enought space inside the Targeted Inventory --
+	if self.TargetInventoryFull == true then return end
 	
 	-- Get the Mobile Factory Trunk --
 	local inv = global.MF.ent.get_inventory(defines.inventory.car_trunk)
@@ -127,19 +151,52 @@ function MJF:requestJet()
 	-- Check the Inventory --
 	if inv == nil or inv.valid == false then return end
 	
-	-- Remove a Jet from the Inventory --
-	local removed = inv.remove({name="MiningJet", count=1})
+	-- Request Jet --
+	for i = 1, table_size(self.oreTable) do
+		-- Get an Ore Path --
+		local orePath = self:getOrePath()
+		
+		-- Check the Ore Path --
+		if orePath == nil or orePath.valid == false or orePath.amount <= 0 then
+			self:removeOrePath(orePath)
+		else
+			-- Remove a Jet from the Inventory --
+			local removed = inv.remove({name="MiningJet", count=1})
+			-- Check if the Jet exist --
+			if removed <= 0 then return end
+			-- Create the Entity --
+			local entity = global.MF.ent.surface.create_entity{name="MiningJet", position=global.MF.ent.position, force="player"}
+			global.miningJetTable[entity.unit_number] = MJ:new(entity, orePath, self)
+		end
+		-- Stop if there are 5 Jet out --
+		if i >= 5 then return end
+	end
 	
-	-- Check if the Jet exist --
-	if removed <= 0 then return end
-	
-	-- Increase the Targeted Ore number --
-	self.targetedOre = self.targetedOre + 1
-	
-	-- Create the Entity --
-	local entity = global.MF.ent.surface.create_entity{name="MiningJet", position=global.MF.ent.position, force="player"}
-	global.miningJetTable[entity.unit_number] = MJ:new(entity, orePath, self.targetedInv)
-	
+end
+
+-- Get a new Ore Path to Mine --
+function MJF:getOrePath()
+	-- Get a random Path --
+	local i = math.random(1, table_size(self.oreTable))
+	return self.oreTable[i]
+end
+
+-- Remove an Ore Path from the Ore Table --
+function MJF:removeOrePath(orePath)
+	for k, path in pairs(self.oreTable) do
+		if path == orePath then
+			table.remove(self.oreTable, k)
+		end
+	end
+end
+
+-- Add items to the Inventory --
+function MJF:addItems(name, count)
+	if self.inventory[name] == nil then
+		self.inventory[name] = count
+	else
+		self.inventory[name] = self.inventory[name] + count
+	end
 end
 
 -- Save the Selected Inventory --
@@ -148,7 +205,65 @@ function MJF:changeInventory(ID)
 	self.targetedInv = ID
 end
 
+-- Send inside Inventory to the Targeted one --
+function MJF:sendInventory()
 
+	if self.inventory == nil then self.inventory = {} end
+
+	-- Sended value --
+	local sended = false
+
+	-- Itinerate the Inventory --
+	for name, count in pairs(self.inventory) do
+		-- Check the targeted Inventory --
+		if self.targetedInv == 0 then
+			-- Get the Linked Inventory --
+			local dataInv = global.MF.II
+			-- Add Items to the Data Inventory --
+			local amountAdded = dataInv:addItem(name, count)
+			-- Remove Items from the local Inventory --
+			if amountAdded > 0 then
+				count = count - amountAdded
+				sended = true
+				if count <= 0 then
+					self.inventory[name] = nil
+				end
+			end
+		else
+			-- Find the Ore Silo --
+			local silo = global.oreSilotTable[self.targetedInv]
+			-- Check the Ore Silo --
+			if silo == nil or silo.valid == false then return end
+			-- Get the Silo Inventory --
+			local siloInv = silo.get_inventory(defines.inventory.chest)
+			-- Check if the Inventory is valid --
+			if siloInv == nil then return end
+			-- Insert Items --
+			local amountAdded = siloInv.insert({name=name, count=count})
+			-- Remove Items from the local Inventory --
+			if amountAdded > 0 then
+				count = count - amountAdded
+				sended = true
+				if count <= 0 then
+					self.inventory[name] = nil
+				end
+			end
+		end
+	end
+	
+	-- Create the Laser --
+	if sended == true then
+		self.ent.surface.create_entity{name="BlueBeam", duration=20, position=self.ent.position, target=global.MF.ent.position, source={self.ent.position.x,self.ent.position.y}}
+	end
+	
+	-- No enought space inside the Targeted Inventory --
+	if table_size(self.inventory) > 0 then
+		self.TargetInventoryFull = true
+		return
+	else
+		self.TargetInventoryFull = false
+	end
+end
 
 
 

@@ -1,111 +1,137 @@
 require("utils/functions.lua")
 
+-- Add an Object to the Update System --
+function UpSys.addObj(obj)
+  if obj == nil or obj:valid() == false then return end
+  -- Add the Object --
+  UpSys.addObject(obj)
+end
+
+-- Remove an Object from the Update System --
+function UpSys.removeObj(obj)
+  -- Remove the Object --
+  for k, object in pairs(global.entsTable) do
+    if object == obj then
+      table.remove(global.entsTable, k)
+    end
+  end
+end
+
 -- Update System: Scan Entities --
-function UpSys.scanEnts()
-	-- Clear the Entities Table --
-	global.entsTable = {}
+function UpSys.scanObjs()
+  -- Clear the Entities Table --
+  global.entsTable = {}
+  -- Clear the Tick Table --
+  for k, j in pairs(global.upsysTickTable) do
+    if k < game.tick then
+      table.remove(global.upsysTickTable, k)
+    end
+  end
 		
-	-- Add Object --
-	UpSys.addObj(global.MF)
-	if UpSys.addObj(global.MF.dataCenter) == false then global.MF.dataCenter = nil end
+  -- Add Object --
+  UpSys.addObject(global.MF)
+  if UpSys.addObject(global.MF.dataCenter) == false then global.MF.dataCenter = nil end
 	
-	-- Add Array --
-	UpSys.addTable(global.dataCenterTable)
-	UpSys.addTable(global.matterSerializerTable)
-	UpSys.addTable(global.matterPrinterTable)
-	UpSys.addTable(global.dataStorageTable)
-	UpSys.addTable(global.energyCubesTable)
-	UpSys.addTable(global.oreCleanerTable)
-	UpSys.addTable(global.fluidExtractorTable)
-	UpSys.addTable(global.dataNetworkTable)
-	UpSys.addTable(global.wirelessDataTransmitterTable)
-	UpSys.addTable(global.wirelessDataReceiverTable)
-	UpSys.addTable(global.miningJetTable)
-	UpSys.addTable(global.jetFlagTable)
+  -- Add Array --
+  UpSys.addTable(global.dataCenterTable)
+  UpSys.addTable(global.matterSerializerTable)
+  UpSys.addTable(global.matterPrinterTable)
+  UpSys.addTable(global.dataStorageTable)
+  UpSys.addTable(global.energyCubesTable)
+  UpSys.addTable(global.oreCleanerTable)
+  UpSys.addTable(global.fluidExtractorTable)
+  UpSys.addTable(global.dataNetworkTable)
+  UpSys.addTable(global.wirelessDataTransmitterTable)
+  UpSys.addTable(global.wirelessDataReceiverTable)
+  UpSys.addTable(global.miningJetTable)
+  UpSys.addTable(global.jetFlagTable)
 	
-	-- Shuffle the MF Entities Table --
-	UpSys.shuffle(global.entsTable)
+  -- Save the last scan tick --
+  global.upSysLastScan = game.tick
 end
 
 -- Update System: Add an Object to the MF Entities Table --
-function UpSys.addObj(obj)
-	-- Check if the Object is not null --
-	if obj ~= nil then
-		if obj:valid() ~= true then
-			-- Delete the Entity --
-			obj:remove()
-		else
-			table.insert(global.entsTable, obj)
-			return true
-		end
-	end
-	return false
+function UpSys.addObject(obj)
+  -- Check if the Object is not null --
+  if obj ~= nil then
+    if obj:valid() ~= true then
+      -- Delete the Entity --
+      obj:remove()
+    else
+      -- Check if the Object have to be updated --
+	  if obj.updateTick > 0 then
+        -- Set Update --
+        local nextUpdate = game.tick + (game.tick - obj.lastUpdate)
+        if obj.lastUpdate == 0 or game.tick - obj.lastUpdate > obj.updateTick*2 then
+          -- Look for the best Tick to update --
+          local bestTick = 1
+          for i = 1, 60 do
+            if table_size(global.upsysTickTable[game.tick+i] or {}) < table_size(global.upsysTickTable[game.tick+bestTick] or {}) then
+              bestTick = i
+              if global.upsysTickTable[game.tick+i] == nil then
+                break
+              end
+            end
+          end
+          nextUpdate = game.tick + bestTick 
+          if global.upsysTickTable[nextUpdate] == nil then global.upsysTickTable[nextUpdate] = {} end
+          table.insert(global.upsysTickTable[nextUpdate], obj)
+          obj.lastUpdate = 1
+        end
+      end
+	  table.insert(global.entsTable, obj)
+      return true
+    end
+  end
+return false
 end
 
 -- Update System: Add a Table to the MF Entities Table --
 function UpSys.addTable(array)
-	-- Create the Table if needed --
-	if array == nil then array = {} end
-	-- Itinerate the Table --
-	for k, obj in pairs(array) do
-		-- Add the Object --
-		if UpSys.addObj(obj) == false then table.remove(array, k) end
-	end
-end
-
--- Update System: Randomize Table --
-function UpSys.shuffle(array)
-	math.randomseed(game.tick)
-	for i = table_size(array), 2, -1 do
-		local j = math.random(i)
-		array[i], array[j] = array[j], array[i]
-	end
-	return array
+  -- Create the Table if needed --
+  if array == nil then array = {} end
+  -- Itinerate the Table --
+    for k, obj in pairs(array) do
+      -- Add the Object --
+      if UpSys.addObject(obj) == false then
+      table.remove(array, k) 
+    end
+  end
 end
 
 -- Update System: Update Entities --
 function UpSys.update(event)
-	-- Check the Entities Table --
-	if global.entsTable == nil then global.entsTable = {} end
-	-- Check the Index --
-	if global.upSysIndex == nil then global.upSysIndex = 1 end
-	-- Check the last Entities scan --
-	if global.upSysLastScan == nil then global.upSysLastScan = 0 end
-	-- Create the updated Index --
-	local updated = 1
-	
-	-- Get the Entities Table size --
-	local maxIndex = table_size(global.entsTable)
-	-- Begin the Update of Entities --
-	while updated <= global.entsUpPerTick and global.upSysIndex <= maxIndex do
-		-- Check if the Entity is valid --
-		if getmetatable(global.entsTable[global.upSysIndex]) ~= nil and global.entsTable[global.upSysIndex]:valid() == true then
-			-- Check if the Entity need an update --
-			if global.entsTable[global.upSysIndex].updateTick > 0 and game.tick - global.entsTable[global.upSysIndex].lastUpdate >= global.entsTable[global.upSysIndex].updateTick then
-				-- Update the Entity --
-				global.entsTable[global.upSysIndex]:update(event)
-				-- Increment the number of Entities updated --
-				updated = updated + 1
-			end
-		end
-		
-		-- Increment the Global Index --
-		global.upSysIndex = global.upSysIndex + 1
-		
-	end
-	
-	-- Scan all the Entities if needed --
-	if global.upSysIndex > maxIndex and game.tick - global.upSysLastScan >= 100 then
-		-- Reinitialize the index --
-		global.upSysIndex = 1
-		-- Save the last scan tick --
-		global.upSysLastScan = game.tick
-		-- Rescan all Entities --
-		UpSys.scanEnts()
-	elseif global.upSysIndex > maxIndex then
-		global.upSysIndex = 1
-	end
-	
+  -- Check all Object --
+  if game.tick - global.upSysLastScan > _mfScanTicks * 10 then
+    UpSys.scanObjs()
+  end
+  -- if true then return end
+  -- Check if there are something to update --
+  if global.upsysTickTable[game.tick] == nil then return end
+  -- Create the updated Index --
+  local updated = 1
+  -- Update Object --
+  for k, obj in pairs(global.upsysTickTable[game.tick]) do
+    -- If more objects can be updated --
+	if obj:valid() == true then
+      if updated <= global.entsUpPerTick then
+        obj:update(event)
+        updated = updated + 1
+        if global.upsysTickTable[game.tick + obj.updateTick] == nil then
+          global.upsysTickTable[game.tick + obj.updateTick] = {}
+        end
+        table.insert(global.upsysTickTable[game.tick + obj.updateTick], obj)
+      -- Else if there are no more update available --
+      else
+        if global.upsysTickTable[game.tick+1] == nil then
+          global.upsysTickTable[game.tick+1] = {}
+        end
+        table.insert(global.upsysTickTable[game.tick+1], obj)
+      end
+    end
+  end
+  -- Delete the Table --
+  table.remove(global.upsysTickTable, game.tick)
 end
 
 

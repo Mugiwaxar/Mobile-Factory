@@ -1,5 +1,6 @@
 -- Update System --
 _mfBaseUpdatePerTick = 100
+_mfScanTicks = 100
 
 -- Mobile Factory Surfaces name --
 _mfSurfaceName = "mfSurface"
@@ -72,7 +73,10 @@ _mfMiningJetOrePerUpdate = 5
 _mfMiningJetInventorySize = 100
 
 -- Mining Jet Flag --
-_mfMiningJetFlagRadius = 102
+_mfMiningJetFlagMK1Radius = 1
+_mfMiningJetFlagMK2Radius = 16
+_mfMiningJetFlagMK3Radius = 50
+_mfMiningJetFlagMK4Radius = 100
 
 -- Fluid Extractor settings --
 _mfFEFluidPerExtraction = 30

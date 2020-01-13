@@ -35,6 +35,7 @@ function DN:new(object)
 	t.energyCubeTable = {}
 	t.dataStorageTable = {}
 	table.insert(global.dataNetworkTable, t)
+	UpSys.addObj(t)
 	return t
 end
 
@@ -48,6 +49,8 @@ end
 
 -- Destructor --
 function DN:remove()
+	-- Remove from the Update System --
+	UpSys.removeObj(self)
 end
 
 -- Is valid --
@@ -69,6 +72,11 @@ end
 function DN:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
+	-- Check the Validity --
+	if self:valid() == false then
+		self:remove()
+		return
+	end
 	-- Check all added Network --
 	self:checkNetworkID()
 	-- Get all Linked Entities --

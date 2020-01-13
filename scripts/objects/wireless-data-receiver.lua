@@ -26,6 +26,7 @@ function WDR:new(object)
 	t.ent = object
 	t.localCN = {}
 	t.lastSignal = {}
+	UpSys.addObj(t)
 	return t
 end
 
@@ -41,6 +42,8 @@ end
 function WDR:remove()
 	-- Destroy the Animation --
 	rendering.destroy(self.animID)
+	-- Remove from the Update System --
+	UpSys.removeObj(self)
 end
 
 -- Is valid --
@@ -54,8 +57,11 @@ function WDR:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	
-	-- Check if the Entity is valid --
-	if self.ent == nil or self.ent.valid == false then return end
+	-- Check the Validity --
+	if self:valid() == false then
+		self:remove()
+		return
+	end
 
 	-- Check if the Entity is inside a Green Circuit Network --
 	if self.ent.get_circuit_network(defines.wire_type.green) ~= nil and self.ent.get_circuit_network(defines.wire_type.green).valid == true then

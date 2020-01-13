@@ -1,4 +1,5 @@
 GUI = {}
+Util = {}
 UpSys = {}
 
 require("utils/profiler.lua")
@@ -28,23 +29,21 @@ require("scripts/objects/mining-jet-flag.lua")
 
 -- When the mod init --
 function onInit()
+	-- Update System --
+	global.entsTable = {}
+	global.upsysTickTable = {}
+	global.entsUpPerTick = _mfBaseUpdatePerTick
+	global.upSysLastScan = 0
 	-- Mobile Factory Object --
 	global.MF = MF:new()
 	global.MF.II = INV:new("Internal Inventory")
 	global.MF.II.isII = true
 	createMFSurface()
 	createControlRoom()
-	-- Update System --
-	global.entsTable = {}
-	global.entsUpPerTick = _mfBaseUpdatePerTick
-	global.upSysIndex = 1
-	global.upSysLastScan = 0
 	-- Module ID --
 	global.IDModule = 0
 	-- Data Network --
 	global.dataNetworkID = 0
-	-- Current Entities Update --
-	-- global.currentSilotPadChestUpdate = 1
 	-- Tables --
 	global.playersTable = {}
 	global.accTable = {}
@@ -116,13 +115,13 @@ function onLoad()
 	for k, fe in pairs(global.fluidExtractorTable or {}) do
 		FE:rebuild(fe)
 	end
-	-- Set The Jet Metatables --
-	for k, mjf in pairs(global.jetFlagTable or {}) do
-		MJF:rebuild(mjf)
-	end
 	-- Set The Mining Jet Metatables --
 	for k, mj in pairs(global.miningJetTable or {}) do
 		MJ:rebuild(mj)
+	end
+	-- Set The Jet Metatables --
+	for k, mjf in pairs(global.jetFlagTable or {}) do
+		MJF:rebuild(mjf)
 	end
 end
 

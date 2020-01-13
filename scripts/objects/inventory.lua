@@ -32,6 +32,11 @@ function INV:rebuild(object)
 	setmetatable(object, mt)
 end
 
+-- Is valid --
+function INV:valid()
+	return true
+end
+
 -- Rescan Inventory --
 function INV:rescan()
 
@@ -230,7 +235,7 @@ function INV:getFrame(guiElement)
 	-- invList.style.width = 205
 	-- Create the list --
 	for item, count in pairs(self.inventory) do
-		INV:itemToFrame(item, count, invList)
+		Util.itemToFrame(item, count, invList)
 	end
 	
 	if self.isII then
@@ -246,33 +251,9 @@ function INV:getFrame(guiElement)
 		-- invList.style.width = 205
 		-- Create the list --
 		for item, count in pairs(self.CCInventory) do
-			INV:itemToFrame(item, count, invList)
+			Util.itemToFrame(item, count, invList)
 		end
 	end
-	
-end
-
--- Create a frame from an Item --
-function INV:itemToFrame(item, amount, guiElement)
-
-	-- Check value --
-	if item == nil or amount == nil then return end
-
-	-- Create the Frame --
-	local frame = guiElement.add{type="frame", direction="horizontal"}
-	frame.style.minimal_width = 100
-	frame.style.margin = 0
-	frame.style.padding = 0
-	
-	-- Add the Icon and the Tooltip to the frame --
-	local sprite = frame.add{type="sprite", tooltip=game.item_prototypes[item].localised_name, sprite="item/" .. item}
-	sprite.style.padding = 0
-	sprite.style.margin = 0
-	
-	-- Add the amount label --
-	local label = frame.add{type="label", caption=tonumber(amount)}
-	label.style.padding = 0
-	label.style.margin = 0
 	
 end
 

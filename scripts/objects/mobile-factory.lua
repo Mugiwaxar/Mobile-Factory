@@ -36,6 +36,7 @@ function MF:new()
 	local mt = {}
 	setmetatable(t, mt)
 	mt.__index = MF
+	UpSys.addObj(t)
 	return t
 end
 
@@ -362,20 +363,13 @@ function MF:updateShield(event)
 			end
 		end
 	end
-	
-	-- if tick%60 == 0 and self.internalEnergy*_mfShieldChargeRate > _mfShieldComsuption and self.shield < self.maxShield then
-		-- Charge rate or Shield charge missing --
-		-- local charge = math.min(self.maxShield - self.shield, _mfShieldChargeRate)
-		-- Add the charge --
-		-- self.shield = self.shield + charge
-		-- Remove the energy --
-		-- self.internalEnergy = self.internalEnergy - _mfShieldComsuption*charge
-	-- end
 end
 
 
 -- Send Quatron Charge to the Ore Cleaner --
 function MF:SendQuatronToOC(event)
+	-- Check if the Mobile Factory is valid --
+	if self.ent == nil or self.ent.valid == false then return end
 	-- Send Charge only every 10 ticks --
 	if event.tick%10 ~= 0 then return end
 	for k, oc in pairs(global.oreCleanerTable) do
@@ -397,8 +391,10 @@ end
 
 -- Send Quatron Charge to all Fluid Extractors --
 function MF:SendQuatronToFE(event)
-	-- Send Charge only every 15 ticks --
-	if event.tick%15 ~= 0 then return end
+	-- Check if the Mobile Factory is valid --
+	if self.ent == nil or self.ent.valid == false then return end
+	-- Send Charge only every 10 ticks --
+	if event.tick%10 ~= 0 then return end
 	for k, fe in pairs(global.fluidExtractorTable) do
 		-- Check if the Fluid Extractor is valid --
 		if fe:valid() == true then
