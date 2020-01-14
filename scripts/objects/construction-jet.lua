@@ -128,7 +128,9 @@ function CJ:getTooltipInfos(GUI)
 	end
 	
 	-- Create the Inventory List --
-	Util.itemToFrame(self.inventoryItem, 1, GUI)
+	if self.inventoryItem ~= nil then
+		Util.itemToFrame(self.inventoryItem, 1, GUI)
+	end
 end
 
 -- Is the Jet Iddle ? --

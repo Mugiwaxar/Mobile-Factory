@@ -83,6 +83,12 @@ function placedJetFlag(event)
 	global.jetFlagTable[event.created_entity.unit_number] = MJF:new(event.created_entity)
 end
 
+-- Save the Deep Storage --
+function placedDeepStorage(event)
+	if global.deepStorageTable == nil then global.deepStorageTable = {} end
+	global.deepStorageTable[event.created_entity.unit_number] = DSR:new(event.created_entity)
+end
+
 
 
 -- Remove the Dimensional Accumulator from the table --
@@ -180,6 +186,13 @@ function removedJetFlag(event)
 	if global.jetFlagTable == nil then global.jetFlagTable = {} return end
 	if global.jetFlagTable[event.entity.unit_number] ~= nil then global.jetFlagTable[event.entity.unit_number]:remove() end
 	global.jetFlagTable[event.entity.unit_number] = nil
+end
+
+-- Remove the Deep Storage from the table --
+function removedDeepStorage(event)
+	if global.deepStorageTable == nil then global.deepStorageTable = {} return end
+	if global.deepStorageTable[event.entity.unit_number] ~= nil then global.deepStorageTable[event.entity.unit_number]:remove() end
+	global.deepStorageTable[event.entity.unit_number] = nil
 end
 
 

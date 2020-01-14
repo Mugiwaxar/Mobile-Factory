@@ -1,5 +1,6 @@
 -- Called when something is placed --
 function somethingWasPlaced(event, isRobot)
+
 	-- Get the Entity if needed
 	if event.created_entity == nil and event.entity ~= nil then
 		event.created_entity = event.entity
@@ -14,8 +15,8 @@ function somethingWasPlaced(event, isRobot)
 	elseif event.player_index ~= nil then
 		isPlayer = true
 		creator = getPlayer(event.player_index)
-	else
 	end
+	
 	-- Prevent to place Lab/Void Tiles inside the Control Center --
 	if creator ~= nil and event.tiles ~= nil and (event.tile.name == "tutorial-grid" or event.tile.name == "out-of-map") and creator.surface.name == _mfControlSurfaceName  then
 		if isPlayer == true then creator.print({"", "Unable to place ", {"item-name." .. event.stack.name }, " outside the Factory"}) end
@@ -23,8 +24,10 @@ function somethingWasPlaced(event, isRobot)
 			createTilesAtPosition(tile.position, 1, creator.surface, tile.old_tile.name)
 		end
 	end
+	
 	-- Check if all are valid --
 	if event.created_entity == nil or event.created_entity.valid == false then return end
+	
 	-- If the Mobile Factory is placed --
 	if string.match(event.created_entity.name, "MobileFactory") then
 		-- If the Mobile Factory already exist --
@@ -40,8 +43,8 @@ function somethingWasPlaced(event, isRobot)
 			newMobileFactory(event.created_entity)
 		end
 	end
+	
 	-- Prevent to place listed entities outside the Mobile Factory --
-	-- Item --
 	if event.created_entity.surface.name ~= _mfSurfaceName then
 		if canBePlacedOutside(event.created_entity.name) == false then
 			if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"}) end
@@ -52,45 +55,67 @@ function somethingWasPlaced(event, isRobot)
 			return
 		end
 	end
-	-- Save the Ghost inside the Construction Table --
-	if event.created_entity ~= nil and event.created_entity.valid == true and event.created_entity.name == "entity-ghost" then
-		table.insert(global.constructionTable,{ent=event.created_entity, item=event.created_entity.ghost_prototype.items_to_place_this[1].name, name=event.created_entity.ghost_name, position=event.created_entity.position, direction=event.created_entity.direction or 1, mission="Construct"})
+	
+	-- Deep Storage Ghost --
+	if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true and event.created_entity.name == "entity-ghost" then
+		if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Control Center Constructible Area"}) end
+		event.created_entity.destroy()
+		return
 	end
 	
 	-- Ghost --
 	if isPlayer == true and event.created_entity.surface.name ~= _mfSurfaceName and event.stack ~= nil and event.stack.valid_for_read == true and event.created_entity.name == "entity-ghost" then
-		-- Add the Gost to the Construction List --
+		dprint(event.stack.name)
 		if canBePlacedOutside(event.stack.name) == false then
 			if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"}) end
 			event.created_entity.destroy()
 			return
 		end
 	end
+	
 	-- Blueprint --
 	if isPlayer == true and creator.surface.name ~= _mfSurfaceName and event.stack ~= nil and event.stack.valid_for_read == true and event.stack.is_blueprint then
+	if event.stack.name == "DeepStorage" then
+		if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Control Center Constructible Area"}) end
+			event.created_entity.destroy()
+			return
+		end
 		if canBePlacedOutside(event.created_entity.ghost_name) == false then
 			if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"}) end
 			event.created_entity.destroy()
 			return
 		end
 	end
+	
 	-- Allow to place things in the Control Center --
-	if event.created_entity.name == "DataStorage" and event.created_entity.surface.name == _mfControlSurfaceName then
+	if event.created_entity.name == "DeepStorage" and event.created_entity.surface.name == _mfControlSurfaceName then
 		local tile = event.created_entity.surface.find_tiles_filtered{position=event.created_entity.position, radius=1, limit=1}
 		if tile[1] ~= nil and tile[1].valid == true and tile[1].name == "BuildTile" then
-			placedDataStorage(event)
+			placedDeepStorage(event)
 			return
 		end
 	end
+	
 	-- Prevent to place things in the Control Center --
 	if event.created_entity.surface.name == _mfControlSurfaceName then
-		if isPlayer == true then creator.print("You can't build inside the Control Center") end
+		if isPlayer == true then creator.print("You can't build here") end
 		event.created_entity.destroy()
 		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
 			creator.get_main_inventory().insert(event.stack)
 		end
 		return
 	end
+	
+	-- Prevent to place things out of the Control Center --
+	if event.created_entity.name == "DeepStorage" then
+		if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Control Center Constructible Area"}) end
+		event.created_entity.destroy()
+		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
+			creator.get_main_inventory().insert(event.stack)
+		end
+		return
+	end
+	
 	-- Save the Factory Chest --
 	if event.created_entity.name == "FactoryChest" then
 		if global.MF.fChest ~= nil and global.MF.fChest.valid == true then
@@ -104,51 +129,66 @@ function somethingWasPlaced(event, isRobot)
 			global.MF.fChest = event.created_entity
 		end
 	end
+	
+	-- Save the Ghost inside the Construction Table --
+	if event.created_entity ~= nil and event.created_entity.valid == true and event.created_entity.name == "entity-ghost" then
+		table.insert(global.constructionTable,{ent=event.created_entity, item=event.created_entity.ghost_prototype.items_to_place_this[1].name, name=event.created_entity.ghost_name, position=event.created_entity.position, direction=event.created_entity.direction or 1, mission="Construct"})
+	end
+	
 	-- Save the Dimensional Accumulator --
 	if event.created_entity.name == "DimensionalAccumulator" then
 		placedDimensionalAccumulator(event)
 		return
 	end
+	
 	-- Save the Power Drain Pole --
 	if event.created_entity.name == "PowerDrainPole" then
 		placedPowerDrainPole(event)
 		return
 	end
+	
 	-- Save the Logistic Fluid Pole --
 	if event.created_entity.name == "LogisticFluidPole" then
 		placedLogisticPowerPole(event)
 		return
 	end
+	
 	-- Save the Matter Serializer --
 	if event.created_entity.name == "MatterSerializer" then
 		placedMatterSerializer(event)
 		return
 	end
+	
 	-- Save the Matter Printer --
 	if event.created_entity.name == "MatterPrinter" then
 		placedMatterPrinter(event)
 		return
 	end
+	
 	-- Save the Data Center --
 	if event.created_entity.name == "DataCenter" then
 		placedDataCenter(event)
 		return
 	end
+	
 	-- Save the Wireless Data Transmitter --
 	if event.created_entity.name == "WirelessDataTransmitter" then
 		placedWirelessDataTransmitter(event)
 		return
 	end
+	
 	-- Save the Wireless Data Receiver --
 	if event.created_entity.name == "WirelessDataReceiver" then
 		placedWirelessDataReceiver(event)
 		return
 	end
+	
 	-- Save the Energy Cube --
 	if string.match(event.created_entity.name, "EnergyCube") then
 		placedEnergyCube(event)
 		return
 	end
+	
 	-- Save the Data Center MF --
 	if event.created_entity.name == "DataCenterMF" then
 		if global.MF.dataCenter ~= nil and global.MF.dataCenter:valid() == true then
@@ -163,21 +203,25 @@ function somethingWasPlaced(event, isRobot)
 			return
 		end
 	end
+	
 	-- Save the Data Storage --
 	if event.created_entity.name == "DataStorage" then
 		placedDataStorage(event)
 		return
 	end
+	
 	-- Save the Ore Cleaner --
 	if event.created_entity.name == "OreCleaner" then
 		placedOreCleaner(event)
 		return
 	end
+	
 	-- Save the Fluid Extractor --
 	if event.created_entity.name == "FluidExtractor" then
 		placedFluidExtractor(event)
 		return
 	end
+	
 	-- Save the Jet Flag --
 	if string.match(event.created_entity.name, "Flag") then
 		placedJetFlag(event)

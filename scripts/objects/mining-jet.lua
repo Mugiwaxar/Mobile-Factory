@@ -113,7 +113,9 @@ function MJ:getTooltipInfos(GUI)
 	end
 	
 	-- Create the Inventory List --
-	Util.itemToFrame(self.inventoryItem, self.inventoryCount, GUI)
+	if self.inventoryItem ~= nil and self.inventoryCount > 0 then
+		Util.itemToFrame(self.inventoryItem, self.inventoryCount, GUI)
+	end
 	
 end
 

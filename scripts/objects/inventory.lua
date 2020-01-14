@@ -113,6 +113,7 @@ function INV:addItem(item, amount)
 
 	-- Calcule the amount of items that can be inserted --
 	local capableAmount = math.min(amount, self:remCap())
+	dprint(self:remCap())
 	
 	-- Check if the amount is > 0 --
 	if capableAmount > 0 then

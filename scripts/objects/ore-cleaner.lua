@@ -63,6 +63,8 @@ function OC:update(event)
 	end
 	-- The Ore Cleaner can work only if the Mobile Factory Entity is valid --
 	if global.MF.ent == nil or global.MF.ent.valid == false then return end
+	-- Check the Surface --
+	if self.ent.surface ~= global.MF.ent.surface then return end
 	-- Set the Ore Cleaner Energy --
 	self.ent.energy = 60
 	-- Collect Ores --

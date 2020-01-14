@@ -46,7 +46,8 @@ function UpSys.scanObjs()
   UpSys.addTable(global.miningJetTable)
   UpSys.addTable(global.jetFlagTable)
   UpSys.addTable(global.constructionJetTable)
-	
+  UpSys.addTable(global.deepStorageTable)
+
   -- Save the last scan tick --
   global.upSysLastScan = game.tick
 end
@@ -59,6 +60,8 @@ function UpSys.addObject(obj)
       -- Delete the Entity --
       obj:remove()
     else
+      -- Add the Object to the Entity Table --
+      table.insert(global.entsTable, obj)
       -- Check if the Object have to be updated --
 	  if obj.updateTick > 0 then
         -- Set Update --
@@ -80,7 +83,6 @@ function UpSys.addObject(obj)
           obj.lastUpdate = 1
         end
       end
-	  table.insert(global.entsTable, obj)
       return true
     end
   end

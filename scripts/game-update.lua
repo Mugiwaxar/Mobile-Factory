@@ -55,7 +55,7 @@ function updateValues()
 	if global.pdpTable == nil then global.pdpTable = {} end
 	if global.lfpTable == nil then global.lfpTable = {} end
 	if global.tankTable == nil then global.tankTable = {} end
-	if global.oreSilotTable == nil then global.oreSilotTable = {} end
+	if global.deepStorageTable == nil then global.deepStorageTable = {} end
 	if global.dataNetworkTable == nil then global.dataNetworkTable = {} end
 	if global.matterSerializerTable == nil then global.matterSerializerTable = {} end
 	if global.matterPrinterTable == nil then global.matterPrinterTable = {} end
@@ -86,11 +86,7 @@ function technologyFinished(event)
 	if event.research.name == "StorageTankMK2_3" then upgradeTank(3) end
 	if event.research.name == "StorageTankMK2_4" then upgradeTank(4) end
 	if event.research.name == "StorageTankMK2_5" then upgradeTank(5) end
-	if event.research.name == "OreSilot1" then createOreSilot1() end
-	if event.research.name == "OreSilot2" then createOreSilot2() end
-	if event.research.name == "OreSilot3" then createOreSilot3() end
-	if event.research.name == "OreSilot4" then createOreSilot4() end
-	if event.research.name == "OreSilot5" then createOreSilot5() end
+	if event.research.name == "DeepStorage" then createDeepStorageArea() end
 	if event.research.name == "ConstructibleArea1" then createConstructibleArea1() end
 end
 

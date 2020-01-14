@@ -50,38 +50,10 @@ function createLeftPassage5(surface)
 	createTilesSurface(surface, -82, -15, -76, -3, "tutorial-grid")
 end
 
--- Right passage Extension 1 --
-function createRightPassage1(surface)
-	if surface == nil then return end
-	createTilesSurface(surface, 10, -3, 26, 3, "tutorial-grid")
-end
-
--- Right passage Extension 2 --
-function createRightPassage2(surface)
-	createRightPassage1(surface)
-	if surface == nil then return end
-	createTilesSurface(surface, 26, -3, 42, 3, "tutorial-grid")
-end
-
--- Right passage Extension 3 --
-function createRightPassage3(surface)
-	createRightPassage2(surface)
-	if surface == nil then return end
-	createTilesSurface(surface, 42, -3, 58, 3, "tutorial-grid")
-end
-
--- Right passage Extension 4 --
-function createRightPassage4(surface)
-	createRightPassage3(surface)
-	if surface == nil then return end
-	createTilesSurface(surface, 58, -3, 74, 3, "tutorial-grid")
-end
-
--- Right passage Extension 5 --
-function createRightPassage5(surface)
-	createRightPassage4(surface)
-	if surface == nil then return end
-	createTilesSurface(surface, 74, -3, 90, 3, "tutorial-grid")
+-- Right passage Extension --
+function createRightPassage()
+	if global.MF.ccS == nil then return end
+	createTilesSurface(global.MF.ccS, 10, -3, 90, 3, "tutorial-grid")
 end
 
 -- Top passage Extension 1 --
@@ -137,39 +109,10 @@ function createMK1Tank5()
 	global.tankTable[5] = {ent=entity}
 end
 
--- Create Ore Silot 1 --
-function createOreSilot1()
-	createRightPassage1(global.MF.ccS)
-	local entity = createEntity(global.MF.ccS, 18, -11, "OreSilot1", "player")
-	global.oreSilotTable[1] = entity
-end
-
--- Create Ore Silot 2 --
-function createOreSilot2() --
-	createRightPassage2(global.MF.ccS)
-	local entity = createEntity(global.MF.ccS, 34, -11, "OreSilot2", "player")
-	global.oreSilotTable[2] = entity
-end
-
--- Create Ore Silot 3 --
-function createOreSilot3() --
-	createRightPassage3(global.MF.ccS)
-	local entity = createEntity(global.MF.ccS, 50, -11, "OreSilot3", "player")
-	global.oreSilotTable[3] = entity
-end
-
--- Create Ore Silot 4 --
-function createOreSilot4() --
-	createRightPassage4(global.MF.ccS)
-	local entity = createEntity(global.MF.ccS, 66, -11, "OreSilot4", "player")
-	global.oreSilotTable[4] = entity
-end
-
--- Create Ore Silot 5 --
-function createOreSilot5() --
-	createRightPassage5(global.MF.ccS)
-	local entity = createEntity(global.MF.ccS, 80, -11, "OreSilot5", "player")
-	global.oreSilotTable[5] = entity
+-- Create Deep Storage Building Area --
+function createDeepStorageArea()
+	createRightPassage()
+	createTilesSurface(global.MF.ccS, 10, -30, 90, -3, "BuildTile")
 end
 
 -- Create Constructible Area 1 --

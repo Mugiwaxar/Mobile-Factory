@@ -27,6 +27,7 @@ require("scripts/objects/energy-cube.lua")
 require("scripts/objects/mining-jet.lua")
 require("scripts/objects/mining-jet-flag.lua")
 require("scripts/objects/construction-jet.lua")
+require("scripts/objects/deep-storage.lua")
 
 -- When the mod init --
 function onInit()
@@ -60,7 +61,7 @@ function onInit()
 	global.wirelessDataTransmitterTable = {}
 	global.wirelessDataReceiverTable = {}
 	global.energyCubesTable = {}
-	global.oreSilotTable = {}
+	global.deepStorageTable = {}
 	global.lfpTable = {}
 	global.oreCleanerTable = {}
 	global.fluidExtractorTable = {}
@@ -131,6 +132,10 @@ function onLoad()
 	-- Set The Construction Jet Metatables --
 	for k, cj in pairs(global.constructionJetTable or {}) do
 		CJ:rebuild(cj)
+	end
+	-- Set The Deep Storage Metatables --
+	for k, dsr in pairs(global.deepStorageTable or {}) do
+		DSR:rebuild(dsr)
 	end
 end
 
