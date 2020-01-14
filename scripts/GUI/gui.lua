@@ -372,7 +372,7 @@ function GUI.onGuiElemChanged(event)
 		-- Check if a Mining Jet Flag was found --
 		if mjFlag == nil then return end
 		-- Change the Mining Jet Flag targeted Inventory --
-		mjFlag:changeInventory(tonumber(event.element.items[event.element.selected_index]))
+		mjFlag:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
 	end
 end
 

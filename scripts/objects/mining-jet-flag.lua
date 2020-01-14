@@ -7,7 +7,7 @@ MJF = {
 	lastUpdate = 0,
 	lastInventorySend = 0,
 	oreTable = nil,
-	targetedInv = 0,
+	selectedInv = 0,
 	inventory = nil, -- [item]{count}
 	TargetInventoryFull = false
 }
@@ -88,22 +88,42 @@ function MJF:getTooltipInfos(GUI)
 		Util.itemToFrame(name, count, GUI)
 	end
 
-	-- Create the Ore Silo Selection --
-	local inventories = {{"gui-description.InternalInventory"}}
+	-- Create the targeted Inventory label --
+	local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
+	targetLabel.style.top_margin = 7
+	targetLabel.style.font = "LabelFont"
+	targetLabel.style.font_color = {108, 114, 229}
+
+	local invs = {{"gui-description.All"}}
 	local selectedIndex = 1
 	local i = 1
-	for k, oreSilo in pairs(global.oreSilotTable) do
-		if oreSilo ~= nil then
+	for k, deepStorage in pairs(global.deepStorageTable) do
+		if deepStorage ~= nil then
 			i = i + 1
-			inventories[k+1] = tostring(k)
-			if self.targetedInv == k then
+			invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID)}
+			if self.selectedInv == deepStorage then
 				selectedIndex = i
 			end
 		end
 	end
-	if selectedIndex ~= nil and selectedIndex > table_size(inventories) then selectedIndex = nil end
-	local oreSiloSelection = GUI.add{type="list-box", name="MJF" .. self.ent.unit_number, items=inventories, selected_index=selectedIndex}
-	oreSiloSelection.style.width = 50
+	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
+	local invSelection = GUI.add{type="list-box", name="MJF" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
+	invSelection.style.width = 70
+end
+
+-- Change the Targeted Inventory --
+function MJF:changeInventory(ID)
+	-- Check the ID --
+	if ID == nil then self.selectedInv = nil end
+	-- Select the Inventory --
+	self.selectedInv = nil
+	for k, deepStorage in pairs(global.deepStorageTable) do
+		if deepStorage ~= nil and deepStorage:valid() == true then
+			if ID == deepStorage.ID then
+				self.selectedInv = deepStorage
+			end
+		end
+	end
 end
 
 -- Scan Ores Around --
@@ -198,12 +218,6 @@ function MJF:addItems(name, count)
 	end
 end
 
--- Save the Selected Inventory --
-function MJF:changeInventory(ID)
-	if ID == nil then self.targetedInv = 0 end
-	self.targetedInv = ID
-end
-
 -- Send inside Inventory to the Targeted one --
 function MJF:sendInventory()
 
@@ -211,39 +225,34 @@ function MJF:sendInventory()
 
 	-- Sended value --
 	local sended = false
+	
+	-- Check the targeted Inventory --
+	local dataInv = self.selectedInv
+	if dataInv == nil and dataInv:valid() == false then return end
 
 	-- Itinerate the Inventory --
 	for name, count in pairs(self.inventory) do
-		-- Check the targeted Inventory --
-		if self.targetedInv == 0 then
-			-- Get the Linked Inventory --
-			local dataInv = global.MF.II
-			-- Add Items to the Data Inventory --
-			local amountAdded = dataInv:addItem(name, count)
-			-- Remove Items from the local Inventory --
-			if amountAdded > 0 then
-				count = count - amountAdded
-				sended = true
-				if count <= 0 then
-					self.inventory[name] = nil
+		if dataInv == 0 then
+		-- Send Ore to all Deep Storage --
+			for k, dp in pairs(global.deepStorageTable) do
+				local added = dp:addItem(name, count)
+				-- Check if Ore was added --
+				if added > 0 then
+					self.inventory[name] = self.inventory[name] - added
+					-- Remove the Ore --
+					if self.inventory[name] <= 0 then
+						self.inventory[name] = nil
+						break
+					end
 				end
 			end
 		else
-			-- Find the Ore Silo --
-			local silo = global.oreSilotTable[self.targetedInv]
-			-- Check the Ore Silo --
-			if silo == nil or silo.valid == false then return end
-			-- Get the Silo Inventory --
-			local siloInv = silo.get_inventory(defines.inventory.chest)
-			-- Check if the Inventory is valid --
-			if siloInv == nil then return end
-			-- Insert Items --
-			local amountAdded = siloInv.insert({name=name, count=count})
-			-- Remove Items from the local Inventory --
-			if amountAdded > 0 then
-				count = count - amountAdded
-				sended = true
-				if count <= 0 then
+			local added = dataInv:addItem(name, count)
+			-- Check if Ore was added --
+			if added > 0 then
+				self.inventory[name] = self.inventory[name] - added
+				-- Remove the Ore --
+				if self.inventory[name] <= 0 then
 					self.inventory[name] = nil
 				end
 			end
