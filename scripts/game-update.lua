@@ -323,8 +323,12 @@ function updateConstructionJet()
 		table.remove(global.constructionTable, i)
 		return
 	end
+	if structure.ent.surface ~= global.MF.ent.surface then
+		table.remove(global.constructionTable, i)
+		return
+	end
 	if structure.mission == "Deconstruct" and structure.ent.prototype.items_to_place_this == nil then
-	table.remove(global.constructionTable, i)
+		table.remove(global.constructionTable, i)
 		return
 	end
 	if structure.mission == "Deconstruct" and structure.ent.to_be_deconstructed("player") == false then

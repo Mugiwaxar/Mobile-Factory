@@ -53,6 +53,8 @@ function FE:update(event)
 	end
 	-- The Fluid Extractor can work only if the Mobile Factory Entity is valid --
 	if global.MF.ent == nil or global.MF.ent.valid == false then return end
+	-- Check the Surface --
+	if self.ent.surface ~= global.MF.ent.surface then return end
 	-- Extract Fluid --
 	self:extractFluids(event)
 end

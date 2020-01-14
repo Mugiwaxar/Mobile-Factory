@@ -52,10 +52,14 @@ function somethingWasPlaced(event, isRobot)
 			return
 		end
 	end
+	-- Save the Ghost inside the Construction Table --
+	if event.created_entity ~= nil and event.created_entity.valid == true and event.created_entity.name == "entity-ghost" then
+		table.insert(global.constructionTable,{ent=event.created_entity, item=event.created_entity.ghost_prototype.items_to_place_this[1].name, name=event.created_entity.ghost_name, position=event.created_entity.position, direction=event.created_entity.direction or 1, mission="Construct"})
+	end
+	
 	-- Ghost --
 	if isPlayer == true and event.created_entity.surface.name ~= _mfSurfaceName and event.stack ~= nil and event.stack.valid_for_read == true and event.created_entity.name == "entity-ghost" then
 		-- Add the Gost to the Construction List --
-		table.insert(global.constructionTable,{ent=event.created_entity, item=event.created_entity.ghost_prototype.items_to_place_this[1].name, name=event.created_entity.ghost_name, position=event.created_entity.position, direction=event.created_entity.direction or 1, mission="Construct"})
 		if canBePlacedOutside(event.stack.name) == false then
 			if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"}) end
 			event.created_entity.destroy()
