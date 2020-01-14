@@ -153,11 +153,13 @@ function WDT:update()
 		-- Send Signals --
 		local i = 1
 		for k, signal in pairs(wirelessNetwork) do
-			self.ent.get_control_behavior().set_signal(i, {signal={type=signal.type, name=k}, count=signal.count})
-			-- Increament the Slot --
-			i = i + 1
-			-- Stop if there are to much Items --
-			if i > 999 then break end
+			if game.item_prototypes[k] ~= nil then
+				self.ent.get_control_behavior().set_signal(i, {signal={type=signal.type, name=k}, count=signal.count})
+				-- Increament the Slot --
+				i = i + 1
+				-- Stop if there are to much Items --
+				if i > 999 then break end
+			end
 		end
 		
 	end

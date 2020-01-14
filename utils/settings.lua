@@ -99,6 +99,7 @@ _eventTick60=60
 _eventTick63=63
 _eventTick64=64
 _eventTick75=75
+_eventTick90=90
 _eventTick100=100
 _eventTick125=125
 _eventTick130=130

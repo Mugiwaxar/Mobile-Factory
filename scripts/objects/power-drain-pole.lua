@@ -17,7 +17,6 @@ function PDP:new(object)
 	setmetatable(t, mt)
 	mt.__index = PDP
 	t.ent = object
-	UpSys.addObj(t)
 	return t
 end
 

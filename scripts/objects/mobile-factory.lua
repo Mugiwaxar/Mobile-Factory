@@ -14,6 +14,7 @@ MF = {
 	fChest = nil,
 	II = nil,
 	dataCenter = nil,
+	entitiesAround = nil,
 	internalEnergy = _mfInternalEnergy,
 	maxInternalEnergy = _mfInternalEnergyMax,
 	jumpTimer = _mfBaseJumpTimer,
@@ -36,6 +37,7 @@ function MF:new()
 	local mt = {}
 	setmetatable(t, mt)
 	mt.__index = MF
+	t.entitiesAround = {}
 	UpSys.addObj(t)
 	return t
 end
@@ -100,6 +102,8 @@ function MF:update(event)
 	if tick%_eventTick60 == 0 then self:updateLasers() end
 	-- Update the Fuel --
 	if tick%_eventTick27 == 0 then self:updateFuel() end
+	-- Scan Entities Around --
+	if tick%_eventTick90 == 0 then self:scanEnt() end
 	-- Update the Shield --
 	self:updateShield(event)
 	-- Send Quatron Charge --
@@ -159,21 +163,47 @@ function MF:changePowerLaserMode(mode)
 	self.selectedPowerLaserMode = mode
 end
 
--- Search energy sources near Mobile Factory and update the burning fuel --
+-- Scan all Entities around the Mobile Factory --
+function MF:scanEnt()
+	-- Look for Entities --
+	self.entitiesAround = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=self:getLaserRadius()}
+	-- Filter the Entities --
+	for k, entity in pairs(self.entitiesAround) do
+		local keep = false
+		-- Keep Electric Entity --
+		if entity.energy ~= nil and entity.electric_buffer_size ~= nil and entity.energy > 0 then
+			deep = true
+		end
+		-- Keep Tank --
+		if entity.type == "storage-tank" then
+			keep = true
+		end
+		-- Keep Container --
+		if entity.type == "container" or entity.type == "logistic-container" then
+			keep = true
+		end
+		-- Removed not keeped Entity --
+		if keep == false then
+			self.entitiesAround[k] = nil
+		end
+	end
+end
+
+-- Update lasers of the Mobile Factory --
 function MF:updateLasers()
 	-- Check the Mobile Factory --
 	if self.ent == nil or self.ent.valid == false then return end
-	-- Look for Entities --
-	local entities = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=self:getLaserRadius()}
 	-- Create all Lasers --
 	i = 1
-	for k, entity in pairs(entities) do
-		local laserUsed = false
-		if self:updateEnergyLaser(entity) == true then laserUsed = true end
-		if self:updateFluidLaser(entity) == true then laserUsed = true end
-		if self:updateLogisticLaser(entity) == true then laserUsed = true end
-		if laserUsed == true then i = i + 1 end
-		if i > self:getLaserNumber() then return end
+	for k, entity in pairs(self.entitiesAround or {}) do
+		if entity ~= nil and entity.valid == true then
+			local laserUsed = false
+			if self:updateEnergyLaser(entity) == true then laserUsed = true end
+			if self:updateFluidLaser(entity) == true then laserUsed = true end
+			if self:updateLogisticLaser(entity) == true then laserUsed = true end
+			if laserUsed == true then i = i + 1 end
+			if i > self:getLaserNumber() then return end
+		end
 	end
 end
 

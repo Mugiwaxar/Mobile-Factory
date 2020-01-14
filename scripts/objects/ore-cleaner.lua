@@ -121,7 +121,7 @@ function OC:getTooltipInfos(GUI)
 	end
 	if selectedIndex ~= nil and selectedIndex > table_size(oreSilos) then selectedIndex = nil end
 	local oreSiloSelection = ocFrame.add{type="list-box", name="OC" .. self.ent.unit_number, items=oreSilos, selected_index=selectedIndex}
-	oreSiloSelection.style.width = 50
+	oreSiloSelection.style.width = 60
 end
 
 -- Change the Targeted Ore Silo --

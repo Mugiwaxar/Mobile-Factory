@@ -27,7 +27,6 @@ function UpSys.scanObjs()
       global.upsysTickTable[k] = nil
     end
   end
-  dprint(table_size(global.upsysTickTable))
 		
   -- Add Object --
   UpSys.addObject(global.MF)

@@ -17,7 +17,7 @@ dfE.collision_box = {{-1.2, -1.2}, {1.2, 1.2}}
 dfE.selection_box = {{-1.5, -1.5}, {1.5, 1.5}}
 dfE.module_specification = {module_slots=2,module_info_icon_shift={0, 0.8}}
 dfE.allowed_effects = {"consumption", "speed", "productivity", "pollution"}
-dfE.crafting_categories = {"DimensionalSmelting"}
+dfE.crafting_categories = {"DimensionalSmelting", "smelting"}
 dfE.result_inventory_size = 1
 dfE.crafting_speed = 2
 dfE.energy_usage = "180kW"

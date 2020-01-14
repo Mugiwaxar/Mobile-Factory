@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.72
+Date: 14/01/2020
+  Changes:
+    - The Dimensional Furnace can now smelt all resources inside the Smelting category (Not just Dimensional Ore)
+  Optimisations:
+    - Fixed performances issue of the Mobile Factory Lasers
+  Bugfixes:
+    - Fixed a crash when a Power Drain Pole is placed
+---------------------------------------------------------------------------------------------------
 Version: 0.0.71
 Date: 13/01/2020
   Bugfixes:
@@ -17,7 +26,7 @@ Date: 12/01/2020
     - The Mining Jet Flag will now send its content to the targeted Inventory
   Graphics:
     - Reworked the Jet Mining Flag Shadow
-  Scripting:
+  Optimisations:
     - Massive Performance improvement of the Mining Jet
     - Massive rewrite for improvement of the Update System
   Bugfixes:
