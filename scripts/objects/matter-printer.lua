@@ -10,7 +10,8 @@ MP = {
 	lastUpdate = 0,
 	dataNetwork = nil,
 	GCNID = 0,
-	RCNID = 0
+	RCNID = 0,
+	selectedInv = nil
 }
 
 -- Constructor --
@@ -95,7 +96,10 @@ end
 
 function MP:updateInv()
 	-- Get the Linked Inventory --
-	local dataInv = self.dataNetwork.dataCenter.invObj
+	local dataInv = self.selectedInv
+	if self.selectedInv == nil then
+		dataInv = self.dataNetwork.dataCenter.invObj
+	end
 	
 	-- Get the Local Inventory --
 	local inv = self.ent.get_inventory(defines.inventory.chest)
@@ -158,6 +162,47 @@ function MP:getTooltipInfos(GUI)
 	link.style.font = "LabelFont"
 	link.caption = text
 	link.style.font_color = style
+	
+	-- Create the Inventory Selection --
+	if self.dataNetwork ~= nil and self.dataNetwork.dataCenter ~= nil and self.dataNetwork.dataCenter:valid() == true and self.dataNetwork.dataCenter.invObj.isII == true then
+	
+		-- Create the targeted Inventory label --
+		local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
+		targetLabel.style.top_margin = 7
+		targetLabel.style.font = "LabelFont"
+		targetLabel.style.font_color = {108, 114, 229}
+	
+		local invs = {self.dataNetwork.dataCenter.invObj.name or {"gui-description.Any"}}
+		local selectedIndex = 1
+		local i = 1
+		for k, deepStorage in pairs(global.deepStorageTable) do
+			if deepStorage ~= nil then
+				i = i + 1
+				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID)}
+				if self.selectedInv == deepStorage then
+					selectedIndex = i
+				end
+			end
+		end
+		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
+		local invSelection = GUI.add{type="list-box", name="MP" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
+		invSelection.style.width = 70
+	end
+end
+
+-- Change the Targeted Inventory --
+function MP:changeInventory(ID)
+	-- Check the ID --
+	if ID == nil then self.selectedInv = nil end
+	-- Select the Inventory --
+	self.selectedInv = nil
+	for k, deepStorage in pairs(global.deepStorageTable) do
+		if deepStorage ~= nil and deepStorage:valid() == true then
+			if ID == deepStorage.ID then
+				self.selectedInv = deepStorage
+			end
+		end
+	end
 end
 
 -- Set Active --

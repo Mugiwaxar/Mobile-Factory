@@ -83,6 +83,10 @@ function CJ:update()
 		self:enterMF()
 		return
 	end
+	if self.currentOrder == "EnterMF" and self:isIddle() == true then
+		self:enterMF()
+		return
+	end
 end
 
 -- Tooltip Infos --

@@ -19,7 +19,6 @@ function INV:new(name)
 	mt.__index = INV
 	t.name = name
 	t.inventory = {}
-	t.CCInventory = {}
 	return t
 end
 
@@ -40,80 +39,43 @@ end
 function INV:rescan()
 
 	-- Calcule the max capacity --
+	if self.isII == true then
+		self.dataStoragesCount = 0
+		if global.MF.dataCenter ~= nil and global.MF.dataCenter:valid() == true then
+			if global.MF.dataCenter.dataNetwork ~= nil then
+				self.dataStoragesCount = table_size(global.MF.dataCenter.dataNetwork.dataStorageTable)
+			end
+		end
+	end
 	self.maxCapacity = _mfBaseMaxItems + (_mfDataStorageCapacity*self.dataStoragesCount)
 	
-	local totalItem = 0
+	self.usedCapacity = 0
 	-- Itinerate the Invernal Inventory --
 	for item, count in pairs(self.inventory) do
 		-- Check if the Item still exist --
 		if game.item_prototypes[item] == nil then
 			self.inventory[item] = nil
 		else
-			totalItem = totalItem + count
+			self.usedCapacity = self.usedCapacity + count
 		end
 	end
-	
-	-- Save the used Capacity --
-	self.usedCapacity = totalItem
-	
-	-- Create the CC Inventory Table --
-	self.CCInventory = {}
-	for k, silo in pairs(global.oreSilotTable) do
-		-- Check the Ore Silo --
-		if silo ~= nil and silo.valid == true then
-			-- Get the Ore Silo Inventory --
-			local inv = silo.get_inventory(defines.inventory.chest)
-			-- Check the Inventory --
-			if inv ~= nil then
-				-- Add Items to the CCInventory --
-				for item, count in pairs(inv.get_contents()) do
-					if self.CCInventory[item] ~= nil then
-						self.CCInventory[item] = self.CCInventory[item] + count
-					else
-						self.CCInventory[item] = count
-					end
-				end
-			end
-		end
-	end
-	
-	
 end
 
 -- Return remaining capacity --
 function INV:remCap()
-	-- Rescan the Inventory --
-	self:rescan()
 	return self.maxCapacity - self.usedCapacity
 end
 
 -- Return the number of requested Item --
 function INV:hasItem(item)
-	
-	-- Rescan the Inventory --
-	self:rescan()
-	
-	-- Test if the item exist and return the amount --
-	local amount = 0
-	if self.inventory[item] ~= nil then
-		amount = amount + self.inventory[item]
-	end
-	if self.CCInventory[item] ~= nil then
-		amount = amount + self.CCInventory[item]
-	end
-	
-	return amount
+	return self.inventory[item] or 0
 end
 
 -- Request to add an Item and return the amount added --
 function INV:addItem(item, amount)
 
-	-- Rescan the Inventory --
-	self:rescan()
-
 	-- Calcule the amount of items that can be inserted --
 	local capableAmount = math.min(amount, self:remCap())
-	dprint(self:remCap())
 	
 	-- Check if the amount is > 0 --
 	if capableAmount > 0 then
@@ -123,6 +85,8 @@ function INV:addItem(item, amount)
 		else
 			self.inventory[item] = capableAmount
 		end
+		-- Set the new Capacity --
+		self.usedCapacity = self.usedCapacity + capableAmount
 	end
 	
 	-- Return the amount inserted --
@@ -133,12 +97,6 @@ end
 -- Request to remove an Item and return the amount removed --
 function INV:getItem(item, amount)
 	
-	-- Rescan the Inventory --
-	self:rescan()
-	
-	-- Create the Item total Variable --
-	totalAmount = 0
-
 	-- Check if the Item is inside the Inventory --
 	if self.inventory[item] ~= nil then
 	
@@ -153,54 +111,23 @@ function INV:getItem(item, amount)
 			self.inventory[item] = nil
 		end
 		
-		-- Return the amount removed --
-		totalAmount = totalAmount + itemAmount
-	end
-	
-	-- Check if the Item is inside the CCInventory --
-	if self.CCInventory[item] ~= nil then
-	
-		-- Calcule the amount that can be removed --
-		local itemAmount = math.min(amount, self.CCInventory[item])
-		local toRemove = itemAmount
-		-- Remove Items from Ore Silos --
-		for k, silo in pairs(global.oreSilotTable) do
-			-- Stop if there are no more Item to remove --
-			if toRemove <= 0 then break end
-			-- Check the Silo --
-			if silo ~= nil then
-				-- Get the Inventory --
-				local inv = silo.get_inventory(defines.inventory.chest)
-				-- Check the Inventory --
-				if inv ~= nil then
-					-- Remove the maximum amount --
-					local removedCount = inv.remove({name=item, count=toRemove})
-					-- Decrease the total amount --
-					toRemove = toRemove - removedCount
-				end
-			end
-		end
+		-- Set the new Capacity --
+		self.usedCapacity = self.usedCapacity - itemAmount
 		
 		-- Return the amount removed --
-		totalAmount = totalAmount + itemAmount
+		return itemAmount
 	end
 	
-	return totalAmount
+	return 0
+	
 end
 
 -- Return the Best Quatron Charge --
 function INV:getBestQuatron()
-	-- Create the Level variable --
-	local level = 0
-	-- Look for Quatron Charge in the Internal Inventory --
-	for i = 100, 0, -1 do
-		-- Look for the best Charge --
-		local amount = self:hasItem("Quatron" .. i)
-		if amount > 0 then
-			level = i
-			-- Remove the Charge from the Internal Inventory --
-			self:getItem("Quatron" .. i, 1)
-			return level
+	for i=100, 1, -1 do
+		if self.inventory["Quatron"..i] ~= nil then
+			self:getItem("Quatron"..i, 1)
+			return i
 		end
 	end
 	return 0
@@ -208,9 +135,6 @@ end
 
 -- Return the Inventory Frame --
 function INV:getFrame(guiElement)
-
-	-- Rescan the Inventory --
-	self:rescan()
 
 	-- Create the Title Label --
 	local title = guiElement.add{type="label"}
@@ -232,27 +156,9 @@ function INV:getFrame(guiElement)
 	
 	-- Create the Inventory List Flow --
 	local invList = guiElement.add{type="flow", direction="vertical"}
-	-- invList.style.width = 205
 	-- Create the list --
 	for item, count in pairs(self.inventory) do
 		Util.itemToFrame(item, count, invList)
-	end
-	
-	if self.isII then
-		-- Create the Ore Silo Label --
-		local oreSilo = guiElement.add{type="label"}
-		oreSilo.style.font = "LabelFont"
-		oreSilo.caption = {"", {"gui-description.OreSilo"}}
-		oreSilo.style.font_color = {108, 114, 229}
-		oreSilo.style.bottom_margin = 7
-		
-		-- Create the CCInventory List Flow --
-		local invList = guiElement.add{type="flow", direction="vertical"}
-		-- invList.style.width = 205
-		-- Create the list --
-		for item, count in pairs(self.CCInventory) do
-			Util.itemToFrame(item, count, invList)
-		end
 	end
 	
 end

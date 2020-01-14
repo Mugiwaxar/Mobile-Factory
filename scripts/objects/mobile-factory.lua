@@ -98,6 +98,8 @@ function MF:update(event)
 	self.lastUpdate = game.tick
 	-- Get the current tick --
 	local tick = event.tick
+	-- Update the Internal Inventory --
+	if tick%_eventTick80 == 0 then self.II:rescan() end
 	--Update all lasers --
 	if tick%_eventTick60 == 0 then self:updateLasers() end
 	-- Update the Fuel --

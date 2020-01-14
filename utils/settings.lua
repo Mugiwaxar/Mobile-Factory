@@ -66,7 +66,6 @@ _mfOreCleanerMaxCharge = 1000
 _mfOreCleanerRadius = 25
 _mfOreCleanerOrePerExtraction = 10
 _mfOreCleanerExtractionTicks = 20
-_mfOreCleanerInventorySize = 12000
 
 -- Mining Jet --
 _mfMiningJetOrePerUpdate = 5
@@ -99,6 +98,7 @@ _eventTick60=60
 _eventTick63=63
 _eventTick64=64
 _eventTick75=75
+_eventTick80=80
 _eventTick90=90
 _eventTick100=100
 _eventTick125=125

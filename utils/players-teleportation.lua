@@ -88,6 +88,8 @@ end
 
 -- Teleport the player from the Factory to the Control Center --
 function teleportPlayerToControlCenter(player)
+	-- Check the Player --
+	if player == nil then return end
 	-- Check if the Control Center Surface is valid --
 	if global.MF.ccS == nil then game.print("Control Center surface lost") return end
 	-- Teleport the Player --

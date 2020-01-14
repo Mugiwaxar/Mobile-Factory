@@ -6,8 +6,7 @@ OC = {
 	charge = 0,
 	totalCharge = 0,
 	oreTable = nil,
-	inventory = nil,
-	selectedOreSilo = nil,
+	selectedInv = nil,
 	animID = 0,
 	animTick = 0,
 	updateTick = 1,
@@ -71,10 +70,6 @@ function OC:update(event)
 	if event.tick%_mfOreCleanerExtractionTicks == 0 then
 		self:collectOres(event)
 	end
-	-- Send ores to the Ore Silo --
-	if event.tick%_eventTick57 == 0 then
-		self:sendToSilo()
-	end
 	-- Update Animation --
 	 self:updateAnimation(event)
 end
@@ -108,34 +103,39 @@ function OC:getTooltipInfos(GUI)
 	PurityBar.style.color = {255, 255, 255}
 	targetLabel.style.font_color = {108, 114, 229}
 	
-	-- Create the Ore Silo Selection --
-	local oreSilos = {{"gui-description.Any"}}
+	-- Create the targeted Inventory label --
+	local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
+	targetLabel.style.top_margin = 7
+	targetLabel.style.font = "LabelFont"
+	targetLabel.style.font_color = {108, 114, 229}
+
+	local invs = {{"gui-description.Any"}}
 	local selectedIndex = 1
 	local i = 1
-	for k, oreSilo in pairs(global.oreSilotTable) do
-		if oreSilo ~= nil then
+	for k, deepStorage in pairs(global.deepStorageTable) do
+		if deepStorage ~= nil then
 			i = i + 1
-			oreSilos[k+1] = tostring(k)
-			if self.selectedOreSilo == oreSilo then
+			invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID)}
+			if self.selectedInv == deepStorage then
 				selectedIndex = i
 			end
 		end
 	end
-	if selectedIndex ~= nil and selectedIndex > table_size(oreSilos) then selectedIndex = nil end
-	local oreSiloSelection = ocFrame.add{type="list-box", name="OC" .. self.ent.unit_number, items=oreSilos, selected_index=selectedIndex}
-	oreSiloSelection.style.width = 60
+	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
+	local invSelection = GUI.add{type="list-box", name="OC" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
+	invSelection.style.width = 70
 end
 
--- Change the Targeted Ore Silo --
-function OC:changeOreSilo(ID)
+-- Change the Targeted Inventory --
+function OC:changeInventory(ID)
 	-- Check the ID --
-	if ID == nil then self.selectedOreSilo = nil end
-	-- Select the Ore Silo --
-	self.selectedOreSilo = nil
-	for k, oreSilo in pairs(global.oreSilotTable) do
-		if oreSilo ~= nil and oreSilo.valid == true then
-			if ID == k then
-				self.selectedOreSilo = oreSilo
+	if ID == nil then self.selectedInv = nil end
+	-- Select the Inventory --
+	self.selectedInv = nil
+	for k, deepStorage in pairs(global.deepStorageTable) do
+		if deepStorage ~= nil and deepStorage:valid() == true then
+			if ID == deepStorage.ID then
+				self.selectedInv = deepStorage
 			end
 		end
 	end
@@ -151,37 +151,6 @@ end
 -- Get the number of Ores per extraction --
 function OC:orePerExtraction()
 	return math.floor(self.purity * _mfOreCleanerOrePerExtraction)
-end
-
--- Get the Inventory items number --
-function OC:inventoryItemNumber()
-	-- Check if the Inventory Table is valid --
-	if self.inventory == nil then self.inventory = {} end
-	-- Create the number variable --
-	local number = 0
-	-- Look for all items --
-	for	 k, itemStack in pairs(self.inventory) do
-		number = number + itemStack.count
-	end
-	return number
-end
-
--- Add ItemsStack to the Inventory --
-function OC:addItemStack(item)
-	-- Test if the Ore Cleaner is valid --
-	if self.ent == nil then return 0 end
-	if self.ent.valid == false then return 0 end
-	-- Test if the Item exist or not inside the Inventory --
-	for k, itemStack in pairs(self.inventory) do
-		-- Look for a corresponding Item --
-		if item.name == itemStack.name then
-			-- Add the Item to the Stack --
-			itemStack.count = itemStack.count + item.count
-			return
-		end
-	end
-	-- If any corresponding Item exist, create a new one --
-	table.insert(self.inventory, item)
 end
 
 -- Scan surronding Ores --
@@ -202,16 +171,12 @@ end
 function OC:collectOres(event)
 	-- Test if the Mobile Factory and the Ore Cleaner are valid --
 	if global.MF:valid() == false or self:valid() == false then return end
-	-- Get the Inventory remaining space --
-	local iRemSpace = _mfOreCleanerInventorySize - self:inventoryItemNumber()
-	-- Return if there are no space remaining --
-	if iRemSpace <= 0 then return end
 	-- Return if the Ore Table is empty --
 	if table_size(self.oreTable) <= 0 then return end
 	-- Return if there are not Quatron Charge remaining --
 	if self.charge <= 0 then return end
-	-- Test if an Ore Silo is selected --
-	if self.selectedOreSilo == nil then return end
+	-- Check the selected Inventory --
+	if self.selectedInv == nil then return end
 	-- Create the OrePath and randomNum variable --
 	local orePath = nil
 	local randomNum  = 0
@@ -229,10 +194,15 @@ function OC:collectOres(event)
 	-- Test if the Ore Path exist and is valid --
 	if orePath == nil then return end
 	if orePath.valid == false then return end
+	local oreName = orePath.prototype.mineable_properties.products[1].name
+	-- Check if a Name was found --
+	if oreName == nil then return end
+	-- Check if the Ore type is the same as the selected Inventory --
+	if self.selectedInv.inventoryItem ~= nil and oreName ~= self.selectedInv.inventoryItem then return end
 	-- Extract Ore --
-	local oreExtracted = math.min(self:orePerExtraction(), orePath.amount, iRemSpace)
+	local oreExtracted = math.min(self:orePerExtraction(), orePath.amount)
 	-- Add Ores to the Inventory --
-	self:addItemStack({name=orePath.prototype.mineable_properties.products[1].name, count=oreExtracted})
+	self.selectedInv:addItem(oreName, oreExtracted)
 	-- Remove Ores from the Ore Path --
 	orePath.amount = math.max(orePath.amount - oreExtracted, 1)
 	-- Make the beam --
@@ -248,32 +218,6 @@ function OC:collectOres(event)
 	if orePath.amount <= 1 then
 		orePath.destroy()
 		table.remove(self.oreTable, randomNum)
-	end
-end
-
--- Send to the Ore Silot --
-function OC:sendToSilo()
-	-- Test if the Ore Silo is valid --
-	if self.selectedOreSilo == nil then return end
-	if self.selectedOreSilo.valid == false then return end
-	-- Get the Silo Inventory --
-	local siloInv = self.selectedOreSilo.get_inventory(defines.inventory.chest)
-	-- Test if the Inventory is valid --
-	if siloInv == nil then return end
-	-- Try to send things --
-	for k, itemStack in pairs(self.inventory) do
-		-- Insert Items --
-		local inserted = siloInv.insert({name=itemStack.name, count=itemStack.count})
-		-- Test if Items was inserted --
-		if inserted > 0 then
-			-- Remove Items from the Inventory --
-			itemStack.count = itemStack.count - inserted
-			-- Test if the itemStack is empty --
-			if itemStack.count <= 0 then
-				-- Remove the ItemStack from the Inventory --
-				self.inventory[k] = nil
-			end
-		end
 	end
 end
 

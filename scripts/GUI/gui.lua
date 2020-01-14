@@ -287,8 +287,8 @@ function GUI.onGuiElemChanged(event)
 		end
 		-- Check if a Ore Cleaner was found --
 		if oreCleaner == nil then return end
-		-- Change the Ore Cleaner targeted Ore Silo --
-		oreCleaner:changeOreSilo(tonumber(event.element.items[event.element.selected_index]))
+		-- Change the Ore Cleaner targeted Deep Storage --
+		oreCleaner:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
 	end
 	
 	------- Read if the Element comes from an Fluid Extractor -------
@@ -329,6 +329,25 @@ function GUI.onGuiElemChanged(event)
 		if matterS == nil then return end
 		-- Change the Matter Serializer targeted Inventory --
 		matterS:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
+	end
+	------- Read if the Element comes from an Matter Printer -------
+	if string.match(event.element.name, "MP") then
+		-- Find the Matter Printer ID --
+		local ID = split(event.element.name, "MP")
+		ID = tonumber(ID[1])
+		-- Check the ID --
+		if ID == nil then return end
+		-- Find the Matter Printer --
+		local matterP = nil
+		for k, mp in pairs(global.matterPrinterTable) do
+			if mp:valid() and mp.ent.unit_number == ID then
+				matterP = mp
+			end
+		end
+		-- Check if a Matter Printer was found --
+		if matterP == nil then return end
+		-- Change the Matter Printer targeted Inventory --
+		matterP:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
 	end
 	------- Read if the Element comes from The Mobile Factory Power Laser -------
 	if string.match(event.element.name, "MFPL") then

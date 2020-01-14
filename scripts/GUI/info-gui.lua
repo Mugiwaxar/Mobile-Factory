@@ -495,7 +495,9 @@ end
 function GUI.updateOreSiloFrame(gui)
 	if global.MF.ccS == nil or global.oreSilotTable == nil then return end
 	-- Make the frame visible if there are at least one Ore Silo in the table --
-	if table_size(global.oreSilotTable) > 0 then
+	if table_size(global.deepStorageTable) > 0 then
+		gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.visible = true
+	else
 		gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.visible = true
 	end
 	-- Get the Ore Silo Flow --
@@ -503,32 +505,21 @@ function GUI.updateOreSiloFrame(gui)
 	-- Clear the Ore Silo Flow --
 	oreSiloFlow.clear()
 	-- Look for all Ore Silos --
-	for k, oreSilo in pairs(global.oreSilotTable) do
-		-- Get the Ore Silo inventory --
-		local inv = oreSilo.get_inventory(defines.inventory.chest)
-		-- Get the Ore Silo capacity --
-		local capacity = #inv
-		local usedCapacity = 0
-		for i=1, capacity do
-			if inv[i].valid_for_read then
-				usedCapacity = usedCapacity + 1
-			end
-		end
+	for k, oreSilo in pairs(global.deepStorageTable) do
 		-- Create the Frame --
 		luaGuiElement = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.mfOreSilosFlow
 		local OreSiloFrame = luaGuiElement.add{type="frame", direction="horizontal"}
+		OreSiloFrame.style.width = 150
 		-- Create the Flow --
 		local OreSiloFlow = OreSiloFrame.add{type="flow", direction="vertical"}
 		-- Create Ore Silo Labels --
 		local OreSiloLabel = OreSiloFlow.add{type="label"}
-		OreSiloLabel.caption = {"", {"gui-description.OreSilo" .. k .. "Label"}, ": ", usedCapacity, "/", capacity}
+		OreSiloLabel.caption = {"", {"gui-description.DeepStorage"}, " ", oreSilo.ID}
 		OreSiloLabel.style.font = "LabelFont"
 		OreSiloLabel.style.font_color = {39,239,0}
-		-- Create Ore Silo ProgressBar -
-		local OreSiloBar = OreSiloFlow.add{type="progressbar"}
-		OreSiloBar.value = usedCapacity/capacity
-		OreSiloBar.style.maximal_width = 200
-		OreSiloBar.style.color = {39,239,0}
+		if oreSilo.inventoryItem ~= nil then
+			Util.itemToFrame(oreSilo.inventoryItem, oreSilo.inventoryCount, OreSiloFlow)
+		end
 	end
 end
 

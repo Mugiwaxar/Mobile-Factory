@@ -95,34 +95,21 @@ function MS:update()
 end
 
 function MS:updateInv()
-		-- Get the Local Inventory --
+	-- Get the Local Inventory --
 	local inv = self.ent.get_inventory(defines.inventory.chest)
 	
 	-- Itinerate the Inventory --
 	for item, count in pairs(inv.get_contents()) do
 		-- Check the targeted Inventory --
+		local dataInv = self.selectedInv
 		if self.selectedInv == nil then
-			-- Get the Linked Inventory --
-			local dataInv = self.dataNetwork.dataCenter.invObj
-			-- Add Items to the Data Inventory --
-			local amountAdded = dataInv:addItem(item, count)
-			-- Remove Items from the local Inventory --
-			if amountAdded > 0 then
-				inv.remove({name=item, count=amountAdded})
-			end
-		else
-			-- Check the Ore Silo --
-			if self.selectedInv.valid == false then return end
-			-- Get the Silo Inventory --
-			local siloInv = self.selectedInv.get_inventory(defines.inventory.chest)
-			-- Check if the Inventory is valid --
-			if siloInv == nil then return end
-			-- Insert Items --
-			local amountAdded = siloInv.insert({name=item, count=count})
-			-- Remove Items from the local Inventory --
-			if amountAdded > 0 then
-				inv.remove({name=item, count=amountAdded})
-			end
+			dataInv = self.dataNetwork.dataCenter.invObj
+		end
+		-- Add Items to the Data Inventory --
+		local amountAdded = dataInv:addItem(item, count)
+		-- Remove Items from the local Inventory --
+		if amountAdded > 0 then
+			inv.remove({name=item, count=amountAdded})
 		end
 	end
 	
@@ -176,11 +163,11 @@ function MS:getTooltipInfos(GUI)
 		local invs = {self.dataNetwork.dataCenter.invObj.name or {"gui-description.Any"}}
 		local selectedIndex = 1
 		local i = 1
-		for k, oreSilo in pairs(global.oreSilotTable) do
-			if oreSilo ~= nil then
+		for k, deepStorage in pairs(global.deepStorageTable) do
+			if deepStorage ~= nil then
 				i = i + 1
-				invs[k+1] = {"", {"gui-description.MSSilo"}, " ", tostring(k)}
-				if self.selectedInv == oreSilo then
+				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID)}
+				if self.selectedInv == deepStorage then
 					selectedIndex = i
 				end
 			end
@@ -197,10 +184,10 @@ function MS:changeInventory(ID)
 	if ID == nil then self.selectedInv = nil end
 	-- Select the Inventory --
 	self.selectedInv = nil
-	for k, oreSilo in pairs(global.oreSilotTable) do
-		if oreSilo ~= nil and oreSilo.valid == true then
-			if ID == k then
-				self.selectedInv = oreSilo
+	for k, deepStorage in pairs(global.deepStorageTable) do
+		if deepStorage ~= nil and deepStorage:valid() == true then
+			if ID == deepStorage.ID then
+				self.selectedInv = deepStorage
 			end
 		end
 	end

@@ -57,7 +57,7 @@ function somethingWasPlaced(event, isRobot)
 	end
 	
 	-- Deep Storage Ghost --
-	if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true and event.created_entity.name == "entity-ghost" then
+	if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true and event.created_entity.name == "entity-ghost" and event.stack.name == "DeepStorage" then
 		if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Control Center Constructible Area"}) end
 		event.created_entity.destroy()
 		return
@@ -65,7 +65,6 @@ function somethingWasPlaced(event, isRobot)
 	
 	-- Ghost --
 	if isPlayer == true and event.created_entity.surface.name ~= _mfSurfaceName and event.stack ~= nil and event.stack.valid_for_read == true and event.created_entity.name == "entity-ghost" then
-		dprint(event.stack.name)
 		if canBePlacedOutside(event.stack.name) == false then
 			if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"}) end
 			event.created_entity.destroy()
@@ -273,6 +272,11 @@ function somethingWasRemoved(event)
 		removedDataCenter(event)
 		return
 	end
+	-- Remove the Data Storage --
+	if event.entity.name == "DataStorage" then
+		removedDataStorage(event)
+		return
+	end
 	-- Remove the Data Center MF --
 	if event.entity.name == "DataCenterMF" then
 		removedDataCenterMF(event)
@@ -306,6 +310,11 @@ function somethingWasRemoved(event)
 	-- Remove the Jet Flag --
 	if string.match(event.entity.name, "Flag") then
 		removedJetFlag(event)
+		return
+	end
+	-- Remove the Deep Storage --
+	if event.entity.name == "DeepStorage" then
+		removedDeepStorage(event)
 		return
 	end
 end

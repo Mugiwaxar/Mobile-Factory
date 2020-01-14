@@ -295,3 +295,26 @@ function Util.shuffle(array)
 	end
 	return array
 end
+
+-- Util: Get Object ID --
+function Util.getEntID(array)
+	local tmpArray = {}
+	local id = 0
+	local highId = 0
+	for k, obj in pairs(array) do
+		tmpArray[obj.ID] = obj
+		if obj.ID > highId then
+			highId = obj.ID
+		end
+	end
+	id = table_size(tmpArray) + 1
+	local i = 1
+	while i < highId do
+		if tmpArray[i] == nil then
+			id = i
+			break
+		end
+		i = i + 1
+	end
+	return id
+end

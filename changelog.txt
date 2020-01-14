@@ -3,13 +3,17 @@ Version: 0.0.72
 Date: 14/01/2020
   Features:
     - Added the Deep Storage, can store an infinite amount of one Item (Can only by placed inside the Control Center)
+    - New Technology: Deep Storage, Unlock the Deep Storage
   Changes:
     - For a major performances gain, the Ore Silo was removed and replaced by the Deep Storage
+    - The Matter Serializer can now send Items to a Deep Storage
+    - The Matter Printer can now retrieve Items from a Deep Storage
     - The Dimensional Furnace can now smelt all resources inside the Smelting category (Not just Dimensional Ore)
   Optimisations:
     - Fixed performances issue of the Mobile Factory Lasers
   Bugfixes:
     - Fixed a crash when a Power Drain Pole is placed
+    - Fixed a crash when a Player enter the Control Center
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.71
 Date: 13/01/2020
