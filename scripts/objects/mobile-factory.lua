@@ -167,6 +167,8 @@ end
 
 -- Scan all Entities around the Mobile Factory --
 function MF:scanEnt()
+	-- Check the Mobile Factory --
+	if self.ent == nil or self.ent.valid == false then return end
 	-- Look for Entities --
 	self.entitiesAround = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=self:getLaserRadius()}
 	-- Filter the Entities --
@@ -174,7 +176,7 @@ function MF:scanEnt()
 		local keep = false
 		-- Keep Electric Entity --
 		if entity.energy ~= nil and entity.electric_buffer_size ~= nil and entity.energy > 0 then
-			deep = true
+			keep = true
 		end
 		-- Keep Tank --
 		if entity.type == "storage-tank" then
