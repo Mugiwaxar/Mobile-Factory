@@ -3,7 +3,7 @@
 -- Create the Deep Storage base object --
 DSR = {
 	ent = nil,
-	updateTick = 0,
+	updateTick = 80,
 	lastUpdate = 0,
 	inventoryItem = nil,
 	inventoryCount = 0,
@@ -44,6 +44,19 @@ end
 
 -- Update --
 function DSR:update()
+	-- Set the lastUpdate variable --
+	self.lastUpdate = game.tick
+	
+	-- Check the Validity --
+	if self:valid() == false then
+		self:remove()
+		return
+	end
+	
+	-- Display the Item Icon --
+	if self.inventoryItem == nil then return true end
+	local sprite = "item/" .. self.inventoryItem
+	rendering.draw_sprite{sprite=sprite, target=self.ent, surface=self.ent.surface, time_to_live=updateTick, target_offset={0,-0.35}} 
 end
 
 -- Tooltip Infos --

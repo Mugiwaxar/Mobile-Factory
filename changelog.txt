@@ -4,6 +4,7 @@ Date: 15/01/2020
   Changes:
     - The Mining Jet Flag now display if the Mobile Factory is not found
     - The Mining Jet Flag will not send its Inventory if the Mobile Factory is not found
+    - The Deep Storage display now what's inside above it
   Bugfixes:
     - Fixed a crash when the Mobile Factory is removed or destroyed
   Gui:
