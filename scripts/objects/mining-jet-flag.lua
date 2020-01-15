@@ -9,7 +9,8 @@ MJF = {
 	oreTable = nil,
 	selectedInv = 0,
 	inventory = nil, -- [item]{count}
-	TargetInventoryFull = false
+	TargetInventoryFull = false,
+	MFNotFound = false
 }
 
 -- Constructor --
@@ -71,17 +72,24 @@ function MJF:getTooltipInfos(GUI)
 	pathLabel.style.font = "LabelFont"
 	pathLabel.style.font_color = _mfBlue
 
-	-- Create the Targed Label --
-	local targetLabel = GUI.add{type="label", caption={"", {"gui-description.TargetedInventory"}, ":"}}
-	targetLabel.style.font = "LabelFont"
-	targetLabel.style.font_color = _mfBlue
-	
 	-- Create the Inventory Full Label --
 	if self.TargetInventoryFull == true then
 		local invFull = GUI.add{type="label", caption={"", {"gui-description.TargetInventoryFull"}}}
 		invFull.style.font = "LabelFont"
 		invFull.style.font_color = _mfRed
 	end
+	
+	-- Create the Mobile Factory No Found Label --
+	if self.MFNotFound == true then
+		local mfNoFound = GUI.add{type="label", caption={"", {"gui-description.MFNotFound"}}}
+		mfNoFound.style.font = "LabelFont"
+		mfNoFound.style.font_color = _mfRed
+	end
+
+	-- Create the Targed Label --
+	local targetLabel = GUI.add{type="label", caption={"", {"gui-description.InternalInventory"}, ":"}}
+	targetLabel.style.font = "LabelFont"
+	targetLabel.style.font_color = _mfBlue
 	
 	-- Create the Inventory Frame --
 	for name, count in pairs(self.inventory) do
@@ -221,6 +229,15 @@ end
 -- Send inside Inventory to the Targeted one --
 function MJF:sendInventory()
 
+	-- Check the Mobile Factory --
+	if global.MF.ent == nil or global.MF.ent.valid == false then
+		self.MFNotFound = true
+		return
+	else
+		self.MFNotFound = false
+	end
+
+	-- Check the Inventory Table --
 	if self.inventory == nil then self.inventory = {} end
 
 	-- Sended value --
@@ -239,6 +256,7 @@ function MJF:sendInventory()
 				-- Check if Ore was added --
 				if added > 0 then
 					self.inventory[name] = self.inventory[name] - added
+					sended = true
 					-- Remove the Ore --
 					if self.inventory[name] <= 0 then
 						self.inventory[name] = nil
@@ -251,6 +269,7 @@ function MJF:sendInventory()
 			-- Check if Ore was added --
 			if added > 0 then
 				self.inventory[name] = self.inventory[name] - added
+				sended = true
 				-- Remove the Ore --
 				if self.inventory[name] <= 0 then
 					self.inventory[name] = nil
