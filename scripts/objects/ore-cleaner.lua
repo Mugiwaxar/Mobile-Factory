@@ -206,6 +206,8 @@ function OC:collectOres(event)
 			end
 		end
 	end
+	-- Check if a Data Inventory was found --
+	if dataInv == 0 then return end
 	-- Check if the Ore type is the same as the selected Inventory --
 	if dataInv.inventoryItem ~= nil and oreName ~= dataInv.inventoryItem then return end
 	-- Extract Ore --

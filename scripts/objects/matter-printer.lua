@@ -11,7 +11,7 @@ MP = {
 	dataNetwork = nil,
 	GCNID = 0,
 	RCNID = 0,
-	selectedInv = nil
+	selectedInv = 0
 }
 
 -- Constructor --
@@ -97,7 +97,7 @@ end
 function MP:updateInv()
 	-- Get the Linked Inventory --
 	local dataInv = self.selectedInv
-	if self.selectedInv == nil then
+	if self.selectedInv == 0 then
 		dataInv = self.dataNetwork.dataCenter.invObj
 	end
 	

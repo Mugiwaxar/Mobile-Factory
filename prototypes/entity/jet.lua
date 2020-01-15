@@ -53,8 +53,8 @@ function createJet(name, order)
 	jU.icon = "__Mobile_Factory__/graphics/jet/" .. name .. "I.png"
 	jU.icon_size = 64
 	jU.order = order
-	jU.collision_box = {{-0.65, -0.65},{0.65, 0.65}}
-	jU.selection_box = jU.collision_box
+	jU.collision_box = nil
+	jU.selection_box = {{-0.65, -0.65},{0.65, 0.65}}
 	jU.collision_mask = {}
 	jU.minable = {mining_time = 0.2, result = name}
 	jU.flags = {"placeable-player", "player-creation", "not-blueprintable", "not-deconstructable"}

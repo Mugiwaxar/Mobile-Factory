@@ -5,8 +5,10 @@ Date: 15/01/2020
     - The Mining Jet Flag now display if the Mobile Factory is not found
     - The Mining Jet Flag will not send its Inventory if the Mobile Factory is not found
     - The Deep Storage display now what's inside above it
+    - Removed Jets Bounding Box to make then more UPS friendly
   Bugfixes:
     - Fixed a crash when the Mobile Factory is removed or destroyed
+    - Fixed a crash with Matter Printer, Matter Serializer, Ore Cleaner and Mining Jet Flag Selected Inventory
   Gui:
     - Little rework of the Deep Storage Frame
 ---------------------------------------------------------------------------------------------------

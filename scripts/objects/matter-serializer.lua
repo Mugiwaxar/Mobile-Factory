@@ -11,7 +11,7 @@ MS = {
 	dataNetwork = nil,
 	GCNID = 0,
 	RCNID = 0,
-	selectedInv = nil
+	selectedInv = 0
 }
 
 -- Constructor --
@@ -102,7 +102,7 @@ function MS:updateInv()
 	for item, count in pairs(inv.get_contents()) do
 		-- Check the targeted Inventory --
 		local dataInv = self.selectedInv
-		if self.selectedInv == nil then
+		if self.selectedInv == 0 then
 			dataInv = self.dataNetwork.dataCenter.invObj
 		end
 		-- Add Items to the Data Inventory --

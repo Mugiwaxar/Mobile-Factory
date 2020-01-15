@@ -70,6 +70,13 @@ function updateValues()
 	if global.jetFlagTable == nil then global.jetFlagTable = {} end
 	if global.constructionJetTable == nil then global.constructionJetTable = {} end
 	if global.constructionTable == nil then global.constructionTable = {} end
+	-- for k, j in pairs(global) do
+		-- if type(j) == "table" then
+			-- dprint(k .. ":" .. table_size(j))
+		-- else
+			-- dprint(k)
+		-- end
+	-- end
 end
 
 -- When a technology is finished --
@@ -333,16 +340,16 @@ function updateConstructionJet()
 	end
 	-- Check if there are no Jet already attributed to this Structure --
 	if structure.jet ~= nil and structure.jet:valid() == true then return end
+	-- Remove a Jet from the Inventory --
+	local removed = inv.remove({name="ConstructionJet", count=1})
+	-- Check if the Jet exist --
+	if removed <= 0 then return end
 	if structure.mission == "Construct" then
 		-- Remove the Item from the II --
 		local removed = global.MF.II:getItem(structure.item, 1)
 		-- Check if the Item exist --
 		if removed <= 0 then return end
 	end
-	-- Remove a Jet from the Inventory --
-	local removed = inv.remove({name="ConstructionJet", count=1})
-	-- Check if the Jet exist --
-	if removed <= 0 then return end
 	-- Create the Jet --
 	local entity = global.MF.ent.surface.create_entity{name="ConstructionJet", position=global.MF.ent.position, force="player"}
 	global.constructionJetTable[entity.unit_number] = CJ:new(entity, structure)
