@@ -165,7 +165,6 @@ function MP:getTooltipInfos(GUI)
 	
 	-- Create the Inventory Selection --
 	if self.dataNetwork ~= nil and self.dataNetwork.dataCenter ~= nil and self.dataNetwork.dataCenter:valid() == true and self.dataNetwork.dataCenter.invObj.isII == true then
-	
 		-- Create the targeted Inventory label --
 		local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
 		targetLabel.style.top_margin = 7

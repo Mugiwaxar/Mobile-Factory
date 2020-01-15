@@ -250,7 +250,7 @@ function MJF:sendInventory()
 	-- Itinerate the Inventory --
 	for name, count in pairs(self.inventory) do
 		if dataInv == 0 then
-		-- Send Ore to all Deep Storage --
+			-- Send Ore to all Deep Storage --
 			for k, dp in pairs(global.deepStorageTable) do
 				local added = dp:addItem(name, count)
 				-- Check if Ore was added --

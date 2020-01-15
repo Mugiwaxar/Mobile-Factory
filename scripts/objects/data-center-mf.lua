@@ -88,10 +88,9 @@ function DCMF:update()
 		self:setActive(true)
 	else
 		self:setActive(false)
+		self.ent.get_control_behavior().parameters = nil
+		return
 	end
-	
-	-- Save the Data Storage count --
-	self.invObj.dataStoragesCount = self.dataNetwork:dataStoragesCount()
 	
 	-- Create the Inventory Signal --
 	self.ent.get_control_behavior().parameters = nil

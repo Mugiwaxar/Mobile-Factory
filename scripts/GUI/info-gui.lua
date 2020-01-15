@@ -26,7 +26,7 @@ function GUI.createInfoGui(gui, player)
 	-- Create the Menu Bar --
 	local mfGUIMenuBar = mfInfoGUI.add{type="flow", name="mfGUIMenuBar", direction="horizontal"}
 	-- Set Style --
-	mfGUIMenuBar.style.width = 972
+	mfGUIMenuBar.style.width = 858
 	mfGUIMenuBar.style.padding = 0
 	mfGUIMenuBar.style.margin = 0
 	mfGUIMenuBar.style.horizontal_align = "right"
@@ -62,7 +62,7 @@ function GUI.createInfoGui(gui, player)
 	
 	-- Create the Main Flow --
 	local mfInfoMainFlow = gui.screen.mfInfoGUI.add{type="frame", name="mfInfoMainFlow", direction="horizontal"}
-	mfInfoMainFlow.style.width = 970
+	mfInfoMainFlow.style.width = 856
 	mfInfoMainFlow.style.height = 750
 	
 	------------------------------------------ FLOW 1 -------------------------------------
@@ -269,15 +269,16 @@ function GUI.createInfoGui(gui, player)
 	local mfInfoFlow5 = mfInfoMainFlow.add{type="frame", name="mfInfoFlow5", direction="vertical"}
 	mfInfoFlow5.style.height = 732
 	mfInfoFlow5.visible = false
+	mfInfoFlow5.style.width = 150
 	
-	-- Create OreSilos Title Label --
-	mfInfoFlow5.add{type="label", name="mfOreSilosTitle"}
-	mfInfoFlow5.mfOreSilosTitle.style.font = "TitleFont"
-	mfInfoFlow5.mfOreSilosTitle.caption = {"gui-description.mfOreSilosTitle"}
+	-- Create Deep Storage Title Label --
+	mfInfoFlow5.add{type="label", name="mfDeepStorageTitle"}
+	mfInfoFlow5.mfDeepStorageTitle.style.font = "TitleFont"
+	mfInfoFlow5.mfDeepStorageTitle.caption = {"gui-description.mfDeepStorageTitle"}
 	
-	-- Create the OreSilos Flow --
-	local mfOreSilosFlow = mfInfoFlow5.add{type="flow", name = "mfOreSilosFlow", direction="vertical"}
-	mfOreSilosFlow.style.width = 225
+	-- Create the Deep Storage Flow --
+	local mfDeepStorageFlow = mfInfoFlow5.add{type="scroll-pane", name="mfDeepStorageFlow", horizontal_scroll_policy="never"}
+	mfDeepStorageFlow.style.width = 125
 	
 	---------------------------------------- FLOW 3 -------------------------------------
 		
@@ -501,15 +502,15 @@ function GUI.updateOreSiloFrame(gui)
 		gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.visible = true
 	end
 	-- Get the Ore Silo Flow --
-	local oreSiloFlow = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.mfOreSilosFlow
+	local oreSiloFlow = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.mfDeepStorageFlow
 	-- Clear the Ore Silo Flow --
 	oreSiloFlow.clear()
 	-- Look for all Ore Silos --
 	for k, oreSilo in pairs(global.deepStorageTable) do
 		-- Create the Frame --
-		luaGuiElement = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.mfOreSilosFlow
+		luaGuiElement = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.mfDeepStorageFlow
 		local OreSiloFrame = luaGuiElement.add{type="frame", direction="horizontal"}
-		OreSiloFrame.style.width = 150
+		OreSiloFrame.style.width = 100
 		-- Create the Flow --
 		local OreSiloFlow = OreSiloFrame.add{type="flow", direction="vertical"}
 		-- Create Ore Silo Labels --
@@ -518,7 +519,7 @@ function GUI.updateOreSiloFrame(gui)
 		OreSiloLabel.style.font = "LabelFont"
 		OreSiloLabel.style.font_color = {39,239,0}
 		if oreSilo.inventoryItem ~= nil then
-			Util.itemToFrame(oreSilo.inventoryItem, oreSilo.inventoryCount, OreSiloFlow)
+			Util.itemToLabel(oreSilo.inventoryItem, oreSilo.inventoryCount, OreSiloFlow)
 		end
 	end
 end

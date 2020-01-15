@@ -41,7 +41,7 @@ function INV:rescan()
 	-- Calcule the max capacity --
 	if self.isII == true then
 		self.dataStoragesCount = 0
-		if global.MF.dataCenter ~= nil and global.MF.dataCenter:valid() == true then
+		if global.MF.dataCenter ~= nil and global.MF.dataCenter:valid() == true and global.MF.dataCenter.active == true then
 			if global.MF.dataCenter.dataNetwork ~= nil then
 				self.dataStoragesCount = table_size(global.MF.dataCenter.dataNetwork.dataStorageTable)
 			end

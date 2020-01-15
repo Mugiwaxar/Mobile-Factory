@@ -6,7 +6,7 @@ OC = {
 	charge = 0,
 	totalCharge = 0,
 	oreTable = nil,
-	selectedInv = nil,
+	selectedInv = 0,
 	animID = 0,
 	animTick = 0,
 	updateTick = 1,
@@ -109,7 +109,7 @@ function OC:getTooltipInfos(GUI)
 	targetLabel.style.font = "LabelFont"
 	targetLabel.style.font_color = {108, 114, 229}
 
-	local invs = {{"gui-description.Any"}}
+	local invs = {{"gui-description.All"}}
 	local selectedIndex = 1
 	local i = 1
 	for k, deepStorage in pairs(global.deepStorageTable) do
@@ -197,12 +197,21 @@ function OC:collectOres(event)
 	local oreName = orePath.prototype.mineable_properties.products[1].name
 	-- Check if a Name was found --
 	if oreName == nil then return end
+	-- Try to find a Deep Storage if the Selected Inventory is All --
+	local dataInv = self.selectedInv
+	if dataInv == 0 then
+		for k, dp in pairs(global.deepStorageTable) do
+			if dp.inventoryItem == nil or dp.inventoryItem == oreName then
+				dataInv = dp
+			end
+		end
+	end
 	-- Check if the Ore type is the same as the selected Inventory --
-	if self.selectedInv.inventoryItem ~= nil and oreName ~= self.selectedInv.inventoryItem then return end
+	if dataInv.inventoryItem ~= nil and oreName ~= dataInv.inventoryItem then return end
 	-- Extract Ore --
 	local oreExtracted = math.min(self:orePerExtraction(), orePath.amount)
 	-- Add Ores to the Inventory --
-	self.selectedInv:addItem(oreName, oreExtracted)
+	dataInv:addItem(oreName, oreExtracted)
 	-- Remove Ores from the Ore Path --
 	orePath.amount = math.max(orePath.amount - oreExtracted, 1)
 	-- Make the beam --
