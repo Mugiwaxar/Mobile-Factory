@@ -5,7 +5,7 @@ function synchronizeInventory(inventory1, inventory2, filter, ignoreDrone)
 	-- Itinerate all items --
 	for item, amount in pairs(allItems) do
 		-- Check if this is a drone --
-		if ignoreDrone == true and (item == "MiningJet" or item == "ConstructionJet" )then
+		if ignoreDrone == true and (item == "MiningJet" or item == "ConstructionJet" or item == "RepairJet" )then
 		else
 			-- Test if there are a filter --
 			if filter == nil or (filter ~= nil and filter == item) then 

@@ -109,6 +109,8 @@ function GUI.updateTooltip(player, objID)
 		if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and obj.ent.unit_number == objID then
 			-- Check if the Object can return a Frame --
 			if obj.getTooltipInfos ~= nil then
+				-- Save the Entity ID --
+				setPlayerVariable(player.name, "lastEntitySelected", obj.ent.unit_number)
 				-- Clear the Tooltip GUI --
 				player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.clear()
 				-- Update the GUI --
@@ -117,7 +119,7 @@ function GUI.updateTooltip(player, objID)
 			end
 		end
 	end
-	player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.clear()
+	-- player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.clear()
 end
 
 

@@ -78,6 +78,9 @@ function WDR:update()
 	end
 	
 	-- Check the Transmitter --
+	if getmetatable(self.linkedTransmitter) == nil then
+		self.linkedTransmitter = nil
+	end
 	if self.linkedTransmitter ~= nil and self.linkedTransmitter:valid() == true and self.linkedTransmitter.dataNetwork ~= nil and self.linkedTransmitter.dataNetwork:isLive() == true then
 		self.dataNetwork = self.linkedTransmitter.dataNetwork
 	else
@@ -104,6 +107,8 @@ function WDR:update()
 			self.dataNetwork.RCNTable[self.RCNID] = nil
 		end
 	end
+	
+	if active == false then return end
 	
 	-- Add Wireless Data Network Signals --
 	self.ent.get_control_behavior().parameters = nil
@@ -230,7 +235,7 @@ function WDR:getTooltipInfos(GUI)
 	if selectedIndex ~= nil and selectedIndex > table_size(transmitters) then selectedIndex = nil end
 	local networkSelection = GUI.add{type="list-box", name="WDR" .. self.ent.unit_number, items=transmitters, selected_index=selectedIndex}
 	networkSelection.style.margin = 5
-	networkSelection.style.width = 50
+	networkSelection.style.width = 70
 end
 
 -- Set Active --

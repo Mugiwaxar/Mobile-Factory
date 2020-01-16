@@ -9,7 +9,7 @@ require("utils/place-and-remove.lua")
 function onTick(event)
 	if global.MF == nil then return end
 	-- Synchronize Tank chest with Factory Chest --
-	if event.tick%_eventTick20 == 0 and global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid == true then
+	if event.tick%_eventTick21 == 0 and global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid == true then
 		global.MF:syncFChest()
 	end
 	-- Update all entities --
@@ -31,14 +31,15 @@ end
 function updateEntities(event)
 	-- Verify Mobile Factory --
 	if global.MF == nil then return end
-	-- Update System --
-	UpSys.update(event)
 	-- Update --
 	if event.tick%_eventTick5 == 0 then factoryTeleportBox() end
 	if event.tick%_eventTick38 == 0 then updateAccumulators() end
 	if event.tick%_eventTick64 == 0 then updateLogisticFluidPoles() end
+	if event.tick%_eventTick45 == 0 then updateConstructionJet() end
+	if event.tick%_eventTick41 == 0 then updateRepairJet() end
+	-- Update System --
+	UpSys.update(event)
 	updatePowerDrainPole(event)
-	updateConstructionJet()
 end
 
 -- Update base Mobile Factory Values --
@@ -50,7 +51,8 @@ function updateValues()
 	if global.upSysLastScan == nil then global.upSysLastScan = 0 end
 	if global.IDModule == nil then global.IDModule = 0 end
 	if global.dataNetworkID == nil then global.dataNetworkID = 0 end
-	if global.constructionJetIndex == nil then global.constructionJetIndex = 1 end
+	if global.constructionJetIndex == nil then global.constructionJetIndex = 0 end
+	if global.repairJetIndex == nil then global.repairJetIndex = 0 end
 	if global.accTable == nil then global.accTable = {} end
 	if global.pdpTable == nil then global.pdpTable = {} end
 	if global.lfpTable == nil then global.lfpTable = {} end
@@ -70,6 +72,8 @@ function updateValues()
 	if global.jetFlagTable == nil then global.jetFlagTable = {} end
 	if global.constructionJetTable == nil then global.constructionJetTable = {} end
 	if global.constructionTable == nil then global.constructionTable = {} end
+	if global.repairJetTable == nil then global.repairJetTable = {} end
+	if global.repairTable == nil then global.repairTable = {} end
 	-- for k, j in pairs(global) do
 		-- if type(j) == "table" then
 			-- dprint(k .. ":" .. table_size(j))
@@ -106,8 +110,6 @@ function selectedEntityChanged(event)
 	if player.gui.screen.mfTooltipGUI == nil or player.gui.screen.mfTooltipGUI.valid == false then return end
 	-- Check if the Tooltip GUI is not locked --
 	if player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite == "LockIconReed" then return end
-	-- Save the Entity ID --
-	setPlayerVariable(player.name, "lastEntitySelected", player.selected.unit_number)
 	-- Update the Tooltip GUI --
 	GUI.updateTooltip(player, player.selected.unit_number)
 end
@@ -230,6 +232,8 @@ end
 
 -- Watch damages --
 function onEntityDamaged(event)
+	-- Check the Entity --
+	if event.entity == nil or event.entity.valid == false then return end
 	-- Test if this is the Mobile Factory --
 	if event.entity.name == "MobileFactory" then
 		-- Drain Shield --
@@ -247,7 +251,24 @@ function onEntityDamaged(event)
 	if event.entity.surface.name == _mfControlSurfaceName then
 		event.entity.health = event.entity.prototype.max_health
 	end
+	-- Save the Entity inside the Repair table for Jet --
+	if event.entity.health < event.entity.prototype.max_health then
+		-- Check if the Entity is not already inside the table --
+		-- for k, structure in pairs(global.repairTable) do
+			-- if event.entity.unit_number == structure.ent.unit_number then
+				-- return
+			-- end
+		-- end
+		table.insert(global.repairTable, {ent=event.entity})
+	end
+end
 
+-- Called after an Entity die --
+function onGhostPlacedByDie(event)
+	-- Raise event if a Blueprint is placed --
+	if event.ghost ~= nil and event.ghost.valid == true then
+		somethingWasPlaced({entity=event.ghost})
+	end
 end
 
 -- Upgrade a Tank to MK2 --
@@ -301,7 +322,7 @@ function updatePollution()
 	end
 end
 
--- Update the Contructions Jet --
+-- Update the Contruction Jets --
 function updateConstructionJet()
 	-- Check if the Technology is unlocked --
 	if technologyUnlocked("ConstructionJet") == false then return end
@@ -315,47 +336,103 @@ function updateConstructionJet()
 	if inv == nil or inv.valid == false then return end
 	-- Check if the index must be reinitialized --
 	if global.constructionJetIndex > table_size(global.constructionTable) then
-		global.constructionJetIndex = 1
+		global.constructionJetIndex = 0
 	end
-	local i = global.constructionJetIndex
-	global.constructionJetIndex = global.constructionJetIndex + 1
-	-- Get the next Structure --
-	local structure = global.constructionTable[i]
-	-- Check the Structure --
-	if structure == nil or structure.ent == nil or structure.ent.valid == false then
-		table.remove(global.constructionTable, i)
-		return
-	end
-	if structure.ent.surface ~= global.MF.ent.surface then
-		table.remove(global.constructionTable, i)
-		return
-	end
-	if structure.mission == "Deconstruct" and structure.ent.prototype.items_to_place_this == nil then
-		table.remove(global.constructionTable, i)
-		return
-	end
-	if structure.mission == "Deconstruct" and structure.ent.to_be_deconstructed("player") == false then
-		table.remove(global.constructionTable, i)
-		return
-	end
-	-- Check if there are no Jet already attributed to this Structure --
-	if structure.jet ~= nil and structure.jet:valid() == true then return end
-	-- Remove a Jet from the Inventory --
-	local removed = inv.remove({name="ConstructionJet", count=1})
-	-- Check if the Jet exist --
-	if removed <= 0 then return end
-	if structure.mission == "Construct" then
-		-- Remove the Item from the II --
-		local removed = global.MF.II:getItem(structure.item, 1)
-		-- Check if the Item exist --
+	for i = 1, _mfEntitiesScanedPerUpdate do
+		global.constructionJetIndex = global.constructionJetIndex + 1
+		if global.constructionJetIndex > table_size(global.constructionTable) then
+			global.constructionJetIndex = 0
+			return
+		end
+		-- Get the next Structure --
+		local structure = global.constructionTable[global.constructionJetIndex]
+		-- Check the Structure --
+		if structure == nil or structure.ent == nil or structure.ent.valid == false then
+			table.remove(global.constructionTable, global.constructionJetIndex)
+			goto continue
+		end
+		if structure.ent.surface ~= global.MF.ent.surface then
+			table.remove(global.constructionTable, global.constructionJetIndex)
+			goto continue
+		end
+		if structure.mission == "Deconstruct" and structure.ent.prototype.items_to_place_this == nil then
+			table.remove(global.constructionTable, global.constructionJetIndex)
+			goto continue
+		end
+		if structure.mission == "Deconstruct" and structure.ent.to_be_deconstructed("player") == false then
+			table.remove(global.constructionTable, global.constructionJetIndex)
+			goto continue
+		end
+		-- Check if there are no Jet already attributed to this Structure --
+		if structure.jet ~= nil and structure.jet:valid() == true then goto continue end
+		-- Remove a Jet from the Inventory --
+		local removed = inv.remove({name="ConstructionJet", count=1})
+		-- Check if the Jet exist --
 		if removed <= 0 then return end
+		if structure.mission == "Construct" then
+			-- Remove the Item from the II --
+			local removed = global.MF.II:getItem(structure.item, 1)
+			-- Check if the Item exist --
+			if removed <= 0 then 
+				inv.insert({name="ConstructionJet", count=1})
+				goto continue 
+			end
+		end
+		-- Create the Jet --
+		local entity = global.MF.ent.surface.create_entity{name="ConstructionJet", position=global.MF.ent.position, force="player"}
+		global.constructionJetTable[entity.unit_number] = CJ:new(entity, structure)
+		structure.jet = global.constructionJetTable[entity.unit_number]
+		::continue::
 	end
-	-- Create the Jet --
-	local entity = global.MF.ent.surface.create_entity{name="ConstructionJet", position=global.MF.ent.position, force="player"}
-	global.constructionJetTable[entity.unit_number] = CJ:new(entity, structure)
-	structure.jet = global.constructionJetTable[entity.unit_number]
 end
 
-
+-- Update the Repair Jets --
+function updateRepairJet()
+	-- Check if the Technology is unlocked --
+	if technologyUnlocked("RepairJet") == false then return end
+	-- Check if there are something to do --
+	if table_size(global.repairTable) <= 0 then return end
+	-- Check the Mobile Factory --
+	if global.MF.ent == nil or global.MF.ent.valid == false then return end
+	-- Get the Mobile Factory Trunk --
+	local inv = global.MF.ent.get_inventory(defines.inventory.car_trunk)
+	-- Check the Inventory --
+	if inv == nil or inv.valid == false then return end
+	-- Check if the index must be reinitialized --
+	if global.repairJetIndex > table_size(global.repairTable) then
+		global.repairJetIndex = 0
+	end
+	for i = 1, _mfEntitiesScanedPerUpdate do
+	global.repairJetIndex = global.repairJetIndex + 1
+	if global.repairJetIndex > table_size(global.repairTable) then
+		global.repairJetIndex = 0
+		return
+	end
+	-- Get the next Structure --
+	local structure = global.repairTable[global.repairJetIndex]
+	if structure == nil or structure.ent == nil or structure.ent.valid == false then
+		table.remove(global.repairTable, global.repairJetIndex)
+		goto continue
+	end
+	if structure.ent.surface ~= global.MF.ent.surface then
+		table.remove(global.repairTable, global.repairJetIndex)
+		goto continue
+	end
+	if structure.ent.health >= structure.ent.prototype.max_health then
+		table.remove(global.repairTable, global.repairJetIndex)
+		goto continue
+	end
+	-- Check if there are no Jet already attributed to this Structure --
+	if structure.jet ~= nil and structure.jet:valid() == true then goto continue end
+	-- Remove a Jet from the Inventory --
+	local removed = inv.remove({name="RepairJet", count=1})
+	-- Check if the Jet exist --
+	if removed <= 0 then return end
+	local entity = global.MF.ent.surface.create_entity{name="RepairJet", position=global.MF.ent.position, force="player"}
+	global.repairJetTable[entity.unit_number] = RJ:new(entity, structure)
+	structure.jet = global.repairJetTable[entity.unit_number]
+	::continue::
+	end
+end
 
 

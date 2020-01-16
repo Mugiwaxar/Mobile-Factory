@@ -76,7 +76,7 @@ function WDT:update()
 		self.RCNID = 0
 	end
 	
-	-- Check if the Wireless Data Storage is linked with a live Data Network --
+	-- Check if the Wireless Data Network is linked with a live Data Network --
 	local active = false
 	self.dataNetwork = nil
 	for k, obj in pairs(global.dataNetworkTable) do
@@ -89,7 +89,10 @@ function WDT:update()
 			end
 		end
 	end
+	
 	self:setActive(active)
+	if active == false then return end
+	
 	
 	-- Add Wireless Data Network Signals --
 	self.ent.get_control_behavior().parameters = nil

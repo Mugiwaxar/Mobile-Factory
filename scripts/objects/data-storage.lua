@@ -72,7 +72,7 @@ function DS:update()
 		self.RCNID = 0
 	end
 	
-	-- Check if the Matter Serializer is linked with a live Data Network --
+	-- Check if the Data Storage is linked with a live Data Network --
 	local active = false
 	self.dataNetwork = nil
 	for k, obj in pairs(global.dataNetworkTable) do

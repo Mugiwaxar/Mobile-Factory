@@ -1,3 +1,14 @@
+Version: 0.0.75
+Date: 16/01/2020
+  Features:
+    - Added the Repair Jet: It will fly to damaged Structures and repair them
+    - New Technology: Repair Jet, Unlock the Repair Jet
+  Optimisations:
+    - Improved performances of the Construction Jet
+  Changes:
+    - To fix a bug, instead of removing all Signals, the Wireless Matter Transmitter/Receiver stop updating them when they are disconnected from a Data Network
+  Scripting:
+    - Entities that no longer exist are correctly removed from the Update System
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.74
 Date: 15/01/2020
@@ -39,6 +50,12 @@ Version: 0.0.71
 Date: 13/01/2020
   Bugfixes:
     - Fixed an issue with long Load/Save
+---------------------------------------------------------------------------------------------------
+Version: 0.0.70
+Date: 13/01/2020
+  Features:
+    - Added the Construction Jet: It will construct Blueprint or remove marked Structures (Interact with the Internal Inventory)
+    - New Technology: Construction Jet, Unlock the Construction Jet
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.69
 Date: 12/01/2020

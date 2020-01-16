@@ -12,7 +12,7 @@ function UpSys.removeObj(obj)
   -- Remove the Object --
   for k, object in pairs(global.entsTable) do
     if object == obj then
-      table.remove(global.entsTable, k)
+      global.entsTable[k] = nil
     end
   end
 end
@@ -46,6 +46,7 @@ function UpSys.scanObjs()
   UpSys.addTable(global.miningJetTable)
   UpSys.addTable(global.jetFlagTable)
   UpSys.addTable(global.constructionJetTable)
+  UpSys.addTable(global.repairJetTable)
   UpSys.addTable(global.deepStorageTable)
 
   -- Save the last scan tick --
@@ -97,7 +98,7 @@ function UpSys.addTable(array)
     for k, obj in pairs(array) do
       -- Add the Object --
       if UpSys.addObject(obj) == false then
-      table.remove(array, k) 
+      array[k] = nil
     end
   end
 end
@@ -134,7 +135,7 @@ function UpSys.update(event)
     end
   end
   -- Delete the Table --
-  table.remove(global.upsysTickTable, game.tick)
+  global.upsysTickTable[game.tick] = nil
 end
 
 

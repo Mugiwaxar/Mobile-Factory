@@ -27,6 +27,7 @@ require("scripts/objects/energy-cube.lua")
 require("scripts/objects/mining-jet.lua")
 require("scripts/objects/mining-jet-flag.lua")
 require("scripts/objects/construction-jet.lua")
+require("scripts/objects/repair-jet.lua")
 require("scripts/objects/deep-storage.lua")
 
 -- When the mod init --
@@ -47,7 +48,9 @@ function onInit()
 	-- Data Network --
 	global.dataNetworkID = 0
 	-- Construction Jet Update --
-	global.constructionJetIndex = 1
+	global.constructionJetIndex = 0
+	-- Repair Jet Update --
+	global.repairJetIndex = 0
 	-- Tables --
 	global.playersTable = {}
 	global.accTable = {}
@@ -69,6 +72,8 @@ function onInit()
 	global.jetFlagTable = {}
 	global.constructionJetTable = {}
 	global.constructionTable = {}
+	global.repairJetTable = {}
+	global.repairTable = {}
 end
 
 -- When a save is loaded --
@@ -133,6 +138,10 @@ function onLoad()
 	for k, cj in pairs(global.constructionJetTable or {}) do
 		CJ:rebuild(cj)
 	end
+	-- Set The Repair Jet Metatables --
+	for k, rj in pairs(global.repairJetTable or {}) do
+		RJ:rebuild(rj)
+	end
 	-- Set The Deep Storage Metatables --
 	for k, dsr in pairs(global.deepStorageTable or {}) do
 		DSR:rebuild(dsr)
@@ -176,6 +185,7 @@ script.on_event(defines.events.on_robot_mined_entity, onRobotRemoveSomething)
 script.on_event(defines.events.on_robot_mined_tile, onRobotRemoveSomething)
 script.on_event(defines.events.script_raised_destroy, onPlayerRemoveSomethings)
 script.on_event(defines.events.on_entity_died, onEntityIsDestroyed)
+script.on_event(defines.events.on_post_entity_died, onGhostPlacedByDie)
 script.on_event(defines.events.on_gui_click, GUI.buttonClicked)
 script.on_event(defines.events.on_gui_elem_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_gui_checked_state_changed, GUI.onGuiElemChanged)

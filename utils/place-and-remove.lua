@@ -1,6 +1,5 @@
 -- Called when something is placed --
 function somethingWasPlaced(event, isRobot)
-
 	-- Get the Entity if needed
 	if event.created_entity == nil and event.entity ~= nil then
 		event.created_entity = event.entity

@@ -67,7 +67,8 @@ function createJet(name, order)
 	jU.distraction_cooldown = 0
 	jU.vision_distance = 0
 	jU.ai_settings = {}
-	jU.max_pursue_distance = 0 
+	jU.max_pursue_distance = 0
+	jU.render_layer = "air-object"
 	jU.selection_priority = 150
 	jU.run_animation =
 	{
@@ -114,6 +115,7 @@ end
 	
 createJet("MiningJet", "a")
 createJet("ConstructionJet", "b")
+createJet("RepairJet", "c")
 	
 	
 	

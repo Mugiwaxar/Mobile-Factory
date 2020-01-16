@@ -77,6 +77,10 @@ _mfMiningJetFlagMK2Radius = 16
 _mfMiningJetFlagMK3Radius = 50
 _mfMiningJetFlagMK4Radius = 100
 
+-- Construction/Repair Jet --
+_mfEntitiesScanedPerUpdate = 30
+_mfHPRepairedPerUpdate = -35
+
 -- Fluid Extractor settings --
 _mfFEFluidPerExtraction = 30
 _mfFEMaxCharge = 1000
@@ -85,26 +89,19 @@ _mfFEMaxCharge = 1000
 _GUIButtonsSize = 25
 
 -- Event Tick --
-_eventTick5=5
-_eventTick8=8
-_eventTick20=20
-_eventTick27=27
-_eventTick38=38
-_eventTick50=50
-_eventTick55=55
-_eventTick57=57
-_eventTick59=59
-_eventTick60=60
-_eventTick63=63
-_eventTick64=64
-_eventTick75=75
-_eventTick80=80
-_eventTick90=90
-_eventTick100=100
-_eventTick125=125
-_eventTick130=130
-_eventTick300=300
-_eventTick1200=1200
+_eventTick5=5 -- Teleportation --
+_eventTick21=21 -- Factory Chest --
+_eventTick27=27 -- Mobile Factory Fuel --
+_eventTick38=38 -- Dimensional Accumulator --
+_eventTick41=41 -- Repair Jets --
+_eventTick45=45 -- Construction Jets --
+_eventTick55=55 -- GUI --
+_eventTick60=60 -- Mobile Factory Lasers/Jump Drive --
+_eventTick64=64 -- Logistic Fluid Poles --
+_eventTick80=80 -- Mobile Factory Internal Inventory --
+_eventTick90=90 -- Mobile Factory Entities Scan --
+_eventTick125=125 -- Mobile Factory Modules Scan --
+_eventTick1200=1200 -- Factory Pollution --
 
 _mfBlue = {108, 114, 229}
 _mfGreen = {92, 232, 54}

@@ -91,7 +91,6 @@ function DC:update()
 		self:setActive(true)
 	else
 		self:setActive(false)
-		self.ent.get_control_behavior().parameters = nil
 		return
 	end
 	
