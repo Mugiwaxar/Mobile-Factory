@@ -235,7 +235,7 @@ function callMobileFactory(player)
 end
 
 -- Create Tiles at the given position and radius --
-function createTilesAtPosition(position, radius, surface, tileName)
+function createTilesAtPosition(position, radius, surface, tileName, force)
 	-- Check all variables --
 	if position == nil or radius == nil or surface == nil then return end
 	if tileName == nil then tileName = "tutorial-grid" end
@@ -254,7 +254,7 @@ function createTilesAtPosition(position, radius, surface, tileName)
 					replace = false
 				end
 			end
-			if replace == true then
+			if force == true or replace == true then
 				table.insert(tilesTable, {name=tileName, position={posX, posY}})
 			end
 		end

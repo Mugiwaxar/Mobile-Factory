@@ -16,11 +16,13 @@ function somethingWasPlaced(event, isRobot)
 		creator = getPlayer(event.player_index)
 	end
 	
-	-- Prevent to place Lab/Void Tiles inside the Control Center --
-	if creator ~= nil and event.tiles ~= nil and (event.tile.name == "tutorial-grid" or event.tile.name == "out-of-map") and creator.surface.name == _mfControlSurfaceName  then
-		if isPlayer == true then creator.print({"", "Unable to place ", {"item-name." .. event.stack.name }, " outside the Factory"}) end
+	-- Prevent to place Tiles inside the Control Center --
+	if creator ~= nil and event.tiles ~= nil and creator.surface.name == _mfControlSurfaceName  then
+		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then 
+			creator.print({"", "Unable to place ", {"item-name." .. event.stack.name }, " inside the Control Center"})
+		end
 		for k, tile in pairs(event.tiles) do
-			createTilesAtPosition(tile.position, 1, creator.surface, tile.old_tile.name)
+			createTilesAtPosition(tile.position, 1, creator.surface, tile.old_tile.name, true)
 		end
 	end
 	

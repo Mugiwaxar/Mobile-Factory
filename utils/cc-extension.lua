@@ -59,7 +59,7 @@ end
 -- Top passage Extension 1 --
 function createTopPassage1(surface)
 	if surface == nil then return end
-	createTilesSurface(surface, -10, -50, 10, -10, "tutorial-grid")
+	createTilesSurface(surface, -10, -58, 10, -10, "tutorial-grid")
 end
 
 -- Create Equalizer --
@@ -118,8 +118,7 @@ end
 -- Create Constructible Area 1 --
 function createConstructibleArea1()
 	createTopPassage1(global.MF.ccS)
-	createTilesSurface(global.MF.ccS, 10, -50, 16, -46, "tutorial-grid")
-	createTilesSurface(global.MF.ccS, 16, -58, 36, -38, "BuildTile")
+	createTilesSurface(global.MF.ccS, 10, -58, 90, -30, "BuildTile")
 end
 
 
