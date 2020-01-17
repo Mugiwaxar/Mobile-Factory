@@ -83,7 +83,7 @@ data:extend{ocE}
 
 -- Item --
 local ocI = {}
-ocI.type = "item"
+ocI.type = "item-with-tags"
 ocI.name = "OreCleaner"
 ocI.icon = "__Mobile_Factory__/graphics/icones/OreCleaner.png"
 ocI.icon_size = 64

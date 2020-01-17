@@ -1,8 +1,10 @@
 ---------------------------------------------------------------------------------------------------
-Version: 0.0.78
+Version: 0.0.79
 Date: 17/01/2020
   Features:
     - Added compatibility with Mining Drones
+    - The Ore Cleaner now keep its level of Charge and Purity
+    - The Fluid Extractor now keep its level of Charge and Purity
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.78
 Date: 17/01/2020

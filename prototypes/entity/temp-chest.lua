@@ -6,7 +6,7 @@ tcE.type = "container"
 tcE.name = "TempChest"
 tcE.order = "zzz"
 tcE.flags = {}
-dsE.minable = {mining_time = 0.8}
+tcE.minable = {mining_time = 0.8}
 tcE.max_health = 9999
 tcE.fast_replaceable_group = nil
 tcE.inventory_size = 300

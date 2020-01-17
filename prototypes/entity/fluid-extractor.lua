@@ -65,7 +65,7 @@ data:extend{feE}
 
 -- Item --
 local feI = {}
-feI.type = "item"
+feI.type = "item-with-tags"
 feI.name = "FluidExtractor"
 feI.place_result = "FluidExtractor"
 feI.icon = "__Mobile_Factory__/graphics/icones/FluidExtractor.png"

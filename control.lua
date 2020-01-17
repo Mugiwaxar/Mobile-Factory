@@ -1,3 +1,5 @@
+pcall(require,'__debugadapter__/debugadapter.lua')
+
 GUI = {}
 Util = {}
 UpSys = {}

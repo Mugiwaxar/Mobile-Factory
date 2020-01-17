@@ -213,12 +213,28 @@ function somethingWasPlaced(event, isRobot)
 	-- Save the Ore Cleaner --
 	if event.created_entity.name == "OreCleaner" then
 		placedOreCleaner(event)
+		if event.stack ~= nil then
+			local tags = event.stack.get_tag("Infos")
+			if tags ~= nil then
+				global.oreCleanerTable[event.created_entity.unit_number].purity = tags.purity
+				global.oreCleanerTable[event.created_entity.unit_number].charge = tags.charge
+				global.oreCleanerTable[event.created_entity.unit_number].totalCharge = tags.totalCharge
+			end
+		end
 		return
 	end
 	
 	-- Save the Fluid Extractor --
 	if event.created_entity.name == "FluidExtractor" then
 		placedFluidExtractor(event)
+		if event.stack ~= nil then
+			local tags = event.stack.get_tag("Infos")
+			if tags ~= nil then
+				global.fluidExtractorTable[event.created_entity.unit_number].purity = tags.purity
+				global.fluidExtractorTable[event.created_entity.unit_number].charge = tags.charge
+				global.fluidExtractorTable[event.created_entity.unit_number].totalCharge = tags.totalCharge
+			end
+		end
 		return
 	end
 	
@@ -300,11 +316,21 @@ function somethingWasRemoved(event)
 	end
 	-- Remove the Ore Cleaner --
 	if event.entity.name == "OreCleaner" then
+		local obj = global.oreCleanerTable[event.entity.unit_number]
+		if obj ~= nil and event.buffer[1] ~= nil then
+			event.buffer[1].set_tag("Infos", {purity=obj.purity, charge=obj.charge, totalCharge=obj.totalCharge})
+			event.buffer[1].custom_description = {"", {"item-description.OreCleaner"}, {"item-description.OreCleanerC", obj.purity, obj.charge, obj.totalCharge}}
+		end
 		removedOreCleaner(event)
 		return
 	end
 	-- Remove the Fluid Extractor --
 	if event.entity.name == "FluidExtractor" then
+		local obj = global.fluidExtractorTable[event.entity.unit_number]
+		if obj ~= nil and event.buffer[1] ~= nil then
+			event.buffer[1].set_tag("Infos", {purity=obj.purity, charge=obj.charge, totalCharge=obj.totalCharge})
+			event.buffer[1].custom_description = {"", {"item-description.FluidExtractor"}, {"item-description.FluidExtractorC", obj.purity, obj.charge, obj.totalCharge}}
+		end
 		removedFluidExtractor(event)
 		return
 	end

@@ -57,7 +57,6 @@ require("prototypes/gun/tank-guns.lua")
 require("prototypes/animation/shield.lua")
 require("prototypes/animation/red-energy-orb.lua")
 if mods["omnimatter"] then require("utils/omnimatter.lua") end
-		
 
 
 ------------------ ADD ITEM-GROUP CATEGORY ----------------
