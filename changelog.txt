@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.78
+Date: 17/01/2020
+  Bugfixes:
+    - Fixed a crash that appened when a Structure was damaged and destroyed at the same time
+---------------------------------------------------------------------------------------------------
 Version: 0.0.77
 Date: 17/01/2020
   Features:
@@ -8,7 +13,7 @@ Date: 17/01/2020
   Changes:
     - Ore Cleaners will only work if the distance to the Mobile Factory is less than 100 Tiles (Performances)
     - Fluid Extractors will only work if the distance to the Mobile Factory is less than 100 Tiles (Performances)
-    - Constructible Area 1 Technology unlock now a big Area inside the Control Center
+    - Constructible Area 1 Technology unlocks now a big Area inside the Control Center
   Bugfixes:
     - Fixed a crash when Tiles are placed inside the Control Center
 ---------------------------------------------------------------------------------------------------
@@ -37,7 +42,7 @@ Date: 15/01/2020
   Changes:
     - The Mining Jet Flag now display if the Mobile Factory is not found
     - The Mining Jet Flag will not send its Inventory if the Mobile Factory is not found
-    - The Deep Storage display now what's inside above it
+    - The Deep Storage displays now what's inside above it
     - Removed Jets Bounding Box to make then more UPS friendly
   Bugfixes:
     - Fixed a crash when the Mobile Factory is removed or destroyed

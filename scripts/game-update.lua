@@ -260,7 +260,7 @@ function onEntityDamaged(event)
 	if event.entity.health < event.entity.prototype.max_health then
 		-- Check if the Entity is not already inside the table --
 		for k, structure in pairs(global.repairTable) do
-			if event.entity.unit_number == structure.ent.unit_number then
+			if structure.ent ~= nil and event.entity.unit_number == structure.ent.unit_number then
 				return
 			end
 		end
