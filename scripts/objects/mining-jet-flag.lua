@@ -166,6 +166,9 @@ function MJF:requestJet()
 	-- Check the Mobile Factory --
 	if global.MF.ent == nil or global.MF.ent.valid == false or global.MF.ent.surface ~= self.ent.surface then return end
 	
+	-- Check the Distance --
+	if Util.distance(self.ent.position, global.MF.ent.position) > global.mjMaxDistance then return end
+	
 	-- Check if there are Ores left --
 	if table_size(self.oreTable) <= 0 then return end
 	

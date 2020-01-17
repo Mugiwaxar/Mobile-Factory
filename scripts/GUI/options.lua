@@ -29,6 +29,19 @@ function GUI.readOptions(option, player, gui)
 	if name == "GUIEnergyBarOpt" then
 		player.gui.screen.mfGUI.mfGUICenterFrame.InternalEnergyBar.visible = player.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab1Frame.mfOptTab1Pane.GUIEnergyBarOpt.state
 	end
+	-- Game --
+	if name == "MiningJetDistanceOpt" then
+		global.mjMaxDistance = tonumber(option.text)
+	end
+	if name == "ConstructionJetDistanceOpt" then
+		global.cjMaxDistance = tonumber(option.text)
+	end
+	if name == "RepairJetDistanceOpt" then
+		global.rjMaxDistance = tonumber(option.text)
+	end
+	if name == "CombatJetDistanceOpt" then
+		global.cbjMaxDistance = tonumber(option.text)
+	end
 	-- Performances --
 	if name == "SystemPerfEntsPerTick" then
 		local number = tonumber(option.text)
@@ -36,6 +49,5 @@ function GUI.readOptions(option, player, gui)
 		number = math.max(number, 10)
 		number = math.min(number, 10000)
 		global.entsUpPerTick = number
-		option.text = number
 	end
 end

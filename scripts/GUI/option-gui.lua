@@ -87,6 +87,35 @@ function GUI.createOptionGUI(gui, player)
 	-- Create the Tab 1 --
 	GUI.createOptTab1(mfOptTab1Pane)
 	
+	------------------------------------------- TAB 3 --------------------------------
+	-- Create the Tab --
+	local mfOptTab3 = mfOptTabbedPane.add{type="tab", name="mfOptTab3"}
+	mfOptTab3.caption = {"gui-description.tab3"}
+	mfOptTab3.style.padding = 0
+	mfOptTab3.style.margin = 0
+	
+	-- Create the Frame --
+	local mfOptTab3Frame = mfOptTabbedPane.add{type="frame", name="mfOptTab3Frame"}
+	mfOptTab3Frame.style.width = width - 16
+	mfOptTab3Frame.style.height = height - 100
+	mfOptTab3Frame.style.padding = 0
+	mfOptTab3Frame.style.margin = 0
+	
+	-- Create the Scroll-pane --
+	local mfOptTab3Pane = mfOptTab3Frame.add{type="frame", name="mfOptTab3Pane", direction="vertical"}
+	mfOptTab3Pane.style.width = width - 24
+	mfOptTab3Pane.style.height = height - 107
+	mfOptTab3Pane.style.padding = 0
+	mfOptTab3Pane.style.margin = 0
+	mfOptTab3Pane.style.horizontal_align = "left"
+	mfOptTab3Pane.style.vertical_align = "top"
+	
+	-- Add all Tabs to the Tabbed-pane --
+	mfOptTabbedPane.add_tab(mfOptTab3, mfOptTab3Frame)
+	
+	-- Create the Tab 3 --
+	GUI.createOptTab3(mfOptTab3Pane)
+	
 	------------------------------------------- TAB 2 --------------------------------
 	-- Create the Tab --
 	local mfOptTab2 = mfOptTabbedPane.add{type="tab", name="mfOptTab2"}
@@ -133,11 +162,53 @@ function GUI.createOptTab1(tab)
 	tab.add{type="checkbox", name="GUIEnergyBarOpt", caption={"gui-description.GUIEnergyBarOpt"}, state=true}
 end
 
+---------------------- OPTIONS GUI TAB 3 --------------------------
+function GUI.createOptTab3(tab)
+	local GUIMainGuiOpt = tab.add{type="label", name="GUIMainGuiOpt", caption={"gui-description.JetOpt"}}
+	GUIMainGuiOpt.style.font = "TitleFont"
+	tab.add{type="label", caption={"gui-description.JetMaximalDistance"}}
+	GUI.createDTextField(tab, "MiningJetDistanceOpt", "MiningJetDistanceOpt", "MiningJetDistanceOptTT", global.mjMaxDistance)
+	GUI.createDTextField(tab, "ConstructionJetDistanceOpt", "ConstructionJetMaximalDistance", "ConstructionJetMaximalDistanceTT", global.cjMaxDistance)
+	GUI.createDTextField(tab, "RepairJetDistanceOpt", "RepairJetDistanceOpt", "RepairJetDistanceOptTT", global.rjMaxDistance)
+	GUI.createDTextField(tab, "CombatJetDistanceOpt", "CombatJetDistanceOpt", "CombatJetDistanceOpt", global.cbjMaxDistance)
+end
+
+
 ---------------------- OPTIONS GUI TAB 2 --------------------------
 function GUI.createOptTab2(tab)
 	local SystemPerfGuiOpt = tab.add{type="label", name="SystemPerfGuiOpt", caption={"gui-description.GUIPerfGuiOpt"}}
 	SystemPerfGuiOpt.style.font = "TitleFont"
-	local SystemPerfEntsPerTickFlow = tab.add{type="flow", direction="vertical"}
-	SystemPerfEntsPerTickFlow.add{type="label", caption={"gui-description.SystemPerfEntsPerTick"}, tooltip={"gui-description.SystemPerfEntsPerTickTT"}}
-	SystemPerfEntsPerTickFlow.add{type="textfield", name="SystemPerfEntsPerTick", tooltip={"gui-description.SystemPerfEntsPerTickTT"}, text=global.entsUpPerTick, numeric=true, allow_decimal=false, allow_negative=false}
+	GUI.createDTextField(tab, "SystemPerfEntsPerTick", "SystemPerfEntsPerTick", "SystemPerfEntsPerTickTT", global.entsUpPerTick)
 end
+
+-- Create an option with decimal Textfield --
+function GUI.createDTextField(GUI, name, caption, tooltip, text)
+	local flow = GUI.add{type="flow", direction="horizontal"}
+	flow.add{type="textfield", name=name, tooltip={"gui-description." .. tooltip}, text=text, numeric=true, allow_decimal=false, allow_negative=false}	
+	flow.add{type="label", caption={"gui-description." .. caption}, tooltip={"gui-description." .. tooltip}}
+	flow[name].style.width = 100
+	flow[name].style.left_margin = 5
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

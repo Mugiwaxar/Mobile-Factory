@@ -152,6 +152,7 @@ function RJ:repair()
 	-- Repair the Structure --
 	self.isRepairing = true
 	self.currentOrder = "Repair"
+	self.ent.set_command({type=defines.command.stop})
 	self.target.ent.damage(_mfHPRepairedPerUpdate, self.ent.force)
 end
 

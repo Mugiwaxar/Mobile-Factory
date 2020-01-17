@@ -1,4 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.77
+Date: 17/01/2020
+  Features:
+    - The Maximum Mining Distance of the Mining Jet can be configured inside the Option GUI
+    - The Maximum Construction Distance of the Construction Jet can be configured inside the Option GUI
+    - The Maximum Repair Distance of the Repair Jet can be configured inside the Option GUI
+  Changes:
+    - Ore Cleaners will only work if the distance to the Mobile Factory is less than 100 Tiles (Performances)
+    - Fluid Extractors will only work if the distance to the Mobile Factory is less than 100 Tiles (Performances)
+    - Constructible Area 1 Technology unlock now a big Area inside the Control Center
+  Bugfixes:
+    - Fixed a crash when Tiles are placed inside the Control Center
+---------------------------------------------------------------------------------------------------
 Version: 0.0.76
 Date: 16/01/2020
   Optimisations:

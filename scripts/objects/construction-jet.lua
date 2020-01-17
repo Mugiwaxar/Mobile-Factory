@@ -169,6 +169,7 @@ function CJ:build()
 		return
 	end
 	self.currentOrder = "Build"
+	self.ent.set_command({type=defines.command.stop})
 	-- Destroy the Gost --
 	self.target.ent.destroy()
 	-- Create the Entity --

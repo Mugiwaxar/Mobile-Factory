@@ -51,6 +51,10 @@ function updateValues()
 	if global.upSysLastScan == nil then global.upSysLastScan = 0 end
 	if global.IDModule == nil then global.IDModule = 0 end
 	if global.dataNetworkID == nil then global.dataNetworkID = 0 end
+	if global.mjMaxDistance == nil then global.mjMaxDistance = 200 end
+	if global.cjMaxDistance == nil then global.cjMaxDistance = 200 end
+	if global.rjMaxDistance == nil then global.rjMaxDistance = 200 end
+	if global.cbjMaxDistance == nil then global.cbjMaxDistance= 200 end
 	if global.constructionJetIndex == nil then global.constructionJetIndex = 0 end
 	if global.repairJetIndex == nil then global.repairJetIndex = 0 end
 	if global.accTable == nil then global.accTable = {} end
@@ -232,7 +236,7 @@ end
 
 -- Watch damages --
 function onEntityDamaged(event)
-	if event.entity.force ~= "player" then return end
+	if event.entity.force.name ~= "player" then return end
 	-- Check the Entity --
 	if event.entity == nil or event.entity.valid == false then return end
 	-- Test if this is the Mobile Factory --
@@ -255,13 +259,15 @@ function onEntityDamaged(event)
 	-- Save the Entity inside the Repair table for Jet --
 	if event.entity.health < event.entity.prototype.max_health then
 		-- Check if the Entity is not already inside the table --
-		-- for k, structure in pairs(global.repairTable) do
-			-- if event.entity.unit_number == structure.ent.unit_number then
-				-- return
-			-- end
-		-- end
-		if table_size(global.repairTable < 300) then
+		for k, structure in pairs(global.repairTable) do
+			if event.entity.unit_number == structure.ent.unit_number then
+				return
+			end
+		end
+		if table_size(global.repairTable) < 300 then
 			table.insert(global.repairTable, {ent=event.entity})
+		else
+			game.print("Mobile Factory: To many damaged Entities inside the Repair Table")
 		end
 	end
 end
@@ -366,6 +372,8 @@ function updateConstructionJet()
 			table.remove(global.constructionTable, global.constructionJetIndex)
 			goto continue
 		end
+		-- Check the Distance --
+		if Util.distance(structure.ent.position, global.MF.ent.position) > global.cjMaxDistance then goto continue end
 		-- Check if there are no Jet already attributed to this Structure --
 		if structure.jet ~= nil and structure.jet:valid() == true then goto continue end
 		-- Remove a Jet from the Inventory --
@@ -425,6 +433,8 @@ function updateRepairJet()
 		table.remove(global.repairTable, global.repairJetIndex)
 		goto continue
 	end
+	-- Check the Distance --
+	if Util.distance(structure.ent.position, global.MF.ent.position) > global.rjMaxDistance then goto continue end
 	-- Check if there are no Jet already attributed to this Structure --
 	if structure.jet ~= nil and structure.jet:valid() == true then goto continue end
 	-- Remove a Jet from the Inventory --
