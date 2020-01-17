@@ -333,3 +333,45 @@ function Util.getEntID(array)
 	end
 	return id
 end
+
+-- Calcule the Distance between two Positions --
+function Util.distance(position1, position2)
+  local x1 = position1[1] or position1.x
+  local y1 = position1[2] or position1.y
+  local x2 = position2[1] or position2.x
+  local y2 = position2[2] or position2.y
+  return ((x1 - x2) ^ 2 + (y1 - y2) ^ 2) ^ 0.5
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

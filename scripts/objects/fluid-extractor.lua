@@ -7,7 +7,8 @@ FE = {
 	totalCharge = 0,
 	updateTick = 60,
 	lastUpdate = 0;
-	selectedDimTank = nil
+	selectedDimTank = nil,
+	mfTooFar = false
 }
 
 -- Constructor --
@@ -55,8 +56,14 @@ function FE:update(event)
 	if global.MF.ent == nil or global.MF.ent.valid == false then return end
 	-- Check the Surface --
 	if self.ent.surface ~= global.MF.ent.surface then return end
-	-- Extract Fluid --
-	self:extractFluids(event)
+	-- Check the Distance --
+	if Util.distance(self.ent.position, global.MF.ent.position) > _mfOreCleanerMaxDistance then
+		self.MFTooFar = true
+	else
+		self.MFTooFar = false
+		-- Extract Fluid --
+		self:extractFluids(event)
+	end
 end
 
 -- Tooltip Infos --
@@ -88,6 +95,13 @@ function FE:getTooltipInfos(GUI)
 	PurityLabel.style.font_color = {39,239,0}
 	PurityBar.style.color = {255, 255, 255}
 	targetLabel.style.font_color = {108, 114, 229}
+	
+	-- Create the Mobile Factory Too Far Label --
+	if self.MFTooFar == true then
+		local mfTooFarL = feFrame.add{type="label", caption={"", {"gui-description.MFTooFar"}}}
+		mfTooFarL.style.font = "LabelFont"
+		mfTooFarL.style.font_color = _mfRed
+	end
 	
 	-- Create the Dimensional Tank Selection --
 	local dimTanks = {{"gui-description.Any"}}

@@ -407,7 +407,8 @@ function MF:SendQuatronToOC(event)
 	-- Send Charge only every 10 ticks --
 	if event.tick%10 ~= 0 then return end
 	for k, oc in pairs(global.oreCleanerTable) do
-		if oc:valid() == true then
+	-- Check the Distance --
+		if oc:valid() == true and Util.distance(self.ent.position, oc.ent.position) < _mfOreCleanerMaxDistance then
 			-- Test if there are space inside the Ore Cleaner for Quatron Charge --
 			if oc.charge <= _mfFEMaxCharge - 100 then
 				-- Get the Best Quatron Change --
@@ -431,7 +432,7 @@ function MF:SendQuatronToFE(event)
 	if event.tick%10 ~= 0 then return end
 	for k, fe in pairs(global.fluidExtractorTable) do
 		-- Check if the Fluid Extractor is valid --
-		if fe:valid() == true then
+		if fe:valid() == true and Util.distance(self.ent.position, fe.ent.position) < _mfFluidExtractorMaxDistance then
 			-- Test if there are space inside the Fluid Extractor for Quatron Charge --
 			if fe.charge <= _mfFEMaxCharge - 100 then
 				-- Get the Best Quatron Change --

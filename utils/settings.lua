@@ -66,6 +66,12 @@ _mfOreCleanerMaxCharge = 1000
 _mfOreCleanerRadius = 25
 _mfOreCleanerOrePerExtraction = 10
 _mfOreCleanerExtractionTicks = 20
+_mfOreCleanerMaxDistance = 100
+
+-- Fluid Extractor settings --
+_mfFEFluidPerExtraction = 30
+_mfFEMaxCharge = 1000
+_mfFluidExtractorMaxDistance = 100
 
 -- Mining Jet --
 _mfMiningJetOrePerUpdate = 5
@@ -80,10 +86,6 @@ _mfMiningJetFlagMK4Radius = 100
 -- Construction/Repair Jet --
 _mfEntitiesScanedPerUpdate = 30
 _mfHPRepairedPerUpdate = -35
-
--- Fluid Extractor settings --
-_mfFEFluidPerExtraction = 30
-_mfFEMaxCharge = 1000
 
 -- GUI Settings --
 _GUIButtonsSize = 25

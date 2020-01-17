@@ -11,7 +11,8 @@ OC = {
 	animTick = 0,
 	updateTick = 1,
 	lastUpdate = 0,
-	lastExtraction = 0
+	lastExtraction = 0,
+	mfTooFar = false
 }
 
 -- Constructor --
@@ -64,10 +65,16 @@ function OC:update(event)
 	if global.MF.ent == nil or global.MF.ent.valid == false then return end
 	-- Check the Surface --
 	if self.ent.surface ~= global.MF.ent.surface then return end
+	-- Check the Distance --
+	if Util.distance(self.ent.position, global.MF.ent.position) > _mfOreCleanerMaxDistance then
+		self.MFTooFar = true
+	else
+		self.MFTooFar = false
+	end
 	-- Set the Ore Cleaner Energy --
-	self.ent.energy = 60
+	self.ent.energy = 600
 	-- Collect Ores --
-	if event.tick%_mfOreCleanerExtractionTicks == 0 then
+	if event.tick%_mfOreCleanerExtractionTicks == 0 and self.MFTooFar == false then
 		self:collectOres(event)
 	end
 	-- Update Animation --
@@ -86,25 +93,28 @@ function OC:getTooltipInfos(GUI)
 	local ChargeBar = ocFrame.add{type="progressbar", value=self.charge/_mfOreCleanerMaxCharge}
 	local PurityLabel = ocFrame.add{type="label", caption={"", {"gui-description.Purity"}, ": ", math.floor(self.purity*100)/100}}
 	local PurityBar = ocFrame.add{type="progressbar", value=self.purity/100}
-	local targetLabel = ocFrame.add{type="label", caption={"", {"gui-description.OSTarget"}, ":"}}
 	
 	-- Update Style --
 	nameLabel.style.bottom_margin = 5
 	SpeedLabel.style.font = "LabelFont"
 	ChargeLabel.style.font = "LabelFont"
 	PurityLabel.style.font = "LabelFont"
-	targetLabel.style.top_margin = 7
-	targetLabel.style.font = "LabelFont"
 	nameLabel.style.font_color = {108, 114, 229}
 	SpeedLabel.style.font_color = {39,239,0}
 	ChargeLabel.style.font_color = {39,239,0}
 	ChargeBar.style.color = {176,50,176}
 	PurityLabel.style.font_color = {39,239,0}
 	PurityBar.style.color = {255, 255, 255}
-	targetLabel.style.font_color = {108, 114, 229}
+	
+	-- Create the Mobile Factory Too Far Label --
+	if self.MFTooFar == true then
+		local mfTooFarL = ocFrame.add{type="label", caption={"", {"gui-description.MFTooFar"}}}
+		mfTooFarL.style.font = "LabelFont"
+		mfTooFarL.style.font_color = _mfRed
+	end
 	
 	-- Create the targeted Inventory label --
-	local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
+	local targetLabel = ocFrame.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
 	targetLabel.style.top_margin = 7
 	targetLabel.style.font = "LabelFont"
 	targetLabel.style.font_color = {108, 114, 229}
@@ -122,7 +132,7 @@ function OC:getTooltipInfos(GUI)
 		end
 	end
 	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-	local invSelection = GUI.add{type="list-box", name="OC" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
+	local invSelection = ocFrame.add{type="list-box", name="OC" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
 	invSelection.style.width = 70
 end
 
