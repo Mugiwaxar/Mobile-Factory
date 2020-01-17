@@ -1,3 +1,12 @@
+---------------------------------------------------------------------------------------------------
+Version: 0.0.76
+Date: 16/01/2020
+  Optimisations:
+    - Added a Filter for the Entity Damaged event
+    - Added a Filter for destroyed Entities
+  Bugfixes:
+    - Fixed the Save/Load
+---------------------------------------------------------------------------------------------------
 Version: 0.0.75
 Date: 16/01/2020
   Features:

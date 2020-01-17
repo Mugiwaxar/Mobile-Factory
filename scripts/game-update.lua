@@ -232,6 +232,7 @@ end
 
 -- Watch damages --
 function onEntityDamaged(event)
+	if event.entity.force ~= "player" then return end
 	-- Check the Entity --
 	if event.entity == nil or event.entity.valid == false then return end
 	-- Test if this is the Mobile Factory --
@@ -247,7 +248,7 @@ function onEntityDamaged(event)
 			game.print("Mobile Factory heal low")
 		end
 	end
-	-- Test if this is in Control Center --
+	-- Test if this is in the Control Center --
 	if event.entity.surface.name == _mfControlSurfaceName then
 		event.entity.health = event.entity.prototype.max_health
 	end
@@ -259,7 +260,9 @@ function onEntityDamaged(event)
 				-- return
 			-- end
 		-- end
-		table.insert(global.repairTable, {ent=event.entity})
+		if table_size(global.repairTable < 300) then
+			table.insert(global.repairTable, {ent=event.entity})
+		end
 	end
 end
 
