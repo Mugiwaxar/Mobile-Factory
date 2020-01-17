@@ -32,7 +32,7 @@ dmOR.stages =
 		scale = 0.25
 	}
 }
-dmOR.map_color = {102, 0, 102}
+dmOR.map_color = {102/255, 0, 102/255}
 dmOR.autoplace = resource_autoplace.resource_autoplace_settings{
 		name = "DimensionalOre",
         order = "b",
