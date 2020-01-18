@@ -59,8 +59,8 @@ function createJet(name, order)
 	jU.minable = {mining_time = 0.2, result = name}
 	jU.flags = {"placeable-player", "player-creation", "not-blueprintable", "not-deconstructable"}
 	jU.emissions_per_second = 0.008
-	jU.max_health = 100
-	jU.healing_per_tick = 1/60
+	jU.max_health = 250
+	jU.healing_per_tick = 1/20
 	jU.movement_speed = 0.2
 	jU.distance_per_frame = 1
 	jU.pollution_to_join_attack = 1000000
@@ -69,7 +69,16 @@ function createJet(name, order)
 	jU.ai_settings = {}
 	jU.max_pursue_distance = 0
 	jU.render_layer = "air-object"
+	jU.has_belt_immunity = true
 	jU.selection_priority = 150
+	jU.move_while_shooting = true
+	jU.resistances =
+    {
+      {
+        type = "fire",
+        percent = 100
+      }
+    }
 	jU.run_animation =
 	{
 		layers =
@@ -108,6 +117,36 @@ function createJet(name, order)
 			category = "laser-turret"
 		}
 	}
+
+	if name == "CombatJet" then
+		jU.max_health = 400
+		jU.healing_per_tick = 1/5
+		jU.vision_distance = 15
+		jU.max_pursue_distance = 50
+		jU.pollution_to_join_attack = 0
+		jU.attack_parameters =
+		{
+			type = "stream",
+			range = 7,
+			min_attack_distance = 0,
+			movement_slow_down_factor = 0.5,
+			cooldown = 0,
+			animation = jU.run_animation,
+			ammo_type =
+			{
+				category = "biological",
+				action =
+				{
+					type = "direct",
+					action_delivery =
+					{
+						type = "stream",
+						stream = "flamethrower-fire-stream"
+					}
+				}
+			}
+		}
+	end
 	data:extend{jU}
 	
 end
@@ -116,6 +155,7 @@ end
 createJet("MiningJet", "a")
 createJet("ConstructionJet", "b")
 createJet("RepairJet", "c")
+createJet("CombatJet", "d")
 	
 	
 	

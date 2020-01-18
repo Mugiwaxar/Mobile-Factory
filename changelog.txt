@@ -1,6 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.81
+Date: 18/01/2020
+  Features:
+    - Added the Combat Jet: It will help you to defend your Mobile Factory
+    - New Technology: Combat Jet, Unlock the Combat Jet
+---------------------------------------------------------------------------------------------------
 Version: 0.0.80
 Date: 18/01/2020
+  Bugfixes:
+    - Fixed a crash related to Repair Jet
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.79
 Date: 17/01/2020

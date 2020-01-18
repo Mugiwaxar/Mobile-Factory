@@ -96,8 +96,8 @@ function CJ:getTooltipInfos(GUI)
 	work.style.font = "LabelFont"
 	work.style.font_color = _mfBlue
 	
+	-- Create the Mission Label --
 	if self.target ~= nil then
-		-- Create the Mission Label --
 		local mission = GUI.add{type="label", caption={"",{"gui-description.Mission"}, ": ", {"gui-description." .. self.target.mission}, " ", {"entity-name." .. self.target.name}}}
 		mission.style.font = "LabelFont"
 		mission.style.font_color = _mfGreen

@@ -37,6 +37,7 @@ function updateEntities(event)
 	if event.tick%_eventTick64 == 0 then updateLogisticFluidPoles() end
 	if event.tick%_eventTick45 == 0 then updateConstructionJet() end
 	if event.tick%_eventTick41 == 0 then updateRepairJet() end
+	if event.tick%_eventTick73 == 0 then updateCombatJet() end
 	-- Update System --
 	UpSys.update(event)
 	updatePowerDrainPole(event)
@@ -78,6 +79,7 @@ function updateValues()
 	if global.constructionTable == nil then global.constructionTable = {} end
 	if global.repairJetTable == nil then global.repairJetTable = {} end
 	if global.repairTable == nil then global.repairTable = {} end
+	if global.combatJetTable == nil then global.combatJetTable = {} end
 	-- for k, j in pairs(global) do
 		-- if type(j) == "table" then
 			-- dprint(k .. ":" .. table_size(j))
@@ -423,20 +425,20 @@ function updateRepairJet()
 	local structure = global.repairTable[global.repairJetIndex]
 	if structure == nil or structure.ent == nil or structure.ent.valid == false then
 		table.remove(global.repairTable, global.repairJetIndex)
-		goto continue
+		return
 	end
 	if structure.ent.surface ~= global.MF.ent.surface then
 		table.remove(global.repairTable, global.repairJetIndex)
-		goto continue
+		return
 	end
 	if structure.ent.health >= structure.ent.prototype.max_health then
 		table.remove(global.repairTable, global.repairJetIndex)
-		goto continue
+		return
 	end
 	-- Check the Distance --
-	if Util.distance(structure.ent.position, global.MF.ent.position) > global.rjMaxDistance then goto continue end
+	if Util.distance(structure.ent.position, global.MF.ent.position) > global.rjMaxDistance then return end
 	-- Check if there are no Jet already attributed to this Structure --
-	if structure.jet ~= nil and structure.jet:valid() == true then goto continue end
+	if structure.jet ~= nil and structure.jet:valid() == true then return end
 	-- Remove a Jet from the Inventory --
 	local removed = inv.remove({name="RepairJet", count=1})
 	-- Check if the Jet exist --
@@ -444,8 +446,30 @@ function updateRepairJet()
 	local entity = global.MF.ent.surface.create_entity{name="RepairJet", position=global.MF.ent.position, force="player"}
 	global.repairJetTable[entity.unit_number] = RJ:new(entity, structure)
 	structure.jet = global.repairJetTable[entity.unit_number]
-	::continue::
 	end
 end
 
-
+-- Update Combat Jets --
+function updateCombatJet()
+	-- Check if the Technology is unlocked --
+	if technologyUnlocked("CombatJet") == false then return end
+	-- Check the Mobile Factory --
+	if global.MF.ent == nil or global.MF.ent.valid == false then return end
+	-- Get the Mobile Factory Trunk --
+	local inv = global.MF.ent.get_inventory(defines.inventory.car_trunk)
+	-- Check the Inventory --
+	if inv == nil or inv.valid == false then return end
+	-- Look for an Enemy --
+	local enemy = global.MF.ent.surface.find_entities_filtered{position=global.MF.ent.position, radius=global.cbjMaxDistance, type="unit", force="enemy", limit=1}[1]
+	-- Check the Entity --
+	if enemy == nil or enemy.valid == false then return end
+	-- Sent 5 Jets --
+	for i = 1, 5 do
+		-- Remove a Jet from the Inventory --
+		local removed = inv.remove({name="CombatJet", count=1})
+		-- Check if the Jet exist --
+		if removed <= 0 then return end
+		local entity = global.MF.ent.surface.create_entity{name="CombatJet", position=global.MF.ent.position, force="player"}
+		global.repairJetTable[entity.unit_number] = CBJ:new(entity, enemy.position)
+	end
+end

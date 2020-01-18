@@ -100,6 +100,7 @@ _eventTick45=45 -- Construction Jets --
 _eventTick55=55 -- GUI --
 _eventTick60=60 -- Mobile Factory Lasers/Jump Drive --
 _eventTick64=64 -- Logistic Fluid Poles --
+_eventTick73=73 -- Combat Jets --
 _eventTick80=80 -- Mobile Factory Internal Inventory --
 _eventTick90=90 -- Mobile Factory Entities Scan --
 _eventTick125=125 -- Mobile Factory Modules Scan --

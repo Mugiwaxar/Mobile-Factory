@@ -30,6 +30,7 @@ require("scripts/objects/mining-jet.lua")
 require("scripts/objects/mining-jet-flag.lua")
 require("scripts/objects/construction-jet.lua")
 require("scripts/objects/repair-jet.lua")
+require("scripts/objects/combat-jet.lua")
 require("scripts/objects/deep-storage.lua")
 
 -- When the mod init --
@@ -81,6 +82,7 @@ function onInit()
 	global.constructionTable = {}
 	global.repairJetTable = {}
 	global.repairTable = {}
+	global.combatJetTable = {}
 end
 
 -- When a save is loaded --
@@ -148,6 +150,10 @@ function onLoad()
 	-- Set The Repair Jet Metatables --
 	for k, rj in pairs(global.repairJetTable or {}) do
 		RJ:rebuild(rj)
+	end
+	-- Set The Combat Jet Metatables --
+	for k, cbj in pairs(global.combatJetTable or {}) do
+		CBJ:rebuild(cbj)
 	end
 	-- Set The Deep Storage Metatables --
 	for k, dsr in pairs(global.deepStorageTable or {}) do
