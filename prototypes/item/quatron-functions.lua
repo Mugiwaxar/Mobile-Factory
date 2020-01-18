@@ -8,7 +8,7 @@ qI = {}
 qI.name = "Quatron" .. tonumber(level)
 qI.type = "item"
 qI.stack_size = 50
-qI.icon = "__Mobile_Factory__/graphics/icones/Quatron.png"
+qI.icon = "__Mobile_Factory_Graphics__/graphics/icones/Quatron.png"
 qI.icon_size = 32
 qI.subgroup = "Quatrons"
 if level < 10 then qI.order = "0" .. tonumber(level) else qI.order = tonumber(level) end
@@ -19,7 +19,7 @@ data:extend{qI}
 qR = {}
 qR.name = "Quatron" .. tonumber(level)
 qR.type = "recipe"
-qR.icon = "__Mobile_Factory__/graphics/icones/Quatron.png"
+qR.icon = "__Mobile_Factory_Graphics__/graphics/icones/Quatron.png"
 qR.icon_size = 32
 qR.category = "Elements"
 qR.subgroup = "Quatrons"
@@ -36,7 +36,7 @@ data:extend{qR}
 qT = {}
 qT.name = "Quatron" .. tonumber(level)
 qT.type = "technology"
-qT.icon = "__Mobile_Factory__/graphics/icones/Quatron.png"
+qT.icon = "__Mobile_Factory_Graphics__/graphics/icones/Quatron.png"
 qT.icon_size = 32
 if level == 1 then qT.prerequisites = {"DimensionalPlant", "DimensionalCrystal"} else qT.prerequisites = {"Quatron" .. previousLevel} end
 qT.unit = {

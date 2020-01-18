@@ -4,7 +4,7 @@
 local daE = {}
 daE.type = "accumulator"
 daE.name = "DimensionalAccumulator"
-daE.icon = "__Mobile_Factory__/graphics/icones/DimensionalAccumulator.png"
+daE.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalAccumulator.png"
 daE.icon_size = 32
 daE.flags = {"placeable-neutral", "player-creation"}
 daE.minable = {mining_time = 0.5, result = "DimensionalAccumulator"}
@@ -49,7 +49,7 @@ daE.working_sound =
     layers =
     {
       {
-          filename = "__Mobile_Factory__/graphics/entity/DimensionalAccumulator.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/entity/DimensionalAccumulator.png",
           priority = "high",
           width = 130,
           height = 189,
@@ -95,7 +95,7 @@ local daI = {}
 daI.type = "item"
 daI.name = "DimensionalAccumulator"
 daI.place_result = "DimensionalAccumulator"
-daI.icon = "__Mobile_Factory__/graphics/icones/DimensionalAccumulator.png"
+daI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalAccumulator.png"
 daI.icon_size = 32
 daI.subgroup = "DimensionalStuff"
 daI.order = "c"
@@ -120,7 +120,7 @@ data:extend{daC}
 local daT = {}
 daT.name = "ElectricityCompression"
 daT.type = "technology"
-daT.icon = "__Mobile_Factory__/graphics/icones/DimensionalAccumulator.png"
+daT.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalAccumulator.png"
 daT.icon_size = 32
 daT.unit = {
 	count=450,

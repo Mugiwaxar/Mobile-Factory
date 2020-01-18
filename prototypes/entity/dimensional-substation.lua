@@ -4,7 +4,7 @@
 local dS = {}
 dS.type = "electric-pole"
 dS.name = "DimensionalSubstation"
-dS.icon = "__Mobile_Factory__/graphics/icones/DimensionalSubstation.png"
+dS.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalSubstation.png"
 dS.icon_size = 32
 dS.flags = {"placeable-neutral", "player-creation"}
 dS.minable = {mining_time = 1, result = "DimensionalSubstation"}
@@ -22,7 +22,7 @@ dS.pictures =
       {
 
         {
-            filename = "__Mobile_Factory__/graphics/entity/DimensionalSubstation.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/entity/DimensionalSubstation.png",
             priority = "high",
             width = 138,
             height = 270,
@@ -123,7 +123,7 @@ local dsI = {}
 dsI.type = "item"
 dsI.name = "DimensionalSubstation"
 dsI.place_result = "DimensionalSubstation"
-dsI.icon = "__Mobile_Factory__/graphics/icones/DimensionalSubstation.png"
+dsI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalSubstation.png"
 dsI.icon_size = 32
 dsI.subgroup = "Poles"
 dsI.order = "a"
@@ -149,7 +149,7 @@ data:extend{dsC}
 local dsT = {}
 dsT.name = "ElectricityInfusion"
 dsT.type = "technology"
-dsT.icon = "__Mobile_Factory__/graphics/icones/DimensionalSubstation.png"
+dsT.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalSubstation.png"
 dsT.icon_size = 32
 dsT.unit = {
 	count=600,

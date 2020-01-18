@@ -3,14 +3,14 @@
 -- Entity --
 dpE = table.deepcopy(data.raw["assembling-machine"]["chemical-plant"])
 dpE.name = "DimensionalPlant"
-dpE.icon = "__Mobile_Factory__/graphics/icones/DimensionalPlant.png"
+dpE.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalPlant.png"
 dpE.minable = {mining_time = 0.3, result = "DimensionalPlant"}
 dpE.crafting_categories = {"Elements"}
 dpE.animation = make_4way_animation_from_spritesheet({ 
 	layers =
 		{
 		{
-          filename = "__Mobile_Factory__/graphics/entity/DimensionalPlant.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/entity/DimensionalPlant.png",
           width = 220,
           height = 292,
           frame_count = 24,
@@ -35,7 +35,7 @@ data:extend{dpE}
 local dpI = {}
 dpI.type = "item"
 dpI.name = "DimensionalPlant"
-dpI.icon = "__Mobile_Factory__/graphics/icones/DimensionalPlant.png"
+dpI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalPlant.png"
 dpI.icon_size = 32
 dpI.place_result = "DimensionalPlant"
 dpI.subgroup = "DimensionalStuff"
@@ -61,7 +61,7 @@ data:extend{dpR}
 local dpT = {}
 dpT.name = "DimensionalPlant"
 dpT.type = "technology"
-dpT.icon = "__Mobile_Factory__/graphics/icones/DimensionalPlant.png"
+dpT.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalPlant.png"
 dpT.icon_size = 32
 dpT.unit = {
 	count=1200,

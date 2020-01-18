@@ -5,7 +5,7 @@
 dmE = {}
 dmE.type = "storage-tank"
 dmE.name = "StorageTank1MK1"
-dmE.icon = "__Mobile_Factory__/graphics/icones/DimensionalTank1.png"
+dmE.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTank1.png"
 dmE.icon_size = 32
 dmE.flags = {"placeable-player", "player-creation"}
 dmE.minable = nil
@@ -32,7 +32,7 @@ dmE.pictures =
         sheets =
         {
           {
-			  filename = "__Mobile_Factory__/graphics/entity/DimensionalTank.png",
+			  filename = "__Mobile_Factory_Graphics__/graphics/entity/DimensionalTank.png",
 			  priority = "extra-high",
 			  frames = 2,
 			  width = 219,
@@ -125,7 +125,7 @@ data:extend{dmE}
 local dmT = {}
 dmT.name = "StorageTankMK1_1"
 dmT.type = "technology"
-dmT.icon = "__Mobile_Factory__/graphics/icones/DimensionalTank1.png"
+dmT.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTank1.png"
 dmT.icon_size = 32
 dmT.unit = {
 	count=450,
@@ -144,7 +144,7 @@ data:extend{dmT}
 dt2 = {}
 dt2.type = "storage-tank"
 dt2.name = "StorageTank2MK1"
-dt2.icon = "__Mobile_Factory__/graphics/icones/DimensionalTank2.png"
+dt2.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTank2.png"
 dt2.icon_size = 32
 dt2.flags = {"placeable-player", "player-creation"}
 dt2.minable = nil
@@ -171,7 +171,7 @@ dt2.pictures =
         sheets =
         {
           {
-			  filename = "__Mobile_Factory__/graphics/entity/DimensionalTank2.png",
+			  filename = "__Mobile_Factory_Graphics__/graphics/entity/DimensionalTank2.png",
 			  priority = "extra-high",
 			  frames = 2,
 			  width = 219,
@@ -264,7 +264,7 @@ data:extend{dt2}
 local dt2T = {}
 dt2T.name = "StorageTankMK1_2"
 dt2T.type = "technology"
-dt2T.icon = "__Mobile_Factory__/graphics/icones/DimensionalTank2.png"
+dt2T.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTank2.png"
 dt2T.icon_size = 32
 dt2T.unit = {
 	count=650,
@@ -283,7 +283,7 @@ data:extend{dt2T}
 dt3 = {}
 dt3.type = "storage-tank"
 dt3.name = "StorageTank3MK1"
-dt3.icon = "__Mobile_Factory__/graphics/icones/DimensionalTank3.png"
+dt3.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTank3.png"
 dt3.icon_size = 32
 dt3.flags = {"placeable-player", "player-creation"}
 dt3.minable = nil
@@ -310,7 +310,7 @@ dt3.pictures =
         sheets =
         {
           {
-			  filename = "__Mobile_Factory__/graphics/entity/DimensionalTank3.png",
+			  filename = "__Mobile_Factory_Graphics__/graphics/entity/DimensionalTank3.png",
 			  priority = "extra-high",
 			  frames = 2,
 			  width = 219,
@@ -403,7 +403,7 @@ data:extend{dt3}
 local dt3T = {}
 dt3T.name = "StorageTankMK1_3"
 dt3T.type = "technology"
-dt3T.icon = "__Mobile_Factory__/graphics/icones/DimensionalTank3.png"
+dt3T.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTank3.png"
 dt3T.icon_size = 32
 dt3T.unit = {
 	count=800,
@@ -423,7 +423,7 @@ data:extend{dt3T}
 dt4 = {}
 dt4.type = "storage-tank"
 dt4.name = "StorageTank4MK1"
-dt4.icon = "__Mobile_Factory__/graphics/icones/DimensionalTank4.png"
+dt4.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTank4.png"
 dt4.icon_size = 32
 dt4.flags = {"placeable-player", "player-creation"}
 dt4.minable = nil
@@ -450,7 +450,7 @@ dt4.pictures =
         sheets =
         {
           {
-			  filename = "__Mobile_Factory__/graphics/entity/DimensionalTank4.png",
+			  filename = "__Mobile_Factory_Graphics__/graphics/entity/DimensionalTank4.png",
 			  priority = "extra-high",
 			  frames = 2,
 			  width = 219,
@@ -543,7 +543,7 @@ data:extend{dt4}
 local dt4T = {}
 dt4T.name = "StorageTankMK1_4"
 dt4T.type = "technology"
-dt4T.icon = "__Mobile_Factory__/graphics/icones/DimensionalTank4.png"
+dt4T.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTank4.png"
 dt4T.icon_size = 32
 dt4T.unit = {
 	count=1100,
@@ -562,7 +562,7 @@ data:extend{dt4T}
 dt5T = {}
 dt5T.type = "storage-tank"
 dt5T.name = "StorageTank5MK1"
-dt5T.icon = "__Mobile_Factory__/graphics/icones/DimensionalTank5.png"
+dt5T.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTank5.png"
 dt5T.icon_size = 32
 dt5T.flags = {"placeable-player", "player-creation"}
 dt5T.minable = nil
@@ -589,7 +589,7 @@ dt5T.pictures =
         sheets =
         {
           {
-			  filename = "__Mobile_Factory__/graphics/entity/DimensionalTank5.png",
+			  filename = "__Mobile_Factory_Graphics__/graphics/entity/DimensionalTank5.png",
 			  priority = "extra-high",
 			  frames = 2,
 			  width = 219,
@@ -682,7 +682,7 @@ data:extend{dt5T}
 local dt5T = {}
 dt5T.name = "StorageTankMK1_5"
 dt5T.type = "technology"
-dt5T.icon = "__Mobile_Factory__/graphics/icones/DimensionalTank5.png"
+dt5T.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTank5.png"
 dt5T.icon_size = 32
 dt5T.unit = {
 	count=1350,

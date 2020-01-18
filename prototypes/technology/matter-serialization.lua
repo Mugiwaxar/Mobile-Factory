@@ -4,7 +4,7 @@
 local msT = {}
 msT.name = "MatterSerialization"
 msT.type = "technology"
-msT.icon = "__Mobile_Factory__/graphics/matter-serialization/MatterSerializationI.png"
+msT.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/MatterSerializationI.png"
 msT.icon_size = 64
 msT.unit = {
 	count=15,
@@ -31,7 +31,7 @@ data:extend{msT}
 local dtT = {}
 dtT.name = "DataTransmission"
 dtT.type = "technology"
-dtT.icon = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataTransmissionI.png"
+dtT.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessDataTransmissionI.png"
 dtT.icon_size = 64
 dtT.unit = {
 	count=20,
@@ -54,7 +54,7 @@ data:extend{dtT}
 local idT = {}
 idT.name = "TechItemDrain"
 idT.type = "technology"
-idT.icon = "__Mobile_Factory__/graphics/icones/TechItemDrain.png"
+idT.icon = "__Mobile_Factory_Graphics__/graphics/icones/TechItemDrain.png"
 idT.icon_size = 32
 idT.unit = {
 	count=5,

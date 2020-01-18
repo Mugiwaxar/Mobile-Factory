@@ -4,7 +4,7 @@
 local dcI = {}
 dcI.type = "tool"
 dcI.name = "DimensionalCrystal"
-dcI.icon = "__Mobile_Factory__/graphics/icones/DimensionalCrystal.png"
+dcI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalCrystal.png"
 dcI.icon_size = 256
 dcI.subgroup = "Resources"
 dcI.durability = 1
@@ -31,7 +31,7 @@ data:extend{dcR}
 local dcT = {}
 dcT.name = "DimensionalCrystal"
 dcT.type = "technology"
-dcT.icon = "__Mobile_Factory__/graphics/icones/DimensionalCrystal.png"
+dcT.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalCrystal.png"
 dcT.icon_size = 256
 dcT.unit = {
 	count=1300,

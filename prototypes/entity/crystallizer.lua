@@ -4,7 +4,7 @@
 cE = {}
 cE.type = "assembling-machine"
 cE.name = "Crystallizer"
-cE.icon = "__Mobile_Factory__/graphics/icones/Crystallizer.png"
+cE.icon = "__Mobile_Factory_Graphics__/graphics/icones/Crystallizer.png"
 cE.icon_size = 32
 cE.flags = {"placeable-neutral", "placeable-player", "player-creation"}
 cE.minable = {mining_time = 0.2, result = "Crystallizer"}
@@ -48,7 +48,7 @@ cE.animation =
       layers =
       {
         {
-            filename = "__Mobile_Factory__/graphics/entity/Crystallizer.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/entity/Crystallizer.png",
             priority = "high",
             width = 214,
             height = 218,
@@ -110,7 +110,7 @@ data:extend{cE}
 local cI = {}
 cI.type = "item"
 cI.name = "Crystallizer"
-cI.icon = "__Mobile_Factory__/graphics/icones/Crystallizer.png"
+cI.icon = "__Mobile_Factory_Graphics__/graphics/icones/Crystallizer.png"
 cI.icon_size = 32
 cI.place_result = "Crystallizer"
 cI.subgroup = "DimensionalStuff"
@@ -136,7 +136,7 @@ data:extend{cR}
 local cT = {}
 cT.name = "Crystallizer"
 cT.type = "technology"
-cT.icon = "__Mobile_Factory__/graphics/icones/Crystallizer.png"
+cT.icon = "__Mobile_Factory_Graphics__/graphics/icones/Crystallizer.png"
 cT.icon_size = 32
 cT.unit = {
 	count=1000,

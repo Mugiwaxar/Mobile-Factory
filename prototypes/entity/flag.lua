@@ -8,7 +8,7 @@ function createFlag(name, order, MachineFrameCount, area, scale)
 	local fI = {}
 	fI.type = "item"
 	fI.name = name
-	fI.icon = "__Mobile_Factory__/graphics/jet/" .. name .. "I.png"
+	fI.icon = "__Mobile_Factory_Graphics__/graphics/jet/" .. name .. "I.png"
 	fI.icon_size = 64
 	fI.subgroup = "Jet"
 	fI.place_result = name
@@ -36,7 +36,7 @@ function createFlag(name, order, MachineFrameCount, area, scale)
 	local fE = {}
 	fE.type = "beacon"
 	fE.name = name
-	fE.icon = "__Mobile_Factory__/graphics/jet/" .. name .. "I.png"
+	fE.icon = "__Mobile_Factory_Graphics__/graphics/jet/" .. name .. "I.png"
 	fE.icon_size = 64
 	fE.max_health = 250
 	fE.collision_box = {{-1*scale, -1*scale},{1*scale, 1*scale}}
@@ -52,14 +52,14 @@ function createFlag(name, order, MachineFrameCount, area, scale)
 		layers =
 		{
 			{
-				filename = "__Mobile_Factory__/graphics/jet/" .. name .. "E.png",
+				filename = "__Mobile_Factory_Graphics__/graphics/jet/" .. name .. "E.png",
 				width = 450,
 				height = 900,
 				scale = scale/4,
 				shift = {0.35*scale, -2*scale}
 			},
 			{
-				filename = "__Mobile_Factory__/graphics/jet/MiningJetFlagS.png",
+				filename = "__Mobile_Factory_Graphics__/graphics/jet/MiningJetFlagS.png",
 				width = 200,
 				height = 100,
 				scale = scale,
@@ -70,7 +70,7 @@ function createFlag(name, order, MachineFrameCount, area, scale)
 	}
 	fE.animation =
 	{
-		filename = "__Mobile_Factory__/graphics/Alpha.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/Alpha.png",
 		width = 1,
 		height = 1,
 		line_length = 1,
@@ -79,7 +79,7 @@ function createFlag(name, order, MachineFrameCount, area, scale)
 	}
 	fE.animation_shadow =
 	{
-		filename = "__Mobile_Factory__/graphics/Alpha.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/Alpha.png",
 		width = 1,
 		height = 1,
 		line_length = 1,

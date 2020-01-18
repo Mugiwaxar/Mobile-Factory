@@ -30,7 +30,7 @@ mf.animation =
 			stripes =
 			{
 				{
-				filename = "__Mobile_Factory__/graphics/mobile- factory/mobile-factory.png",
+				filename = "__Mobile_Factory_Graphics__/graphics/mobile- factory/mobile-factory.png",
 				width_in_frames = 10,
 				height_in_frames = 8
 				}
@@ -187,7 +187,7 @@ data:extend{mf}
 local mfI = {}
 mfI.type = "item-with-entity-data"
 mfI.name = "MobileFactory"
-mfI.icon = "__Mobile_Factory__/graphics/mobile- factory/tank.png"
+mfI.icon = "__Mobile_Factory_Graphics__/graphics/mobile- factory/tank.png"
 mfI.icon_size = 32
 mfI.place_result = "MobileFactory"
 mfI.subgroup = "MobileFactory"

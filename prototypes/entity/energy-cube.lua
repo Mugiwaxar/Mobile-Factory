@@ -4,7 +4,7 @@
 local ec1E = {}
 ec1E.type = "accumulator"
 ec1E.name = "EnergyCubeMK1"
-ec1E.icon = "__Mobile_Factory__/graphics/energy/EnergyCubeMK1I.png"
+ec1E.icon = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK1I.png"
 ec1E.icon_size = 64
 ec1E.flags = {"placeable-neutral", "player-creation"}
 ec1E.minable = {mining_time = 0.5, result = "EnergyCubeMK1"}
@@ -36,7 +36,7 @@ ec1E.picture = {
     layers =
     {
       {
-          filename = "__Mobile_Factory__/graphics/energy/EnergyCubeMK1E.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK1E.png",
           priority = "high",
           width = 300,
           height = 300,
@@ -45,7 +45,7 @@ ec1E.picture = {
 		  scale = 1 / 325 * (33*3)
       },
       {
-          filename = "__Mobile_Factory__/graphics/energy/EnergyCubeMK1S.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK1S.png",
           priority = "high",
           width = 300,
           height = 180,
@@ -64,7 +64,7 @@ local ec1I = {}
 ec1I.type = "item"
 ec1I.name = "EnergyCubeMK1"
 ec1I.place_result = "EnergyCubeMK1"
-ec1I.icon = "__Mobile_Factory__/graphics/energy/EnergyCubeMK1I.png"
+ec1I.icon = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK1I.png"
 ec1I.icon_size = 64
 ec1I.subgroup = "DataSerialization"
 ec1I.order = "g"
@@ -90,7 +90,7 @@ for i = 0, 10 do
 	local ec1S = {}
 	ec1S.type = "sprite"
 	ec1S.name = "EnergyCubeMK1Sprite" .. i
-	ec1S.filename = "__Mobile_Factory__/graphics/energy/EnergyCubeMK1Sprite.png"
+	ec1S.filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK1Sprite.png"
 	ec1S.size = 300
 	ec1S.x = 300 * i
 	data:extend{ec1S}

@@ -4,7 +4,7 @@
 wdtE = table.deepcopy(data.raw["constant-combinator"]["constant-combinator"])
 wdtE.type = "constant-combinator"
 wdtE.name = "WirelessDataTransmitter"
-wdtE.icon = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataTransmitterI.png"
+wdtE.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessDataTransmitterI.png"
 wdtE.icon_size = 64
 wdtE.minable = {mining_time = 0.2, result = "WirelessDataTransmitter"}
 wdtE.max_health = 200
@@ -16,7 +16,7 @@ wdtE.circuit_wire_max_distance = 20
 wdtE.circuit_connector_sprites = nil
 wdtE.sprites.sheets =
 	{	{
-            filename = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataTransmitterE.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessDataTransmitterE.png",
             width = 400,
             height = 400,
             shift = {0,-0.2},
@@ -24,7 +24,7 @@ wdtE.sprites.sheets =
 			frames = 1
         },
         {
-            filename = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataTransmitterS.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessDataTransmitterS.png",
             width = 400,
             height = 400,
             shift = {1.8,0.4},
@@ -58,7 +58,7 @@ data:extend{wdtE}
 local wdtI = {}
 wdtI.type = "item"
 wdtI.name = "WirelessDataTransmitter"
-wdtI.icon = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataTransmitterI.png"
+wdtI.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessDataTransmitterI.png"
 wdtI.icon_size = 64
 wdtI.place_result = "WirelessDataTransmitter"
 wdtI.subgroup = "DataSerialization"
@@ -85,7 +85,7 @@ wdtA = {}
 wdtA.name = "WirelessDataTransmitterA"
 wdtA.type = "animation"
 wdtA.frame_count = 60
-wdtA.filename = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataTransmitterA.png"
+wdtA.filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessDataTransmitterA.png"
 wdtA.size = 500
 wdtA.line_length = 10
 wdtA.animation_speed = 1/6

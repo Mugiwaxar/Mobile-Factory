@@ -22,7 +22,7 @@ data:extend{dmTE}
 local dmT = {}
 dmT.name = "StorageTankMK2_1"
 dmT.type = "technology"
-dmT.icon = "__Mobile_Factory__/graphics/icones/DimensionalTank1.png"
+dmT.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTank1.png"
 dmT.icon_size = 32
 dmT.unit = {
 	count=5,
@@ -54,7 +54,7 @@ data:extend{dmT2}
 local dt2T = {}
 dt2T.name = "StorageTankMK2_2"
 dt2T.type = "technology"
-dt2T.icon = "__Mobile_Factory__/graphics/icones/DimensionalTank2.png"
+dt2T.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTank2.png"
 dt2T.icon_size = 32
 dt2T.unit = {
 	count=5,
@@ -86,7 +86,7 @@ data:extend{dmT3}
 local dt3T = {}
 dt3T.name = "StorageTankMK2_3"
 dt3T.type = "technology"
-dt3T.icon = "__Mobile_Factory__/graphics/icones/DimensionalTank3.png"
+dt3T.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTank3.png"
 dt3T.icon_size = 32
 dt3T.unit = {
 	count=5,
@@ -118,7 +118,7 @@ data:extend{dmT4}
 local dt4T = {}
 dt4T.name = "StorageTankMK2_4"
 dt4T.type = "technology"
-dt4T.icon = "__Mobile_Factory__/graphics/icones/DimensionalTank4.png"
+dt4T.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTank4.png"
 dt4T.icon_size = 32
 dt4T.unit = {
 	count=5,
@@ -150,7 +150,7 @@ data:extend{dmT5}
 local dt5T = {}
 dt5T.name = "StorageTankMK2_5"
 dt5T.type = "technology"
-dt5T.icon = "__Mobile_Factory__/graphics/icones/DimensionalTank5.png"
+dt5T.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTank5.png"
 dt5T.icon_size = 32
 dt5T.unit = {
 	count=5,

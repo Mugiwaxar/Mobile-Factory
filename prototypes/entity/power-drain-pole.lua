@@ -4,7 +4,7 @@
 pdpE = {}
 pdpE.type = "beacon"
 pdpE.name = "PowerDrainPole"
-pdpE.icon = "__Mobile_Factory__/graphics/icones/PowerDrainPole.png"
+pdpE.icon = "__Mobile_Factory_Graphics__/graphics/icones/PowerDrainPole.png"
 pdpE.icon_size = 32
 pdpE.flags = {"placeable-neutral", "player-creation", "fast-replaceable-no-build-while-moving"}
 pdpE.minable = {mining_time = 0.1, result = "PowerDrainPole"}
@@ -24,7 +24,7 @@ pdpE.base_picture =
       layers =
       {
         {
-          filename = "__Mobile_Factory__/graphics/entity/PowerDrainPole.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/entity/PowerDrainPole.png",
           priority = "extra-high",
             width = 148,
             height = 312,
@@ -84,7 +84,7 @@ data:extend{pdpE}
 local pdpI = {}
 pdpI.type = "item"
 pdpI.name = "PowerDrainPole"
-pdpI.icon = "__Mobile_Factory__/graphics/icones/PowerDrainPole.png"
+pdpI.icon = "__Mobile_Factory_Graphics__/graphics/icones/PowerDrainPole.png"
 pdpI.icon_size = 32
 pdpI.place_result = "PowerDrainPole"
 pdpI.subgroup = "Poles"
@@ -111,7 +111,7 @@ data:extend{dpdR}
 local pdpT = {}
 pdpT.name = "PowerDrainPole"
 pdpT.type = "technology"
-pdpT.icon = "__Mobile_Factory__/graphics/icones/PowerDrainPole.png"
+pdpT.icon = "__Mobile_Factory_Graphics__/graphics/icones/PowerDrainPole.png"
 pdpT.icon_size = 32
 pdpT.unit = {
 	count=500,

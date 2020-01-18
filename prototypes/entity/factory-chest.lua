@@ -23,7 +23,7 @@ mfC.picture =
       layers =
       {
         {
-            filename = "__Mobile_Factory__/graphics/entity/FactoryChest.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/entity/FactoryChest.png",
             priority = "extra-high",
             width = 66,
             height = 76,
@@ -41,7 +41,7 @@ data:extend{mfC}
 local fcI = {}
 fcI.type = "item"
 fcI.name = "FactoryChest"
-fcI.icon = "__Mobile_Factory__/graphics/icones/FactoryChest.png"
+fcI.icon = "__Mobile_Factory_Graphics__/graphics/icones/FactoryChest.png"
 fcI.icon_size = 32
 fcI.subgroup = "DimensionalStuff"
 fcI.order = "A"

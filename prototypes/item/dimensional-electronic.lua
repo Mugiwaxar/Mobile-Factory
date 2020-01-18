@@ -4,7 +4,7 @@
 local dwI = {}
 dwI.type = "item"
 dwI.name = "DimensionalWire"
-dwI.icon = "__Mobile_Factory__/graphics/icones/DimensionalWire.png"
+dwI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalWire.png"
 dwI.icon_size = 32
 dwI.subgroup = "Intermediate"
 dwI.order = "a1"
@@ -31,7 +31,7 @@ data:extend{dwR}
 local dcI = {}
 dcI.type = "item"
 dcI.name = "DimensionalCircuit"
-dcI.icon = "__Mobile_Factory__/graphics/icones/DimensionalCircuit.png"
+dcI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalCircuit.png"
 dcI.icon_size = 32
 dcI.subgroup = "Intermediate"
 dcI.order = "a2"
@@ -57,7 +57,7 @@ data:extend{dcR}
 local deT = {}
 deT.type = "technology"
 deT.name = "DimensionalElectronic"
-deT.icon = "__Mobile_Factory__/graphics/icones/DimensionalElectronic.png"
+deT.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalElectronic.png"
 deT.icon_size = 128
 deT.unit =
 {
@@ -78,7 +78,7 @@ data:extend{deT}
 local ccI = {}
 ccI.type = "item"
 ccI.name = "CrystalizedCircuit"
-ccI.icon = "__Mobile_Factory__/graphics/icones/CrystalizedCircuit.png"
+ccI.icon = "__Mobile_Factory_Graphics__/graphics/icones/CrystalizedCircuit.png"
 ccI.icon_size = 32
 ccI.subgroup = "Intermediate"
 ccI.order = "a3"

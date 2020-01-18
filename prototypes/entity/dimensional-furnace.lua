@@ -5,7 +5,7 @@ local dfE = {}
 
 dfE.type = "furnace"
 dfE.name = "DimensionalFurnace"
-dfE.icon = "__Mobile_Factory__/graphics/icones/DimensionalFurnace.png"
+dfE.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalFurnace.png"
 dfE.icon_size = 32
 dfE.flags = {"placeable-neutral", "placeable-player", "player-creation"}
 dfE.minable = {mining_time = 0.5, result = "DimensionalFurnace"}
@@ -39,7 +39,7 @@ dfE.animation =
       layers =
       {
         {
-            filename = "__Mobile_Factory__/graphics/entity/DimensionalFurnace.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/entity/DimensionalFurnace.png",
             priority = "high",
             width = 239,
             height = 219,
@@ -108,7 +108,7 @@ data:extend{dfE}
 local dfI = {}
 dfI.type = "item"
 dfI.name = "DimensionalFurnace"
-dfI.icon = "__Mobile_Factory__/graphics/icones/DimensionalFurnace.png"
+dfI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalFurnace.png"
 dfI.icon_size = 32
 dfI.place_result = "DimensionalFurnace"
 dfI.subgroup = "DimensionalStuff"
@@ -133,7 +133,7 @@ data:extend{dfR}
 local dfT = {}
 dfT.name = "DimensionalOreSmelting"
 dfT.type = "technology"
-dfT.icon = "__Mobile_Factory__/graphics/icones/DimensionalFurnace.png"
+dfT.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalFurnace.png"
 dfT.icon_size = 32
 dfT.unit = {
 	count=150,

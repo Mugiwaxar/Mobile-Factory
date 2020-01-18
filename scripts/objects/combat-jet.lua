@@ -3,7 +3,7 @@
 -- Create the Combat Jet base Object --
 CBJ = {
 	ent = nil,
-	updateTick = 30,
+	updateTick = 60,
 	lastUpdate = 0,
 	target = nil,
 	currentOrder = "Created", -- Created - GoEnt - Fight - GoMF - EnterMF --
@@ -57,8 +57,8 @@ function CBJ:update()
     end
 
 
-    -- Give a command to the Jet --
-    if self.ent.health <= 150 and self.currentOrder == "Fight" then
+	-- Give a command to the Jet --
+	if self.ent.health <= 600 and self.currentOrder == "Fight" then
         self:goMF(defines.distraction.none)
         return
     end

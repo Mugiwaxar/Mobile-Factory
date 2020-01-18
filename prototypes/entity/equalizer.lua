@@ -2,7 +2,7 @@
 ez = {}
 ez.type = "beacon"
 ez.name = "Equalizer"
-ez.icon = "__Mobile_Factory__/graphics/icones/Equalizer.png"
+ez.icon = "__Mobile_Factory_Graphics__/graphics/icones/Equalizer.png"
 ez.icon_size = 32
 ez.flags = {}
 ez.minable = nil
@@ -16,7 +16,7 @@ ez.supply_area_distance = 0
 ez.energy_usage = "1J"
 ez.base_picture =
   {
-    filename = "__Mobile_Factory__/graphics/entity/Equalizer.png",
+    filename = "__Mobile_Factory_Graphics__/graphics/entity/Equalizer.png",
     width = 116,
     height = 93,
 	scale = 4
@@ -63,7 +63,7 @@ data:extend{ez}
 local ezT = {}
 ezT.name = "UpgradeModules"
 ezT.type = "technology"
-ezT.icon = "__Mobile_Factory__/graphics/icones/Equalizer.png"
+ezT.icon = "__Mobile_Factory_Graphics__/graphics/icones/Equalizer.png"
 ezT.icon_size = 32
 ezT.unit = {
 	count=350,

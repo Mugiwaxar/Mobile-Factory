@@ -4,7 +4,7 @@
 dsE = {}
 dsE.type = "container"
 dsE.name = "DeepStorage"
-dsE.icon = "__Mobile_Factory__/graphics/icones/DeepStorageI.png"
+dsE.icon = "__Mobile_Factory_Graphics__/graphics/icones/DeepStorageI.png"
 dsE.icon_size = 256
 dsE.flags = {"placeable-neutral", "player-creation"}
 dsE.minable = {mining_time = 0.8, result = "DeepStorage"}
@@ -23,7 +23,7 @@ dsE.picture =
 	  layers =
 	  {
 		{
-			filename = "__Mobile_Factory__/graphics/entity/DeepStorageE.png",
+			filename = "__Mobile_Factory_Graphics__/graphics/entity/DeepStorageE.png",
 			priority = "low",
 			width = 600,
 			height = 600,
@@ -31,7 +31,7 @@ dsE.picture =
 			scale = 1/4
 		},
 		{
-			filename = "__Mobile_Factory__/graphics/entity/DeepStorageS.png",
+			filename = "__Mobile_Factory_Graphics__/graphics/entity/DeepStorageS.png",
 			priority = "very-low",
 			width = 620,
 			height = 608,
@@ -50,7 +50,7 @@ data:extend{dsE}
 local dsI = {}
 dsI.type = "item"
 dsI.name = "DeepStorage"
-dsI.icon = "__Mobile_Factory__/graphics/icones/DeepStorageI.png"
+dsI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DeepStorageI.png"
 dsI.icon_size = 256
 dsI.place_result = "DeepStorage"
 dsI.subgroup = "DataSerialization"
@@ -76,7 +76,7 @@ data:extend{dsR}
 local dsT = {}
 dsT.name = "DeepStorage"
 dsT.type = "technology"
-dsT.icon = "__Mobile_Factory__/graphics/icones/DeepStorageI.png"
+dsT.icon = "__Mobile_Factory_Graphics__/graphics/icones/DeepStorageI.png"
 dsT.icon_size = 256
 dsT.unit = {
 	count=20,

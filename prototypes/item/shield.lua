@@ -6,7 +6,7 @@
 local shI = {}
 shI.type = "item"
 shI.name = "mfShieldEquipment"
-shI.icon = "__Mobile_Factory__/graphics/effects/shield.png"
+shI.icon = "__Mobile_Factory_Graphics__/graphics/effects/shield.png"
 shI.placed_as_equipment_result = "mfShieldEquipment"
 shI.icon_size = 556
 shI.subgroup = "Equipments"
@@ -21,7 +21,7 @@ shE.type = "energy-shield-equipment"
 shE.energy_per_shield = "1J"
 shE.max_shield_value = 1000
 shE.categories = {"mfEquipments"}
-shE.sprite = {filename="__Mobile_Factory__/graphics/effects/shield.png", size=556}
+shE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/effects/shield.png", size=556}
 shE.shape = {width=3, height=3, type="full"}
 shE.energy_source = {type="electric", usage_priority="tertiary", input_flow_limit="0J", output_flow_limit="0J", buffer_capacity="0J"}
 data:extend{shE}
@@ -43,7 +43,7 @@ data:extend{shR}
 local shT = {}
 shT.name = "MFShield"
 shT.type = "technology"
-shT.icon = "__Mobile_Factory__/graphics/icones/shield.png"
+shT.icon = "__Mobile_Factory_Graphics__/graphics/icones/shield.png"
 shT.icon_size = 64
 shT.unit = {
 	count = 5,

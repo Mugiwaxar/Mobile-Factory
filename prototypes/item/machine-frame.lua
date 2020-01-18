@@ -4,7 +4,7 @@
 local mfI = {}
 mfI.type = "item"
 mfI.name = "MachineFrame"
-mfI.icon = "__Mobile_Factory__/graphics/icones/MachineFrame.png"
+mfI.icon = "__Mobile_Factory_Graphics__/graphics/icones/MachineFrame.png"
 mfI.icon_size = 64
 mfI.subgroup = "Intermediate"
 mfI.order = "b1"
@@ -29,7 +29,7 @@ data:extend{mfR}
 local mf2I = {}
 mf2I.type = "item"
 mf2I.name = "MachineFrame2"
-mf2I.icon = "__Mobile_Factory__/graphics/icones/MachineFrame2.png"
+mf2I.icon = "__Mobile_Factory_Graphics__/graphics/icones/MachineFrame2.png"
 mf2I.icon_size = 64
 mf2I.subgroup = "Intermediate"
 mf2I.order = "b2"
@@ -56,7 +56,7 @@ data:extend{mf2R}
 local mf3I = {}
 mf3I.type = "item"
 mf3I.name = "MachineFrame3"
-mf3I.icon = "__Mobile_Factory__/graphics/icones/MachineFrame3.png"
+mf3I.icon = "__Mobile_Factory_Graphics__/graphics/icones/MachineFrame3.png"
 mf3I.icon_size = 64
 mf3I.subgroup = "Intermediate"
 mf3I.order = "b3"

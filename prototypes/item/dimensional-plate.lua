@@ -2,7 +2,7 @@
 local dpI = {}
 dpI.type = "item"
 dpI.name = "DimensionalPlate"
-dpI.icon = "__Mobile_Factory__/graphics/icones/DimensionalPlate.png"
+dpI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalPlate.png"
 dpI.icon_size = 32
 dpI.subgroup = "Resources"
 dpI.order = "d"

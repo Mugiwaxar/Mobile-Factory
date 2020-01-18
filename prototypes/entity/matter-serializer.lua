@@ -4,7 +4,7 @@
 msE = {}
 msE.type = "logistic-container"
 msE.name = "MatterSerializer"
-msE.icon = "__Mobile_Factory__/graphics/matter-serialization/MatterSerializerI.png"
+msE.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/MatterSerializerI.png"
 msE.icon_size = 64
 msE.flags = {"placeable-neutral", "player-creation"}
 msE.minable = {mining_time = 0.5, result = "MatterSerializer"}
@@ -24,7 +24,7 @@ msE.picture =
       layers =
       {
         {
-            filename = "__Mobile_Factory__/graphics/matter-serialization/MatterSerializerE.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/MatterSerializerE.png",
             priority = "extra-high",
             width = 400,
             height = 400,
@@ -32,7 +32,7 @@ msE.picture =
             scale = 1/400*33
         },
         {
-            filename = "__Mobile_Factory__/graphics/matter-serialization/MatterSerializerS.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/MatterSerializerS.png",
             priority = "high",
             width = 400,
             height = 400,
@@ -55,7 +55,7 @@ data:extend{msE}
 local msI = {}
 msI.type = "item"
 msI.name = "MatterSerializer"
-msI.icon = "__Mobile_Factory__/graphics/matter-serialization/MatterSerializerI.png"
+msI.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/MatterSerializerI.png"
 msI.icon_size = 64
 msI.place_result = "MatterSerializer"
 msI.subgroup = "DataSerialization"
@@ -83,7 +83,7 @@ mpA = {}
 mpA.name = "MatterSerializerA"
 mpA.type = "animation"
 mpA.frame_count = 80
-mpA.filename = "__Mobile_Factory__/graphics/matter-serialization/MatterSerializerAn.png"
+mpA.filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/MatterSerializerAn.png"
 mpA.width = 400
 mpA.height = 300
 mpA.line_length = 10

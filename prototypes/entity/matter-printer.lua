@@ -4,7 +4,7 @@
 mpE = {}
 mpE.type = "logistic-container"
 mpE.name = "MatterPrinter"
-mpE.icon = "__Mobile_Factory__/graphics/matter-serialization/MatterPrinterI.png"
+mpE.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/MatterPrinterI.png"
 mpE.icon_size = 64
 mpE.flags = {"placeable-neutral", "player-creation"}
 mpE.minable = {mining_time = 0.5, result = "MatterPrinter"}
@@ -24,7 +24,7 @@ mpE.picture =
       layers =
       {
         {
-            filename = "__Mobile_Factory__/graphics/matter-serialization/MatterPrinterE.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/MatterPrinterE.png",
             priority = "extra-high",
             width = 400,
             height = 400,
@@ -32,7 +32,7 @@ mpE.picture =
             scale = 1/400*33
         },
         {
-            filename = "__Mobile_Factory__/graphics/matter-serialization/MatterPrinterS.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/MatterPrinterS.png",
             priority = "high",
             width = 400,
             height = 400,
@@ -55,7 +55,7 @@ data:extend{mpE}
 local mpI = {}
 mpI.type = "item"
 mpI.name = "MatterPrinter"
-mpI.icon = "__Mobile_Factory__/graphics/matter-serialization/MatterPrinterI.png"
+mpI.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/MatterPrinterI.png"
 mpI.icon_size = 64
 mpI.place_result = "MatterPrinter"
 mpI.subgroup = "DataSerialization"
@@ -83,7 +83,7 @@ mpA = {}
 mpA.name = "MatterPrinterA"
 mpA.type = "animation"
 mpA.frame_count = 80
-mpA.filename = "__Mobile_Factory__/graphics/matter-serialization/MatterPrinterAn.png"
+mpA.filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/MatterPrinterAn.png"
 mpA.width = 340
 mpA.height = 380
 mpA.line_length = 10

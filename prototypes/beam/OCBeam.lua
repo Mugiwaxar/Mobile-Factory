@@ -13,7 +13,7 @@ ocB.direction_count = 1
 
 ocB.head =
     {
-      filename = "__Mobile_Factory__/graphics/Alpha.png",
+      filename = "__Mobile_Factory_Graphics__/graphics/Alpha.png",
       width = 1,
       height = 1,
 	  line_length = 10,
@@ -23,7 +23,7 @@ ocB.head =
     }
 ocB.tail =
     {
-      filename = "__Mobile_Factory__/graphics/Alpha.png",
+      filename = "__Mobile_Factory_Graphics__/graphics/Alpha.png",
       width = 1,
       height = 1,
 	  line_length = 10,
@@ -34,7 +34,7 @@ ocB.tail =
 ocB.body =
     {
       {
-      filename = "__Mobile_Factory__/graphics/beams/OCbeam.png",
+      filename = "__Mobile_Factory_Graphics__/graphics/beams/OCbeam.png",
       width = 10,
       height = 10,
 	  line_length = 10,
@@ -59,7 +59,7 @@ ocBB.direction_count = 1
 
 ocBB.head =
     {
-      filename = "__Mobile_Factory__/graphics/Alpha.png",
+      filename = "__Mobile_Factory_Graphics__/graphics/Alpha.png",
       width = 1,
       height = 1,
 	  line_length = 16,
@@ -69,7 +69,7 @@ ocBB.head =
     }
 ocBB.tail =
     {
-      filename = "__Mobile_Factory__/graphics/Alpha.png",
+      filename = "__Mobile_Factory_Graphics__/graphics/Alpha.png",
       width = 1,
       height = 1,
 	  line_length = 16,
@@ -80,7 +80,7 @@ ocBB.tail =
 ocBB.body =
     {
       {
-      filename = "__Mobile_Factory__/graphics/beams/OCBigBeam.png",
+      filename = "__Mobile_Factory_Graphics__/graphics/beams/OCBigBeam.png",
       width = 8,
       height = 12,
 	  line_length = 16,

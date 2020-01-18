@@ -1,6 +1,14 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.81
 Date: 18/01/2020
+  Balancing:
+    - All Jets base health is now 400 help
+    - Combat Jet have now 1200 HP and his speed was doubled
+  Bugfixes:
+    - Fixed a crash that can appen when a Player leave the Mobile Factory Vehicle Seat
+---------------------------------------------------------------------------------------------------
+Version: 0.0.81
+Date: 18/01/2020
   Features:
     - Added the Combat Jet: It will help you to defend your Mobile Factory
     - New Technology: Combat Jet, Unlock the Combat Jet

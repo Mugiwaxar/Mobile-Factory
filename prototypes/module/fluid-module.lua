@@ -2,7 +2,7 @@
 dmI = {}
 dmI.type = "module"
 dmI.name = "DistributionModule"
-dmI.icon = "__Mobile_Factory__/graphics/icones/DistributionModule.png"
+dmI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DistributionModule.png"
 dmI.icon_size = 128
 dmI.subgroup = "Modules2"
 dmI.category = "productivity"
@@ -31,7 +31,7 @@ data:extend{dmR}
 drmI = {}
 drmI.type = "module"
 drmI.name = "DrainModule"
-drmI.icon = "__Mobile_Factory__/graphics/icones/DrainModule.png"
+drmI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DrainModule.png"
 drmI.icon_size = 128
 drmI.subgroup = "Modules2"
 drmI.category = "productivity"
@@ -64,7 +64,7 @@ data:extend{drmR}
 tm1I = {}
 tm1I.type = "module"
 tm1I.name = "ModuleID1"
-tm1I.icon = "__Mobile_Factory__/graphics/icones/ModuleID1.png"
+tm1I.icon = "__Mobile_Factory_Graphics__/graphics/icones/ModuleID1.png"
 tm1I.icon_size = 128
 tm1I.subgroup = "Modules2"
 tm1I.category = "productivity"
@@ -94,7 +94,7 @@ data:extend{tm1R}
 mID2I = {}
 mID2I.type = "module"
 mID2I.name = "ModuleID2"
-mID2I.icon = "__Mobile_Factory__/graphics/icones/ModuleID2.png"
+mID2I.icon = "__Mobile_Factory_Graphics__/graphics/icones/ModuleID2.png"
 mID2I.icon_size = 128
 mID2I.subgroup = "Modules2"
 mID2I.category = "productivity"
@@ -124,7 +124,7 @@ data:extend{mID2R}
 mID3I = {}
 mID3I.type = "module"
 mID3I.name = "ModuleID3"
-mID3I.icon = "__Mobile_Factory__/graphics/icones/ModuleID3.png"
+mID3I.icon = "__Mobile_Factory_Graphics__/graphics/icones/ModuleID3.png"
 mID3I.icon_size = 128
 mID3I.subgroup = "Modules2"
 mID3I.category = "productivity"
@@ -154,7 +154,7 @@ data:extend{mID3R}
 mID4I = {}
 mID4I.type = "module"
 mID4I.name = "ModuleID4"
-mID4I.icon = "__Mobile_Factory__/graphics/icones/ModuleID4.png"
+mID4I.icon = "__Mobile_Factory_Graphics__/graphics/icones/ModuleID4.png"
 mID4I.icon_size = 128
 mID4I.subgroup = "Modules2"
 mID4I.category = "productivity"
@@ -184,7 +184,7 @@ data:extend{mID4R}
 mID5I = {}
 mID5I.type = "module"
 mID5I.name = "ModuleID5"
-mID5I.icon = "__Mobile_Factory__/graphics/icones/ModuleID5.png"
+mID5I.icon = "__Mobile_Factory_Graphics__/graphics/icones/ModuleID5.png"
 mID5I.icon_size = 128
 mID5I.subgroup = "Modules2"
 mID5I.category = "productivity"

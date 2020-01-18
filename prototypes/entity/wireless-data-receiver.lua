@@ -4,7 +4,7 @@
 wdrE = table.deepcopy(data.raw["constant-combinator"]["constant-combinator"])
 wdrE.type = "constant-combinator"
 wdrE.name = "WirelessDataReceiver"
-wdrE.icon = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataReceiverI.png"
+wdrE.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessDataReceiverI.png"
 wdrE.icon_size = 64
 wdrE.minable = {mining_time = 0.5, result = "WirelessDataReceiver"}
 wdrE.max_health = 200
@@ -16,7 +16,7 @@ wdrE.circuit_wire_max_distance = 20
 wdrE.circuit_connector_sprites = nil
 wdrE.sprites.sheets =
 	{	{
-			filename = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataReceiverE.png",
+			filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessDataReceiverE.png",
 			width = 200,
 			height = 400,
 			scale = 1 / 2.5,
@@ -24,7 +24,7 @@ wdrE.sprites.sheets =
 			frames = 1
 		},
 		{
-			filename = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataReceiverS.png",
+			filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessDataReceiverS.png",
 			draw_as_shadow = true,
 			width = 400,
 			height = 200,
@@ -58,7 +58,7 @@ data:extend{wdrE}
 local wdrI = {}
 wdrI.type = "item"
 wdrI.name = "WirelessDataReceiver"
-wdrI.icon = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataReceiverI.png"
+wdrI.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessDataReceiverI.png"
 wdrI.icon_size = 64
 wdrI.place_result = "WirelessDataReceiver"
 wdrI.subgroup = "DataSerialization"
@@ -85,7 +85,7 @@ wdrA = {}
 wdrA.name = "WirelessDataReceiverA"
 wdrA.type = "animation"
 wdrA.frame_count = 120
-wdrA.filename = "__Mobile_Factory__/graphics/matter-serialization/WirelessDataReceiverA.png"
+wdrA.filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessDataReceiverA.png"
 wdrA.width = 100
 wdrA.height = 400
 wdrA.line_length = 10

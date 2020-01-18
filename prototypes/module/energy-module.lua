@@ -2,7 +2,7 @@
 pMI = {}
 pMI.type = "module"
 pMI.name = "EnergyPowerModule"
-pMI.icon = "__Mobile_Factory__/graphics/icones/EnergyPowerModule.png"
+pMI.icon = "__Mobile_Factory_Graphics__/graphics/icones/EnergyPowerModule.png"
 pMI.icon_size = 32
 pMI.subgroup = "Modules1"
 pMI.category = "productivity"
@@ -32,7 +32,7 @@ data:extend{pMR}
 eMI = {}
 eMI.type = "module"
 eMI.name = "EnergyEfficiencyModule"
-eMI.icon = "__Mobile_Factory__/graphics/icones/EnergyEfficiencyModule.png"
+eMI.icon = "__Mobile_Factory_Graphics__/graphics/icones/EnergyEfficiencyModule.png"
 eMI.icon_size = 32
 eMI.subgroup = "Modules1"
 eMI.category = "productivity"
@@ -62,7 +62,7 @@ data:extend{eMR}
 fMI = {}
 fMI.type = "module"
 fMI.name = "EnergyFocusModule"
-fMI.icon = "__Mobile_Factory__/graphics/icones/EnergyFocusModule.png"
+fMI.icon = "__Mobile_Factory_Graphics__/graphics/icones/EnergyFocusModule.png"
 fMI.icon_size = 32
 fMI.subgroup = "Modules1"
 fMI.category = "productivity"
@@ -92,7 +92,7 @@ data:extend{fMR}
 local pMT = {}
 pMT.name = "EnergyPowerModule"
 pMT.type = "technology"
-pMT.icon = "__Mobile_Factory__/graphics/icones/EnergyPowerModule.png"
+pMT.icon = "__Mobile_Factory_Graphics__/graphics/icones/EnergyPowerModule.png"
 pMT.icon_size = 32
 pMT.unit = {
 	count=400,

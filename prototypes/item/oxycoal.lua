@@ -4,7 +4,7 @@
 local ocI = {}
 ocI.type = "item"
 ocI.name = "Oxycoal"
-ocI.icon = "__Mobile_Factory__/graphics/icones/Oxycoal.png"
+ocI.icon = "__Mobile_Factory_Graphics__/graphics/icones/Oxycoal.png"
 ocI.icon_size = 32
 ocI.fuel_category = "chemical"
 ocI.fuel_value = "15MJ"
@@ -32,7 +32,7 @@ data:extend{ocR}
 local ocT = {}
 ocT.name = "Oxycoal"
 ocT.type = "technology"
-ocT.icon = "__Mobile_Factory__/graphics/icones/Oxycoal.png"
+ocT.icon = "__Mobile_Factory_Graphics__/graphics/icones/Oxycoal.png"
 ocT.icon_size = 32
 ocT.unit = {
 	count=800,

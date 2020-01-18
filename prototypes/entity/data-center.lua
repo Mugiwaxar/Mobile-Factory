@@ -4,7 +4,7 @@
 dcE = table.deepcopy(data.raw["constant-combinator"]["constant-combinator"])
 dcE.type = "constant-combinator"
 dcE.name = "DataCenter"
-dcE.icon = "__Mobile_Factory__/graphics/matter-serialization/DataCenterI.png"
+dcE.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataCenterI.png"
 dcE.icon_size = 64
 dcE.minable = {mining_time = 0.5, result = "DataCenter"}
 dcE.max_health = 200
@@ -16,7 +16,7 @@ dcE.item_slot_count = 999
 dcE.circuit_wire_max_distance = 20
 dcE.sprites.sheets =
 	{	{
-			filename = "__Mobile_Factory__/graphics/matter-serialization/DataCenterE.png",
+			filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataCenterE.png",
 			width = 600,
 			height = 600,
 			scale = 1/4.05,
@@ -24,7 +24,7 @@ dcE.sprites.sheets =
 			frames = 4
 		},
 		{
-			filename = "__Mobile_Factory__/graphics/matter-serialization/DataCenterS.png",
+			filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataCenterS.png",
 			draw_as_shadow = true,
 			width = 400,
 			height = 400,
@@ -58,11 +58,11 @@ data:extend{dcE}
 -- Entity MF --
 dcEMF = table.deepcopy(data.raw["constant-combinator"].DataCenter)
 dcEMF.name = "DataCenterMF"
-dcEMF.icon = "__Mobile_Factory__/graphics/matter-serialization/DataCenterMFI.png"
+dcEMF.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataCenterMFI.png"
 dcEMF.minable = {mining_time = 0.5, result = "DataCenterMF"}
 dcEMF.sprites.sheets =
 	{	{
-			filename = "__Mobile_Factory__/graphics/matter-serialization/DataCenterMFE.png",
+			filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataCenterMFE.png",
 			width = 600,
 			height = 600,
 			scale = 1/4,
@@ -70,7 +70,7 @@ dcEMF.sprites.sheets =
 			frames = 4
 		},
 		{
-			filename = "__Mobile_Factory__/graphics/matter-serialization/DataCenterS.png",
+			filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataCenterS.png",
 			draw_as_shadow = true,
 			width = 400,
 			height = 400,
@@ -85,7 +85,7 @@ data:extend{dcEMF}
 local dcI = {}
 dcI.type = "item"
 dcI.name = "DataCenter"
-dcI.icon = "__Mobile_Factory__/graphics/matter-serialization/DataCenterI.png"
+dcI.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataCenterI.png"
 dcI.icon_size = 64
 dcI.place_result = "DataCenter"
 dcI.subgroup = "DataSerialization"
@@ -96,7 +96,7 @@ data:extend{dcI}
 -- Item MF --
 dcIMF = table.deepcopy(data.raw.item.DataCenter)
 dcIMF.name = "DataCenterMF"
-dcIMF.icon = "__Mobile_Factory__/graphics/matter-serialization/DataCenterMFI.png"
+dcIMF.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataCenterMFI.png"
 dcIMF.place_result = "DataCenterMF"
 dcIMF.order = "a2"
 data:extend{dcIMF}
@@ -126,7 +126,7 @@ dcA = {}
 dcA.name = "DataCenterA"
 dcA.type = "animation"
 dcA.frame_count = 120
-dcA.filename = "__Mobile_Factory__/graphics/matter-serialization/DataCenterAn.png"
+dcA.filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataCenterAn.png"
 dcA.width = 400
 dcA.height = 320
 dcA.line_length = 10

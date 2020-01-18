@@ -4,7 +4,7 @@
 lfpE = {}
 lfpE.type = "beacon"
 lfpE.name = "LogisticFluidPole"
-lfpE.icon = "__Mobile_Factory__/graphics/icones/LogisticFluidPole.png"
+lfpE.icon = "__Mobile_Factory_Graphics__/graphics/icones/LogisticFluidPole.png"
 lfpE.icon_size = 32
 lfpE.flags = {"placeable-neutral", "player-creation", "fast-replaceable-no-build-while-moving"}
 lfpE.minable = {mining_time = 0.1, result = "LogisticFluidPole"}
@@ -24,7 +24,7 @@ lfpE.base_picture =
       layers =
       {
         {
-          filename = "__Mobile_Factory__/graphics/entity/LogisticFluidPole.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/entity/LogisticFluidPole.png",
           priority = "extra-high",
             width = 84,
             height = 252,
@@ -85,7 +85,7 @@ data:extend{lfpE}
 local lfpE = {}
 lfpE.type = "item"
 lfpE.name = "LogisticFluidPole"
-lfpE.icon = "__Mobile_Factory__/graphics/icones/LogisticFluidPole.png"
+lfpE.icon = "__Mobile_Factory_Graphics__/graphics/icones/LogisticFluidPole.png"
 lfpE.icon_size = 32
 lfpE.place_result = "LogisticFluidPole"
 lfpE.subgroup = "Poles"
@@ -112,7 +112,7 @@ data:extend{lfpR}
 local lfpT = {}
 lfpT.name = "LogisticFluidPole"
 lfpT.type = "technology"
-lfpT.icon = "__Mobile_Factory__/graphics/icones/LogisticFluidPole.png"
+lfpT.icon = "__Mobile_Factory_Graphics__/graphics/icones/LogisticFluidPole.png"
 lfpT.icon_size = 32
 lfpT.unit = {
 	count=380,

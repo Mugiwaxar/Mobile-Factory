@@ -3,10 +3,10 @@
 local dmFR = {}
 dmFR.name = "DimensionalFluid"
 dmFR.type = "resource"
-dmFR.icon = "__Mobile_Factory__/graphics/icones/DimensionalFluid.png"
+dmFR.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalFluid.png"
 dmFR.icon_size = 32
 dmFR.stages = table.deepcopy(data.raw.resource["crude-oil"].stages)
-dmFR.stages["sheet"]["filename"] = "__Mobile_Factory__/graphics/entity/DimensionalFluid.png"
+dmFR.stages["sheet"]["filename"] = "__Mobile_Factory_Graphics__/graphics/entity/DimensionalFluid.png"
 dmFR.stage_counts = data.raw.resource["crude-oil"].stage_counts
 dmFR.map_color = {102/255, 0, 102/255}
 dmFR.category = "basic-fluid"
@@ -45,7 +45,7 @@ data:extend{dmFR}
 local dmFF = {}
 dmFF.name = "DimensionalFluid"
 dmFF.type = "fluid"
-dmFF.icon = "__Mobile_Factory__/graphics/icones/DimensionalFluidIcon.png"
+dmFF.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalFluidIcon.png"
 dmFF.icon_size = 32
 dmFF.default_temperature = 20
 dmFF.max_temperature = 100
@@ -66,7 +66,7 @@ data:extend{dmFAPC}
 local dmFI = {}
 dmFI.name = "DimensionalFluid"
 dmFI.type= "item"
-dmFI.icon = "__Mobile_Factory__/graphics/icones/DimensionalFluidIcon.png"
+dmFI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalFluidIcon.png"
 dmFI.icon_size = 32
 dmFI.stack_size = 1000
 dmFI.subgroup = "Resources"

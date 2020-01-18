@@ -17,14 +17,14 @@ dmOR.minable =
     }
 dmOR.collision_box = {{ -0.1, -0.1}, {0.1, 0.1}}
 dmOR.selection_box = {{ -0.5, -0.5}, {0.5, 0.5}}
-dmOR.icon = "__Mobile_Factory__/graphics/icones/DimensionalOreI.png"
+dmOR.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalOreI.png"
 dmOR.icon_size = 256
 dmOR.stage_counts = {1500, 1200, 700, 600, 300}
 dmOR.stages =
 {
 	sheet =
 	{
-		filename = "__Mobile_Factory__/graphics/entity/DimensionalOreR.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/entity/DimensionalOreR.png",
 		priority = "extra-high",	
 		size = 128,
 		frame_count = 3,
@@ -55,7 +55,7 @@ data:extend{dmOAPC}
 local dmOI = {}
 dmOI.name = "DimensionalOre"
 dmOI.type = "item"
-dmOI.icon = "__Mobile_Factory__/graphics/icones/DimensionalOreO.png"
+dmOI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalOreO.png"
 dmOI.icon_size = 64
 dmOI.subgroup = "Resources"
 dmOI.order = "a"
@@ -85,7 +85,7 @@ data:extend{dmOR}
 local dmT = {}
 dmT.name = "DimensionalOre"
 dmT.type = "technology"
-dmT.icon = "__Mobile_Factory__/graphics/icones/DimensionalOreI.png"
+dmT.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalOreI.png"
 dmT.icon_size = 256
 dmT.unit = {
 	count=1,

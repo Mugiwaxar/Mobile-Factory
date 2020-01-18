@@ -10,7 +10,7 @@ dlP.on_animation =
       layers =
       {
         {
-            filename = "__Mobile_Factory__/graphics/entity/hr-DimensionalLab.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/entity/hr-DimensionalLab.png",
             width = 194,
             height = 174,
             frame_count = 33,
@@ -49,7 +49,7 @@ dlP.off_animation =
       layers =
       {
         {
-            filename = "__Mobile_Factory__/graphics/entity/hr-DimensionalLab.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/entity/hr-DimensionalLab.png",
             width = 194,
             height = 174,
             frame_count = 1,
@@ -82,7 +82,7 @@ data:extend{dlP}
 local dlI = {}
 dlI.type = "item"
 dlI.name = "DimensionalLab"
-dlI.icon = "__Mobile_Factory__/graphics/icones/DimensionalLab.png"
+dlI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalLab.png"
 dlI.icon_size = 32
 dlI.subgroup = "DimensionalStuff"
 dlI.order = "b"

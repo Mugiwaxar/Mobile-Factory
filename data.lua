@@ -64,14 +64,14 @@ data:extend{
 	{
 		type="item-group",
 		name="MobileFactory",
-		icon="__Mobile_Factory__/graphics/icones/MFIcon.png",
+		icon="__Mobile_Factory_Graphics__/graphics/icones/MFIcon.png",
 		icon_size="32",
 		order="y"
 	},
 	{
 		type="item-group",
 		name="Elements",
-		icon="__Mobile_Factory__/graphics/icones/Elements.png",
+		icon="__Mobile_Factory_Graphics__/graphics/icones/Elements.png",
 		icon_size="32",
 		order="z"
 	}
@@ -299,7 +299,7 @@ data:extend{
     {
         type = "sprite",
         name = "MoveIcon",
-        filename = "__Mobile_Factory__/graphics/icones/moveIcon.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icones/moveIcon.png",
         size = 32,
         flags = {"icon"}
     }
@@ -309,7 +309,7 @@ data:extend{
     {
         type = "sprite",
         name = "MoveIconOv",
-        filename = "__Mobile_Factory__/graphics/icones/moveIconOv.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icones/moveIconOv.png",
         size = 32,
         flags = {"icon"}
     }
@@ -319,7 +319,7 @@ data:extend{
     {
         type = "sprite",
         name = "LockIcon",
-        filename = "__Mobile_Factory__/graphics/icones/LockI.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icones/LockI.png",
         size = 32,
         flags = {"icon"}
     }
@@ -329,7 +329,7 @@ data:extend{
     {
         type = "sprite",
         name = "LockIconReed",
-        filename = "__Mobile_Factory__/graphics/icones/LockIReed.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icones/LockIReed.png",
         size = 32,
         flags = {"icon"}
     }
@@ -339,7 +339,7 @@ data:extend{
     {
         type = "sprite",
         name = "ArrowIconDown",
-        filename = "__Mobile_Factory__/graphics/icones/ArrowIconDown.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconDown.png",
         size = 32,
         flags = {"icon"}
     }
@@ -349,7 +349,7 @@ data:extend{
     {
         type = "sprite",
         name = "ArrowIconDownOv",
-        filename = "__Mobile_Factory__/graphics/icones/ArrowIconDownOv.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconDownOv.png",
         size = 32,
         flags = {"icon"}
     }
@@ -359,7 +359,7 @@ data:extend{
     {
         type = "sprite",
         name = "ArrowIconUp",
-        filename = "__Mobile_Factory__/graphics/icones/ArrowIconUp.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconUp.png",
         size = 32,
         flags = {"icon"}
     }
@@ -369,7 +369,7 @@ data:extend{
     {
         type = "sprite",
         name = "ArrowIconUpOv",
-        filename = "__Mobile_Factory__/graphics/icones/ArrowIconUpOv.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconUpOv.png",
         size = 32,
         flags = {"icon"}
     }
@@ -379,7 +379,7 @@ data:extend{
     {
         type = "sprite",
         name = "OptionIcon",
-        filename = "__Mobile_Factory__/graphics/icones/OptionIcon.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icones/OptionIcon.png",
         size = 32,
         flags = {"icon"}
     }
@@ -389,7 +389,7 @@ data:extend{
     {
         type = "sprite",
         name = "CloseIcon",
-        filename = "__Mobile_Factory__/graphics/icones/CloseIcon.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icones/CloseIcon.png",
         size = 32,
         flags = {"icon"}
     }
@@ -399,7 +399,7 @@ data:extend{
     {
         type = "sprite",
         name = "MFIcon",
-        filename = "__Mobile_Factory__/graphics/icones/MFIcon.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIcon.png",
         size = 32,
         flags = {"icon"}
     }
@@ -409,7 +409,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "MFIconExc",
-		filename = "__Mobile_Factory__/graphics/icones/MFIconExc.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIconExc.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -419,7 +419,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "MFTPIcon",
-		filename = "__Mobile_Factory__/graphics/icones/MFTPIcon.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/MFTPIcon.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -429,7 +429,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "MFTPIconDisabled",
-		filename = "__Mobile_Factory__/graphics/icones/MFTPIconDisabled.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/MFTPIconDisabled.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -439,7 +439,7 @@ data:extend{
     {
         type = "sprite",
         name = "MFIconI",
-        filename = "__Mobile_Factory__/graphics/icones/MFIconI.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIconI.png",
         size = 32,
         flags = {"icon"}
     }
@@ -449,7 +449,7 @@ data:extend{
     {
         type = "sprite",
         name = "InspectI",
-        filename = "__Mobile_Factory__/graphics/icones/MGlass.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icones/MGlass.png",
         size = 32,
         flags = {"icon"}
     }
@@ -459,7 +459,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "PortIcon",
-		filename = "__Mobile_Factory__/graphics/icones/PortIcon.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/PortIcon.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -469,7 +469,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "EnergyDrainIcon",
-		filename = "__Mobile_Factory__/graphics/icones/TecEnergyDrain1.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/TecEnergyDrain1.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -479,7 +479,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "EnergyDrainIconDisabled",
-		filename = "__Mobile_Factory__/graphics/icones/EnergyDrainDisabled.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/EnergyDrainDisabled.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -489,7 +489,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "FluidDrainIcon",
-		filename = "__Mobile_Factory__/graphics/icones/TecFluidDrain1.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/TecFluidDrain1.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -499,7 +499,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "FluidDrainIconDisabled",
-		filename = "__Mobile_Factory__/graphics/icones/FluidDrainDisabled.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/FluidDrainDisabled.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -509,7 +509,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "EnergyDistributionIcon",
-		filename = "__Mobile_Factory__/graphics/icones/TecEnergyDistribution1.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/TecEnergyDistribution1.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -519,7 +519,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "EnergyDistributionIconDisabled",
-		filename = "__Mobile_Factory__/graphics/icones/EnergyDistributionDisabled.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/EnergyDistributionDisabled.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -529,7 +529,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "ItemDrainIcon",
-		filename = "__Mobile_Factory__/graphics/icones/TechItemDrain.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/TechItemDrain.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -539,7 +539,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "ItemDrainIconDisabled",
-		filename = "__Mobile_Factory__/graphics/icones/ItemDrainDisabled.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/ItemDrainDisabled.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -549,7 +549,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "QuatronIcon",
-		filename = "__Mobile_Factory__/graphics/icones/Quatron.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/Quatron.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -559,7 +559,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "QuatronIconDisabled",
-		filename = "__Mobile_Factory__/graphics/icones/QuatronDisabled.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/QuatronDisabled.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -590,7 +590,7 @@ data:extend{
 	type = "sound",
 	name = "MFEnter",
 	category = "game-effect",
-	filename = "__Mobile_Factory__/sounds/EnterMF.ogg",
+	filename = "__Mobile_Factory_Graphics__/sounds/EnterMF.ogg",
 	preload = true
 	}
 }
@@ -599,7 +599,7 @@ data:extend{
 	type = "sound",
 	name = "MFLeave",
 	category = "game-effect",
-	filename = "__Mobile_Factory__/sounds/LeaveMF.ogg",
+	filename = "__Mobile_Factory_Graphics__/sounds/LeaveMF.ogg",
 	preload = true
 	}
 }
@@ -608,7 +608,7 @@ data:extend{
 ------------------------ ADD REDCROSS ----------------------
 -- local RC = table.deepcopy(data.raw.fluid["crude-oil"])
 -- RC.name = "RedCross"
--- RC.icon = "__Mobile_Factory__/graphics/icones/RedCross.png"
+-- RC.icon = "__Mobile_Factory_Graphics__/graphics/icones/RedCross.png"
 -- RC.subgroup = "Resources"
 -- RC.order = "zzz"
 -- RC.fuel_category = nil

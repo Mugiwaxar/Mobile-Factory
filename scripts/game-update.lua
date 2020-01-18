@@ -189,7 +189,7 @@ function playerDriveStatChange(event)
 	local player = getPlayer(event.player_index)
 	if player ~= nil and player.valid == true then
 		if event.entity ~= nil and event.entity.valid == true and string.match(event.entity.name, "MobileFactory") then
-			if event.entity.get_driver() == nil and global.MF ~= nil and global.MF.ent.valid == true and global.MF.ent.surface ~= nil then
+			if event.entity.get_driver() == nil and global.MF.ent ~= nil and global.MF.ent.valid == true and global.MF.ent.surface ~= nil then
 				if global.MF.ent.surface.can_place_entity{name="character", position = {global.MF.ent.position.x + 5, global.MF.ent.position.y}} then
 					player.teleport({global.MF.ent.position.x + 5, global.MF.ent.position.y}, global.MF.ent.surface)
 				elseif global.MF.ent.surface.can_place_entity{name="character", position = {global.MF.ent.position.x -5, global.MF.ent.position.y}} then
@@ -243,15 +243,17 @@ function onEntityDamaged(event)
 	if event.entity == nil or event.entity.valid == false then return end
 	-- Test if this is the Mobile Factory --
 	if event.entity.name == "MobileFactory" then
-		-- Drain Shield --
-		-- if global.MF.shield > 0 and global.MF.ent ~= nil and global.MF.ent.valid == true then
-			-- local drain = math.min(global.MF.shield, event.final_damage_amount)
-			-- global.MF.shield = global.MF.shield - drain
-			-- global.MF.ent.health = global.MF.ent.health + drain
-		-- end
 		-- Heal Low message --
 		if event.entity.health < 1000 then
 			game.print("Mobile Factory heal low")
+		end
+	end
+	-- Command to the Jet to return to the Mobile Factory if its life is low --
+	if event.entity.name == "CombatJet" then
+		local obj = global.entsTable[event.entity.unit_number]
+		if obj ~= nil then
+			obj:goMF()
+			dprint("returning home")
 		end
 	end
 	-- Test if this is in the Control Center --
