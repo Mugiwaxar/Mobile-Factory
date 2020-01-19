@@ -102,7 +102,8 @@ function MP:updateInv()
 	end
 	
 	-- Check the Data Inventory --
-	if dataInv == nil or getmetatable(dataInv == nil) then return end
+	if dataInv == nil or getmetatable(dataInv) == nil then return end
+	dprint()
 	
 	-- Get the Local Inventory --
 	local inv = self.ent.get_inventory(defines.inventory.chest)

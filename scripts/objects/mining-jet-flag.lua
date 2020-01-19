@@ -248,8 +248,9 @@ function MJF:sendInventory()
 	
 	-- Check the targeted Inventory --
 	local dataInv = self.selectedInv
+	
 	-- Check the Data Inventory --
-	if dataInv == nil or getmetatable(dataInv == nil) then return end
+	if dataInv == nil or getmetatable(dataInv) == nil then return end
 
 	-- Itinerate the Inventory --
 	for name, count in pairs(self.inventory) do
