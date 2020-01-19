@@ -53,6 +53,13 @@ function DSR:update()
 		return
 	end
 	
+	-- Remove the Item if it doesn't exist anymore --
+	if game.item_prototypes[self.inventoryItem] == nil then
+		self.inventoryItem = nil
+		self.inventoryCount = 0
+		return
+	end
+	
 	-- Display the Item Icon --
 	if self.inventoryItem == nil then return true end
 	local sprite = "item/" .. self.inventoryItem

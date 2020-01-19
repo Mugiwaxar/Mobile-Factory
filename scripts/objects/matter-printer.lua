@@ -101,6 +101,9 @@ function MP:updateInv()
 		dataInv = self.dataNetwork.dataCenter.invObj
 	end
 	
+	-- Check the Data Inventory --
+	if dataInv:valid() == false then return end
+	
 	-- Get the Local Inventory --
 	local inv = self.ent.get_inventory(defines.inventory.chest)
 	

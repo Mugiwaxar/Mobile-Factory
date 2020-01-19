@@ -32,6 +32,7 @@ end
 
 -- Is valid --
 function INV:valid()
+	if getmetatable(self) == nil then return false end
 	return true
 end
 

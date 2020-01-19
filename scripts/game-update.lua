@@ -268,10 +268,11 @@ function onEntityDamaged(event)
 				return
 			end
 		end
-		if table_size(global.repairTable) < 300 then
+		if table_size(global.repairTable) < 1000 then
 			table.insert(global.repairTable, {ent=event.entity})
 		else
 			game.print("Mobile Factory: To many damaged Entities inside the Repair Table")
+			global.repairTable = {}
 		end
 	end
 end

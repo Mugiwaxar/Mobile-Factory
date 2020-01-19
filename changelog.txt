@@ -1,6 +1,22 @@
 ---------------------------------------------------------------------------------------------------
-Version: 0.0.81
+Version: 0.0.84
+Date: 19/01/2020
+  Bugfixes:
+    - Fixed a crash on Load when a Matter Printer request an Item or a Matter Serializer send an Item whill the targeted Inventory was removed
+---------------------------------------------------------------------------------------------------
+Version: 0.0.83
+Date: 19/01/2020
+  Scripting:
+    - Added a maximum size for the Construction table (Avoid long Save/Load)
+  Bugfixes:
+    - Fixed a compatibility problem with Bob's Logistic Mod and the Temp Chest
+    - Fixed a crash when an Item from a removed mod was still inside a Deep Storage
+    - Rebuilded the Contruction Area inside the Control Center
+---------------------------------------------------------------------------------------------------
+Version: 0.0.82
 Date: 18/01/2020
+  Features:
+    - The Mobile Factory Mod is now splitted, Logical Part and Graphical Part
   Balancing:
     - All Jets base health is now 400 help
     - Combat Jet have now 1200 HP and his speed was doubled
