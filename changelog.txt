@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.85
+Date: 19/01/2020
+  Bugfixes:
+    - Fixed a crash on Load when a Matter Printer request an Item or a Matter Serializer send an Item whill the targeted Inventory was removed (Second attempt)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.84
 Date: 19/01/2020
   Bugfixes:

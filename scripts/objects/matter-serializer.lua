@@ -106,7 +106,7 @@ function MS:updateInv()
 			dataInv = self.dataNetwork.dataCenter.invObj
 		end
 		-- Check the Data Inventory --
-		if dataInv:valid() == false then return end
+		if dataInv == nil or getmetatable(dataInv == nil) then return end
 		-- Add Items to the Data Inventory --
 		local amountAdded = dataInv:addItem(item, count)
 		-- Remove Items from the local Inventory --

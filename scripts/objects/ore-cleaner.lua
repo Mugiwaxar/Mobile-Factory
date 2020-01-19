@@ -218,8 +218,10 @@ function OC:collectOres(event)
 	end
 	-- Check if a Data Inventory was found --
 	if dataInv == 0 then return end
+	-- Check the Data Inventory --
+	if dataInv == nil or getmetatable(dataInv == nil) then return end
 	-- Check if the Ore type is the same as the selected Inventory --
-	if dataInv.inventoryItem ~= nil and dataInv:valid() == true and oreName ~= dataInv.inventoryItem then return end
+	if oreName ~= dataInv.inventoryItem then return end
 	-- Extract Ore --
 	local oreExtracted = math.min(self:orePerExtraction(), orePath.amount)
 	-- Add Ores to the Inventory --
