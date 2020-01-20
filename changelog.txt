@@ -1,8 +1,14 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.87
 Date: 20/01/2020
+  Gui:
+    - Updated all numbers to more readable numbers
+    - The Information GUI Button was moved to the top of the Main GUI
+    - The Tootip GUI Button was moved to the top of the Main GUI
   Scripting:
     - The Combat Jet will watch is life even more
+  Graphics:
+    - Reworked the Dimensional Ore Icon transparency
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.86
 Date: 19/01/2020

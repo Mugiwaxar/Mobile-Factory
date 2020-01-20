@@ -33,6 +33,35 @@ function GUI.createMainGUI(player, gui)
 	mfGUIMenuFrame.style.horizontal_align = "right"
 	mfGUIMenuFrame.style.minimal_width = 150
 
+	-- Add MFInfos Button to top Flow --
+	mfGUIMenuFrame.add{
+		type="sprite-button",
+		name="MFInfos",
+		sprite="MFIconI",
+		hovered_sprite="MFIconI",
+		resize_to_sprite=false,
+		tooltip={"gui-description.MFInfosButton"}
+	}
+	-- Set Style --
+	mfGUIMenuFrame.MFInfos.style.maximal_width = 15
+	mfGUIMenuFrame.MFInfos.style.maximal_height = 15
+	mfGUIMenuFrame.MFInfos.style.padding = 0
+	mfGUIMenuFrame.MFInfos.style.margin = 0
+	
+	-- Add MFInspect Button to top Flow --
+	mfGUIMenuFrame.add{
+		type="sprite-button",
+		name="MFInspect",
+		sprite="InspectI",
+		resize_to_sprite=false,
+		tooltip={"gui-description.MFInspectButton"}
+	}
+	-- Set Style --
+	mfGUIMenuFrame.MFInspect.style.maximal_width = 15
+	mfGUIMenuFrame.MFInspect.style.maximal_height = 15
+	mfGUIMenuFrame.MFInspect.style.padding = 0
+	mfGUIMenuFrame.MFInspect.style.margin = 0
+
 	-- Add the Option Button to top Flow --
 	mfGUIMenuFrame.add{
 		type="sprite-button",
@@ -255,31 +284,6 @@ function GUI.createMainGUI(player, gui)
 	-- Set Style --
 	mfGUIExtFF1.MFTPInside.style.maximal_height = _GUIButtonsSize
 	mfGUIExtFF1.MFTPInside.style.maximal_width = _GUIButtonsSize
-	
-	-- Add MFInfos Button --
-	mfGUIExtFF1.add{
-		type="sprite-button",
-		name="MFInfos",
-		sprite="MFIconI",
-		hovered_sprite="MFIconI",
-		resize_to_sprite=false,
-		tooltip={"gui-description.MFInfosButton"}
-	}
-	-- Set Style --
-	mfGUIExtFF1.MFInfos.style.maximal_height = _GUIButtonsSize
-	mfGUIExtFF1.MFInfos.style.maximal_width = _GUIButtonsSize
-	
-	-- Add MFInfos Button --
-	mfGUIExtFF1.add{
-		type="sprite-button",
-		name="MFInspect",
-		sprite="InspectI",
-		resize_to_sprite=false,
-		tooltip={"gui-description.MFInspectButton"}
-	}
-	-- Set Style --
-	mfGUIExtFF1.MFInspect.style.maximal_height = _GUIButtonsSize
-	mfGUIExtFF1.MFInspect.style.maximal_width = _GUIButtonsSize
 	
 	-- Add EnergyDrain Button --
 	mfGUIExtFF2.add{
