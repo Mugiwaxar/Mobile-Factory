@@ -250,11 +250,11 @@ function onEntityDamaged(event)
 	end
 	-- Command to the Jet to return to the Mobile Factory if its life is low --
 	if event.entity.name == "CombatJet" then
-		local obj = global.entsTable[event.entity.unit_number]
-		if obj ~= nil then
-			obj:goMF()
-			dprint("returning home")
+		local obj = global.combatJetTable[event.entity.unit_number]
+		if obj ~= nil and obj:valid() == true and event.entity.health < 600 and obj.currentOrder == "Fight"then
+			obj:goMF(defines.distraction.none)
 		end
+		return
 	end
 	-- Test if this is in the Control Center --
 	if event.entity.surface.name == _mfControlSurfaceName then
@@ -473,6 +473,6 @@ function updateCombatJet()
 		-- Check if the Jet exist --
 		if removed <= 0 then return end
 		local entity = global.MF.ent.surface.create_entity{name="CombatJet", position=global.MF.ent.position, force="player"}
-		global.repairJetTable[entity.unit_number] = CBJ:new(entity, enemy.position)
+		global.combatJetTable[entity.unit_number] = CBJ:new(entity, enemy.position)
 	end
 end

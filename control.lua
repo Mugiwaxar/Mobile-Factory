@@ -186,6 +186,16 @@ _mfEntityFilter = {
 	{filter = "type", type = "fish", mode = "and", invert = true}
 }
 
+_mfEntityFilterWithCBJ = {
+	{filter = "type", type = "unit", invert = true},
+	{filter = "type", type = "tree", mode = "and", invert = true},
+	{filter = "type", type = "simple-entity", mode = "and", invert = true},
+	{filter = "type", type = "unit-spawner", mode = "and", invert = true},
+	{filter = "type", type = "turret", mode = "and", invert = true},
+	{filter = "type", type = "fish", mode = "and", invert = true},
+	{filter = "name", name = "CombatJet", mode = "or"}
+}
+
 -- Events --
 script.on_init(onInit)
 script.on_load(onLoad)
@@ -194,7 +204,7 @@ script.on_event(defines.events.on_player_joined_game, onPlayerJoint)
 script.on_event(defines.events.on_player_driving_changed_state, playerDriveStatChange)
 script.on_event(defines.events.on_player_created, onPlayerCreated)
 script.on_event(defines.events.on_tick, onTick)
-script.on_event(defines.events.on_entity_damaged, onEntityDamaged, _mfEntityFilter)
+script.on_event(defines.events.on_entity_damaged, onEntityDamaged, _mfEntityFilterWithCBJ)
 script.on_event(defines.events.on_built_entity, onPlayerBuildSomething)
 script.on_event(defines.events.on_player_built_tile, onPlayerBuildSomething)
 script.on_event(defines.events.script_raised_built, onPlayerBuildSomething)

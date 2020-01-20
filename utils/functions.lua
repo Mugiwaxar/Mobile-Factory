@@ -343,7 +343,22 @@ function Util.distance(position1, position2)
   return ((x1 - x2) ^ 2 + (y1 - y2) ^ 2) ^ 0.5
 end
 
+-- Transform big numbers to readable numbers --
+function toRNumber(number)
+	local rNumber = number
+	if number >= 1000 and number < 1000000 then
+		rNumber = tostring(math.floor(number/10)/100) .. " k"
+	elseif number >= 1000000 and number < 1000000000 then
+		rNumber = tostring(math.floor(number/10000)/100) .. " M"
+	elseif number >= 1000000000 then
+		rNumber = tostring(math.floor(number/10000000)/100) .. " G"
+	end
 
+
+
+
+	return rNumber
+end
 
 
 
