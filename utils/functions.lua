@@ -277,7 +277,7 @@ function Util.itemToFrame(item, amount, guiElement)
 	sprite.style.padding = 0
 	sprite.style.margin = 0
 	-- Add the amount label --
-	local label = frame.add{type="label", caption=tonumber(amount)}
+	local label = frame.add{type="label", caption=Util.toRNumber(amount)}
 	label.style.padding = 0
 	label.style.margin = 0
 end
@@ -296,7 +296,7 @@ function Util.itemToLabel(item, amount, guiElement)
 	sprite.style.padding = 0
 	sprite.style.margin = 0
 	-- Add the amount label --
-	local label = frame.add{type="label", caption=tonumber(amount)}
+	local label = frame.add{type="label", caption=Util.toRNumber(amount)}
 	label.style.padding = 0
 	label.style.margin = 0
 	label.style.font = "LabelFont"
@@ -344,7 +344,7 @@ function Util.distance(position1, position2)
 end
 
 -- Transform big numbers to readable numbers --
-function toRNumber(number)
+function Util.toRNumber(number)
 	local rNumber = number
 	if number >= 1000 and number < 1000000 then
 		rNumber = tostring(math.floor(number/10)/100) .. " k"

@@ -320,7 +320,7 @@ function GUI.updatePlayerInfoGUI(player)
 	-- Energy Laser Drain --
 	if technologyUnlocked("EnergyDrain1") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyDrainLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyDrainLabel.caption = {"", {"gui-description.EnergyDrainLabel"}, ": ", global.MF:getLaserEnergyDrain()/1000000, " MW"}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyDrainLabel.caption = {"", {"gui-description.EnergyDrainLabel"}, ": ", Util.toRNumber(global.MF:getLaserEnergyDrain()), "W"}
 	end
 	
 	-- Energy Laser Drain Multiplier --
@@ -344,7 +344,7 @@ function GUI.updatePlayerInfoGUI(player)
 	-- Fluid Laser Drain --
 	if technologyUnlocked("FluidDrain1") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidDrainLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidDrainLabel.caption = {"", {"gui-description.FluidDrainLabel"}, ": ", global.MF:getLaserFluidDrain(), "u/s"}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidDrainLabel.caption = {"", {"gui-description.FluidDrainLabel"}, ": ", Util.toRNumber(global.MF:getLaserFluidDrain()), "u/s"}
 	end
 	
 	-- Fluid Laser Drain Multiplier --
@@ -356,13 +356,13 @@ function GUI.updatePlayerInfoGUI(player)
 	-- Fluid Laser Consomption --
 	if technologyUnlocked("FluidDrain1") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidConsumptionLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidConsumptionLabel.caption = {"", {"gui-description.FluidConsumptionLabel"}, ": ", global.MF:getLaserFluidDrain()*_lfpFluidConsomption/1000, " kW"}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidConsumptionLabel.caption = {"", {"gui-description.FluidConsumptionLabel"}, ": ", Util.toRNumber(global.MF:getLaserFluidDrain()*_lfpFluidConsomption), "W"}
 	end
 	
 	-- Item Laser Drain --
 	if technologyUnlocked("TechItemDrain") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemDrainLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemDrainLabel.caption = {"", {"gui-description.ItemDrainLabel"}, ": ", global.MF:getLaserItemDrain(), "i/s"}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemDrainLabel.caption = {"", {"gui-description.ItemDrainLabel"}, ": ", Util.toRNumber(global.MF:getLaserItemDrain()), "i/s"}
 	end
 	
 	-- Item Laser Drain Multiplier --
@@ -374,7 +374,7 @@ function GUI.updatePlayerInfoGUI(player)
 	-- Item Laser Consomption --
 	if technologyUnlocked("TechItemDrain") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemConsumptionLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemConsumptionLabel.caption = {"", {"gui-description.ItemConsumptionLabel"}, ": ", _mfItemsDrain*global.MF:getLaserItemDrain()/1000, " kW"}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemConsumptionLabel.caption = {"", {"gui-description.ItemConsumptionLabel"}, ": ", Util.toRNumber(_mfItemsDrain*global.MF:getLaserItemDrain()), "W"}
 	end
 	
 	-- Tank ID --
@@ -471,7 +471,7 @@ function GUI.updateTankFrame(player)
 			local TankFlow = TankFrame.add{type="flow", direction="vertical"}
 			-- Create Tank Labels --
 			local TankLabel = TankFlow.add{type="label"}
-			TankLabel.caption = {"", {"gui-description.Tank" .. k .. "Label"}, ": ", fName, " ", fAmount, "/", tCapacity}
+			TankLabel.caption = {"", {"gui-description.Tank" .. k .. "Label"}, ": ", fName, " ", Util.toRNumber(fAmount), "/", Util.toRNumber(tCapacity)}
 			TankLabel.style.font = "LabelFont"
 			TankLabel.style.font_color = {214, 3, 220}
 			-- Create Tank ProgressBar -

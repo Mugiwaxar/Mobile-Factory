@@ -144,7 +144,7 @@ function INV:getFrame(guiElement)
 	-- Create the Amount label --
 	local amount = guiElement.add{type="label"}
 	amount.style.font = "LabelFont"
-	amount.caption = {"", {"gui-description.InventoryAmount"}, ": ", self.usedCapacity, "/", self.maxCapacity}
+	amount.caption = {"", {"gui-description.InventoryAmount"}, ": ", Util.toRNumber(self.usedCapacity), "/", Util.toRNumber(self.maxCapacity)}
 	amount.style.font_color = {108, 114, 229}
 	
 	-- Create the Data Storage Label --
