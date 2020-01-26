@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.88
+Date: 26/01/2020
+  Features:
+    - Updated to Factorio version 0.18
+  Bugfixes:
+    - Deep Storages correctly appear inside the Information GUI
+---------------------------------------------------------------------------------------------------
 Version: 0.0.87
 Date: 20/01/2020
   Gui:

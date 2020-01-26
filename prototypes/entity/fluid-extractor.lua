@@ -4,6 +4,7 @@
 feE = table.deepcopy(data.raw["mining-drill"]["pumpjack"])
 feE.name = "FluidExtractor"
 feE.icon = "__Mobile_Factory_Graphics__/graphics/icones/FluidExtractor.png"
+feE.icon_size = 32
 feE.minable = {mining_time = 0.5, result = "FluidExtractor"}
 feE.energy_source =
     {

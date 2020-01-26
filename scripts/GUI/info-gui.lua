@@ -494,7 +494,7 @@ end
 
 -- Update OreSilo Frame --
 function GUI.updateOreSiloFrame(gui)
-	if global.MF.ccS == nil or global.oreSilotTable == nil then return end
+	if global.MF.ccS == nil or global.deepStorageTable == nil then return end
 	-- Make the frame visible if there are at least one Ore Silo in the table --
 	if table_size(global.deepStorageTable) > 0 then
 		gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.visible = true
