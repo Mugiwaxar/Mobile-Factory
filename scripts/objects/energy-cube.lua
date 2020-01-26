@@ -21,7 +21,7 @@ function EC:new(object)
 	mt.__index = EC
 	t.ent = object
 	-- Draw the Sprite --
-	t.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite0", x_scale=1/325*(33*3), y_scale=1/325*(33*3), target=object, surface=object.surface, target_offset={0, -0.3}}
+	t.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite0", x_scale=1/325*(33*3), y_scale=1/325*(33*3), target=object, surface=object.surface, target_offset={0, -0.3}, render_layer=131}
 	UpSys.addObj(t)
 	return t
 end
@@ -84,7 +84,7 @@ function EC:update()
 	-- Update the Sprite --
 	local spriteNumber = math.ceil(self.ent.energy/self.ent.prototype.electric_energy_source_prototype.buffer_capacity*10)
 	rendering.destroy(self.spriteID)
-	self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite" .. spriteNumber, x_scale=1/325*(33*3), y_scale=1/325*(33*3), target=self.ent, surface=self.ent.surface, target_offset={0, -0.3}}
+	self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite" .. spriteNumber, x_scale=1/325*(33*3), y_scale=1/325*(33*3), target=self.ent, surface=self.ent.surface, target_offset={0, -0.3}, render_layer=131}
 end
 
 
