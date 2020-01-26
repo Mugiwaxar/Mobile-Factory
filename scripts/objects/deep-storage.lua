@@ -63,7 +63,7 @@ function DSR:update()
 	-- Display the Item Icon --
 	if self.inventoryItem == nil then return true end
 	local sprite = "item/" .. self.inventoryItem
-	rendering.draw_sprite{sprite=sprite, target=self.ent, surface=self.ent.surface, time_to_live=updateTick, target_offset={0,-0.35}} 
+	rendering.draw_sprite{sprite=sprite, target=self.ent, surface=self.ent.surface, time_to_live=self.updateTick + 1, target_offset={0,-0.35}, render_layer=131}
 end
 
 -- Tooltip Infos --
@@ -88,8 +88,15 @@ function DSR:hasItem(name)
 	return 0
 end
 
+-- Return if the Item can be accepted --
+function DSR:canAccept(name)
+	if self.inventoryItem == nil or self.inventoryItem == name then return true end
+	return false
+end
+
 -- Add Items --
 function DSR:addItem(name, count)
+	if self:canAccept(name) == false then return 0 end
 	if self.inventoryItem == nil or self.inventoryItem == name then
 		self.inventoryItem = name
 		self.inventoryCount = self.inventoryCount + count

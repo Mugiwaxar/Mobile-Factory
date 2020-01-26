@@ -321,7 +321,7 @@ function somethingWasRemoved(event)
 	-- Remove the Ore Cleaner --
 	if event.entity.name == "OreCleaner" then
 		local obj = global.oreCleanerTable[event.entity.unit_number]
-		if obj ~= nil and event.buffer[1] ~= nil then
+		if obj ~= nil and event.buffer ~= nil and event.buffer[1] ~= nil then
 			event.buffer[1].set_tag("Infos", {purity=obj.purity, charge=obj.charge, totalCharge=obj.totalCharge})
 			event.buffer[1].custom_description = {"", {"item-description.OreCleaner"}, {"item-description.OreCleanerC", obj.purity, obj.charge, obj.totalCharge}}
 		end
@@ -331,7 +331,7 @@ function somethingWasRemoved(event)
 	-- Remove the Fluid Extractor --
 	if event.entity.name == "FluidExtractor" then
 		local obj = global.fluidExtractorTable[event.entity.unit_number]
-		if obj ~= nil and event.buffer[1] ~= nil then
+		if obj ~= nil and event.buffer ~= nil and event.buffer[1] ~= nil then
 			event.buffer[1].set_tag("Infos", {purity=obj.purity, charge=obj.charge, totalCharge=obj.totalCharge})
 			event.buffer[1].custom_description = {"", {"item-description.FluidExtractor"}, {"item-description.FluidExtractorC", obj.purity, obj.charge, obj.totalCharge}}
 		end

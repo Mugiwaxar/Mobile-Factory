@@ -80,6 +80,8 @@ function updateValues()
 	if global.repairJetTable == nil then global.repairJetTable = {} end
 	if global.repairTable == nil then global.repairTable = {} end
 	if global.combatJetTable == nil then global.combatJetTable = {} end
+	-- Delete all Animations and Sprites --
+	rendering.clear("Mobile_Factory")
 	-- for k, j in pairs(global) do
 		-- if type(j) == "table" then
 			-- dprint(k .. ":" .. table_size(j))

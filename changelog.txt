@@ -5,6 +5,13 @@ Date: 26/01/2020
     - Updated to Factorio version 0.18
   Bugfixes:
     - Deep Storages correctly appear inside the Information GUI
+    - A destroyed Ore Cleaner or Fluid Extractor will not lounger crash the Game
+    - Rendering of Sprites and Animations will no lounger stack (Big perfarmance optimization)
+    - The Ore Cleaner will now accept to send Ore to empty Deep Storage
+  Graphics:
+    - Reworked Animations and Sprites Layers
+  Scripting:
+    - The Deep Storage can now say if it can accept an Item
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.87
 Date: 20/01/2020

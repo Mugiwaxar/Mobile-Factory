@@ -71,8 +71,17 @@ function INV:hasItem(item)
 	return self.inventory[item] or 0
 end
 
+-- Return if the Item can be accepted --
+function INV:canAccept(name)
+	if self:remCap() > 0 then return true end
+	return false
+end
+
 -- Request to add an Item and return the amount added --
 function INV:addItem(item, amount)
+
+	-- Check if the Item can be accepted --
+	if self:canAccept(item) == false then return 0 end
 
 	-- Calcule the amount of items that can be inserted --
 	local capableAmount = math.min(amount, self:remCap())
@@ -90,7 +99,7 @@ function INV:addItem(item, amount)
 	end
 	
 	-- Return the amount inserted --
-	return capableAmount	
+	return capableAmount
 	
 end
 

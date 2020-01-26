@@ -197,8 +197,8 @@ function WDT:setActive(set)
 	self.active = set
 	if set == true then
 		-- Create the Animation if it doesn't exist --
-		if self.animID == 0 then
-			self.animID = rendering.draw_animation{animation="WirelessDataTransmitterA", target={self.ent.position.x,self.ent.position.y-0.9}, surface=self.ent.surface}
+		if self.animID == 0 or rendering.is_valid(self.animID) == false then
+			self.animID = rendering.draw_animation{animation="WirelessDataTransmitterA", target={self.ent.position.x,self.ent.position.y-0.9}, surface=self.ent.surface, render_layer=131}
 		end
 	else
 		-- Destroy the Animation --

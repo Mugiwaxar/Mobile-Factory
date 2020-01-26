@@ -211,7 +211,7 @@ function OC:collectOres(event)
 	local dataInv = self.selectedInv
 	if dataInv == 0 then
 		for k, dp in pairs(global.deepStorageTable) do
-			if dp.inventoryItem == nil or dp.inventoryItem == oreName then
+			if dp:canAccept(oreName) == true then
 				dataInv = dp
 			end
 		end
@@ -221,7 +221,7 @@ function OC:collectOres(event)
 	-- Check the Data Inventory --
 	if dataInv == nil or getmetatable(dataInv) == nil then return end
 	-- Check if the Ore type is the same as the selected Inventory --
-	if oreName ~= dataInv.inventoryItem then return end
+	if dataInv:canAccept(oreName) == false then return end
 	-- Extract Ore --
 	local oreExtracted = math.min(self:orePerExtraction(), orePath.amount)
 	-- Add Ores to the Inventory --
@@ -257,7 +257,7 @@ function OC:updateAnimation(event)
 	-- If they was extraction but the animation doesn't exist --
 	elseif event.tick - self.lastExtraction <= _mfOreCleanerExtractionTicks + 10 and self.animID == 0 then
 		-- Create the Orb Animation --
-		self.animID = rendering.draw_animation{animation="RedEnergyOrb", target={self.ent.position.x,self.ent.position.y - 3.25}, surface=self.ent.surface}
+		self.animID = rendering.draw_animation{animation="RedEnergyOrb", target={self.ent.position.x,self.ent.position.y - 3.25}, surface=self.ent.surface, render_layer=144}
 		-- I don't know what this do, but it work (reset the animation) --
 		rendering.set_animation_offset(self.animID, 240 - (event.tick%240))
 		self.animTick = event.tick
