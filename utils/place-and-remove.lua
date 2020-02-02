@@ -74,7 +74,8 @@ function somethingWasPlaced(event, isRobot)
 	end
 	
 	-- Blueprint --
-	if isPlayer == true and creator.surface.name ~= _mfSurfaceName and event.stack ~= nil and event.stack.valid_for_read == true and event.stack.is_blueprint then
+	if isPlayer == true and creator.surface.name ~= _mfSurfaceName and event.stack ~= nil and event.stack.valid_for_read == true and event.stack.is_blueprint == true then
+	dprint(event.stack.name)
 	if event.stack.name == "DeepStorage" then
 		if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Control Center Constructible Area"}) end
 			event.created_entity.destroy()

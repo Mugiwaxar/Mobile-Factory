@@ -121,6 +121,7 @@ end
 
 -- Is the Jet Iddle ? --
 function MJ:isIddle()
+	if self.ent.command == nil then return true end
 	if self.isMining == true or (self.ent.command.type ~= 6 and self.ent.command.type ~= 9) then
 		return false
 	end
@@ -190,7 +191,7 @@ function MJ:mine()
 	if self.targetOre.amount <= 1 then
 		self.targetOre.destroy()
 		self.isMining = false
-		self.flag:removeOrePath(targetOre)
+		self.flag:removeOrePath(self.targetOre)
 		-- Take Another Ore Path or return home --
 		if self.inventoryCount >= _mfMiningJetInventorySize then
 			self:goToFlag()

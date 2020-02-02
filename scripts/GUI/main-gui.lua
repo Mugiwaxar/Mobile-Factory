@@ -1,13 +1,6 @@
 -- Create the Main GUI --
 function GUI.createMainGUI(player, gui)
 	
-	-- Verify if the Main GUI exist, save the positions and destroy it --
-	if gui.screen.mfGUI ~= nil and gui.screen.mfGUI.valid == true then
-		posX = gui.screen.mfGUI.location.x
-		posY = gui.screen.mfGUI.location.y
-		gui.screen.mfGUI.destroy()
-	end
-	
 	-- Determine the GUI location with the screen resolution --
 	local resolutionWidth = player.display_resolution.width -- / player.display_scale
 	local resolutionHeight = player.display_resolution.height -- / player.display_scale
@@ -15,6 +8,13 @@ function GUI.createMainGUI(player, gui)
 	local posY = 0 -- resolutionHeight / 100 * 35
 	local iPosX = 200
 	local iPosY = 200
+
+	-- Verify if the Main GUI exist, save the positions and destroy it --
+	if gui.screen.mfGUI ~= nil and gui.screen.mfGUI.valid == true then
+		posX = gui.screen.mfGUI.location.x
+		posY = gui.screen.mfGUI.location.y
+		gui.screen.mfGUI.destroy()
+	end
 
 	-- Create the GUI --
 	local mfGUI = gui.screen.add{type="frame", name="mfGUI", direction="vertical"}
