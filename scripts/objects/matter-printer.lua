@@ -180,7 +180,11 @@ function MP:getTooltipInfos(GUI)
 		for k, deepStorage in pairs(global.deepStorageTable) do
 			if deepStorage ~= nil then
 				i = i + 1
-				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID)}
+				local itemText = ""
+				if deepStorage.inventoryItem ~= nil then
+					itemText = " (" .. deepStorage.inventoryItem .. ")"
+				end
+				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
 				if self.selectedInv == deepStorage then
 					selectedIndex = i
 				end
@@ -188,7 +192,7 @@ function MP:getTooltipInfos(GUI)
 		end
 		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
 		local invSelection = GUI.add{type="list-box", name="MP" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
-		invSelection.style.width = 70
+		invSelection.style.width = 100
 	end
 end
 

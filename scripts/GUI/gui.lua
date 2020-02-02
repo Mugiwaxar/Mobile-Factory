@@ -61,7 +61,7 @@ function GUI.buttonClicked(event)
 	local player = getPlayer(event.player_index)
 	
 	-- Disable the info GUI Tanks update when the player is choosing a filter --
-	if event.element.type == "choose-elem-button" then
+	if event.element.type == "choose-elem-button" and event.element.get_mod() == "Mobile_Factory" then
 		setPlayerVariable(player.name, "GUIUpdateInfoGUI", false)
 	end
 	
@@ -237,14 +237,31 @@ function GUI.onGuiElemChanged(event)
 	GUI.readOptions(event.element, player, player.gui)
 	
 	------- Save the filter -------
-	if event.element.type == "choose-elem-button" then
-		local id = tonumber(event.element.name)
-		if global.tankTable[id] == nil then return end
-		if event.element.elem_value ~= nil then
-			global.tankTable[id].filter = event.element.elem_value
-		else
-			global.tankTable[id].filter = nil
+	if event.element.type == "choose-elem-button" and event.element.get_mod() == "Mobile_Factory" then
+		local id = event.element.name
+
+		-- If this is a Dimensional Tank --
+		if string.match(id, "TF") then
+			id = tonumber(split(id, "TF")[1])
+			if global.tankTable[id] == nil then return end
+			if event.element.elem_value ~= nil then
+				global.tankTable[id].filter = event.element.elem_value
+			else
+				global.tankTable[id].filter = nil
+			end
 		end
+
+		-- If this is a Deep Storage --
+		if string.match(id, "DSRF") then
+			id = tonumber(split(id, "DSRF")[1])
+			if global.deepStorageTable[id] == nil then return end
+			if event.element.elem_value ~= nil then
+				global.deepStorageTable[id].filter = event.element.elem_value
+			else
+				global.deepStorageTable[id].filter = nil
+			end
+		end
+
 		-- Re-enable the GUI --
 		if player ~= nil then
 			setPlayerVariable(player.name, "GUIUpdateInfoGUI", true)

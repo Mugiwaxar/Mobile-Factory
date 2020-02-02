@@ -111,6 +111,7 @@ end
 
 -- Is the Jet Iddle ? --
 function CBJ:isIddle()
+	if self.ent.command == nil then return true end
 	if self.ent.command.type ~= 6 and self.ent.command.type ~= 9 then
 		return false
 	end

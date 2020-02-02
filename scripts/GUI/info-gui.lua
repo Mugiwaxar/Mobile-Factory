@@ -21,14 +21,16 @@ function GUI.createInfoGui(gui, player)
 	mfInfoGUI.caption = "Mobile Factory"
 	mfInfoGUI.location = {posX, posY}
 	mfInfoGUI.style.padding = 5
+	-- mfInfoGUI.style.width = 1300
+	mfInfoGUI.style.horizontal_align = "center"
 	mfInfoGUI.visible = false
 	
 	-- Create the Menu Bar --
 	local mfGUIMenuBar = mfInfoGUI.add{type="flow", name="mfGUIMenuBar", direction="horizontal"}
 	-- Set Style --
-	mfGUIMenuBar.style.width = 858
 	mfGUIMenuBar.style.padding = 0
 	mfGUIMenuBar.style.margin = 0
+	mfGUIMenuBar.style.width = 860
 	mfGUIMenuBar.style.horizontal_align = "right"
 	mfGUIMenuBar.style.vertical_align = "top"
 	
@@ -61,9 +63,10 @@ function GUI.createInfoGui(gui, player)
 	mfGUIMenuBar.CloseButton.style.margin = 0
 	
 	-- Create the Main Flow --
-	local mfInfoMainFlow = gui.screen.mfInfoGUI.add{type="frame", name="mfInfoMainFlow", direction="horizontal"}
-	mfInfoMainFlow.style.width = 856
+	local mfInfoMainFlow = mfInfoGUI.add{type="frame", name="mfInfoMainFlow", direction="horizontal"}
+	-- mfInfoMainFlow.style.width = 856
 	mfInfoMainFlow.style.height = 750
+
 	
 	------------------------------------------ FLOW 1 -------------------------------------
 	
@@ -269,7 +272,7 @@ function GUI.createInfoGui(gui, player)
 	local mfInfoFlow5 = mfInfoMainFlow.add{type="frame", name="mfInfoFlow5", direction="vertical"}
 	mfInfoFlow5.style.height = 732
 	mfInfoFlow5.visible = false
-	mfInfoFlow5.style.width = 150
+	-- mfInfoFlow5.style.width = 175
 	
 	-- Create Deep Storage Title Label --
 	mfInfoFlow5.add{type="label", name="mfDeepStorageTitle"}
@@ -278,7 +281,7 @@ function GUI.createInfoGui(gui, player)
 	
 	-- Create the Deep Storage Flow --
 	local mfDeepStorageFlow = mfInfoFlow5.add{type="scroll-pane", name="mfDeepStorageFlow", horizontal_scroll_policy="never"}
-	mfDeepStorageFlow.style.width = 125
+	-- mfDeepStorageFlow.style.width = 150
 	
 	---------------------------------------- FLOW 3 -------------------------------------
 		
@@ -424,8 +427,8 @@ function GUI.updatePlayerInfoGUI(player)
 	-- Update Tank Frame --
 	GUI.updateTankFrame(player)
 	
-	-- Update OreSilos Frame --
-	GUI.updateOreSiloFrame(player.gui)
+	-- Update Deep Storage Frame --
+	GUI.updateDeepStorageFrame(player)
 	
 	-- Update Inventory frame --
 	GUI.updateInventoryFrame(player.gui)
@@ -480,7 +483,7 @@ function GUI.updateTankFrame(player)
 			TankBar.style.maximal_width = 200
 			TankBar.style.color = {214, 3, 220}
 			-- Create Tank Filter --
-			local TankFilter = TankFrame.add{type="choose-elem-button", elem_type="fluid", name=k}
+			local TankFilter = TankFrame.add{type="choose-elem-button", elem_type="fluid", name="TF" .. tostring(k)}
 			TankFilter.style.maximal_height = 25
 			TankFilter.style.maximal_width = 25
 			if TankFilter.elem_value == nil and global.tankTable[k].filter ~= nil then
@@ -492,35 +495,52 @@ function GUI.updateTankFrame(player)
 end
 
 
--- Update OreSilo Frame --
-function GUI.updateOreSiloFrame(gui)
-	if global.MF.ccS == nil or global.deepStorageTable == nil then return end
-	-- Make the frame visible if there are at least one Ore Silo in the table --
+-- Update Deep Storage Frame --
+function GUI.updateDeepStorageFrame(player)
+	if global.MF.ccS == nil or global.deepStorageTable == nil or getPlayerVariable(player.name, "GUIUpdateInfoGUI") ~= true then return end
+	local gui = player.gui
+	-- Make the frame visible if there are at least one Deep Storage in the table --
 	if table_size(global.deepStorageTable) > 0 then
 		gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.visible = true
 	else
-		gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.visible = true
+		gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.visible = false
+		return
 	end
-	-- Get the Ore Silo Flow --
-	local oreSiloFlow = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.mfDeepStorageFlow
-	-- Clear the Ore Silo Flow --
-	oreSiloFlow.clear()
-	-- Look for all Ore Silos --
-	for k, oreSilo in pairs(global.deepStorageTable) do
+	-- Get the Deep Storage Flow --
+	local deepStorageFlow = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.mfDeepStorageFlow
+	-- Clear the Deep Storage Flow --
+	deepStorageFlow.clear()
+	-- Look for all Deep Storage --
+	for k, deepStorage in pairs(global.deepStorageTable) do
 		-- Create the Frame --
 		luaGuiElement = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.mfDeepStorageFlow
-		local OreSiloFrame = luaGuiElement.add{type="frame", direction="horizontal"}
-		OreSiloFrame.style.width = 100
+		local deepStorageFrame = luaGuiElement.add{type="frame", direction="horizontal"}
+		-- deepStorageFrame.style.width = 130
 		-- Create the Flow --
-		local OreSiloFlow = OreSiloFrame.add{type="flow", direction="vertical"}
-		-- Create Ore Silo Labels --
-		local OreSiloLabel = OreSiloFlow.add{type="label"}
-		OreSiloLabel.caption = {"", {"gui-description.DeepStorage"}, " ", oreSilo.ID}
-		OreSiloLabel.style.font = "LabelFont"
-		OreSiloLabel.style.font_color = {39,239,0}
-		if oreSilo.inventoryItem ~= nil then
-			Util.itemToLabel(oreSilo.inventoryItem, oreSilo.inventoryCount, OreSiloFlow)
+		local deepStorageFlow = deepStorageFrame.add{type="flow", direction="vertical"}
+		deepStorageFlow.style.margin = 0
+		deepStorageFlow.style.padding = 0
+		-- Create Deep Storage Labels --
+		local deepStorageLabel = deepStorageFlow.add{type="label"}
+		deepStorageLabel.caption = {"", {"gui-description.DeepStorage"}, " ", deepStorage.ID}
+		deepStorageLabel.style.font = "LabelFont"
+		deepStorageLabel.style.font_color = {39,239,0}
+		deepStorageLabel.style.margin = 0
+		deepStorageLabel.style.padding = 0
+		deepStorageLabel.style.width = 80
+		if deepStorage.inventoryItem ~= nil then
+			Util.itemToLabel(deepStorage.inventoryItem, deepStorage.inventoryCount, deepStorageFlow)
 		end
+		-- Create Deep Storage Filter --
+		local deepStorageFilter = deepStorageFrame.add{type="choose-elem-button", elem_type="item", name="DSRF" .. tostring(k)}
+		deepStorageFilter.style.maximal_height = 25
+		deepStorageFilter.style.maximal_width = 25
+		deepStorageFilter.style.margin = 0
+		deepStorageFilter.style.padding = 0
+		if deepStorageFilter.elem_value == nil and global.deepStorageTable[k].filter ~= nil then
+			deepStorageFilter.elem_value = global.deepStorageTable[k].filter
+		end
+		global.deepStorageTable[k].filter = deepStorageFilter.elem_value
 	end
 end
 
