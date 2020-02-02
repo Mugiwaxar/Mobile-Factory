@@ -8,11 +8,13 @@ function createMFSurface()
 	if testSurface ~= nil then global.MF.fS = testSurface return end
 	-- Create settings --
 	local mfSurfaceSettings = {
+		default_enable_all_autoplace_controls = false,
+		property_expression_names = {cliffiness = 0},
 		peaceful_mode = true,
-		autoplace_settings={entity={treat_missing_as_default=false},tile={treat_missing_as_default=true},decorative={treat_missing_as_default=false}},
+		autoplace_settings = {tile = {settings = { ["VoidTile"] = {frequency="normal", size="normal", richness="normal"} }}},
 		starting_area = "none",
-		width = 1,
-		height = 1
+		-- width = 1,
+		-- height = 1
 	}
 	-- Set surface setting --
 	local newSurface = game.create_surface(_mfSurfaceName, mfSurfaceSettings)
@@ -39,11 +41,13 @@ function createControlRoom()
 	if testSurface ~= nil then global.MF.ccS = testSurface return end
 	-- Create settings --
 	local mfSurfaceSettings = {
+		default_enable_all_autoplace_controls = false,
+		property_expression_names = {cliffiness = 0},
 		peaceful_mode = true,
-		autoplace_settings={entity={treat_missing_as_default=false},tile={treat_missing_as_default=true},decorative={treat_missing_as_default=false}},
+		autoplace_settings = {tile = {settings = { ["VoidTile"] = {frequency="normal", size="normal", richness="normal"} }}},
 		starting_area = "none",
-		width = 1,
-		height = 1
+		-- width = 1,
+		-- height = 1
 	}
 	-- Set surface setting --
 	local newSurface = game.create_surface(_mfControlSurfaceName, mfSurfaceSettings)
@@ -63,7 +67,7 @@ function createControlRoom()
 	local newTiles = newSurface.find_tiles_filtered{area={{-100,-100},{100,100}}}
 	for k, tile in pairs(newTiles) do
 		if tile.name ~= "tutorial-grid" and tile.name ~= "refined-hazard-concrete-right" then
-			newSurface.set_tiles({{name="out-of-map", position=tile.position}})
+			newSurface.set_tiles({{name="VoidTile", position=tile.position}})
 		end
 	end
 	-- Save variable --

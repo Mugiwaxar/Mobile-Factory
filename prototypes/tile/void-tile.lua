@@ -1,5 +1,12 @@
 ------------------------------- VOID TILE ------------------
 
+-- Tile --
+local vtT = table.deepcopy(data.raw.tile["out-of-map"])
+vtT.name = "VoidTile"
+vtT.autoplace = table.deepcopy(data.raw.tile["dirt-6"].autoplace)
+vtT.autoplace.default_enabled = false
+data:extend{vtT}
+
 -- Item --
 local vtI = {}
 vtI.type = "item"
@@ -11,7 +18,7 @@ vtI.order = "b"
 vtI.stack_size = 1000
 vtI.place_as_tile =
     {
-      result = "out-of-map",
+      result = "VoidTile",
       condition_size = 1,
       condition = { "water-tile" }
     }
