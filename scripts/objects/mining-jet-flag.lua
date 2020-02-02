@@ -153,6 +153,8 @@ function MJF:scanOres()
 	elseif self.ent.name == "MiningJetFlagMK4" then
 		radius = _mfMiningJetFlagMK4Radius
 	end
+	radius = radius / 2
+	if radius <= 1 then radius = 1 end
 	local area = {{self.ent.position.x - radius, self.ent.position.y - radius},{self.ent.position.x + radius, self.ent.position.y + radius}}
 	self.oreTable = self.ent.surface.find_entities_filtered{area=area, type="resource"}
 	-- Remove Fluid Path from the Table --
