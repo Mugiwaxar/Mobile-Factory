@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.90
+  Bugfixes:
+    - Fixed a crash with Jets
+    - Fixed Mining Jet Flags Radius
+    - Fixed a crash with the Data Center Tooltip
+    - The Main GUI position is saved and restored even if the Mod are updated
+    - The Map will now be correctly displayed (Thanks Honktown for the help)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.89
 Date: 28/01/2020
   Features:
