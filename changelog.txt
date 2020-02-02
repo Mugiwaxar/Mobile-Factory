@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.89
+Date: 28/01/2020
+  Features:
+    - The Deep Storage selection list will now display what's inside the Deep Storage
+    - Added Filters to Deep Storages accessible via the Information GUI
+  Bugfixes:
+    - The Deep Storage Frame inside the Information GUI will only show if there are Deep Storages placed
+---------------------------------------------------------------------------------------------------
 Version: 0.0.88
 Date: 26/01/2020
   Features:

@@ -7,7 +7,8 @@ DSR = {
 	lastUpdate = 0,
 	inventoryItem = nil,
 	inventoryCount = 0,
-	ID = 0
+	ID = 0,
+	filter = nil
 }
 
 -- Constructor --
@@ -90,14 +91,15 @@ end
 
 -- Return if the Item can be accepted --
 function DSR:canAccept(name)
-	if self.inventoryItem == nil or self.inventoryItem == name then return true end
-	return false
+	if self.filter == nil then return false end
+	if self.filter ~= nil and self.filter ~= name then return false end
+	if self.inventoryItem ~= nil and self.inventoryItem ~= name then return false end
+	return true
 end
 
 -- Add Items --
 function DSR:addItem(name, count)
-	if self:canAccept(name) == false then return 0 end
-	if self.inventoryItem == nil or self.inventoryItem == name then
+	if self:canAccept(name) == true then
 		self.inventoryItem = name
 		self.inventoryCount = self.inventoryCount + count
 		return count

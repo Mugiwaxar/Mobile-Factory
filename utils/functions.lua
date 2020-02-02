@@ -269,7 +269,7 @@ function Util.itemToFrame(item, amount, guiElement)
 	if item == nil or amount == nil then return end
 	-- Create the Frame --
 	local frame = guiElement.add{type="frame", direction="horizontal"}
-	frame.style.minimal_width = 100
+	frame.style.minimal_width = 75
 	frame.style.margin = 0
 	frame.style.padding = 0
 	-- Add the Icon and the Tooltip to the frame --
@@ -288,7 +288,6 @@ function Util.itemToLabel(item, amount, guiElement)
 	if item == nil or amount == nil then return end
 	-- Create the Frame --
 	local frame = guiElement.add{type="flow", direction="horizontal"}
-	frame.style.minimal_width = 100
 	frame.style.margin = 0
 	frame.style.padding = 0
 	-- Add the Icon and the Tooltip to the frame --
