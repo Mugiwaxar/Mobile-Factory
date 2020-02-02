@@ -108,7 +108,7 @@ function DS:getTooltipInfos(GUI)
 	local text = ""
 	local style = {}
 	-- Check if the Data Storage is linked with a Data Center --
-	if self.dataNetwork ~= nil and getmetatable(self.dataNetwork) ~= nil and self.dataNetwork.dataCenter ~= nil then
+	if self.dataNetwork ~= nil and getmetatable(self.dataNetwork) ~= nil and self.dataNetwork.dataCenter ~= nil and self.dataNetwork.dataCenter.invObj ~= nil then
 		text = {"", {"gui-description.LinkedTo"}, ": ", self.dataNetwork.dataCenter.invObj.name}
 		style = {92, 232, 54}
 	else
