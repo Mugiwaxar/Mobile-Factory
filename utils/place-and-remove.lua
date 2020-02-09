@@ -19,7 +19,7 @@ function somethingWasPlaced(event, isRobot)
 	-- Prevent to place Tiles inside the Control Center --
 	if creator ~= nil and event.tiles ~= nil and creator.surface.name == _mfControlSurfaceName  then
 		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then 
-			creator.print({"", "Unable to place ", {"item-name." .. event.stack.name }, " inside the Control Center"})
+			creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.CCNotPlaceable"}})
 		end
 		for k, tile in pairs(event.tiles) do
 			createTilesAtPosition(tile.position, 1, creator.surface, tile.old_tile.name, true)
@@ -33,7 +33,23 @@ function somethingWasPlaced(event, isRobot)
 	if string.match(event.created_entity.name, "MobileFactory") then
 		-- If the Mobile Factory already exist --
 		if global.MF.ent ~= nil and global.MF.ent.valid == true then
-			if isPlayer == true then creator.print({"", "Unable to place more than one ", {"item-name." .. event.stack.name }}) end
+			if isPlayer == true then creator.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }}) end
+			event.created_entity.destroy()
+			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
+				creator.get_main_inventory().insert(event.stack)
+			end
+			return
+		-- Check if the Mobile Factory can be placed here --
+		elseif creator.surface.name == _mfSurfaceName or creator.surface.name == _mfControlSurfaceName then
+			if isPlayer == true then creator.print({"", {"gui-description.MFPlacedInsideFactory"}}) end
+			event.created_entity.destroy()
+			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
+				creator.get_main_inventory().insert(event.stack)
+			end
+			return
+		-- Factorissimo Check --
+		elseif string.match(creator.surface.name, "Factory") then
+			if isPlayer == true then creator.print({"", {"gui-description.MFPlacedInsideFactorissimo"}}) end
 			event.created_entity.destroy()
 			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
 				creator.get_main_inventory().insert(event.stack)
@@ -48,7 +64,7 @@ function somethingWasPlaced(event, isRobot)
 	-- Prevent to place listed entities outside the Mobile Factory --
 	if event.created_entity.surface.name ~= _mfSurfaceName then
 		if canBePlacedOutside(event.created_entity.name) == false then
-			if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"}) end
+			if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheFactory"}}) end
 			event.created_entity.destroy()
 			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
 				creator.get_main_inventory().insert(event.stack)
@@ -59,7 +75,7 @@ function somethingWasPlaced(event, isRobot)
 	
 	-- Deep Storage Ghost --
 	if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true and event.created_entity.name == "entity-ghost" and event.stack.name == "DeepStorage" then
-		if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Control Center Constructible Area"}) end
+		if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheCCCArea"}}) end
 		event.created_entity.destroy()
 		return
 	end
@@ -67,7 +83,7 @@ function somethingWasPlaced(event, isRobot)
 	-- Ghost --
 	if isPlayer == true and event.created_entity.surface.name ~= _mfSurfaceName and event.stack ~= nil and event.stack.valid_for_read == true and event.created_entity.name == "entity-ghost" then
 		if canBePlacedOutside(event.stack.name) == false then
-			if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"}) end
+			if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheFactory"}}) end
 			event.created_entity.destroy()
 			return
 		end
@@ -75,14 +91,13 @@ function somethingWasPlaced(event, isRobot)
 	
 	-- Blueprint --
 	if isPlayer == true and creator.surface.name ~= _mfSurfaceName and event.stack ~= nil and event.stack.valid_for_read == true and event.stack.is_blueprint == true then
-	dprint(event.stack.name)
 	if event.stack.name == "DeepStorage" then
-		if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Control Center Constructible Area"}) end
+		if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheCCCArea"}}) end
 			event.created_entity.destroy()
 			return
 		end
-		if canBePlacedOutside(event.created_entity.ghost_name) == false then
-			if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Factory"}) end
+		if canBePlacedOutside(event.created_entity.name) == false then
+			if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheFactory"}}) end
 			event.created_entity.destroy()
 			return
 		end
@@ -93,13 +108,20 @@ function somethingWasPlaced(event, isRobot)
 		local tile = event.created_entity.surface.find_tiles_filtered{position=event.created_entity.position, radius=1, limit=1}
 		if tile[1] ~= nil and tile[1].valid == true and tile[1].name == "BuildTile" then
 			placedDeepStorage(event)
+			if event.stack ~= nil then
+				local tags = event.stack.get_tag("Infos")
+				if tags ~= nil then
+					global.deepStorageTable[event.created_entity.unit_number].inventoryItem = tags.inventoryItem
+					global.deepStorageTable[event.created_entity.unit_number].inventoryCount = tags.inventoryCount
+				end
+			end
 			return
 		end
 	end
 	
-	-- Prevent to place things in the Control Center --
+	-- Prevent to place things inside the Control Center --
 	if event.created_entity.surface.name == _mfControlSurfaceName then
-		if isPlayer == true then creator.print("You can't build here") end
+		if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.CCNotPlaceable"}}) end
 		event.created_entity.destroy()
 		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
 			creator.get_main_inventory().insert(event.stack)
@@ -109,7 +131,7 @@ function somethingWasPlaced(event, isRobot)
 	
 	-- Prevent to place things out of the Control Center --
 	if event.created_entity.name == "DeepStorage" then
-		if isPlayer == true then creator.print({"", "You can only place the ", {"item-name." .. event.stack.name }, " inside the Control Center Constructible Area"}) end
+		if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheCCCArea"}}) end
 		event.created_entity.destroy()
 		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
 			creator.get_main_inventory().insert(event.stack)
@@ -120,7 +142,7 @@ function somethingWasPlaced(event, isRobot)
 	-- Save the Factory Chest --
 	if event.created_entity.name == "FactoryChest" then
 		if global.MF.fChest ~= nil and global.MF.fChest.valid == true then
-			if isPlayer == true then creator.print({"", "Unable to place more than one ", {"item-name." .. event.stack.name }}) end
+			if isPlayer == true then creator.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }}) end
 			event.created_entity.destroy()
 			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
 				creator.get_main_inventory().insert(event.stack)
@@ -132,7 +154,7 @@ function somethingWasPlaced(event, isRobot)
 	end
 	
 	-- Save the Ghost inside the Construction Table --
-	if event.created_entity ~= nil and event.created_entity.valid == true and event.created_entity.name == "entity-ghost" then
+	if event.created_entity ~= nil and event.created_entity.valid == true and event.created_entity.name == "entity-ghost" and global.MF.ent ~= nil and global.MF.ent.valid == true and event.created_entity.surface.name == global.MF.ent.surface.name then
 		if table_size(global.constructionTable) > 1000 then
 			game.print("Mobile Factory: To many Blueprint inside the Construction Table")
 			global.constructionTable = {}
@@ -173,6 +195,12 @@ function somethingWasPlaced(event, isRobot)
 	-- Save the Data Center --
 	if event.created_entity.name == "DataCenter" then
 		placedDataCenter(event)
+		if event.stack ~= nil then
+			local tags = event.stack.get_tag("Infos")
+			if tags ~= nil then
+				global.dataCenterTable[event.created_entity.unit_number].invObj.inventory = tags.inventory
+			end
+		end
 		return
 	end
 	
@@ -191,13 +219,19 @@ function somethingWasPlaced(event, isRobot)
 	-- Save the Energy Cube --
 	if string.match(event.created_entity.name, "EnergyCube") then
 		placedEnergyCube(event)
+		if event.stack ~= nil then
+			local tags = event.stack.get_tag("Infos")
+			if tags ~= nil then
+				global.energyCubesTable[event.created_entity.unit_number].ent.energy = tags.energy
+			end
+		end
 		return
 	end
 	
 	-- Save the Data Center MF --
 	if event.created_entity.name == "DataCenterMF" then
 		if global.MF.dataCenter ~= nil and global.MF.dataCenter:valid() == true then
-			if isPlayer == true then creator.print({"", "Unable to place more than one ", {"item-name." .. event.stack.name }}) end
+			if isPlayer == true then creator.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }}) end
 			event.created_entity.destroy()
 			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
 				creator.get_main_inventory().insert(event.stack)
@@ -246,6 +280,12 @@ function somethingWasPlaced(event, isRobot)
 	-- Save the Jet Flag --
 	if string.match(event.created_entity.name, "Flag") then
 		placedJetFlag(event)
+		if event.stack ~= nil then
+			local tags = event.stack.get_tag("Infos")
+			if tags ~= nil then
+				global.jetFlagTable[event.created_entity.unit_number].inventory = tags.inventory
+			end
+		end
 		return
 	end
 end
@@ -291,6 +331,12 @@ function somethingWasRemoved(event)
 	end
 	-- Remove the Data Center --
 	if event.entity.name == "DataCenter" then
+		local obj = global.dataCenterTable[event.entity.unit_number]
+		if obj ~= nil and table_size(obj.invObj.inventory) > 0 and event.buffer ~= nil and event.buffer[1] ~= nil then
+			obj.invObj:rescan()
+			event.buffer[1].set_tag("Infos", {inventory=obj.invObj.inventory})
+			event.buffer[1].custom_description = {"", {"item-description.DataCenter"}, {"item-description.DataCenterC", obj.invObj.usedCapacity}}
+		end
 		removedDataCenter(event)
 		return
 	end
@@ -317,6 +363,11 @@ function somethingWasRemoved(event)
 	-- Remove the Energy Cube --
 	if string.match(event.entity.name, "EnergyCube") then
 		removedEnergyCube(event)
+		local obj = global.energyCubesTable[event.entity.unit_number]
+		if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and obj.ent.energy > 0 and event.buffer ~= nil and event.buffer[1] ~= nil then
+			event.buffer[1].set_tag("Infos", {energy=obj.ent.energy})
+			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.EnergyCubeC", Util.toRNumber(math.floor(obj.ent.energy))}, "J"}
+		end
 		return
 	end
 	-- Remove the Ore Cleaner --
@@ -324,7 +375,7 @@ function somethingWasRemoved(event)
 		local obj = global.oreCleanerTable[event.entity.unit_number]
 		if obj ~= nil and event.buffer ~= nil and event.buffer[1] ~= nil then
 			event.buffer[1].set_tag("Infos", {purity=obj.purity, charge=obj.charge, totalCharge=obj.totalCharge})
-			event.buffer[1].custom_description = {"", {"item-description.OreCleaner"}, {"item-description.OreCleanerC", obj.purity, obj.charge, obj.totalCharge}}
+			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.OreCleanerC", obj.purity, obj.charge, obj.totalCharge}}
 		end
 		removedOreCleaner(event)
 		return
@@ -334,18 +385,32 @@ function somethingWasRemoved(event)
 		local obj = global.fluidExtractorTable[event.entity.unit_number]
 		if obj ~= nil and event.buffer ~= nil and event.buffer[1] ~= nil then
 			event.buffer[1].set_tag("Infos", {purity=obj.purity, charge=obj.charge, totalCharge=obj.totalCharge})
-			event.buffer[1].custom_description = {"", {"item-description.FluidExtractor"}, {"item-description.FluidExtractorC", obj.purity, obj.charge, obj.totalCharge}}
+			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.FluidExtractorC", obj.purity, obj.charge, obj.totalCharge}}
 		end
 		removedFluidExtractor(event)
 		return
 	end
 	-- Remove the Jet Flag --
 	if string.match(event.entity.name, "Flag") then
+		local obj = global.jetFlagTable[event.entity.unit_number]
+		if obj ~= nil and table_size(obj.inventory) > 0 and event.buffer ~= nil and event.buffer[1] ~= nil then
+			event.buffer[1].set_tag("Infos", {inventory=obj.inventory})
+			local total = 0
+			for k, count in pairs(obj.inventory) do
+				total = total + count
+			end
+			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.MiningJetFlagC", total}}
+		end
 		removedJetFlag(event)
 		return
 	end
 	-- Remove the Deep Storage --
 	if event.entity.name == "DeepStorage" then
+		local obj = global.deepStorageTable[event.entity.unit_number]
+		if obj ~= nil and obj.inventoryItem ~= nil and event.buffer ~= nil and event.buffer[1] ~= nil then
+			event.buffer[1].set_tag("Infos", {inventoryItem=obj.inventoryItem, inventoryCount=obj.inventoryCount})
+			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.DeepStorageC", obj.inventoryItem, obj.inventoryCount}}
+		end
 		removedDeepStorage(event)
 		return
 	end
@@ -361,5 +426,6 @@ end
 -- Called when a Structure is marked for deconstruction --
 function markedForDeconstruction(event)
 	if event.entity == nil or event.entity.valid == false then return end
+	if global.MF.ent == nil or global.MF.ent.valid == false or event.entity.surface.name ~= global.MF.ent.surface.name then return end
 	table.insert(global.constructionTable,{ent=event.entity, name=event.entity.name, position=event.entity.position, direction=event.entity.direction or 1, mission="Deconstruct"})
 end
