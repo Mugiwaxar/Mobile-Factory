@@ -83,7 +83,7 @@ data:extend{dcEMF}
 
 -- Item --
 local dcI = {}
-dcI.type = "item"
+dcI.type = "item-with-tags"
 dcI.name = "DataCenter"
 dcI.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataCenterI.png"
 dcI.icon_size = 64
@@ -94,7 +94,7 @@ dcI.stack_size = 10
 data:extend{dcI}
 
 -- Item MF --
-dcIMF = table.deepcopy(data.raw.item.DataCenter)
+dcIMF = table.deepcopy(data.raw["item-with-tags"].DataCenter)
 dcIMF.name = "DataCenterMF"
 dcIMF.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataCenterMFI.png"
 dcIMF.place_result = "DataCenterMF"

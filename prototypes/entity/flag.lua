@@ -6,7 +6,7 @@ function createFlag(name, order, MachineFrameCount, area, scale)
 
 	-- Item --
 	local fI = {}
-	fI.type = "item"
+	fI.type = "item-with-tags"
 	fI.name = name
 	fI.icon = "__Mobile_Factory_Graphics__/graphics/jet/" .. name .. "I.png"
 	fI.icon_size = 64
