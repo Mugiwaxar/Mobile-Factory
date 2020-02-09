@@ -10,7 +10,7 @@ MJ = {
 	inventoryItem = nil,
 	inventoryCount = 0,
 	isMining = false,
-	flag = 0,
+	flag = nil,
 	MFFull = false,
 	MFNotFound = false
 }
@@ -154,6 +154,13 @@ end
 
 -- Beggin the Mining Process --
 function MJ:mine()
+	-- Check if the Flag still exist --
+	if self.flag == nil or self.flag:valid() == false then
+		self.isMining = false
+		self:goToMF()
+		return
+	end
+
 	-- Check if the Ore Path is still valid --
 	if self.targetOre == nil or self.targetOre.valid == false or self.targetOre.amount <= 0 then
 		self.isMining = false
