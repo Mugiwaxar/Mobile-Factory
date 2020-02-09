@@ -20,7 +20,6 @@ function DSR:new(object)
 	mt.__index = DSR
 	t.ent = object
 	t.ID = Util.getEntID(global.deepStorageTable)
-	dsTable = {}
 	UpSys.addObj(t)
 	return t
 end

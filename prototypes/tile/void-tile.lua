@@ -3,8 +3,7 @@
 -- Tile --
 local vtT = table.deepcopy(data.raw.tile["out-of-map"])
 vtT.name = "VoidTile"
-vtT.autoplace = table.deepcopy(data.raw.tile["dirt-6"].autoplace)
-vtT.autoplace.default_enabled = false
+vtT.autoplace = {default_enabled = false}
 data:extend{vtT}
 
 -- Item --

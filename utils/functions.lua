@@ -42,12 +42,12 @@ end
 function mfPlaceable(player)
 	-- Make the Mobile Factory unable to be placed inside it --
 	if player.surface.name == _mfSurfaceName or player.surface.name == _mfControlSurfaceName then
-		player.print("Mobile factory can't be placed in the Mobile Factory!")
+		player.print({"", {"gui-description.MFPlacedInsideFactory"}})
 		return nil
 	end
 	-- Make the Mobile Factory unable to be placed inside a Factorissimo Structure --
 	if string.match(player.surface.name, "Factory") then
-		player.print("Mobile Factory can't be placed inside Factorissimo structures")
+		player.print({"", {"gui-description.MFPlacedInsideFactorissimo"}})
 		return nil
 	end
 	-- Try to a position near the Player --
@@ -55,7 +55,7 @@ function mfPlaceable(player)
 		if player.surface.can_place_entity{name="MobileFactory", position={player.position.x-5, player.position.y}} == false then
 			if player.surface.can_place_entity{name="MobileFactory", position={player.position.x, player.position.y+5}} == false then
 				if player.surface.can_place_entity{name="MobileFactory", position={player.position.x, player.position.y-5}} == false then
-					player.print("Unable to place Mobile Factory: No enought space")
+					player.print({"", {"gui-description.MFPlacedNoEnoughtSpace"}})
 					return nil
 				else return {player.position.x, player.position.y-5} end
 			else return {player.position.x, player.position.y+5} end
@@ -132,23 +132,6 @@ function newMobileFactory(mf)
 	-- ReContruct the MF Object --
 	global.MF:contruct(mf)
 end
-
--- Add a Mobile Factory to a player inventory --
-function addMobileFactory(event)
-	-- Get the Player Object --
-	local player = getPlayer(event.player_index)
-	-- Get the Player Inventory --
-	local inv = player.get_main_inventory()
-	-- Add a Mobile Factory to the player inventaire --
-	if inv.can_insert({name="MobileFactory"}) then
-		-- Can insert --
-		inv.insert({name="MobileFactory", count=1})
-		player.print("Inserted Mobile Factory in player inventory")
-	else
-		-- Can't insert --
-		player.print("Can not insert Mobile Factory to the player inventory")
-	end
-end
 	
 -- If Mobile Factory or his surfaces are broken, try to fix them --
 function fixMB(event)
@@ -158,11 +141,11 @@ function fixMB(event)
 		tempMf = findMF()
 		if tempMf ~= nil and tempMf.valid == true then
 			-- Found it, attach it to the MF object --
-			game.print("Mobile Factory found!")
+			game.print({"", {"gui-description.MFScanFound"}})
 			newMobileFactory(tempMf)
 		else
 			-- Unable to find --
-			game.print("Unable to find the Mobile Factory, try to place a new one")
+			game.print({"", {"gui-description.MFScanNotFound"}})
 		end
 	end
 	-- If Factory Surface is lost --
@@ -171,11 +154,11 @@ function fixMB(event)
 		tempSurface = game.get_surface(_mfSurfaceName)
 		if tempSurface ~= nil and tempSurface.valid == true then
 			-- Surface found, attach it to the MF object --
-			game.print("Factory surface found")
+			game.print({"", {"gui-description.FSFound"}})
 			global.MF.fS = tempSurface
 		else
 			-- Unable to find, create a new one --
-			game.print("Unable to find the Factory surface, creating a new one")
+			game.print({"", {"gui-description.FSNotFound"}})
 			createMFSurface()
 		end
 	end
@@ -187,11 +170,11 @@ function fixMB(event)
 			tempSurface = game.get_surface(_mfControlSurfaceName)
 			if tempSurface ~= nil and tempSurface.valid == true then
 				-- Surface found, attach it to the MF object --
-				game.print("Factory control center")
+				game.print({"", {"gui-description.CCSFound"}})
 				global.MF.ccS = tempSurface
 			else
 				-- Unable to find it, create a new one --
-				game.print("Unable to find the Control Center surface, creating a new one")
+				game.print({"", {"gui-description.CCSNotFound"}})
 				createControlRoom()
 			end
 		end
@@ -200,36 +183,30 @@ end
 		
 -- Call the mobile Factory near the player
 function callMobileFactory(player)
+	-- Check if the Mobile Factory exist --
+	if global.MF.ent == nil or global.MF.ent.valid == false then
+		player.print({"", {"gui-description.MFLostOrDestroyed"}})
+		return
+	end
 	-- Test if the Jump Drives are ready --
 	if global.MF.jumpTimer > 0 then
-		player.print("Unable to call Mobile Factory, jump drive is recharging")
+		player.print({"", {"gui-description.MFJumpDriveRecharging"}})
 		return
 	end
 	-- Try to find the best coords --
 	local coords = mfPlaceable(player)
 	-- Return if any coords was found --
 	if coords == nil then return end
-	-- Create a new Mobile Factory if it's not existing --
-	if global.MF == nil or global.MF.ent.valid == false then
-		player.print("Factory was lost or destroyed, creating a new one")
-		global.MF = player.surface.create_entity{name="MobileFactory", position = coords, force="player"}
-	----------------------------- To remove? Vehicle can now be teleported between surface -------------------------------------
-	-- elseif player.surface.name ~= global.MF.ent.surface.name then
-		-- player.print("Factory are in another surface, creating a new one")
-		-- newMobileFactory(player.surface.create_entity{name="MobileFactory", position = coords, force="player"})
-	-----------------------------------------------------------------------------------------------------------------------------
-	else
-		-- Teleport the Mobile Factory to the cords --
-		global.MF.ent.teleport(coords, player.surface)
-		-- Try to find the Mobile Factory if it is lost --
-		if global.MF.ent == nil or global.MF.ent.valid == false then
-			global.MF.ent = player.surface.find_entity("MobileFactory", coords)
-		end
-		-- Save the position --
-		global.MF.lastSurface = global.MF.ent.surface
-		global.MF.lastPosX = global.MF.ent.position.x
-		global.MF.lastPosY = global.MF.ent.position.y
+	-- Teleport the Mobile Factory to the cords --
+	global.MF.ent.teleport(coords, player.surface)
+	-- Try to find the Mobile Factory if it is lost --
+	if global.MF.ent == nil or global.MF.ent.valid == false then
+		global.MF.ent = player.surface.find_entity("MobileFactory", coords)
 	end
+	-- Save the position --
+	global.MF.lastSurface = global.MF.ent.surface
+	global.MF.lastPosX = global.MF.ent.position.x
+	global.MF.lastPosY = global.MF.ent.position.y
 	-- Discharge the Jump Drives --
 	global.MF.jumpTimer = global.MF.baseJumpTimer
 end
@@ -261,6 +238,21 @@ function createTilesAtPosition(position, radius, surface, tileName, force)
 	end
 	-- Set tiles --
 	if table_size(tilesTable) > 0 then surface.set_tiles(tilesTable) end
+end
+
+-- Add a Mobile Factory to a player inventory --
+function Util.addMobileFactory(player)
+	-- Get the Player Inventory --
+	local inv = player.get_main_inventory()
+	-- Add a Mobile Factory to the player inventaire --
+	if inv.can_insert({name="MobileFactory"}) then
+		-- Can insert --
+		inv.insert({name="MobileFactory", count=1})
+		player.print({"", {"gui-description.MFInsertedInsideInventory"}})
+	else
+		-- Can't insert --
+		player.print({"", {"gui-description.MFNotInsertedInsideInventory"}})
+	end
 end
 
 -- Util: Create a frame from an Item --

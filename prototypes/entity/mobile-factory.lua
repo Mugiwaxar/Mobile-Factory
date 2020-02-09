@@ -40,6 +40,7 @@ data.raw.car.HMobileFactory.equipment_grid = "MFEquipmentGridH"
 data.raw.car.HMobileFactory.inventory_size = 8
 data.raw.car.HMobileFactory.collision_mask = {}
 data.raw.car.HMobileFactory.animation.layers[3].shift = util.by_pixel(17.75, 80)
+data.raw.car.HMobileFactory.selection_priority = 120
 data.raw.recipe.HMobileFactory.ingredients =
 {
       {"CrystalizedCircuit", 28},

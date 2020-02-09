@@ -46,6 +46,7 @@ function onInit()
 	global.MF.II.isII = true
 	createMFSurface()
 	createControlRoom()
+	global.insertedMFInsideInventory = false
 	-- Module ID --
 	global.IDModule = 0
 	-- Data Network --
@@ -59,6 +60,8 @@ function onInit()
 	global.constructionJetIndex = 0
 	-- Repair Jet Update --
 	global.repairJetIndex = 0
+	-- Research --
+	game.forces["player"].technologies["DimensionalOre"].researched = true
 	-- Tables --
 	global.playersTable = {}
 	global.accTable = {}
@@ -83,6 +86,9 @@ function onInit()
 	global.repairJetTable = {}
 	global.repairTable = {}
 	global.combatJetTable = {}
+	if game.players[1] ~= nil then
+		onPlayerCreated(game.players[1])
+	end
 end
 
 -- When a save is loaded --
@@ -228,7 +234,7 @@ script.on_event(defines.events.on_selected_entity_changed, selectedEntityChanged
 script.on_event(defines.events.on_marked_for_deconstruction, markedForDeconstruction)
 
 -- Add command to insert Mobile Factory to the player inventory --
-commands.add_command("GetMobileFactory", "Add the Mobile Factory to the player inventory", addMobileFactory)
+-- commands.add_command("GetMobileFactory", "Add the Mobile Factory to the player inventory", addMobileFactory)
 
 
 

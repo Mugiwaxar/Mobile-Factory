@@ -76,6 +76,7 @@ _mfFluidExtractorMaxDistance = 100
 -- Mining Jet --
 _mfMiningJetOrePerUpdate = 5
 _mfMiningJetInventorySize = 100
+_mfMiningJetEnergyNeeded = 2500000
 
 -- Mining Jet Flag --
 _mfMiningJetFlagMK1Radius = 1
@@ -85,7 +86,16 @@ _mfMiningJetFlagMK4Radius = 100
 
 -- Construction/Repair Jet --
 _mfEntitiesScanedPerUpdate = 30
+
+-- Construction Jet --
 _mfHPRepairedPerUpdate = -35
+_mfContructionJetEnergyNeeded = 2500000
+
+-- Repair Jet --
+_mfRepairJetEnergyNeeded = 4000000
+
+-- Combat Jet --
+_mfCombatJetEnergyNeeded = 3200000
 
 -- GUI Settings --
 _GUIButtonsSize = 25
@@ -103,6 +113,7 @@ _eventTick64=64 -- Logistic Fluid Poles --
 _eventTick73=73 -- Combat Jets --
 _eventTick80=80 -- Mobile Factory Internal Inventory --
 _eventTick90=90 -- Mobile Factory Entities Scan --
+_eventTick110=110 -- Mining Jets --
 _eventTick125=125 -- Mobile Factory Modules Scan --
 _eventTick1200=1200 -- Factory Pollution --
 

@@ -1,5 +1,28 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.91
+Date: 09/02/2020
+  Features:
+    - Added compatibility with Alien Biomes
+    - The Deep Storage Keep now its Inventory when removed
+    - The Mining Jet Flag Keep now its Inventory when removed
+    - The Data Center Keep now its Inventory when removed
+    - The Energy Cube MK1 Keep now its energy when removed
+  Changes:
+    - Jets now consume Energy to take off
+    - Removed the "/GetMobileFactory" command
+    - A new free Mobile Factory will no lounger be created if any Mobile Factory are existing
+    - You are now teleported to the last Mobile Factory known position if you teleport outside it whill it is destroyed
+  Bugfixes:
+    - Fixed a crash with Copy/Paste in Editor
+    - Fixed the Shield size
+    - Hovering Factory is now easier to select when hovering Ores or Trees
+  Scripting:
+    - Mining Jets are now send by the Mobile Factory (Not more requested by the Flag)
+  Translation:
+    - All sentences are now localized
+---------------------------------------------------------------------------------------------------
 Version: 0.0.90
+Date: 03/02/2020
   Bugfixes:
     - Fixed a crash with Jets
     - Fixed Mining Jet Flags Radius

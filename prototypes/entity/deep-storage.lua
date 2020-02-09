@@ -48,7 +48,7 @@ data:extend{dsE}
 
 -- Item --
 local dsI = {}
-dsI.type = "item"
+dsI.type = "item-with-tags"
 dsI.name = "DeepStorage"
 dsI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DeepStorageI.png"
 dsI.icon_size = 256

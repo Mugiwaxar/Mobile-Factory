@@ -61,7 +61,7 @@ data:extend{ec1E}
 
 -- Item --
 local ec1I = {}
-ec1I.type = "item"
+ec1I.type = "item-with-tags"
 ec1I.name = "EnergyCubeMK1"
 ec1I.place_result = "EnergyCubeMK1"
 ec1I.icon = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK1I.png"

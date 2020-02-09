@@ -2,9 +2,9 @@ require("utils/functions.lua")
 
 -- Teleport the player inside the Mobile Factory --
 function teleportPlayerInside(player)
-	-- Check Internal Surface and Player --
-	if global.MF.fS == nil then game.print("Factory surface lost") return end
 	if player == nil then return end
+	-- Check Internal Surface and Player --
+	if global.MF.fS == nil then player.print({"", {"gui-description.FSLost"}}) return end
 	-- Save the visited Factory once variable --
 	setPlayerVariable(player.name, "VisitedFactory", true)
 	-- Get the Player direction --
@@ -45,12 +45,12 @@ function teleportPlayerOutside(player)
 	-- Check if the Player is on the right Surface --
 	if player.surface.name ~= _mfSurfaceName and player.surface.name ~= _mfControlSurfaceName then return end
 	-- Check if the Mobile Factory Vehicle is valid --
-	if global.MF == nil or global.MF.ent.valid == false then
+	if global.MF.ent == nil or global.MF.ent.valid == false then
 		-- Unable to find the Mobile Factory --
-		player.print("Unable to find the Mobile Factory vehicle (Destroyed? Changed surface?), teleporting to spawn point") 
+		player.print({"", {"gui-description.MFTeleportToLastPos"}}) 
 		if global.MF.lastSurface ~= nil then
 			-- Teleport the Player to the last know position --
-			player.teleport({0,0}, global.MF.lastSurface)
+			player.teleport({global.MF.lastPosX,global.MF.lastPosY}, global.MF.lastSurface)
 		else
 			-- Teleport the Player to the spawm point --
 			player.teleport({0,0}, "nauvis")
@@ -91,7 +91,7 @@ function teleportPlayerToControlCenter(player)
 	-- Check the Player --
 	if player == nil then return end
 	-- Check if the Control Center Surface is valid --
-	if global.MF.ccS == nil then game.print("Control Center surface lost") return end
+	if global.MF.ccS == nil then game.print({"", {"gui-description.CCSLost"}}) return end
 	-- Teleport the Player --
 	player.teleport({0,4}, global.MF.ccS)
 	-- Play the sound --
@@ -100,8 +100,10 @@ end
 
 -- Teleport the player from Control Center to the Factory --
 function teleportPlayerToFactory(player)
+	-- Check the Player --
+	if player == nil then return end
 	-- Check if the Factory Surface is valid --
-	if global.MF.fS == nil then game.print("Factory surface lost") return end
+	if global.MF.fS == nil then player.print({"", {"gui-description.FSLost"}}) return end
 	-- Teleport the Player --
 	player.teleport({0,-30}, global.MF.fS)
 	-- Play the sound --
