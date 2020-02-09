@@ -65,11 +65,11 @@ function createControlRoom()
 	createTilesSurface(newSurface, -4, 10, 3, 13, "tutorial-grid")
 	-- Remove unwanted tiles --
 	local newTiles = newSurface.find_tiles_filtered{area={{-100,-100},{100,100}}}
-	for k, tile in pairs(newTiles) do
-		if tile.name ~= "tutorial-grid" and tile.name ~= "refined-hazard-concrete-right" then
-			newSurface.set_tiles({{name="VoidTile", position=tile.position}})
-		end
-	end
+	-- for k, tile in pairs(newTiles) do
+	-- 	if tile.name ~= "tutorial-grid" and tile.name ~= "refined-hazard-concrete-right" then
+	-- 		newSurface.set_tiles({{name="VoidTile", position=tile.position}})
+	-- 	end
+	-- end
 	-- Save variable --
 	global.MF.ccS = newSurface
 	-- Create Entities --
