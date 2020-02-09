@@ -55,8 +55,6 @@ function MJF:update()
 		self:remove()
 		return
 	end
-	-- Request a Jet --
-	self:requestJet()
 	-- Send Inventory to the Targed --
 	if game.tick - self.lastInventorySend > 300 then
 		self:sendInventory()
@@ -162,50 +160,6 @@ function MJF:scanOres()
 		if path.prototype.mineable_properties.products[1].type ~= "item" then
 			self.oreTable[k] = nil
 		end
-	end
-	
-end
-
--- Request a Mining Jet --
-function MJF:requestJet()
-
-	-- Check the Mobile Factory --
-	if global.MF.ent == nil or global.MF.ent.valid == false or global.MF.ent.surface ~= self.ent.surface then return end
-	
-	-- Check the Distance --
-	if Util.distance(self.ent.position, global.MF.ent.position) > global.mjMaxDistance then return end
-	
-	-- Check if there are Ores left --
-	if table_size(self.oreTable) <= 0 then return end
-	
-	-- Check if there are enought space inside the Targeted Inventory --
-	if self.TargetInventoryFull == true then return end
-	
-	-- Get the Mobile Factory Trunk --
-	local inv = global.MF.ent.get_inventory(defines.inventory.car_trunk)
-	
-	-- Check the Inventory --
-	if inv == nil or inv.valid == false then return end
-	
-	-- Request Jet --
-	for i = 1, table_size(self.oreTable) do
-		-- Get an Ore Path --
-		local orePath = self:getOrePath()
-		
-		-- Check the Ore Path --
-		if orePath == nil or orePath.valid == false or orePath.amount <= 0 then
-			self:removeOrePath(orePath)
-		else
-			-- Remove a Jet from the Inventory --
-			local removed = inv.remove({name="MiningJet", count=1})
-			-- Check if the Jet exist --
-			if removed <= 0 then return end
-			-- Create the Entity --
-			local entity = global.MF.ent.surface.create_entity{name="MiningJet", position=global.MF.ent.position, force="player"}
-			global.miningJetTable[entity.unit_number] = MJ:new(entity, orePath, self)
-		end
-		-- Stop if there are 5 Jet out --
-		if i >= 5 then return end
 	end
 	
 end
