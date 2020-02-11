@@ -27,6 +27,15 @@ function dprint(v)
 	game.print(serpent.block(v))
 end
 
+-- Print all Keys --
+function dprintKeys(t)
+	dprint("--- KEYS ---")
+	for k, j in pairs(t) do
+		dprint(k)
+	end
+	dprint("------------")
+end
+
 -- Return a splitted table of a string --
 function split(str, char)
    char = "[^" .. char .."]+"
@@ -344,17 +353,39 @@ function Util.toRNumber(number)
 	elseif number >= 1000000000 then
 		rNumber = tostring(math.floor(number/10000000)/100) .. " G"
 	end
-
-
-
-
 	return rNumber
 end
 
+-- Get the Green Circuit Network ID --
+function Util.greenCNID(obj)
+	if obj == nil or obj.ent == nil or obj.ent.valid == false then return nil end
+	if obj.ent.get_circuit_network(defines.wire_type.green) ~= nil and obj.ent.get_circuit_network(defines.wire_type.green).valid == true and obj.ent.get_circuit_network(defines.wire_type.green) ~= 0 then
+		return obj.ent.get_circuit_network(defines.wire_type.green).network_id
+	end
+	return nil
+end
 
+-- Get the Red Circuit Network ID --
+function Util.redCNID(obj)
+	if obj == nil or obj.ent == nil or obj.ent.valid == false then return nil end
+	if obj.ent.get_circuit_network(defines.wire_type.red) ~= nil and obj.ent.get_circuit_network(defines.wire_type.red).valid == true and obj.ent.get_circuit_network(defines.wire_type.red) ~= 0 then
+		return obj.ent.get_circuit_network(defines.wire_type.red).network_id
+	end
+	return nil
+end
 
-
-
+-- Check if the Object is connected with a Data Network and return it --
+function Util.getConnectedDN(obj)
+	-- Check the Object --
+	if obj == nil or obj.ent == nil or obj.ent.valid == false then return nil end
+	-- Get Green and Red Circuit Network ID --
+	local objGCN = Util.greenCNID(obj)
+	local objRCN = Util.redCNID(obj)
+	-- Check if the Object is inside a Data Network --
+	if objGCN ~= nil then return global.dataNetworkIDGreenTable[objGCN] end
+	if objRCN ~= nil then return global.dataNetworkIDRedTable[objRCN] end
+	return nil
+end
 
 
 

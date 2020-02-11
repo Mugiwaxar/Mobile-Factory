@@ -3,14 +3,13 @@
 -- Create the Data Storage base object --
 DS = {
 	ent = nil,
+	entID = 0,
 	animID = 0,
 	active = false,
 	consumption = _mfDSEnergyDrainPerUpdate,
 	updateTick = 80,
 	lastUpdate = 0,
-	dataNetwork = nil,
-	GCNID = 0,
-	RCNID = 0
+	dataNetwork = nil
 }
 
 -- Constructor --
@@ -21,6 +20,7 @@ function DS:new(object)
 	setmetatable(t, mt)
 	mt.__index = DS
 	t.ent = object
+	t.entID = object.unit_number
 	UpSys.addObj(t)
 	return t
 end
@@ -39,6 +39,10 @@ function DS:remove()
 	rendering.destroy(self.animID)
 	-- Remove from the Update System --
 	UpSys.removeObj(self)
+	-- Remove from the Data Network --
+	if self.dataNetwork ~= nil and getmetatable(self.dataNetwork) ~= nil then
+		self.dataNetwork:removeObject(self)
+	end
 end
 
 -- Is valid --
@@ -58,34 +62,25 @@ function DS:update()
 		return
 	end
 
-	-- Check if the Entity is inside a Green Circuit Network --
-	if self.ent.get_circuit_network(defines.wire_type.green) ~= nil and self.ent.get_circuit_network(defines.wire_type.green).valid == true then
-		self.GCNID = self.ent.get_circuit_network(defines.wire_type.green).network_id
+	-- Try to find a connected Data Network --
+	local obj = Util.getConnectedDN(self)
+	if obj ~= nil then
+		self.dataNetwork = obj.dataNetwork
+		self.dataNetwork:addObject(self)
 	else
-		self.GCNID = 0
-	end
-	
-	-- Check if the Entity is inside a Red Circuit Network --
-	if self.ent.get_circuit_network(defines.wire_type.red) ~= nil and self.ent.get_circuit_network(defines.wire_type.red).valid == true then
-		self.RCNID = self.ent.get_circuit_network(defines.wire_type.red).network_id
-	else
-		self.RCNID = 0
-	end
-	
-	-- Check if the Data Storage is linked with a live Data Network --
-	local active = false
-	self.dataNetwork = nil
-	for k, obj in pairs(global.dataNetworkTable) do
-		if obj:isLinked(self) == true then
-			self.dataNetwork = obj
-			if obj:isLive() == true then
-				active = true
-			else
-				active = false
-			end
+		if self.dataNetwork ~= nil then
+			self.dataNetwork:removeObject(self)
 		end
+		self.dataNetwork = nil
 	end
-	self:setActive(active)
+
+	-- Set Active or Not --
+	if self.dataNetwork ~= nil and self.dataNetwork:isLive() == true then
+		self:setActive(true)
+	else
+		self:setActive(false)
+	end
+	
 end
 
 -- Tooltip Infos --
@@ -93,16 +88,22 @@ function DS:getTooltipInfos(GUI)
 	-- Create the Data Network label --
 	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
 	if self.dataNetwork ~= nil then
-		if self.dataNetwork:isLive() == true then
-			DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
-		else
-			DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Invalid"}}
-		end
+		DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
 	end
 	local dataNetworkL = GUI.add{type="label"}
 	dataNetworkL.style.font = "LabelFont"
 	dataNetworkL.caption = DNText
 	dataNetworkL.style.font_color = {155, 0, 168}
+
+	-- Create the Out Of Power Label --
+	if self.dataNetwork ~= nil then
+		if self.dataNetwork.outOfPower == true then
+			local dataNetworOOPower = GUI.add{type="label"}
+			dataNetworOOPower.style.font = "LabelFont"
+			dataNetworOOPower.caption = {"", {"gui-description.OutOfPower"}}
+			dataNetworOOPower.style.font_color = {231, 5, 5}
+		end
+	end
 	
 	-- Create the text and style variables --
 	local text = ""

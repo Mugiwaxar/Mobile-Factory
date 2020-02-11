@@ -63,7 +63,7 @@ function UpSys.addObject(obj)
     return
   end
   -- Check if the Object is not null --
-  if obj ~= nil then
+  if obj ~= nil and getmetatable(obj) ~= nil then
     if obj:valid() ~= true then
       -- Delete the Entity --
       obj:remove()

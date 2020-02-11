@@ -3,16 +3,15 @@
 -- Create the Wireless Data Transmitter object --
 WDT = {
 	ent = nil,
+	entID = 0,
 	animID = 0,
 	active = false,
 	consumption = _mfWDTEnergyDrainPerUpdate,
 	updateTick = 60,
 	lastUpdate = 0,
 	dataNetwork = nil,
-	GCNID = 0,
-	RCNID = 0,
-	localCN = nil,
-	lastSignal = nil
+	inConflict = false,
+	lastSignals = nil
 }
 
 -- Constructor --
@@ -23,6 +22,7 @@ function WDT:new(object)
 	setmetatable(t, mt)
 	mt.__index = WDT
 	t.ent = object
+	t.entID = object.unit_number
 	t.localCN = {}
 	t.lastSignal = {}
 	UpSys.addObj(t)
@@ -43,6 +43,10 @@ function WDT:remove()
 	rendering.destroy(self.animID)
 	-- Remove from the Update System --
 	UpSys.removeObj(self)
+	-- Remove from the Data Network --
+	if self.dataNetwork ~= nil and getmetatable(self.dataNetwork) ~= nil then
+		self.dataNetwork:removeObject(self)
+	end
 end
 
 -- Is valid --
@@ -62,111 +66,70 @@ function WDT:update()
 		return
 	end
 
-	-- Check if the Entity is inside a Green Circuit Network --
-	if self.ent.get_circuit_network(defines.wire_type.green) ~= nil and self.ent.get_circuit_network(defines.wire_type.green).valid == true then
-		self.GCNID = self.ent.get_circuit_network(defines.wire_type.green).network_id
+	-- Try to find a connected Data Network --
+	local obj = Util.getConnectedDN(self)
+	if obj ~= nil then
+		self.dataNetwork = obj.dataNetwork
+		self.dataNetwork:addObject(self)
 	else
-		self.GCNID = 0
+		if self.dataNetwork ~= nil then
+			self.dataNetwork:removeObject(self)
+		end
+		self.dataNetwork = nil
 	end
-	
-	-- Check if the Entity is inside a Red Circuit Network --
-	if self.ent.get_circuit_network(defines.wire_type.red) ~= nil and self.ent.get_circuit_network(defines.wire_type.red).valid == true then
-		self.RCNID = self.ent.get_circuit_network(defines.wire_type.red).network_id
-	else
-		self.RCNID = 0
-	end
-	
-	-- Check if the Wireless Data Network is linked with a live Data Network --
-	local active = false
-	self.dataNetwork = nil
-	for k, obj in pairs(global.dataNetworkTable) do
-		if obj:isLinked(self) == true then
-			self.dataNetwork = obj
-			if obj:isLive() == true then
-				active = true
-			else
-				active = false
-			end
+
+	-- Check if the Data Center is inside the same Circuit Network --
+	if self.dataNetwork ~= nil and self.dataNetwork:valid() == true then
+		if Util.greenCNID(self) ~= Util.greenCNID(self.dataNetwork.dataCenter) and Util.redCNID(self) ~= Util.redCNID(self.dataNetwork.dataCenter) then
+			self.dataNetwork = nil
 		end
 	end
-	
-	self:setActive(active)
-	if active == false then return end
-	
-	
-	-- Add Wireless Data Network Signals --
+
+	-- Check if there are any other Wireless Transmitter --
+	if self.dataNetwork ~= nil and self.dataNetwork.wirelessDataTransmitter ~= nil and self.dataNetwork.wirelessDataTransmitter:valid() == true and self.dataNetwork.wirelessDataTransmitter ~= self and Util.getConnectedDN( self.dataNetwork.wirelessDataTransmitter) ~= nil then
+		self.dataNetwork = nil
+		self.inConflict = true
+	else
+		self.inConflict = false
+	end
+
+	-- Register the Transmitter --
+	if self.dataNetwork ~= nil and self.dataNetwork:valid() == true then
+		self.dataNetwork.wirelessDataTransmitter = self
+	end
+
+	-- Set Active or Not --
+	if self.dataNetwork ~= nil and self.dataNetwork:isLive() == true then
+		self:setActive(true)
+	else
+		self:setActive(false)
+		return
+	end
+
+	-- Send Signals --
 	self.ent.get_control_behavior().parameters = nil
-	if self.dataNetwork ~= nil and self.active == true then
-		local wirelessNetwork = {}
-		local localNetwork = {}
-		if self.localCN == nil then self.localCN = {} end
-		if self.lastSignal == nil then self.lastSignal = {} end
-		
-		-- Get GREEN Signals from this Network --
-		if self.ent.get_circuit_network(defines.wire_type.green) ~= nil then
-			local Gsignals = self.ent.get_circuit_network(defines.wire_type.green).signals
-			for k, signal in pairs(Gsignals or {}) do
-				localNetwork[signal.signal.name] = {type=signal.signal.type, count=signal.count}
-			end
-		end
-		-- Get RED Signals from this Network --
-		if self.ent.get_circuit_network(defines.wire_type.red) ~= nil then
-			local Rsignals = self.ent.get_circuit_network(defines.wire_type.red).signals
-			for k, signal in pairs(Rsignals or {}) do
-				localNetwork[signal.signal.name] = {type=signal.signal.type, count=signal.count}
-			end
-		end
-		
-		for k, obj in pairs(self.dataNetwork.wirelessReceiverTable) do
-			if obj ~= nil and obj:valid() == true then
-				if obj.linkedTransmitter == self then
-					if obj ~= nil and obj:valid() == true then
-						for k, signal in pairs(obj.localCN) do
-							wirelessNetwork[k] = signal
-						end
-					end
-				end
-			end
-		end
-		
-		-- Calcul Local Signal --
-		for k, signal in pairs(localNetwork) do
-			if self.lastSignal[k] ~= nil then
-				localNetwork[k].count = localNetwork[k].count - signal.count
-				if localNetwork[k].count <= 0 then
-					localNetwork[k] = nil
-				end
-			end
-		end
-		
-		-- Remove Local from Wireless --
-		for k, signal in pairs(wirelessNetwork) do
-			if localNetwork[k] ~= nil then
-				wirelessNetwork[k].count = wirelessNetwork[k].count - signal.count
-				if wirelessNetwork[k].count <= 0 then
-					wirelessNetwork[k] = nil
-				end
-			end
-		end
-		
-		-- Save the Local Network and the Signal --
-		self.localCN = localNetwork
-		self.lastSignal = wirelessNetwork
-		
-		-- Send Signals --
-		local i = 1
-		for k, signal in pairs(wirelessNetwork) do
-			if game.item_prototypes[k] ~= nil then
-				self.ent.get_control_behavior().set_signal(i, {signal={type=signal.type, name=k}, count=signal.count})
+	self.lastSignals = {}
+	local i = 1
+	for k, item in pairs(self.dataNetwork.signalsTable) do
+		if item.obj ~= self and item.signal ~= nil and item.signal.signal ~= nil then
+			if item.signal.signal.type == "virtual" then
+				self.ent.get_control_behavior().set_signal(i, {signal={type=item.signal.signal.type, name=item.signal.signal.name}, count=item.signal.count})
+				table.insert(self.lastSignals, item.signal)
+				-- Increament the Slot --
+				i = i + 1
+				-- Stop if there are to much Items --
+				if i > 999 then break end
+			elseif item.signal.signal.name ~= nil and game.item_prototypes[item.signal.signal.name] ~= nil then
+				self.ent.get_control_behavior().set_signal(i, {signal={type=item.signal.signal.type, name=item.signal.signal.name}, count=item.signal.count})
+				table.insert(self.lastSignals, item.signal)
 				-- Increament the Slot --
 				i = i + 1
 				-- Stop if there are to much Items --
 				if i > 999 then break end
 			end
 		end
-		
 	end
-	
+
 end
 
 -- Tooltip Info --
@@ -174,16 +137,30 @@ function WDT:getTooltipInfos(GUI)
 	-- Create the Data Network label --
 	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
 	if self.dataNetwork ~= nil then
-		if self.dataNetwork:isLive() == true then
-			DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
-		else
-			DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Invalid"}}
-		end
+		DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
 	end
 	local dataNetworkL = GUI.add{type="label"}
 	dataNetworkL.style.font = "LabelFont"
 	dataNetworkL.caption = DNText
 	dataNetworkL.style.font_color = {155, 0, 168}
+
+	-- Create the Out Of Power Label --
+	if self.dataNetwork ~= nil then
+		if self.dataNetwork.outOfPower == true then
+			local dataNetworOOPower = GUI.add{type="label"}
+			dataNetworOOPower.style.font = "LabelFont"
+			dataNetworOOPower.caption = {"", {"gui-description.OutOfPower"}}
+			dataNetworOOPower.style.font_color = {231, 5, 5}
+		end
+	end
+
+	-- Create the in conflict Label --
+	if self.inConflict == true then
+		local dataNetworConflict = GUI.add{type="label"}
+		dataNetworConflict.style.font = "LabelFont"
+		dataNetworConflict.caption = {"", {"gui-description.WirelessTransmitterConflict"}}
+		dataNetworConflict.style.font_color = {231, 5, 5}
+	end
 	
 	-- Create the ID label --
 	local IDL = GUI.add{type="label"}
@@ -207,27 +184,29 @@ function WDT:setActive(set)
 	end
 end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- Get Signals --
+function WDT:getSignals(t)
+	if self:valid() == false then return end
+	-- Get GREEN Signals from this Network --
+	if self.ent.get_circuit_network(defines.wire_type.green) ~= nil then
+		local Gsignals = self.ent.get_circuit_network(defines.wire_type.green).signals
+		for k, signal in pairs(Gsignals or {}) do
+			t[signal] = self
+		end
+	end
+	-- Get RED Signals from this Network --
+	if self.ent.get_circuit_network(defines.wire_type.red) ~= nil then
+		local Rsignals = self.ent.get_circuit_network(defines.wire_type.red).signals
+		for k, signal in pairs(Rsignals or {}) do
+			table.insert(t, {obj=self, signal=signal})
+		end
+	end
+	-- Remove self Signals --
+	for k, signal in pairs(self.lastSignals or {}) do
+		for k2, signal2 in pairs(t) do
+			if signal2.signal ~= nil and signal.signal.name == signal2.signal.signal.name then
+				signal2.signal.count = signal2.signal.count - signal.count
+			end
+		end
+	end
+end
