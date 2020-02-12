@@ -267,7 +267,7 @@ end
 -- Util: Create a frame from an Item --
 function Util.itemToFrame(item, amount, guiElement)
 	-- Check value --
-	if item == nil or amount == nil then return end
+	if item == nil or amount == nil or game.item_prototypes[item] == nil then return end
 	-- Create the Frame --
 	local frame = guiElement.add{type="frame", direction="horizontal"}
 	frame.style.minimal_width = 75
@@ -387,7 +387,14 @@ function Util.getConnectedDN(obj)
 	return nil
 end
 
-
+-- Copy a Table --
+function Util.copyTable(t1)
+	local t2 = {}
+	for k, j in pairs(t1 or {}) do
+		t2[k] = j
+	end
+	return t2
+end
 
 
 

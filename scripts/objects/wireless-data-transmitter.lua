@@ -107,6 +107,7 @@ function WDT:update()
 	end
 
 	-- Send Signals --
+	self.lastSignal = {}
 	self.ent.get_control_behavior().parameters = nil
 	local i = 1
 	for k, item in pairs(self.dataNetwork.signalsTable) do
@@ -116,7 +117,7 @@ function WDT:update()
 				if self.lastSignal[item.signal.name] ~= nil then
 					self.lastSignal[item.signal.name].count = self.lastSignal[item.signal.name].count + item.count
 				else
-					self.lastSignal[item.signal.name] = item
+					self.lastSignal[item.signal.name] = Util.copyTable(item)
 				end
 				-- Increament the Slot --
 				i = i + 1
@@ -127,7 +128,7 @@ function WDT:update()
 				if self.lastSignal[item.signal.name] ~= nil then
 					self.lastSignal[item.signal.name].count = self.lastSignal[item.signal.name].count + item.count
 				else
-					self.lastSignal[item.signal.name] = item
+					self.lastSignal[item.signal.name] = Util.copyTable(item)
 				end
 				-- Increament the Slot --
 				i = i + 1
@@ -172,8 +173,26 @@ function WDT:getTooltipInfos(GUI)
 	-- Create the ID label --
 	local IDL = GUI.add{type="label"}
 	IDL.style.font = "LabelFont"
-	IDL.caption = {"", {"gui-description.TransmitterID"}, ": ", tostring(self.ent.unit_number)}
+	IDL.caption = {"", {"gui-description.TransmitterID"}, ": ", tostring(self.entID)}
 	IDL.style.font_color = {92, 232, 54}
+
+	-- Create the Connected Receivers Label --
+	local CRL = GUI.add{type="label"}
+	CRL.style.font = "LabelFont"
+	CRL.caption = {"", {"gui-description.ConnectedReceiver"}, ":"}
+	CRL.style.font_color = {92, 232, 54}
+
+	-- List all Receivers --
+	for k, wdr in pairs(global.wirelessDataReceiverTable) do
+		if wdr.linkedTransmitter == self then
+			local RL = GUI.add{type="label"}
+			RL.style.font = "LabelFont"
+			RL.caption = wdr.entID
+			RL.style.font_color = {155, 0, 168}
+		end
+	end
+
+
 end
 
 -- Set Active --
