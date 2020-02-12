@@ -39,6 +39,7 @@ function updateEntities(event)
 	if event.tick%_eventTick45 == 0 then updateConstructionJet() end
 	if event.tick%_eventTick41 == 0 then updateRepairJet() end
 	if event.tick%_eventTick73 == 0 then updateCombatJet() end
+	if event.tick%_eventTick242 == 0 then checkDataNetworkID() end
 	-- Update System --
 	UpSys.update(event)
 	updatePowerDrainPole(event)
@@ -66,6 +67,8 @@ function updateValues()
 	if global.tankTable == nil then global.tankTable = {} end
 	if global.deepStorageTable == nil then global.deepStorageTable = {} end
 	if global.dataNetworkTable == nil then global.dataNetworkTable = {} end
+	if global.dataNetworkIDGreenTable == nil then global.dataNetworkIDGreenTable = {} end
+	if global.dataNetworkIDRedTable == nil then global.dataNetworkIDRedTable = {} end
 	if global.matterSerializerTable == nil then global.matterSerializerTable = {} end
 	if global.matterPrinterTable == nil then global.matterPrinterTable = {} end
 	if global.dataCenterTable == nil then global.dataCenterTable = {} end
@@ -544,5 +547,21 @@ function updateCombatJet()
 		-- Create the Jet --
 		local entity = global.MF.ent.surface.create_entity{name="CombatJet", position=global.MF.ent.position, force="player"}
 		global.combatJetTable[entity.unit_number] = CBJ:new(entity, enemy.position)
+	end
+end
+
+-- Check Data Network ID Tables --
+function checkDataNetworkID()
+	-- Check Green IDs --
+	for id, obj in pairs(global.dataNetworkIDGreenTable) do
+		if obj == nil or obj:valid() == false or Util.greenCNID(obj) ~= id then
+			global.dataNetworkIDGreenTable[id] = nil
+		end
+	end
+	-- Check Red IDs --
+	for id, obj in pairs(global.dataNetworkIDRedTable) do
+		if obj == nil or obj:valid() == false or Util.redCNID(obj) ~= id then
+			global.dataNetworkIDRedTable[id] = nil
+		end
 	end
 end

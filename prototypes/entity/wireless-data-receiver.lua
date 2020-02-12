@@ -2,6 +2,7 @@
 
 -- Entity --
 wdrE = table.deepcopy(data.raw["constant-combinator"]["constant-combinator"])
+table.insert(wdrE.flags, "not-rotatable")
 wdrE.type = "constant-combinator"
 wdrE.name = "WirelessDataReceiver"
 wdrE.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessDataReceiverI.png"

@@ -10,8 +10,7 @@ DC = {
 	updateTick = 60,
 	lastUpdate = 0,
 	dataNetwork = nil,
-	GCNID = 0,
-	RCNID = 0
+	inConflict = false
 }
 
 -- Contructor --
@@ -67,25 +66,29 @@ function DC:update()
 		self:remove()
 		return
 	end
-	
-	-- Check if the Entity is inside a Green Circuit Network --
-	if self.ent.get_circuit_network(defines.wire_type.green) ~= nil and self.ent.get_circuit_network(defines.wire_type.green).valid == true then
-		self.GCNID = self.ent.get_circuit_network(defines.wire_type.green).network_id
+
+	-- Get Data Center Circuit Network IDs --
+	local greenID = Util.greenCNID(self)
+	local redID = Util.redCNID(self)
+
+	-- Check if another Data Center is not Already inside this Data Netwowk --
+	if global.dataNetworkIDGreenTable[greenID] ~= nil and global.dataNetworkIDGreenTable[greenID] ~= self then
+		self.inConflict = true
+		return
 	else
-		self.GCNID = 0
+		self.inConflict = false
 	end
-	
-	-- Check if the Entity is inside a Red Circuit Network --
-	if self.ent.get_circuit_network(defines.wire_type.red) ~= nil and self.ent.get_circuit_network(defines.wire_type.red).valid == true then
-		self.RCNID = self.ent.get_circuit_network(defines.wire_type.red).network_id
+	if global.dataNetworkIDRedTable[redID] ~= nil and global.dataNetworkIDRedTable[redID] ~= self then
+		self.inConflict = true
+		return
 	else
-		self.RCNID = 0
+		self.inConflict = false
 	end
-	
-	-- Add both Circuit Network to the Data Network --
-	self.dataNetwork.GCNTable[self.GCNID] = self
-	self.dataNetwork.RCNTable[self.RCNID] = self
-	
+
+	-- Add the Data Center to the ID Table --
+	if greenID ~= nil then global.dataNetworkIDGreenTable[greenID] = self end
+	if redID ~= nil then global.dataNetworkIDRedTable[redID] = self end
+
 	-- Check if the Data Network is live --
 	if self.dataNetwork:isLive() == true then
 		self:setActive(true)
@@ -120,16 +123,30 @@ function DC:getTooltipInfos(GUI)
 	-- Create the Data Network label --
 	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
 	if self.dataNetwork ~= nil then
-		if self.dataNetwork:isLive() == true then
-			DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
-		else
-			DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Invalid"}}
-		end
+		DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
 	end
 	local dataNetworkL = GUI.add{type="label"}
 	dataNetworkL.style.font = "LabelFont"
 	dataNetworkL.caption = DNText
 	dataNetworkL.style.font_color = {155, 0, 168}
+
+	-- Create the Out Of Power Label --
+	if self.dataNetwork ~= nil then
+		if self.dataNetwork.outOfPower == true then
+			local dataNetworOOPower = GUI.add{type="label"}
+			dataNetworOOPower.style.font = "LabelFont"
+			dataNetworOOPower.caption = {"", {"gui-description.OutOfPower"}}
+			dataNetworOOPower.style.font_color = {231, 5, 5}
+		end
+	end
+
+	-- Create the in conflict Label --
+	if self.inConflict == true then
+		local dataNetworConflict = GUI.add{type="label"}
+		dataNetworConflict.style.font = "LabelFont"
+		dataNetworConflict.caption = {"", {"gui-description.DataCenterConflict"}}
+		dataNetworConflict.style.font_color = {231, 5, 5}
+	end
 	
 	-- Create the Total Energy label --
 	local totalEnergy = GUI.add{type="label"}
@@ -161,16 +178,3 @@ function DC:setActive(set)
 		self.animID = 0
 	end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-

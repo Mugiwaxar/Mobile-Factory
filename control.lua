@@ -68,6 +68,8 @@ function onInit()
 	global.pdpTable = {}
 	global.tankTable = {}
 	global.dataNetworkTable = {}
+	global.dataNetworkIDGreenTable = {}
+	global.dataNetworkIDRedTable = {}
 	global.dataCenterTable = {}
 	global.matterSerializerTable = {}
 	global.matterPrinterTable = {}
