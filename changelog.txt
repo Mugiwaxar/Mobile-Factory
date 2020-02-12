@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.94
+Date: 11/02/2020
+  Features:
+    - Added the Wireless Data Receiver list inside the Data Wireless Transmitter Tooltip GUI
+    - Added the Receiver ID inside the Wireless Data Receiver Tooltip GUI
+  Bugfixes:
+    - Cleared and Recreated all Data Network Tables to fix wrong Signals
+    - Fixed a Tooltip GUI crash that appened when a Item from a removed Mod still exist
+---------------------------------------------------------------------------------------------------
+Version: 0.0.93
+Date: 11/02/2020
+  Bugfixes:
+    - Data Network Migration fix
+---------------------------------------------------------------------------------------------------
 Version: 0.0.92
 Date: 11/02/2020
   Scripting:

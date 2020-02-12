@@ -123,7 +123,7 @@ function WDR:update()
 				if self.lastSignal[item.signal.name] ~= nil then
 					self.lastSignal[item.signal.name].count = self.lastSignal[item.signal.name].count + item.count
 				else
-					self.lastSignal[item.signal.name] = item
+					self.lastSignal[item.signal.name] = Util.copyTable(item)
 				end
 				-- Increament the Slot --
 				i = i + 1
@@ -134,7 +134,7 @@ function WDR:update()
 				if self.lastSignal[item.signal.name] ~= nil then
 					self.lastSignal[item.signal.name].count = self.lastSignal[item.signal.name].count + item.count
 				else
-					self.lastSignal[item.signal.name] = item
+					self.lastSignal[item.signal.name] = Util.copyTable(item)
 				end
 				-- Increament the Slot --
 				i = i + 1
@@ -143,7 +143,7 @@ function WDR:update()
 			end
 		end
 	end
-	
+
 end
 
 -- Tooltip Info --
@@ -175,6 +175,12 @@ function WDR:getTooltipInfos(GUI)
 		dataNetworConflict.caption = {"", {"gui-description.WirelessReceiverConflict"}}
 		dataNetworConflict.style.font_color = {231, 5, 5}
 	end
+
+	-- Create the ID label --
+	local IDL = GUI.add{type="label"}
+	IDL.style.font = "LabelFont"
+	IDL.caption = {"", {"gui-description.ReceiverID"}, ": ", tostring(self.entID)}
+	IDL.style.font_color = {92, 232, 54}
 
 	-- Create the Connected label --
 	local connectedText = {"", {"gui-description.NoLink"}}
@@ -255,7 +261,7 @@ function WDR:getSignals(t)
 		end
 	end
 	-- Get RED Signals from this Network --
-	if self.ent.get_circuit_network(defines.wire_type.red) ~= nil then
+		if self.ent.get_circuit_network(defines.wire_type.red) ~= nil then
 		local Rsignals = self.ent.get_circuit_network(defines.wire_type.red).signals
 		for k, signal in pairs(Rsignals or {}) do
 			signal.obj = self
