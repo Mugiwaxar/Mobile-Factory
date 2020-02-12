@@ -11,7 +11,7 @@ WDT = {
 	lastUpdate = 0,
 	dataNetwork = nil,
 	inConflict = false,
-	lastSignals = nil
+	lastSignal = nil
 }
 
 -- Constructor --
@@ -108,20 +108,27 @@ function WDT:update()
 
 	-- Send Signals --
 	self.ent.get_control_behavior().parameters = nil
-	self.lastSignals = {}
 	local i = 1
 	for k, item in pairs(self.dataNetwork.signalsTable) do
-		if item.obj ~= self and item.signal ~= nil and item.signal.signal ~= nil then
-			if item.signal.signal.type == "virtual" then
-				self.ent.get_control_behavior().set_signal(i, {signal={type=item.signal.signal.type, name=item.signal.signal.name}, count=item.signal.count})
-				table.insert(self.lastSignals, item.signal)
+		if item.obj ~= self and item.signal ~= nil then
+			if item.signal.type == "virtual" then
+				self.ent.get_control_behavior().set_signal(i, {signal={type=item.signal.type, name=item.signal.name}, count=item.count})
+				if self.lastSignal[item.signal.name] ~= nil then
+					self.lastSignal[item.signal.name].count = self.lastSignal[item.signal.name].count + item.count
+				else
+					self.lastSignal[item.signal.name] = item
+				end
 				-- Increament the Slot --
 				i = i + 1
 				-- Stop if there are to much Items --
 				if i > 999 then break end
-			elseif item.signal.signal.name ~= nil and game.item_prototypes[item.signal.signal.name] ~= nil then
-				self.ent.get_control_behavior().set_signal(i, {signal={type=item.signal.signal.type, name=item.signal.signal.name}, count=item.signal.count})
-				table.insert(self.lastSignals, item.signal)
+			elseif item.signal.name ~= nil and game.item_prototypes[item.signal.name] ~= nil then
+				self.ent.get_control_behavior().set_signal(i, {signal={type=item.signal.type, name=item.signal.name}, count=item.count})
+				if self.lastSignal[item.signal.name] ~= nil then
+					self.lastSignal[item.signal.name].count = self.lastSignal[item.signal.name].count + item.count
+				else
+					self.lastSignal[item.signal.name] = item
+				end
 				-- Increament the Slot --
 				i = i + 1
 				-- Stop if there are to much Items --
@@ -191,22 +198,22 @@ function WDT:getSignals(t)
 	if self.ent.get_circuit_network(defines.wire_type.green) ~= nil then
 		local Gsignals = self.ent.get_circuit_network(defines.wire_type.green).signals
 		for k, signal in pairs(Gsignals or {}) do
-			t[signal] = self
+			signal.obj = self
+			if self.lastSignal[signal.signal.name] ~= nil then
+				signal.count = signal.count - self.lastSignal[signal.signal.name].count
+			end
+			if signal.count > 0 then table.insert(t, signal) end
 		end
 	end
 	-- Get RED Signals from this Network --
 	if self.ent.get_circuit_network(defines.wire_type.red) ~= nil then
 		local Rsignals = self.ent.get_circuit_network(defines.wire_type.red).signals
 		for k, signal in pairs(Rsignals or {}) do
-			table.insert(t, {obj=self, signal=signal})
-		end
-	end
-	-- Remove self Signals --
-	for k, signal in pairs(self.lastSignals or {}) do
-		for k2, signal2 in pairs(t) do
-			if signal2.signal ~= nil and signal.signal.name == signal2.signal.signal.name then
-				signal2.signal.count = signal2.signal.count - signal.count
+			signal.obj = self
+			if self.lastSignal[signal.signal.name] ~= nil then
+				signal.count = signal.count - self.lastSignal[signal.signal.name].count
 			end
+			if signal.count > 0 then table.insert(t, signal) end
 		end
 	end
 end
