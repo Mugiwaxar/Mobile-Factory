@@ -186,7 +186,11 @@ end
 function MJF:removeOrePath(orePath)
 	for k, path in pairs(self.oreTable) do
 		if path == orePath then
-			table.remove(self.oreTable, k)
+			if table_size(self.oreTable) >= 1 then
+				self.oreTable = {}
+			else
+				table.remove(self.oreTable, k)
+			end
 		end
 	end
 end
