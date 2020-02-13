@@ -168,14 +168,29 @@ end
 function MJF:getOrePath()
 	-- Get a random Path --
 	local i = math.random(1, table_size(self.oreTable))
-	return self.oreTable[i]
+	local orePath = self.oreTable[i]
+	if orePath == nil then
+		for k, path in pairs(self.oreTable) do
+			if path ~= nil and path.valid == true then return path end
+			if path ~= nil and path.valid == false then self:removeOrePath(path) end
+		end
+	elseif orePath.valid == false then
+		self:removeOrePath(orePath)
+	else
+		return orePath
+	end
+	return nil
 end
 
 -- Remove an Ore Path from the Ore Table --
 function MJF:removeOrePath(orePath)
 	for k, path in pairs(self.oreTable) do
 		if path == orePath then
-			table.remove(self.oreTable, k)
+			if table_size(self.oreTable) >= 1 then
+				self.oreTable = {}
+			else
+				table.remove(self.oreTable, k)
+			end
 		end
 	end
 end

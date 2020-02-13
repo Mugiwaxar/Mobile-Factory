@@ -1,6 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.95
+Date: 13/02/2020
+---------------------------------------------------------------------------------------------------
 Version: 0.0.94
-Date: 11/02/2020
+Date: 12/02/2020
   Features:
     - Added the Wireless Data Receiver list inside the Data Wireless Transmitter Tooltip GUI
     - Added the Receiver ID inside the Wireless Data Receiver Tooltip GUI
