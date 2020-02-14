@@ -251,7 +251,7 @@ end
 -- Take another Ore Path --
 function MJ:takeAnotherPath()
 	-- Check if there are Path left and if the Targeted Inventory is not full --
-	if table_size(self.flag.oreTable) <= 0 or self.flag.TargetInventoryFull == true then
+	if table_size(self.flag.oreTable) <= 0 then
 		-- Return to the Mobile Factory --
 		self:goToMF()
 		return

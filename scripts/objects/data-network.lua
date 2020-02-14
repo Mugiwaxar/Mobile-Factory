@@ -189,7 +189,7 @@ function DN:updateSignals()
 	-- Clear the Table --
 	self.signalsTable = {}
 	-- Get all signals from Transmitter --
-	if self.wirelessDataTransmitter ~= nil and self.wirelessDataTransmitter:valid() == true then
+	if self.wirelessDataTransmitter ~= nil and getmetatable(self.wirelessDataTransmitter) ~= nil and self.wirelessDataTransmitter:valid() == true then
 		self.wirelessDataTransmitter:getSignals(self.signalsTable)
 	end
 	-- Get all signals from Receivers --
