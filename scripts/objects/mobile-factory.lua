@@ -175,7 +175,7 @@ function MF:scanEnt()
 	for k, entity in pairs(self.entitiesAround) do
 		local keep = false
 		-- Keep Electric Entity --
-		if entity.energy ~= nil and entity.electric_buffer_size ~= nil and entity.energy > 0 then
+		if entity.energy ~= nil and entity.electric_buffer_size ~= nil then
 			keep = true
 		end
 		-- Keep Tank --
