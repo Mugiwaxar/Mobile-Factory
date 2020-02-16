@@ -1,8 +1,35 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.97
+Date: 16/02/2020
+  Major Features:
+    - Floor Is Lava -> Since the Original Mod is not up to date and not compatible with Mobile Factory, the feature was added
+    - You will take damages on any Tiles except Dimensional Tiles
+    - The Mobile Factory is safe (Factorissimo structures too)
+    - Floor Is Lava can be Enabled/Disabled inside the Option GUI (Disabled by default)
+  Features:
+    - Add "Active Floor Is Lava" Option inside the Game Tab of the Option GUI
+    - Added the Dimensional Tile, a Tile made with Dimensional Ore with +50% speed (Safe when Floor Is Lava is activated)
+    - You will recieve 300 Dimensional Tiles when you start a new Game
+    - Copy/Paste now work for the Deep Storage
+    - Copy/Paste now work for the Ore Cleaner
+    - Copy/Paste now work for the Fluid Extractor
+    - Copy/Paste now work for the Matter Printer
+    - Copy/Paste now work for the Matter Serializer
+    - Copy/Paste now work for the Wire Data Receiver
+  Gui:
+    - Deep Storage show now its filter inside the Tooltip GUI
+    - Add Set Filter Button inside the Deep Storage Tooltip GUI
+  Bugfixes:
+    - Fixed a crash with Mining Jet
+    - Fixed a crash with the Information GUI
+    - Mining Jet Flag can now be removed by Deconstruction Planner
+  Scripting:
+    - All Metatables are now checked before being used (Improved stability)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.96
 Date: 14/02/2020
   Changes:
-    - Mining Jet will no lounger go back home if the Inventory of the Mining Jet Flag can't be send to Deep Storage
+    - Mining Jet will no lounger go back home if the Inventory of the Mining Jet Flag can't be send to Deep Storages
   Bugfixes:
     - Fixed a crash with the Data Center
     - Mobile Factory Energy Drain Laser should now work correctly
