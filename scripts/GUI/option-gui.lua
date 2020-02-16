@@ -164,13 +164,23 @@ end
 
 ---------------------- OPTIONS GUI TAB 3 --------------------------
 function GUI.createOptTab3(tab)
-	local GUIMainGuiOpt = tab.add{type="label", name="GUIMainGuiOpt", caption={"gui-description.JetOpt"}}
-	GUIMainGuiOpt.style.font = "TitleFont"
+	-- Jets --
+	local JetSettingsL = tab.add{type="label", name="JetSettingsL", caption={"gui-description.JetOpt"}}
+	JetSettingsL.style.font = "TitleFont"
 	tab.add{type="label", caption={"gui-description.JetMaximalDistance"}}
 	GUI.createDTextField(tab, "MiningJetDistanceOpt", "MiningJetDistanceOpt", "MiningJetDistanceOptTT", global.mjMaxDistance)
 	GUI.createDTextField(tab, "ConstructionJetDistanceOpt", "ConstructionJetMaximalDistance", "ConstructionJetMaximalDistanceTT", global.cjMaxDistance)
 	GUI.createDTextField(tab, "RepairJetDistanceOpt", "RepairJetDistanceOpt", "RepairJetDistanceOptTT", global.rjMaxDistance)
 	GUI.createDTextField(tab, "CombatJetDistanceOpt", "CombatJetDistanceOpt", "CombatJetDistanceOpt", global.cbjMaxDistance)
+
+	-- Floor Is Lava --
+	local FILSettingsL = tab.add{type="label", name="FILSettingsL", caption={"gui-description.FILOptTitle"}}
+	FILSettingsL.style.font = "TitleFont"
+	FILSettingsL.style.top_margin = 20
+	local FILActivatedF = tab.add{type="flow", direction="horizontal"}
+	FILActivatedF.add{type="checkbox", name="FloorIsLaveActiveOpt", tooltip={"gui-description.FloorIsLavaOptTT"}, state=global.floorIsLavaActivated}
+	FILActivatedF.add{type="label", caption={"gui-description.FloorIsLavaActOpt"}, tooltip={"gui-description.FloorIsLavaOptTT"}}
+	
 end
 
 
