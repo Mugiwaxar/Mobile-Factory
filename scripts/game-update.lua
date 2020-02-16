@@ -23,6 +23,8 @@ function onTick(event)
 		global.MF.jumpTimer = global.MF.jumpTimer -1
 		global.MF.internalEnergy = global.MF.internalEnergy - _mfJumpEnergyDrain
 	end
+	-- Update the Floor Is Lava --
+	if event.tick%_eventTick150 == 0 and global.floorIsLavaActivated == true then updateFloorIsLava() end
 	-- Update Pollution --
 	if event.tick%_eventTick1200 == 0 then updatePollution() end
 end
@@ -61,6 +63,7 @@ function updateValues()
 	if global.cbjMaxDistance == nil then global.cbjMaxDistance= 200 end
 	if global.constructionJetIndex == nil then global.constructionJetIndex = 0 end
 	if global.repairJetIndex == nil then global.repairJetIndex = 0 end
+	if global.floorIsLavaActivated == nil then global.floorIsLavaActivated = false end
 	if global.accTable == nil then global.accTable = {} end
 	if global.pdpTable == nil then global.pdpTable = {} end
 	if global.lfpTable == nil then global.lfpTable = {} end
@@ -213,7 +216,7 @@ end
 
 -- When a player joint the game --
 function onPlayerCreated(player)
-	if player.name == nil then player = getPlayer(event.player_index) end
+	if player.name == nil then player = getPlayer(player.player_index) end
 	setPlayerVariable(player.name, "VisitedFactory", false)
 	if global.insertedMFInsideInventory == false then
 		Util.addMobileFactory(game.players[1])
@@ -261,7 +264,7 @@ function onEntityDamaged(event)
 	-- Command to the Jet to return to the Mobile Factory if its life is low --
 	if event.entity.name == "CombatJet" then
 		local obj = global.combatJetTable[event.entity.unit_number]
-		if obj ~= nil and obj:valid() == true and event.entity.health < 600 and obj.currentOrder == "Fight"then
+		if valid(obj) == true and event.entity.health < 600 and obj.currentOrder == "Fight" then
 			obj:goMF(defines.distraction.none)
 		end
 		return
@@ -292,6 +295,34 @@ function onGhostPlacedByDie(event)
 	-- Raise event if a Blueprint is placed --
 	if event.ghost ~= nil and event.ghost.valid == true then
 		somethingWasPlaced({entity=event.ghost})
+	end
+end
+
+-- Called when a Setting is pasted --
+function settingsPasted(event)
+	dprint("pasted")
+	-- Check the Entities --
+	if event.source == nil or event.source.valid == false then return end
+	if event.destination == nil or event.destination.valid == false then return end
+
+	-- Get the Objects --
+	local o1 = nil
+	local o2 = nil
+	for k, obj in pairs(global.entsTable) do
+		if valid(obj) == true and obj.ent ~= nil and obj.ent.valid == true then
+			if obj.ent.unit_number == event.source.unit_number then o1 = obj end
+			if obj.ent.unit_number == event.destination.unit_number then o2 = obj end
+		end
+	end
+
+	-- Check the Objects --
+	if o1 == nil then return end
+	if o2 == nil then return end
+	if o1.ent.name ~= o2.ent.name then return end
+
+	-- Copy the Settings --
+	if o2.copySettings ~= nil then
+		o2:copySettings(o1)
 	end
 end
 
@@ -330,6 +361,22 @@ function upgradeTank(id)
 	tank.destroy()
 end
 
+-- Damage all Players that aren't on a safe position --
+function updateFloorIsLava()
+	-- Take all Players --
+	for k, player in pairs(game.players) do
+		-- Check the Player --
+		if player.character == nil then return end
+		-- Check the Surface --
+		if player.surface.name == _mfSurfaceName or player.surface.name == _mfControlSurfaceName or string.match(player.surface.name, "Factory") then return end
+		-- Check the Tile --
+		local tile = player.surface.get_tile(player.position.x, player.position.y)
+		if tile ~= nil and tile.valid == true and tile.name ~= "DimensionalTile" then
+			player.character.damage(50, "neutral", "fire")
+		end
+	end
+end
+
 -- Send all Pollution outside --
 function updatePollution()
 	-- Test if the Mobile Factory is valid --
@@ -360,7 +407,7 @@ function updateMiningJet()
 	if inv == nil or inv.valid == false then return end
 	for k, flag in pairs(global.jetFlagTable) do
 		-- Check the Flag --
-		if getmetatable(flag) == nil or flag:valid() == false then goto continue end
+		if valid(flag) == false then goto continue end
 		-- Check the Distance --
 		if Util.distance(flag.ent.position, global.MF.ent.position) > global.mjMaxDistance then goto continue end
 		-- Check if there are Ores left --
@@ -440,7 +487,7 @@ function updateConstructionJet()
 		-- Check the Distance --
 		if Util.distance(structure.ent.position, global.MF.ent.position) > global.cjMaxDistance then goto continue end
 		-- Check if there are no Jet already attributed to this Structure --
-		if structure.jet ~= nil and structure.jet:valid() == true then goto continue end
+		if valid(structure.jet) == true then goto continue end
 		-- Remove a Jet from the Inventory --
 		local removed = inv.remove({name="ConstructionJet", count=1})
 		-- Check if the Jet exist --
@@ -505,7 +552,7 @@ function updateRepairJet()
 		-- Check the Distance --
 		if Util.distance(structure.ent.position, global.MF.ent.position) > global.rjMaxDistance then return end
 		-- Check if there are no Jet already attributed to this Structure --
-		if structure.jet ~= nil and structure.jet:valid() == true then goto continue end
+		if valid(structure.jet) then goto continue end
 		-- Remove a Jet from the Inventory --
 		local removed = inv.remove({name="RepairJet", count=1})
 		-- Check if the Jet exist --
@@ -554,13 +601,13 @@ end
 function checkDataNetworkID()
 	-- Check Green IDs --
 	for id, obj in pairs(global.dataNetworkIDGreenTable) do
-		if obj == nil or obj:valid() == false or Util.greenCNID(obj) ~= id then
+		if valid(obj) == false or Util.greenCNID(obj) ~= id then
 			global.dataNetworkIDGreenTable[id] = nil
 		end
 	end
 	-- Check Red IDs --
 	for id, obj in pairs(global.dataNetworkIDRedTable) do
-		if obj == nil or obj:valid() == false or Util.redCNID(obj) ~= id then
+		if valid(obj) == false or Util.redCNID(obj) ~= id then
 			global.dataNetworkIDRedTable[id] = nil
 		end
 	end

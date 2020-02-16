@@ -278,7 +278,7 @@ function GUI.onGuiElemChanged(event)
 		-- Find the Receiver --
 		local receiver = nil
 		for k, wdr in pairs(global.wirelessDataReceiverTable) do
-			if wdr:valid() and wdr.ent.unit_number == ID then
+			if valid(wdr) == true and wdr.ent.unit_number == ID then
 				receiver = wdr
 			end
 		end
@@ -298,7 +298,7 @@ function GUI.onGuiElemChanged(event)
 		-- Find the Ore Cleaner --
 		local oreCleaner = nil
 		for k, oc in pairs(global.oreCleanerTable) do
-			if oc:valid() and oc.ent.unit_number == ID then
+			if valid(oc) == true and oc.ent.unit_number == ID then
 				oreCleaner = oc
 			end
 		end
@@ -318,7 +318,7 @@ function GUI.onGuiElemChanged(event)
 		-- Find the Fluid Extractor --
 		local fluidExtractor = nil
 		for k, fe in pairs(global.fluidExtractorTable) do
-			if fe:valid() and fe.ent.unit_number == ID then
+			if valid(fe) == true and fe.ent.unit_number == ID then
 				fluidExtractor = fe
 			end
 		end
@@ -338,7 +338,7 @@ function GUI.onGuiElemChanged(event)
 		-- Find the Matter Serializer --
 		local matterS = nil
 		for k, ms in pairs(global.matterSerializerTable) do
-			if ms:valid() and ms.ent.unit_number == ID then
+			if valid(ms) == true and ms.ent.unit_number == ID then
 				matterS = ms
 			end
 		end
@@ -357,7 +357,7 @@ function GUI.onGuiElemChanged(event)
 		-- Find the Matter Printer --
 		local matterP = nil
 		for k, mp in pairs(global.matterPrinterTable) do
-			if mp:valid() and mp.ent.unit_number == ID then
+			if valid(mp) == true and mp.ent.unit_number == ID then
 				matterP = mp
 			end
 		end
@@ -382,7 +382,7 @@ function GUI.onGuiElemChanged(event)
 		-- Find the Mining Jet Flag --
 		local mjFlag = nil
 		for k, mjf in pairs(global.jetFlagTable) do
-			if mjf:valid() and mjf.ent.unit_number == ID then
+			if valid(mjf) == true and mjf.ent.unit_number == ID then
 				mjFlag = mjf
 			end
 		end
@@ -390,6 +390,16 @@ function GUI.onGuiElemChanged(event)
 		if mjFlag == nil then return end
 		-- Change the Mining Jet Flag targeted Inventory --
 		mjFlag:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
+	end
+
+	-- Read if the Element comes from the Floor Is Lava Option --
+	if event.element.name == "FloorIsLaveActiveOpt" then
+		global.floorIsLavaActivated = event.element.state
+		if global.floorIsLavaActivated == true then
+			game.print({"gui-description.FloorIsLavaActivated"})
+		else
+			game.print({"gui-description.FloorIsLavaDeactivated"})
+		end
 	end
 end
 

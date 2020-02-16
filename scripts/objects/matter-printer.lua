@@ -52,13 +52,20 @@ function MP:valid()
 	return false
 end
 
+-- Copy Settings --
+function MP:copySettings(obj)
+	if obj.selectedInv ~= nil then
+		self.selectedInv = obj.selectedInv
+	end
+end
+
 -- Update --
 function MP:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	
 	-- Check the Validity --
-	if self:valid() == false then
+	if valid(self) == false then
 		self:remove()
 		return
 	end
@@ -153,7 +160,7 @@ function MP:getTooltipInfos(GUI)
 	local text = ""
 	local style = {}
 	-- Check if the Data Storage is linked with a Data Center --
-	if self.dataNetwork ~= nil and getmetatable(self.dataNetwork) ~= nil and self.dataNetwork.dataCenter ~= nil and self.dataNetwork.dataCenter:valid() == true then
+	if valid(self.dataNetwork) == true and valid(self.dataNetwork.dataCenter) == true then
 		text = {"", {"gui-description.LinkedTo"}, ": ", self.dataNetwork.dataCenter.invObj.name}
 		style = {92, 232, 54}
 	else
@@ -167,7 +174,7 @@ function MP:getTooltipInfos(GUI)
 	link.style.font_color = style
 	
 	-- Create the Inventory Selection --
-	if self.dataNetwork ~= nil and self.dataNetwork.dataCenter ~= nil and self.dataNetwork.dataCenter:valid() == true and self.dataNetwork.dataCenter.invObj.isII == true then
+	if valid(self.dataNetwork) == true and valid(self.dataNetwork.dataCenter) == true and self.dataNetwork.dataCenter.invObj.isII == true then
 		-- Create the targeted Inventory label --
 		local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
 		targetLabel.style.top_margin = 7
@@ -203,7 +210,7 @@ function MP:changeInventory(ID)
 	-- Select the Inventory --
 	self.selectedInv = nil
 	for k, deepStorage in pairs(global.deepStorageTable) do
-		if deepStorage ~= nil and deepStorage:valid() == true then
+		if valid(deepStorage) then
 			if ID == deepStorage.ID then
 				self.selectedInv = deepStorage
 			end

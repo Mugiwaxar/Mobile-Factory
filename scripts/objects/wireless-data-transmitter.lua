@@ -61,7 +61,7 @@ function WDT:update()
 	self.lastUpdate = game.tick
 	
 	-- Check the Validity --
-	if self:valid() == false then
+	if valid(self) == false then
 		self:remove()
 		return
 	end
@@ -79,14 +79,14 @@ function WDT:update()
 	end
 
 	-- Check if the Data Center is inside the same Circuit Network --
-	if self.dataNetwork ~= nil and self.dataNetwork:valid() == true then
+	if valid(self.dataNetwork) == true then
 		if Util.greenCNID(self) ~= Util.greenCNID(self.dataNetwork.dataCenter) and Util.redCNID(self) ~= Util.redCNID(self.dataNetwork.dataCenter) then
 			self.dataNetwork = nil
 		end
 	end
 
 	-- Check if there are any other Wireless Transmitter --
-	if self.dataNetwork ~= nil and self.dataNetwork.wirelessDataTransmitter ~= nil and self.dataNetwork.wirelessDataTransmitter:valid() == true and self.dataNetwork.wirelessDataTransmitter ~= self and Util.getConnectedDN( self.dataNetwork.wirelessDataTransmitter) ~= nil then
+	if valid(self.dataNetwork) == true and valid(self.dataNetwork.wirelessDataTransmitter) == true and self.dataNetwork.wirelessDataTransmitter ~= self and Util.getConnectedDN( self.dataNetwork.wirelessDataTransmitter) ~= nil then
 		self.dataNetwork = nil
 		self.inConflict = true
 	else
@@ -94,7 +94,7 @@ function WDT:update()
 	end
 
 	-- Register the Transmitter --
-	if self.dataNetwork ~= nil and self.dataNetwork:valid() == true then
+	if valid(self.dataNetwork) == true then
 		self.dataNetwork.wirelessDataTransmitter = self
 	end
 
@@ -212,7 +212,7 @@ end
 
 -- Get Signals --
 function WDT:getSignals(t)
-	if self:valid() == false then return end
+	if valid(self) == false then return end
 	-- Get GREEN Signals from this Network --
 	if self.ent.get_circuit_network(defines.wire_type.green) ~= nil then
 		local Gsignals = self.ent.get_circuit_network(defines.wire_type.green).signals

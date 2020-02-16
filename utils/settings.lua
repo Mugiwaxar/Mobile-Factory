@@ -115,6 +115,7 @@ _eventTick80=80 -- Mobile Factory Internal Inventory --
 _eventTick90=90 -- Mobile Factory Entities Scan --
 _eventTick110=110 -- Mining Jets --
 _eventTick125=125 -- Mobile Factory Modules Scan --
+_eventTick150=150 -- Floor Is Lava Update --
 _eventTick242=242 -- Data Network ID Tables Check --
 _eventTick1200=1200 -- Factory Pollution --
 

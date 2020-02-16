@@ -65,7 +65,7 @@ function PDP:update(event)
 	-- Update lastUpdate variable --
 	self.lastUpdate = event.tick
 	-- Check the Validity --
-	if self:valid() == false then
+	if valid(self) == false then
 		self:remove()
 		return
 	end

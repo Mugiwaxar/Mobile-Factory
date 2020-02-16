@@ -43,12 +43,17 @@ function FE:valid()
 	return false
 end
 
+-- Copy Settings --
+function FE:copySettings(obj)
+	self.selectedDimTank = obj.selectedDimTank
+end
+
 -- Update --
 function FE:update(event)
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	-- Check the Validity --
-	if self:valid() == false then
+	if valid(self) == false then
 		self:remove()
 		return
 	end
@@ -147,36 +152,6 @@ end
 function FE:fluidPerExtraction()
 	return math.floor(self.purity * _mfFEFluidPerExtraction)
 end
-
---[[
--- Get the module ID inside --
-function FE:getModuleID()
-	-- Test if the Fluid Extractor is valid --
-	if self:valid() == false then return true end
-	-- Get the Inventory --
-	local inventory = self.ent.get_module_inventory()
-	-- Test if the Inventory is valid --
-	if inventory == nil then return 0 end
-	-- Look for the Module --
-	local moduleID = inventory[1]
-	-- Test if the Module is valid --
-	if moduleID == nil then return 0 end
-	if moduleID.valid == false then return 0 end
-	if moduleID.valid_for_read == false then return 0 end
-	-- Look for the Module name --
-	local moduleName = moduleID.name
-	-- Test if the Module name is valid --
-	if moduleName == nil then return 0 end
-	-- Look for the ID --
-	if string.match(moduleName, "ModuleID") then
-		ID = tonumber(string.sub(moduleName, -1))
-	end
-	-- Test if the ID is valid --
-	if ID == nil then return 0 end
-	-- Return the ID --
-	return ID
-end
---]]
 
 -- Extract Fluids --
 function FE:extractFluids(event)

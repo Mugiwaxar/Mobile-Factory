@@ -58,7 +58,7 @@ function DCMF:update()
 	self.lastUpdate = game.tick
 	
 	-- Check the Validity --
-	if self:valid() == false then
+	if valid(self) == false then
 		self:remove()
 		return
 	end

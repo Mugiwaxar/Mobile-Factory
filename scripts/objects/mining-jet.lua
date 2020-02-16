@@ -55,7 +55,7 @@ function MJ:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	-- Check the Validity --
-	if self:valid() == false then
+	if valid(self) == false then
 		self:remove()
 		return
 	end
@@ -155,7 +155,7 @@ end
 -- Beggin the Mining Process --
 function MJ:mine()
 	-- Check if the Flag still exist --
-	if self.flag == nil or self.flag:valid() == false then
+	if valid(self.flag) == false then
 		self.isMining = false
 		self:goToMF()
 		return
@@ -220,7 +220,7 @@ end
 -- Go back to the Flag --
 function MJ:goToFlag()
 	-- Check if the Flag still exist --
-	if self.flag:valid() == false then
+	if valid(self.flag) == false then
 		-- Go to the Mobile Factory --
 		self:goToMF()
 		return
@@ -233,7 +233,7 @@ end
 -- Empty the Inventory --
 function MJ:emptyInventory()
 	self.currentOrder = "EmptInv"
-	if self.flag:valid() == false then
+	if valid(self.flag) == false then
 		self:goToMF()
 		return
 	end
@@ -251,7 +251,7 @@ end
 -- Take another Ore Path --
 function MJ:takeAnotherPath()
 	-- Check if there are Path left and if the Targeted Inventory is not full --
-	if table_size(self.flag.oreTable) <= 0 then
+	if table_size(self.flag.oreTable) <= 0 or valid(self.flag) == false then
 		-- Return to the Mobile Factory --
 		self:goToMF()
 		return
@@ -267,7 +267,7 @@ end
 -- Go back to the Mobile Factory --
 function MJ:goToMF()
 	-- Check if the Jet have to empty its Inventory --
-	if self.inventoryItem ~= nil and self.inventoryCount > 0 and self.flag:valid() == true then
+	if self.inventoryItem ~= nil and self.inventoryCount > 0 and valid(self.flag) == true then
 		self:goToFlag()
 		return
 	end

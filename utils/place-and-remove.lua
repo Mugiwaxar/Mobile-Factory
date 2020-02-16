@@ -230,7 +230,7 @@ function somethingWasPlaced(event, isRobot)
 	
 	-- Save the Data Center MF --
 	if event.created_entity.name == "DataCenterMF" then
-		if global.MF.dataCenter ~= nil and global.MF.dataCenter:valid() == true then
+		if valid(global.MF.dataCenter) == true then
 			if isPlayer == true then creator.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }}) end
 			event.created_entity.destroy()
 			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then

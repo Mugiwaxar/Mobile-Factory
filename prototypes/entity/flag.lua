@@ -42,6 +42,7 @@ function createFlag(name, order, MachineFrameCount, area, scale)
 	fE.collision_box = {{-1*scale, -1*scale},{1*scale, 1*scale}}
 	fE.selection_box = fE.collision_box
 	fE.minable = {mining_time = 0.2, result = name}
+	fE.flags = {"placeable-neutral", "player-creation"}
 	fE.radius_visualisation_picture = data.raw.beacon.beacon.radius_visualisation_picture
 	fE.radius_visualisation_picture.scale = 2
 	fE.allowed_effects = {}

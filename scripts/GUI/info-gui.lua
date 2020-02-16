@@ -453,7 +453,7 @@ function GUI.updateTankFrame(player)
 	for k, id in pairs(global.tankTable) do
 		-- Get the Tank --
 		local tank = id.ent
-		if tank ~= nil then
+		if tank ~= nil and tank.valid == true then
 			-- Get the Tank capacity --
 			local tCapacity = math.floor(tank.fluidbox.get_capacity(1))
 			local fName

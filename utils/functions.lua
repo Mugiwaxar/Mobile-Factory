@@ -47,6 +47,15 @@ function split(str, char)
    return parts
 end
 
+-- Check if an Object is valid --
+function valid(obj)
+	if obj == nil then return false end
+	if getmetatable(obj) == nil then return false end
+	if obj.valid == nil then return false end
+	if obj:valid() ~= true then return false end
+	return true
+end
+
 -- Test if Mobile Factory can be placed near a player --
 function mfPlaceable(player)
 	-- Make the Mobile Factory unable to be placed inside it --
@@ -262,6 +271,7 @@ function Util.addMobileFactory(player)
 		-- Can't insert --
 		player.print({"", {"gui-description.MFNotInsertedInsideInventory"}})
 	end
+	inv.insert({name="DimensionalTile", count=300})
 end
 
 -- Util: Create a frame from an Item --

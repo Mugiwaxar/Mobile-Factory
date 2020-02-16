@@ -62,6 +62,8 @@ function onInit()
 	global.repairJetIndex = 0
 	-- Research --
 	game.forces["player"].technologies["DimensionalOre"].researched = true
+	-- Floor Is Lava --
+	global.floorIsLavaActivated = false
 	-- Tables --
 	global.playersTable = {}
 	global.accTable = {}
@@ -234,6 +236,7 @@ script.on_event(defines.events.on_gui_text_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_research_finished, technologyFinished)
 script.on_event(defines.events.on_selected_entity_changed, selectedEntityChanged)
 script.on_event(defines.events.on_marked_for_deconstruction, markedForDeconstruction)
+script.on_event(defines.events.on_entity_settings_pasted, settingsPasted)
 
 -- Add command to insert Mobile Factory to the player inventory --
 -- commands.add_command("GetMobileFactory", "Add the Mobile Factory to the player inventory", addMobileFactory)

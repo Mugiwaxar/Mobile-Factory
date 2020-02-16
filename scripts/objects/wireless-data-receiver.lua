@@ -55,13 +55,18 @@ function WDR:valid()
 	return false
 end
 
+-- Copy Settings --
+function WDR:copySettings(obj)
+	self.linkedTransmitter = obj.linkedTransmitter
+end
+
 -- Update --
 function WDR:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 
 	-- Check the Validity --
-	if self:valid() == false then
+	if valid(self) == false then
 		self:remove()
 		return
 	end
@@ -70,7 +75,7 @@ function WDR:update()
 	if getmetatable(self.linkedTransmitter) == nil then
 		self.linkedTransmitter = nil
 	end
-	if self.linkedTransmitter ~= nil and self.linkedTransmitter:valid() == true and self.linkedTransmitter.dataNetwork ~= nil and self.linkedTransmitter.dataNetwork:isLive() == true then
+	if valid(self.linkedTransmitter) == true and valid(self.linkedTransmitter.dataNetwork) == true and self.linkedTransmitter.dataNetwork:isLive() == true then
 		self.dataNetwork = self.linkedTransmitter.dataNetwork
 	elseif self.dataNetwork ~= nil then
 		-- Remove the Receiver --
@@ -186,7 +191,7 @@ function WDR:getTooltipInfos(GUI)
 	local connectedText = {"", {"gui-description.NoLink"}}
 	local connectedL = GUI.add{type="label"}
 	if self.linkedTransmitter ~= nil then
-		if self.linkedTransmitter ~= nil and self.linkedTransmitter:valid() == true then
+		if valid(self.linkedTransmitter) == true then
 			connectedText = {"", {"gui-description.Connected"}, " ", tostring(self.linkedTransmitter.ent.unit_number)}
 			connectedL.style.font_color = {92, 232, 54}
 		else
@@ -238,7 +243,7 @@ function WDR:changeTransmitter(ID)
 	-- Select the Transmitter --
 	self.linkedTransmitter = nil
 	for k, transmitter in pairs(global.wirelessDataTransmitterTable) do
-		if transmitter ~= nil and transmitter:valid() == true then
+		if valid(transmitter) == true then
 			if ID == transmitter.ent.unit_number then
 				self.linkedTransmitter = transmitter
 			end
@@ -248,7 +253,7 @@ end
 
 -- Get Signals --
 function WDR:getSignals(t)
-	if self:valid() == false then return end
+	if valid(self) == false then return end
 	-- Get GREEN Signals from this Network --
 	if self.ent.get_circuit_network(defines.wire_type.green) ~= nil then
 		local Gsignals = self.ent.get_circuit_network(defines.wire_type.green).signals

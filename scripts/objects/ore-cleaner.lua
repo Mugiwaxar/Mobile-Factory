@@ -52,12 +52,17 @@ function OC:valid()
 	return false
 end
 
+-- Copy Settings --
+function OC:copySettings(obj)
+	self.selectedInv = obj.selectedInv
+end
+
 -- Update --
 function OC:update(event)
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	-- Check the Validity --
-	if self:valid() == false then
+	if valid(self) == false then
 		self:remove()
 		return
 	end
@@ -147,7 +152,7 @@ function OC:changeInventory(ID)
 	-- Select the Inventory --
 	self.selectedInv = nil
 	for k, deepStorage in pairs(global.deepStorageTable) do
-		if deepStorage ~= nil and deepStorage:valid() == true then
+		if valid(deepStorage) == true then
 			if ID == deepStorage.ID then
 				self.selectedInv = deepStorage
 			end
@@ -184,7 +189,7 @@ end
 -- Collect surrounding Ores --
 function OC:collectOres(event)
 	-- Test if the Mobile Factory and the Ore Cleaner are valid --
-	if global.MF:valid() == false or self:valid() == false then return end
+	if valid(global.MF) == false or valid(self) == false then return end
 	-- Return if the Ore Table is empty --
 	if table_size(self.oreTable) <= 0 then return end
 	-- Return if there are not Quatron Charge remaining --
