@@ -53,7 +53,7 @@ end
 
 -- Is valid --
 function DN:valid()
-	if self.dataCenter:valid() == true then
+	if valid(self.dataCenter) == true then
 		return true
 	end
 	return false
@@ -61,7 +61,7 @@ end
 
 -- Is live --
 function DN:isLive()
-	if self.dataCenter == nil or self.dataCenter:valid() == false then return false end
+	if valid(self.dataCenter) == false then return false end
 	if self.outOfPower == true then return false end
 	return true
 end
@@ -71,7 +71,7 @@ function DN:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	-- Check the Validity --
-	if self:valid() == false then
+	if valid(self) == false then
 		self:remove()
 		return
 	end
@@ -87,7 +87,7 @@ end
 
 -- Register Object --
 function DN:addObject(obj)
-	if obj == nil or obj:valid() == false then return end
+	if valid(obj) == false then return end
 	-- Add the Object to the Entities Table --
 	self.entitiesTable[obj.entID] = obj
 	-- Check if the Object have to be in another Table --
@@ -121,7 +121,7 @@ end
 
 -- Return true if the passed Object is a part of this Data Network --
 function DN:isLinked(obj)
-	if obj:valid() == true and self.entitiesTable[obj.ent.unit_number] ~= nil then
+	if valid(obj) == true and self.entitiesTable[obj.ent.unit_number] ~= nil then
 		return true
 	end
 	return false
@@ -132,7 +132,7 @@ function DN:availablePower()
 	-- Calcule the Total Power available --
 	local totalPower = 0
 	for k, obj in pairs(self.energyCubeTable) do
-		if obj:valid() then
+		if valid(obj) then
 			totalPower = totalPower + obj.ent.energy
 		end
 	end
@@ -173,7 +173,7 @@ function DN:drainPower(amount)
 	local energyToRemovePerCube = math.floor(amount/table_size(self.energyCubeTable))
 	while energyLeft > 0 do
 		for k, ec in pairs(self.energyCubeTable) do
-			if ec:valid() == true then
+			if valid(ec) == true then
 				local removedEnergy = math.min(ec.ent.energy, energyToRemovePerCube)
 				ec.ent.energy = ec.ent.energy - removedEnergy
 				energyLeft = energyLeft - removedEnergy
@@ -189,12 +189,14 @@ function DN:updateSignals()
 	-- Clear the Table --
 	self.signalsTable = {}
 	-- Get all signals from Transmitter --
-	if self.wirelessDataTransmitter ~= nil and getmetatable(self.wirelessDataTransmitter) ~= nil and self.wirelessDataTransmitter:valid() == true then
+	if valid(self.wirelessDataTransmitter) == true then
 		self.wirelessDataTransmitter:getSignals(self.signalsTable)
 	end
 	-- Get all signals from Receivers --
 	for k, receiver in pairs(self.wirelessReceiverTable) do
-		receiver:getSignals(self.signalsTable)
+		if valid(receiver) == true then
+			receiver:getSignals(self.signalsTable)
+		end
 	end
 end
 

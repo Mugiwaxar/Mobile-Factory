@@ -42,7 +42,7 @@ end
 
 -- Is valid --
 function CBJ:valid()
-	if self.ent ~= nil and self.ent.valid then return true end
+	if self.ent ~= nil and self.ent.valid == true then return true end
 	return false
 end
 
@@ -51,7 +51,7 @@ function CBJ:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	-- Check the Validity --
-	if self:valid() == false then
+	if valid(self) == false then
 		self:remove()
 		return
     end

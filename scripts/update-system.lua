@@ -2,7 +2,7 @@ require("utils/functions.lua")
 
 -- Add an Object to the Update System --
 function UpSys.addObj(obj)
-  if obj == nil or obj:valid() == false then return end
+  if valid(obj) == false then return end
   -- Add the Object --
   UpSys.addObject(obj)
 end
@@ -124,7 +124,7 @@ function UpSys.update(event)
   -- Update Object --
   for k, obj in pairs(global.upsysTickTable[game.tick]) do
     -- If more objects can be updated --
-	if obj:valid() == true then
+	if valid(obj) == true then
       if updated <= global.entsUpPerTick then
         obj:update(event)
         updated = updated + 1

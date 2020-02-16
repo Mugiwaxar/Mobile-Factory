@@ -46,12 +46,19 @@ function MJF:valid()
 	return false
 end
 
+-- Copy Settings --
+function MJF:copySettings(obj)
+	if obj.selectedInv ~= nil then
+		self.selectedInv = obj.selectedInv
+	end
+end
+
 -- Update --
 function MJF:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	-- Check the Validity --
-	if self:valid() == false then
+	if valid(self) == false then
 		self:remove()
 		return
 	end
@@ -128,7 +135,7 @@ function MJF:changeInventory(ID)
 	-- Select the Inventory --
 	self.selectedInv = nil
 	for k, deepStorage in pairs(global.deepStorageTable) do
-		if deepStorage ~= nil and deepStorage:valid() == true then
+		if valid(deepStorage) == true then
 			if ID == deepStorage.ID then
 				self.selectedInv = deepStorage
 			end
@@ -167,6 +174,7 @@ end
 -- Get a new Ore Path to Mine --
 function MJF:getOrePath()
 	-- Get a random Path --
+	if table_size(self.oreTable) <= 0 then return nil end
 	local i = math.random(1, table_size(self.oreTable))
 	local orePath = self.oreTable[i]
 	if orePath == nil then

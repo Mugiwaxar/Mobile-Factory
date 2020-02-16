@@ -42,13 +42,18 @@ function DSR:valid()
 	return false
 end
 
+-- Copy Settings --
+function DSR:copySettings(obj)
+	self.filter = obj.filter
+end
+
 -- Update --
 function DSR:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	
 	-- Check the Validity --
-	if self:valid() == false then
+	if valid(self) == false then
 		self:remove()
 		return
 	end
@@ -78,6 +83,24 @@ function DSR:getTooltipInfos(GUI)
 	if self.inventoryItem ~= nil and self.inventoryCount > 0 then
 		Util.itemToFrame(self.inventoryItem, self.inventoryCount, GUI)
 	end
+
+	-- Create the Filter Display --
+	if self.filter ~= nil and game.item_prototypes[self.filter] ~= nil then
+		local fDisplayL = GUI.add{type="label"}
+		fDisplayL.style.font = "LabelFont"
+		fDisplayL.caption = {"", {"gui-description.Filter"}, ": "}
+		fDisplayL.style.font_color = {92, 232, 54}
+		fDisplayL.style.top_margin = 10
+
+		local sprite = "item/" .. self.filter
+		local fDisplayI = GUI.add{type="sprite", sprite=sprite}
+		fDisplayI.tooltip = self.filter
+	end
+
+	-- Add the Set Filter Button --
+	local fButton = GUI.add{type="button", name = "MFInfos", caption={"", {"gui-description.SetFilter"}}}
+	fButton.style.width = 100
+
 end
 
 -- Return the number of item present inside the Inventory --
