@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.98
+Date: 18/02/2020
+  Major Features:
+    - Multiplayer Update
+    - You can now place more than one Mobile Factory (One per Player)
+  Gui:
+    - The Tooltip GUI now show to who belong a Structure
+  Bugfixes:
+    - Mine Dimensional Tile give now Dimensional Tile
+    - All things inside the Information GUI will no longer disappear when the Mobile Factory is removed
+---------------------------------------------------------------------------------------------------
 Version: 0.0.97
 Date: 16/02/2020
   Major Features:
@@ -145,7 +156,7 @@ Date: 19/01/2020
   Bugfixes:
     - Fixed a compatibility problem with Bob's Logistic Mod and the Temp Chest
     - Fixed a crash when an Item from a removed mod was still inside a Deep Storage
-    - Rebuilded the Contruction Area inside the Control Center
+    - Rebuilded the Construction Area inside the Control Center
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.82
 Date: 18/01/2020
@@ -624,7 +635,7 @@ Version: 0.0.38
 Date: 13/10/2019
   Major Features:
     - Constructible Area inside the Control Center, will be used to place upgrade and other things
-    - New Technology: Constructible Area 1, unlock the first Contructible Area
+    - New Technology: Constructible Area 1, unlock the first Constructible Area
   Features:
     - Added Inventory Pad: Expend the Internal Inventory, must be placed inside the Constructible Area
     - New Technology: Inventory Pad, unlock the Inventory Pad

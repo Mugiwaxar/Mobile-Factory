@@ -3,6 +3,8 @@
 -- Create the Data Center base object --
 DC = {
 	ent = nil,
+	player = "",
+	MF = nil,
 	invObj = nil,
 	animID = 0,
 	active = false,
@@ -13,7 +15,7 @@ DC = {
 	inConflict = false
 }
 
--- Contructor --
+-- Constructor --
 function DC:new(object)
 	if object == nil then return end
 	local t = {}
@@ -21,6 +23,9 @@ function DC:new(object)
 	setmetatable(t, mt)
 	mt.__index = DC
 	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
 	t.invObj = INV:new("Inventory " .. tostring(object.unit_number))
 	t.dataNetwork = DN:new(t)
 	UpSys.addObj(t)
@@ -120,6 +125,12 @@ end
 
 -- Tooltip Infos --
 function DC:getTooltipInfos(GUI)
+
+	-- Create the Belongs to Label --
+	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
+	belongsToL.style.font = "LabelFont"
+	belongsToL.style.font_color = _mfOrange
+
 	-- Create the Data Network label --
 	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
 	if self.dataNetwork ~= nil then

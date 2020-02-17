@@ -89,7 +89,7 @@ _mfEntitiesScanedPerUpdate = 30
 
 -- Construction Jet --
 _mfHPRepairedPerUpdate = -35
-_mfContructionJetEnergyNeeded = 2500000
+_mfConstructionJetEnergyNeeded = 2500000
 
 -- Repair Jet --
 _mfRepairJetEnergyNeeded = 4000000
@@ -123,3 +123,4 @@ _mfBlue = {108, 114, 229}
 _mfGreen = {92, 232, 54}
 _mfPurple = {155, 0, 168}
 _mfRed = {231, 5, 5}
+_mfOrange = {211, 84, 0}

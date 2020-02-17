@@ -15,9 +15,12 @@ function somethingWasPlaced(event, isRobot)
 		isPlayer = true
 		creator = getPlayer(event.player_index)
 	end
+
+	-- Get the Player Mobile Factory --
+	local MF = getMF(event.created_entity.last_user.name)
 	
 	-- Prevent to place Tiles inside the Control Center --
-	if creator ~= nil and event.tiles ~= nil and creator.surface.name == _mfControlSurfaceName  then
+	if creator ~= nil and event.tiles ~= nil and string.match(creator.surface.name, _mfControlSurfaceName) then
 		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then 
 			creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.CCNotPlaceable"}})
 		end
@@ -29,10 +32,10 @@ function somethingWasPlaced(event, isRobot)
 	-- Check if all are valid --
 	if event.created_entity == nil or event.created_entity.valid == false then return end
 	
-	-- If the Mobile Factory is placed --
+	-- If a Mobile Factory is placed --
 	if string.match(event.created_entity.name, "MobileFactory") then
 		-- If the Mobile Factory already exist --
-		if global.MF.ent ~= nil and global.MF.ent.valid == true then
+		if MF ~= nil and MF.ent ~= nil and MF.ent.valid == true then
 			if isPlayer == true then creator.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }}) end
 			event.created_entity.destroy()
 			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
@@ -40,7 +43,7 @@ function somethingWasPlaced(event, isRobot)
 			end
 			return
 		-- Check if the Mobile Factory can be placed here --
-		elseif creator.surface.name == _mfSurfaceName or creator.surface.name == _mfControlSurfaceName then
+		elseif string.match(creator.surface.name, _mfSurfaceName) or string.match(creator.surface.name, _mfControlSurfaceName) then
 			if isPlayer == true then creator.print({"", {"gui-description.MFPlacedInsideFactory"}}) end
 			event.created_entity.destroy()
 			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
@@ -62,7 +65,7 @@ function somethingWasPlaced(event, isRobot)
 	end
 	
 	-- Prevent to place listed entities outside the Mobile Factory --
-	if event.created_entity.surface.name ~= _mfSurfaceName then
+	if string.match(event.created_entity.surface.name, _mfSurfaceName) == nil then
 		if canBePlacedOutside(event.created_entity.name) == false then
 			if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheFactory"}}) end
 			event.created_entity.destroy()
@@ -81,7 +84,7 @@ function somethingWasPlaced(event, isRobot)
 	end
 	
 	-- Ghost --
-	if isPlayer == true and event.created_entity.surface.name ~= _mfSurfaceName and event.stack ~= nil and event.stack.valid_for_read == true and event.created_entity.name == "entity-ghost" then
+	if isPlayer == true and string.match(event.created_entity.surface.name, _mfSurfaceName) == nil and event.stack ~= nil and event.stack.valid_for_read == true and event.created_entity.name == "entity-ghost" then
 		if canBePlacedOutside(event.stack.name) == false then
 			if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheFactory"}}) end
 			event.created_entity.destroy()
@@ -90,7 +93,7 @@ function somethingWasPlaced(event, isRobot)
 	end
 	
 	-- Blueprint --
-	if isPlayer == true and creator.surface.name ~= _mfSurfaceName and event.stack ~= nil and event.stack.valid_for_read == true and event.stack.is_blueprint == true then
+	if isPlayer == true and string.match(event.created_entity.surface.name, _mfSurfaceName) == nil and event.stack ~= nil and event.stack.valid_for_read == true and event.stack.is_blueprint == true then
 	if event.stack.name == "DeepStorage" then
 		if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheCCCArea"}}) end
 			event.created_entity.destroy()
@@ -104,7 +107,12 @@ function somethingWasPlaced(event, isRobot)
 	end
 	
 	-- Allow to place things in the Control Center --
-	if event.created_entity.name == "DeepStorage" and event.created_entity.surface.name == _mfControlSurfaceName then
+	if event.created_entity.name == "DeepStorage" and string.match(event.created_entity.surface.name, _mfControlSurfaceName) then
+		-------------------------------------------------------------------------------------------------- GetTile? -------------------------------------------------------------------
+		-------------------------------------------------------------------------------------------------- GetTile? -------------------------------------------------------------------
+		-------------------------------------------------------------------------------------------------- GetTile? -------------------------------------------------------------------
+		-------------------------------------------------------------------------------------------------- GetTile? -------------------------------------------------------------------
+		-------------------------------------------------------------------------------------------------- GetTile? -------------------------------------------------------------------
 		local tile = event.created_entity.surface.find_tiles_filtered{position=event.created_entity.position, radius=1, limit=1}
 		if tile[1] ~= nil and tile[1].valid == true and tile[1].name == "BuildTile" then
 			placedDeepStorage(event)
@@ -120,7 +128,7 @@ function somethingWasPlaced(event, isRobot)
 	end
 	
 	-- Prevent to place things inside the Control Center --
-	if event.created_entity.surface.name == _mfControlSurfaceName then
+	if string.match(event.created_entity.surface.name, _mfControlSurfaceName) then
 		if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.CCNotPlaceable"}}) end
 		event.created_entity.destroy()
 		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
@@ -141,7 +149,7 @@ function somethingWasPlaced(event, isRobot)
 	
 	-- Save the Factory Chest --
 	if event.created_entity.name == "FactoryChest" then
-		if global.MF.fChest ~= nil and global.MF.fChest.valid == true then
+		if MF ~= nil and MF.fChest ~= nil and MF.fChest.valid == true then
 			if isPlayer == true then creator.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }}) end
 			event.created_entity.destroy()
 			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
@@ -149,12 +157,13 @@ function somethingWasPlaced(event, isRobot)
 			end
 			return
 		else
-			global.MF.fChest = event.created_entity
+			MF.fChest = event.created_entity
 		end
 	end
 	
 	-- Save the Ghost inside the Construction Table --
-	if event.created_entity ~= nil and event.created_entity.valid == true and event.created_entity.name == "entity-ghost" and global.MF.ent ~= nil and global.MF.ent.valid == true and event.created_entity.surface.name == global.MF.ent.surface.name then
+	if event.created_entity ~= nil and event.created_entity.valid == true and event.created_entity.name == "entity-ghost" and
+	MF ~= nil and MF.ent ~= nil and MF.valid == true and event.created_entity.surface.name == MF.ent.surface.name then
 		if table_size(global.constructionTable) > 1000 then
 			game.print("Mobile Factory: To many Blueprint inside the Construction Table")
 			global.constructionTable = {}
@@ -230,7 +239,7 @@ function somethingWasPlaced(event, isRobot)
 	
 	-- Save the Data Center MF --
 	if event.created_entity.name == "DataCenterMF" then
-		if valid(global.MF.dataCenter) == true then
+		if MF ~= nil and valid(MF.dataCenter) == true then
 			if isPlayer == true then creator.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }}) end
 			event.created_entity.destroy()
 			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
@@ -294,14 +303,23 @@ end
 function somethingWasRemoved(event)
 	-- Check if the Entity is valid --
 	if event.entity == nil or event.entity.valid == false then return end
+	-- Get the Player Mobile Factory --
+	local MF = nil
+	if event.entity.last_user ~= nil then
+		MF = getMF(event.entity.last_user.name)
+	end
 	-- The Mobile Factory was removed --
 	if string.match(event.entity.name, "MobileFactory") then
-		global.MF:remove(event.entity)
+		if MF ~= nil then
+			MF:remove(event.entity)
+		end
 		return
 	end
 	-- Remove the Factory Chest --
 	if event.entity.name == "FactoryChest" then
-		global.MF.fChest = nil
+		if MF ~= nil then
+			MF.fChest = nil
+		end
 		return
 	end
 	-- Remove the Dimensional Accumulator --
@@ -425,7 +443,11 @@ end
 
 -- Called when a Structure is marked for deconstruction --
 function markedForDeconstruction(event)
-	if event.entity == nil or event.entity.valid == false then return end
-	if global.MF.ent == nil or global.MF.ent.valid == false or event.entity.surface.name ~= global.MF.ent.surface.name then return end
+	if event.entity == nil or event.entity.valid == false or event.player_index == nil then return end
+	local player = getPlayer(event.player_index)
+	if player == nil then return end
+	local MF = getMF(player.name)
+	if MF == nil then return end
+	if MF[player.name].ent == nil or MF[player.name].ent.valid == false or event.entity.surface.name ~= MF.ent.surface.name then return end
 	table.insert(global.constructionTable,{ent=event.entity, name=event.entity.name, position=event.entity.position, direction=event.entity.direction or 1, mission="Deconstruct"})
 end

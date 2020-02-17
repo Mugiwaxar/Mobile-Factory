@@ -1,7 +1,8 @@
 -- Read changed Options from the Options GUI --
 function GUI.readOptions(option, player, gui)
 	local name = option.name
-	-- Main GUI --
+
+	------------------- Main GUI -------------------
 	if name == "GUIPosOpt" then
 		player.gui.screen.mfGUI.mfGUICenterFrame.mfposition.visible = player.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab1Frame.mfOptTab1Pane.GUIPosOpt.state
 	end
@@ -29,7 +30,8 @@ function GUI.readOptions(option, player, gui)
 	if name == "GUIEnergyBarOpt" then
 		player.gui.screen.mfGUI.mfGUICenterFrame.InternalEnergyBar.visible = player.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab1Frame.mfOptTab1Pane.GUIEnergyBarOpt.state
 	end
-	-- Game --
+
+	------------------- Game -------------------
 	if name == "MiningJetDistanceOpt" then
 		global.mjMaxDistance = tonumber(option.text)
 	end
@@ -42,7 +44,16 @@ function GUI.readOptions(option, player, gui)
 	if name == "CombatJetDistanceOpt" then
 		global.cbjMaxDistance = tonumber(option.text)
 	end
-	-- Performances --
+	if name == "FloorIsLaveActiveOpt" then
+		global.floorIsLavaActivated = option.state
+		if global.floorIsLavaActivated == true then
+			game.print({"gui-description.FloorIsLavaActivated"})
+		else
+			game.print({"gui-description.FloorIsLavaDeactivated"})
+		end
+	end
+	
+	------------------- Performances -------------------
 	if name == "SystemPerfEntsPerTick" then
 		local number = tonumber(option.text)
 		if number == nil then return end

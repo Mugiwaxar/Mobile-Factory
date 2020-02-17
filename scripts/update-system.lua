@@ -29,10 +29,11 @@ function UpSys.scanObjs()
   end
 		
   -- Add Object --
-  UpSys.addObject(global.MF)
-  if UpSys.addObject(global.MF.dataCenter) == false then global.MF.dataCenter = nil end
+--   UpSys.addObject(global.MF)
+--   if UpSys.addObject(global.MF.dataCenter) == false then global.MF.dataCenter = nil end
 	
   -- Add Array --
+  UpSys.addTable(global.MFTable)
   UpSys.addTable(global.dataCenterTable)
   UpSys.addTable(global.matterSerializerTable)
   UpSys.addTable(global.matterPrinterTable)
@@ -49,6 +50,7 @@ function UpSys.scanObjs()
   UpSys.addTable(global.repairJetTable)
   UpSys.addTable(global.combatJetTable)
   UpSys.addTable(global.deepStorageTable)
+  UpSys.addTable(global.pdpTable)
 
   -- Save the last scan tick --
   global.upSysLastScan = game.tick
@@ -145,35 +147,19 @@ function UpSys.update(event)
   global.upsysTickTable[game.tick] = nil
 end
 
-
--- Recharge inroom Dimensional Accumulator --
-function updateAccumulators()
-	-- Factory --
-	if global.MF.fS ~= nil and global.MF.fS.valid == true and technologyUnlocked("EnergyDistribution1") and global.MF.internalEnergyDistributionActivated and global.MF.internalEnergy > 0 then
-		for k, entity in pairs(global.accTable) do
-			if entity == nil or entity.valid == false then global.accTable[k] = nil return end
-			if global.MF.internalEnergy > _mfBaseEnergyAccSend and entity.energy < entity.electric_buffer_size then
-				entity.energy = entity.energy + _mfBaseEnergyAccSend
-				global.MF.internalEnergy = global.MF.internalEnergy - _mfBaseEnergyAccSend
-			end
-		end
-	end
-	-- Control Center --
-	if global.MF.ccS ~= nil then
-		local accumulator = global.MF.ccS.find_entity("DimensionalAccumulator", {2,12})
-		if accumulator == nil or accumulator.valid == false then
-			game.print("Unable to charge the Control Center accumulator")
-		else
-			accumulator.energy = accumulator.electric_buffer_size
-		end
-	end
-end
-
 -- Fill/Empty tank --
 function updateLogisticFluidPoles()
-	if technologyUnlocked("LogisticFluidPole") == false then return end
+	-- if technologyUnlocked("LogisticFluidPole") == false then return end
 	for k, entity in pairs(global.lfpTable) do
-		if entity == nil or entity.valid == false then global.lfpTable[k] = nil return end
+    if entity == nil or entity.valid == false or entity.last_user == nil then
+      global.lfpTable[k] = nil
+      goto continue
+    end
+    local MF = getMF(entity.last_user.name)
+    if MF == nil then
+      global.lfpTable[k] = nil
+      goto continue
+    end
 		local powerMD = 0
 		local efficiencyMD = 0
 		local focusMD = 0
@@ -198,119 +184,57 @@ function updateLogisticFluidPoles()
 			local lfpLaser = _lfpFluidLaser + focusMD
 			local entities = entity.surface.find_entities_filtered{position=entity.position, radius=lfpRadius}
 			i = 1
-			for k, pTank in pairs(entities) do
-				if pTank ~= nil and pTank.valid == true then
-					if i > lfpLaser then break end
-					if pTank.type == "storage-tank" then
-						if pTank.fluidbox.get_capacity(1) > 1000 then
-							local ccTank
-							local filter
-							if global.tankTable ~= nil and global.tankTable[tankMD] ~= nil then 
-								filter = global.tankTable[tankMD].filter
-								ccTank = global.tankTable[tankMD].ent
-							end
-							if filter ~= nil and ccTank ~= nil then
-								if methodMD == "DistributionModule" then
-									local name
-									local amount
-									for k, i in pairs(ccTank.get_fluid_contents()) do
-										name = k
-										amount = i
-									end
-									if name ~= nil and global.MF.internalEnergy > _lfpFluidConsomption * math.min(amount, lfpDrain) then
-									
-										local amountRm = pTank.insert_fluid({name=name, amount=math.min(amount, lfpDrain)})
-										ccTank.remove_fluid{name=name, amount = amountRm}
-										if amountRm > 0 then
-											entity.surface.create_entity{name="PurpleBeam", duration=60, position=entity.position, target=pTank.position, source={entity.position.x, entity.position.y-4.5}}
-											global.MF.internalEnergy = global.MF.internalEnergy - (_lfpFluidConsomption*amountRm)
-											i = i + 1
-										end
-									end
-								end
-								if methodMD == "DrainModule" then
-									local name
-									local amount
-									for k, i in pairs(pTank.get_fluid_contents()) do
-										name = k
-										amount = i
-									end
-									if name ~= nil and name == filter and global.MF.internalEnergy > _lfpFluidConsomption * math.min(amount, lfpDrain) then
-										local amountRm = ccTank.insert_fluid({name=name, amount=math.min(amount, lfpDrain)})
-										pTank.remove_fluid{name=name, amount=amountRm}
-										if amountRm > 0 then
-											entity.surface.create_entity{name="PurpleBeam", duration=60, position=entity.position, target=pTank.position, source={entity.position.x, entity.position.y-4.5}}
-											global.MF.internalEnergy = global.MF.internalEnergy - (_lfpFluidConsomption*amountRm)
-											i = i + 1
-										end
-									end
-								end
-							end
-						end
-					end
-				end
+			for k2, pTank in pairs(entities) do
+				if pTank == nil or pTank.valid ~= true then goto continue2 end
+        if i > lfpLaser then break end
+        if pTank.type ~= "storage-tank" then goto continue2 end
+        if pTank.fluidbox.get_capacity(1) < 1000 then goto continue2 end
+        local ccTank
+        local filter
+        if MF.varTable.tanks ~= nil and MF.varTable.tanks[tankMD] ~= nil then
+          filter = MF.varTable.tanks[tankMD].filter
+          ccTank = MF.varTable.tanks[tankMD].ent
+        end
+        if filter == nil or ccTank == nil then goto continue2 end
+
+        if methodMD == "DistributionModule" then
+          local name
+          local amount
+          for k3, i in pairs(ccTank.get_fluid_contents()) do
+            name = k3
+            amount = i
+          end
+          if name ~= nil and MF.internalEnergy > _lfpFluidConsomption * math.min(amount, lfpDrain) then
+            local amountRm = pTank.insert_fluid({name=name, amount=math.min(amount, lfpDrain)})
+            ccTank.remove_fluid{name=name, amount = amountRm}
+            if amountRm > 0 then
+              entity.surface.create_entity{name="PurpleBeam", duration=60, position=entity.position, target=pTank.position, source={entity.position.x, entity.position.y-4.5}}
+              MF.internalEnergy = MF.internalEnergy - (_lfpFluidConsomption*amountRm)
+              i = i + 1
+            end
+          end
+        end
+
+        if methodMD == "DrainModule" then
+          local name
+          local amount
+          for k, i in pairs(pTank.get_fluid_contents()) do
+            name = k
+            amount = i
+          end
+          if name ~= nil and name == filter and MF.internalEnergy > _lfpFluidConsomption * math.min(amount, lfpDrain) then
+            local amountRm = ccTank.insert_fluid({name=name, amount=math.min(amount, lfpDrain)})
+            pTank.remove_fluid{name=name, amount=amountRm}
+            if amountRm > 0 then
+              entity.surface.create_entity{name="PurpleBeam", duration=60, position=entity.position, target=pTank.position, source={entity.position.x, entity.position.y-4.5}}
+              MF.internalEnergy = MF.internalEnergy - (_lfpFluidConsomption*amountRm)
+              i = i + 1
+            end
+          end
+        end
+        ::continue2::
 			end
-		end
+    end
+    ::continue::
 	end
 end
-
--- Update the Power Drain Pole --
-function updatePowerDrainPole(event)
-	-- Test if the technology is unlocked, if the PDP table is not empty and if the Mobile Factory need energy --
-	if technologyUnlocked("PowerDrainPole") and table_size(global.pdpTable) > 0 and global.MF.internalEnergy < global.MF.maxInternalEnergy then
-		-- Create updated variable --
-		local updated = 0
-		-- Itinerate all Power Drain Pole --
-		for k, pdp in pairs(global.pdpTable) do
-			-- Test if the Power Drain Pole still exist else remove it from the table --
-			if pdp.ent == nil or pdp.ent.valid == false then 
-				global.pdpTable[k] = nil
-			else
-				-- Initialise a new Power Drain Pole --
-				if pdp.lastUpdate == 0 then
-					pdp.lastUpdate = event.tick
-				-- Try to update a Power Drain Pole --
-				elseif pdp.lastUpdate + 60 <= event.tick then
-					-- If there are less than 10 updates --
-					if updated < 10 then
-						-- Update the Power Drain Pole and add 1 update --
-						pdp:update(event)
-						updated = updated + 1
-					-- If there are 10 or more updates and the Power Drain Pole need to update --
-					elseif updated >= 10 and event.tick - pdp.lastUpdate == 61 then
-						-- Update the Power Drain Pole and add 1 update --
-						pdp:update(event)
-						updated = updated + 1
-					-- If there are more than 20 updates and the Power Drain Pole realy need to update --
-					elseif updated >= 20 and event.tick - pdp.lastUpdate == 62 then
-						-- Update the Power Drain Pole and add 1 update --
-						pdp:update(event)
-						updated = updated + 1
-					-- If the Power Drain Pole update is mandatory --
-					elseif event.tick - pdp.lastUpdate >= 63 then
-						-- Update the Power Drain Pole and add 1 update --
-						pdp:update(event)
-						updated = updated + 1
-					end
-				end
-			end
-		end
-	end
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

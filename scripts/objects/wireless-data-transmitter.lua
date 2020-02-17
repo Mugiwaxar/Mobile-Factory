@@ -3,6 +3,8 @@
 -- Create the Wireless Data Transmitter object --
 WDT = {
 	ent = nil,
+	player = "",
+	MF = nil,
 	entID = 0,
 	animID = 0,
 	active = false,
@@ -22,6 +24,9 @@ function WDT:new(object)
 	setmetatable(t, mt)
 	mt.__index = WDT
 	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
 	t.entID = object.unit_number
 	t.localCN = {}
 	t.lastSignal = {}
@@ -68,11 +73,11 @@ function WDT:update()
 
 	-- Try to find a connected Data Network --
 	local obj = Util.getConnectedDN(self)
-	if obj ~= nil then
+	if obj ~= nil and valid(obj.dataNetwork) then
 		self.dataNetwork = obj.dataNetwork
 		self.dataNetwork:addObject(self)
 	else
-		if self.dataNetwork ~= nil then
+		if valid(self.dataNetwork) then
 			self.dataNetwork:removeObject(self)
 		end
 		self.dataNetwork = nil
@@ -142,6 +147,12 @@ end
 
 -- Tooltip Info --
 function WDT:getTooltipInfos(GUI)
+
+	-- Create the Belongs to Label --
+	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
+	belongsToL.style.font = "LabelFont"
+	belongsToL.style.font_color = _mfOrange
+
 	-- Create the Data Network label --
 	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
 	if self.dataNetwork ~= nil then

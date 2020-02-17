@@ -3,6 +3,8 @@
 -- Create the Data Center MF base object --
 DCMF = {
 	ent = nil,
+	player = "",
+	MF = nil,
 	invObj = nil,
 	animID = 0,
 	active = false,
@@ -12,7 +14,7 @@ DCMF = {
 	dataNetwork = nil
 }
 
--- Contructor --
+-- Constructor --
 function DCMF:new(object)
 	if object == nil then return end
 	local t = {}
@@ -20,7 +22,10 @@ function DCMF:new(object)
 	setmetatable(t, mt)
 	mt.__index = DCMF
 	t.ent = object
-	t.invObj = global.MF.II
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
+	t.invObj = t.MF.II
 	t.dataNetwork = DN:new(t)
 	UpSys.addObj(t)
 	return t
@@ -123,6 +128,12 @@ function DCMF:update()
 end
 -- Tooltip Infos --
 function DCMF:getTooltipInfos(GUI)
+
+	-- Create the Belongs to Label --
+	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
+	belongsToL.style.font = "LabelFont"
+	belongsToL.style.font_color = _mfOrange
+	
 	-- Create the Data Network label --
 	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
 	if self.dataNetwork ~= nil then

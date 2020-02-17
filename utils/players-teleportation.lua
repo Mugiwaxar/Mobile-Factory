@@ -1,12 +1,15 @@
 require("utils/functions.lua")
 
 -- Teleport the player inside the Mobile Factory --
-function teleportPlayerInside(player)
+function teleportPlayerInside(player, MF)
 	if player == nil then return end
+	if MF == nil then return end
 	-- Check Internal Surface and Player --
-	if global.MF.fS == nil then player.print({"", {"gui-description.FSLost"}}) return end
+	if MF.fS == nil then player.print({"", {"gui-description.FSLost"}}) return end
 	-- Save the visited Factory once variable --
-	setPlayerVariable(player.name, "VisitedFactory", true)
+	if MF.ent ~= nil and MF.ent.last_user ~= nil and player.name == MF.ent.last_user.name then
+		setPlayerVariable(player.name, "VisitedFactory", true)
+	end
 	-- Get the Player direction --
 	local direction = player.walking_state.direction
 	-- Calcul the future position --
@@ -21,36 +24,37 @@ function teleportPlayerInside(player)
 		position = {-2,0}
 	end
 	--Test where the Player can be teleported and teleport the Player --
-	if global.MF.fS.can_place_entity{name="character", position = position} then
-		player.teleport(position, global.MF.fS)
-	elseif global.MF.fS.can_place_entity{name="character", position = {2, 0}} then
-		player.teleport({2,0}, global.MF.fS)
-	elseif global.MF.fS.can_place_entity{name="character", position = {-2, 0}} then
-		player.teleport({-2,0}, global.MF.fS)
-	elseif global.MF.fS.can_place_entity{name="character", position = {0, 2}} then
-		player.teleport({0,2}, global.MF.fS)
+	if MF.fS.can_place_entity{name="character", position = position} then
+		player.teleport(position, MF.fS)
+	elseif MF.fS.can_place_entity{name="character", position = {2, 0}} then
+		player.teleport({2,0}, MF.fS)
+	elseif MF.fS.can_place_entity{name="character", position = {-2, 0}} then
+		player.teleport({-2,0}, MF.fS)
+	elseif MF.fS.can_place_entity{name="character", position = {0, 2}} then
+		player.teleport({0,2}, MF.fS)
 	else
-		player.teleport({0,-2}, global.MF.fS)
+		player.teleport({0,-2}, MF.fS)
 	end
 	-- Play the sound --
 	player.surface.play_sound{path="MFEnter", position=player.position}
 	-- Save the Mobile Factory last surface and position --
-	global.MF.lastSurface = global.MF.ent.surface
-	global.MF.lastPosX = global.MF.ent.position.X
-	global.MF.lastPosY = global.MF.ent.position.Y
+	MF.lastSurface = MF.ent.surface
+	MF.lastPosX = MF.ent.position.X
+	MF.lastPosY = MF.ent.position.Y
 end
 
 -- Teleport the player outside the Mobile Factory --
-function teleportPlayerOutside(player)
+function teleportPlayerOutside(player, MF)
 	-- Check if the Player is on the right Surface --
-	if player.surface.name ~= _mfSurfaceName and player.surface.name ~= _mfControlSurfaceName then return end
+	if string.match(player.surface.name, _mfSurfaceName) == nil and string.match(player.surface.name, _mfControlSurfaceName) == nil then return end
+	if MF == nil then return end
 	-- Check if the Mobile Factory Vehicle is valid --
-	if global.MF.ent == nil or global.MF.ent.valid == false then
+	if MF.ent == nil or MF.ent.valid == false then
 		-- Unable to find the Mobile Factory --
 		player.print({"", {"gui-description.MFTeleportToLastPos"}}) 
-		if global.MF.lastSurface ~= nil then
+		if MF.lastSurface ~= nil then
 			-- Teleport the Player to the last know position --
-			player.teleport({global.MF.lastPosX,global.MF.lastPosY}, global.MF.lastSurface)
+			player.teleport({MF.lastPosX,MF.lastPosY}, MF.lastSurface)
 		else
 			-- Teleport the Player to the spawm point --
 			player.teleport({0,0}, "nauvis")
@@ -62,50 +66,52 @@ function teleportPlayerOutside(player)
 	-- Calcul the future position --
 	local position
 	if direction == defines.direction.north then
-		position = {global.MF.ent.position.x, global.MF.ent.position.y -5}
+		position = {MF.ent.position.x, MF.ent.position.y -5}
 	elseif direction == defines.direction.northeast or direction == defines.direction.east or direction == defines.direction.southeast then
-		position = {global.MF.ent.position.x + 2, global.MF.ent.position.y}
+		position = {MF.ent.position.x + 2, MF.ent.position.y}
 	elseif direction == defines.direction.south then
-		position = {global.MF.ent.position.x, global.MF.ent.position.y + 5}
+		position = {MF.ent.position.x, MF.ent.position.y + 5}
 	else
-		position = {global.MF.ent.position.x -5, global.MF.ent.position.y}
+		position = {MF.ent.position.x -5, MF.ent.position.y}
 	end
 	-- Teleport the Player --
-	if global.MF.ent.surface.can_place_entity{name="character", position=position} then
-		player.teleport(position, global.MF.ent.surface)
-	elseif global.MF.ent.surface.can_place_entity{name="character", position = {global.MF.ent.position.x + 5, global.MF.ent.position.y}} then
-		player.teleport({global.MF.ent.position.x + 5, global.MF.ent.position.y}, global.MF.ent.surface)
-	elseif global.MF.ent.surface.can_place_entity{name="character", position = {global.MF.ent.position.x -5, global.MF.ent.position.y}} then
-		player.teleport({global.MF.ent.position.x - 5, global.MF.ent.position.y}, global.MF.ent.surface)
-	elseif global.MF.ent.surface.can_place_entity{name="character", position = {global.MF.ent.position.x, global.MF.ent.position.y - 7}} then
-		player.teleport({global.MF.ent.position.x, global.MF.ent.position.y - 7}, global.MF.ent.surface)
+	if MF.ent.surface.can_place_entity{name="character", position=position} then
+		player.teleport(position, MF.ent.surface)
+	elseif MF.ent.surface.can_place_entity{name="character", position = {MF.ent.position.x + 5, MF.ent.position.y}} then
+		player.teleport({MF.ent.position.x + 5, MF.ent.position.y}, MF.ent.surface)
+	elseif MF.ent.surface.can_place_entity{name="character", position = {MF.ent.position.x -5, MF.ent.position.y}} then
+		player.teleport({MF.ent.position.x - 5, MF.ent.position.y}, MF.ent.surface)
+	elseif MF.ent.surface.can_place_entity{name="character", position = {MF.ent.position.x, MF.ent.position.y - 7}} then
+		player.teleport({MF.ent.position.x, MF.ent.position.y - 7}, MF.ent.surface)
 	else
-		player.teleport({global.MF.ent.position.x, global.MF.ent.position.y + 7}, global.MF.ent.surface)
+		player.teleport({MF.ent.position.x, MF.ent.position.y + 7}, MF.ent.surface)
 	end
 	-- Play the sound --
 	player.surface.play_sound{path="MFLeave", position=player.position}
 end
 
 -- Teleport the player from the Factory to the Control Center --
-function teleportPlayerToControlCenter(player)
+function teleportPlayerToControlCenter(player, MF)
 	-- Check the Player --
 	if player == nil then return end
+	if MF == nil then return end
 	-- Check if the Control Center Surface is valid --
-	if global.MF.ccS == nil then game.print({"", {"gui-description.CCSLost"}}) return end
+	if MF.ccS == nil then game.print({"", {"gui-description.CCSLost"}}) return end
 	-- Teleport the Player --
-	player.teleport({0,4}, global.MF.ccS)
+	player.teleport({0,4}, MF.ccS)
 	-- Play the sound --
 	player.surface.play_sound{path="MFEnter", position=player.position}
 end
 
 -- Teleport the player from Control Center to the Factory --
-function teleportPlayerToFactory(player)
+function teleportPlayerToFactory(player, MF)
 	-- Check the Player --
 	if player == nil then return end
+	if MF == nil then return end
 	-- Check if the Factory Surface is valid --
-	if global.MF.fS == nil then player.print({"", {"gui-description.FSLost"}}) return end
+	if MF.fS == nil then player.print({"", {"gui-description.FSLost"}}) return end
 	-- Teleport the Player --
-	player.teleport({0,-30}, global.MF.fS)
+	player.teleport({0,-30}, MF.fS)
 	-- Play the sound --
 	player.surface.play_sound{path="MFEnter", position=player.position}
 end
