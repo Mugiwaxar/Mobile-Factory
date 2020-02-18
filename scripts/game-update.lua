@@ -157,7 +157,9 @@ end
 -- When a player joint the game --
 function initPlayer(event)
 	local player = getPlayer(event.player_index)
-	player.print(global.playersTable)
+	for k, player in pairs(global.playersTable) do
+		player.print(player.name)
+	end
 	if player == nil then return end
 	if global.playersTable[player.name] ~= nil then
 		setPlayerVariable(player.name, "GotInventory", true)
