@@ -49,6 +49,10 @@ if global.tankTable[3] ~= nil then global.MF.varTable.tanks[3] = Util.copyTable(
 if global.tankTable[4] ~= nil then global.MF.varTable.tanks[4] = Util.copyTable(global.tankTable[4]) end
 if global.tankTable[5] ~= nil then global.MF.varTable.tanks[5] = Util.copyTable(global.tankTable[5]) end
 
+-- Set the Mobile Factory Surface Name --
+if global.MF ~= nil and global.MF.player ~= nil and global.MF.fS ~= nil and global.MF.fS.valid == true then global.MF.fS.name = _mfSurfaceName .. global.MF.player end
+if global.MF ~= nil and global.MF.player ~= nil and global.MF.ccS ~= nil and global.MF.ccS.valid == true then global.MF.ccS.name = _mfControlSurfaceName .. global.MF.player end
+
 -- Remove old Variables and Tables --
 global.MF = {}
 global.tankTable = {}
