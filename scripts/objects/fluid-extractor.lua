@@ -2,6 +2,8 @@
 
 FE = {
 	ent = nil,
+	player = "",
+	MF = nil,
 	purity = 0,
 	charge = 0,
 	totalCharge = 0,
@@ -19,6 +21,9 @@ function FE:new(object)
 	setmetatable(t, mt)
 	mt.__index = FE
 	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
 	UpSys.addObj(t)
 	return t
 end
@@ -58,11 +63,11 @@ function FE:update(event)
 		return
 	end
 	-- The Fluid Extractor can work only if the Mobile Factory Entity is valid --
-	if global.MF.ent == nil or global.MF.ent.valid == false then return end
+	if self.MF.ent == nil or self.MF.ent.valid == false then return end
 	-- Check the Surface --
-	if self.ent.surface ~= global.MF.ent.surface then return end
+	if self.ent.surface ~= self.MF.ent.surface then return end
 	-- Check the Distance --
-	if Util.distance(self.ent.position, global.MF.ent.position) > _mfOreCleanerMaxDistance then
+	if Util.distance(self.ent.position, self.MF.ent.position) > _mfOreCleanerMaxDistance then
 		self.MFTooFar = true
 	else
 		self.MFTooFar = false
@@ -73,9 +78,15 @@ end
 
 -- Tooltip Infos --
 function FE:getTooltipInfos(GUI)
+
 	--------------- Make the Frame ----------------
 	local feFrame = GUI.add{type="frame", direction="vertical"}
 	feFrame.style.width = 150
+
+	-- Create the Belongs to Label --
+	local belongsToL = feFrame.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
+	belongsToL.style.font = "LabelFont"
+	belongsToL.style.font_color = _mfOrange
 		
 	-- Create Labels and Bares --
 	local nameLabel = feFrame.add{type="label", caption={"", {"gui-description.FluidExtractor"}}}
@@ -112,7 +123,7 @@ function FE:getTooltipInfos(GUI)
 	local dimTanks = {{"gui-description.Any"}}
 	local selectedIndex = 1
 	local i = 1
-	for k, dimTank in pairs(global.tankTable) do
+	for k, dimTank in pairs(self.MF.varTable.tanks) do
 		if dimTank ~= nil then
 			i = i + 1
 			dimTanks[k+1] = tostring(k)
@@ -132,7 +143,7 @@ function FE:changeDimTank(ID)
 	if ID == nil then self.selectedDimTank = nil end
 	-- Select the Ore Silo --
 	self.selectedDimTank = nil
-	for k, dimTank in pairs(global.tankTable) do
+	for k, dimTank in pairs(self.MF.varTable.tanks) do
 		if dimTank ~= nil and dimTank.ent ~= nil and dimTank.ent.valid == true then
 			if ID == k then
 				self.selectedDimTank = dimTank
@@ -176,7 +187,7 @@ function FE:extractFluids(event)
 	if amountAdded > 0 then
 		self.charge = self.charge - 10
 		-- Make a Beam --
-		self.ent.surface.create_entity{name="BigPurpleBeam", duration=59, position=self.ent.position, target=global.MF.ent.position, source=self.ent.position}
+		self.ent.surface.create_entity{name="BigPurpleBeam", duration=59, position=self.ent.position, target=self.MF.ent.position, source=self.ent.position}
 		-- Remove amount from the FluidPath --
 		resource.amount = math.max(resource.amount - amountAdded, 1)
 		-- Remove the FluidPath if amount == 0 --

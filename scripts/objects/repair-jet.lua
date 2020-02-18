@@ -3,6 +3,8 @@
 -- Create the Repair Jet base Object --
 RJ = {
 	ent = nil,
+	player = "",
+	MF = nil,
 	updateTick = 60,
 	lastUpdate = 0,
 	target = nil,
@@ -22,6 +24,9 @@ function RJ:new(object, target)
 	setmetatable(t, mt)
 	mt.__index = RJ
 	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
 	t.target = target
 	UpSys.addObj(t)
 	t:update()
@@ -85,6 +90,12 @@ end
 
 -- Tooltip Infos --
 function RJ:getTooltipInfos(GUI)
+
+	-- Create the Belongs to Label --
+	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
+	belongsToL.style.font = "LabelFont"
+	belongsToL.style.font_color = _mfOrange
+
 	-- Create the Current Work Label --
 	local work = GUI.add{type="label", caption={"", {"gui-description." .. self.currentOrder}}}
 	work.style.font = "LabelFont"
@@ -122,7 +133,7 @@ end
 -- Is the Jet Iddle ? --
 function RJ:isIddle()
 	if self.ent.command == nil then return true end
-	if self.ent.command.type ~= 6 and self.ent.command.type ~= 9 or isRepairing == true then
+	if self.ent.command.type ~= 6 and self.ent.command.type ~= 9 or self.isRepairing == true then
 		return false
 	end
 	return true
@@ -160,7 +171,7 @@ end
 -- Go Back to the Mobile Factory --
 function RJ:goMF()
 	-- Check if the Mobile Factory is still valid --
-	if global.MF.ent == nil or global.MF.ent.valid == false then
+	if self.MF.ent == nil or self.MF.ent.valid == false then
 		-- Say the Mobile Factory is not found --
 		self.MFNotFound = true
 		return
@@ -168,14 +179,14 @@ function RJ:goMF()
 		self.MFNotFound = false
 	end
 	-- Return to the Mobile Factory --
-	self.ent.set_command({type=defines.command.go_to_location, destination_entity=global.MF.ent, radius=1})
+	self.ent.set_command({type=defines.command.go_to_location, destination_entity=self.MF.ent, radius=1})
 	self.currentOrder = "GoMF"
 end
 
 -- Enter the Mobile Factory --
 function RJ:enterMF()
 	-- Check if the Mobile Factory is still valid --
-	if global.MF.ent == nil or global.MF.ent.valid == false then
+	if self.MF.ent == nil or self.MF.ent.valid == false then
 		-- Say the Mobile Factory is not found --
 		self.MFNotFound = true
 		return
@@ -185,7 +196,7 @@ function RJ:enterMF()
 	self.currentOrder = "EnterMF"
 	
 	-- Get the Mobile Factory Trunk --
-	local inv = global.MF.ent.get_inventory(defines.inventory.car_trunk)
+	local inv = self.MF.ent.get_inventory(defines.inventory.car_trunk)
 	
 	-- Check the Inventory --
 	if inv == nil or inv.valid == false then return end
@@ -204,20 +215,3 @@ function RJ:enterMF()
 	self:remove()
 	self.ent.destroy()
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

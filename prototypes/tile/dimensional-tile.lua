@@ -6,6 +6,7 @@ local dtTint = {150,50,130}
 local dtE = table.deepcopy(data.raw.tile["refined-concrete"])
 dtE.name = "DimensionalTile"
 dtE.tint = dtTint
+dtE.minable = {mining_time = 0.1, result = "DimensionalTile"}
 data:extend{dtE}
 
 -- Item --
