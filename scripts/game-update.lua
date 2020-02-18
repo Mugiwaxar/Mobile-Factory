@@ -158,8 +158,11 @@ end
 function initPlayer(event)
 	local player = getPlayer(event.player_index)
 	if player == nil then return end
-	setPlayerVariable(player.name, "VisitedFactory", false)
+	if global.playersTable[player.name] ~= nil then
+		setPlayerVariable(player.name, "GotInventory", true)
+	end
 	if getPlayerVariable(player.name, "GotInventory") ~= true then
+		setPlayerVariable(player.name, "VisitedFactory", false)
 		-- Mobile Factory Object --
 		global.MFTable[player.name] = MF:new()
 		global.MFTable[player.name].II = INV:new("Internal Inventory")
