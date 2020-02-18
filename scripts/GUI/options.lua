@@ -2,6 +2,18 @@
 function GUI.readOptions(option, player, gui)
 	local name = option.name
 
+	-- Get the Mobile Factory --
+	local MF = getMF(player.name)
+	if MF == nil then return end
+
+	------------------- MF -------------------
+	if name == "GUIShareOpt" then
+		MF.varTable.shareStructures = option.state
+	end
+	if name == "GUIUseShareOpt" then
+		MF.varTable.useSharedStructures = option.state
+	end
+
 	------------------- Main GUI -------------------
 	if name == "GUIPosOpt" then
 		player.gui.screen.mfGUI.mfGUICenterFrame.mfposition.visible = player.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab1Frame.mfOptTab1Pane.GUIPosOpt.state
@@ -33,16 +45,16 @@ function GUI.readOptions(option, player, gui)
 
 	------------------- Game -------------------
 	if name == "MiningJetDistanceOpt" then
-		global.mjMaxDistance = tonumber(option.text)
+		MF.varTable.jets.mjMaxDistance = tonumber(option.text)
 	end
 	if name == "ConstructionJetDistanceOpt" then
-		global.cjMaxDistance = tonumber(option.text)
+		MF.varTable.jets.cjMaxDistance = tonumber(option.text)
 	end
 	if name == "RepairJetDistanceOpt" then
-		global.rjMaxDistance = tonumber(option.text)
+		MF.varTable.jets.rjMaxDistance = tonumber(option.text)
 	end
 	if name == "CombatJetDistanceOpt" then
-		global.cbjMaxDistance = tonumber(option.text)
+		MF.varTable.jets.cbjMaxDistance = tonumber(option.text)
 	end
 	if name == "FloorIsLaveActiveOpt" then
 		global.floorIsLavaActivated = option.state

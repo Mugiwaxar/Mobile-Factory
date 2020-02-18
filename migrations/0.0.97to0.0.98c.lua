@@ -64,3 +64,25 @@ for k, MF in pairs(global.MFTable or {}) do
 		MF.ccS.name = _mfControlSurfaceName .. MF.player
 	end
 end
+
+-- Set GotInventory Value --
+for k, player in pairs(global.playersTable or {}) do
+	player["GotInventory"] = true
+end
+
+-- Set Jets Max Distance --
+for k, MF in pairs(global.MFTable or {}) do
+	if MF.varTable.jets == nil then
+		MF.varTable.jets = {}
+		MF.varTable.jets.mjMaxDistance = global.mjMaxDistance or _MFMiningJetDefaultMaxDistance
+		MF.varTable.jets.cjMaxDistance = global.cjMaxDistance or  _MFConstructionJetDefaultMaxDistance
+		MF.varTable.jets.rjMaxDistance = global.rjMaxDistance or  _MFRepairJetDefaultMaxDistance
+		MF.varTable.jets.cbjMaxDistance = global.cbjMaxDistance or  _MFCombatJetDefaultMaxDistance
+	end
+end
+
+-- Remove old Jets Distances --
+global.mjMaxDistance = nil
+global.cjMaxDistance = nil
+global.rjMaxDistance = nil
+global.cbjMaxDistance = nil

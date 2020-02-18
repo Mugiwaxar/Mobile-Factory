@@ -451,7 +451,7 @@ function GUI.mainGUIUpdate(player)
 	end
 	
 	-- Update the CallMF Button --
-	if Util.isOutside(player) == true then
+	if Util.isOutside(player) == false then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.CallMF.visible = false
 	else
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.CallMF.visible = true

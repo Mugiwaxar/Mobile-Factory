@@ -43,10 +43,6 @@ function updateValues()
 	if global.upSysLastScan == nil then global.upSysLastScan = 0 end
 	if global.IDModule == nil then global.IDModule = 0 end
 	if global.dataNetworkID == nil then global.dataNetworkID = 0 end
-	if global.mjMaxDistance == nil then global.mjMaxDistance = 200 end
-	if global.cjMaxDistance == nil then global.cjMaxDistance = 200 end
-	if global.rjMaxDistance == nil then global.rjMaxDistance = 200 end
-	if global.cbjMaxDistance == nil then global.cbjMaxDistance= 200 end
 	if global.constructionJetIndex == nil then global.constructionJetIndex = 0 end
 	if global.repairJetIndex == nil then global.repairJetIndex = 0 end
 	if global.floorIsLavaActivated == nil then global.floorIsLavaActivated = false end
@@ -157,12 +153,7 @@ end
 -- When a player joint the game --
 function initPlayer(event)
 	local player = getPlayer(event.player_index)
-	player.print(serpent.block(global.playersTable))
 	if player == nil then return end
-	if global.playersTable[player.name] ~= nil then
-		setPlayerVariable(player.name, "GotInventory", true)
-		return
-	end
 	if getPlayerVariable(player.name, "GotInventory") ~= true then
 		setPlayerVariable(player.name, "VisitedFactory", false)
 		-- Mobile Factory Object --
@@ -173,7 +164,7 @@ function initPlayer(event)
 		global.MFTable[player.name].player = player.name
 		createMFSurface(global.MFTable[player.name])
 		createControlRoom(global.MFTable[player.name])
-		Util.addMobileFactory(game.players[1])
+		Util.addMobileFactory(player)
 		setPlayerVariable(player.name, "GotInventory", true)
 	end
 end
@@ -304,7 +295,7 @@ function updateMiningJet()
 		-- Check the Inventory --
 		if inv == nil or inv.valid == false then return end
 		-- Check the Distance --
-		if Util.distance(flag.ent.position, flag.MF.ent.position) > global.mjMaxDistance then goto continue end
+		if Util.distance(flag.ent.position, flag.MF.ent.position) > flag.MF.varTable.jets.mjMaxDistance then goto continue end
 		-- Check if there are Ores left --
 		if table_size(flag.oreTable) <= 0 then goto continue end
 		-- Check if there are enought space inside the Targeted Inventory --
@@ -386,7 +377,7 @@ function updateConstructionJet()
 			goto continue
 		end
 		-- Check the Distance --
-		if Util.distance(structure.ent.position, MF.ent.position) > global.cjMaxDistance then goto continue end
+		if Util.distance(structure.ent.position, MF.ent.position) > MF.varTable.jets.cjMaxDistance then goto continue end
 		-- Check if there are no Jet already attributed to this Structure --
 		if valid(structure.jet) == true then goto continue end
 		-- Remove a Jet from the Inventory --
@@ -458,7 +449,7 @@ function updateRepairJet()
 			goto continue
 		end
 		-- Check the Distance --
-		if Util.distance(structure.ent.position, MF.ent.position) > global.rjMaxDistance then return end
+		if Util.distance(structure.ent.position, MF.ent.position) > MF.varTable.jets.rjMaxDistance then return end
 		-- Check if there are no Jet already attributed to this Structure --
 		if valid(structure.jet) then goto continue end
 		-- Remove a Jet from the Inventory --
@@ -488,7 +479,7 @@ function updateCombatJet()
 		-- Check the Inventory --
 		if inv == nil or inv.valid == false then goto continue end
 		-- Look for an Enemy --
-		local enemy = MF.ent.surface.find_entities_filtered{position=MF.ent.position, radius=global.cbjMaxDistance, type="unit", force="enemy", limit=1}[1]
+		local enemy = MF.ent.surface.find_entities_filtered{position=MF.ent.position, radius=MF.varTable.jets.cbjMaxDistance, type="unit", force="enemy", limit=1}[1]
 		-- Check the Entity --
 		if enemy == nil or enemy.valid == false then goto continue end
 		-- Sent 5 Jets --

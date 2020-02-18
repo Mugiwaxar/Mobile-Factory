@@ -185,7 +185,7 @@ function updateLogisticFluidPoles()
 			local entities = entity.surface.find_entities_filtered{position=entity.position, radius=lfpRadius}
 			i = 1
 			for k2, pTank in pairs(entities) do
-				if pTank == nil or pTank.valid ~= true then goto continue2 end
+				if pTank == nil or pTank.valid ~= true or Util.canUse(MF.player, pTank) == false then goto continue2 end
         if i > lfpLaser then break end
         if pTank.type ~= "storage-tank" then goto continue2 end
         if pTank.fluidbox.get_capacity(1) < 1000 then goto continue2 end

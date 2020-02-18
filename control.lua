@@ -45,11 +45,6 @@ function onInit()
 	global.IDModule = 0
 	-- Data Network --
 	global.dataNetworkID = 0
-	-- Jets Options --
-	global.mjMaxDistance = 200
-	global.cjMaxDistance = 200
-	global.rjMaxDistance = 200
-	global.cbjMaxDistance = 200
 	-- Construction Jet Update --
 	global.constructionJetIndex = 0
 	-- Repair Jet Update --

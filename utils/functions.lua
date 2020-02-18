@@ -427,24 +427,16 @@ function Util.isOutside(player)
 	return true
 end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- Check if the Player can interact with the Structure --
+function Util.canUse(playerName, structure)
+	if playerName == nil or structure == nil or structure.last_user == nil then return false end
+	if playerName == structure.last_user.name then return true end
+	local MF1 = getMF(playerName)
+	local MF2 = getMF(structure.last_user.name)
+	if MF1 ~= nil and MF2 ~= nil then
+		if MF1.varTable.useSharedStructures == true and MF2.varTable.shareStructures == true then
+			return true
+		end
+	end
+	return false
+end

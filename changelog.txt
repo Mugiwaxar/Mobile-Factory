@@ -6,6 +6,9 @@ Date: 18/02/2020
     - You can now place more than one Mobile Factory (One per Player)
   Gui:
     - The Tooltip GUI now show to who belong a Structure
+    - Added a new Tab to the Option GUI: MF (Mobile Factory)
+    - Added a new Option to the MF Tab: Share Structures -> Allow other Players to interact with your Structures (Drain/Send Power, Items, Fluid, ...)
+    - Added a new Option to the MF Tab: Use Shared Structures -> Share your Structures with other Players (Drain/Send Power, Items, Fluid, ...)
   Bugfixes:
     - Mine Dimensional Tile give now Dimensional Tile
     - All things inside the Information GUI will no longer disappear when the Mobile Factory is removed

@@ -43,6 +43,7 @@ function MF:new()
 	t.varTable = {}
 	t.varTable.tech = {}
 	t.varTable.tanks = {}
+	t.varTable.jets = {}
 	UpSys.addObj(t)
 	return t
 end
@@ -213,7 +214,7 @@ function MF:scanEnt()
 			keep = true
 		end
 		-- Removed not keeped Entity --
-		if keep == false then
+		if keep == false or Util.canUse(self.player, entity) == false then
 			self.entitiesAround[k] = nil
 		end
 	end

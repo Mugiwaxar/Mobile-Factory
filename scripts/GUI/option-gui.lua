@@ -8,13 +8,17 @@ function GUI.createOptionGUI(gui, player)
 	
 	-- Create the GUI --
 	local mfOptionGUI = gui.screen.add{type="frame", name="mfOptionGUI", direction="vertical"}
+
+	-- Get the MF --
+	local MF = getMF(player.name)
+	if MF == nil then return end
 	
 	-- Calcule the position --
 	local resolutionWidth = player.display_resolution.width  / player.display_scale
 	local resolutionHeight = player.display_resolution.height  / player.display_scale
 	local posX = resolutionWidth / 100 * 45
 	local posY = resolutionHeight / 100 * 18
-	local width = 350
+	local width = 400
 	local height = 600
 	
 	-- Set the GUI position end style --
@@ -56,6 +60,36 @@ function GUI.createOptionGUI(gui, player)
 	mfOptTabbedPane.style.height = height - 62
 	mfOptTabbedPane.style.padding = 0
 	mfOptTabbedPane.style.margin = 0
+
+	------------------------------------------- TAB 4 --------------------------------
+	-- Create the Tab --
+	local mfOptTab4 = mfOptTabbedPane.add{type="tab", name="mfOptTab4"}
+	mfOptTab4.caption = {"gui-description.tab4"}
+	mfOptTab4.style.padding = 0
+	mfOptTab4.style.margin = 0
+	
+	-- Create the Frame --
+	local mfOptTab4Frame = mfOptTabbedPane.add{type="frame", name="mfOptTab4Frame"}
+	mfOptTab4Frame.style.width = width - 16
+	mfOptTab4Frame.style.height = height - 100
+	mfOptTab4Frame.style.padding = 0
+	mfOptTab4Frame.style.margin = 0
+	
+	-- Create the Scroll-pane --
+	local mfOptTab4Pane = mfOptTab4Frame.add{type="frame", name="mfOptTab4Pane", direction="vertical"}
+	mfOptTab4Pane.style.width = width - 24
+	mfOptTab4Pane.style.height = height - 107
+	mfOptTab4Pane.style.padding = 0
+	mfOptTab4Pane.style.margin = 0
+	mfOptTab4Pane.style.horizontal_align = "left"
+	mfOptTab4Pane.style.vertical_align = "top"
+	
+	-- Add all Tabs to the Tabbed-pane --
+	mfOptTabbedPane.add_tab(mfOptTab4, mfOptTab4Frame)
+	mfOptTabbedPane.selected_tab_index = mfOptTab4.index
+	
+	-- Create the Tab 4 --
+	GUI.createOptTab4(mfOptTab4Pane)
 	
 	------------------------------------------- TAB 1 --------------------------------
 	-- Create the Tab --
@@ -114,7 +148,7 @@ function GUI.createOptionGUI(gui, player)
 	mfOptTabbedPane.add_tab(mfOptTab3, mfOptTab3Frame)
 	
 	-- Create the Tab 3 --
-	GUI.createOptTab3(mfOptTab3Pane)
+	GUI.createOptTab3(mfOptTab3Pane, MF)
 	
 	------------------------------------------- TAB 2 --------------------------------
 	-- Create the Tab --
@@ -147,6 +181,14 @@ function GUI.createOptionGUI(gui, player)
 
 end
 
+---------------------- OPTIONS GUI TAB 4 --------------------------
+function GUI.createOptTab4(tab)
+	local GUIMainGuiOpt = tab.add{type="label", name="GUIMFOpt", caption={"gui-description.GUIMFOpt"}}
+	GUIMainGuiOpt.style.font = "TitleFont"
+	tab.add{type="checkbox", name="GUIShareOpt", caption={"gui-description.GUIShareOpt"}, tooltip={"gui-description.GUIShareOptTT"}, state=false}
+	tab.add{type="checkbox", name="GUIUseShareOpt", caption={"gui-description.GUIUseShareOpt"}, tooltip={"gui-description.GUIUseShareOptTT"}, state=false}
+end
+
 ---------------------- OPTIONS GUI TAB 1 --------------------------
 function GUI.createOptTab1(tab)
 	local GUIMainGuiOpt = tab.add{type="label", name="GUIMainGuiOpt", caption={"gui-description.GUIMainGuiOpt"}}
@@ -163,15 +205,19 @@ function GUI.createOptTab1(tab)
 end
 
 ---------------------- OPTIONS GUI TAB 3 --------------------------
-function GUI.createOptTab3(tab)
+function GUI.createOptTab3(tab, MF)
 	-- Jets --
 	local JetSettingsL = tab.add{type="label", name="JetSettingsL", caption={"gui-description.JetOpt"}}
 	JetSettingsL.style.font = "TitleFont"
 	tab.add{type="label", caption={"gui-description.JetMaximalDistance"}}
-	GUI.createDTextField(tab, "MiningJetDistanceOpt", "MiningJetDistanceOpt", "MiningJetDistanceOptTT", global.mjMaxDistance)
-	GUI.createDTextField(tab, "ConstructionJetDistanceOpt", "ConstructionJetMaximalDistance", "ConstructionJetMaximalDistanceTT", global.cjMaxDistance)
-	GUI.createDTextField(tab, "RepairJetDistanceOpt", "RepairJetDistanceOpt", "RepairJetDistanceOptTT", global.rjMaxDistance)
-	GUI.createDTextField(tab, "CombatJetDistanceOpt", "CombatJetDistanceOpt", "CombatJetDistanceOpt", global.cbjMaxDistance)
+	if MF.varTable.jets.mjMaxDistance == nil then MF.varTable.jets.mjMaxDistance = _MFMiningJetDefaultMaxDistance end
+	if MF.varTable.jets.cjMaxDistance == nil then MF.varTable.jets.cjMaxDistance = _MFConstructionJetDefaultMaxDistance end
+	if MF.varTable.jets.rjMaxDistance == nil then MF.varTable.jets.rjMaxDistance = _MFRepairJetDefaultMaxDistance end
+	if MF.varTable.jets.cbjMaxDistance == nil then MF.varTable.jets.cbjMaxDistance = _MFCombatJetDefaultMaxDistance end
+	GUI.createDTextField(tab, "MiningJetDistanceOpt", "MiningJetDistanceOpt", "MiningJetDistanceOptTT", MF.varTable.jets.mjMaxDistance)
+	GUI.createDTextField(tab, "ConstructionJetDistanceOpt", "ConstructionJetMaximalDistance", "ConstructionJetMaximalDistanceTT", MF.varTable.jets.cjMaxDistance)
+	GUI.createDTextField(tab, "RepairJetDistanceOpt", "RepairJetDistanceOpt", "RepairJetDistanceOptTT", MF.varTable.jets.rjMaxDistance)
+	GUI.createDTextField(tab, "CombatJetDistanceOpt", "CombatJetDistanceOpt", "CombatJetDistanceOpt", MF.varTable.jets.cbjMaxDistance)
 
 	-- Floor Is Lava --
 	local FILSettingsL = tab.add{type="label", name="FILSettingsL", caption={"gui-description.FILOptTitle"}}
@@ -199,26 +245,3 @@ function GUI.createDTextField(GUI, name, caption, tooltip, text)
 	flow[name].style.width = 100
 	flow[name].style.left_margin = 5
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

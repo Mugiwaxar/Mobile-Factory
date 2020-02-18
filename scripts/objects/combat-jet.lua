@@ -134,7 +134,7 @@ function CBJ:fight()
     -- Check the Target --
     if self.target == nil then return end
     -- Fight --
-    self.ent.set_command({type=defines.command.attack_area, destination=self.target, radius=global.cbjMaxDistance})
+    self.ent.set_command({type=defines.command.attack_area, destination=self.target, radius=self.MF.varTable.jets.cbjMaxDistance})
     self.currentOrder = "Fight"
 end
 

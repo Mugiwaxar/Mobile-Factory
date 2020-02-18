@@ -166,7 +166,7 @@ function GUI.buttonClicked(event)
 	
 	-- ItemDrain button --
 	if event.element.name == "ItemDrain" then
-		if MF.itemLaserActivated == true then glol.MF.itemLaserActivated = false
+		if MF.itemLaserActivated == true then MF.itemLaserActivated = false
 		elseif MF.itemLaserActivated == false then MF.itemLaserActivated = true end
 	end
 	
