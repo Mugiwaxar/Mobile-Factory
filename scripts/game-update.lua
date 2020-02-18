@@ -7,35 +7,23 @@ require("utils/place-and-remove.lua")
 
 -- One each game tick --
 function onTick(event)
-	if global.MF == nil then return end
-	-- Synchronize Tank chest with Factory Chest --
-	if event.tick%_eventTick21 == 0 and global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid == true then
-		global.MF:syncFChest()
+	-- Update all Mobile Factory --
+	for k, MF in pairs(global.MFTable) do
+		if MF ~= nil then
+			MF:update(event)
+		end
 	end
 	-- Update all entities --
 	updateEntities(event)
 	-- Update all GUI --
 	if event.tick%_eventTick55 == 0 then GUI.updateAllGUIs() end
-	-- Update Modules Variable inside de Equalizer --
-	if event.tick%_eventTick125 == 0 then scanModules(event) end
-	-- Update the Jump Drives --
-	if event.tick%_eventTick60 == 0 and global.MF.jumpTimer > 0 and global.MF.internalEnergy > _mfJumpEnergyDrain then
-		global.MF.jumpTimer = global.MF.jumpTimer -1
-		global.MF.internalEnergy = global.MF.internalEnergy - _mfJumpEnergyDrain
-	end
 	-- Update the Floor Is Lava --
 	if event.tick%_eventTick150 == 0 and global.floorIsLavaActivated == true then updateFloorIsLava() end
-	-- Update Pollution --
-	if event.tick%_eventTick1200 == 0 then updatePollution() end
 end
 
 -- Update all entities --
 function updateEntities(event)
-	-- Verify Mobile Factory --
-	if global.MF == nil then return end
 	-- Update --
-	if event.tick%_eventTick5 == 0 then factoryTeleportBox() end
-	if event.tick%_eventTick38 == 0 then updateAccumulators() end
 	if event.tick%_eventTick64 == 0 then updateLogisticFluidPoles() end
 	if event.tick%_eventTick110 == 0 then updateMiningJet() end
 	if event.tick%_eventTick45 == 0 then updateConstructionJet() end
@@ -44,12 +32,10 @@ function updateEntities(event)
 	if event.tick%_eventTick242 == 0 then checkDataNetworkID() end
 	-- Update System --
 	UpSys.update(event)
-	updatePowerDrainPole(event)
 end
 
 -- Update base Mobile Factory Values --
 function updateValues()
-	if global.MF == nil then global.MF = MF:new() end
 	if global.insertedMFInsideInventory == nil then global.insertedMFInsideInventory = true end
 	if global.entsTable == nil then global.entsTable = {} end
 	if global.upsysTickTable == nil then global.upsysTickTable = {} end
@@ -64,10 +50,11 @@ function updateValues()
 	if global.constructionJetIndex == nil then global.constructionJetIndex = 0 end
 	if global.repairJetIndex == nil then global.repairJetIndex = 0 end
 	if global.floorIsLavaActivated == nil then global.floorIsLavaActivated = false end
+	if global.playersTable == nil then global.playersTable = {} end
+	if global.MFTable == nil then Table = {} end
 	if global.accTable == nil then global.accTable = {} end
 	if global.pdpTable == nil then global.pdpTable = {} end
 	if global.lfpTable == nil then global.lfpTable = {} end
-	if global.tankTable == nil then global.tankTable = {} end
 	if global.deepStorageTable == nil then global.deepStorageTable = {} end
 	if global.dataNetworkTable == nil then global.dataNetworkTable = {} end
 	if global.dataNetworkIDGreenTable == nil then global.dataNetworkIDGreenTable = {} end
@@ -101,20 +88,40 @@ end
 
 -- When a technology is finished --
 function technologyFinished(event)
-	if event.research.name == "ControlCenter" then updateFactoryFloorForCC() end
-	if event.research.name == "UpgradeModules" then createControlCenterEqualizer() end
-	if event.research.name == "StorageTankMK1_1" then createMK1Tank1() end
-	if event.research.name == "StorageTankMK1_2" then createMK1Tank2() end
-	if event.research.name == "StorageTankMK1_3" then createMK1Tank3() end
-	if event.research.name == "StorageTankMK1_4" then createMK1Tank4() end
-	if event.research.name == "StorageTankMK1_5" then createMK1Tank5() end
-	if event.research.name == "StorageTankMK2_1" then upgradeTank(1) end
-	if event.research.name == "StorageTankMK2_2" then upgradeTank(2) end
-	if event.research.name == "StorageTankMK2_3" then upgradeTank(3) end
-	if event.research.name == "StorageTankMK2_4" then upgradeTank(4) end
-	if event.research.name == "StorageTankMK2_5" then upgradeTank(5) end
-	if event.research.name == "DeepStorage" then createDeepStorageArea() end
-	if event.research.name == "ConstructibleArea1" then createConstructibleArea1() end
+	for k, MF in pairs(global.MFTable) do
+		if event.research.name == "ControlCenter" then updateFactoryFloorForCC(MF) end
+		if event.research.name == "UpgradeModules" then createControlCenterEqualizer(MF) end
+		if event.research.name == "StorageTankMK1_1" then createMK1Tank1(MF) end
+		if event.research.name == "StorageTankMK1_2" then createMK1Tank2(MF) end
+		if event.research.name == "StorageTankMK1_3" then createMK1Tank3(MF) end
+		if event.research.name == "StorageTankMK1_4" then createMK1Tank4(MF) end
+		if event.research.name == "StorageTankMK1_5" then createMK1Tank5(MF) end
+		if event.research.name == "StorageTankMK2_1" then upgradeTank(1, MF) end
+		if event.research.name == "StorageTankMK2_2" then upgradeTank(2, MF) end
+		if event.research.name == "StorageTankMK2_3" then upgradeTank(3, MF) end
+		if event.research.name == "StorageTankMK2_4" then upgradeTank(4, MF) end
+		if event.research.name == "StorageTankMK2_5" then upgradeTank(5, MF) end
+		if event.research.name == "DeepStorage" then createDeepStorageArea(MF) end
+		if event.research.name == "ConstructibleArea1" then createConstructibleArea1(MF) end
+	end
+end
+
+-- Check all Technologies of a Player Mobile Factory --
+function checkTechnologies(MF)
+	if technologyUnlocked("ControlCenter") == true and MF.varTable.tech.ControlCenter == false then updateFactoryFloorForCC(MF) end
+	if technologyUnlocked("UpgradeModules") == true and MF.varTable.tech.UpgradeModules == false then createControlCenterEqualizer(MF) end
+	if technologyUnlocked("StorageTankMK1_1") == true and MF.varTable.tech.StorageTankMK11 == false then createMK1Tank1(MF) end
+	if technologyUnlocked("StorageTankMK1_2") == true and MF.varTable.tech.StorageTankMK12 == false then createMK1Tank2(MF) end
+	if technologyUnlocked("StorageTankMK1_3") == true and MF.varTable.tech.StorageTankMK13 == false then createMK1Tank3(MF) end
+	if technologyUnlocked("StorageTankMK1_4") == true and MF.varTable.tech.StorageTankMK14 == false then createMK1Tank4(MF) end
+	if technologyUnlocked("StorageTankMK1_5") == true and MF.varTable.tech.StorageTankMK15 == false then createMK1Tank5(MF) end
+	if technologyUnlocked("StorageTankMK2_1") == true and MF.varTable.tech.StorageTankMK21 == false then upgradeTank(1, MF) end
+	if technologyUnlocked("StorageTankMK2_2") == true and MF.varTable.tech.StorageTankMK22 == false then upgradeTank(2, MF) end
+	if technologyUnlocked("StorageTankMK2_3") == true and MF.varTable.tech.StorageTankMK23 == false then upgradeTank(3, MF) end
+	if technologyUnlocked("StorageTankMK2_4") == true and MF.varTable.tech.StorageTankMK24 == false then upgradeTank(4, MF) end
+	if technologyUnlocked("StorageTankMK2_5") == true and MF.varTable.tech.StorageTankMK25 == false then upgradeTank(5, MF) end
+	if technologyUnlocked("DeepStorage") == true and MF.varTable.tech.DeepStorage == false then createDeepStorageArea(MF) end
+	if technologyUnlocked("ConstructibleArea1") == true and MF.varTable.tech.ConstructibleArea1 == false then createConstructibleArea1(MF) end
 end
 
 function selectedEntityChanged(event)
@@ -130,97 +137,39 @@ function selectedEntityChanged(event)
 	GUI.updateTooltip(player, player.selected.unit_number)
 end
 
--- Update teleportation box --
-function factoryTeleportBox()
-	-- Check the Mobile Factory --
-	if global.MF.ent == nil then return end
-	if global.MF.ent.valid == false then return end
-	-- Mobile Factory Vehicule --
-	if global.MF.tpEnabled == true then
-		local mfB = global.MF.ent.bounding_box
-		local entities = global.MF.ent.surface.find_entities_filtered{area={{mfB.left_top.x-0.5,mfB.left_top.y-0.5},{mfB.right_bottom.x+0.5, mfB.right_bottom.y+0.5}}, type="character"}
-		for k, entity in pairs(entities) do
-			teleportPlayerInside(entity.player)
-		end
-	end
-	-- Factory to Outside --
-	if global.MF.fS ~= nil then
-		local entities = global.MF.fS.find_entities_filtered{area={{-1,-1},{1,1}}, type="character"}
-		for k, entity in pairs(entities) do
-			teleportPlayerOutside(entity.player)
-		end
-	end
-	-- Factory to Control Center --
-	if technologyUnlocked("ControlCenter") == true and global.MF.fS ~= nil and global.MF.fS ~= nil then
-		local entities = global.MF.fS.find_entities_filtered{area={{-3,-34},{3,-31}}, type="character"}
-		for k, entity in pairs(entities) do
-			teleportPlayerToControlCenter(entity.player)
-		end
-	end
-	-- Control Center to Factory --
-	if technologyUnlocked("ControlCenter") == true and global.MF.ccS ~= nil and global.MF.fS~= nil then
-		local entities = global.MF.ccS.find_entities_filtered{area={{-3,5},{3,8}}, type="character"}
-		for k, entity in pairs(entities) do
-			teleportPlayerToFactory(entity.player)
-		end
-	end
-end
-
--- Scan modules inside the Equalizer --
-function scanModules(event)
-	if technologyUnlocked("UpgradeModules") == false then return end
-	if global.MF.ccS == nil then return end
-	local equalizer = global.MF.ccS.find_entity("Equalizer", {1, -16})
-	if equalizer == nil or equalizer.valid == false then return end
-	local powerMD = 0
-	local efficiencyMD = 0
-	local focusMD = 0
-	local tankMDS
-	for name, count in pairs(equalizer.get_inventory(defines.inventory.beacon_modules).get_contents()) do
-		if name == "EnergyPowerModule" then powerMD = powerMD + count end
-		if name == "EnergyEfficiencyModule" then efficiencyMD = efficiencyMD + count end
-		if name == "EnergyFocusModule" then focusMD = focusMD + count end
-		if string.match(name, "ModuleID") then tankMDS = name end
-	end
-	if tankMDS ~= nil then
-		tankMD = split(tankMDS, "D")[2]
-		global.IDModule = tonumber(tankMD)
-	else
-		global.IDModule = 0
-	end
-	global.MF.laserRadiusMultiplier = powerMD
-	global.MF.laserDrainMultiplier = efficiencyMD
-	global.MF.laserNumberMultiplier = focusMD
-end
-
 -- If player entered or living a vehicle --
 function playerDriveStatChange(event)
 	-- Teleport the player out of reach from Mobile Factoty teleport box --
 	local player = getPlayer(event.player_index)
-	if player ~= nil and player.valid == true then
-		if event.entity ~= nil and event.entity.valid == true and string.match(event.entity.name, "MobileFactory") then
-			if event.entity.get_driver() == nil and global.MF.ent ~= nil and global.MF.ent.valid == true and global.MF.ent.surface ~= nil then
-				if global.MF.ent.surface.can_place_entity{name="character", position = {global.MF.ent.position.x + 5, global.MF.ent.position.y}} then
-					player.teleport({global.MF.ent.position.x + 5, global.MF.ent.position.y}, global.MF.ent.surface)
-				elseif global.MF.ent.surface.can_place_entity{name="character", position = {global.MF.ent.position.x -5, global.MF.ent.position.y}} then
-					player.teleport({global.MF.ent.position.x - 5, global.MF.ent.position.y}, global.MF.ent.surface)
-				elseif global.MF.ent.surface.can_place_entity{name="character", position = {global.MF.ent.position.x, global.MF.ent.position.y - 7}} then
-					player.teleport({global.MF.ent.position.x, global.MF.ent.position.y - 7}, global.MF.ent.surface)
-				else
-					player.teleport({global.MF.ent.position.x, global.MF.ent.position.y + 7}, global.MF.ent.surface)
-				end
-			end
-		end
+	local entity = event.entity
+	if entity == nil or entity.valid == false or player == nil or player.valid == false and string.match(entity.name, "MobileFactory") == false then return end
+	if entity.surface.can_place_entity{name="character", position = {entity.position.x + 5, entity.position.y}} then
+		player.teleport({entity.position.x + 5, entity.position.y}, entity.surface)
+	elseif entity.surface.can_place_entity{name="character", position = {entity.position.x -5, entity.position.y}} then
+		player.teleport({entity.position.x - 5, entity.position.y}, entity.surface)
+	elseif entity.surface.can_place_entity{name="character", position = {entity.position.x, entity.position.y - 7}} then
+		player.teleport({entity.position.x, entity.position.y - 7}, entity.surface)
+	else
+		player.teleport({entity.position.x, entity.position.y + 7}, entity.surface)
 	end
 end
 
 -- When a player joint the game --
-function onPlayerCreated(player)
-	if player.name == nil then player = getPlayer(player.player_index) end
+function initPlayer(event)
+	local player = getPlayer(event.player_index)
+	if player == nil then return end
 	setPlayerVariable(player.name, "VisitedFactory", false)
-	if global.insertedMFInsideInventory == false then
+	if getPlayerVariable(player.name, "GotInventory") ~= true then
+		-- Mobile Factory Object --
+		global.MFTable[player.name] = MF:new()
+		global.MFTable[player.name].II = INV:new("Internal Inventory")
+		global.MFTable[player.name].II.MF = global.MFTable[player.name]
+		global.MFTable[player.name].II.isII = true
+		global.MFTable[player.name].player = player.name
+		createMFSurface(global.MFTable[player.name])
+		createControlRoom(global.MFTable[player.name])
 		Util.addMobileFactory(game.players[1])
-		global.insertedMFInsideInventory = true
+		setPlayerVariable(player.name, "GotInventory", true)
 	end
 end
 
@@ -254,13 +203,6 @@ function onEntityDamaged(event)
 	if event.entity.force.name ~= "player" then return end
 	-- Check the Entity --
 	if event.entity == nil or event.entity.valid == false then return end
-	-- Test if this is the Mobile Factory --
-	if event.entity.name == "MobileFactory" then
-		-- Heal Low message --
-		if event.entity.health < 1000 then
-			game.print({"", {"gui-description.MFHealLow"}})
-		end
-	end
 	-- Command to the Jet to return to the Mobile Factory if its life is low --
 	if event.entity.name == "CombatJet" then
 		local obj = global.combatJetTable[event.entity.unit_number]
@@ -274,7 +216,7 @@ function onEntityDamaged(event)
 		event.entity.health = event.entity.prototype.max_health
 	end
 	-- Save the Entity inside the Repair table for Jet --
-	if event.entity.health < event.entity.prototype.max_health and global.MF.ent ~= nil and global.MF.ent.valid == true and event.entity.surface.name == global.MF.ent.surface.name then
+	if event.entity.health < event.entity.prototype.max_health then
 		-- Check if the Entity is not already inside the table --
 		for k, structure in pairs(global.repairTable) do
 			if structure.ent ~= nil and structure.ent.valid == true and event.entity.unit_number == structure.ent.unit_number then
@@ -300,7 +242,6 @@ end
 
 -- Called when a Setting is pasted --
 function settingsPasted(event)
-	dprint("pasted")
 	-- Check the Entities --
 	if event.source == nil or event.source.valid == false then return end
 	if event.destination == nil or event.destination.valid == false then return end
@@ -326,41 +267,6 @@ function settingsPasted(event)
 	end
 end
 
--- Upgrade a Tank to MK2 --
-function upgradeTank(id)
-	if global.MF.ccS == nil or global.tankTable == nil  then return end
-	-- Get the tank ID --
-	local tankId = global.tankTable[id]
-	if tankId == nil then return end
-	-- Get The Tank --
-	local tank = global.tankTable[id].ent
-	-- Test if there are fluid inside --
-	if tank.get_fluid_count() > 0 then 
-		local fluid = tank.get_fluid_contents()
-		local name
-		local amount
-		-- Get the fluid --
-		for n, a in pairs(fluid) do
-			name = n
-			amount = a
-		end
-		if name == nil or amount == nil then game.print("upgradeTank() error for id: " .. id) return end
-		-- Create the new tank --
-		local newTank = global.MF.ccS.create_entity{name="StorageTank".. id .."MK2", position=tank.position, force="player"}
-		-- Fill the fluid --
-		newTank.insert_fluid({name=name, amount=amount})
-		-- Save the tank --
-		global.tankTable[id].ent = newTank
-	else
-		-- Create the new tank --
-		local newTank = global.MF.ccS.create_entity{name="StorageTank".. id .."MK2", position=tank.position, force="player"}
-		-- Save the tank --
-		global.tankTable[id].ent = newTank
-	end
-	-- Destroy the old Tank --
-	tank.destroy()
-end
-
 -- Damage all Players that aren't on a safe position --
 function updateFloorIsLava()
 	-- Take all Players --
@@ -368,28 +274,12 @@ function updateFloorIsLava()
 		-- Check the Player --
 		if player.character == nil then return end
 		-- Check the Surface --
-		if player.surface.name == _mfSurfaceName or player.surface.name == _mfControlSurfaceName or string.match(player.surface.name, "Factory") then return end
+		if string.match(player.surface.name, _mfSurfaceName) or string.match(player.surface.name, _mfControlSurfaceName) or string.match(player.surface.name, "Factory") then return end
 		-- Check the Tile --
 		local tile = player.surface.get_tile(player.position.x, player.position.y)
 		if tile ~= nil and tile.valid == true and tile.name ~= "DimensionalTile" then
 			player.character.damage(50, "neutral", "fire")
 		end
-	end
-end
-
--- Send all Pollution outside --
-function updatePollution()
-	-- Test if the Mobile Factory is valid --
-	if global.MF == nil or global.MF.fS == nil or global.MF.ent == nil then return end
-	if global.MF.ent.valid == false then return end
-	if global.MF.ent.surface == nil then return end
-	-- Get the total amount of Pollution --
-	local totalPollution = global.MF.fS.get_total_pollution()
-	if totalPollution ~= nil then
-		-- Create Pollution outside the Factory --
-		global.MF.ent.surface.pollute(global.MF.ent.position, totalPollution)
-		-- Clear the Factory Pollution --
-		global.MF.fS.clear_pollution()
 	end
 end
 
@@ -399,17 +289,17 @@ function updateMiningJet()
 	if technologyUnlocked("MiningJet") == false then return end
 	-- Check if there are something to do --
 	if table_size(global.jetFlagTable) <= 0 then return end
-	-- Check the Mobile Factory --
-	if global.MF.ent == nil or global.MF.ent.valid == false then return end
-	-- Get the Mobile Factory Trunk --
-	local inv = global.MF.ent.get_inventory(defines.inventory.car_trunk)
-	-- Check the Inventory --
-	if inv == nil or inv.valid == false then return end
 	for k, flag in pairs(global.jetFlagTable) do
 		-- Check the Flag --
 		if valid(flag) == false then goto continue end
+		-- Check the Mobile Factory --
+		if valid(flag.MF) == false then goto continue end
+		-- Get the Mobile Factory Trunk --
+		local inv = flag.MF.ent.get_inventory(defines.inventory.car_trunk)
+		-- Check the Inventory --
+		if inv == nil or inv.valid == false then return end
 		-- Check the Distance --
-		if Util.distance(flag.ent.position, global.MF.ent.position) > global.mjMaxDistance then goto continue end
+		if Util.distance(flag.ent.position, flag.MF.ent.position) > global.mjMaxDistance then goto continue end
 		-- Check if there are Ores left --
 		if table_size(flag.oreTable) <= 0 then goto continue end
 		-- Check if there are enought space inside the Targeted Inventory --
@@ -417,7 +307,7 @@ function updateMiningJet()
 		-- Request Jet --
 		for i = 1, table_size(flag.oreTable) do
 			-- Check the Energy --
-			if global.MF.internalEnergy < _mfMiningJetEnergyNeeded then return end
+			if flag.MF.internalEnergy < _mfMiningJetEnergyNeeded then return end
 			-- Get an Ore Path --
 			local orePath = flag:getOrePath()
 			-- Check the Ore Path --
@@ -429,9 +319,9 @@ function updateMiningJet()
 				-- Check if the Jet exist --
 				if removed <= 0 then goto continue end
 				-- Remove the Energy --
-				global.MF.internalEnergy = global.MF.internalEnergy - _mfMiningJetEnergyNeeded
+				flag.MF.internalEnergy = flag.MF.internalEnergy - _mfMiningJetEnergyNeeded
 				-- Create the Entity --
-				local entity = global.MF.ent.surface.create_entity{name="MiningJet", position=global.MF.ent.position, force="player"}
+				local entity = flag.MF.ent.surface.create_entity{name="MiningJet", position=flag.MF.ent.position, force="player", player=MF.player}
 				global.miningJetTable[entity.unit_number] = MJ:new(entity, orePath, flag)
 			end
 			-- Stop if there are 5 Jets out --
@@ -441,18 +331,12 @@ function updateMiningJet()
 	end
 end
 
--- Update the Contruction Jets --
+-- Update the Construction Jets --
 function updateConstructionJet()
 	-- Check if the Technology is unlocked --
 	if technologyUnlocked("ConstructionJet") == false then return end
 	-- Check if there are something to do --
 	if table_size(global.constructionTable) <= 0 then return end
-	-- Check the Mobile Factory --
-	if global.MF.ent == nil or global.MF.ent.valid == false then return end
-	-- Get the Mobile Factory Trunk --
-	local inv = global.MF.ent.get_inventory(defines.inventory.car_trunk)
-	-- Check the Inventory --
-	if inv == nil or inv.valid == false then return end
 	-- Check if the index must be reinitialized --
 	if global.constructionJetIndex > table_size(global.constructionTable) then
 		global.constructionJetIndex = 0
@@ -463,16 +347,28 @@ function updateConstructionJet()
 			global.constructionJetIndex = 0
 			return
 		end
-		-- Check the Energy --
-		if global.MF.internalEnergy < _mfContructionJetEnergyNeeded then return end
 		-- Get the next Structure --
 		local structure = global.constructionTable[global.constructionJetIndex]
-		-- Check the Structure --
 		if structure == nil or structure.ent == nil or structure.ent.valid == false then
 			table.remove(global.constructionTable, global.constructionJetIndex)
 			goto continue
 		end
-		if structure.ent.surface ~= global.MF.ent.surface then
+		-- Check the Structure Owner --
+		if structure.ent.last_user == nil then goto continue end
+		-- Get the Mobile Factory --
+		local MF = global.MFTable[structure.ent.last_user.name]
+		-- Check the Mobile Factory --
+		if MF == nil or MF.ent == nil or MF.ent.valid == false then goto continue end
+		-- Check the Structure and Mobile Factory Owner --
+		if structure.ent.last_user.name ~= MF.player then goto continue end
+		-- Check the Energy --
+		if MF.internalEnergy < _mfConstructionJetEnergyNeeded then goto continue end
+		-- Get the Mobile Factory Trunk --
+		local inv = MF.ent.get_inventory(defines.inventory.car_trunk)
+		-- Check the Inventory --
+		if inv == nil or inv.valid == false then goto continue end
+		-- Check the Structure --
+		if structure.ent.surface ~= MF.ent.surface then
 			table.remove(global.constructionTable, global.constructionJetIndex)
 			goto continue
 		end
@@ -485,26 +381,26 @@ function updateConstructionJet()
 			goto continue
 		end
 		-- Check the Distance --
-		if Util.distance(structure.ent.position, global.MF.ent.position) > global.cjMaxDistance then goto continue end
+		if Util.distance(structure.ent.position, MF.ent.position) > global.cjMaxDistance then goto continue end
 		-- Check if there are no Jet already attributed to this Structure --
 		if valid(structure.jet) == true then goto continue end
 		-- Remove a Jet from the Inventory --
 		local removed = inv.remove({name="ConstructionJet", count=1})
 		-- Check if the Jet exist --
-		if removed <= 0 then return end
+		if removed <= 0 then goto continue end
 		if structure.mission == "Construct" then
 			-- Remove the Item from the II --
-			local removed = global.MF.II:getItem(structure.item, 1)
+			local removed = MF.II:getItem(structure.item, 1)
 			-- Check if the Item exist --
-			if removed <= 0 then 
+			if removed <= 0 then
 				inv.insert({name="ConstructionJet", count=1})
 				goto continue
 			end
 		end
 		-- Remove the Energy --
-		global.MF.internalEnergy = global.MF.internalEnergy - _mfContructionJetEnergyNeeded
+		MF.internalEnergy = MF.internalEnergy - _mfConstructionJetEnergyNeeded
 		-- Create the Jet --
-		local entity = global.MF.ent.surface.create_entity{name="ConstructionJet", position=global.MF.ent.position, force="player"}
+		local entity = MF.ent.surface.create_entity{name="ConstructionJet", position=MF.ent.position, force="player", player=MF.player}
 		global.constructionJetTable[entity.unit_number] = CJ:new(entity, structure)
 		structure.jet = global.constructionJetTable[entity.unit_number]
 		::continue::
@@ -517,12 +413,6 @@ function updateRepairJet()
 	if technologyUnlocked("RepairJet") == false then return end
 	-- Check if there are something to do --
 	if table_size(global.repairTable) <= 0 then return end
-	-- Check the Mobile Factory --
-	if global.MF.ent == nil or global.MF.ent.valid == false then return end
-	-- Get the Mobile Factory Trunk --
-	local inv = global.MF.ent.get_inventory(defines.inventory.car_trunk)
-	-- Check the Inventory --
-	if inv == nil or inv.valid == false then return end
 	-- Check if the index must be reinitialized --
 	if global.repairJetIndex > table_size(global.repairTable) then
 		global.repairJetIndex = 0
@@ -533,15 +423,28 @@ function updateRepairJet()
 			global.repairJetIndex = 0
 			return
 		end
-		-- Check the Energy --
-		if global.MF.internalEnergy < _mfRepairJetEnergyNeeded then return end
 		-- Get the next Structure --
 		local structure = global.repairTable[global.repairJetIndex]
 		if structure == nil or structure.ent == nil or structure.ent.valid == false then
 			table.remove(global.repairTable, global.repairJetIndex)
 			goto continue
 		end
-		if structure.ent.surface ~= global.MF.ent.surface then
+		-- Check the Structure Owner --
+		if structure.ent.last_user == nil then goto continue end
+		-- Get the Mobile Factory --
+		local MF = global.MFTable[structure.ent.last_user.name]
+		-- Check the Mobile Factory --
+		if MF.ent == nil or MF.ent.valid == false then return end
+		-- Check the Structure and Mobile Factory Owner --
+		if structure.ent.last_user.name ~= MF.player then goto continue end
+		-- Check the Energy --
+		if MF.internalEnergy < _mfRepairJetEnergyNeeded then return end
+		-- Get the Mobile Factory Trunk --
+		local inv = MF.ent.get_inventory(defines.inventory.car_trunk)
+		-- Check the Inventory --
+		if inv == nil or inv.valid == false then return end
+		-- Check the Structure Surface --
+		if structure.ent.surface ~= MF.ent.surface then
 			table.remove(global.repairTable, global.repairJetIndex)
 			goto continue
 		end
@@ -550,7 +453,7 @@ function updateRepairJet()
 			goto continue
 		end
 		-- Check the Distance --
-		if Util.distance(structure.ent.position, global.MF.ent.position) > global.rjMaxDistance then return end
+		if Util.distance(structure.ent.position, MF.ent.position) > global.rjMaxDistance then return end
 		-- Check if there are no Jet already attributed to this Structure --
 		if valid(structure.jet) then goto continue end
 		-- Remove a Jet from the Inventory --
@@ -558,9 +461,9 @@ function updateRepairJet()
 		-- Check if the Jet exist --
 		if removed <= 0 then goto continue end
 		-- Remove the Energy --
-		global.MF.internalEnergy = global.MF.internalEnergy - _mfRepairJetEnergyNeeded
+		MF.internalEnergy = MF.internalEnergy - _mfRepairJetEnergyNeeded
 		-- Create the Jet --
-		local entity = global.MF.ent.surface.create_entity{name="RepairJet", position=global.MF.ent.position, force="player"}
+		local entity = MF.ent.surface.create_entity{name="RepairJet", position=MF.ent.position, force="player", player=MF.player}
 		global.repairJetTable[entity.unit_number] = RJ:new(entity, structure)
 		structure.jet = global.repairJetTable[entity.unit_number]
 		::continue::
@@ -571,29 +474,33 @@ end
 function updateCombatJet()
 	-- Check if the Technology is unlocked --
 	if technologyUnlocked("CombatJet") == false then return end
-	-- Check the Mobile Factory --
-	if global.MF.ent == nil or global.MF.ent.valid == false then return end
-	-- Get the Mobile Factory Trunk --
-	local inv = global.MF.ent.get_inventory(defines.inventory.car_trunk)
-	-- Check the Inventory --
-	if inv == nil or inv.valid == false then return end
-	-- Look for an Enemy --
-	local enemy = global.MF.ent.surface.find_entities_filtered{position=global.MF.ent.position, radius=global.cbjMaxDistance, type="unit", force="enemy", limit=1}[1]
-	-- Check the Entity --
-	if enemy == nil or enemy.valid == false then return end
-	-- Sent 5 Jets --
-	for i = 1, 5 do
-		-- Check the Energy --
-		if global.MF.internalEnergy < _mfCombatJetEnergyNeeded then return end
-		-- Remove a Jet from the Inventory --
-		local removed = inv.remove({name="CombatJet", count=1})
-		-- Check if the Jet exist --
-		if removed <= 0 then return end
-		-- Remove the Energy --
-		global.MF.internalEnergy = global.MF.internalEnergy - _mfCombatJetEnergyNeeded
-		-- Create the Jet --
-		local entity = global.MF.ent.surface.create_entity{name="CombatJet", position=global.MF.ent.position, force="player"}
-		global.combatJetTable[entity.unit_number] = CBJ:new(entity, enemy.position)
+	-- Itinerate all Mobile Factories --
+	for k, MF in pairs(global.MFTable) do
+		-- Check the Mobile Factory --
+		if MF.ent == nil or MF.ent.valid == false then goto continue end
+		-- Get the Mobile Factory Trunk --
+		local inv = MF.ent.get_inventory(defines.inventory.car_trunk)
+		-- Check the Inventory --
+		if inv == nil or inv.valid == false then goto continue end
+		-- Look for an Enemy --
+		local enemy = MF.ent.surface.find_entities_filtered{position=MF.ent.position, radius=global.cbjMaxDistance, type="unit", force="enemy", limit=1}[1]
+		-- Check the Entity --
+		if enemy == nil or enemy.valid == false then goto continue end
+		-- Sent 5 Jets --
+		for i = 1, 5 do
+			-- Check the Energy --
+			if MF.internalEnergy < _mfCombatJetEnergyNeeded then goto continue end
+			-- Remove a Jet from the Inventory --
+			local removed = inv.remove({name="CombatJet", count=1})
+			-- Check if the Jet exist --
+			if removed <= 0 then goto continue end
+			-- Remove the Energy --
+			MF.internalEnergy = MF.internalEnergy - _mfCombatJetEnergyNeeded
+			-- Create the Jet --
+			local entity = MF.ent.surface.create_entity{name="CombatJet", position=MF.ent.position, force="player", player=MF.player}
+			global.combatJetTable[entity.unit_number] = CBJ:new(entity, enemy.position)
+		end
+		::continue::
 	end
 end
 

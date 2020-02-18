@@ -2,6 +2,8 @@
 
 OC = {
 	ent = nil,
+	player = "",
+	MF = nil,
 	purity = 0,
 	charge = 0,
 	totalCharge = 0,
@@ -23,6 +25,9 @@ function OC:new(object)
 	setmetatable(t, mt)
 	mt.__index = OC
 	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
 	t.oreTable = {}
 	t.inventory = {}
 	UpSys.addObj(t)
@@ -67,11 +72,11 @@ function OC:update(event)
 		return
 	end
 	-- The Ore Cleaner can work only if the Mobile Factory Entity is valid --
-	if global.MF.ent == nil or global.MF.ent.valid == false then return end
+	if self.MF.ent == nil or self.MF.ent.valid == false then return end
 	-- Check the Surface --
-	if self.ent.surface ~= global.MF.ent.surface then return end
+	if self.ent.surface ~= self.MF.ent.surface then return end
 	-- Check the Distance --
-	if Util.distance(self.ent.position, global.MF.ent.position) > _mfOreCleanerMaxDistance then
+	if Util.distance(self.ent.position, self.MF.ent.position) > _mfOreCleanerMaxDistance then
 		self.MFTooFar = true
 	else
 		self.MFTooFar = false
@@ -90,6 +95,11 @@ end
 function OC:getTooltipInfos(GUI)
 	local ocFrame = GUI.add{type="frame", direction="vertical"}
 	ocFrame.style.width = 150
+
+	-- Create the Belongs to Label --
+	local belongsToL = ocFrame.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
+	belongsToL.style.font = "LabelFont"
+	belongsToL.style.font_color = _mfOrange
 		
 	-- Create Labels and Bares --
 	local nameLabel = ocFrame.add{type="label", caption={"", {"gui-description.OreCleaner"}}}
@@ -261,7 +271,7 @@ function OC:updateAnimation(event)
 		rendering.destroy(self.animID)
 		self.animID = 0
 		-- Make the transfer Beam --
-		self.ent.surface.create_entity{name="OCBigBeam", duration=16, position=self.ent.position, target=global.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
+		self.ent.surface.create_entity{name="OCBigBeam", duration=16, position=self.ent.position, target=self.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
 		return
 	-- If they was extraction but the animation doesn't exist --
 	elseif event.tick - self.lastExtraction <= _mfOreCleanerExtractionTicks + 10 and self.animID == 0 then
@@ -273,7 +283,7 @@ function OC:updateAnimation(event)
 	-- Make the Beam if the animation ended --
 	elseif (event.tick - self.animTick)%240 == 0 and self.animID ~= 0 then
 		-- Make the transfer Beam --
-		self.ent.surface.create_entity{name="OCBigBeam", duration=16, position=self.ent.position, target=global.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
+		self.ent.surface.create_entity{name="OCBigBeam", duration=16, position=self.ent.position, target=self.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
 	end
 end
 

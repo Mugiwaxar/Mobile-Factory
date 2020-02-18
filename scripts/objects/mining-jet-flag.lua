@@ -3,6 +3,8 @@
 -- Create the Mining Jet Flag base Object --
 MJF = {
 	ent = nil,
+	player = "",
+	MF = nil,
 	updateTick = 60,
 	lastUpdate = 0,
 	lastInventorySend = 0,
@@ -21,6 +23,9 @@ function MJF:new(object)
 	setmetatable(t, mt)
 	mt.__index = MJF
 	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
 	t.oreTable = {}
 	t.inventory = {}
 	UpSys.addObj(t)
@@ -72,6 +77,11 @@ end
 -- Tooltip Infos --
 function MJF:getTooltipInfos(GUI)
 
+	-- Create the Belongs to Label --
+	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
+	belongsToL.style.font = "LabelFont"
+	belongsToL.style.font_color = _mfOrange
+
 	-- Create the Total Ore Path Label --
 	local pathLabel = GUI.add{type="label", caption={"", tonumber(table_size(self.oreTable)), " ", {"gui-description.OrePathsFound"}, ":"}}
 	pathLabel.style.font = "LabelFont"
@@ -111,7 +121,7 @@ function MJF:getTooltipInfos(GUI)
 	local selectedIndex = 1
 	local i = 1
 	for k, deepStorage in pairs(global.deepStorageTable) do
-		if deepStorage ~= nil then
+		if deepStorage ~= nil and deepStorage.player == self.player then
 			i = i + 1
 			local itemText = ""
 			if deepStorage.inventoryItem ~= nil then
@@ -217,7 +227,7 @@ end
 function MJF:sendInventory()
 
 	-- Check the Mobile Factory --
-	if global.MF.ent == nil or global.MF.ent.valid == false then
+	if self.MF.ent == nil or self.MF.ent.valid == false then
 		self.MFNotFound = true
 		return
 	else
@@ -269,7 +279,7 @@ function MJF:sendInventory()
 	
 	-- Create the Laser --
 	if sended == true then
-		self.ent.surface.create_entity{name="BlueBeam", duration=20, position=self.ent.position, target=global.MF.ent.position, source={self.ent.position.x,self.ent.position.y}}
+		self.ent.surface.create_entity{name="BlueBeam", duration=20, position=self.ent.position, target=self.MF.ent.position, source={self.ent.position.x,self.ent.position.y}}
 	end
 	
 	-- No enought space inside the Targeted Inventory --
