@@ -44,7 +44,18 @@ function teleportPlayerInside(player, MF)
 end
 
 -- Teleport the player outside the Mobile Factory --
-function teleportPlayerOutside(player, MF)
+function teleportPlayerOutside(player)
+	-- Find the Mobile Factory --
+	local MF = nil
+	for k, mf in pairs(global.MFTable) do
+		if mf.fS ~= nil and mf.fS.valid == true and mf.fS.name == player.surface.name then
+			MF = mf
+		end
+		if mf.ccS ~= nil and mf.ccS.valid == true and mf.ccS.name == player.surface.name then
+			MF = mf
+		end
+	end
+	if MF == nil then return end
 	-- Check if the Player is on the right Surface --
 	if string.match(player.surface.name, _mfSurfaceName) == nil and string.match(player.surface.name, _mfControlSurfaceName) == nil then return end
 	if MF == nil then return end

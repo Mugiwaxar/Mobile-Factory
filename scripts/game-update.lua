@@ -108,20 +108,20 @@ end
 
 -- Check all Technologies of a Player Mobile Factory --
 function checkTechnologies(MF)
-	if technologyUnlocked("ControlCenter") == true and MF.varTable.tech.ControlCenter == false then updateFactoryFloorForCC(MF) end
-	if technologyUnlocked("UpgradeModules") == true and MF.varTable.tech.UpgradeModules == false then createControlCenterEqualizer(MF) end
-	if technologyUnlocked("StorageTankMK1_1") == true and MF.varTable.tech.StorageTankMK11 == false then createMK1Tank1(MF) end
-	if technologyUnlocked("StorageTankMK1_2") == true and MF.varTable.tech.StorageTankMK12 == false then createMK1Tank2(MF) end
-	if technologyUnlocked("StorageTankMK1_3") == true and MF.varTable.tech.StorageTankMK13 == false then createMK1Tank3(MF) end
-	if technologyUnlocked("StorageTankMK1_4") == true and MF.varTable.tech.StorageTankMK14 == false then createMK1Tank4(MF) end
-	if technologyUnlocked("StorageTankMK1_5") == true and MF.varTable.tech.StorageTankMK15 == false then createMK1Tank5(MF) end
-	if technologyUnlocked("StorageTankMK2_1") == true and MF.varTable.tech.StorageTankMK21 == false then upgradeTank(1, MF) end
-	if technologyUnlocked("StorageTankMK2_2") == true and MF.varTable.tech.StorageTankMK22 == false then upgradeTank(2, MF) end
-	if technologyUnlocked("StorageTankMK2_3") == true and MF.varTable.tech.StorageTankMK23 == false then upgradeTank(3, MF) end
-	if technologyUnlocked("StorageTankMK2_4") == true and MF.varTable.tech.StorageTankMK24 == false then upgradeTank(4, MF) end
-	if technologyUnlocked("StorageTankMK2_5") == true and MF.varTable.tech.StorageTankMK25 == false then upgradeTank(5, MF) end
-	if technologyUnlocked("DeepStorage") == true and MF.varTable.tech.DeepStorage == false then createDeepStorageArea(MF) end
-	if technologyUnlocked("ConstructibleArea1") == true and MF.varTable.tech.ConstructibleArea1 == false then createConstructibleArea1(MF) end
+	if technologyUnlocked("ControlCenter") == true and MF.varTable.tech.ControlCenter ~= true then updateFactoryFloorForCC(MF) end
+	if technologyUnlocked("UpgradeModules") == true and MF.varTable.tech.UpgradeModules ~= true then createControlCenterEqualizer(MF) end
+	if technologyUnlocked("StorageTankMK1_1") == true and MF.varTable.tech.StorageTankMK11 ~= true then createMK1Tank1(MF) end
+	if technologyUnlocked("StorageTankMK1_2") == true and MF.varTable.tech.StorageTankMK12 ~= true then createMK1Tank2(MF) end
+	if technologyUnlocked("StorageTankMK1_3") == true and MF.varTable.tech.StorageTankMK13 ~= true then createMK1Tank3(MF) end
+	if technologyUnlocked("StorageTankMK1_4") == true and MF.varTable.tech.StorageTankMK14 ~= true then createMK1Tank4(MF) end
+	if technologyUnlocked("StorageTankMK1_5") == true and MF.varTable.tech.StorageTankMK15 ~= true then createMK1Tank5(MF) end
+	if technologyUnlocked("StorageTankMK2_1") == true and MF.varTable.tech.StorageTankMK21 ~= true then upgradeTank(1, MF) end
+	if technologyUnlocked("StorageTankMK2_2") == true and MF.varTable.tech.StorageTankMK22 ~= true then upgradeTank(2, MF) end
+	if technologyUnlocked("StorageTankMK2_3") == true and MF.varTable.tech.StorageTankMK23 ~= true then upgradeTank(3, MF) end
+	if technologyUnlocked("StorageTankMK2_4") == true and MF.varTable.tech.StorageTankMK24 ~= true then upgradeTank(4, MF) end
+	if technologyUnlocked("StorageTankMK2_5") == true and MF.varTable.tech.StorageTankMK25 ~= true then upgradeTank(5, MF) end
+	if technologyUnlocked("DeepStorage") == true and MF.varTable.tech.DeepStorage ~= true then createDeepStorageArea(MF) end
+	if technologyUnlocked("ConstructibleArea1") == true and MF.varTable.tech.ConstructibleArea1 ~= true then createConstructibleArea1(MF) end
 end
 
 function selectedEntityChanged(event)

@@ -451,14 +451,14 @@ function GUI.mainGUIUpdate(player)
 	end
 	
 	-- Update the CallMF Button --
-	if player.surface.name == _mfSurfaceName or player.surface.name == _mfControlSurfaceName then
+	if Util.isOutside(player) == true then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.CallMF.visible = false
 	else
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.CallMF.visible = true
 	end
 	
 	-- Update the PortOutside button --
-	if player.surface.name == _mfSurfaceName or player.surface.name == _mfControlSurfaceName then
+	if Util.isOutside(player) == false then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.PortOutside.visible = true
 	else
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.PortOutside.visible = false

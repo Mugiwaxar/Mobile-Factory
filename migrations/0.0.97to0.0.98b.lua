@@ -1,4 +1,5 @@
 -- Set all Mobile Factory Objects to belongs to the first Player --
+if global.MF == nil or global.MF == {} then goto continue end
 global.MFTable = {}
 if global.MF ~= nil and global.MF.II ~= nil then
 	global.MF.II.MF = global.MF
@@ -49,10 +50,17 @@ if global.tankTable[3] ~= nil then global.MF.varTable.tanks[3] = Util.copyTable(
 if global.tankTable[4] ~= nil then global.MF.varTable.tanks[4] = Util.copyTable(global.tankTable[4]) end
 if global.tankTable[5] ~= nil then global.MF.varTable.tanks[5] = Util.copyTable(global.tankTable[5]) end
 
--- Set the Mobile Factory Surface Name --
-if global.MF ~= nil and global.MF.player ~= nil and global.MF.fS ~= nil and global.MF.fS.valid == true then global.MF.fS.name = _mfSurfaceName .. global.MF.player end
-if global.MF ~= nil and global.MF.player ~= nil and global.MF.ccS ~= nil and global.MF.ccS.valid == true then global.MF.ccS.name = _mfControlSurfaceName .. global.MF.player end
-
+::continue::
 -- Remove old Variables and Tables --
-global.MF = {}
-global.tankTable = {}
+global.MF = nil
+global.tankTable = nil
+
+-- Set the Mobile Factories Surfaces Name --
+for k, MF in pairs(global.MFTable or {}) do
+	if MF.player ~= nil and MF.fS ~= nil and MF.fS.valid == true then
+		MF.fS.name = _mfSurfaceName .. MF.player
+	end
+	if MF.player ~= nil and MF.ccS ~= nil and MF.ccS.valid == true then
+		MF.ccS.name = _mfControlSurfaceName .. MF.player
+	end
+end

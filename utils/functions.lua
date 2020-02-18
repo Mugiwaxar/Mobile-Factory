@@ -419,7 +419,13 @@ function Util.copyTable(t1)
 	return t2
 end
 
-
+-- Return true if the Player is not inside a Mobile Factory --
+function Util.isOutside(player)
+	if player == nil then return true end
+	if string.match(player.surface.name, _mfSurfaceName) then return false end
+	if string.match(player.surface.name, _mfControlSurfaceName) then return false end
+	return true
+end
 
 
 

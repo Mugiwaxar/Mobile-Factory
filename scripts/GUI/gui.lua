@@ -149,7 +149,7 @@ function GUI.buttonClicked(event)
 	
 	-- PortOutside button --
 	if event.element.name == "PortOutside" then
-		teleportPlayerOutside(player, MF)
+		teleportPlayerOutside(player)
 	end
 	
 	-- EnergyDrain button --
