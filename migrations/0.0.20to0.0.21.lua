@@ -5,7 +5,6 @@ if global.controlSurface ~= nil then
 		if tile.name ~= "tutorial-grid" and tile.name ~= "refined-hazard-concrete-right" and tile.name ~= "out-of-map" then
 			ents = global.controlSurface.find_entities_filtered{area={{tile.position.x,tile.position.y},{tile.position.x+1,tile.position.y+1}}}
 			if table_size(ents) == 0 then
-				game.print(tile.name)
 				global.controlSurface.set_tiles({{name="out-of-map", position=tile.position}})
 			end
 		end
@@ -14,11 +13,9 @@ end
 
 if technologyUnlocked("ControlCenter") then
 	if global.controlSurface.find_entity("DimensionalSubstation", {-2,10}) == nil then
-		game.print("Mobile Factory: Recreated Dimensional Substation")
 		createEntity(global.controlSurface, -2, 10, "DimensionalSubstation", "player").minable = nil
 	end
 	if global.controlSurface.find_entity("DimensionalAccumulator", {2,12}) == nil then
-		game.print("Mobile Factory: Recreated Dimensional Accumulator")
 		createEntity(global.controlSurface, 2, 12, "DimensionalAccumulator", "player").minable = nil
 	end
 	createTilesSurface(global.controlSurface, -10, -10, 10, 10, "tutorial-grid")
@@ -29,7 +26,6 @@ if technologyUnlocked("UpgradeModules") then
 		createTilesSurface(global.controlSurface, -6, -20, 6, -10, "tutorial-grid")
 	if global.controlSurface.find_entity("Equalizer", {1,-16}) == nil then
 		createEntity(global.controlSurface, 1, -16, "Equalizer", "player").minable = nil
-		game.print("Mobile Factory: Recreated Equalizer")
 	end
 end
 if technologyUnlocked("StorageTankMK1_1") then

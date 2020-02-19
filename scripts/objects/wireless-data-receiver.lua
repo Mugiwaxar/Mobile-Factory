@@ -82,7 +82,7 @@ function WDR:update()
 	end
 	if valid(self.linkedTransmitter) == true and valid(self.linkedTransmitter.dataNetwork) == true and self.linkedTransmitter.dataNetwork:isLive() == true then
 		self.dataNetwork = self.linkedTransmitter.dataNetwork
-	elseif valid(self.linkedTransmitter.dataNetwork) then
+	elseif valid(self.dataNetwork) then
 		-- Remove the Receiver --
 		self.dataNetwork:removeObject(self)
 		self.dataNetwork = nil
@@ -213,12 +213,14 @@ function WDR:getTooltipInfos(GUI)
 	connectedL.style.font = "LabelFont"
 	connectedL.caption = connectedText
 	
+	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
+
 	-- Create the Transmitter Selection --
 	local transmitters = {{"gui-description.Any"}}
 	local selectedIndex = 1
 	local i = 1
 	for k, transmitter in pairs(global.wirelessDataTransmitterTable) do
-		if transmitter ~= nil then
+		if transmitter ~= nil and transmitter.ent ~= nil and Util.canUse(self.player, transmitter.ent) then
 			i = i + 1
 			transmitters[transmitter.ent.unit_number] = tostring(transmitter.ent.unit_number)
 			if self.linkedTransmitter == transmitter then

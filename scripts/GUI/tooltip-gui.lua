@@ -6,7 +6,7 @@ function GUI.createTooltipGUI(gui, player)
 	local resolutionHeight = player.display_resolution.height  / player.display_scale
 	local posX = resolutionWidth / 100 * 80
 	local posY = resolutionHeight / 100 * 25
-	local width = 157
+	local width = 180
 	local height = 300
 	local visible = false
 	
@@ -24,7 +24,7 @@ function GUI.createTooltipGUI(gui, player)
 	-- Set the GUI position end style --
 	mfTooltipGUI.caption = {"gui-description.tooltipGUI"}
 	mfTooltipGUI.location = {posX, posY}
-	mfTooltipGUI.style.minimal_width = width
+	mfTooltipGUI.style.width = width
 	mfTooltipGUI.style.maximal_height = height
 	-- mfTooltipGUI.style.height = height
 	mfTooltipGUI.style.padding = 0
@@ -98,28 +98,37 @@ function GUI.createTooltipGUI(gui, player)
 end
 
 -- Update the tooltip with a new Entity --
-function GUI.updateTooltip(player, objID)
+function GUI.updateTooltip(player, ent)
+	-- Clear the Tooltip GUI --
+	player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.clear()
+	player.gui.screen.mfTooltipGUI.caption = {"gui-description.tooltipGUI"}
 	-- Check the variables --
-	if player == nil or objID == nil then return end
+	if player == nil or ent == nil or ent.valid == false then return end
 	-- Check if the Player Tooltip GUI is not null and visible --
 	if player.gui.screen.mfTooltipGUI == nil or player.gui.screen.mfTooltipGUI.visible == false then return end
+	-- Save the Entity ID --
+	setPlayerVariable(player.name, "lastEntitySelected", ent)
+	-- Set the Tooltip GUI Title --
+	player.gui.screen.mfTooltipGUI.caption = ent.name
 	-- Look for the Object associated with the Entity --
 	for k, obj in pairs(global.entsTable) do
 		-- Check the Object --
-		if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and obj.ent.unit_number == objID then
+		if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and obj.ent.unit_number == ent.unit_number then
 			-- Check if the Object can return a Frame --
 			if obj.getTooltipInfos ~= nil then
-				-- Save the Entity ID --
-				setPlayerVariable(player.name, "lastEntitySelected", obj.ent.unit_number)
-				-- Clear the Tooltip GUI --
-				player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.clear()
 				-- Update the GUI --
 				obj:getTooltipInfos(player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane)
 				return
 			end
 		end
 	end
-	-- player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.clear()
+	-- If no Objects was found, create a basic Frame --
+	if ent.last_user ~= nil then
+		-- Create the Belongs to Label --
+		local belongsToL = player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", ent.last_user.name}}
+		belongsToL.style.font = "LabelFont"
+		belongsToL.style.font_color = _mfOrange
+	end
 end
 
 

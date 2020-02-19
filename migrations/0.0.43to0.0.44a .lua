@@ -1,6 +1,5 @@
 -- CC Tanks Migration --
 if global.tankTable ~= nil and table_size(global.tankTable) > 0 then
-	game.print("Mobile Factory: Update Tank Table Update")
 	-- Update all Tanks --
 	for k, tank in pairs(global.tankTable) do
 		-- Update the Tank --

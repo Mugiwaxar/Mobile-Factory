@@ -125,25 +125,25 @@ function getDataNetworkID()
 end
 
 -- Try to find a lost Mobile Factory --
--- function findMF(player, MF)
--- 	-- Number of Tank found --
--- 	local mfFound = 0
--- 	-- Last Tank found --
--- 	local lastMFFound = nil
--- 	-- Look for the Tank in all surfaces --
--- 	for k, surface in pairs(game.surfaces) do
--- 		for k2, entity in pairs(surface.find_entities_filtered{type="car"}) do
--- 			if string.match(entity.name, "MobileFactory") then
--- 				mfFound = mfFound + 1
--- 				lastMFFound = entity
--- 			end
--- 		end
--- 	end
--- 	-- Print the number of Tank found --
--- 	game.print("Found " .. mfFound .. " Mobile Factory")
--- 	-- Return the last Tank found --
--- 	return lastMFFound
--- end
+function findMF(player, MF)
+	-- Number of Tank found --
+	local mfFound = 0
+	-- Last Tank found --
+	local lastMFFound = nil
+	-- Look for the Tank in all surfaces --
+	for k, surface in pairs(game.surfaces) do
+		for k2, entity in pairs(surface.find_entities_filtered{type="car"}) do
+			if string.match(entity.name, "MobileFactory") and entity.last_user ~= nil and entity.last_user.name == player.name then
+				mfFound = mfFound + 1
+				lastMFFound = entity
+			end
+		end
+	end
+	-- Print the number of Tank found --
+	player.print("Found " .. mfFound .. " Mobile Factory")
+	-- Return the last Tank found --
+	return lastMFFound
+end
 
 -- Define the Main Mobile Factory global variable --
 function newMobileFactory(MF)
@@ -152,6 +152,9 @@ function newMobileFactory(MF)
 	-- Test if the Mobile Factory doesn't already exist --
 	if global.MFTable[MF.last_user.name] ~= nil and global.MFTable[MF.last_user.name].ent ~= nil and global.MFTable[MF.last_user.name].valid == true then global.MFTable[MF.last_user.name].ent.destroy() end
 	-- ReConstruct the MF Object --
+	if global.MFTable[MF.last_user.name] == nil then
+		global.MFTable[MF.last_user.name] = getMF("")
+	end
 	global.MFTable[MF.last_user.name]:construct(MF)
 	-- Check all Technologies --
 	checkTechnologies(global.MFTable[MF.last_user.name])
@@ -165,29 +168,29 @@ function fixMB(event)
 	local MF = getMF(player.name)
 	if MF == nil then return end
 	-- If Mobile Factory is lost --
-	-- if MF.ent == nil or MF.ent.valid == false then
-	-- 	-- Try to find it --
-	-- 	tempMf = findMF(player, MF)
-	-- 	if tempMf ~= nil and tempMf.valid == true then
-	-- 		-- Found it, attach it to the MF object --
-	-- 		game.print({"", {"gui-description.MFScanFound"}})
-	-- 		newMobileFactory(tempMf)
-	-- 	else
-	-- 		-- Unable to find --
-	-- 		game.print({"", {"gui-description.MFScanNotFound"}})
-	-- 	end
-	-- end
+	if MF.ent == nil or MF.ent.valid == false then
+		-- Try to find it --
+		tempMf = findMF(player, MF)
+		if tempMf ~= nil and tempMf.valid == true then
+			-- Found it, attach it to the MF object --
+			player.print({"", {"gui-description.MFScanFound"}})
+			newMobileFactory(tempMf)
+		else
+			-- Unable to find --
+			player.print({"", {"gui-description.MFScanNotFound"}})
+		end
+	end
 	-- If Factory Surface is lost --
 	if MF.fS == nil or MF.fS.valid == false then
 		-- Try to find it --
 		tempSurface = game.get_surface(_mfSurfaceName .. player.name)
 		if tempSurface ~= nil and tempSurface.valid == true then
 			-- Surface found, attach it to the MF object --
-			game.print({"", {"gui-description.FSFound"}})
+			player.print({"", {"gui-description.FSFound"}})
 			MF.fS = tempSurface
 		else
 			-- Unable to find, create a new one --
-			game.print({"", {"gui-description.FSNotFound"}})
+			player.print({"", {"gui-description.FSNotFound"}})
 			createMFSurface(MF)
 		end
 	end
@@ -199,11 +202,11 @@ function fixMB(event)
 			tempSurface = game.get_surface(_mfControlSurfaceName .. player.name)
 			if tempSurface ~= nil and tempSurface.valid == true then
 				-- Surface found, attach it to the MF object --
-				game.print({"", {"gui-description.CCSFound"}})
+				player.print({"", {"gui-description.CCSFound"}})
 				MF.ccS = tempSurface
 			else
 				-- Unable to find it, create a new one --
-				game.print({"", {"gui-description.CCSNotFound"}})
+				player.print({"", {"gui-description.CCSNotFound"}})
 				createControlRoom(MF)
 			end
 		end
@@ -405,8 +408,12 @@ function Util.getConnectedDN(obj)
 	local objGCN = Util.greenCNID(obj)
 	local objRCN = Util.redCNID(obj)
 	-- Check if the Object is inside a Data Network --
-	if objGCN ~= nil then return global.dataNetworkIDGreenTable[objGCN] end
-	if objRCN ~= nil then return global.dataNetworkIDRedTable[objRCN] end
+	local link = nil
+	if objGCN ~= nil then link = global.dataNetworkIDGreenTable[objGCN] end
+	if objRCN ~= nil then link = global.dataNetworkIDRedTable[objRCN] end
+	if link ~= nil and link.ent ~= nil then
+		if Util.canUse(obj.player, link.ent) then return link end
+	end
 	return nil
 end
 
@@ -437,6 +444,17 @@ function Util.canUse(playerName, structure)
 		if MF1.varTable.useSharedStructures == true and MF2.varTable.shareStructures == true then
 			return true
 		end
+	end
+	return false
+end
+
+-- Check if the Player can modify the Structure Settings --
+function canModify(playerName, structure)
+	if playerName == nil or structure == nil or structure.last_user == nil then return false end
+	if playerName == structure.last_user.name then return true end
+	local MF2 = getMF(structure.last_user.name)
+	if MF2 ~= nil and MF2.varTable.allowToModify == true then
+		return
 	end
 	return false
 end

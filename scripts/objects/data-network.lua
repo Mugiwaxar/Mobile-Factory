@@ -144,7 +144,7 @@ function DN:powerConsumption()
 	-- Calcule the total Power Consumption --
 	local totalConsumption = 0
 	for k, obj in pairs(self.entitiesTable) do
-		if obj.active == true then
+		if obj.active == true or (obj.ent ~= nil and string.match(obj.ent.name, "DataCeter")) then
 			totalConsumption = totalConsumption + (obj.consumption or 0)
 		end
 	end
@@ -199,13 +199,3 @@ function DN:updateSignals()
 		end
 	end
 end
-
-
-
-
-
-
-
-
-
-

@@ -44,11 +44,13 @@ if technologyUnlocked("ConstructibleArea1") == true then global.MF.varTable.tech
 
 -- Save all Dimensional Tank --
 global.MF.varTable.tanks = {}
-if global.tankTable[1] ~= nil then global.MF.varTable.tanks[1] = Util.copyTable(global.tankTable[1]) end
-if global.tankTable[2] ~= nil then global.MF.varTable.tanks[2] = Util.copyTable(global.tankTable[2]) end
-if global.tankTable[3] ~= nil then global.MF.varTable.tanks[3] = Util.copyTable(global.tankTable[3]) end
-if global.tankTable[4] ~= nil then global.MF.varTable.tanks[4] = Util.copyTable(global.tankTable[4]) end
-if global.tankTable[5] ~= nil then global.MF.varTable.tanks[5] = Util.copyTable(global.tankTable[5]) end
+if global.tankTable ~= nil then
+	if global.tankTable[1] ~= nil then global.MF.varTable.tanks[1] = Util.copyTable(global.tankTable[1]) end
+	if global.tankTable[2] ~= nil then global.MF.varTable.tanks[2] = Util.copyTable(global.tankTable[2]) end
+	if global.tankTable[3] ~= nil then global.MF.varTable.tanks[3] = Util.copyTable(global.tankTable[3]) end
+	if global.tankTable[4] ~= nil then global.MF.varTable.tanks[4] = Util.copyTable(global.tankTable[4]) end
+	if global.tankTable[5] ~= nil then global.MF.varTable.tanks[5] = Util.copyTable(global.tankTable[5]) end
+end
 
 ::continue::
 -- Remove old Variables and Tables --
@@ -57,10 +59,10 @@ global.tankTable = nil
 
 -- Set the Mobile Factories Surfaces Name --
 for k, MF in pairs(global.MFTable or {}) do
-	if MF.player ~= nil and MF.fS ~= nil and MF.fS.valid == true then
+	if MF.player ~= nil and MF.player ~= "" and MF.fS ~= nil and MF.fS.valid == true then
 		MF.fS.name = _mfSurfaceName .. MF.player
 	end
-	if MF.player ~= nil and MF.ccS ~= nil and MF.ccS.valid == true then
+	if MF.player ~= nil and MF.player ~= "" and MF.ccS ~= nil and MF.ccS.valid == true then
 		MF.ccS.name = _mfControlSurfaceName .. MF.player
 	end
 end
@@ -86,3 +88,8 @@ global.mjMaxDistance = nil
 global.cjMaxDistance = nil
 global.rjMaxDistance = nil
 global.cbjMaxDistance = nil
+
+-- Set all Players Last Selected Entity to nil --
+for k, player in pairs(global.playersTable or {}) do
+	setPlayerVariable(k, "lastEntitySelected", nil)
+end

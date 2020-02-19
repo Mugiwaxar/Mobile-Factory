@@ -51,8 +51,8 @@ end
 -- Constructor for a placed Mobile Factory --
 function MF:construct(object)
 	if object == nil then return end
-	if self.fS == nil then createMFSurface() end
-	if self.ccS == nil then createControlRoom() end
+	if self.fS == nil then createMFSurface(self) end
+	if self.ccS == nil then createControlRoom(self) end
 	self.ent = object
 	self.lastSurface = object.surface
 	self.lastPosX = object.position.x
@@ -88,6 +88,8 @@ function MF:getTooltipInfos(GUI)
 	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
 	belongsToL.style.font = "LabelFont"
 	belongsToL.style.font_color = _mfOrange
+
+	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
 
 	-- Create the Power laser Label --
 	if technologyUnlocked("EnergyDrain1") then

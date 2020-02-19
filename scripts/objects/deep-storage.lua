@@ -108,6 +108,8 @@ function DSR:getTooltipInfos(GUI)
 		fDisplayI.tooltip = self.filter
 	end
 
+	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
+
 	-- Add the Set Filter Button --
 	local fButton = GUI.add{type="button", name = "MFInfos", caption={"", {"gui-description.SetFilter"}}}
 	fButton.style.width = 100

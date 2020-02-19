@@ -7,11 +7,14 @@ function GUI.readOptions(option, player, gui)
 	if MF == nil then return end
 
 	------------------- MF -------------------
-	if name == "GUIShareOpt" then
+	if name == "MFShareOpt" then
 		MF.varTable.shareStructures = option.state
 	end
-	if name == "GUIUseShareOpt" then
+	if name == "MFUseShareOpt" then
 		MF.varTable.useSharedStructures = option.state
+	end
+	if name == "MFShareSettingOpt" then
+		MF.varTable.allowToModify = option.state
 	end
 
 	------------------- Main GUI -------------------
@@ -63,14 +66,21 @@ function GUI.readOptions(option, player, gui)
 		else
 			game.print({"gui-description.FloorIsLavaDeactivated"})
 		end
+		for k, player2 in pairs(game.players) do
+			player2.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab3Frame.mfOptTab3Pane.FILActivatedF.FloorIsLaveActiveOpt.state = option.state
+		end
 	end
 	
 	------------------- Performances -------------------
-	if name == "SystemPerfEntsPerTick" then
+	if name == "SystemPerfEntsPerTickT" then
 		local number = tonumber(option.text)
 		if number == nil then return end
 		number = math.max(number, 10)
 		number = math.min(number, 10000)
 		global.entsUpPerTick = number
+		game.print({"", {"gui-description.EntitiesUpdatePerTickNumber"}, " ", number})
+		for k, player2 in pairs(game.players) do
+			player2.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab2Frame.mfOptTab2Pane.SystemPerfEntsPerTickF.SystemPerfEntsPerTickT.text = option.text
+		end
 	end
 end

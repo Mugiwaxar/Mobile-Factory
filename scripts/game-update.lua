@@ -130,7 +130,7 @@ function selectedEntityChanged(event)
 	-- Check if the Tooltip GUI is not locked --
 	if player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite == "LockIconReed" then return end
 	-- Update the Tooltip GUI --
-	GUI.updateTooltip(player, player.selected.unit_number)
+	GUI.updateTooltip(player, player.selected)
 end
 
 -- If player entered or living a vehicle --

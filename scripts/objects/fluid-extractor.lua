@@ -118,6 +118,8 @@ function FE:getTooltipInfos(GUI)
 		mfTooFarL.style.font = "LabelFont"
 		mfTooFarL.style.font_color = _mfRed
 	end
+
+	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
 	
 	-- Create the Dimensional Tank Selection --
 	local dimTanks = {{"gui-description.Any"}}

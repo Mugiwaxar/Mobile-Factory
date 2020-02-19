@@ -1,4 +1,4 @@
-if global.MF.fS ~= nil then
+if global.MF ~= nil and global.MF.fS ~= nil then
     local mapSetting = {
 		default_enable_all_autoplace_controls = false,
 		property_expression_names = {cliffiness = 0},
@@ -11,7 +11,7 @@ if global.MF.fS ~= nil then
     global.MF.fS.map_gen_settings = mapSetting
 end
 
-if global.MF.ccS ~= nil then
+if global.MF ~= nil and global.MF.ccS ~= nil then
     local mapSetting = {
 		default_enable_all_autoplace_controls = false,
 		property_expression_names = {cliffiness = 0},

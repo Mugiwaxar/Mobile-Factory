@@ -148,7 +148,7 @@ function GUI.createOptionGUI(gui, player)
 	mfOptTabbedPane.add_tab(mfOptTab3, mfOptTab3Frame)
 	
 	-- Create the Tab 3 --
-	GUI.createOptTab3(mfOptTab3Pane, MF)
+	GUI.createOptTab3(mfOptTab3Pane, player, MF)
 	
 	------------------------------------------- TAB 2 --------------------------------
 	-- Create the Tab --
@@ -177,16 +177,17 @@ function GUI.createOptionGUI(gui, player)
 	mfOptTabbedPane.add_tab(mfOptTab2, mfOptTab2Frame)
 	
 	-- Create the Tab 2 --
-	GUI.createOptTab2(mfOptTab2Pane)
+	GUI.createOptTab2(mfOptTab2Pane, player)
 
 end
 
 ---------------------- OPTIONS GUI TAB 4 --------------------------
 function GUI.createOptTab4(tab)
-	local GUIMainGuiOpt = tab.add{type="label", name="GUIMFOpt", caption={"gui-description.GUIMFOpt"}}
+	local GUIMainGuiOpt = tab.add{type="label", name="MFOpt", caption={"gui-description.MFOpt"}}
 	GUIMainGuiOpt.style.font = "TitleFont"
-	tab.add{type="checkbox", name="GUIShareOpt", caption={"gui-description.GUIShareOpt"}, tooltip={"gui-description.GUIShareOptTT"}, state=false}
-	tab.add{type="checkbox", name="GUIUseShareOpt", caption={"gui-description.GUIUseShareOpt"}, tooltip={"gui-description.GUIUseShareOptTT"}, state=false}
+	tab.add{type="checkbox", name="MFShareOpt", caption={"gui-description.MFShareOpt"}, tooltip={"gui-description.MFShareOptTT"}, state=false}
+	tab.add{type="checkbox", name="MFUseShareOpt", caption={"gui-description.MFUseShareOpt"}, tooltip={"gui-description.MFUseShareOptTT"}, state=false}
+	tab.add{type="checkbox", name="MFShareSettingOpt", caption={"gui-description.MFShareSettingOpt"}, tooltip={"gui-description.MFShareSettingOptTT"}, state=false}
 end
 
 ---------------------- OPTIONS GUI TAB 1 --------------------------
@@ -205,7 +206,7 @@ function GUI.createOptTab1(tab)
 end
 
 ---------------------- OPTIONS GUI TAB 3 --------------------------
-function GUI.createOptTab3(tab, MF)
+function GUI.createOptTab3(tab, player, MF)
 	-- Jets --
 	local JetSettingsL = tab.add{type="label", name="JetSettingsL", caption={"gui-description.JetOpt"}}
 	JetSettingsL.style.font = "TitleFont"
@@ -223,25 +224,26 @@ function GUI.createOptTab3(tab, MF)
 	local FILSettingsL = tab.add{type="label", name="FILSettingsL", caption={"gui-description.FILOptTitle"}}
 	FILSettingsL.style.font = "TitleFont"
 	FILSettingsL.style.top_margin = 20
-	local FILActivatedF = tab.add{type="flow", direction="horizontal"}
-	FILActivatedF.add{type="checkbox", name="FloorIsLaveActiveOpt", tooltip={"gui-description.FloorIsLavaOptTT"}, state=global.floorIsLavaActivated}
-	FILActivatedF.add{type="label", caption={"gui-description.FloorIsLavaActOpt"}, tooltip={"gui-description.FloorIsLavaOptTT"}}
+	local FILActivatedF = tab.add{type="flow", name="FILActivatedF", direction="horizontal"}
+	FILActivatedF.add{type="checkbox", name="FloorIsLaveActiveOpt", tooltip={"gui-description.FloorIsLavaOptTT"}, state=global.floorIsLavaActivated, enabled=player.admin}
+	FILActivatedF.add{type="label", caption={"gui-description.FloorIsLavaActOpt"}, tooltip={"gui-description.FloorIsLavaOptTT"}, enabled=player.admin}
 	
 end
 
 
 ---------------------- OPTIONS GUI TAB 2 --------------------------
-function GUI.createOptTab2(tab)
-	local SystemPerfGuiOpt = tab.add{type="label", name="SystemPerfGuiOpt", caption={"gui-description.GUIPerfGuiOpt"}}
+function GUI.createOptTab2(tab, player)
+	local SystemPerfGuiOpt = tab.add{type="label", name="SystemPerfGuiOpt", caption={"gui-description.PerfGuiOpt"}}
 	SystemPerfGuiOpt.style.font = "TitleFont"
-	GUI.createDTextField(tab, "SystemPerfEntsPerTick", "SystemPerfEntsPerTick", "SystemPerfEntsPerTickTT", global.entsUpPerTick)
+	GUI.createDTextField(tab, "SystemPerfEntsPerTick", "SystemPerfEntsPerTick", "SystemPerfEntsPerTickTT", global.entsUpPerTick, player.admin)
 end
 
 -- Create an option with decimal Textfield --
-function GUI.createDTextField(GUI, name, caption, tooltip, text)
-	local flow = GUI.add{type="flow", direction="horizontal"}
-	flow.add{type="textfield", name=name, tooltip={"gui-description." .. tooltip}, text=text, numeric=true, allow_decimal=false, allow_negative=false}	
-	flow.add{type="label", caption={"gui-description." .. caption}, tooltip={"gui-description." .. tooltip}}
-	flow[name].style.width = 100
-	flow[name].style.left_margin = 5
+function GUI.createDTextField(GUI, name, caption, tooltip, text, enabled)
+	if enabled == nil then enabled = true end
+	local flow = GUI.add{type="flow", name=name .. "F", direction="horizontal"}
+	flow.add{type="textfield", name=name .. "T", tooltip={"gui-description." .. tooltip}, text=text, numeric=true, allow_decimal=false, allow_negative=false, enabled=enabled}
+	flow.add{type="label", name=name .. "L", caption={"gui-description." .. caption}, tooltip={"gui-description." .. tooltip}, enabled=enabled}
+	flow[name .. "T"].style.width = 100
+	flow[name .. "T"].style.left_margin = 5
 end

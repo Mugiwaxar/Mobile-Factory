@@ -1,16 +1,5 @@
 require("scripts/objects/inventory.lua")
 
--- Print update message --
-if global.inventoryTable ~= nil and table_size(global.inventoryTable) > 0 then
-	game.print("#################################################################################################################")
-	game.print("Mobile Factory: In this Update, all the Internal Inventory logistic was changed.")
-	game.print("The Inventory/Provider/Requester Pad was removed, and replaced by Matter Serializer/Printer and Data Storage.")
-	game.print("Replaced all Inventory/Provider/Requester Pads by Iron Chests")
-	game.print("################################################################################################################# ")
-	game.print(" ")
-	game.print("  ")
-end
-
 -- Unlock Matter Serialization recipes --
 if technologyUnlocked("MatterSerialization") then
 	game.forces["player"].recipes["DataCenter"].enabled = true
@@ -32,7 +21,7 @@ global.MF.ccS.daytime = 0
 end
 
 -- Internal Inventory to OOP --
-if global.MF.II == nil then
+if global.MF ~= nil and global.MF.II == nil then
 	-- Create II and tables --
 	global.MF.II = INV:new("Internal Inventory")
 	global.MF.II.inventory = {}

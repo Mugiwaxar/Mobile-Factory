@@ -9,6 +9,10 @@ Date: 18/02/2020
     - Added a new Tab to the Option GUI: MF (Mobile Factory)
     - Added a new Option to the MF Tab: Share Structures -> Allow other Players to interact with your Structures (Drain/Send Power, Items, Fluid, ...)
     - Added a new Option to the MF Tab: Use Shared Structures -> Share your Structures with other Players (Drain/Send Power, Items, Fluid, ...)
+    - Added a new Option to the MF Tab: Allow settings modification -> Allow others Players to modify your Structures Settings
+    - The Floor Is Lava option is now only accessible for Admins
+    - The Entities Update Per Tick option is now only accessible for Admins
+    - The Tooltip GUI Show now the hovered Entity name
   Bugfixes:
     - Mine Dimensional Tile give now Dimensional Tile
     - All things inside the Information GUI will no longer disappear when the Mobile Factory is removed
@@ -426,7 +430,7 @@ Date: 24/12/2019
     - The content of the Control Center Ore Silos is added to the Internal Inventory Data Center Signals
     - Removed Ore Silo Pad 1/2/3/4/5, replaced by Iron Chest when placed on the Map
   Bugfixes:
-    - Fixed a game crash when an Item from a removed Mod still exist inside the Internal Inventory
+    - Fixed a game crash when an Item from a removed Mod still 1exist inside the Internal Inventory
   Scripting:
     - Rework of all Migrations game.print()
 ---------------------------------------------------------------------------------------------------

@@ -2,7 +2,6 @@
 if global.mobileFactory ~= nil then
 	global.upsysTickTable = {}
 	global.entsTable = {}
-	game.print("Mobile Factory to OOP Update")
 	-- Copy all variables --
 	global.MF = MF:new(global.mobileFactory)
 	local MF = global.MF

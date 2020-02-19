@@ -1,4 +1,4 @@
 -- Unlock the Constructible Area 1 --
-if technologyUnlocked("ConstructibleArea1") then
-	createConstructibleArea1()
-end
+-- if technologyUnlocked("ConstructibleArea1") then
+	-- createConstructibleArea1()
+-- end
