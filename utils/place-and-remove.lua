@@ -17,7 +17,9 @@ function somethingWasPlaced(event, isRobot)
 	end
 
 	-- Get the Player Mobile Factory --
-	local MF = getMF(event.created_entity.last_user.name)
+	local MF = nil
+	if event.created_entity ~= nil and event.created_entity.last_user ~= nil then MF = getMF(event.created_entity.last_user.name) end
+	if MF == nil and isPlayer == true then getMF(creator.name) end
 	
 	-- Prevent to place Tiles inside the Control Center --
 	if creator ~= nil and event.tiles ~= nil and string.match(creator.surface.name, _mfControlSurfaceName) then
@@ -129,7 +131,7 @@ function somethingWasPlaced(event, isRobot)
 	
 	-- Prevent to place things inside the Control Center --
 	if string.match(event.created_entity.surface.name, _mfControlSurfaceName) then
-		if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.CCNotPlaceable"}}) end
+		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.CCNotPlaceable"}}) end
 		event.created_entity.destroy()
 		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
 			creator.get_main_inventory().insert(event.stack)
@@ -139,7 +141,7 @@ function somethingWasPlaced(event, isRobot)
 	
 	-- Prevent to place things out of the Control Center --
 	if event.created_entity.name == "DeepStorage" then
-		if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheCCCArea"}}) end
+		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheCCCArea"}}) end
 		event.created_entity.destroy()
 		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
 			creator.get_main_inventory().insert(event.stack)
@@ -448,6 +450,6 @@ function markedForDeconstruction(event)
 	if player == nil then return end
 	local MF = getMF(player.name)
 	if MF == nil then return end
-	if MF[player.name].ent == nil or MF[player.name].ent.valid == false or event.entity.surface.name ~= MF.ent.surface.name then return end
+	if MF.ent == nil or MF.ent.valid == false or event.entity.surface.name ~= MF.ent.surface.name then return end
 	table.insert(global.constructionTable,{ent=event.entity, name=event.entity.name, position=event.entity.position, direction=event.entity.direction or 1, mission="Deconstruct"})
 end

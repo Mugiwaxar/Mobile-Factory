@@ -109,7 +109,7 @@ function GUI.updateTooltip(player, ent)
 	-- Save the Entity ID --
 	setPlayerVariable(player.name, "lastEntitySelected", ent)
 	-- Set the Tooltip GUI Title --
-	player.gui.screen.mfTooltipGUI.caption = ent.name
+	player.gui.screen.mfTooltipGUI.caption = game.entity_prototypes[ent.name].localised_name
 	-- Look for the Object associated with the Entity --
 	for k, obj in pairs(global.entsTable) do
 		-- Check the Object --

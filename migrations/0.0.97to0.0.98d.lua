@@ -1,4 +1,5 @@
 -- Set all Mobile Factory Objects to belongs to the first Player --
+local player = nil
 if global.MF == nil or global.MF == {} then goto continue end
 global.MFTable = {}
 if global.MF ~= nil and global.MF.II ~= nil then
@@ -8,21 +9,18 @@ if global.MF ~= nil and global.MF.II ~= nil then
 		global.dataCenterTable[global.MF.dataCenter.ent.unit_number] = global.MF.dataCenter
 	end
 end
-for name, j in pairs(global.playersTable or {}) do
-	if name ~= nil then
-		-- Register the Mobile Factory inside the MFTable --
-		global.MF.player = name
-		global.MFTable[name] = global.MF
-		-- Register all Objects --
-		for k, obj in pairs(global.entsTable or {}) do
-			if obj.ent ~= nil and obj.ent.valid == true and string.match(obj.ent.name, "MobileFactory") == nil then
-				obj.player = name
-				obj.MF = global.MF
-			end
-		end
-		break
+-- Try to find a player --
+if global.MF.ent ~= nil and global.MF.ent.last_user ~= nil then player = global.MF.ent.last_user end
+if player == nil then player = game.players[1] end
+global.MF.player = player.name
+global.MFTable[player.name] = global.MF
+for k, obj in pairs(global.entsTable or {}) do
+	if obj.ent ~= nil and obj.ent.valid == true and string.match(obj.ent.name, "MobileFactory") == nil then
+		obj.player = player.name
+		obj.MF = global.MF
 	end
 end
+
 
 -- Set all Technology Variables --
 global.MF.varTable = {}
@@ -60,20 +58,18 @@ global.tankTable = nil
 -- Set the Mobile Factories Surfaces Name --
 for k, MF in pairs(global.MFTable or {}) do
 	if MF.player ~= nil and MF.player ~= "" and MF.fS ~= nil and MF.fS.valid == true then
-		MF.fS.name = _mfSurfaceName .. MF.player
+		local newName = _mfSurfaceName .. MF.player
+		if MF.fS.name ~= newName then MF.fS.name = newName end
 	end
 	if MF.player ~= nil and MF.player ~= "" and MF.ccS ~= nil and MF.ccS.valid == true then
-		MF.ccS.name = _mfControlSurfaceName .. MF.player
+		local newName = _mfControlSurfaceName .. MF.player
+		if MF.ccS.name ~= newName then MF.ccS.name = _mfControlSurfaceName .. MF.player end
 	end
-end
-
--- Set GotInventory Value --
-for k, player in pairs(global.playersTable or {}) do
-	player["GotInventory"] = true
 end
 
 -- Set Jets Max Distance --
 for k, MF in pairs(global.MFTable or {}) do
+	MF.locked = true
 	if MF.varTable.jets == nil then
 		MF.varTable.jets = {}
 		MF.varTable.jets.mjMaxDistance = global.mjMaxDistance or _MFMiningJetDefaultMaxDistance
@@ -89,7 +85,17 @@ global.cjMaxDistance = nil
 global.rjMaxDistance = nil
 global.cbjMaxDistance = nil
 
+-- Create all Players Object --
+for k, player2 in pairs(game.players) do
+	local playerTable = global.playersTable[player2.name]
+	local MFPlayer = MFP:new(player2)
+	MFPlayer.MF = getMF(player2.name)
+	if playerTable ~= nil then MFPlayer.varTable = playerTable end
+	global.playersTable[player2.name] = MFPlayer
+	setPlayerVariable(player2.name, "GotInventory", true)
+end
+
 -- Set all Players Last Selected Entity to nil --
-for k, player in pairs(global.playersTable or {}) do
+for k, player2 in pairs(global.playersTable or {}) do
 	setPlayerVariable(k, "lastEntitySelected", nil)
 end

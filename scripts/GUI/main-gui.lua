@@ -284,6 +284,19 @@ function GUI.createMainGUI(player, gui)
 	-- Set Style --
 	mfGUIExtFF1.MFTPInside.style.maximal_height = _GUIButtonsSize
 	mfGUIExtFF1.MFTPInside.style.maximal_width = _GUIButtonsSize
+
+	-- Add MFLock Button --
+	mfGUIExtFF1.add{
+		type="sprite-button",
+		name="MFLock",
+		sprite="LockMFCIcon",
+		hovered_sprite="LockMFOIcon",
+		resize_to_sprite=false,
+		tooltip={"gui-description.LockMF"}
+	}
+	-- Set Style --
+	mfGUIExtFF1.MFLock.style.maximal_height = _GUIButtonsSize
+	mfGUIExtFF1.MFLock.style.maximal_width = _GUIButtonsSize
 	
 	-- Add EnergyDrain Button --
 	mfGUIExtFF2.add{
@@ -479,6 +492,15 @@ function GUI.mainGUIUpdate(player)
 	else
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFTPInside.sprite = "MFTPIconDisabled"
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFTPInside.hovered_sprite = "MFTPIcon"
+	end
+
+	-- Update the MFLock Icone --
+	if MF.locked == true then
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFLock.sprite = "LockMFCIcon"
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFLock.hovered_sprite = "LockMFOIcon"
+	else
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFLock.sprite = "LockMFOIcon"
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFLock.hovered_sprite = "LockMFCIcon"
 	end
 
 	-- Update Energy Drain Button --

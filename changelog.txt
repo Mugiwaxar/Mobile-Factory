@@ -4,6 +4,9 @@ Date: 18/02/2020
   Major Features:
     - Multiplayer Update
     - You can now place more than one Mobile Factory (One per Player)
+    - The Player can choose if its owned Structures are shared with others Players or not
+    - The Player can choose if the Structures shared by other Players will be used or not
+    - The Mobile Factory can now be Locked to prevent other Players to enter
   Gui:
     - The Tooltip GUI now show to who belong a Structure
     - Added a new Tab to the Option GUI: MF (Mobile Factory)
@@ -13,9 +16,12 @@ Date: 18/02/2020
     - The Floor Is Lava option is now only accessible for Admins
     - The Entities Update Per Tick option is now only accessible for Admins
     - The Tooltip GUI Show now the hovered Entity name
+    - Added the Lock/Unlock Button
   Bugfixes:
     - Mine Dimensional Tile give now Dimensional Tile
     - All things inside the Information GUI will no longer disappear when the Mobile Factory is removed
+    - Fixed a crash when a Deep Storage filter was set with an Item removed from the game
+    - Fixed a crash with Deep Storage placed as ghost
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.97
 Date: 16/02/2020

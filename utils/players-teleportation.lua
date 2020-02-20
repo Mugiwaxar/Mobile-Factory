@@ -4,6 +4,8 @@ require("utils/functions.lua")
 function teleportPlayerInside(player, MF)
 	if player == nil then return end
 	if MF == nil then return end
+	-- Check if the Player can enter --
+	if player.name ~= MF.player and MF.locked == true then return end
 	-- Check Internal Surface and Player --
 	if MF.fS == nil then player.print({"", {"gui-description.FSLost"}}) return end
 	-- Save the visited Factory once variable --

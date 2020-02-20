@@ -1,6 +1,3 @@
--- MOBILE FACTORY OBJECT --
-require("utils/functions")
-
 -- Create the Mobile Factory Object --
 MF = {
 	ent = nil,
@@ -21,6 +18,7 @@ MF = {
 	jumpTimer = _mfBaseJumpTimer,
 	baseJumpTimer = _mfBaseJumpTimer,
 	tpEnabled = true,
+	locked = true,
 	laserRadiusMultiplier = 0,
 	laserDrainMultiplier = 0,
 	laserNumberMultiplier = 0,

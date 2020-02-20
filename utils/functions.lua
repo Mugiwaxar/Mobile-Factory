@@ -103,18 +103,28 @@ function getMF(playerName)
 	return global.MFTable[playerName]
 end
 
+-- Return the MFPlayer Object --
+function getMFPlayer(playerName)
+	if playerName == nil then return nil end
+	return global.playersTable[playerName]
+end
+
 -- Get player specific variable --
 function getPlayerVariable(playerName, variable)
 	if global.playersTable == nil then global.playersTable = {} end
-	if global.playersTable[playerName] == nil then global.playersTable[playerName] = {} end
-	return global.playersTable[playerName][variable]
+	local MFPlayer = getMFPlayer(playerName)
+	if MFPlayer == nil then global.playersTable[playerName] = MFP:new(getPlayer(playerName)) end
+	if MFPlayer.varTable == nil then MFPlayer.varTable = {} end
+	return MFPlayer.varTable[variable]
 end
 
 -- Set player specific variable --
 function setPlayerVariable(playerName, variable, value)
 	if global.playersTable == nil then global.playersTable = {} end
-	if global.playersTable[playerName] == nil then global.playersTable[playerName] = {} end
-	global.playersTable[playerName][variable] = value
+	local MFPlayer = getMFPlayer(playerName)
+	if MFPlayer == nil then global.playersTable[playerName] = MFP:new(getPlayer(playerName)) end
+	if MFPlayer.varTable == nil then MFPlayer.varTable = {} end
+	MFPlayer.varTable[variable] = value
 end
 
 -- Get a Data Network ID --

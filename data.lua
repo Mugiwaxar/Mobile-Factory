@@ -469,6 +469,26 @@ data:extend{
 data:extend{
 	{
 		type = "sprite",
+		name = "LockMFCIcon",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/LockMFC.png",
+		size = 32,
+		flags = {"icon"}
+	}
+}
+
+data:extend{
+	{
+		type = "sprite",
+		name = "LockMFOIcon",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/LockMFO.png",
+		size = 32,
+		flags = {"icon"}
+	}
+}
+
+data:extend{
+	{
+		type = "sprite",
 		name = "EnergyDrainIcon",
 		filename = "__Mobile_Factory_Graphics__/graphics/icones/TecEnergyDrain1.png",
 		size = 32,

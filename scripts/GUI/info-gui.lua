@@ -541,7 +541,7 @@ function GUI.updateDeepStorageFrame(player, MF)
 		deepStorageFilter.style.maximal_width = 25
 		deepStorageFilter.style.margin = 0
 		deepStorageFilter.style.padding = 0
-		if deepStorageFilter.elem_value == nil and global.deepStorageTable[k].filter ~= nil then
+		if deepStorageFilter.elem_value == nil and global.deepStorageTable[k].filter ~= nil and game.item_prototypes[global.deepStorageTable[k].filter] ~= nil then
 			deepStorageFilter.elem_value = global.deepStorageTable[k].filter
 		end
 		global.deepStorageTable[k].filter = deepStorageFilter.elem_value

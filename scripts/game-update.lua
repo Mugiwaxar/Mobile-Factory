@@ -154,16 +154,18 @@ end
 function initPlayer(event)
 	local player = getPlayer(event.player_index)
 	if player == nil then return end
-	if getPlayerVariable(player.name, "GotInventory") ~= true then
-		setPlayerVariable(player.name, "VisitedFactory", false)
+	if getMFPlayer(player.name) == nil then
+		global.playersTable[player.name] = MFP:new(player)
 		-- Mobile Factory Object --
-		global.MFTable[player.name] = MF:new()
-		global.MFTable[player.name].II = INV:new("Internal Inventory")
-		global.MFTable[player.name].II.MF = global.MFTable[player.name]
-		global.MFTable[player.name].II.isII = true
-		global.MFTable[player.name].player = player.name
-		createMFSurface(global.MFTable[player.name])
-		createControlRoom(global.MFTable[player.name])
+		local MF = MF:new()
+		global.MFTable[player.name] = MF
+		MF.II = INV:new("Internal Inventory")
+		MF.II.MF = MF
+		MF.II.isII = true
+		MF.player = player.name
+		createMFSurface(MF)
+		createControlRoom(MF)
+		global.playersTable[player.name].MF = MF
 		Util.addMobileFactory(player)
 		setPlayerVariable(player.name, "GotInventory", true)
 	end
@@ -317,7 +319,7 @@ function updateMiningJet()
 				-- Remove the Energy --
 				flag.MF.internalEnergy = flag.MF.internalEnergy - _mfMiningJetEnergyNeeded
 				-- Create the Entity --
-				local entity = flag.MF.ent.surface.create_entity{name="MiningJet", position=flag.MF.ent.position, force="player", player=MF.player}
+				local entity = flag.MF.ent.surface.create_entity{name="MiningJet", position=flag.MF.ent.position, force="player", player=flag.MF.player}
 				global.miningJetTable[entity.unit_number] = MJ:new(entity, orePath, flag)
 			end
 			-- Stop if there are 5 Jets out --

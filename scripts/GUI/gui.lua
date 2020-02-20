@@ -118,11 +118,27 @@ function GUI.buttonClicked(event)
 	if event.element.name == "FindMF" then
 		fixMB(event)
 	end
+
+	-- PortOutside button --
+	if event.element.name == "PortOutside" then
+		teleportPlayerOutside(player)
+	end
 	
 	-- MFTPInside button --
 	if event.element.name == "MFTPInside" then
 		if MF.tpEnabled == true then MF.tpEnabled = false
 		elseif MF.tpEnabled == false then MF.tpEnabled = true end
+	end
+
+	-- MFLock button --
+	if event.element.name == "MFLock" then
+		if MF.locked == true then
+			MF.locked = false
+			player.print({"gui-description.MFUnlocked"})
+		else
+			MF.locked = true
+			player.print({"gui-description.MFLocked"})
+		end
 	end
 	
 	-- Show/Hide the Mobile Factory Info GUI --
@@ -145,11 +161,6 @@ function GUI.buttonClicked(event)
 			player.gui.screen.mfTooltipGUI.visible = false
 			setPlayerVariable(player.name, "GUIUpdateTooltipGUI", false)
 		end
-	end
-	
-	-- PortOutside button --
-	if event.element.name == "PortOutside" then
-		teleportPlayerOutside(player)
 	end
 	
 	-- EnergyDrain button --

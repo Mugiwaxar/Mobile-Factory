@@ -32,6 +32,7 @@ require("scripts/objects/construction-jet.lua")
 require("scripts/objects/repair-jet.lua")
 require("scripts/objects/combat-jet.lua")
 require("scripts/objects/deep-storage.lua")
+require("scripts/objects/MFPlayer.lua")
 
 -- When the mod init --
 function onInit()
@@ -85,6 +86,10 @@ end
 function onLoad()
 	-- Add Warptorio Compatibility --
 	warptorio()
+	-- Set MFPlayer Metatable --
+	for k, mfplayer in  pairs(global.playersTable or {}) do
+		MFP:rebuild(mfplayer)
+	end
 	-- Set MF Metatable --
 	for k, mf in  pairs(global.MFTable or {}) do
 		MF:rebuild(mf)
