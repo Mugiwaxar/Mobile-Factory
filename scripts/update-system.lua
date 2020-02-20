@@ -27,11 +27,7 @@ function UpSys.scanObjs()
       global.upsysTickTable[k] = nil
     end
   end
-		
-  -- Add Object --
---   UpSys.addObject(global.MF)
---   if UpSys.addObject(global.MF.dataCenter) == false then global.MF.dataCenter = nil end
-	
+
   -- Add Array --
   UpSys.addTable(global.MFTable)
   UpSys.addTable(global.dataCenterTable)

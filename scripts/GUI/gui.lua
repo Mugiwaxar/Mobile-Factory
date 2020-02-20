@@ -213,8 +213,10 @@ function GUI.buttonClicked(event)
 	if event.element.name == "TTLockButton" then
 		if player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite == "LockIcon" then
 			player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite = "LockIconReed"
+			setPlayerVariable(player.name, "TTGUILocked", true)
 		else
 			player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite = "LockIcon"
+			setPlayerVariable(player.name, "TTGUILocked", false)
 		end
 	end
 	
@@ -390,7 +392,7 @@ function GUI.onGuiElemChanged(event)
 	------- Read if the Element comes from The Mobile Factory Power Laser -------
 	if string.match(event.element.name, "MFPL") then
 		-- Change the Matter Serializer targeted Inventory --
-		global.MF:changePowerLaserMode(event.element.selected_index)
+		MF:changePowerLaserMode(event.element.selected_index)
 	end
 	
 	------- Read if the Element comes from a Mining Jet Flag -------

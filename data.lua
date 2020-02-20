@@ -626,21 +626,6 @@ data:extend{
 }
 
 
------------------------- ADD REDCROSS ----------------------
--- local RC = table.deepcopy(data.raw.fluid["crude-oil"])
--- RC.name = "RedCross"
--- RC.icon = "__Mobile_Factory_Graphics__/graphics/icones/RedCross.png"
--- RC.subgroup = "Resources"
--- RC.order = "zzz"
--- RC.fuel_category = nil
--- RC.fuel_value = nil
--- RC.fuel_acceleration_multiplier = nil
--- RC.fuel_top_speed_multiplier = nil
--- RC.fuel_emissions_multiplier = nil
--- RC.fuel_glow_color = nil
--- data:extend{RC}
-
-
 -------------------- SET ORES STACK TO 1000 --------------------
 function setStackTo1000(itemName)
 	local item = data.raw.item[itemName]
@@ -652,3 +637,13 @@ setStackTo1000("copper-ore")
 setStackTo1000("iron-ore")
 setStackTo1000("stone")
 setStackTo1000("uranium-ore")
+
+
+-------------------- SHORTCUTS --------------------
+data:extend{
+	{
+	type = "custom-input",
+	name = "TTGUIKey",
+	key_sequence = "mouse-button-3"
+	}
+}
