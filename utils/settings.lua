@@ -77,6 +77,7 @@ _mfFluidExtractorMaxDistance = 100
 _mfMiningJetOrePerUpdate = 5
 _mfMiningJetInventorySize = 100
 _mfMiningJetEnergyNeeded = 2500000
+_MFMiningJetDefaultMaxDistance = 200
 
 -- Mining Jet Flag --
 _mfMiningJetFlagMK1Radius = 1
@@ -89,13 +90,16 @@ _mfEntitiesScanedPerUpdate = 30
 
 -- Construction Jet --
 _mfHPRepairedPerUpdate = -35
-_mfContructionJetEnergyNeeded = 2500000
+_mfConstructionJetEnergyNeeded = 2500000
+_MFConstructionJetDefaultMaxDistance = 130
 
 -- Repair Jet --
 _mfRepairJetEnergyNeeded = 4000000
+_MFRepairJetDefaultMaxDistance = 130
 
 -- Combat Jet --
 _mfCombatJetEnergyNeeded = 3200000
+_MFCombatJetDefaultMaxDistance = 50
 
 -- GUI Settings --
 _GUIButtonsSize = 25
@@ -123,3 +127,4 @@ _mfBlue = {108, 114, 229}
 _mfGreen = {92, 232, 54}
 _mfPurple = {155, 0, 168}
 _mfRed = {231, 5, 5}
+_mfOrange = {211, 84, 0}

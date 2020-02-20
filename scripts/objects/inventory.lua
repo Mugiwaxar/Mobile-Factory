@@ -3,6 +3,7 @@
 -- Create the Inventory base object --
 INV = {
 	name = "",
+	MF = nil,
 	usedCapacity = 0,
 	maxCapacity = _mfBaseMaxItems,
 	dataStoragesCount = 0,
@@ -41,9 +42,9 @@ function INV:rescan()
 	-- Calcule the max capacity --
 	if self.isII == true then
 		self.dataStoragesCount = 0
-		if valid(global.MF.dataCenter) == true and global.MF.dataCenter.active == true then
-			if global.MF.dataCenter.dataNetwork ~= nil then
-				self.dataStoragesCount = table_size(global.MF.dataCenter.dataNetwork.dataStorageTable)
+		if valid(self.MF.dataCenter) == true and self.MF.dataCenter.active == true then
+			if self.MF.dataCenter.dataNetwork ~= nil then
+				self.dataStoragesCount = table_size(self.MF.dataCenter.dataNetwork.dataStorageTable)
 			end
 		end
 	end
@@ -171,12 +172,3 @@ function INV:getFrame(guiElement)
 	end
 	
 end
-
-
-
-
-
-
-
-
-

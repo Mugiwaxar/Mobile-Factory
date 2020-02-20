@@ -2,7 +2,6 @@
 require("scripts/objects/power-drain-pole.lua")
 
 if global.pdpTable ~= nil and table_size(global.pdpTable) > 0 then
-	game.print("Mobile Factory: Updating all Power Drain Poles to OOP")
 	for k, pdp in pairs(global.pdpTable) do
 		global.pdpTable[k] = PDP:new(pdp)
 	end

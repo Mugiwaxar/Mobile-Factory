@@ -1,4 +1,28 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.98
+Date: 18/02/2020
+  Major Features:
+    - Multiplayer Update
+    - You can now place more than one Mobile Factory (One per Player)
+    - The Player can choose if its owned Structures are shared with others Players or not
+    - The Player can choose if the Structures shared by other Players will be used or not
+    - The Mobile Factory can now be Locked to prevent other Players to enter
+  Gui:
+    - The Tooltip GUI now show to who belong a Structure
+    - Added a new Tab to the Option GUI: MF (Mobile Factory)
+    - Added a new Option to the MF Tab: Share Structures -> Allow other Players to interact with your Structures (Drain/Send Power, Items, Fluid, ...)
+    - Added a new Option to the MF Tab: Use Shared Structures -> Share your Structures with other Players (Drain/Send Power, Items, Fluid, ...)
+    - Added a new Option to the MF Tab: Allow settings modification -> Allow others Players to modify your Structures Settings
+    - The Floor Is Lava option is now only accessible for Admins
+    - The Entities Update Per Tick option is now only accessible for Admins
+    - The Tooltip GUI Show now the hovered Entity name
+    - Added the Lock/Unlock Button
+  Bugfixes:
+    - Mine Dimensional Tile give now Dimensional Tile
+    - All things inside the Information GUI will no longer disappear when the Mobile Factory is removed
+    - Fixed a crash when a Deep Storage filter was set with an Item removed from the game
+    - Fixed a crash with Deep Storage placed as ghost
+---------------------------------------------------------------------------------------------------
 Version: 0.0.97
 Date: 16/02/2020
   Major Features:
@@ -145,7 +169,7 @@ Date: 19/01/2020
   Bugfixes:
     - Fixed a compatibility problem with Bob's Logistic Mod and the Temp Chest
     - Fixed a crash when an Item from a removed mod was still inside a Deep Storage
-    - Rebuilded the Contruction Area inside the Control Center
+    - Rebuilded the Construction Area inside the Control Center
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.82
 Date: 18/01/2020
@@ -412,7 +436,7 @@ Date: 24/12/2019
     - The content of the Control Center Ore Silos is added to the Internal Inventory Data Center Signals
     - Removed Ore Silo Pad 1/2/3/4/5, replaced by Iron Chest when placed on the Map
   Bugfixes:
-    - Fixed a game crash when an Item from a removed Mod still exist inside the Internal Inventory
+    - Fixed a game crash when an Item from a removed Mod still 1exist inside the Internal Inventory
   Scripting:
     - Rework of all Migrations game.print()
 ---------------------------------------------------------------------------------------------------
@@ -624,7 +648,7 @@ Version: 0.0.38
 Date: 13/10/2019
   Major Features:
     - Constructible Area inside the Control Center, will be used to place upgrade and other things
-    - New Technology: Constructible Area 1, unlock the first Contructible Area
+    - New Technology: Constructible Area 1, unlock the first Constructible Area
   Features:
     - Added Inventory Pad: Expend the Internal Inventory, must be placed inside the Constructible Area
     - New Technology: Inventory Pad, unlock the Inventory Pad

@@ -9,11 +9,12 @@ end
 
 -- Called before a Warptorio2 Warp --
 function beforeWarp(new_surface, new_planet_table, old_surface, old_planet_table)
-	global.MF.lastPosX = global.MF.ent.position.x
-	global.MF.lastPosY = global.MF.ent.position.y
-	-- global.MF.ent = nil
-	global.MF.ent.teleport(global.MF.ent.position, new_surface["newsurface"].name)
-	global.MF.ent = new_surface["newsurface"].find_entity("MobileFactory", {global.MF.lastPosX,global.MF.lastPosY})
+	for k, MF in pairs(global.MFTable) do
+		MF.lastPosX = MF.ent.position.x
+		MF.lastPosY = MF.ent.position.y
+		MF.ent.teleport(MF.ent.position, new_surface["newsurface"].name)
+		MF.ent = new_surface["newsurface"].find_entity({MF.lastPosX,MF.lastPosY})
+	end
 end
 
 -- Called after a Warptorio2 Warp --

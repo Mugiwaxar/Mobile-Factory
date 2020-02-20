@@ -57,9 +57,9 @@ function valid(obj)
 end
 
 -- Test if Mobile Factory can be placed near a player --
-function mfPlaceable(player)
+function mfPlaceable(player, MF)
 	-- Make the Mobile Factory unable to be placed inside it --
-	if player.surface.name == _mfSurfaceName or player.surface.name == _mfControlSurfaceName then
+	if string.match(player.surface.name, _mfSurfaceName) or string.match(player.surface.name, _mfControlSurfaceName) then
 		player.print({"", {"gui-description.MFPlacedInsideFactory"}})
 		return nil
 	end
@@ -69,10 +69,10 @@ function mfPlaceable(player)
 		return nil
 	end
 	-- Try to a position near the Player --
-	if player.surface.can_place_entity{name="MobileFactory", position={player.position.x+5, player.position.y}} == false then
-		if player.surface.can_place_entity{name="MobileFactory", position={player.position.x-5, player.position.y}} == false then
-			if player.surface.can_place_entity{name="MobileFactory", position={player.position.x, player.position.y+5}} == false then
-				if player.surface.can_place_entity{name="MobileFactory", position={player.position.x, player.position.y-5}} == false then
+	if player.surface.can_place_entity{name=MF.ent.name, position={player.position.x+5, player.position.y}} == false then
+		if player.surface.can_place_entity{MF.ent.name, position={player.position.x-5, player.position.y}} == false then
+			if player.surface.can_place_entity{MF.ent.name, position={player.position.x, player.position.y+5}} == false then
+				if player.surface.can_place_entity{MF.ent.name, position={player.position.x, player.position.y-5}} == false then
 					player.print({"", {"gui-description.MFPlacedNoEnoughtSpace"}})
 					return nil
 				else return {player.position.x, player.position.y-5} end
@@ -97,18 +97,34 @@ function getPlayer(id)
 	return game.players[id]
 end
 
+-- Return the Player Mobile Factory --
+function getMF(playerName)
+	if playerName == nil then return nil end
+	return global.MFTable[playerName]
+end
+
+-- Return the MFPlayer Object --
+function getMFPlayer(playerName)
+	if playerName == nil then return nil end
+	return global.playersTable[playerName]
+end
+
 -- Get player specific variable --
 function getPlayerVariable(playerName, variable)
 	if global.playersTable == nil then global.playersTable = {} end
-	if global.playersTable[playerName] == nil then global.playersTable[playerName] = {} end
-	return global.playersTable[playerName][variable]
+	local MFPlayer = getMFPlayer(playerName)
+	if MFPlayer == nil then global.playersTable[playerName] = MFP:new(getPlayer(playerName)) end
+	if MFPlayer.varTable == nil then MFPlayer.varTable = {} end
+	return MFPlayer.varTable[variable]
 end
 
 -- Set player specific variable --
 function setPlayerVariable(playerName, variable, value)
 	if global.playersTable == nil then global.playersTable = {} end
-	if global.playersTable[playerName] == nil then global.playersTable[playerName] = {} end
-	global.playersTable[playerName][variable] = value
+	local MFPlayer = getMFPlayer(playerName)
+	if MFPlayer == nil then global.playersTable[playerName] = MFP:new(getPlayer(playerName)) end
+	if MFPlayer.varTable == nil then MFPlayer.varTable = {} end
+	MFPlayer.varTable[variable] = value
 end
 
 -- Get a Data Network ID --
@@ -119,114 +135,124 @@ function getDataNetworkID()
 end
 
 -- Try to find a lost Mobile Factory --
-function findMF()
+function findMF(player, MF)
 	-- Number of Tank found --
 	local mfFound = 0
 	-- Last Tank found --
 	local lastMFFound = nil
-	-- Look for the Tank in all the surface --
+	-- Look for the Tank in all surfaces --
 	for k, surface in pairs(game.surfaces) do
-		for k, entity in pairs(surface.find_entities_filtered{type="car"}) do
-			if string.match(entity.name, "MobileFactory") then
+		for k2, entity in pairs(surface.find_entities_filtered{type="car"}) do
+			if string.match(entity.name, "MobileFactory") and entity.last_user ~= nil and entity.last_user.name == player.name then
 				mfFound = mfFound + 1
 				lastMFFound = entity
 			end
 		end
 	end
 	-- Print the number of Tank found --
-	game.print("Found " .. mfFound .. " Mobile Factory")
+	player.print("Found " .. mfFound .. " Mobile Factory")
 	-- Return the last Tank found --
 	return lastMFFound
 end
 
 -- Define the Main Mobile Factory global variable --
-function newMobileFactory(mf)
+function newMobileFactory(MF)
+	-- Check the Mobile Factory --
+	if MF == nil or MF.valid == false or MF.last_user == nil then return end
 	-- Test if the Mobile Factory doesn't already exist --
-	if global.MF ~= nil and global.MF.ent ~= nil then global.MF.ent.destroy() end
-	-- Set the new one --
-	if global.MF == nil then
-		global.MF = MF:new()
+	if global.MFTable[MF.last_user.name] ~= nil and global.MFTable[MF.last_user.name].ent ~= nil and global.MFTable[MF.last_user.name].valid == true then global.MFTable[MF.last_user.name].ent.destroy() end
+	-- ReConstruct the MF Object --
+	if global.MFTable[MF.last_user.name] == nil then
+		global.MFTable[MF.last_user.name] = getMF("")
 	end
-	-- ReContruct the MF Object --
-	global.MF:contruct(mf)
+	global.MFTable[MF.last_user.name]:construct(MF)
+	-- Check all Technologies --
+	checkTechnologies(global.MFTable[MF.last_user.name])
 end
-	
+
 -- If Mobile Factory or his surfaces are broken, try to fix them --
 function fixMB(event)
+	-- Get the Mobile Factory --
+	local player = getPlayer(event.player_index)
+	if player == nil then return end
+	local MF = getMF(player.name)
+	if MF == nil then return end
 	-- If Mobile Factory is lost --
-	if global.MF == nil or global.MF.ent == nil or global.MF.ent.valid == false then
+	if MF.ent == nil or MF.ent.valid == false then
 		-- Try to find it --
-		tempMf = findMF()
+		tempMf = findMF(player, MF)
 		if tempMf ~= nil and tempMf.valid == true then
 			-- Found it, attach it to the MF object --
-			game.print({"", {"gui-description.MFScanFound"}})
+			player.print({"", {"gui-description.MFScanFound"}})
 			newMobileFactory(tempMf)
 		else
 			-- Unable to find --
-			game.print({"", {"gui-description.MFScanNotFound"}})
+			player.print({"", {"gui-description.MFScanNotFound"}})
 		end
 	end
 	-- If Factory Surface is lost --
-	if global.MF.fS == nil or global.MF.fS.valid == false then
+	if MF.fS == nil or MF.fS.valid == false then
 		-- Try to find it --
-		tempSurface = game.get_surface(_mfSurfaceName)
+		tempSurface = game.get_surface(_mfSurfaceName .. player.name)
 		if tempSurface ~= nil and tempSurface.valid == true then
 			-- Surface found, attach it to the MF object --
-			game.print({"", {"gui-description.FSFound"}})
-			global.MF.fS = tempSurface
+			player.print({"", {"gui-description.FSFound"}})
+			MF.fS = tempSurface
 		else
 			-- Unable to find, create a new one --
-			game.print({"", {"gui-description.FSNotFound"}})
-			createMFSurface()
+			player.print({"", {"gui-description.FSNotFound"}})
+			createMFSurface(MF)
 		end
 	end
 	-- If Control Center Surface is lost --
-	if global.MF.ccS == nil or global.MF.ccS.valid == false then
+	if MF.ccS == nil or MF.ccS.valid == false then
 		-- Test if the Technology is unlocked --
 		if technologyUnlocked("ControlCenter") == true then
 			-- Try to find it --
-			tempSurface = game.get_surface(_mfControlSurfaceName)
+			tempSurface = game.get_surface(_mfControlSurfaceName .. player.name)
 			if tempSurface ~= nil and tempSurface.valid == true then
 				-- Surface found, attach it to the MF object --
-				game.print({"", {"gui-description.CCSFound"}})
-				global.MF.ccS = tempSurface
+				player.print({"", {"gui-description.CCSFound"}})
+				MF.ccS = tempSurface
 			else
 				-- Unable to find it, create a new one --
-				game.print({"", {"gui-description.CCSNotFound"}})
-				createControlRoom()
+				player.print({"", {"gui-description.CCSNotFound"}})
+				createControlRoom(MF)
 			end
 		end
 	end
 end
-		
+	
 -- Call the mobile Factory near the player
 function callMobileFactory(player)
+	-- Get the Mobile Factory --
+	local MF = getMF(player.name)
 	-- Check if the Mobile Factory exist --
-	if global.MF.ent == nil or global.MF.ent.valid == false then
+	if MF ~= nil and MF.ent == nil or MF.ent.valid == false then
 		player.print({"", {"gui-description.MFLostOrDestroyed"}})
 		return
 	end
 	-- Test if the Jump Drives are ready --
-	if global.MF.jumpTimer > 0 then
+	if MF.jumpTimer > 0 then
 		player.print({"", {"gui-description.MFJumpDriveRecharging"}})
 		return
 	end
 	-- Try to find the best coords --
-	local coords = mfPlaceable(player)
+	local coords = mfPlaceable(player, MF)
 	-- Return if any coords was found --
 	if coords == nil then return end
 	-- Teleport the Mobile Factory to the cords --
-	global.MF.ent.teleport(coords, player.surface)
+	MF.ent.teleport(coords, player.surface)
 	-- Try to find the Mobile Factory if it is lost --
-	if global.MF.ent == nil or global.MF.ent.valid == false then
-		global.MF.ent = player.surface.find_entity("MobileFactory", coords)
+	if MF.ent == nil or MF.ent.valid == false then
+		MF.ent = player.surface.find_entity("MobileFactory", coords)
 	end
 	-- Save the position --
-	global.MF.lastSurface = global.MF.ent.surface
-	global.MF.lastPosX = global.MF.ent.position.x
-	global.MF.lastPosY = global.MF.ent.position.y
+	MF.lastSurface = MF.ent.surface
+	MF.lastPosX = MF.ent.position.x
+	MF.lastPosY = MF.ent.position.y
 	-- Discharge the Jump Drives --
-	global.MF.jumpTimer = global.MF.baseJumpTimer
+	MF.jumpTimer = MF.baseJumpTimer
 end
 
 -- Create Tiles at the given position and radius --
@@ -392,8 +418,12 @@ function Util.getConnectedDN(obj)
 	local objGCN = Util.greenCNID(obj)
 	local objRCN = Util.redCNID(obj)
 	-- Check if the Object is inside a Data Network --
-	if objGCN ~= nil then return global.dataNetworkIDGreenTable[objGCN] end
-	if objRCN ~= nil then return global.dataNetworkIDRedTable[objRCN] end
+	local link = nil
+	if objGCN ~= nil then link = global.dataNetworkIDGreenTable[objGCN] end
+	if objRCN ~= nil then link = global.dataNetworkIDRedTable[objRCN] end
+	if link ~= nil and link.ent ~= nil then
+		if Util.canUse(obj.player, link.ent) then return link end
+	end
 	return nil
 end
 
@@ -406,26 +436,35 @@ function Util.copyTable(t1)
 	return t2
 end
 
+-- Return true if the Player is not inside a Mobile Factory --
+function Util.isOutside(player)
+	if player == nil then return true end
+	if string.match(player.surface.name, _mfSurfaceName) then return false end
+	if string.match(player.surface.name, _mfControlSurfaceName) then return false end
+	return true
+end
 
+-- Check if the Player can interact with the Structure --
+function Util.canUse(playerName, structure)
+	if playerName == nil or structure == nil or structure.last_user == nil then return false end
+	if playerName == structure.last_user.name then return true end
+	local MF1 = getMF(playerName)
+	local MF2 = getMF(structure.last_user.name)
+	if MF1 ~= nil and MF2 ~= nil then
+		if MF1.varTable.useSharedStructures == true and MF2.varTable.shareStructures == true then
+			return true
+		end
+	end
+	return false
+end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- Check if the Player can modify the Structure Settings --
+function canModify(playerName, structure)
+	if playerName == nil or structure == nil or structure.last_user == nil then return false end
+	if playerName == structure.last_user.name then return true end
+	local MF2 = getMF(structure.last_user.name)
+	if MF2 ~= nil and MF2.varTable.allowToModify == true then
+		return
+	end
+	return false
+end

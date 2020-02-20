@@ -8,13 +8,17 @@ function GUI.createOptionGUI(gui, player)
 	
 	-- Create the GUI --
 	local mfOptionGUI = gui.screen.add{type="frame", name="mfOptionGUI", direction="vertical"}
+
+	-- Get the MF --
+	local MF = getMF(player.name)
+	if MF == nil then return end
 	
 	-- Calcule the position --
 	local resolutionWidth = player.display_resolution.width  / player.display_scale
 	local resolutionHeight = player.display_resolution.height  / player.display_scale
 	local posX = resolutionWidth / 100 * 45
 	local posY = resolutionHeight / 100 * 18
-	local width = 350
+	local width = 400
 	local height = 600
 	
 	-- Set the GUI position end style --
@@ -56,6 +60,36 @@ function GUI.createOptionGUI(gui, player)
 	mfOptTabbedPane.style.height = height - 62
 	mfOptTabbedPane.style.padding = 0
 	mfOptTabbedPane.style.margin = 0
+
+	------------------------------------------- TAB 4 --------------------------------
+	-- Create the Tab --
+	local mfOptTab4 = mfOptTabbedPane.add{type="tab", name="mfOptTab4"}
+	mfOptTab4.caption = {"gui-description.tab4"}
+	mfOptTab4.style.padding = 0
+	mfOptTab4.style.margin = 0
+	
+	-- Create the Frame --
+	local mfOptTab4Frame = mfOptTabbedPane.add{type="frame", name="mfOptTab4Frame"}
+	mfOptTab4Frame.style.width = width - 16
+	mfOptTab4Frame.style.height = height - 100
+	mfOptTab4Frame.style.padding = 0
+	mfOptTab4Frame.style.margin = 0
+	
+	-- Create the Scroll-pane --
+	local mfOptTab4Pane = mfOptTab4Frame.add{type="frame", name="mfOptTab4Pane", direction="vertical"}
+	mfOptTab4Pane.style.width = width - 24
+	mfOptTab4Pane.style.height = height - 107
+	mfOptTab4Pane.style.padding = 0
+	mfOptTab4Pane.style.margin = 0
+	mfOptTab4Pane.style.horizontal_align = "left"
+	mfOptTab4Pane.style.vertical_align = "top"
+	
+	-- Add all Tabs to the Tabbed-pane --
+	mfOptTabbedPane.add_tab(mfOptTab4, mfOptTab4Frame)
+	mfOptTabbedPane.selected_tab_index = mfOptTab4.index
+	
+	-- Create the Tab 4 --
+	GUI.createOptTab4(mfOptTab4Pane)
 	
 	------------------------------------------- TAB 1 --------------------------------
 	-- Create the Tab --
@@ -114,7 +148,7 @@ function GUI.createOptionGUI(gui, player)
 	mfOptTabbedPane.add_tab(mfOptTab3, mfOptTab3Frame)
 	
 	-- Create the Tab 3 --
-	GUI.createOptTab3(mfOptTab3Pane)
+	GUI.createOptTab3(mfOptTab3Pane, player, MF)
 	
 	------------------------------------------- TAB 2 --------------------------------
 	-- Create the Tab --
@@ -143,8 +177,17 @@ function GUI.createOptionGUI(gui, player)
 	mfOptTabbedPane.add_tab(mfOptTab2, mfOptTab2Frame)
 	
 	-- Create the Tab 2 --
-	GUI.createOptTab2(mfOptTab2Pane)
+	GUI.createOptTab2(mfOptTab2Pane, player)
 
+end
+
+---------------------- OPTIONS GUI TAB 4 --------------------------
+function GUI.createOptTab4(tab)
+	local GUIMainGuiOpt = tab.add{type="label", name="MFOpt", caption={"gui-description.MFOpt"}}
+	GUIMainGuiOpt.style.font = "TitleFont"
+	tab.add{type="checkbox", name="MFShareOpt", caption={"gui-description.MFShareOpt"}, tooltip={"gui-description.MFShareOptTT"}, state=false}
+	tab.add{type="checkbox", name="MFUseShareOpt", caption={"gui-description.MFUseShareOpt"}, tooltip={"gui-description.MFUseShareOptTT"}, state=false}
+	tab.add{type="checkbox", name="MFShareSettingOpt", caption={"gui-description.MFShareSettingOpt"}, tooltip={"gui-description.MFShareSettingOptTT"}, state=false}
 end
 
 ---------------------- OPTIONS GUI TAB 1 --------------------------
@@ -163,62 +206,44 @@ function GUI.createOptTab1(tab)
 end
 
 ---------------------- OPTIONS GUI TAB 3 --------------------------
-function GUI.createOptTab3(tab)
+function GUI.createOptTab3(tab, player, MF)
 	-- Jets --
 	local JetSettingsL = tab.add{type="label", name="JetSettingsL", caption={"gui-description.JetOpt"}}
 	JetSettingsL.style.font = "TitleFont"
 	tab.add{type="label", caption={"gui-description.JetMaximalDistance"}}
-	GUI.createDTextField(tab, "MiningJetDistanceOpt", "MiningJetDistanceOpt", "MiningJetDistanceOptTT", global.mjMaxDistance)
-	GUI.createDTextField(tab, "ConstructionJetDistanceOpt", "ConstructionJetMaximalDistance", "ConstructionJetMaximalDistanceTT", global.cjMaxDistance)
-	GUI.createDTextField(tab, "RepairJetDistanceOpt", "RepairJetDistanceOpt", "RepairJetDistanceOptTT", global.rjMaxDistance)
-	GUI.createDTextField(tab, "CombatJetDistanceOpt", "CombatJetDistanceOpt", "CombatJetDistanceOpt", global.cbjMaxDistance)
+	if MF.varTable.jets.mjMaxDistance == nil then MF.varTable.jets.mjMaxDistance = _MFMiningJetDefaultMaxDistance end
+	if MF.varTable.jets.cjMaxDistance == nil then MF.varTable.jets.cjMaxDistance = _MFConstructionJetDefaultMaxDistance end
+	if MF.varTable.jets.rjMaxDistance == nil then MF.varTable.jets.rjMaxDistance = _MFRepairJetDefaultMaxDistance end
+	if MF.varTable.jets.cbjMaxDistance == nil then MF.varTable.jets.cbjMaxDistance = _MFCombatJetDefaultMaxDistance end
+	GUI.createDTextField(tab, "MiningJetDistanceOpt", "MiningJetDistanceOpt", "MiningJetDistanceOptTT", MF.varTable.jets.mjMaxDistance)
+	GUI.createDTextField(tab, "ConstructionJetDistanceOpt", "ConstructionJetMaximalDistance", "ConstructionJetMaximalDistanceTT", MF.varTable.jets.cjMaxDistance)
+	GUI.createDTextField(tab, "RepairJetDistanceOpt", "RepairJetDistanceOpt", "RepairJetDistanceOptTT", MF.varTable.jets.rjMaxDistance)
+	GUI.createDTextField(tab, "CombatJetDistanceOpt", "CombatJetDistanceOpt", "CombatJetDistanceOpt", MF.varTable.jets.cbjMaxDistance)
 
 	-- Floor Is Lava --
 	local FILSettingsL = tab.add{type="label", name="FILSettingsL", caption={"gui-description.FILOptTitle"}}
 	FILSettingsL.style.font = "TitleFont"
 	FILSettingsL.style.top_margin = 20
-	local FILActivatedF = tab.add{type="flow", direction="horizontal"}
-	FILActivatedF.add{type="checkbox", name="FloorIsLaveActiveOpt", tooltip={"gui-description.FloorIsLavaOptTT"}, state=global.floorIsLavaActivated}
-	FILActivatedF.add{type="label", caption={"gui-description.FloorIsLavaActOpt"}, tooltip={"gui-description.FloorIsLavaOptTT"}}
+	local FILActivatedF = tab.add{type="flow", name="FILActivatedF", direction="horizontal"}
+	FILActivatedF.add{type="checkbox", name="FloorIsLaveActiveOpt", tooltip={"gui-description.FloorIsLavaOptTT"}, state=global.floorIsLavaActivated, enabled=player.admin}
+	FILActivatedF.add{type="label", caption={"gui-description.FloorIsLavaActOpt"}, tooltip={"gui-description.FloorIsLavaOptTT"}, enabled=player.admin}
 	
 end
 
 
 ---------------------- OPTIONS GUI TAB 2 --------------------------
-function GUI.createOptTab2(tab)
-	local SystemPerfGuiOpt = tab.add{type="label", name="SystemPerfGuiOpt", caption={"gui-description.GUIPerfGuiOpt"}}
+function GUI.createOptTab2(tab, player)
+	local SystemPerfGuiOpt = tab.add{type="label", name="SystemPerfGuiOpt", caption={"gui-description.PerfGuiOpt"}}
 	SystemPerfGuiOpt.style.font = "TitleFont"
-	GUI.createDTextField(tab, "SystemPerfEntsPerTick", "SystemPerfEntsPerTick", "SystemPerfEntsPerTickTT", global.entsUpPerTick)
+	GUI.createDTextField(tab, "SystemPerfEntsPerTick", "SystemPerfEntsPerTick", "SystemPerfEntsPerTickTT", global.entsUpPerTick, player.admin)
 end
 
 -- Create an option with decimal Textfield --
-function GUI.createDTextField(GUI, name, caption, tooltip, text)
-	local flow = GUI.add{type="flow", direction="horizontal"}
-	flow.add{type="textfield", name=name, tooltip={"gui-description." .. tooltip}, text=text, numeric=true, allow_decimal=false, allow_negative=false}	
-	flow.add{type="label", caption={"gui-description." .. caption}, tooltip={"gui-description." .. tooltip}}
-	flow[name].style.width = 100
-	flow[name].style.left_margin = 5
+function GUI.createDTextField(GUI, name, caption, tooltip, text, enabled)
+	if enabled == nil then enabled = true end
+	local flow = GUI.add{type="flow", name=name .. "F", direction="horizontal"}
+	flow.add{type="textfield", name=name .. "T", tooltip={"gui-description." .. tooltip}, text=text, numeric=true, allow_decimal=false, allow_negative=false, enabled=enabled}
+	flow.add{type="label", name=name .. "L", caption={"gui-description." .. caption}, tooltip={"gui-description." .. tooltip}, enabled=enabled}
+	flow[name .. "T"].style.width = 100
+	flow[name .. "T"].style.left_margin = 5
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

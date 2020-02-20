@@ -3,6 +3,8 @@
 -- Create the Wireless Data Receiver object --
 WDR = {
 	ent = nil,
+	player = "",
+	MF = nil,
 	entID = 0,
 	animID = 0,
 	active = false,
@@ -23,6 +25,9 @@ function WDR:new(object)
 	setmetatable(t, mt)
 	mt.__index = WDR
 	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
 	t.entID = object.unit_number
 	t.lastSignal = {}
 	UpSys.addObj(t)
@@ -77,7 +82,7 @@ function WDR:update()
 	end
 	if valid(self.linkedTransmitter) == true and valid(self.linkedTransmitter.dataNetwork) == true and self.linkedTransmitter.dataNetwork:isLive() == true then
 		self.dataNetwork = self.linkedTransmitter.dataNetwork
-	elseif self.dataNetwork ~= nil then
+	elseif valid(self.dataNetwork) then
 		-- Remove the Receiver --
 		self.dataNetwork:removeObject(self)
 		self.dataNetwork = nil
@@ -102,7 +107,7 @@ function WDR:update()
 	end
 
 	-- Check the Connected Data Network --
-	if self.dataNetwork ~= nil then
+	if valid(self.dataNetwork) then
 		-- Register the Receiver --
 		self.dataNetwork:addObject(self)
 		-- Add the Wireless Receiver to the ID Table --
@@ -153,6 +158,12 @@ end
 
 -- Tooltip Info --
 function WDR:getTooltipInfos(GUI)
+
+	-- Create the Belongs to Label --
+	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
+	belongsToL.style.font = "LabelFont"
+	belongsToL.style.font_color = _mfOrange
+
 	-- Create the Data Network label --
 	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
 	if self.dataNetwork ~= nil then
@@ -202,12 +213,14 @@ function WDR:getTooltipInfos(GUI)
 	connectedL.style.font = "LabelFont"
 	connectedL.caption = connectedText
 	
+	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
+
 	-- Create the Transmitter Selection --
 	local transmitters = {{"gui-description.Any"}}
 	local selectedIndex = 1
 	local i = 1
 	for k, transmitter in pairs(global.wirelessDataTransmitterTable) do
-		if transmitter ~= nil then
+		if transmitter ~= nil and transmitter.ent ~= nil and Util.canUse(self.player, transmitter.ent) then
 			i = i + 1
 			transmitters[transmitter.ent.unit_number] = tostring(transmitter.ent.unit_number)
 			if self.linkedTransmitter == transmitter then

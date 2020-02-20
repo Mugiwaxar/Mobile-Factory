@@ -1,7 +1,23 @@
 -- Read changed Options from the Options GUI --
 function GUI.readOptions(option, player, gui)
 	local name = option.name
-	-- Main GUI --
+
+	-- Get the Mobile Factory --
+	local MF = getMF(player.name)
+	if MF == nil then return end
+
+	------------------- MF -------------------
+	if name == "MFShareOpt" then
+		MF.varTable.shareStructures = option.state
+	end
+	if name == "MFUseShareOpt" then
+		MF.varTable.useSharedStructures = option.state
+	end
+	if name == "MFShareSettingOpt" then
+		MF.varTable.allowToModify = option.state
+	end
+
+	------------------- Main GUI -------------------
 	if name == "GUIPosOpt" then
 		player.gui.screen.mfGUI.mfGUICenterFrame.mfposition.visible = player.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab1Frame.mfOptTab1Pane.GUIPosOpt.state
 	end
@@ -29,25 +45,42 @@ function GUI.readOptions(option, player, gui)
 	if name == "GUIEnergyBarOpt" then
 		player.gui.screen.mfGUI.mfGUICenterFrame.InternalEnergyBar.visible = player.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab1Frame.mfOptTab1Pane.GUIEnergyBarOpt.state
 	end
-	-- Game --
+
+	------------------- Game -------------------
 	if name == "MiningJetDistanceOpt" then
-		global.mjMaxDistance = tonumber(option.text)
+		MF.varTable.jets.mjMaxDistance = tonumber(option.text)
 	end
 	if name == "ConstructionJetDistanceOpt" then
-		global.cjMaxDistance = tonumber(option.text)
+		MF.varTable.jets.cjMaxDistance = tonumber(option.text)
 	end
 	if name == "RepairJetDistanceOpt" then
-		global.rjMaxDistance = tonumber(option.text)
+		MF.varTable.jets.rjMaxDistance = tonumber(option.text)
 	end
 	if name == "CombatJetDistanceOpt" then
-		global.cbjMaxDistance = tonumber(option.text)
+		MF.varTable.jets.cbjMaxDistance = tonumber(option.text)
 	end
-	-- Performances --
-	if name == "SystemPerfEntsPerTick" then
+	if name == "FloorIsLaveActiveOpt" then
+		global.floorIsLavaActivated = option.state
+		if global.floorIsLavaActivated == true then
+			game.print({"gui-description.FloorIsLavaActivated"})
+		else
+			game.print({"gui-description.FloorIsLavaDeactivated"})
+		end
+		for k, player2 in pairs(game.players) do
+			player2.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab3Frame.mfOptTab3Pane.FILActivatedF.FloorIsLaveActiveOpt.state = option.state
+		end
+	end
+	
+	------------------- Performances -------------------
+	if name == "SystemPerfEntsPerTickT" then
 		local number = tonumber(option.text)
 		if number == nil then return end
 		number = math.max(number, 10)
 		number = math.min(number, 10000)
 		global.entsUpPerTick = number
+		game.print({"", {"gui-description.EntitiesUpdatePerTickNumber"}, " ", number})
+		for k, player2 in pairs(game.players) do
+			player2.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab2Frame.mfOptTab2Pane.SystemPerfEntsPerTickF.SystemPerfEntsPerTickT.text = option.text
+		end
 	end
 end

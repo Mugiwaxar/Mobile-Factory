@@ -301,7 +301,11 @@ end
 -- Update the Mobile Factory Info GUI --
 function GUI.updatePlayerInfoGUI(player)
 
-	if global.MF.ent == nil or global.MF.ent.valid == false then return end
+	-- Get the Mobile Factory --
+	local MF = getMF(player.name)
+	if MF == nil then return end
+
+	if MF.ent == nil or MF.ent.valid == false then return end
 	
 	-- Check if info GUI is valid --
 	if player.gui.screen.mfInfoGUI == nil or player.gui.screen.mfInfoGUI.visible == false then
@@ -311,73 +315,73 @@ function GUI.updatePlayerInfoGUI(player)
 	-- Energy Laser Radius --
 	if technologyUnlocked("EnergyDrain1") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyRadiusLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyRadiusLabel.caption = {"", {"gui-description.EnergyRadiusLabel"}, ": ", global.MF:getLaserRadius(), " tiles"}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyRadiusLabel.caption = {"", {"gui-description.EnergyRadiusLabel"}, ": ", MF:getLaserRadius(), " tiles"}
 	end
 	
 	-- Energy Laser Radius Multiplier --
 	if technologyUnlocked("EnergyDrain1") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyRadiusMLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyRadiusMLabel.caption = {"", {"gui-description.EnergyRadiusMLabel"}, ": ", global.MF.laserRadiusMultiplier}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyRadiusMLabel.caption = {"", {"gui-description.EnergyRadiusMLabel"}, ": ", MF.laserRadiusMultiplier}
 	end
 	
 	-- Energy Laser Drain --
 	if technologyUnlocked("EnergyDrain1") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyDrainLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyDrainLabel.caption = {"", {"gui-description.EnergyDrainLabel"}, ": ", Util.toRNumber(global.MF:getLaserEnergyDrain()), "W"}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyDrainLabel.caption = {"", {"gui-description.EnergyDrainLabel"}, ": ", Util.toRNumber(MF:getLaserEnergyDrain()), "W"}
 	end
 	
 	-- Energy Laser Drain Multiplier --
 	if technologyUnlocked("EnergyDrain1") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyDrainMLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyDrainMLabel.caption = {"", {"gui-description.EnergyDrainMLabel"}, ": ", global.MF.laserDrainMultiplier}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyDrainMLabel.caption = {"", {"gui-description.EnergyDrainMLabel"}, ": ", MF.laserDrainMultiplier}
 	end
 	
 	-- Energy Laser Laser --
 	if technologyUnlocked("EnergyDrain1") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyLaserLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyLaserLabel.caption = {"", {"gui-description.EnergyLaserLabel"}, ": ", global.MF:getLaserNumber()}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyLaserLabel.caption = {"", {"gui-description.EnergyLaserLabel"}, ": ", MF:getLaserNumber()}
 	end
 	
 	-- Energy Laser Drain Multiplier --
 	if technologyUnlocked("EnergyDrain1") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyLaserMLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyLaserMLabel.caption = {"", {"gui-description.EnergyLaserMLabel"}, ": ", global.MF.laserNumberMultiplier}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyLaserMLabel.caption = {"", {"gui-description.EnergyLaserMLabel"}, ": ", MF.laserNumberMultiplier}
 	end
 	
 	-- Fluid Laser Drain --
 	if technologyUnlocked("FluidDrain1") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidDrainLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidDrainLabel.caption = {"", {"gui-description.FluidDrainLabel"}, ": ", Util.toRNumber(global.MF:getLaserFluidDrain()), "u/s"}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidDrainLabel.caption = {"", {"gui-description.FluidDrainLabel"}, ": ", Util.toRNumber(MF:getLaserFluidDrain()), "u/s"}
 	end
 	
 	-- Fluid Laser Drain Multiplier --
 	if technologyUnlocked("FluidDrain1") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidDrainMLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidDrainMLabel.caption = {"", {"gui-description.FluidDrainMLabel"}, ": ", global.MF.laserDrainMultiplier}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidDrainMLabel.caption = {"", {"gui-description.FluidDrainMLabel"}, ": ", MF.laserDrainMultiplier}
 	end
 	
 	-- Fluid Laser Consomption --
 	if technologyUnlocked("FluidDrain1") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidConsumptionLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidConsumptionLabel.caption = {"", {"gui-description.FluidConsumptionLabel"}, ": ", Util.toRNumber(global.MF:getLaserFluidDrain()*_lfpFluidConsomption), "W"}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidConsumptionLabel.caption = {"", {"gui-description.FluidConsumptionLabel"}, ": ", Util.toRNumber(MF:getLaserFluidDrain()*_lfpFluidConsomption), "W"}
 	end
 	
 	-- Item Laser Drain --
 	if technologyUnlocked("TechItemDrain") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemDrainLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemDrainLabel.caption = {"", {"gui-description.ItemDrainLabel"}, ": ", Util.toRNumber(global.MF:getLaserItemDrain()), "i/s"}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemDrainLabel.caption = {"", {"gui-description.ItemDrainLabel"}, ": ", Util.toRNumber(MF:getLaserItemDrain()), "i/s"}
 	end
 	
 	-- Item Laser Drain Multiplier --
 	if technologyUnlocked("TechItemDrain") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemDrainMLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemDrainMLabel.caption = {"", {"gui-description.ItemDrainMLabel"}, ": ", global.MF.laserDrainMultiplier}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemDrainMLabel.caption = {"", {"gui-description.ItemDrainMLabel"}, ": ", MF.laserDrainMultiplier}
 	end
 	
 	-- Item Laser Consomption --
 	if technologyUnlocked("TechItemDrain") then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemConsumptionLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemConsumptionLabel.caption = {"", {"gui-description.ItemConsumptionLabel"}, ": ", Util.toRNumber(_mfItemsDrain*global.MF:getLaserItemDrain()), "W"}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemConsumptionLabel.caption = {"", {"gui-description.ItemConsumptionLabel"}, ": ", Util.toRNumber(_mfItemsDrain*MF:getLaserItemDrain()), "W"}
 	end
 	
 	-- Tank ID --
@@ -413,9 +417,9 @@ function GUI.updatePlayerInfoGUI(player)
 	end
 	
 	-- Number of Tank --
-	if global.tankTable ~= nil and table_size(global.tankTable) > 0 then
+	if MF.varTable.tanks ~= nil and table_size(MF.varTable.tanks) > 0 then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.TankAmountLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.TankAmountLabel.caption = {"", {"gui-description.TankAmountLabel"}, ": ", table_size(global.tankTable)}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.TankAmountLabel.caption = {"", {"gui-description.TankAmountLabel"}, ": ", table_size(MF.varTable.tanks)}
 	end
 	
 	-- Number of Ore Silo --
@@ -425,24 +429,24 @@ function GUI.updatePlayerInfoGUI(player)
 	end
 	
 	-- Update Tank Frame --
-	GUI.updateTankFrame(player)
+	GUI.updateTankFrame(player, MF)
 	
 	-- Update Deep Storage Frame --
-	GUI.updateDeepStorageFrame(player)
+	GUI.updateDeepStorageFrame(player, MF)
 	
 	-- Update Inventory frame --
-	GUI.updateInventoryFrame(player.gui)
+	GUI.updateInventoryFrame(player.gui, MF)
 	
 end
 	
 	
 -- Update Tank Frame --
-function GUI.updateTankFrame(player)
+function GUI.updateTankFrame(player, MF)
 	-- Get the GUI --
 	gui = player.gui
-	if global.MF.ccS == nil or global.tankTable == nil or getPlayerVariable(player.name, "GUIUpdateInfoGUI") ~= true then return end
+	if MF.ccS == nil or MF.varTable.tanks == nil or getPlayerVariable(player.name, "GUIUpdateInfoGUI") ~= true then return end
 	-- Make the frame visible if there are at least one Tank in the table --
-	if table_size(global.tankTable) > 0 then
+	if table_size(MF.varTable.tanks) > 0 then
 		gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow2.visible = true
 	end
 	-- Get the Tank Flow --
@@ -450,7 +454,7 @@ function GUI.updateTankFrame(player)
 	-- Clear the Tank Flow --
 	tankFlow.clear()
 	-- Look for all Tanks --
-	for k, id in pairs(global.tankTable) do
+	for k, id in pairs(MF.varTable.tanks) do
 		-- Get the Tank --
 		local tank = id.ent
 		if tank ~= nil and tank.valid == true then
@@ -486,18 +490,18 @@ function GUI.updateTankFrame(player)
 			local TankFilter = TankFrame.add{type="choose-elem-button", elem_type="fluid", name="TF" .. tostring(k)}
 			TankFilter.style.maximal_height = 25
 			TankFilter.style.maximal_width = 25
-			if TankFilter.elem_value == nil and global.tankTable[k].filter ~= nil then
-					TankFilter.elem_value = global.tankTable[k].filter
+			if TankFilter.elem_value == nil and MF.varTable.tanks[k].filter ~= nil then
+					TankFilter.elem_value = MF.varTable.tanks[k].filter
 			end
-			global.tankTable[k].filter = TankFilter.elem_value
+			MF.varTable.tanks[k].filter = TankFilter.elem_value
 		end
 	end
 end
 
 
 -- Update Deep Storage Frame --
-function GUI.updateDeepStorageFrame(player)
-	if global.MF.ccS == nil or global.deepStorageTable == nil or getPlayerVariable(player.name, "GUIUpdateInfoGUI") ~= true then return end
+function GUI.updateDeepStorageFrame(player, MF)
+	if MF.ccS == nil or global.deepStorageTable == nil or getPlayerVariable(player.name, "GUIUpdateInfoGUI") ~= true then return end
 	local gui = player.gui
 	-- Make the frame visible if there are at least one Deep Storage in the table --
 	if table_size(global.deepStorageTable) > 0 then
@@ -537,7 +541,7 @@ function GUI.updateDeepStorageFrame(player)
 		deepStorageFilter.style.maximal_width = 25
 		deepStorageFilter.style.margin = 0
 		deepStorageFilter.style.padding = 0
-		if deepStorageFilter.elem_value == nil and global.deepStorageTable[k].filter ~= nil then
+		if deepStorageFilter.elem_value == nil and global.deepStorageTable[k].filter ~= nil and game.item_prototypes[global.deepStorageTable[k].filter] ~= nil then
 			deepStorageFilter.elem_value = global.deepStorageTable[k].filter
 		end
 		global.deepStorageTable[k].filter = deepStorageFilter.elem_value
@@ -546,13 +550,13 @@ end
 
 	
 -- Update the Inventory GUI Frame --
-function GUI.updateInventoryFrame(gui)
-	if global.MF.II == nil then return end
+function GUI.updateInventoryFrame(gui, MF)
+	if MF.II == nil then return end
 	-- Make the frame visible if the technology is unlocked --
 	if technologyUnlocked("MatterSerialization") == false then return end
 	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.visible = true
 	-- Clear the frame --
 	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.mfInfoFlow3SP.clear()
 	-- Add the Inventory Frame --
-	global.MF.II:getFrame(gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.mfInfoFlow3SP)
+	MF.II:getFrame(gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.mfInfoFlow3SP)
 end

@@ -58,7 +58,13 @@ end
 -- When a GUI Button is clicked --
 function GUI.buttonClicked(event)
 	
+	-- Get the Player --
 	local player = getPlayer(event.player_index)
+	if player == nil then return end
+
+	-- Get the Mobile Factory --
+	local MF = getMF(player.name)
+	if MF == nil then return end
 	
 	-- Disable the info GUI Tanks update when the player is choosing a filter --
 	if event.element.type == "choose-elem-button" and event.element.get_mod() == "Mobile_Factory" then
@@ -112,11 +118,27 @@ function GUI.buttonClicked(event)
 	if event.element.name == "FindMF" then
 		fixMB(event)
 	end
+
+	-- PortOutside button --
+	if event.element.name == "PortOutside" then
+		teleportPlayerOutside(player)
+	end
 	
 	-- MFTPInside button --
 	if event.element.name == "MFTPInside" then
-		if global.MF.tpEnabled == true then global.MF.tpEnabled = false
-		elseif global.MF.tpEnabled == false then global.MF.tpEnabled = true end
+		if MF.tpEnabled == true then MF.tpEnabled = false
+		elseif MF.tpEnabled == false then MF.tpEnabled = true end
+	end
+
+	-- MFLock button --
+	if event.element.name == "MFLock" then
+		if MF.locked == true then
+			MF.locked = false
+			player.print({"gui-description.MFUnlocked"})
+		else
+			MF.locked = true
+			player.print({"gui-description.MFLocked"})
+		end
 	end
 	
 	-- Show/Hide the Mobile Factory Info GUI --
@@ -141,39 +163,34 @@ function GUI.buttonClicked(event)
 		end
 	end
 	
-	-- PortOutside button --
-	if event.element.name == "PortOutside" then
-		teleportPlayerOutside(player)
-	end
-	
 	-- EnergyDrain button --
 	if event.element.name == "EnergyDrain" then
-		if global.MF.energyLaserActivated == true then global.MF.energyLaserActivated = false
-		elseif global.MF.energyLaserActivated == false then global.MF.energyLaserActivated = true end
+		if MF.energyLaserActivated == true then MF.energyLaserActivated = false
+		elseif MF.energyLaserActivated == false then MF.energyLaserActivated = true end
 	end
 	
 	-- FluidDrain button --
 	if event.element.name == "FluidDrain" then
-		if global.MF.fluidLaserActivated == true then global.MF.fluidLaserActivated = false
-		elseif global.MF.fluidLaserActivated == false then global.MF.fluidLaserActivated = true end
+		if MF.fluidLaserActivated == true then MF.fluidLaserActivated = false
+		elseif MF.fluidLaserActivated == false then MF.fluidLaserActivated = true end
 	end
 	
 	-- ItemDrain button --
 	if event.element.name == "ItemDrain" then
-		if global.MF.itemLaserActivated == true then global.MF.itemLaserActivated = false
-		elseif global.MF.itemLaserActivated == false then global.MF.itemLaserActivated = true end
+		if MF.itemLaserActivated == true then MF.itemLaserActivated = false
+		elseif MF.itemLaserActivated == false then MF.itemLaserActivated = true end
 	end
 	
 	-- EnergyDistribution button --
 	if event.element.name == "EnergyDistribution" then
-		if global.MF.internalEnergyDistributionActivated == true then global.MF.internalEnergyDistributionActivated = false
-		elseif global.MF.internalEnergyDistributionActivated == false then global.MF.internalEnergyDistributionActivated = true end
+		if MF.internalEnergyDistributionActivated == true then MF.internalEnergyDistributionActivated = false
+		elseif MF.internalEnergyDistributionActivated == false then MF.internalEnergyDistributionActivated = true end
 	end
 	
 	-- Send Quatron button --
 	if event.element.name == "SendQuatron" then
-		if global.MF.sendQuatronActivated == true then global.MF.sendQuatronActivated = false
-		elseif global.MF.sendQuatronActivated == false then global.MF.sendQuatronActivated = true end
+		if MF.sendQuatronActivated == true then MF.sendQuatronActivated = false
+		elseif MF.sendQuatronActivated == false then MF.sendQuatronActivated = true end
 	end
 	
 	-- Open Options GUI Button --
@@ -232,6 +249,9 @@ function GUI.onGuiElemChanged(event)
 	local player = getPlayer(event.player_index)
 	-- Return if the Player is not valid --
 	if player == nil then return end
+	-- Get the Mobile Factory --
+	local MF = getMF(player.name)
+	if MF == nil then return end
 	
 	------- Read if the Element came from the Option GUI -------
 	GUI.readOptions(event.element, player, player.gui)
@@ -242,12 +262,13 @@ function GUI.onGuiElemChanged(event)
 
 		-- If this is a Dimensional Tank --
 		if string.match(id, "TF") then
+			-- Get
 			id = tonumber(split(id, "TF")[1])
-			if global.tankTable[id] == nil then return end
+			if MF.varTable.tanks[id] == nil then return end
 			if event.element.elem_value ~= nil then
-				global.tankTable[id].filter = event.element.elem_value
+				MF.varTable.tanks[id].filter = event.element.elem_value
 			else
-				global.tankTable[id].filter = nil
+				MF.varTable.tanks[id].filter = nil
 			end
 		end
 
@@ -391,41 +412,4 @@ function GUI.onGuiElemChanged(event)
 		-- Change the Mining Jet Flag targeted Inventory --
 		mjFlag:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
 	end
-
-	-- Read if the Element comes from the Floor Is Lava Option --
-	if event.element.name == "FloorIsLaveActiveOpt" then
-		global.floorIsLavaActivated = event.element.state
-		if global.floorIsLavaActivated == true then
-			game.print({"gui-description.FloorIsLavaActivated"})
-		else
-			game.print({"gui-description.FloorIsLavaDeactivated"})
-		end
-	end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

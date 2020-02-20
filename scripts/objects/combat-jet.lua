@@ -3,6 +3,8 @@
 -- Create the Combat Jet base Object --
 CBJ = {
 	ent = nil,
+	player = "",
+	MF = nil,
 	updateTick = 60,
 	lastUpdate = 0,
 	target = nil,
@@ -20,6 +22,9 @@ function CBJ:new(object, target)
 	setmetatable(t, mt)
 	mt.__index = CBJ
 	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
 	t.target = target
 	UpSys.addObj(t)
 	t:update()
@@ -82,6 +87,12 @@ end
 
 -- Tooltip Infos --
 function CBJ:getTooltipInfos(GUI)
+
+	-- Create the Belongs to Label --
+	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
+	belongsToL.style.font = "LabelFont"
+	belongsToL.style.font_color = _mfOrange
+
 	-- Create the Current Work Label --
 	local work = GUI.add{type="label", caption={"", {"gui-description." .. self.currentOrder}}}
 	work.style.font = "LabelFont"
@@ -123,14 +134,14 @@ function CBJ:fight()
     -- Check the Target --
     if self.target == nil then return end
     -- Fight --
-    self.ent.set_command({type=defines.command.attack_area, destination=self.target, radius=global.cbjMaxDistance})
+    self.ent.set_command({type=defines.command.attack_area, destination=self.target, radius=self.MF.varTable.jets.cbjMaxDistance})
     self.currentOrder = "Fight"
 end
 
 -- Go Back to the Mobile Factory --
 function CBJ:goMF(distraction)
 	-- Check if the Mobile Factory is still valid --
-	if global.MF.ent == nil or global.MF.ent.valid == false then
+	if self.MF.ent == nil or self.MF.ent.valid == false then
 		-- Say the Mobile Factory is not found --
 		self.MFNotFound = true
 		return
@@ -138,14 +149,14 @@ function CBJ:goMF(distraction)
 		self.MFNotFound = false
 	end
 	-- Return to the Mobile Factory --
-	self.ent.set_command({type=defines.command.go_to_location, destination_entity=global.MF.ent, radius=1, distraction=distraction})
+	self.ent.set_command({type=defines.command.go_to_location, destination_entity=self.MF.ent, radius=1, distraction=distraction})
 	self.currentOrder = "GoMF"
 end
 
 -- Enter the Mobile Factory --
 function CBJ:enterMF()
 	-- Check if the Mobile Factory is still valid --
-	if global.MF.ent == nil or global.MF.ent.valid == false then
+	if self.MF.ent == nil or self.MF.ent.valid == false then
 		-- Say the Mobile Factory is not found --
 		self.MFNotFound = true
 		return
@@ -155,7 +166,7 @@ function CBJ:enterMF()
 	self.currentOrder = "EnterMF"
 	
 	-- Get the Mobile Factory Trunk --
-	local inv = global.MF.ent.get_inventory(defines.inventory.car_trunk)
+	local inv = self.MF.ent.get_inventory(defines.inventory.car_trunk)
 	
 	-- Check the Inventory --
 	if inv == nil or inv.valid == false then return end

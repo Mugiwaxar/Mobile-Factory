@@ -3,10 +3,13 @@
 -- Create the Power Drain Pole object --
 PDP = {
 	ent = nil,
+	player = "",
+	MF = nil,
+	updateTick = 60,
+	lastUpdate = 0,
 	laserRadius = _pdpEnergyRadius,
 	laserDrain = _pdpEnergyDrain,
 	laserNumber = _pdpEnergyLaser,
-	lastUpdate = 0
 }
 
 -- Constructor --
@@ -14,9 +17,12 @@ function PDP:new(object)
 	if object == nil then return end
 	local t = {}
 	local mt = {}
+	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
 	setmetatable(t, mt)
 	mt.__index = PDP
-	t.ent = object
 	return t
 end
 
@@ -24,9 +30,6 @@ end
 function PDP:rebuild(object)
 	if object == nil then return end
 	local mt = {}
-	-- for k, j in pairs(PDP) do
-		-- mt[k] = j
-	-- end
 	mt.__index = PDP
 	setmetatable(object, mt)
 end
@@ -80,15 +83,15 @@ function PDP:update(event)
 		-- Stop if the number of lasers is exceeded --
 		if i > self.laserNumber then break end
 		-- Exclude Character, Power Drain Pole and Entities with 0 energy --
-		if entity.type ~= "character" and entity.name ~= "PowerDrainPole" and entity.name ~= "OreCleaner" and entity.name ~= "FluidExtractor" and entity.energy > 0 then
+		if entity.type ~= "character" and entity.name ~= "PowerDrainPole" and entity.name ~= "OreCleaner" and entity.name ~= "FluidExtractor" and entity.energy > 0 and Util.canUse(self.player, entity) then
 			-- Missing Internal Energy or Structure Energy --
-			local energyDrain = math.min(global.MF.maxInternalEnergy - global.MF.internalEnergy, entity.energy)
+			local energyDrain = math.min(self.MF.maxInternalEnergy - self.MF.internalEnergy, entity.energy)
 			-- EnergyDrain or LaserDrain Caparity --
 			local drainedEnergy = math.min(self.laserDrain, energyDrain)
 			-- Test if some Energy was drained --
 			if drainedEnergy > 0 then
 				-- Add the Energy to the Mobile Factory Batteries --
-				global.MF.internalEnergy = global.MF.internalEnergy + drainedEnergy
+				self.MF.internalEnergy = self.MF.internalEnergy + drainedEnergy
 				-- Remove the Energy from the Structure --
 				entity.energy = entity.energy - drainedEnergy
 				-- Create the Beam --

@@ -3,6 +3,8 @@
 -- Create the Construction Jet base Object --
 CJ = {
 	ent = nil,
+	player = "",
+	MF = nil,
 	updateTick = 60,
 	lastUpdate = 0,
 	target = nil,
@@ -23,6 +25,9 @@ function CJ:new(object, target)
 	setmetatable(t, mt)
 	mt.__index = CJ
 	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
 	t.target = target
 	if target.mission == "Construct" then
 		t.inventoryItem = target.item
@@ -91,6 +96,12 @@ end
 
 -- Tooltip Infos --
 function CJ:getTooltipInfos(GUI)
+
+	-- Create the Belongs to Label --
+	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
+	belongsToL.style.font = "LabelFont"
+	belongsToL.style.font_color = _mfOrange
+
 	-- Create the Current Work Label --
 	local work = GUI.add{type="label", caption={"", {"gui-description." .. self.currentOrder}}}
 	work.style.font = "LabelFont"
@@ -174,7 +185,7 @@ function CJ:build()
 	-- Destroy the Gost --
 	self.target.ent.destroy()
 	-- Create the Entity --
-	local ent = self.ent.surface.create_entity{name=self.target.name, position=self.target.position, direction=self.target.direction, force="player", raise_built=true}
+	local ent = self.ent.surface.create_entity{name=self.target.name, position=self.target.position, direction=self.target.direction, force="player", player=self.player, raise_built=true}
 	-- Empty the Inventory --
 	self.inventoryItem = nil
 	-- Make the Beam --
@@ -205,7 +216,7 @@ end
 -- Go Back to the Mobile Factory --
 function CJ:goMF()
 	-- Check if the Mobile Factory is still valid --
-	if global.MF.ent == nil or global.MF.ent.valid == false then
+	if self.MF.ent == nil or self.MF.ent.valid == false then
 		-- Say the Mobile Factory is not found --
 		self.MFNotFound = true
 		return
@@ -213,14 +224,14 @@ function CJ:goMF()
 		self.MFNotFound = false
 	end
 	-- Return to the Mobile Factory --
-	self.ent.set_command({type=defines.command.go_to_location, destination_entity=global.MF.ent, radius=1})
+	self.ent.set_command({type=defines.command.go_to_location, destination_entity=self.MF.ent, radius=1})
 	self.currentOrder = "GoMF"
 end
 
 -- Enter the Mobile Factory --
 function CJ:enterMF()
 	-- Check if the Mobile Factory is still valid --
-	if global.MF.ent == nil or global.MF.ent.valid == false then
+	if self.MF.ent == nil or self.MF.ent.valid == false then
 		-- Say the Mobile Factory is not found --
 		self.MFNotFound = true
 		return
@@ -231,7 +242,7 @@ function CJ:enterMF()
 	
 	-- Empty the Inventory --
 	if self.inventoryItem ~= nil then
-		local added = global.MF.II:addItem(self.inventoryItem, 1)
+		local added = self.MF.II:addItem(self.inventoryItem, 1)
 		-- Check if the Inventory was stored --
 		if added <= 0 then
 			self.TargetInventoryFull = true
@@ -240,12 +251,12 @@ function CJ:enterMF()
 			self.TargetInventoryFull = false
 			self.inventoryItem = nil
 			-- Create the Laser --
-			self.ent.surface.create_entity{name="GreenBeam", duration=12, position=self.ent.position, target=global.MF.ent.position, source=self.ent.position}
+			self.ent.surface.create_entity{name="GreenBeam", duration=12, position=self.ent.position, target=self.MF.ent.position, source=self.ent.position}
 		end		
 	end
 	
 	-- Get the Mobile Factory Trunk --
-	local inv = global.MF.ent.get_inventory(defines.inventory.car_trunk)
+	local inv = self.MF.ent.get_inventory(defines.inventory.car_trunk)
 	
 	-- Check the Inventory --
 	if inv == nil or inv.valid == false then return end

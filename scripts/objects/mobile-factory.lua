@@ -1,9 +1,7 @@
--- MOBILE FACTORY OBJECT --
-require("utils/functions")
-
 -- Create the Mobile Factory Object --
 MF = {
 	ent = nil,
+	player = "",
 	updateTick = 1,
 	lastUpdate = 0,
 	lastSurface = nil,
@@ -20,6 +18,7 @@ MF = {
 	jumpTimer = _mfBaseJumpTimer,
 	baseJumpTimer = _mfBaseJumpTimer,
 	tpEnabled = true,
+	locked = true,
 	laserRadiusMultiplier = 0,
 	laserDrainMultiplier = 0,
 	laserNumberMultiplier = 0,
@@ -28,7 +27,8 @@ MF = {
 	itemLaserActivated = false,
 	internalEnergyDistributionActivated = false,
 	sendQuatronActivated = false,
-	selectedPowerLaserMode = 1
+	selectedPowerLaserMode = 1,
+	varTable = nil
 }
 
 -- Constructor --
@@ -38,15 +38,19 @@ function MF:new()
 	setmetatable(t, mt)
 	mt.__index = MF
 	t.entitiesAround = {}
+	t.varTable = {}
+	t.varTable.tech = {}
+	t.varTable.tanks = {}
+	t.varTable.jets = {}
 	UpSys.addObj(t)
 	return t
 end
 
--- Contructor for a placed Mobile Factory --
-function MF:contruct(object)
+-- Constructor for a placed Mobile Factory --
+function MF:construct(object)
 	if object == nil then return end
-	if self.fS == nil then createMFSurface() end
-	if self.ccS == nil then createControlRoom() end
+	if self.fS == nil then createMFSurface(self) end
+	if self.ccS == nil then createControlRoom(self) end
 	self.ent = object
 	self.lastSurface = object.surface
 	self.lastPosX = object.position.x
@@ -59,7 +63,8 @@ function MF:rebuild(object)
 	local mt = {}
 	mt.__index = MF
 	setmetatable(object, mt)
-	INV:rebuild(global.MF.II)
+	INV:rebuild(object.II)
+	DCMF:rebuild(object.dataCenter)
 end
 
 -- Destructor --
@@ -76,6 +81,15 @@ end
 
 -- Tooltip Infos --
 function MF:getTooltipInfos(GUI)
+
+	-- Create the Belongs to Label --
+	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
+	belongsToL.style.font = "LabelFont"
+	belongsToL.style.font_color = _mfOrange
+
+	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
+
+	-- Create the Power laser Label --
 	if technologyUnlocked("EnergyDrain1") then
 		-- Create the Power Laser label --
 		local connectedL = GUI.add{type="label"}
@@ -98,16 +112,29 @@ function MF:update(event)
 	self.lastUpdate = game.tick
 	-- Get the current tick --
 	local tick = event.tick
+	-- Update the Jump Drives --
+	if event.tick%_eventTick60 == 0 and self.jumpTimer > 0 and self.internalEnergy > _mfJumpEnergyDrain then
+		self.jumpTimer = self.jumpTimer -1
+		self.internalEnergy = self.internalEnergy - _mfJumpEnergyDrain
+	end
 	-- Update the Internal Inventory --
 	if tick%_eventTick80 == 0 then self.II:rescan() end
 	--Update all lasers --
 	if tick%_eventTick60 == 0 then self:updateLasers() end
 	-- Update the Fuel --
 	if tick%_eventTick27 == 0 then self:updateFuel() end
+	-- Update the Factory Chest --
+	if event.tick%_eventTick21 == 0 then self:syncFChest() end
 	-- Scan Entities Around --
 	if tick%_eventTick90 == 0 then self:scanEnt() end
 	-- Update the Shield --
 	self:updateShield(event)
+	-- Update Pollution --
+	if event.tick%_eventTick1200 == 0 then self:updatePollution() end
+	-- Update Teleportation Box --
+	if event.tick%_eventTick5 == 0 then self:factoryTeleportBox() end
+	-- Update accumulators --
+	if event.tick%_eventTick38 == 0 then self:updateAccumulators() end
 	-- Send Quatron Charge --
 	if self.sendQuatronActivated == true then
 		self:SendQuatronToOC(event)
@@ -117,7 +144,7 @@ end
 
 -- Synchronize Factory Chest --
 function MF:syncFChest()
-	if self.fChest ~= nil and self.fChest.valid == true then
+	if self.ent ~= nil and self.ent.valid == true and self.fChest ~= nil and self.fChest.valid == true then
 		synchronizeInventory(self.ent.get_inventory(defines.inventory.car_trunk), self.fChest.get_inventory(defines.inventory.chest), nil, true)
 	end
 end
@@ -187,7 +214,7 @@ function MF:scanEnt()
 			keep = true
 		end
 		-- Removed not keeped Entity --
-		if keep == false then
+		if keep == false or Util.canUse(self.player, entity) == false then
 			self.entitiesAround[k] = nil
 		end
 	end
@@ -229,7 +256,7 @@ function MF:updateEnergyLaser(entity)
 			-- Test if some Energy was drained --
 			if drainedEnergy > 0 then
 				-- Add the Energy to the Mobile Factory Batteries --
-				global.MF.internalEnergy = global.MF.internalEnergy + drainedEnergy
+				self.internalEnergy = self.internalEnergy + drainedEnergy
 				-- Remove the Energy from the Structure --
 				entity.energy = entity.energy - drainedEnergy
 				-- Create the Beam --
@@ -247,7 +274,7 @@ function MF:updateEnergyLaser(entity)
 				-- Add the Energy to the Entity --
 				entity.energy = entity.energy + energySend
 				-- Remove the Energy from the Mobile Factory --
-				global.MF.internalEnergy = global.MF.internalEnergy - energySend
+				self.internalEnergy = self.internalEnergy - energySend
 				-- Create the Beam --
 				self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
 				-- One less Beam to the Beam capacity --
@@ -267,9 +294,9 @@ function MF:updateFluidLaser(entity)
 			-- Get the Internal Tank --
 			local name
 			local ccTank
-			if global.tankTable ~= nil and global.tankTable[global.IDModule] ~= nil then
-				filter = global.tankTable[global.IDModule].filter
-				ccTank = global.tankTable[global.IDModule].ent
+			if self.varTable.tanks ~= nil and self.varTable.tanks[global.IDModule] ~= nil then
+				filter = self.varTable.tanks[global.IDModule].filter
+				ccTank = self.varTable.tanks[global.IDModule].ent
 			end
 			if filter ~= nil and ccTank ~= nil then
 				-- Get the focused Tank --
@@ -374,7 +401,7 @@ function MF:updateShield(event)
 		-- Calcule the shield tint --
 		local tint = self:shield() / self:maxShield()
 		-- Calcule the shield size --
-		local mfB = global.MF.ent.selection_box
+		local mfB = self.ent.selection_box
 		local size = (mfB.right_bottom.y - mfB.left_top.y) / 12
 		rendering.draw_animation{animation="mfShield", target={self.ent.position.x-0.25, self.ent.position.y-0.3}, tint={1,tint,tint}, time_to_live=2, x_scale=size, y_scale=size, surface=self.ent.surface, render_layer=134}
 	end
@@ -408,11 +435,11 @@ function MF:SendQuatronToOC(event)
 	if event.tick%10 ~= 0 then return end
 	for k, oc in pairs(global.oreCleanerTable) do
 	-- Check the Distance --
-		if valid(oc) == true and Util.distance(self.ent.position, oc.ent.position) < _mfOreCleanerMaxDistance then
+		if valid(oc) == true and oc.player == self.player and Util.distance(self.ent.position, oc.ent.position) < _mfOreCleanerMaxDistance then
 			-- Test if there are space inside the Ore Cleaner for Quatron Charge --
 			if oc.charge <= _mfFEMaxCharge - 100 then
 				-- Get the Best Quatron Change --
-				local charge = global.MF.II:getBestQuatron()
+				local charge = self.II:getBestQuatron()
 				if charge > 0 then
 					-- Add the Charge --
 					oc:addQuatron(charge)
@@ -432,11 +459,11 @@ function MF:SendQuatronToFE(event)
 	if event.tick%10 ~= 0 then return end
 	for k, fe in pairs(global.fluidExtractorTable) do
 		-- Check if the Fluid Extractor is valid --
-		if valid(fe) == true and Util.distance(self.ent.position, fe.ent.position) < _mfFluidExtractorMaxDistance then
+		if valid(fe) == true and fe.player == self.player and Util.distance(self.ent.position, fe.ent.position) < _mfFluidExtractorMaxDistance then
 			-- Test if there are space inside the Fluid Extractor for Quatron Charge --
 			if fe.charge <= _mfFEMaxCharge - 100 then
 				-- Get the Best Quatron Change --
-				local charge = global.MF.II:getBestQuatron()
+				local charge = self.II:getBestQuatron()
 				if charge > 0 then
 					-- Add the Charge --
 					fe:addQuatron(charge)
@@ -448,9 +475,104 @@ function MF:SendQuatronToFE(event)
 	end
 end
 
+-- Send all Pollution outside --
+function MF:updatePollution()
+	-- Test if the Mobile Factory is valid --
+	if self.fS == nil or self.ent == nil then return end
+	if self.ent.valid == false then return end
+	if self.ent.surface == nil then return end
+	-- Get the total amount of Pollution --
+	local totalPollution = self.fS.get_total_pollution()
+	if totalPollution ~= nil then
+		-- Create Pollution outside the Factory --
+		self.ent.surface.pollute(self.ent.position, totalPollution)
+		-- Clear the Factory Pollution --
+		self.fS.clear_pollution()
+	end
+end
 
+-- Update teleportation box --
+function MF:factoryTeleportBox()
+	-- Check the Mobile Factory --
+	if self.ent == nil then return end
+	if self.ent.valid == false then return end
+	-- Mobile Factory Vehicule --
+	if self.tpEnabled == true then
+		local mfB = self.ent.bounding_box
+		local entities = self.ent.surface.find_entities_filtered{area={{mfB.left_top.x-0.5,mfB.left_top.y-0.5},{mfB.right_bottom.x+0.5, mfB.right_bottom.y+0.5}}, type="character"}
+		for k, entity in pairs(entities) do
+			teleportPlayerInside(entity.player, self)
+		end
+	end
+	-- Factory to Outside --
+	if self.fS ~= nil then
+		local entities = self.fS.find_entities_filtered{area={{-1,-1},{1,1}}, type="character"}
+		for k, entity in pairs(entities) do
+			teleportPlayerOutside(entity.player, self)
+		end
+	end
+	-- Factory to Control Center --
+	if technologyUnlocked("ControlCenter") == true and self.fS ~= nil and self.fS ~= nil then
+		local entities = self.fS.find_entities_filtered{area={{-3,-34},{3,-31}}, type="character"}
+		for k, entity in pairs(entities) do
+			teleportPlayerToControlCenter(entity.player, self)
+		end
+	end
+	-- Control Center to Factory --
+	if technologyUnlocked("ControlCenter") == true and self.ccS ~= nil and self.fS~= nil then
+		local entities = self.ccS.find_entities_filtered{area={{-3,5},{3,8}}, type="character"}
+		for k, entity in pairs(entities) do
+			teleportPlayerToFactory(entity.player, self)
+		end
+	end
+end
 
+-- Scan modules inside the Equalizer --
+function MF:scanModules()
+	if technologyUnlocked("UpgradeModules") == false then return end
+	if self.ccS == nil then return end
+	local equalizer = self.ccS.find_entity("Equalizer", {1, -16})
+	if equalizer == nil or equalizer.valid == false then return end
+	local powerMD = 0
+	local efficiencyMD = 0
+	local focusMD = 0
+	local tankMDS
+	for name, count in pairs(equalizer.get_inventory(defines.inventory.beacon_modules).get_contents()) do
+		if name == "EnergyPowerModule" then powerMD = powerMD + count end
+		if name == "EnergyEfficiencyModule" then efficiencyMD = efficiencyMD + count end
+		if name == "EnergyFocusModule" then focusMD = focusMD + count end
+		if string.match(name, "ModuleID") then tankMDS = name end
+	end
+	if tankMDS ~= nil then
+		tankMD = split(tankMDS, "D")[2]
+		global.IDModule = tonumber(tankMD)
+	else
+		global.IDModule = 0
+	end
+	self.laserRadiusMultiplier = powerMD
+	self.laserDrainMultiplier = efficiencyMD
+	self.laserNumberMultiplier = focusMD
+end
 
-
-
-
+-- Recharge inroom Dimensional Accumulator --
+function MF:updateAccumulators()
+	-- Factory --
+	if self.fS ~= nil and self.fS.valid == true and technologyUnlocked("EnergyDistribution1") and self.internalEnergyDistributionActivated and self.internalEnergy > 0 then
+		for k, entity in pairs(global.accTable) do
+			if entity == nil or entity.valid == false then global.accTable[k] = nil return end
+			if self.internalEnergy > _mfBaseEnergyAccSend and entity.energy < entity.electric_buffer_size then
+				entity.energy = entity.energy + _mfBaseEnergyAccSend
+				self.internalEnergy = self.internalEnergy - _mfBaseEnergyAccSend
+			end
+		end
+	end
+	-- Control Center --
+	if self.ccS ~= nil then
+		local accumulator = self.ccS.find_entity("DimensionalAccumulator", {2,12})
+		if accumulator == nil or accumulator.valid == false then
+			game.print("Unable to charge the Control Center accumulator")
+		else
+			accumulator.energy = accumulator.electric_buffer_size
+		end
+	end
+end

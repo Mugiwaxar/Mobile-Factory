@@ -1,7 +1,6 @@
 -- Unlock Shield recipe --
 if technologyUnlocked("MFShield") then
 	game.forces["player"].recipes["mfShieldEquipment"].enabled = true
-	game.print("Mobile Factory: Unlocked Shield recipe")
 end
 
 if global.MF ~= nil then

@@ -3,6 +3,8 @@
 -- Create the Deep Storage base object --
 DSR = {
 	ent = nil,
+	player = "",
+	MF = nil,
 	updateTick = 80,
 	lastUpdate = 0,
 	inventoryItem = nil,
@@ -19,6 +21,9 @@ function DSR:new(object)
 	setmetatable(t, mt)
 	mt.__index = DSR
 	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
 	t.ID = Util.getEntID(global.deepStorageTable)
 	UpSys.addObj(t)
 	return t
@@ -73,6 +78,12 @@ end
 
 -- Tooltip Infos --
 function DSR:getTooltipInfos(GUI)
+
+	-- Create the Belongs to Label --
+	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
+	belongsToL.style.font = "LabelFont"
+	belongsToL.style.font_color = _mfOrange
+
 	-- Create the ID label --
 	local IDL = GUI.add{type="label"}
 	IDL.style.font = "LabelFont"
@@ -96,6 +107,8 @@ function DSR:getTooltipInfos(GUI)
 		local fDisplayI = GUI.add{type="sprite", sprite=sprite}
 		fDisplayI.tooltip = self.filter
 	end
+
+	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
 
 	-- Add the Set Filter Button --
 	local fButton = GUI.add{type="button", name = "MFInfos", caption={"", {"gui-description.SetFilter"}}}

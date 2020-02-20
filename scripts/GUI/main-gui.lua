@@ -284,6 +284,19 @@ function GUI.createMainGUI(player, gui)
 	-- Set Style --
 	mfGUIExtFF1.MFTPInside.style.maximal_height = _GUIButtonsSize
 	mfGUIExtFF1.MFTPInside.style.maximal_width = _GUIButtonsSize
+
+	-- Add MFLock Button --
+	mfGUIExtFF1.add{
+		type="sprite-button",
+		name="MFLock",
+		sprite="LockMFCIcon",
+		hovered_sprite="LockMFOIcon",
+		resize_to_sprite=false,
+		tooltip={"gui-description.LockMF"}
+	}
+	-- Set Style --
+	mfGUIExtFF1.MFLock.style.maximal_height = _GUIButtonsSize
+	mfGUIExtFF1.MFLock.style.maximal_width = _GUIButtonsSize
 	
 	-- Add EnergyDrain Button --
 	mfGUIExtFF2.add{
@@ -359,34 +372,38 @@ end
 
 function GUI.mainGUIUpdate(player)
 
+	-- Get the Mobile Factory --
+	local MF = getMF(player.name)
+	if MF == nil then return end
+
 -- Update the Mobile Factory positions --
-	if global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid then
-		player.gui.screen.mfGUI.mfGUICenterFrame.mfposition.caption = {"", {"gui-description.mfPosition"}, ": (", math.floor(global.MF.ent.position.x), " ; ", math.floor(global.MF.ent.position.y), ")  ", global.MF.ent.surface.name}
+	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
+		player.gui.screen.mfGUI.mfGUICenterFrame.mfposition.caption = {"", {"gui-description.mfPosition"}, ": (", math.floor(MF.ent.position.x), " ; ", math.floor(MF.ent.position.y), ")  ", MF.ent.surface.name}
 	else
 		player.gui.screen.mfGUI.mfGUICenterFrame.mfposition.caption = {"", {"gui-description.mfPosition"}, ": ", {"gui-description.Unknow"}}
 	end
-	if global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid then
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfposition.caption = {"", {"gui-description.mfPosition"}, ": (", math.floor(global.MF.ent.position.x), " ; ", math.floor(global.MF.ent.position.y), ")  ", global.MF.ent.surface.name}
+	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfposition.caption = {"", {"gui-description.mfPosition"}, ": (", math.floor(MF.ent.position.x), " ; ", math.floor(MF.ent.position.y), ")  ", MF.ent.surface.name}
 	else
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.caption = {"", {"gui-description.mfPosition"}, ": ", {"gui-description.Unknow"}}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfposition.caption = {"", {"gui-description.mfPosition"}, ": ", {"gui-description.Unknow"}}
 	end
 
 	-- Update the Mobile Factory health --
-	if global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid then
-		player.gui.screen.mfGUI.mfGUICenterFrame.mfHealth.caption = {"", {"gui-description.mfHealth"}, ": ", math.floor(global.MF.ent.health), "/", global.MF.ent.prototype.max_health}
-		player.gui.screen.mfGUI.mfGUICenterFrame.HealthBar.value = global.MF.ent.health / global.MF.ent.prototype.max_health
+	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
+		player.gui.screen.mfGUI.mfGUICenterFrame.mfHealth.caption = {"", {"gui-description.mfHealth"}, ": ", math.floor(MF.ent.health), "/", MF.ent.prototype.max_health}
+		player.gui.screen.mfGUI.mfGUICenterFrame.HealthBar.value = MF.ent.health / MF.ent.prototype.max_health
 	else
 		player.gui.screen.mfGUI.mfGUICenterFrame.mfHealth.caption = {"", {"gui-description.mfHealth"}, ": ", {"gui-description.Unknow"}}
 	end
-	if global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid then
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfHealth.caption = {"", {"gui-description.mfHealth"}, ": ", math.floor(global.MF.ent.health), "/", global.MF.ent.prototype.max_health}
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.HealthBar.value = global.MF.ent.health / global.MF.ent.prototype.max_health
+	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfHealth.caption = {"", {"gui-description.mfHealth"}, ": ", math.floor(MF.ent.health), "/", MF.ent.prototype.max_health}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.HealthBar.value = MF.ent.health / MF.ent.prototype.max_health
 	else
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfHealth.caption = {"", {"gui-description.mfHealth"}, ": ", {"gui-description.Unknow"}}
 	end
 	
 	-- Update the Mobile Factory Shield --
-	if global.MF:maxShield() > 0 then
+	if MF:maxShield() > 0 then
 		if player.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab1Frame.mfOptTab1Pane.GUIShieldOpt.state == true then
 			player.gui.screen.mfGUI.mfGUICenterFrame.mfShield.visible = true
 		end
@@ -395,15 +412,15 @@ function GUI.mainGUIUpdate(player)
 		end
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfShield.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ShieldBar.visible = true
-		if global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid then
-			player.gui.screen.mfGUI.mfGUICenterFrame.mfShield.caption = {"", {"gui-description.mfShield"}, ": ", math.floor(global.MF:shield()), "/", global.MF:maxShield()}
-			player.gui.screen.mfGUI.mfGUICenterFrame.ShieldBar.value = global.MF:shield() / global.MF:maxShield()
+		if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
+			player.gui.screen.mfGUI.mfGUICenterFrame.mfShield.caption = {"", {"gui-description.mfShield"}, ": ", math.floor(MF:shield()), "/", MF:maxShield()}
+			player.gui.screen.mfGUI.mfGUICenterFrame.ShieldBar.value = MF:shield() / MF:maxShield()
 		else
 			player.gui.screen.mfGUI.mfGUICenterFrame.mfShield.caption = {"", {"gui-description.mfShield"}, ": ", {"gui-description.Unknow"}}
 		end
-		if global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid then
-			player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfShield.caption = {"", {"gui-description.mfShield"}, ": ", math.floor(global.MF:shield()), "/", global.MF:maxShield()}
-			player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ShieldBar.value = global.MF:shield() / global.MF:maxShield()
+		if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
+			player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfShield.caption = {"", {"gui-description.mfShield"}, ": ", math.floor(MF:shield()), "/", MF:maxShield()}
+			player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ShieldBar.value = MF:shield() / MF:maxShield()
 		else
 			player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfShield.caption = {"", {"gui-description.mfShield"}, ": ", {"gui-description.Unknow"}}
 		end
@@ -415,46 +432,46 @@ function GUI.mainGUIUpdate(player)
 	end
 	
 	-- Update the Mobile Factory Jump Charge --
-	if global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid then
-		local chargePercent = math.floor(100 - global.MF.jumpTimer / global.MF.baseJumpTimer * 100)
-		player.gui.screen.mfGUI.mfGUICenterFrame.JumpCharge.caption = {"", {"gui-description.mfJumpTimer"}, ": ", chargePercent, "% (", global.MF.jumpTimer, "s)"}
+	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
+		local chargePercent = math.floor(100 - MF.jumpTimer / MF.baseJumpTimer * 100)
+		player.gui.screen.mfGUI.mfGUICenterFrame.JumpCharge.caption = {"", {"gui-description.mfJumpTimer"}, ": ", chargePercent, "% (", MF.jumpTimer, "s)"}
 		player.gui.screen.mfGUI.mfGUICenterFrame.JumpChargeBar.value = chargePercent / 100
 	else
 		player.gui.screen.mfGUI.mfGUICenterFrame.JumpCharge.caption = {"", {"gui-description.mfJumpTimer"}, ": ", {"gui-description.Unknow"}}
 	end
-	if global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid then
-		local chargePercent = math.floor(100 - global.MF.jumpTimer / global.MF.baseJumpTimer * 100)
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.JumpCharge.caption = {"", {"gui-description.mfJumpTimer"}, ": ", chargePercent, "% (", global.MF.jumpTimer, "s)"}
+	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
+		local chargePercent = math.floor(100 - MF.jumpTimer / MF.baseJumpTimer * 100)
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.JumpCharge.caption = {"", {"gui-description.mfJumpTimer"}, ": ", chargePercent, "% (", MF.jumpTimer, "s)"}
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.JumpChargeBar.value = chargePercent / 100
 	else
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.JumpCharge.caption = {"", {"gui-description.mfJumpTimer"}, ": ", {"gui-description.Unknow"}}
 	end
 	
 	-- Update the Mobile Factory Internal Energy Charge --
-	if global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid then
-		local chargePercent = math.floor(100 - global.MF.internalEnergy / global.MF.maxInternalEnergy * 100)
-		player.gui.screen.mfGUI.mfGUICenterFrame.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(global.MF.internalEnergy), "J/", Util.toRNumber(global.MF.maxInternalEnergy), "J"}
+	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
+		local chargePercent = math.floor(100 - MF.internalEnergy / MF.maxInternalEnergy * 100)
+		player.gui.screen.mfGUI.mfGUICenterFrame.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF.internalEnergy), "J/", Util.toRNumber(MF.maxInternalEnergy), "J"}
 		player.gui.screen.mfGUI.mfGUICenterFrame.InternalEnergyBar.value = 1 - chargePercent / 100
 	else
 		player.gui.screen.mfGUI.mfGUICenterFrame.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": ", {"gui-description.Unknow"}}
 	end
-	if global.MF ~= nil and global.MF.ent ~= nil and global.MF.ent.valid then
-		local chargePercent = math.floor(100 - global.MF.internalEnergy / global.MF.maxInternalEnergy * 100)
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(global.MF.internalEnergy), "J/", Util.toRNumber(global.MF.maxInternalEnergy), "J"}
+	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
+		local chargePercent = math.floor(100 - MF.internalEnergy / MF.maxInternalEnergy * 100)
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF.internalEnergy), "J/", Util.toRNumber(MF.maxInternalEnergy), "J"}
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.InternalEnergyBar.value = 1 - chargePercent / 100
 	else
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": ", {"gui-description.Unknow"}}
 	end
 	
 	-- Update the CallMF Button --
-	if player.surface.name == _mfSurfaceName or player.surface.name == _mfControlSurfaceName then
+	if Util.isOutside(player) == false then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.CallMF.visible = false
 	else
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.CallMF.visible = true
 	end
 	
 	-- Update the PortOutside button --
-	if player.surface.name == _mfSurfaceName or player.surface.name == _mfControlSurfaceName then
+	if Util.isOutside(player) == false then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.PortOutside.visible = true
 	else
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.PortOutside.visible = false
@@ -463,18 +480,27 @@ function GUI.mainGUIUpdate(player)
 	-- Update the FindMF Button --
 	player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = false
 	
-	if global.MF == nil or global.MF.ent == nil then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
-	if global.MF.ent ~= nil and global.MF.ent.valid == false then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
-	if global.MF.fS == nil or global.MF.fS.valid == false then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
-	if (global.MF.ccS == nil or global.MF.ccS.valid == false) and technologyUnlocked("ControlCenter") then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
+	if MF == nil or MF.ent == nil then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
+	if MF.ent ~= nil and MF.ent.valid == false then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
+	if MF.fS == nil or MF.fS.valid == false then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
+	if (MF.ccS == nil or MF.ccS.valid == false) and technologyUnlocked("ControlCenter") then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
 	
 	-- Update the MFTPInside Icone --
-	if global.MF.tpEnabled == true then
+	if MF.tpEnabled == true then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFTPInside.sprite = "MFTPIcon"
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFTPInside.hovered_sprite = "MFTPIconDisabled"
 	else
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFTPInside.sprite = "MFTPIconDisabled"
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFTPInside.hovered_sprite = "MFTPIcon"
+	end
+
+	-- Update the MFLock Icone --
+	if MF.locked == true then
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFLock.sprite = "LockMFCIcon"
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFLock.hovered_sprite = "LockMFOIcon"
+	else
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFLock.sprite = "LockMFOIcon"
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFLock.hovered_sprite = "LockMFCIcon"
 	end
 
 	-- Update Energy Drain Button --
@@ -513,7 +539,7 @@ function GUI.mainGUIUpdate(player)
 	end
 
 	-- Update the Energy Drain Icon --
-	if global.MF.energyLaserActivated == true then
+	if MF.energyLaserActivated == true then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDrain.sprite = "EnergyDrainIcon"
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDrain.hovered_sprite = "EnergyDrainIconDisabled"
 	else
@@ -522,7 +548,7 @@ function GUI.mainGUIUpdate(player)
 	end
 	
 	-- Update the Fluid Drain Icon --
-	if global.MF.fluidLaserActivated == true then
+	if MF.fluidLaserActivated == true then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.FluidDrain.sprite = "FluidDrainIcon"
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.FluidDrain.hovered_sprite = "FluidDrainIconDisabled"
 	else
@@ -531,7 +557,7 @@ function GUI.mainGUIUpdate(player)
 	end
 	
 	-- Update the Item Drain Icon --
-	if global.MF.itemLaserActivated == true then
+	if MF.itemLaserActivated == true then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.ItemDrain.sprite = "ItemDrainIcon"
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.ItemDrain.hovered_sprite = "ItemDrainIconDisabled"
 	else
@@ -540,7 +566,7 @@ function GUI.mainGUIUpdate(player)
 	end
 	
 	-- Update Energy Distribution Icon --
-	if global.MF.internalEnergyDistributionActivated == true then
+	if MF.internalEnergyDistributionActivated == true then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDistribution.sprite = "EnergyDistributionIcon"
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDistribution.hovered_sprite = "EnergyDistributionIconDisabled"
 	else
@@ -549,7 +575,7 @@ function GUI.mainGUIUpdate(player)
 	end
 	
 	-- Update Send Quatron Icon --
-	if global.MF.sendQuatronActivated == true then
+	if MF.sendQuatronActivated == true then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.sprite = "QuatronIcon"
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.hovered_sprite = "QuatronIconDisabled"
 	else

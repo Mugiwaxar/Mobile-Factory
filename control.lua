@@ -32,6 +32,7 @@ require("scripts/objects/construction-jet.lua")
 require("scripts/objects/repair-jet.lua")
 require("scripts/objects/combat-jet.lua")
 require("scripts/objects/deep-storage.lua")
+require("scripts/objects/MFPlayer.lua")
 
 -- When the mod init --
 function onInit()
@@ -40,22 +41,11 @@ function onInit()
 	global.upsysTickTable = {}
 	global.entsUpPerTick = _mfBaseUpdatePerTick
 	global.upSysLastScan = 0
-	-- Mobile Factory Object --
-	global.MF = MF:new()
-	global.MF.II = INV:new("Internal Inventory")
-	global.MF.II.isII = true
-	createMFSurface()
-	createControlRoom()
 	global.insertedMFInsideInventory = false
 	-- Module ID --
 	global.IDModule = 0
 	-- Data Network --
 	global.dataNetworkID = 0
-	-- Jets Options --
-	global.mjMaxDistance = 200
-	global.cjMaxDistance = 200
-	global.rjMaxDistance = 200
-	global.cbjMaxDistance = 200
 	-- Construction Jet Update --
 	global.constructionJetIndex = 0
 	-- Repair Jet Update --
@@ -66,9 +56,9 @@ function onInit()
 	global.floorIsLavaActivated = false
 	-- Tables --
 	global.playersTable = {}
+	global.MFTable = {}
 	global.accTable = {}
 	global.pdpTable = {}
-	global.tankTable = {}
 	global.dataNetworkTable = {}
 	global.dataNetworkIDGreenTable = {}
 	global.dataNetworkIDRedTable = {}
@@ -90,17 +80,20 @@ function onInit()
 	global.repairJetTable = {}
 	global.repairTable = {}
 	global.combatJetTable = {}
-	if game.players[1] ~= nil then
-		onPlayerCreated(game.players[1])
-	end
 end
 
 -- When a save is loaded --
 function onLoad()
 	-- Add Warptorio Compatibility --
 	warptorio()
+	-- Set MFPlayer Metatable --
+	for k, mfplayer in  pairs(global.playersTable or {}) do
+		MFP:rebuild(mfplayer)
+	end
 	-- Set MF Metatable --
-	MF:rebuild(global.MF)
+	for k, mf in  pairs(global.MFTable or {}) do
+		MF:rebuild(mf)
+	end
 	-- Set PDP Metatables --
 	for k, pdp in  pairs(global.pdpTable or {}) do
 		PDP:rebuild(pdp)
@@ -108,10 +101,6 @@ function onLoad()
 	-- Set DataCenter Metatables --
 	for k, dc in  pairs(global.dataCenterTable or {}) do
 		DC:rebuild(dc)
-	end
-	-- Set DataCenterMF Metatable --
-	if global.MF.dataCenter ~= nil then
-		DCMF:rebuild(global.MF.dataCenter)
 	end
 	-- Set DataStorage Metatables --
 	for k, ds in  pairs(global.dataStorageTable or {}) do
@@ -171,12 +160,6 @@ function onLoad()
 	end
 end
 
--- When a player joint the game --
-function onPlayerJoint(event)
-	local player = getPlayer(event.player_index)
-	setPlayerVariable(player.name, "GUICreated", false)
-end
-
 -- When the configuration have changed --
 function onConfigurationChanged()
 	-- Update all Variables --
@@ -210,9 +193,9 @@ _mfEntityFilterWithCBJ = {
 script.on_init(onInit)
 script.on_load(onLoad)
 script.on_configuration_changed(onConfigurationChanged)
-script.on_event(defines.events.on_player_joined_game, onPlayerJoint)
+script.on_event(defines.events.on_player_created, initPlayer)
+script.on_event(defines.events.on_player_joined_game, initPlayer)
 script.on_event(defines.events.on_player_driving_changed_state, playerDriveStatChange)
-script.on_event(defines.events.on_player_created, onPlayerCreated)
 script.on_event(defines.events.on_tick, onTick)
 script.on_event(defines.events.on_entity_damaged, onEntityDamaged, _mfEntityFilterWithCBJ)
 script.on_event(defines.events.on_built_entity, onPlayerBuildSomething)

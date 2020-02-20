@@ -3,6 +3,8 @@
 -- Create the Matter Printer base object --
 MP = {
 	ent = nil,
+	player = "",
+	MF = nil,
 	entID = 0,
 	animID = 0,
 	active = false,
@@ -21,6 +23,9 @@ function MP:new(object)
 	setmetatable(t, mt)
 	mt.__index = MP
 	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
 	t.entID = object.unit_number
 	UpSys.addObj(t)
 	return t
@@ -72,11 +77,11 @@ function MP:update()
 	
 	-- Try to find a connected Data Network --
 	local obj = Util.getConnectedDN(self)
-	if obj ~= nil then
+	if obj ~= nil and valid(obj.dataNetwork) then
 		self.dataNetwork = obj.dataNetwork
 		self.dataNetwork:addObject(self)
 	else
-		if self.dataNetwork ~= nil then
+		if valid(self.dataNetwork) then
 			self.dataNetwork:removeObject(self)
 		end
 		self.dataNetwork = nil
@@ -136,6 +141,12 @@ end
 
 -- Tooltip Infos --
 function MP:getTooltipInfos(GUI)
+
+	-- Create the Belongs to Label --
+	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
+	belongsToL.style.font = "LabelFont"
+	belongsToL.style.font_color = _mfOrange
+
 	-- Create the Data Network label --
 	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
 	if self.dataNetwork ~= nil then
@@ -173,6 +184,8 @@ function MP:getTooltipInfos(GUI)
 	link.caption = text
 	link.style.font_color = style
 	
+	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
+
 	-- Create the Inventory Selection --
 	if valid(self.dataNetwork) == true and valid(self.dataNetwork.dataCenter) == true and self.dataNetwork.dataCenter.invObj.isII == true then
 		-- Create the targeted Inventory label --
@@ -185,11 +198,11 @@ function MP:getTooltipInfos(GUI)
 		local selectedIndex = 1
 		local i = 1
 		for k, deepStorage in pairs(global.deepStorageTable) do
-			if deepStorage ~= nil then
+			if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(self.player, deepStorage.ent) then
 				i = i + 1
 				local itemText = ""
-				if deepStorage.inventoryItem ~= nil then
-					itemText = " (" .. deepStorage.inventoryItem .. ")"
+				if deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
+					itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, " - ", deepStorage.player, ")"}
 				end
 				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
 				if self.selectedInv == deepStorage then
