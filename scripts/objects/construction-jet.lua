@@ -185,7 +185,7 @@ function CJ:build()
 	-- Destroy the Gost --
 	self.target.ent.destroy()
 	-- Create the Entity --
-	local ent = self.ent.surface.create_entity{name=self.target.name, position=self.target.position, direction=self.target.direction, force="player", player=self.player, raise_built=true}
+	local ent = self.ent.surface.create_entity{name=self.target.name, position=self.target.position, direction=self.target.direction, force=self.ent.force, player=self.player, raise_built=true}
 	-- Empty the Inventory --
 	self.inventoryItem = nil
 	-- Make the Beam --

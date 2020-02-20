@@ -319,7 +319,7 @@ function updateMiningJet()
 				-- Remove the Energy --
 				flag.MF.internalEnergy = flag.MF.internalEnergy - _mfMiningJetEnergyNeeded
 				-- Create the Entity --
-				local entity = flag.MF.ent.surface.create_entity{name="MiningJet", position=flag.MF.ent.position, force="player", player=flag.MF.player}
+				local entity = flag.MF.ent.surface.create_entity{name="MiningJet", position=flag.MF.ent.position, force=flag.MF.ent.force, player=flag.MF.player}
 				global.miningJetTable[entity.unit_number] = MJ:new(entity, orePath, flag)
 			end
 			-- Stop if there are 5 Jets out --
@@ -398,7 +398,7 @@ function updateConstructionJet()
 		-- Remove the Energy --
 		MF.internalEnergy = MF.internalEnergy - _mfConstructionJetEnergyNeeded
 		-- Create the Jet --
-		local entity = MF.ent.surface.create_entity{name="ConstructionJet", position=MF.ent.position, force="player", player=MF.player}
+		local entity = MF.ent.surface.create_entity{name="ConstructionJet", position=MF.ent.position, force=MF.ent.force, player=MF.player}
 		global.constructionJetTable[entity.unit_number] = CJ:new(entity, structure)
 		structure.jet = global.constructionJetTable[entity.unit_number]
 		::continue::
@@ -461,7 +461,7 @@ function updateRepairJet()
 		-- Remove the Energy --
 		MF.internalEnergy = MF.internalEnergy - _mfRepairJetEnergyNeeded
 		-- Create the Jet --
-		local entity = MF.ent.surface.create_entity{name="RepairJet", position=MF.ent.position, force="player", player=MF.player}
+		local entity = MF.ent.surface.create_entity{name="RepairJet", position=MF.ent.position, force=MF.ent.force, player=MF.player}
 		global.repairJetTable[entity.unit_number] = RJ:new(entity, structure)
 		structure.jet = global.repairJetTable[entity.unit_number]
 		::continue::
@@ -481,7 +481,7 @@ function updateCombatJet()
 		-- Check the Inventory --
 		if inv == nil or inv.valid == false then goto continue end
 		-- Look for an Enemy --
-		local enemy = MF.ent.surface.find_entities_filtered{position=MF.ent.position, radius=MF.varTable.jets.cbjMaxDistance, type="unit", force="enemy", limit=1}[1]
+		local enemy = MF.ent.surface.find_entities_filtered{position=MF.ent.position, radius=MF.varTable.jets.cbjMaxDistance, type="unit", force=MF.ent.force, limit=1}[1]
 		-- Check the Entity --
 		if enemy == nil or enemy.valid == false then goto continue end
 		-- Sent 5 Jets --
@@ -495,7 +495,7 @@ function updateCombatJet()
 			-- Remove the Energy --
 			MF.internalEnergy = MF.internalEnergy - _mfCombatJetEnergyNeeded
 			-- Create the Jet --
-			local entity = MF.ent.surface.create_entity{name="CombatJet", position=MF.ent.position, force="player", player=MF.player}
+			local entity = MF.ent.surface.create_entity{name="CombatJet", position=MF.ent.position, force=MF.ent.force, player=MF.player}
 			global.combatJetTable[entity.unit_number] = CBJ:new(entity, enemy.position)
 		end
 		::continue::
