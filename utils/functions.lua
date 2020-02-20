@@ -106,7 +106,9 @@ end
 -- Return the MFPlayer Object --
 function getMFPlayer(playerName)
 	if playerName == nil then return nil end
-	return global.playersTable[playerName]
+	local MFPlayer = global.playersTable[playerName]
+	if MFPlayer == nil then MFPlayer = global.playersTable[getPlayer(playerName).name] end
+	return MFPlayer
 end
 
 -- Get player specific variable --

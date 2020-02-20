@@ -1,8 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.99
 Date: 20/02/2020
+  Gui:
+    - Added a Shortcut to lock the Tooltip GUI (Middle mouse button, can be configured)
   Scripting:
     - Changed some force assignment
+  Bugfixes:
+    - Fixed a crash when selecting the Mobile Factory Energy laser mode
+    - Fixed a bug that prevented Contruction Jet to place Structures
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.98
 Date: 18/02/2020

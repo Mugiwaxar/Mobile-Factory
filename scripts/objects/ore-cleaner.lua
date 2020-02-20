@@ -201,7 +201,7 @@ end
 -- Collect surrounding Ores --
 function OC:collectOres(event)
 	-- Test if the Mobile Factory and the Ore Cleaner are valid --
-	if valid(global.MF) == false or valid(self) == false then return end
+	if valid(self) == false or valid(self.MF) == false then return end
 	-- Return if the Ore Table is empty --
 	if table_size(self.oreTable) <= 0 then return end
 	-- Return if there are not Quatron Charge remaining --

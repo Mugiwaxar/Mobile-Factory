@@ -128,7 +128,7 @@ function selectedEntityChanged(event)
 	-- Check if the Tooltip GUI exist --
 	if player.gui.screen.mfTooltipGUI == nil or player.gui.screen.mfTooltipGUI.valid == false then return end
 	-- Check if the Tooltip GUI is not locked --
-	if player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite == "LockIconReed" then return end
+	if getPlayerVariable(player.name, "TTGUILocked") == true then return end
 	-- Update the Tooltip GUI --
 	GUI.updateTooltip(player, player.selected)
 end
@@ -262,6 +262,21 @@ function settingsPasted(event)
 	-- Copy the Settings --
 	if o2.copySettings ~= nil then
 		o2:copySettings(o1)
+	end
+end
+
+-- Called when a Shortcut is pressed --
+function onShortcut(event)
+	local player = getPlayer(event.player_index)
+	if event.input_name == "TTGUIKey" then
+		local set = getPlayerVariable(player.name, "TTGUILocked")
+		if set == true then
+			setPlayerVariable(player.name, "TTGUILocked", false)
+			player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite = "LockIcon"
+		else
+			setPlayerVariable(player.name, "TTGUILocked", true)
+			player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite = "LockIconReed"
+		end
 	end
 end
 

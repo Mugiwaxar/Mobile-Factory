@@ -165,7 +165,7 @@ function somethingWasPlaced(event, isRobot)
 	
 	-- Save the Ghost inside the Construction Table --
 	if event.created_entity ~= nil and event.created_entity.valid == true and event.created_entity.name == "entity-ghost" and
-	MF ~= nil and MF.ent ~= nil and MF.valid == true and event.created_entity.surface.name == MF.ent.surface.name then
+	MF ~= nil and MF.ent ~= nil and MF.ent.valid == true and event.created_entity.surface.name == MF.ent.surface.name then
 		if table_size(global.constructionTable) > 1000 then
 			game.print("Mobile Factory: To many Blueprint inside the Construction Table")
 			global.constructionTable = {}
