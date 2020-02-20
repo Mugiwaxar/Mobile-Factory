@@ -483,7 +483,7 @@ function GUI.mainGUIUpdate(player)
 	if MF == nil or MF.ent == nil then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
 	if MF.ent ~= nil and MF.ent.valid == false then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
 	if MF.fS == nil or MF.fS.valid == false then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
-	if (MF.ccS == nil or MF.ccS.valid == false) and technologyUnlocked("ControlCenter") then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
+	if (MF.ccS == nil or MF.ccS.valid == false) and technologyUnlocked("ControlCenter", getForce(player.name)) then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
 	
 	-- Update the MFTPInside Icone --
 	if MF.tpEnabled == true then
@@ -504,35 +504,35 @@ function GUI.mainGUIUpdate(player)
 	end
 
 	-- Update Energy Drain Button --
-	if technologyUnlocked("EnergyDrain1") then
+	if technologyUnlocked("EnergyDrain1", getForce(player.name)) then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDrain.visible = true
 	else
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDrain.visible = false 
 	end
 	
 	-- Update Fluid Drain Button --
-	if technologyUnlocked("FluidDrain1") then
+	if technologyUnlocked("FluidDrain1", getForce(player.name)) then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.FluidDrain.visible = true
 	else
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.FluidDrain.visible = false 
 	end
 	
 	-- Update Item Drain Button --
-	if technologyUnlocked("TechItemDrain") then
+	if technologyUnlocked("TechItemDrain", getForce(player.name)) then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.ItemDrain.visible = true
 	else
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.ItemDrain.visible = false 
 	end
 	
 	-- Update Energy Distribution Button --
-	if technologyUnlocked("EnergyDistribution1") then
+	if technologyUnlocked("EnergyDistribution1", getForce(player.name)) then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDistribution.visible = true
 	else
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDistribution.visible = false 
 	end
 	
 	-- Update Send Quatron Button --
-	if technologyUnlocked("OreCleaner") or technologyUnlocked("FluidExtractor") then
+	if technologyUnlocked("OreCleaner", getForce(player.name)) or technologyUnlocked("FluidExtractor", getForce(player.name)) then
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.visible = true
 	else
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.visible = false 

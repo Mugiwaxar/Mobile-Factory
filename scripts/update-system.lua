@@ -145,7 +145,6 @@ end
 
 -- Fill/Empty tank --
 function updateLogisticFluidPoles()
-	-- if technologyUnlocked("LogisticFluidPole") == false then return end
 	for k, entity in pairs(global.lfpTable) do
     if entity == nil or entity.valid == false or entity.last_user == nil then
       global.lfpTable[k] = nil

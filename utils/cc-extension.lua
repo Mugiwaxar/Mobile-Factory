@@ -98,7 +98,7 @@ end
 -- Create MK1 Tank 1 --
 function createMK1Tank1(MF)
 	createLeftPassage1(MF.ccS)
-	local entity = createEntity(MF.ccS, -17, -9, "StorageTank1MK1", "player")
+	local entity = createEntity(MF.ccS, -17, -9, "StorageTank1MK1", MF.ent.force)
 	MF.varTable.tanks[1] = {ent=entity}
 	-- Valid the Technology --
 	MF.varTable.tech.StorageTankMK11 = true
@@ -107,7 +107,7 @@ end
 -- Create MK1 tank 2 --
 function createMK1Tank2(MF)
 	createLeftPassage2(MF.ccS)
-	local entity = createEntity(MF.ccS, -35, -9, "StorageTank2MK1", "player")
+	local entity = createEntity(MF.ccS, -35, -9, "StorageTank2MK1", MF.ent.force)
 	MF.varTable.tanks[2] = {ent=entity}
 	-- Valid the Technology --
 	MF.varTable.tech.StorageTankMK12 = true
@@ -116,7 +116,7 @@ end
 -- Create MK1 tank 3 --
 function createMK1Tank3(MF)
 	createLeftPassage3(MF.ccS)
-	local entity = createEntity(MF.ccS, -53, -9, "StorageTank3MK1", "player")
+	local entity = createEntity(MF.ccS, -53, -9, "StorageTank3MK1", MF.ent.force)
 	MF.varTable.tanks[3] = {ent=entity}
 	-- Valid the Technology --
 	MF.varTable.tech.StorageTankMK13 = true
@@ -125,7 +125,7 @@ end
 -- Create MK1 tank 4 --
 function createMK1Tank4(MF)
 	createLeftPassage4(MF.ccS)
-	local entity = createEntity(MF.ccS, -71, -9, "StorageTank4MK1", "player")
+	local entity = createEntity(MF.ccS, -71, -9, "StorageTank4MK1", MF.ent.force)
 	MF.varTable.tanks[4] = {ent=entity}
 	-- Valid the Technology --
 	MF.varTable.tech.StorageTankMK14 = true
@@ -134,7 +134,7 @@ end
 -- Create MK1 tank 5 --
 function createMK1Tank5(MF)
 	createLeftPassage5(MF.ccS)
-	local entity = createEntity(MF.ccS, -89, -9, "StorageTank5MK1", "player")
+	local entity = createEntity(MF.ccS, -89, -9, "StorageTank5MK1", MF.ent.force)
 	MF.varTable.tanks[5] = {ent=entity}
 	-- Valid the Technology --
 	MF.varTable.tech.StorageTankMK15 = true

@@ -29,7 +29,8 @@ function createMFSurface(MF)
 	-- Save variable --
 	MF.fS = newSurface
 	-- Place the Factory Chest --
-	MF.fChest = createEntity(MF.fS, -0, -7, "FactoryChest", "player")
+	MF.fChest = createEntity(MF.fS, -0, -7, "FactoryChest", getForce(MF.player))
+	MF.fChest.last_user = MF.player
 end
 
 -- Create the Mobile Factory Control room -
@@ -64,9 +65,12 @@ function createControlRoom(MF)
 	-- Save variable --
 	MF.ccS = newSurface
 	-- Create Entities --
-	createEntity(MF.ccS, -2, 10, "DimensionalSubstation", "player").minable = nil
-	createEntity(MF.ccS, 2, 12, "DimensionalAccumulator", "player").minable = nil
-	
+	local dimSub = createEntity(MF.ccS, -2, 10, "DimensionalSubstation", getForce(MF.player))
+	dimSub.minable = nil
+	dimSub.last_user = MF.player
+	local DimAcc = createEntity(MF.ccS, 2, 12, "DimensionalAccumulator", getForce(MF.player))
+	DimAcc.minable = nil
+	DimAcc.last_user = MF.player
 end
 
 -- Create a new Entity --

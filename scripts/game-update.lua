@@ -104,20 +104,20 @@ end
 
 -- Check all Technologies of a Player Mobile Factory --
 function checkTechnologies(MF)
-	if technologyUnlocked("ControlCenter") == true and MF.varTable.tech.ControlCenter ~= true then updateFactoryFloorForCC(MF) end
-	if technologyUnlocked("UpgradeModules") == true and MF.varTable.tech.UpgradeModules ~= true then createControlCenterEqualizer(MF) end
-	if technologyUnlocked("StorageTankMK1_1") == true and MF.varTable.tech.StorageTankMK11 ~= true then createMK1Tank1(MF) end
-	if technologyUnlocked("StorageTankMK1_2") == true and MF.varTable.tech.StorageTankMK12 ~= true then createMK1Tank2(MF) end
-	if technologyUnlocked("StorageTankMK1_3") == true and MF.varTable.tech.StorageTankMK13 ~= true then createMK1Tank3(MF) end
-	if technologyUnlocked("StorageTankMK1_4") == true and MF.varTable.tech.StorageTankMK14 ~= true then createMK1Tank4(MF) end
-	if technologyUnlocked("StorageTankMK1_5") == true and MF.varTable.tech.StorageTankMK15 ~= true then createMK1Tank5(MF) end
-	if technologyUnlocked("StorageTankMK2_1") == true and MF.varTable.tech.StorageTankMK21 ~= true then upgradeTank(1, MF) end
-	if technologyUnlocked("StorageTankMK2_2") == true and MF.varTable.tech.StorageTankMK22 ~= true then upgradeTank(2, MF) end
-	if technologyUnlocked("StorageTankMK2_3") == true and MF.varTable.tech.StorageTankMK23 ~= true then upgradeTank(3, MF) end
-	if technologyUnlocked("StorageTankMK2_4") == true and MF.varTable.tech.StorageTankMK24 ~= true then upgradeTank(4, MF) end
-	if technologyUnlocked("StorageTankMK2_5") == true and MF.varTable.tech.StorageTankMK25 ~= true then upgradeTank(5, MF) end
-	if technologyUnlocked("DeepStorage") == true and MF.varTable.tech.DeepStorage ~= true then createDeepStorageArea(MF) end
-	if technologyUnlocked("ConstructibleArea1") == true and MF.varTable.tech.ConstructibleArea1 ~= true then createConstructibleArea1(MF) end
+	if technologyUnlocked("ControlCenter", getForce(MF.player)) == true and MF.varTable.tech.ControlCenter ~= true then updateFactoryFloorForCC(MF) end
+	if technologyUnlocked("UpgradeModules", getForce(MF.player)) == true and MF.varTable.tech.UpgradeModules ~= true then createControlCenterEqualizer(MF) end
+	if technologyUnlocked("StorageTankMK1_1", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK11 ~= true then createMK1Tank1(MF) end
+	if technologyUnlocked("StorageTankMK1_2", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK12 ~= true then createMK1Tank2(MF) end
+	if technologyUnlocked("StorageTankMK1_3", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK13 ~= true then createMK1Tank3(MF) end
+	if technologyUnlocked("StorageTankMK1_4", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK14 ~= true then createMK1Tank4(MF) end
+	if technologyUnlocked("StorageTankMK1_5", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK15 ~= true then createMK1Tank5(MF) end
+	if technologyUnlocked("StorageTankMK2_1", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK21 ~= true then upgradeTank(1, MF) end
+	if technologyUnlocked("StorageTankMK2_2", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK22 ~= true then upgradeTank(2, MF) end
+	if technologyUnlocked("StorageTankMK2_3", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK23 ~= true then upgradeTank(3, MF) end
+	if technologyUnlocked("StorageTankMK2_4", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK24 ~= true then upgradeTank(4, MF) end
+	if technologyUnlocked("StorageTankMK2_5", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK25 ~= true then upgradeTank(5, MF) end
+	if technologyUnlocked("DeepStorage", getForce(MF.player)) == true and MF.varTable.tech.DeepStorage ~= true then createDeepStorageArea(MF) end
+	if technologyUnlocked("ConstructibleArea1", getForce(MF.player)) == true and MF.varTable.tech.ConstructibleArea1 ~= true then createConstructibleArea1(MF) end
 end
 
 function selectedEntityChanged(event)
@@ -198,7 +198,7 @@ end
 
 -- Watch damages --
 function onEntityDamaged(event)
-	if event.entity.force.name ~= "player" then return end
+	if event.entity.force.name == "enemy" or event.entity.force.name == "neutral" then return end
 	-- Check the Entity --
 	if event.entity == nil or event.entity.valid == false then return end
 	-- Command to the Jet to return to the Mobile Factory if its life is low --
@@ -298,8 +298,6 @@ end
 
 -- Update the Mining Jets --
 function updateMiningJet()
-	-- Check if the Technology is unlocked --
-	if technologyUnlocked("MiningJet") == false then return end
 	-- Check if there are something to do --
 	if table_size(global.jetFlagTable) <= 0 then return end
 	for k, flag in pairs(global.jetFlagTable) do
@@ -346,8 +344,6 @@ end
 
 -- Update the Construction Jets --
 function updateConstructionJet()
-	-- Check if the Technology is unlocked --
-	if technologyUnlocked("ConstructionJet") == false then return end
 	-- Check if there are something to do --
 	if table_size(global.constructionTable) <= 0 then return end
 	-- Check if the index must be reinitialized --
@@ -389,7 +385,7 @@ function updateConstructionJet()
 			table.remove(global.constructionTable, global.constructionJetIndex)
 			goto continue
 		end
-		if structure.mission == "Deconstruct" and structure.ent.to_be_deconstructed("player") == false then
+		if structure.mission == "Deconstruct" and structure.ent.to_be_deconstructed(MF.ent.force) == false then
 			table.remove(global.constructionTable, global.constructionJetIndex)
 			goto continue
 		end
@@ -422,8 +418,6 @@ end
 
 -- Update the Repair Jets --
 function updateRepairJet()
-	-- Check if the Technology is unlocked --
-	if technologyUnlocked("RepairJet") == false then return end
 	-- Check if there are something to do --
 	if table_size(global.repairTable) <= 0 then return end
 	-- Check if the index must be reinitialized --
@@ -485,8 +479,6 @@ end
 
 -- Update Combat Jets --
 function updateCombatJet()
-	-- Check if the Technology is unlocked --
-	if technologyUnlocked("CombatJet") == false then return end
 	-- Itinerate all Mobile Factories --
 	for k, MF in pairs(global.MFTable) do
 		-- Check the Mobile Factory --

@@ -82,7 +82,8 @@ function mfPlaceable(player, MF)
 end
 
 -- Test if player have this technologie unlocked --
-function technologyUnlocked(name)
+function technologyUnlocked(name, force)
+	if force == nil then force = "player" end
 	for _, force in pairs(game.forces) do
 		if force.name == "player" and force.technologies[name] ~= nil and  force.technologies[name].researched then
 			return true
@@ -94,6 +95,7 @@ end
 
 -- Return the player object with his id --
 function getPlayer(id)
+	local player = nil
 	return game.players[id]
 end
 
@@ -109,6 +111,11 @@ function getMFPlayer(playerName)
 	local MFPlayer = global.playersTable[playerName]
 	if MFPlayer == nil then MFPlayer = global.playersTable[getPlayer(playerName).name] end
 	return MFPlayer
+end
+
+-- Return the Player Force Name --
+function getForce(playerName)
+	return game.players[playerName].force.name
 end
 
 -- Get player specific variable --
@@ -208,19 +215,16 @@ function fixMB(event)
 	end
 	-- If Control Center Surface is lost --
 	if MF.ccS == nil or MF.ccS.valid == false then
-		-- Test if the Technology is unlocked --
-		if technologyUnlocked("ControlCenter") == true then
-			-- Try to find it --
-			tempSurface = game.get_surface(_mfControlSurfaceName .. player.name)
-			if tempSurface ~= nil and tempSurface.valid == true then
-				-- Surface found, attach it to the MF object --
-				player.print({"", {"gui-description.CCSFound"}})
-				MF.ccS = tempSurface
-			else
-				-- Unable to find it, create a new one --
-				player.print({"", {"gui-description.CCSNotFound"}})
-				createControlRoom(MF)
-			end
+		-- Try to find it --
+		tempSurface = game.get_surface(_mfControlSurfaceName .. player.name)
+		if tempSurface ~= nil and tempSurface.valid == true then
+			-- Surface found, attach it to the MF object --
+			player.print({"", {"gui-description.CCSFound"}})
+			MF.ccS = tempSurface
+		else
+			-- Unable to find it, create a new one --
+			player.print({"", {"gui-description.CCSNotFound"}})
+			createControlRoom(MF)
 		end
 	end
 end
