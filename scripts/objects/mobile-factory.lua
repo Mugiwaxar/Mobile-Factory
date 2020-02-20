@@ -90,7 +90,7 @@ function MF:getTooltipInfos(GUI)
 	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
 
 	-- Create the Power laser Label --
-	if technologyUnlocked("EnergyDrain1") then
+	if technologyUnlocked("EnergyDrain1", getForce(self.player)) then
 		-- Create the Power Laser label --
 		local connectedL = GUI.add{type="label"}
 		connectedL.style.font = "LabelFont"
@@ -241,7 +241,7 @@ end
 -------------------------------------------- Energy Laser --------------------------------------------
 function MF:updateEnergyLaser(entity)
 	-- Check if a laser should be created --
-	if technologyUnlocked("EnergyDrain1") == false or self.energyLaserActivated == false then return false end
+	if technologyUnlocked("EnergyDrain1", getForce(self.player)) == false or self.energyLaserActivated == false then return false end
 	-- Create the Laser --
 	local mobileFactory = false
 	if string.match(entity.name, "MobileFactory") then mobileFactory = true end
@@ -287,7 +287,7 @@ end
 -------------------------------------------- Fluid Laser --------------------------------------------
 function MF:updateFluidLaser(entity)
 	-- Check if a laser should be created --
-	if technologyUnlocked("FluidDrain1") == false or self.fluidLaserActivated == false then return false end 
+	if technologyUnlocked("FluidDrain1", getForce(self.player)) == false or self.fluidLaserActivated == false then return false end 
 	-- Create the Laser --
 	if entity.type == "storage-tank" and global.IDModule > 0 then
 		if self.ccS ~= nil then
@@ -329,7 +329,7 @@ end
 -------------------------------------------- Logistic Laser --------------------------------------------
 function MF:updateLogisticLaser(entity)
 	-- Check if a laser should be created --
-	if technologyUnlocked("TechItemDrain") == false or self.itemLaserActivated == false then return false end 
+	if technologyUnlocked("TechItemDrain", getForce(self.player)) == false or self.itemLaserActivated == false then return false end 
 	-- Create the Laser --
 	if self.itemLaserActivated == true and self.internalEnergy > _mfBaseItemEnergyConsumption * self:getLaserItemDrain() and (entity.type == "container" or entity.type == "logistic-container") then
 		-- Get Chest Inventory --
@@ -512,14 +512,14 @@ function MF:factoryTeleportBox()
 		end
 	end
 	-- Factory to Control Center --
-	if technologyUnlocked("ControlCenter") == true and self.fS ~= nil and self.fS ~= nil then
+	if technologyUnlocked("ControlCenter", getForce(self.player)) == true and self.fS ~= nil and self.fS ~= nil then
 		local entities = self.fS.find_entities_filtered{area={{-3,-34},{3,-31}}, type="character"}
 		for k, entity in pairs(entities) do
 			teleportPlayerToControlCenter(entity.player, self)
 		end
 	end
 	-- Control Center to Factory --
-	if technologyUnlocked("ControlCenter") == true and self.ccS ~= nil and self.fS~= nil then
+	if technologyUnlocked("ControlCenter", getForce(self.player)) == true and self.ccS ~= nil and self.fS~= nil then
 		local entities = self.ccS.find_entities_filtered{area={{-3,5},{3,8}}, type="character"}
 		for k, entity in pairs(entities) do
 			teleportPlayerToFactory(entity.player, self)
@@ -529,7 +529,7 @@ end
 
 -- Scan modules inside the Equalizer --
 function MF:scanModules()
-	if technologyUnlocked("UpgradeModules") == false then return end
+	if technologyUnlocked("UpgradeModules", getForce(self.player)) == false then return end
 	if self.ccS == nil then return end
 	local equalizer = self.ccS.find_entity("Equalizer", {1, -16})
 	if equalizer == nil or equalizer.valid == false then return end
@@ -557,7 +557,7 @@ end
 -- Recharge inroom Dimensional Accumulator --
 function MF:updateAccumulators()
 	-- Factory --
-	if self.fS ~= nil and self.fS.valid == true and technologyUnlocked("EnergyDistribution1") and self.internalEnergyDistributionActivated and self.internalEnergy > 0 then
+	if self.fS ~= nil and self.fS.valid == true and technologyUnlocked("EnergyDistribution1", getForce(self.player)) and self.internalEnergyDistributionActivated and self.internalEnergy > 0 then
 		for k, entity in pairs(global.accTable) do
 			if entity == nil or entity.valid == false then global.accTable[k] = nil return end
 			if self.internalEnergy > _mfBaseEnergyAccSend and entity.energy < entity.electric_buffer_size then

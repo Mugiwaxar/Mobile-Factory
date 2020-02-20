@@ -313,73 +313,73 @@ function GUI.updatePlayerInfoGUI(player)
 	end
 
 	-- Energy Laser Radius --
-	if technologyUnlocked("EnergyDrain1") then
+	if technologyUnlocked("EnergyDrain1", getForce(player.name)) then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyRadiusLabel.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyRadiusLabel.caption = {"", {"gui-description.EnergyRadiusLabel"}, ": ", MF:getLaserRadius(), " tiles"}
 	end
 	
 	-- Energy Laser Radius Multiplier --
-	if technologyUnlocked("EnergyDrain1") then
+	if technologyUnlocked("EnergyDrain1", getForce(player.name)) then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyRadiusMLabel.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyRadiusMLabel.caption = {"", {"gui-description.EnergyRadiusMLabel"}, ": ", MF.laserRadiusMultiplier}
 	end
 	
 	-- Energy Laser Drain --
-	if technologyUnlocked("EnergyDrain1") then
+	if technologyUnlocked("EnergyDrain1", getForce(player.name)) then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyDrainLabel.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyDrainLabel.caption = {"", {"gui-description.EnergyDrainLabel"}, ": ", Util.toRNumber(MF:getLaserEnergyDrain()), "W"}
 	end
 	
 	-- Energy Laser Drain Multiplier --
-	if technologyUnlocked("EnergyDrain1") then
+	if technologyUnlocked("EnergyDrain1", getForce(player.name)) then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyDrainMLabel.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyDrainMLabel.caption = {"", {"gui-description.EnergyDrainMLabel"}, ": ", MF.laserDrainMultiplier}
 	end
 	
 	-- Energy Laser Laser --
-	if technologyUnlocked("EnergyDrain1") then
+	if technologyUnlocked("EnergyDrain1", getForce(player.name)) then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyLaserLabel.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyLaserLabel.caption = {"", {"gui-description.EnergyLaserLabel"}, ": ", MF:getLaserNumber()}
 	end
 	
 	-- Energy Laser Drain Multiplier --
-	if technologyUnlocked("EnergyDrain1") then
+	if technologyUnlocked("EnergyDrain1", getForce(player.name)) then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyLaserMLabel.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.EnergyLaserMLabel.caption = {"", {"gui-description.EnergyLaserMLabel"}, ": ", MF.laserNumberMultiplier}
 	end
 	
 	-- Fluid Laser Drain --
-	if technologyUnlocked("FluidDrain1") then
+	if technologyUnlocked("FluidDrain1", getForce(player.name)) then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidDrainLabel.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidDrainLabel.caption = {"", {"gui-description.FluidDrainLabel"}, ": ", Util.toRNumber(MF:getLaserFluidDrain()), "u/s"}
 	end
 	
 	-- Fluid Laser Drain Multiplier --
-	if technologyUnlocked("FluidDrain1") then
+	if technologyUnlocked("FluidDrain1", getForce(player.name)) then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidDrainMLabel.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidDrainMLabel.caption = {"", {"gui-description.FluidDrainMLabel"}, ": ", MF.laserDrainMultiplier}
 	end
 	
 	-- Fluid Laser Consomption --
-	if technologyUnlocked("FluidDrain1") then
+	if technologyUnlocked("FluidDrain1", getForce(player.name)) then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidConsumptionLabel.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidConsumptionLabel.caption = {"", {"gui-description.FluidConsumptionLabel"}, ": ", Util.toRNumber(MF:getLaserFluidDrain()*_lfpFluidConsomption), "W"}
 	end
 	
 	-- Item Laser Drain --
-	if technologyUnlocked("TechItemDrain") then
+	if technologyUnlocked("TechItemDrain", getForce(player.name)) then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemDrainLabel.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemDrainLabel.caption = {"", {"gui-description.ItemDrainLabel"}, ": ", Util.toRNumber(MF:getLaserItemDrain()), "i/s"}
 	end
 	
 	-- Item Laser Drain Multiplier --
-	if technologyUnlocked("TechItemDrain") then
+	if technologyUnlocked("TechItemDrain", getForce(player.name)) then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemDrainMLabel.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemDrainMLabel.caption = {"", {"gui-description.ItemDrainMLabel"}, ": ", MF.laserDrainMultiplier}
 	end
 	
 	-- Item Laser Consomption --
-	if technologyUnlocked("TechItemDrain") then
+	if technologyUnlocked("TechItemDrain", getForce(player.name)) then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemConsumptionLabel.visible = true
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ItemConsumptionLabel.caption = {"", {"gui-description.ItemConsumptionLabel"}, ": ", Util.toRNumber(_mfItemsDrain*MF:getLaserItemDrain()), "W"}
 	end
@@ -553,7 +553,7 @@ end
 function GUI.updateInventoryFrame(gui, MF)
 	if MF.II == nil then return end
 	-- Make the frame visible if the technology is unlocked --
-	if technologyUnlocked("MatterSerialization") == false then return end
+	if technologyUnlocked("MatterSerialization", getForce(MF.player)) == false then return end
 	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.visible = true
 	-- Clear the frame --
 	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow3.mfInfoFlow3SP.clear()

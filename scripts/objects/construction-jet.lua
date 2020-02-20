@@ -196,7 +196,7 @@ end
 
 -- Remove the Structure --
 function CJ:deconstruct()
-	if self.target.ent == nil or self.target.ent.valid == false or self.target.ent.to_be_deconstructed("player") == false then
+	if self.target.ent == nil or self.target.ent.valid == false or self.target.ent.to_be_deconstructed(self.target.ent.force) == false then
 		self:goMF()
 		return
 	end
