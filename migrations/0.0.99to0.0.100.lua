@@ -1,6 +1,6 @@
 -- Set last user and Force for the default created Entities inside the Mobile Factory --
 for k, MF in pairs(global.MFTable) do
-    if MF.fChest ~= nil then
+    if MF.fChest ~= nil and MF.fChest.valid == true then
         MF.fChest.last_user = MF.player
         MF.fChest.force = getForce(MF.player)
     end
