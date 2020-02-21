@@ -1,7 +1,7 @@
 -- Set all Mobile Factory Objects to belongs to the first Player --
 local player = nil
-if global.MF == nil or global.MF == {} then goto continue end
 global.MFTable = {}
+if global.MF == nil or global.MF == {} then goto continue end
 if global.MF ~= nil and global.MF.II ~= nil then
 	global.MF.II.MF = global.MF
 	if global.MF.dataCenter ~= nil and global.MF.dataCenter.ent ~= nil and global.MF.dataCenter.ent.valid == true then

@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.102
+Date: 21/02/2020
+  Bugfixes:
+    - Fixed a crash with Repair Jet
+    - Fixed a crash when placing a new Mobile Factory
+    - The Beginning Technology is now unlocked for every Forces
+---------------------------------------------------------------------------------------------------
 Version: 0.0.101
 Date: 21/02/2020
   Bugfixes:
