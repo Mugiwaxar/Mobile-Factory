@@ -4,9 +4,11 @@ for k, MF in pairs(global.MFTable) do
         MF.fChest.last_user = MF.player
         MF.fChest.force = getForce(MF.player)
     end
-    local ents = MF.ccS.find_entities_filtered{}
-    for k2, ent in pairs(ents) do
-        ent.last_user = MF.player
-        ent.force = getForce(MF.player)
+    if MF.ccS ~= nil then
+        local ents = MF.ccS.find_entities_filtered{}
+        for k2, ent in pairs(ents) do
+            ent.last_user = MF.player
+            ent.force = getForce(MF.player)
+        end
     end
 end
