@@ -83,14 +83,14 @@ end
 
 -- Test if player have this technologie unlocked --
 function technologyUnlocked(name, force)
-	if force == nil then force = "player" end
-	for _, force in pairs(game.forces) do
-		if force.name == "player" and force.technologies[name] ~= nil and  force.technologies[name].researched then
+	if force == nil then force = game.forces["player"] end
+	if force == nil then return false end
+	for _, force2 in pairs(game.forces) do
+		if force2.name == force.name and force.technologies[name] ~= nil and force.technologies[name].researched then
 			return true
-		else
-			return false
 		end
 	end
+	return false
 end
 
 -- Return the player object with his id --
@@ -115,7 +115,7 @@ end
 
 -- Return the Player Force Name --
 function getForce(playerName)
-	return game.players[playerName].force.name
+	return game.players[playerName].force
 end
 
 -- Get player specific variable --

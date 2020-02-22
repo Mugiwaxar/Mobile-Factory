@@ -2,7 +2,6 @@
 
 -- Create the Mobile Factory internal surface --
 function createMFSurface(MF)
-
 	-- Test if the surface is not already created --
 	local testSurface = game.get_surface(_mfSurfaceName .. MF.player)
 	if testSurface ~= nil then MF.fS = testSurface return end
@@ -29,7 +28,7 @@ function createMFSurface(MF)
 	-- Save variable --
 	MF.fS = newSurface
 	-- Place the Factory Chest --
-	MF.fChest = createEntity(MF.fS, -0, -7, "FactoryChest", getForce(MF.player))
+	MF.fChest = createEntity(MF.fS, -0, -7, "FactoryChest", getForce(MF.player).name)
 	MF.fChest.last_user = MF.player
 end
 
@@ -65,10 +64,10 @@ function createControlRoom(MF)
 	-- Save variable --
 	MF.ccS = newSurface
 	-- Create Entities --
-	local dimSub = createEntity(MF.ccS, -2, 10, "DimensionalSubstation", getForce(MF.player))
+	local dimSub = createEntity(MF.ccS, -2, 10, "DimensionalSubstation", getForce(MF.player).name)
 	dimSub.minable = nil
 	dimSub.last_user = MF.player
-	local DimAcc = createEntity(MF.ccS, 2, 12, "DimensionalAccumulator", getForce(MF.player))
+	local DimAcc = createEntity(MF.ccS, 2, 12, "DimensionalAccumulator", getForce(MF.player).name)
 	DimAcc.minable = nil
 	DimAcc.last_user = MF.player
 end
@@ -77,7 +76,7 @@ end
 function createEntity(surface, posX, posY, entityName, force)
 	if surface == nil then game.print("createEntity: Surface nul") return end
 	if force == nil then force = "player" end
-	return surface.create_entity{name=entityName, position={posX,posY}, force=force}
+	local ent surface.create_entity{name=entityName, position={posX,posY}, force=force}
 end
 
 
