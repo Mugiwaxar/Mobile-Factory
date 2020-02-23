@@ -9,7 +9,7 @@ function createTilesSurface(surface, x1, y1, x2, y2, tile)
 		table.insert(tilesTable, {name=tile,position={x,y}})
 		end
 	end
-	surface.set_tiles(tilesTable) 
+	surface.set_tiles(tilesTable)
 end
 
 -- Left passage Extension 1 --
