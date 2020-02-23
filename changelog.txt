@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.103
+Date: 22/02/2020
+  Bugfixes:
+    - Control Center Teleportation should now correctly work
+    - Fixed a crash when Control Center Tanks are unlocked
+  Scripting:
+    - Get Players Force function was rewritten, should fix a great amount of crashs
+---------------------------------------------------------------------------------------------------
 Version: 0.0.102
 Date: 21/02/2020
   Bugfixes:
