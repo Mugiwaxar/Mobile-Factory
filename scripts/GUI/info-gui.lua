@@ -385,48 +385,48 @@ function GUI.updatePlayerInfoGUI(player)
 	end
 	
 	-- Tank ID --
-	if global.IDModule ~= nil and global.IDModule > 0 then
+	if MF.IDModule ~= nil and MF.IDModule > 0 then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.TankIDLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.TankIDLabel.caption = {"", {"gui-description.TankIDLabel"}, ": ", global.IDModule}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.TankIDLabel.caption = {"", {"gui-description.TankIDLabel"}, ": ", MF.IDModule}
 	else
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.TankIDLabel.visible = false
 	end
 	
-	-- Number of Accumulator --
-	if global.accTable ~= nil and table_size(global.accTable) > 0 then
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.AccAmountLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.AccAmountLabel.caption = {"", {"gui-description.AccAmountLabel"}, ": ", table_size(global.accTable)}
-	else
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.AccAmountLabel.visible = false
-	end
+	-- -- Number of Accumulator --
+	-- if global.accTable ~= nil and table_size(global.accTable) > 0 then
+	-- 	player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.AccAmountLabel.visible = true
+	-- 	player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.AccAmountLabel.caption = {"", {"gui-description.AccAmountLabel"}, ": ", table_size(global.accTable)}
+	-- else
+	-- 	player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.AccAmountLabel.visible = false
+	-- end
 	
-	-- Number of Power Drain Poles --
-	if global.pdpTable ~= nil and table_size(global.pdpTable) > 0 then
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.PDPAmountLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.PDPAmountLabel.caption = {"", {"gui-description.PDPAmountLabel"}, ": ", table_size(global.pdpTable)}
-	else
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.PDPAmountLabel.visible = false
-	end
+	-- -- Number of Power Drain Poles --
+	-- if global.pdpTable ~= nil and table_size(global.pdpTable) > 0 then
+	-- 	player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.PDPAmountLabel.visible = true
+	-- 	player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.PDPAmountLabel.caption = {"", {"gui-description.PDPAmountLabel"}, ": ", table_size(global.pdpTable)}
+	-- else
+	-- 	player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.PDPAmountLabel.visible = false
+	-- end
 	
-	-- Number of Logistic Fluid Pole --
-	if global.lfpTable ~= nil and table_size(global.lfpTable) > 0 then
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.LFPAmountLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.LFPAmountLabel.caption = {"", {"gui-description.LFPAmountLabel"}, ": ", table_size(global.lfpTable)}
-	else
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.LFPAmountLabel.visible = false
-	end
+	-- -- Number of Logistic Fluid Pole --
+	-- if global.lfpTable ~= nil and table_size(global.lfpTable) > 0 then
+	-- 	player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.LFPAmountLabel.visible = true
+	-- 	player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.LFPAmountLabel.caption = {"", {"gui-description.LFPAmountLabel"}, ": ", table_size(global.lfpTable)}
+	-- else
+	-- 	player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.LFPAmountLabel.visible = false
+	-- end
 	
-	-- Number of Tank --
-	if MF.varTable.tanks ~= nil and table_size(MF.varTable.tanks) > 0 then
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.TankAmountLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.TankAmountLabel.caption = {"", {"gui-description.TankAmountLabel"}, ": ", table_size(MF.varTable.tanks)}
-	end
+	-- -- Number of Tank --
+	-- if MF.varTable.tanks ~= nil and table_size(MF.varTable.tanks) > 0 then
+	-- 	player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.TankAmountLabel.visible = true
+	-- 	player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.TankAmountLabel.caption = {"", {"gui-description.TankAmountLabel"}, ": ", table_size(MF.varTable.tanks)}
+	-- end
 	
-	-- Number of Ore Silo --
-	if global.oreSilotTable ~= nil and table_size(global.oreSilotTable) > 0 then
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.OreSiloAmountLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.OreSiloAmountLabel.caption = {"", {"gui-description.OreSiloAmountLabel"}, ": ", table_size(global.oreSilotTable)}
-	end
+	-- -- Number of Ore Silo --
+	-- if global.oreSilotTable ~= nil and table_size(global.oreSilotTable) > 0 then
+	-- 	player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.OreSiloAmountLabel.visible = true
+	-- 	player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.OreSiloAmountLabel.caption = {"", {"gui-description.OreSiloAmountLabel"}, ": ", table_size(global.oreSilotTable)}
+	-- end
 	
 	-- Update Tank Frame --
 	GUI.updateTankFrame(player, MF)
@@ -445,10 +445,6 @@ function GUI.updateTankFrame(player, MF)
 	-- Get the GUI --
 	gui = player.gui
 	if MF.ccS == nil or MF.varTable.tanks == nil or getPlayerVariable(player.name, "GUIUpdateInfoGUI") ~= true then return end
-	-- Make the frame visible if there are at least one Tank in the table --
-	if table_size(MF.varTable.tanks) > 0 then
-		gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow2.visible = true
-	end
 	-- Get the Tank Flow --
 	local tankFlow = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow2.mfTankFlow
 	-- Clear the Tank Flow --
@@ -494,6 +490,8 @@ function GUI.updateTankFrame(player, MF)
 					TankFilter.elem_value = MF.varTable.tanks[k].filter
 			end
 			MF.varTable.tanks[k].filter = TankFilter.elem_value
+			-- Make the Frame visible --
+			gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow2.visible = true
 		end
 	end
 end
@@ -503,19 +501,16 @@ end
 function GUI.updateDeepStorageFrame(player, MF)
 	if MF.ccS == nil or global.deepStorageTable == nil or getPlayerVariable(player.name, "GUIUpdateInfoGUI") ~= true then return end
 	local gui = player.gui
-	-- Make the frame visible if there are at least one Deep Storage in the table --
-	if table_size(global.deepStorageTable) > 0 then
-		gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.visible = true
-	else
-		gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.visible = false
-		return
-	end
+	-- Make the frame invisible --
+	gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.visible = false
 	-- Get the Deep Storage Flow --
 	local deepStorageFlow = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.mfDeepStorageFlow
 	-- Clear the Deep Storage Flow --
 	deepStorageFlow.clear()
 	-- Look for all Deep Storage --
 	for k, deepStorage in pairs(global.deepStorageTable) do
+		-- Ckeck if the Deep Storage belong to this Player --
+		if deepStorage.player ~= player.name then goto continue end
 		-- Create the Frame --
 		luaGuiElement = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.mfDeepStorageFlow
 		local deepStorageFrame = luaGuiElement.add{type="frame", direction="horizontal"}
@@ -545,6 +540,9 @@ function GUI.updateDeepStorageFrame(player, MF)
 			deepStorageFilter.elem_value = global.deepStorageTable[k].filter
 		end
 		global.deepStorageTable[k].filter = deepStorageFilter.elem_value
+		-- Make the Frame Visible --
+		gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow5.visible = true
+		::continue::
 	end
 end
 

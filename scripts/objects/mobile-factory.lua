@@ -25,6 +25,7 @@ MF = {
 	energyLaserActivated = false,
 	fluidLaserActivated = false,
 	itemLaserActivated = false,
+	IDModule = 0,
 	internalEnergyDistributionActivated = false,
 	sendQuatronActivated = false,
 	selectedPowerLaserMode = 1,
@@ -133,6 +134,8 @@ function MF:update(event)
 	if event.tick%_eventTick1200 == 0 then self:updatePollution() end
 	-- Update Teleportation Box --
 	if event.tick%_eventTick5 == 0 then self:factoryTeleportBox() end
+	-- Read Modules inside the Equalizer --
+	if event.tick%_eventTick125 == 0 then self:scanModules() end
 	-- Update accumulators --
 	if event.tick%_eventTick38 == 0 then self:updateAccumulators() end
 	-- Send Quatron Charge --
@@ -289,14 +292,14 @@ function MF:updateFluidLaser(entity)
 	-- Check if a laser should be created --
 	if technologyUnlocked("FluidDrain1", getForce(self.player)) == false or self.fluidLaserActivated == false then return false end 
 	-- Create the Laser --
-	if entity.type == "storage-tank" and global.IDModule > 0 then
+	if entity.type == "storage-tank" and self.IDModule > 0 then
 		if self.ccS ~= nil then
 			-- Get the Internal Tank --
 			local name
 			local ccTank
-			if self.varTable.tanks ~= nil and self.varTable.tanks[global.IDModule] ~= nil then
-				filter = self.varTable.tanks[global.IDModule].filter
-				ccTank = self.varTable.tanks[global.IDModule].ent
+			if self.varTable.tanks ~= nil and self.varTable.tanks[self.IDModule] ~= nil then
+				filter = self.varTable.tanks[self.IDModule].filter
+				ccTank = self.varTable.tanks[self.IDModule].ent
 			end
 			if filter ~= nil and ccTank ~= nil then
 				-- Get the focused Tank --
@@ -545,9 +548,9 @@ function MF:scanModules()
 	end
 	if tankMDS ~= nil then
 		tankMD = split(tankMDS, "D")[2]
-		global.IDModule = tonumber(tankMD)
+		self.IDModule = tonumber(tankMD)
 	else
-		global.IDModule = 0
+		self.IDModule = 0
 	end
 	self.laserRadiusMultiplier = powerMD
 	self.laserDrainMultiplier = efficiencyMD
