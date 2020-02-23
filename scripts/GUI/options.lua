@@ -47,16 +47,16 @@ function GUI.readOptions(option, player, gui)
 	end
 
 	------------------- Game -------------------
-	if name == "MiningJetDistanceOpt" then
+	if name == "MiningJetDistanceOptT" then
 		MF.varTable.jets.mjMaxDistance = tonumber(option.text)
 	end
-	if name == "ConstructionJetDistanceOpt" then
+	if name == "ConstructionJetDistanceOptT" then
 		MF.varTable.jets.cjMaxDistance = tonumber(option.text)
 	end
-	if name == "RepairJetDistanceOpt" then
+	if name == "RepairJetDistanceOptT" then
 		MF.varTable.jets.rjMaxDistance = tonumber(option.text)
 	end
-	if name == "CombatJetDistanceOpt" then
+	if name == "CombatJetDistanceOptT" then
 		MF.varTable.jets.cbjMaxDistance = tonumber(option.text)
 	end
 	if name == "FloorIsLaveActiveOpt" then
