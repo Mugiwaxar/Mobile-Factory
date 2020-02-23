@@ -54,6 +54,8 @@ end
 
 -- Update System: Add an Object to the MF Entities Table --
 function UpSys.addObject(obj)
+  if global.upsysTickTable == nil then global.upsysTickTable = {} end
+  if global.entsTable == nil then global.entsTable = {} end
   -- Check the size of the UpSys Table --
   if table_size(global.upsysTickTable) > 300 then
     game.print("Mobile Factory - Upsys Error: table size too hight, unable to update Entities")

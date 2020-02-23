@@ -253,15 +253,17 @@ function MJF:sendInventory()
 		if dataInv == 0 then
 			-- Send Ore to all Deep Storage --
 			for k, dp in pairs(global.deepStorageTable) do
-				local added = dp:addItem(name, count)
-				-- Check if Ore was added --
-				if added > 0 then
-					self.inventory[name] = self.inventory[name] - added
-					sended = true
-					-- Remove the Ore --
-					if self.inventory[name] <= 0 then
-						self.inventory[name] = nil
-						break
+				if self.player == dp.player then
+					local added = dp:addItem(name, count)
+					-- Check if Ore was added --
+					if added > 0 then
+						self.inventory[name] = self.inventory[name] - added
+						sended = true
+						-- Remove the Ore --
+						if self.inventory[name] <= 0 then
+							self.inventory[name] = nil
+							break
+						end
 					end
 				end
 			end

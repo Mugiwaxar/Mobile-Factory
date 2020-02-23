@@ -84,20 +84,22 @@ end
 -- When a technology is finished --
 function technologyFinished(event)
 	for k, MF in pairs(global.MFTable) do
-		if event.research.name == "ControlCenter" then updateFactoryFloorForCC(MF) end
-		if event.research.name == "UpgradeModules" then createControlCenterEqualizer(MF) end
-		if event.research.name == "StorageTankMK1_1" then createMK1Tank1(MF) end
-		if event.research.name == "StorageTankMK1_2" then createMK1Tank2(MF) end
-		if event.research.name == "StorageTankMK1_3" then createMK1Tank3(MF) end
-		if event.research.name == "StorageTankMK1_4" then createMK1Tank4(MF) end
-		if event.research.name == "StorageTankMK1_5" then createMK1Tank5(MF) end
-		if event.research.name == "StorageTankMK2_1" then upgradeTank(1, MF) end
-		if event.research.name == "StorageTankMK2_2" then upgradeTank(2, MF) end
-		if event.research.name == "StorageTankMK2_3" then upgradeTank(3, MF) end
-		if event.research.name == "StorageTankMK2_4" then upgradeTank(4, MF) end
-		if event.research.name == "StorageTankMK2_5" then upgradeTank(5, MF) end
-		if event.research.name == "DeepStorage" then createDeepStorageArea(MF) end
-		if event.research.name == "ConstructibleArea1" then createConstructibleArea1(MF) end
+		if event.research.force.name == MF.player then
+			if event.research.name == "ControlCenter" then updateFactoryFloorForCC(MF) end
+			if event.research.name == "UpgradeModules" then createControlCenterEqualizer(MF) end
+			if event.research.name == "StorageTankMK1_1" then createMK1Tank1(MF) end
+			if event.research.name == "StorageTankMK1_2" then createMK1Tank2(MF) end
+			if event.research.name == "StorageTankMK1_3" then createMK1Tank3(MF) end
+			if event.research.name == "StorageTankMK1_4" then createMK1Tank4(MF) end
+			if event.research.name == "StorageTankMK1_5" then createMK1Tank5(MF) end
+			if event.research.name == "StorageTankMK2_1" then upgradeTank(1, MF) end
+			if event.research.name == "StorageTankMK2_2" then upgradeTank(2, MF) end
+			if event.research.name == "StorageTankMK2_3" then upgradeTank(3, MF) end
+			if event.research.name == "StorageTankMK2_4" then upgradeTank(4, MF) end
+			if event.research.name == "StorageTankMK2_5" then upgradeTank(5, MF) end
+			if event.research.name == "DeepStorage" then createDeepStorageArea(MF) end
+			if event.research.name == "ConstructibleArea1" then createConstructibleArea1(MF) end
+		end
 	end
 end
 

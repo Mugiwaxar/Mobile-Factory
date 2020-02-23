@@ -78,21 +78,3 @@ function createEntity(surface, posX, posY, entityName, force)
 	if force == nil then force = "player" end
 	return surface.create_entity{name=entityName, position={posX,posY}, force=force}
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

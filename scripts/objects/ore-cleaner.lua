@@ -232,7 +232,7 @@ function OC:collectOres(event)
 	local dataInv = self.selectedInv
 	if dataInv == 0 then
 		for k, dp in pairs(global.deepStorageTable) do
-			if dp:canAccept(oreName) == true then
+			if self.player == dp.player and dp:canAccept(oreName) == true then
 				dataInv = dp
 			end
 		end

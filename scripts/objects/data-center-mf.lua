@@ -116,13 +116,15 @@ function DCMF:update()
 	-- Create the Deep Storages Signals --
 	for k, ds in pairs(global.deepStorageTable) do
 		-- Create and send the Signal --
-		if ds.inventoryItem ~= nil and game.item_prototypes[ds.inventoryItem] ~= nil then
-			local signal = {signal={type="item", name=ds.inventoryItem} ,count=ds.inventoryCount}
-			self.ent.get_control_behavior().set_signal(i, signal)
-			-- Increament the Slot --
-			i = i + 1
-			-- Stop if there are to much Items --
-			if i > 999 then break end
+		if Util.canUse(self.player, ds.ent) then
+			if ds.inventoryItem ~= nil and game.item_prototypes[ds.inventoryItem] ~= nil then
+				local signal = {signal={type="item", name=ds.inventoryItem} ,count=ds.inventoryCount}
+				self.ent.get_control_behavior().set_signal(i, signal)
+				-- Increament the Slot --
+				i = i + 1
+				-- Stop if there are to much Items --
+				if i > 999 then break end
+			end
 		end
 	end
 	

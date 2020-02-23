@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.106
+Date: 23/02/2020
+  Scripting:
+    - Cleared Migrations
+  Bugfixes:
+    - Unlocked Technology should now apply to the owned Force only
+    - Fixed Internal Inventory Data Storage showing all Deep Storage
+    - Fixed Mining Jet Flag and Ore Cleaner should no longer send Ore to other Players if "All" is selected
+---------------------------------------------------------------------------------------------------
 Version: 0.0.105
 Date: 23/02/2020
   Features:
