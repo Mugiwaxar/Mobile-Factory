@@ -41,7 +41,6 @@ function updateValues()
 	if global.upsysTickTable == nil then global.upsysTickTable = {} end
 	if global.entsUpPerTick == nil then global.entsUpPerTick = _mfBaseUpdatePerTick end
 	if global.upSysLastScan == nil then global.upSysLastScan = 0 end
-	if global.IDModule == nil then global.IDModule = 0 end
 	if global.dataNetworkID == nil then global.dataNetworkID = 0 end
 	if global.constructionJetIndex == nil then global.constructionJetIndex = 0 end
 	if global.repairJetIndex == nil then global.repairJetIndex = 0 end

@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.105
+Date: 23/02/2020
+  Features:
+    - Fixed Angel's Mod compatibility
+---------------------------------------------------------------------------------------------------
+Version: 0.0.104
+Date: 23/02/2020
+  Bugfixes:
+    - Combat Jet should now work correctly
+    - Jet maximum distance fixed
+    - Correction of the CreateEntity() function, should fix a lot of bugs
+    - IDModules put inside the Equalizer should now be used correctly
+    - Only owned Deep Storage should appear inside the Information GUI
+---------------------------------------------------------------------------------------------------
 Version: 0.0.103
 Date: 22/02/2020
   Bugfixes:

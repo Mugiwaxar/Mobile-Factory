@@ -2,7 +2,7 @@
 global.dataNetworkTable = {}
 
 -- Check all Data Center --
-for k, obj in pairs(global.dataCenterTable) do
+for k, obj in pairs(global.dataCenterTable or {}) do
 	-- Create the new Data Network --
 	obj.dataNetwork = DN:new(obj)
 end
