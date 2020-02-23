@@ -216,9 +216,9 @@ function GUI.createOptTab3(tab, player, MF)
 	if MF.varTable.jets.rjMaxDistance == nil then MF.varTable.jets.rjMaxDistance = _MFRepairJetDefaultMaxDistance end
 	if MF.varTable.jets.cbjMaxDistance == nil then MF.varTable.jets.cbjMaxDistance = _MFCombatJetDefaultMaxDistance end
 	GUI.createDTextField(tab, "MiningJetDistanceOpt", "MiningJetDistanceOpt", "MiningJetDistanceOptTT", MF.varTable.jets.mjMaxDistance)
-	GUI.createDTextField(tab, "ConstructionJetDistanceOpt", "ConstructionJetMaximalDistance", "ConstructionJetMaximalDistanceTT", MF.varTable.jets.cjMaxDistance)
+	GUI.createDTextField(tab, "ConstructionJetDistanceOpt", "ConstructionJetDistanceOpt", "ConstructionJetDistanceOptTT", MF.varTable.jets.cjMaxDistance)
 	GUI.createDTextField(tab, "RepairJetDistanceOpt", "RepairJetDistanceOpt", "RepairJetDistanceOptTT", MF.varTable.jets.rjMaxDistance)
-	GUI.createDTextField(tab, "CombatJetDistanceOpt", "CombatJetDistanceOpt", "CombatJetDistanceOpt", MF.varTable.jets.cbjMaxDistance)
+	GUI.createDTextField(tab, "CombatJetDistanceOpt", "CombatJetDistanceOpt", "CombatJetDistanceOptTT", MF.varTable.jets.cbjMaxDistance)
 
 	-- Floor Is Lava --
 	local FILSettingsL = tab.add{type="label", name="FILSettingsL", caption={"gui-description.FILOptTitle"}}

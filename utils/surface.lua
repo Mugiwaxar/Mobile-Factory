@@ -76,7 +76,7 @@ end
 function createEntity(surface, posX, posY, entityName, force)
 	if surface == nil then game.print("createEntity: Surface nul") return end
 	if force == nil then force = "player" end
-	local ent surface.create_entity{name=entityName, position={posX,posY}, force=force}
+	return surface.create_entity{name=entityName, position={posX,posY}, force=force}
 end
 
 
