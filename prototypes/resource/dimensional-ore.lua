@@ -90,7 +90,9 @@ dmT.icon_size = 256
 dmT.unit = {
 	count=1,
 	time=1,
-	ingredients={}
+	ingredients={
+	{"DimensionalSample", 1}
+	}
 }
 dmT.effects = nil
 data:extend{dmT}

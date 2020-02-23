@@ -81,6 +81,15 @@ function mfPlaceable(player, MF)
 	else return {player.position.x+5, player.position.y} end
 end
 
+-- Unlock a recipe for all Players --
+function unlockRecipeForAll(recipeName, techCondition)
+	if recipeName == nil then return end
+	for k, force in pairs(game.forces) do
+		if techCondition ~= nil and technologyUnlocked(techCondition, force) == false then return end
+		force.recipes[recipeName].enabled = true
+	end
+end
+
 -- Test if player have this technologie unlocked --
 function technologyUnlocked(name, force)
 	if force == nil then force = game.forces["player"] end

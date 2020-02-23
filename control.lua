@@ -42,8 +42,6 @@ function onInit()
 	global.entsUpPerTick = _mfBaseUpdatePerTick
 	global.upSysLastScan = 0
 	global.insertedMFInsideInventory = false
-	-- Module ID --
-	global.IDModule = 0
 	-- Data Network --
 	global.dataNetworkID = 0
 	-- Construction Jet Update --
