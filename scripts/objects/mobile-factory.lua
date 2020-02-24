@@ -239,7 +239,7 @@ function MF:updateEnergyLaser(entity)
 			end
 		elseif self.selectedPowerLaserMode == 2 and entity.energy < entity.electric_buffer_size then
 			-- Structure missing Energy or Laser Power --
-			local energySend = math.min(entity.electric_buffer_size , self:getLaserEnergyDrain())
+			local energySend = math.min(entity.electric_buffer_size - entity.energy, self:getLaserEnergyDrain())
 			-- Energy Send or Mobile Factory Energy --
 			energySend = math.min(self.internalEnergy, energySend)
 			-- Check if Energy can be send --
@@ -273,23 +273,27 @@ function MF:updateFluidLaser(entity)
 			end
 			if filter ~= nil and ccTank ~= nil then
 				-- Get the focused Tank --
-				local name
-				local amount
-				pTank = entity
-				for k, i in pairs(pTank.get_fluid_contents()) do
-					name = k
-					amount = i
+                pTank = entity
+				local fluidbox = pTank.fluidbox
+				local fluid = nil
+
+				for j=1,#fluidbox do
+					if fluidbox[j] then
+						fluid = fluidbox[j]
+						break
+					end
 				end
-				if name ~= nil and name == filter and self.internalEnergy > _lfpFluidConsomption * math.min(amount, self:getLaserFluidDrain()) then
+				if fluid and fluid.name == filter and self.internalEnergy > _lfpFluidConsomption * math.min(fluid.amount, self:getLaserFluidDrain()) then
 					-- Add fluid to the Internal Tank --
-					local amountRm = ccTank.insert_fluid({name=name, amount=math.min(amount, self:getLaserFluidDrain())})
+					fluid.amount = math.min(fluid.amount, self:getLaserFluidDrain())
+					local amountRemoved = ccTank.insert_fluid(fluid)
 					-- Remove fluid from the focused Tank --
-					pTank.remove_fluid{name=name, amount=amountRm}
-					if amountRm > 0 then
+					pTank.remove_fluid{name=fluid.name, amount=amountRm}
+					if amountRemoved > 0 then
 						-- Create the Laser --
 						self.ent.surface.create_entity{name="PurpleBeam", duration=60, position=self.ent.position, target=pTank.position, source=self.ent.position}
 						-- Drain Energy --
-						self.internalEnergy = self.internalEnergy - (_mfFluidConsomption*amountRm)
+						self.internalEnergy = self.internalEnergy - (_mfFluidConsomption*amountRemoved)
 						-- One less Beam to the Beam capacity --
 						return true
 					end

@@ -211,36 +211,40 @@ function updateLogisticFluidPoles()
 							end
 							if filter ~= nil and ccTank ~= nil then
 								if methodMD == "DistributionModule" then
-									local name
-									local amount
-									for k, i in pairs(ccTank.get_fluid_contents()) do
-										name = k
-										amount = i
+									local fluidbox = ccTank.fluidbox
+									local fluid = nil
+									for j=1,#fluidbox do
+										if fluidbox[j] then
+											fluid = fluidbox[j]
+											break
+										end
 									end
-									if name ~= nil and global.MF.internalEnergy > _lfpFluidConsomption * math.min(amount, lfpDrain) then
-									
-										local amountRm = pTank.insert_fluid({name=name, amount=math.min(amount, lfpDrain)})
-										ccTank.remove_fluid{name=name, amount = amountRm}
-										if amountRm > 0 then
+									if fluid and MF.internalEnergy > _lfpFluidConsomption * math.min(fluid.amount, lfpDrain) then
+										fluid.amount = math.min(fluid.amount, lfpDrain)
+										local amountRemoved = pTank.insert_fluid(fluid)
+										ccTank.remove_fluid{name=fluid.name, amount = amountRemoved}
+										if amountRemoved > 0 then
 											entity.surface.create_entity{name="PurpleBeam", duration=60, position=entity.position, target=pTank.position, source={entity.position.x, entity.position.y-4.5}}
-											global.MF.internalEnergy = global.MF.internalEnergy - (_lfpFluidConsomption*amountRm)
+											MF.internalEnergy = MF.internalEnergy - (_lfpFluidConsomption*amountRemoved)
 											i = i + 1
 										end
 									end
-								end
-								if methodMD == "DrainModule" then
-									local name
-									local amount
-									for k, i in pairs(pTank.get_fluid_contents()) do
-										name = k
-										amount = i
+								elseif methodMD == "DrainModule" then
+									local fluidbox = pTank.fluidbox
+									local fluid = nil
+									for j=1,#fluidbox do
+										if fluidbox[j] then
+											fluid = fluidbox[j]
+											break
+										end
 									end
-									if name ~= nil and name == filter and global.MF.internalEnergy > _lfpFluidConsomption * math.min(amount, lfpDrain) then
-										local amountRm = ccTank.insert_fluid({name=name, amount=math.min(amount, lfpDrain)})
-										pTank.remove_fluid{name=name, amount=amountRm}
-										if amountRm > 0 then
+									if fluid and fluid.name == filter and MF.internalEnergy > _lfpFluidConsomption * math.min(fluid.amount, lfpDrain) then
+										fluid.amount = math.min(fluid.amount, lfpDrain)
+										local amountRemoved = ccTank.insert_fluid(fluid)
+										pTank.remove_fluid{name=fluid.name, amount=amountRemoved}
+										if amountRemoved > 0 then
 											entity.surface.create_entity{name="PurpleBeam", duration=60, position=entity.position, target=pTank.position, source={entity.position.x, entity.position.y-4.5}}
-											global.MF.internalEnergy = global.MF.internalEnergy - (_lfpFluidConsomption*amountRm)
+											MF.internalEnergy = MF.internalEnergy - (_lfpFluidConsomption*amountRemoved)
 											i = i + 1
 										end
 									end
