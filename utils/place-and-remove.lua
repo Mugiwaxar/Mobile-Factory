@@ -19,7 +19,7 @@ function somethingWasPlaced(event, isRobot)
 	-- Get the Player Mobile Factory --
 	local MF = nil
 	if event.created_entity ~= nil and event.created_entity.last_user ~= nil then MF = getMF(event.created_entity.last_user.name) end
-	if MF == nil and isPlayer == true then getMF(creator.name) end
+	if isPlayer == true then MF = getMF(creator.name) end
 	
 	-- Prevent to place Tiles inside the Control Center --
 	if creator ~= nil and event.tiles ~= nil and string.match(creator.surface.name, _mfControlSurfaceName) then

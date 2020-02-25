@@ -46,7 +46,7 @@ function updateValues()
 	if global.repairJetIndex == nil then global.repairJetIndex = 0 end
 	if global.floorIsLavaActivated == nil then global.floorIsLavaActivated = false end
 	if global.playersTable == nil then global.playersTable = {} end
-	if global.MFTable == nil then Table = {} end
+	if global.MFTable == nil then global.MFTable = {} end
 	if global.accTable == nil then global.accTable = {} end
 	if global.pdpTable == nil then global.pdpTable = {} end
 	if global.lfpTable == nil then global.lfpTable = {} end
@@ -307,6 +307,7 @@ function updateMiningJet()
 		if valid(flag) == false then goto continue end
 		-- Check the Mobile Factory --
 		if valid(flag.MF) == false then goto continue end
+		if flag.MF.ent == nil or flag.MF.ent.valid == false then goto continue end
 		-- Get the Mobile Factory Trunk --
 		local inv = flag.MF.ent.get_inventory(defines.inventory.car_trunk)
 		-- Check the Inventory --
