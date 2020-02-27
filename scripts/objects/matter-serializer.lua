@@ -186,8 +186,10 @@ function MS:getTooltipInfos(GUI)
 			if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(self.player, deepStorage.ent) then
 				i = i + 1
 				local itemText = ""
-				if deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
-					itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, " - ", deepStorage.player, ")"}
+				if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
+					itemText = {"", " (", game.item_prototypes[deepStorage.filter].localised_name, " - ", deepStorage.player, ")"}
+				else
+					itemText = {"", " - ",deepStorage.player}
 				end
 				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
 				if self.selectedInv == deepStorage then
@@ -197,7 +199,7 @@ function MS:getTooltipInfos(GUI)
 		end
 		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
 		local invSelection = GUI.add{type="list-box", name="MS" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
-		invSelection.style.width = 100
+		invSelection.style.width = 140
 	end
 end
 

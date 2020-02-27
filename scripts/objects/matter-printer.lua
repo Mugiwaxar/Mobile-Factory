@@ -126,11 +126,11 @@ function MP:updateInv()
 	local currentItems = inv.get_contents()[filter.name]
 	
 	-- Calcule the number of Items that must be requested --	
-	returnedItems = math.min(returnedItems, filter.count - (currentItems or 0))
-	
+	returnedItems = math.floor(math.min(returnedItems, filter.count - (currentItems or 0)))
+
 	-- Stop if they are any Item --
 	if returnedItems <= 0 then return end
-	
+
 	-- Insert requested Item inside the local Inventory --
 	local addedItems = inv.insert({name=filter.name, count=returnedItems})
 	
@@ -201,9 +201,11 @@ function MP:getTooltipInfos(GUI)
 			if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(self.player, deepStorage.ent) then
 				i = i + 1
 				local itemText = ""
-				if deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
-					itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, " - ", deepStorage.player, ")"}
-				end
+				if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
+					itemText = {"", " (", game.item_prototypes[deepStorage.filter].localised_name, " - ", deepStorage.player, ")"}
+				else
+					itemText = {"", " - ",deepStorage.player}
+                end
 				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
 				if self.selectedInv == deepStorage then
 					selectedIndex = i
@@ -212,7 +214,7 @@ function MP:getTooltipInfos(GUI)
 		end
 		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
 		local invSelection = GUI.add{type="list-box", name="MP" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
-		invSelection.style.width = 100
+		invSelection.style.width = 140
 	end
 end
 

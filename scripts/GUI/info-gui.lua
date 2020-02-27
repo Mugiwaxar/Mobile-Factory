@@ -529,6 +529,10 @@ function GUI.updateDeepStorageFrame(player, MF)
 		deepStorageLabel.style.width = 80
 		if deepStorage.inventoryItem ~= nil then
 			Util.itemToLabel(deepStorage.inventoryItem, deepStorage.inventoryCount, deepStorageFlow)
+		else
+			if global.deepStorageTable[k].filter ~= nil and game.item_prototypes[global.deepStorageTable[k].filter] ~= nil then
+				Util.itemToLabel(global.deepStorageTable[k].filter, 0, deepStorageFlow)
+			end
 		end
 		-- Create Deep Storage Filter --
 		local deepStorageFilter = deepStorageFrame.add{type="choose-elem-button", elem_type="item", name="DSRF" .. tostring(k)}

@@ -94,7 +94,10 @@ end
 -- Tooltip Infos --
 function OC:getTooltipInfos(GUI)
 	local ocFrame = GUI.add{type="frame", direction="vertical"}
-	ocFrame.style.width = 150
+	local function inset(element) element.style.width = 140 - 10 end
+	ocFrame.style.width = 140
+	ocFrame.style.left_padding = 0
+	ocFrame.style.right_padding = 0
 
 	-- Create the Belongs to Label --
 	local belongsToL = ocFrame.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
@@ -120,12 +123,15 @@ function OC:getTooltipInfos(GUI)
 	ChargeBar.style.color = {176,50,176}
 	PurityLabel.style.font_color = {39,239,0}
 	PurityBar.style.color = {255, 255, 255}
-	
+
+	for _, child in pairs(ocFrame.children) do inset(child) end
+
 	-- Create the Mobile Factory Too Far Label --
 	if self.MFTooFar == true then
 		local mfTooFarL = ocFrame.add{type="label", caption={"", {"gui-description.MFTooFar"}}}
 		mfTooFarL.style.font = "LabelFont"
 		mfTooFarL.style.font_color = _mfRed
+		inset(mfTooFarL)
 	end
 	
 	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
@@ -135,7 +141,7 @@ function OC:getTooltipInfos(GUI)
 	targetLabel.style.top_margin = 7
 	targetLabel.style.font = "LabelFont"
 	targetLabel.style.font_color = {108, 114, 229}
-
+	inset(targetLabel)
 	local invs = {{"gui-description.All"}}
 	local selectedIndex = 1
 	local i = 1
@@ -143,8 +149,10 @@ function OC:getTooltipInfos(GUI)
 		if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(self.player, deepStorage.ent) then
 			i = i + 1
 			local itemText = ""
-			if deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
-				itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, " - ", deepStorage.player, ")"}
+			if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
+				itemText = {"", " (", game.item_prototypes[deepStorage.filter].localised_name, " - ", deepStorage.player, ")"}
+			else
+				itemText = {"", " - ",deepStorage.player}
 			end
 			invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
 			if self.selectedInv == deepStorage then
@@ -154,7 +162,7 @@ function OC:getTooltipInfos(GUI)
 	end
 	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
 	local invSelection = ocFrame.add{type="list-box", name="OC" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
-	invSelection.style.width = 100
+	inset(invSelection)
 end
 
 -- Change the Targeted Inventory --
