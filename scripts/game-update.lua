@@ -490,7 +490,7 @@ function updateCombatJet()
 		-- Check the Inventory --
 		if inv == nil or inv.valid == false then goto continue end
 		-- Look for an Enemy --
-		local enemy = MF.ent.surface.find_entities_filtered{position=MF.ent.position, radius=MF.varTable.jets.cbjMaxDistance, type="unit", force="enemy", limit=1}[1]
+		local enemy = MF.ent.surface.find_nearest_enemy{position=MF.ent.position, max_distance=MF.varTable.jets.cbjMaxDistance, force=MF.ent.force}
 		-- Check the Entity --
 		if enemy == nil or enemy.valid == false then goto continue end
 		-- Sent 5 Jets --
