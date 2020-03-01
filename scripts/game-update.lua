@@ -308,7 +308,7 @@ function updateMiningJet()
 		-- Check the Mobile Factory --
 		if flag.MF == nil or valid(flag.MF) == false then goto continue end
 		if flag.MF.ent == nil or flag.MF.ent.valid == false then goto continue end
-		if MF.varTable.jets.mjMaxDistance == nil then MF.varTable.jets.mjMaxDistance = _MFMiningJetDefaultMaxDistance end
+		if flag.MF.varTable.jets.mjMaxDistance == nil then flag.MF.varTable.jets.mjMaxDistance = _MFMiningJetDefaultMaxDistance end
 		-- Get the Mobile Factory Trunk --
 		local inv = flag.MF.ent.get_inventory(defines.inventory.car_trunk)
 		-- Check the Inventory --
