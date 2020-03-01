@@ -101,7 +101,9 @@ end
 function GUI.updateTooltip(player, ent)
 	-- Clear the Tooltip GUI --
 	player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.clear()
-	player.gui.screen.mfTooltipGUI.caption = {"gui-description.tooltipGUI"}
+	if player.gui.screen.mfTooltipGUI.caption ~= "" then
+		player.gui.screen.mfTooltipGUI.caption = {"gui-description.tooltipGUI"}
+	end
 	-- Check the variables --
 	if player == nil or ent == nil or ent.valid == false then return end
 	-- Check if the Player Tooltip GUI is not null and visible --
@@ -109,7 +111,9 @@ function GUI.updateTooltip(player, ent)
 	-- Save the Entity ID --
 	setPlayerVariable(player.name, "lastEntitySelected", ent)
 	-- Set the Tooltip GUI Title --
-	player.gui.screen.mfTooltipGUI.caption = game.entity_prototypes[ent.name].localised_name
+	if player.gui.screen.mfTooltipGUI.caption ~= "" then
+		player.gui.screen.mfTooltipGUI.caption = game.entity_prototypes[ent.name].localised_name
+	end
 	-- Look for the Object associated with the Entity --
 	for k, obj in pairs(global.entsTable) do
 		-- Check the Object --

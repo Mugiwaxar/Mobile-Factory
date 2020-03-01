@@ -84,11 +84,11 @@ end
 function onLoad()
 	-- Add Warptorio Compatibility --
 	warptorio()
-	-- Set MFPlayer Metatable --
+	-- Set MFPlayer Metatables --
 	for k, mfplayer in  pairs(global.playersTable or {}) do
 		MFP:rebuild(mfplayer)
 	end
-	-- Set MF Metatable --
+	-- Set MF Metatables --
 	for k, mf in  pairs(global.MFTable or {}) do
 		MF:rebuild(mf)
 	end
@@ -98,7 +98,11 @@ function onLoad()
 	end
 	-- Set DataCenter Metatables --
 	for k, dc in  pairs(global.dataCenterTable or {}) do
-		DC:rebuild(dc)
+		if dc.invObj.isII then
+			DCMF:rebuild(dc)
+		else
+			DC:rebuild(dc)
+		end
 	end
 	-- Set DataStorage Metatables --
 	for k, ds in  pairs(global.dataStorageTable or {}) do

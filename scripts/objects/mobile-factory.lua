@@ -269,7 +269,7 @@ function MF:updateEnergyLaser(entity)
 			end
 		elseif self.selectedPowerLaserMode == 2 and entity.energy < entity.electric_buffer_size then
 			-- Structure missing Energy or Laser Power --
-			local energySend = math.min(entity.electric_buffer_size , self:getLaserEnergyDrain())
+			local energySend = math.min(entity.electric_buffer_size - entity.energy , self:getLaserEnergyDrain())
 			-- Energy Send or Mobile Factory Energy --
 			energySend = math.min(self.internalEnergy, energySend)
 			-- Check if Energy can be send --

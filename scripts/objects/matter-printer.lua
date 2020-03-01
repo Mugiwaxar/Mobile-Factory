@@ -200,8 +200,10 @@ function MP:getTooltipInfos(GUI)
 		for k, deepStorage in pairs(global.deepStorageTable) do
 			if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(self.player, deepStorage.ent) then
 				i = i + 1
-				local itemText = ""
-				if deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
+				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepStorage.player, ")"}
+				if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
+					itemText = {"", " (", game.item_prototypes[deepStorage.filter].localised_name, " - ", deepStorage.player, ")"}
+				elseif deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
 					itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, " - ", deepStorage.player, ")"}
 				end
 				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
