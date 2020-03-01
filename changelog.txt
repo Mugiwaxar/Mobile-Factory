@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.108
+Date: 24/02/2020
+  Bugfixes:
+    - Fixed crash with Mining Jet when AAI control the Mobile Factory
+    - Data Storage should now work again with the Internal Inventory Data Center
+  Scripting:
+    - Added nil check to all Jets (Stability optimisation)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.107
 Date: 24/02/2020
   Gui:

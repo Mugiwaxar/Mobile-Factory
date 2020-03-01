@@ -249,7 +249,7 @@ function somethingWasPlaced(event, isRobot)
 			end
 			return
 		else
-			placedDataCenterMF(event)
+			placedDataCenterMF(event, MF)
 			return
 		end
 	end
@@ -367,6 +367,7 @@ function somethingWasRemoved(event)
 	end
 	-- Remove the Data Center MF --
 	if event.entity.name == "DataCenterMF" then
+		if MF ~= nil then MF.dataCenter = nil end
 		removedDataCenterMF(event)
 		return
 	end
