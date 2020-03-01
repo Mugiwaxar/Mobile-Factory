@@ -246,7 +246,7 @@ function GUI.onGuiElemChanged(event)
 	-- Return if this is not a Mobile Factory element -
 	if event.element.get_mod() ~= "Mobile_Factory" then return end
 	-- Return if the Element is not valid --
-	if event.element == nil or event.element.valid == false then return end	
+	if event.element == nil or event.element.valid == false then return end
 	-- Get the Player --
 	local player = getPlayer(event.player_index)
 	-- Return if the Player is not valid --

@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.107
+Date: 24/02/2020
+  Gui:
+    - The Matter Printer/Serializer and the Ore Cleaner will show all Deep Storages with their Filter and Owner even if they are empty (Honktown)
+  Bugfixes:
+    - The Control Center Teleportation area is visible again
+    - The Tooltip GUI Move Button work again
+    - The Data Center will no longer blink when there are no enought Power available
+    - The Internal Inventory Data Center should now correctly send Items signals from all Deep Storages
+    - Fixed a crash when Mining Jets are outside but the Mobile Factory was removed (Honktown)
+    - The Mobile Factory Power Send Laser should now send a correct amount of Energy (Honktown)
+  Scripting:
+    - Rewrite of the Combat Jet way to find Enemies (Honktown)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.106
 Date: 23/02/2020
   Scripting:
@@ -776,7 +790,7 @@ Date: 08/10/2019
     - RequesterPad can now be placed outside
     - OreSilotPad can now be placed outside
   Bugfixes:
-    - Fixed a multiplayer error on joint
+    - Fixed a multiplayer error on join
     - Items Laser now work with Logistic Chest
     - Ore Cleaner can now extract Uranium Ore
   Optimisations:
