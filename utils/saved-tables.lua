@@ -38,6 +38,7 @@ end
 function placedDataCenterMF(event)
 	if global.dataCenterTable == nil then global.dataCenterTable = {} end
 	global.dataCenterTable[event.created_entity.unit_number] = DCMF:new(event.created_entity)
+	if MF ~= nil then MF.dataCenter = global.dataCenterTable[event.created_entity.unit_number] end
 end
 
 -- Save the Data Storage in a table --

@@ -306,8 +306,9 @@ function updateMiningJet()
 		-- Check the Flag --
 		if valid(flag) == false then goto continue end
 		-- Check the Mobile Factory --
-		if valid(flag.MF) == false then goto continue end
+		if flag.MF == nil or valid(flag.MF) == false then goto continue end
 		if flag.MF.ent == nil or flag.MF.ent.valid == false then goto continue end
+		if MF.varTable.jets.mjMaxDistance == nil then MF.varTable.jets.mjMaxDistance = _MFMiningJetDefaultMaxDistance end
 		-- Get the Mobile Factory Trunk --
 		local inv = flag.MF.ent.get_inventory(defines.inventory.car_trunk)
 		-- Check the Inventory --
@@ -371,6 +372,7 @@ function updateConstructionJet()
 		local MF = global.MFTable[structure.ent.last_user.name]
 		-- Check the Mobile Factory --
 		if MF == nil or MF.ent == nil or MF.ent.valid == false then goto continue end
+		if MF.varTable.jets.cjMaxDistance == nil then MF.varTable.jets.cjMaxDistance = _MFConstructionJetDefaultMaxDistance end
 		-- Check the Structure and Mobile Factory Owner --
 		if structure.ent.last_user.name ~= MF.player then goto continue end
 		-- Check the Energy --
@@ -444,7 +446,8 @@ function updateRepairJet()
 		-- Get the Mobile Factory --
 		local MF = global.MFTable[structure.ent.last_user.name]
 		-- Check the Mobile Factory --
-		if MF.ent == nil or MF.ent.valid == false then return end
+		if MF == nil or MF.ent == nil or MF.ent.valid == false then return end
+		if MF.varTable.jets.rjMaxDistance == nil then MF.varTable.jets.rjMaxDistance = _MFRepairJetDefaultMaxDistance end
 		-- Check the Structure and Mobile Factory Owner --
 		if structure.ent.last_user.name ~= MF.player then goto continue end
 		-- Check the Energy --
@@ -485,7 +488,8 @@ function updateCombatJet()
 	-- Itinerate all Mobile Factories --
 	for k, MF in pairs(global.MFTable) do
 		-- Check the Mobile Factory --
-		if MF.ent == nil or MF.ent.valid == false then goto continue end
+		if MF == nil or MF.ent == nil or MF.ent.valid == false then goto continue end
+		if MF.varTable.jets.cbjMaxDistance == nil then MF.varTable.jets.cbjMaxDistance = _MFCombatJetDefaultMaxDistance end
 		-- Get the Mobile Factory Trunk --
 		local inv = MF.ent.get_inventory(defines.inventory.car_trunk)
 		-- Check the Inventory --
