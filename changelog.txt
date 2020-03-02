@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.110
 Date: 02/03/2020
+  Changes:
+    - The Factory (Surface inside the Mobile Factory) now has a Day/Night cycle
   Graphics:
     - Reworked Dimensional Tile visual
 ---------------------------------------------------------------------------------------------------
