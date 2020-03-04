@@ -76,7 +76,7 @@ data:extend{
 	{
 		type="item-group",
 		name="Erya",
-		icon="__Mobile_Factory_Graphics__/graphics/erya/EryaPowder.png",
+		icon="__Mobile_Factory_Graphics__/graphics/Erya/EryaPowder.png",
 		icon_size="256",
 		order="y"
 	},
