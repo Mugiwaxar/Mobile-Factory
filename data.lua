@@ -57,6 +57,10 @@ require("prototypes/technology/matter-serialization.lua")
 require("prototypes/gun/tank-guns.lua")
 require("prototypes/animation/shield.lua")
 require("prototypes/animation/red-energy-orb.lua")
+require("prototypes/erya/erya-intermediates.lua")
+require("prototypes/erya/erya-collector.lua")
+require("prototypes/erya/erya-structures.lua")
+require("prototypes/winter/snow-tiles.lua")
 if mods["omnimatter"] then require("utils/omnimatter.lua") end
 
 
@@ -67,6 +71,13 @@ data:extend{
 		name="MobileFactory",
 		icon="__Mobile_Factory_Graphics__/graphics/icones/MFIcon.png",
 		icon_size="32",
+		order="x"
+	},
+	{
+		type="item-group",
+		name="Erya",
+		icon="__Mobile_Factory_Graphics__/graphics/erya/EryaPowder.png",
+		icon_size="256",
 		order="y"
 	},
 	{
@@ -182,9 +193,54 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
+		name="EryaRessources",
+		group="Erya",
+		order="a"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="EryaIntermediates",
+		group="Erya",
+		order="b"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="EryaLogistic",
+		group="Erya",
+		order="c"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="EryaProduction",
+		group="Erya",
+		order="d"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="EryaWar",
+		group="Erya",
+		order="e"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
 		name="Molecules",
 		group="Elements",
-		order="a"
+		order="f"
 	}
 }
 	
@@ -193,7 +249,7 @@ data:extend{
 		type="item-subgroup",
 		name="Elements",
 		group="Elements",
-		order="b"
+		order="a"
 	}
 }
 
@@ -202,7 +258,7 @@ data:extend{
 		type="item-subgroup",
 		name="SciencePack",
 		group="Elements",
-		order="c"
+		order="b"
 	}
 }
 
@@ -237,6 +293,14 @@ data:extend{
 		type="recipe-category",
 		name="Elements",
 		order="c"
+	}
+}
+
+data:extend{
+	{
+		type="recipe-category",
+		name="EryaPowder",
+		order="d"
 	}
 }
 

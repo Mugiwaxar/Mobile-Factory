@@ -6,7 +6,7 @@ end
 -- Make Dimensional Lab accept all materials --
 local inputsTable = {}
 for k, lab in pairs(data.raw.lab) do
-	for k, name in pairs(lab.inputs) do
+	for k2, name in pairs(lab.inputs) do
 		inputsTable[name] = name
 	end
 end

@@ -15,8 +15,8 @@ function createMFSurface(MF)
 	}
 	-- Set surface setting --
 	local newSurface = game.create_surface(_mfSurfaceName .. MF.player, mfSurfaceSettings)
-	newSurface.always_day = true
-	newSurface.daytime = 0
+	newSurface.always_day = false
+	newSurface.daytime = game.get_surface("nauvis").daytime
 	newSurface.wind_speed = 0
 	-- Generate surface --
 	newSurface.request_to_generate_chunks({0,0},4)
@@ -47,8 +47,8 @@ function createControlRoom(MF)
 	}
 	-- Set surface setting --
 	local newSurface = game.create_surface(_mfControlSurfaceName .. MF.player, mfSurfaceSettings)
-	newSurface.always_day = true
-	newSurface.daytime = 0
+	newSurface.always_day = false
+	newSurface.daytime = game.get_surface("nauvis").daytime
 	newSurface.wind_speed = 0
 	-- Regenerate surface --
 	newSurface.request_to_generate_chunks({0,0},1)

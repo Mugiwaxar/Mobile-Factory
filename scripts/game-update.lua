@@ -15,6 +15,8 @@ function onTick(event)
 	end
 	-- Update all entities --
 	updateEntities(event)
+	-- Update all Erya Structures --
+	Erya.updateEryaStructures(event)
 	-- Update all GUI --
 	if event.tick%_eventTick55 == 0 then GUI.updateAllGUIs() end
 	-- Update the Floor Is Lava --
@@ -41,6 +43,7 @@ function updateValues()
 	if global.upsysTickTable == nil then global.upsysTickTable = {} end
 	if global.entsUpPerTick == nil then global.entsUpPerTick = _mfBaseUpdatePerTick end
 	if global.upSysLastScan == nil then global.upSysLastScan = 0 end
+	if global.updateEryaIndex == nil then global.updateEryaIndex = 1 end
 	if global.dataNetworkID == nil then global.dataNetworkID = 0 end
 	if global.constructionJetIndex == nil then global.constructionJetIndex = 0 end
 	if global.repairJetIndex == nil then global.repairJetIndex = 0 end
@@ -70,15 +73,18 @@ function updateValues()
 	if global.repairJetTable == nil then global.repairJetTable = {} end
 	if global.repairTable == nil then global.repairTable = {} end
 	if global.combatJetTable == nil then global.combatJetTable = {} end
+	if global.eryaTable == nil then global.eryaTable = {} end
+	if global.eryaIndexedTable == nil then global.eryaIndexedTable = {} end
 	-- Delete all Animations and Sprites --
 	rendering.clear("Mobile_Factory")
-	-- for k, j in pairs(global) do
-		-- if type(j) == "table" then
-			-- dprint(k .. ":" .. table_size(j))
-		-- else
-			-- dprint(k)
-		-- end
-	-- end
+
+	for k, j in pairs(global) do
+		if type(j) == "table" then
+			dprint(k .. ":" .. table_size(j))
+		else
+			dprint(k)
+		end
+	end
 end
 
 -- When a technology is finished --

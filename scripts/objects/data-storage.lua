@@ -148,17 +148,3 @@ function DS:setActive(set)
 		self.animID = 0
 	end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-

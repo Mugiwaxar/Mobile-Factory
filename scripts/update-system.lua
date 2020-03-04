@@ -145,6 +145,35 @@ function UpSys.update(event)
   global.upsysTickTable[game.tick] = nil
 end
 
+-- Index all Erya Structures --
+function Erya.indexEryaStructures()
+  global.eryaIndexedTable = {}
+  local i = 0
+  for k, es in pairs(global.eryaTable) do
+    i = i + 1
+    if valid(es) then
+      global.eryaIndexedTable[i] = es
+    else
+      global.eryaTable[k] = nil
+    end
+  end
+end
+
+function Erya.updateEryaStructures(event)
+  for i=0, 10 do
+    if global.updateEryaIndex > table_size(global.eryaIndexedTable) then
+      global.updateEryaIndex = 1
+      Erya.indexEryaStructures()
+      return
+    end
+    local es = global.eryaIndexedTable[global.updateEryaIndex]
+    if valid(es) == true and es.lastUpdate + es.updateTick < event.tick then
+      es:update()
+    end
+    global.updateEryaIndex = global.updateEryaIndex + 1
+  end
+end
+
 -- Fill/Empty tank --
 function updateLogisticFluidPoles()
 	for k, entity in pairs(global.lfpTable) do

@@ -3,6 +3,7 @@ pcall(require,'__debugadapter__/debugadapter.lua')
 GUI = {}
 Util = {}
 UpSys = {}
+Erya = {}
 
 require("utils/profiler.lua")
 require("utils/settings.lua")
@@ -33,6 +34,7 @@ require("scripts/objects/repair-jet.lua")
 require("scripts/objects/combat-jet.lua")
 require("scripts/objects/deep-storage.lua")
 require("scripts/objects/MFPlayer.lua")
+require("scripts/objects/erya-structure.lua")
 
 -- When the mod init --
 function onInit()
@@ -42,6 +44,7 @@ function onInit()
 	global.entsUpPerTick = _mfBaseUpdatePerTick
 	global.upSysLastScan = 0
 	global.insertedMFInsideInventory = false
+	global.updateEryaIndex = 1
 	-- Data Network --
 	global.dataNetworkID = 0
 	-- Construction Jet Update --
@@ -78,6 +81,8 @@ function onInit()
 	global.repairJetTable = {}
 	global.repairTable = {}
 	global.combatJetTable = {}
+	global.eryaTable = {}
+	global.eryaIndexedTable = {}
 end
 
 -- When a save is loaded --
@@ -159,6 +164,10 @@ function onLoad()
 	-- Set The Deep Storage Metatables --
 	for k, dsr in pairs(global.deepStorageTable or {}) do
 		DSR:rebuild(dsr)
+	end
+	-- Set Erya Structures Metatables --
+	for k, es in pairs(global.eryaTable or {}) do
+		ES:rebuild(es)
 	end
 end
 
