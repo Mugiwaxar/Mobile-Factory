@@ -89,6 +89,12 @@ function placedDeepStorage(event)
 	global.deepStorageTable[event.created_entity.unit_number] = DSR:new(event.created_entity)
 end
 
+-- Save the Erya Structure --
+function placedEryaStructure(event)
+	if global.eryaTable == nil then global.eryaTable  = {} end
+	global.eryaTable[event.created_entity.unit_number] = ES:new(event.created_entity)
+end
+
 
 
 -- Remove the Dimensional Accumulator from the table --
@@ -193,20 +199,9 @@ function removedDeepStorage(event)
 	global.deepStorageTable[event.entity.unit_number] = nil
 end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- Remove the Erya Structure from the table --
+function removedEryaStructure(event)
+	if global.eryaTable == nil then global.eryaTable = {} return end
+	if global.eryaTable[event.entity.unit_number] ~= nil then global.eryaTable[event.entity.unit_number]:remove() end
+	global.eryaTable[event.entity.unit_number] = nil
+end

@@ -1,4 +1,4 @@
--- Dimensional Sample --
+-- Dimensional Crystal --
 
 -- Item --
 local dcI = {}

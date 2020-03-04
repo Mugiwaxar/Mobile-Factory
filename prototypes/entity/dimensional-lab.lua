@@ -75,7 +75,7 @@ dlP.off_animation =
         }
       }
     }
-dlP.inputs = {"DimensionalSample", "DimensionalCrystal"}
+dlP.inputs = {"DimensionalSample", "DimensionalCrystal", "EryaSample"}
 data:extend{dlP}
 
 -- Item --

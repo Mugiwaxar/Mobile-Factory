@@ -299,6 +299,11 @@ function somethingWasPlaced(event, isRobot)
 		end
 		return
 	end
+
+	-- Save the Erya Structure --
+	if eryaSave(event.created_entity.name) then
+		placedEryaStructure(event)
+	end
 end
 
 -- When something is removed or destroyed --
@@ -435,6 +440,10 @@ function somethingWasRemoved(event)
 		removedDeepStorage(event)
 		return
 	end
+	-- Remove the Erya Structure --
+	if eryaSave(event.entity.name) then
+		removedEryaStructure(event)
+	end
 end
 
 -- Return false if the item can't be placed outside the Mobile Factory --
@@ -453,4 +462,18 @@ function markedForDeconstruction(event)
 	if MF == nil then return end
 	if MF.ent == nil or MF.ent.valid == false or event.entity.surface.name ~= MF.ent.surface.name then return end
 	table.insert(global.constructionTable,{ent=event.entity, name=event.entity.name, position=event.entity.position, direction=event.entity.direction or 1, mission="Deconstruct"})
+end
+
+function eryaSave(entName)
+	if entName == "EryaLamp" then return true end
+	if entName == "EryaInserter1" then return true end
+	if entName == "EryaMiningDrill1" then return true end
+	if entName == "EryaPumpjack1" then return true end
+	if entName == "EryaAssemblingMachine1" then return true end
+	if entName == "EryaPump1" then return true end
+	if entName == "EryaRadar1" then return true end
+	if entName == "EryaFurnace1" then return true end
+	if entName == "EryaRefinery1" then return true end
+	if entName == "EryaChemicalPlant1" then return true end
+	return false
 end

@@ -6,7 +6,7 @@ dtE.name = "DimensionalTile"
 dtE.minable = {mining_time = 0.1, result = "DimensionalTile"}
 dtE.variants.material_background =
 {
-    picture = "__Mobile_Factory__/graphics/DimensionalTileE.png",
+    picture = "__Mobile_Factory_Graphics__/graphics/entity/DimensionalTileE.png",
     count = 8,
     scale = 0.5
 }
@@ -16,7 +16,7 @@ data:extend{dtE}
 local dtI = {}
 dtI.type = "item"
 dtI.name = "DimensionalTile"
-dtI.icon = "__Mobile_Factory__/graphics/DimensionalTileI.png"
+dtI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTileI.png"
 dtI.icon_size = 64
 dtI.subgroup = "Tiles"
 dtI.order = "c"

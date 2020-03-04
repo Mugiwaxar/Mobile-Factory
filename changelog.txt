@@ -1,6 +1,56 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.110
-Date: 02/03/2020
+Date: 03/03/2020
+  Major Features:
+    - Erya Tech:
+    - Erya Tech is a easy way to create things
+    - Erya Structures consume environmental heat instead of Power
+  Features:
+    - Added new Tile: Snow Tile 1, Snow will appear near Erya Structures who consume hear
+    - Added Erya Collector: Must be placed over Water to start collecting Erya Powder
+    - Added Erya Powder: A powder that transform environmental heat into energy
+    - Added Erya Sample: A Sample of Erya Powder to make researches
+    - Added Erya Plate: A Plate made from Erya, can have unlimited Energy
+    - Added Erya Wire: A wire made with Erya used to create Intermediates
+    - Added Erya Circuit: A circuit made with Erya used to create Erya Structures
+    - Added Erya Machine Frame MK1: A Machine Frame made from Erya, can be used to make Structures powered by environmental heat
+    - Added Erya Lamp: A Lamp powered by environmental heat
+    - Added Erya Chest MK1: A simple Chest made from Erya
+    - Added Erya Belt MK1: A basic Belt made from Erya
+    - Added Erya Underground Belt MK1: A basic underground Belt made from Erya
+    - Added Erya Splitter MK1: A basic Splitter made with Erya
+    - Added Erya Inserter: An Inserter who work with environmental heat
+    - Added Erya Mining Drill MK1: A small Minning Drill who work with environmental heal
+    - Added Erya Pumpjack MK1: A basic Pumpjack who work with environmental heat
+    - Added Erya Assembling Machine MK1: A small Assembling Machine who work with environmental heat
+    - Added Erya Pipe: A simple pipe made from Erya
+    - Added Erya Pipe To Ground: A simple Pipe To Ground made with Erya
+    - Added Erya Pump MK1: A basic Pump who use environmental heat to work
+    - Added Erya Wall MK1: A basic Wall made with Erya
+    - Added Erya Gate MK1: A basic Gate made with Erya
+    - Added Erya Radar: A Radar who use environmental heat to work
+    - Added Erya Furnace MK1: A Furnace who use environmental heat to work
+    - Added Erya Refinery MK1: A Refinery who use environmental heat to work
+    - Added Erya Chemical Plant MK1: A Chemical Plant who use environmental heat to work
+    - New Technology: Erya Tech, Unlock the Erya Collector, Erya Powder, Erya Sample, Erya Plate, Erya Wire, Erya Circuit, Erya Machine Frame MK1
+    - New Technology: Erya Lamp, Unlock the Erya Lamp
+    - New Technology: Erya Chest MK1, Unlock the Erya Chest MK1
+    - New Technology: Erya Belt MK1, Unlock the Erya Belt MK1
+    - New Technology: Erya Underground Belt MK1, Unlock the Underground Belt MK1
+    - New Technology: Erya Splitter MK1, Unlock the Erya Splitter MK1
+    - New Technology: Erya Inserter, Unlock the Erya Inserter
+    - New Technology: Erya Mining Drill MK1, Unlock the Erya Mining Drill MK1
+    - New Technology: Erya Pumpjack MK1, Unlock the Erya Pumpjack MK1
+    - New Technology: Erya Assembling Machine MK1, Unlock the Erya Assembling Machine MK1
+    - New Technology: Erya Pipe, Unlock the Erya Pipe
+    - New Technology: Erya Pipe to Ground, Unlock the Erya Pipe to Ground
+    - New Technology: Erya Pump MK1, Unlock the Erya Pump MK1
+    - New Technology: Erya Wall MK1, Unlock the Erya Wall MK1
+    - New Technology: Erya Gate MK1, Unlock the Erya Gate MK1
+    - New Technology: Erya Radar, Unlock the Erya Radar
+    - New Technology: Erya Furnace MK1, Unlock the Erya Furnace MK1
+    - New Technology: Erya Refinery MK1, Unlock the Erya Refinery MK1 
+    - New Technology: Erya Chemical Plant MK1, Unlock the Erya Chemical Plant MK1
   Changes:
     - The Factory (Surface inside the Mobile Factory) now has a Day/Night cycle
   Graphics:
