@@ -1,12 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.111
+Date: 04/03/2020
+  Bugfixes:
+    - Fixed a Startup Error
+---------------------------------------------------------------------------------------------------
 Version: 0.0.110
 Date: 03/03/2020
   Major Features:
     - Erya Tech:
     - Erya Tech is a easy way to create things
-    - Erya Structures consume environmental heat instead of Power
+    - Erya Structures consume environmental heat instead of Energy
   Features:
-    - Added new Tile: Snow Tile 1, Snow will appear near Erya Structures who consume hear
+    - Added new Tile: Snow Tile 1, Snow will appear near Erya Structures who consume heat
     - Added Erya Collector: Must be placed over Water to start collecting Erya Powder
     - Added Erya Powder: A powder that transform environmental heat into energy
     - Added Erya Sample: A Sample of Erya Powder to make researches
@@ -20,7 +25,7 @@ Date: 03/03/2020
     - Added Erya Underground Belt MK1: A basic underground Belt made from Erya
     - Added Erya Splitter MK1: A basic Splitter made with Erya
     - Added Erya Inserter: An Inserter who work with environmental heat
-    - Added Erya Mining Drill MK1: A small Minning Drill who work with environmental heal
+    - Added Erya Mining Drill MK1: A small Mining Drill who work with environmental heal
     - Added Erya Pumpjack MK1: A basic Pumpjack who work with environmental heat
     - Added Erya Assembling Machine MK1: A small Assembling Machine who work with environmental heat
     - Added Erya Pipe: A simple pipe made from Erya
