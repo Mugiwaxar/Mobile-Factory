@@ -35,7 +35,7 @@ function createEryaItem(name, iconSize, subgroup, order, stackSize, REnergy, RIn
 end
 
 -- Frozen Mist Animation --
-fmA = {}
+local fmA = {}
 fmA.name = "FrozenMistA"
 fmA.type = "animation"
 fmA.frame_count = 1
@@ -78,9 +78,9 @@ createEryaItem
 
 
 -- Erya Chest --
-ercE = table.deepcopy(data.raw.container["steel-chest"])
+local ercE = table.deepcopy(data.raw.container["steel-chest"])
 ercE.name = "EryaChest1"
-ercE.minable = {mining_time = 0.1, result = "EryaChest1"}
+ercE.minable = {mining_time = 0.2, result = "EryaChest1"}
 ercE.picture =
 {
     filename="__Mobile_Factory_Graphics__/graphics/Erya/EryaChest1E.png",
@@ -104,9 +104,34 @@ createEryaItem
     "Erya"
 )
 
+-- Erya Tank --
+local erTE = table.deepcopy(data.raw["storage-tank"]["storage-tank"])
+erTE.name = "EryaTank1"
+erTE.minable = {mining_time = 0.3, result = "EryaTank1"}
+erTE.pictures.picture.sheets[1] = erTE.pictures.picture.sheets[1].hr_version
+erTE.pictures.picture.sheets[1].filename = "__Mobile_Factory__/graphics/EryaTank1E.png"
+erTE.pictures.picture.sheets[1].hr_version = nil
+erTE.fluid_box.base_area = 400
+data:extend{erTE}
+
+createEryaItem
+(
+    "EryaTank1",
+    64,
+    "EryaLogistic",
+    "c",
+    20,
+    0.5,
+    {{"EryaMachineFrame1",2},{"EryaPlate",5}},
+    {count=120,time=1,ingredients={{"EryaSample", 1}}},
+    "Erya"
+)
+data.raw.item.EryaTank1.icon = "__Mobile_Factory__/graphics/EryaTank1I.png"
+data.raw.technology.EryaTank1.icon = "__Mobile_Factory__/graphics/EryaTank1I.png"
+
 
 -- Erya Belt MK1 --
-erbE = table.deepcopy(data.raw["transport-belt"]["transport-belt"])
+local erbE = table.deepcopy(data.raw["transport-belt"]["transport-belt"])
 erbE.name = "EryaBelt1"
 erbE.minable = {mining_time = 0.1, result = "EryaBelt1"}
 erbE.speed = 0.04
@@ -120,7 +145,7 @@ createEryaItem
     "EryaBelt1",
     64,
     "EryaLogistic",
-    "c",
+    "d",
     200,
     0.2,
     {{"EryaPlate",2}},
@@ -129,7 +154,7 @@ createEryaItem
 )
 
 -- Erya Underground Belt MK1 --
-erubE = table.deepcopy(data.raw["underground-belt"]["underground-belt"])
+local erubE = table.deepcopy(data.raw["underground-belt"]["underground-belt"])
 erubE.name = "EryaUndergroundBelt1"
 erubE.minable = {mining_time = 0.15, result = "EryaUndergroundBelt1"}
 erubE.speed = 0.04
@@ -154,7 +179,7 @@ createEryaItem
     "EryaUndergroundBelt1",
     64,
     "EryaLogistic",
-    "d",
+    "e",
     100,
     0.3,
     {{"EryaPlate",8}},
@@ -163,7 +188,7 @@ createEryaItem
 )
 
 -- Erya Splitter MK1 --
-erSE = table.deepcopy(data.raw.splitter.splitter)
+local erSE = table.deepcopy(data.raw.splitter.splitter)
 erSE.name = "EryaSplitter1"
 erSE.minable = {mining_time = 0.2, result = "EryaSplitter1"}
 erSE.speed = 0.04
@@ -193,7 +218,7 @@ createEryaItem
     "EryaSplitter1",
     64,
     "EryaLogistic",
-    "e",
+    "f",
     100,
     0.3,
     {{"EryaPlate",12}, {"EryaCircuit",2}},
@@ -203,7 +228,7 @@ createEryaItem
 
 
 -- Erya Inserter MK1 --
-eriE = table.deepcopy(data.raw.inserter.inserter)
+local eriE = table.deepcopy(data.raw.inserter.inserter)
 eriE.name = "EryaInserter1"
 eriE.minable = {mining_time = 0.2, result = "EryaInserter1"}
 eriE.energy_per_movement = "1J"
@@ -230,7 +255,7 @@ createEryaItem
     "EryaInserter1",
     64,
     "EryaLogistic",
-    "f",
+    "g",
     30,
     0.5,
     {{"EryaMachineFrame1",1}, {"EryaCircuit",4}},
@@ -240,7 +265,7 @@ createEryaItem
 
 
 -- Erya Mining Drill --
-ermdE = table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
+local ermdE = table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
 ermdE.name = "EryaMiningDrill1"
 ermdE.minable = {mining_time = 0.2, result = "EryaMiningDrill1"}
 ermdE.mining_speed = 0.2
@@ -283,7 +308,7 @@ createEryaItem
 )
 
 -- Erya Pumpjack MK1 --
-erpE = table.deepcopy(data.raw["mining-drill"].pumpjack)
+local erpE = table.deepcopy(data.raw["mining-drill"].pumpjack)
 erpE.name = "EryaPumpjack1"
 erpE.minable = {mining_time = 0.2, result = "EryaPumpjack1"}
 erpE.energy_usage = "1W"
@@ -310,7 +335,7 @@ createEryaItem
 )
 
 -- Erya Assembling Machine MK1 --
-eramE = table.deepcopy(data.raw["assembling-machine"]["assembling-machine-1"])
+local eramE = table.deepcopy(data.raw["assembling-machine"]["assembling-machine-1"])
 eramE.name = "EryaAssemblingMachine1"
 eramE.minable = {mining_time = 0.2, result = "EryaAssemblingMachine1"}
 eramE.energy_usage = "1W"
@@ -344,7 +369,7 @@ createEryaItem
 
 
 -- Erya Pipe --
-eramE = table.deepcopy(data.raw.pipe.pipe)
+local eramE = table.deepcopy(data.raw.pipe.pipe)
 eramE.name = "EryaPipe1"
 eramE.minable = {mining_time = 0.1, result = "EryaPipe1"}
 
@@ -435,7 +460,7 @@ createEryaItem
     "EryaPipe1",
     64,
     "EryaLogistic",
-    "g",
+    "h",
     100,
     0.5,
     {{"EryaPlate",4}},
@@ -445,7 +470,7 @@ createEryaItem
 
 
 -- Erya Pipe To Ground --
-erptgE = table.deepcopy(data.raw["pipe-to-ground"]["pipe-to-ground"])
+local erptgE = table.deepcopy(data.raw["pipe-to-ground"]["pipe-to-ground"])
 erptgE.name = "EryaPipeToGround1"
 erptgE.minable = {mining_time = 0.2, result = "EryaPipeToGround1"}
 erptgE.fluid_box.pipe_connections[2].max_underground_distance = 20
@@ -473,7 +498,7 @@ createEryaItem
     "EryaPipeToGround1",
     64,
     "EryaLogistic",
-    "h",
+    "i",
     20,
     0.5,
     {{"EryaPlate",16}},
@@ -483,7 +508,7 @@ createEryaItem
 
 
 -- Erya Pump MK1 --
-erp1E = table.deepcopy(data.raw.pump.pump)
+local erp1E = table.deepcopy(data.raw.pump.pump)
 erp1E.name = "EryaPump1"
 erp1E.minable = {mining_time = 0.3, result = "EryaPump1"}
 erp1E.energy_usage = "1W"
@@ -513,7 +538,7 @@ createEryaItem
     "EryaPump1",
     64,
     "EryaLogistic",
-    "i",
+    "j",
     20,
     0.5,
     {{"EryaMachineFrame1",1},{"EryaCircuit",4}},
@@ -523,7 +548,7 @@ createEryaItem
 
 
 -- Erya Wall MK1 --
-erwE = table.deepcopy(data.raw.wall["stone-wall"])
+local erwE = table.deepcopy(data.raw.wall["stone-wall"])
 erwE.name = "EryaWall1"
 erwE.minable = {mining_time = 0.1, result = "EryaWall1"}
 erwE.max_health = 200
@@ -581,7 +606,7 @@ createEryaItem
 
 
 -- Erya Gate MK1 --
-ergE = table.deepcopy(data.raw.gate.gate)
+local ergE = table.deepcopy(data.raw.gate.gate)
 ergE.name = "EryaGate1"
 ergE.minable = {mining_time = 0.2, result = "EryaGate1"}
 ergE.max_health = 200
@@ -635,7 +660,7 @@ createEryaItem
 
 
 -- Erya Radar MK1 --
-errE = table.deepcopy(data.raw.radar.radar)
+local errE = table.deepcopy(data.raw.radar.radar)
 errE.name = "EryaRadar1"
 errE.minable = {mining_time = 0.5, result = "EryaRadar1"}
 errE.energy_usage = "1W"
@@ -659,7 +684,7 @@ createEryaItem
 )
 
 -- Erya Furnace MK1 --
-erfE = table.deepcopy(data.raw.furnace["electric-furnace"])
+local erfE = table.deepcopy(data.raw.furnace["electric-furnace"])
 erfE.name = "EryaFurnace1"
 erfE.minable = {mining_time = 0.5, result = "EryaFurnace1"}
 erfE.crafting_speed = 1
@@ -685,7 +710,7 @@ createEryaItem
 
 
 -- Erya Refinery MK1 --
-errfE = table.deepcopy(data.raw["assembling-machine"]["oil-refinery"])
+local errfE = table.deepcopy(data.raw["assembling-machine"]["oil-refinery"])
 errfE.name = "EryaRefinery1"
 errfE.minable = {mining_time = 0.5, result = "EryaRefinery1"}
 errfE.crafting_speed = 0.7
@@ -725,7 +750,7 @@ createEryaItem
 
 
 -- Erya Chemical Plant MK1 --
-ercpE = table.deepcopy(data.raw["assembling-machine"]["chemical-plant"])
+local ercpE = table.deepcopy(data.raw["assembling-machine"]["chemical-plant"])
 ercpE.name = "EryaChemicalPlant1"
 ercpE.minable = {mining_time = 0.8, result = "EryaChemicalPlant1"}
 ercpE.crafting_speed = 0.7
