@@ -10,6 +10,7 @@ MF = {
 	fS = nil,
 	ccS = nil,
 	fChest = nil,
+	fTank = nil,
 	II = nil,
 	dataCenter = nil,
 	entitiesAround = nil,
@@ -232,6 +233,7 @@ function MF:updateLasers()
 	for k, entity in pairs(self.entitiesAround or {}) do
 		if entity ~= nil and entity.valid == true then
 			local laserUsed = false
+			self:updateWaterLaser(entity)
 			if self:updateEnergyLaser(entity) == true then laserUsed = true end
 			if self:updateFluidLaser(entity) == true then laserUsed = true end
 			if self:updateLogisticLaser(entity) == true then laserUsed = true end
@@ -287,10 +289,35 @@ function MF:updateEnergyLaser(entity)
 	end
 end
 
+-------------------------------------------- Water Laser --------------------------------------------
+function MF:updateWaterLaser(entity)
+	-- Check the Factory Tank --
+	if self.fTank == nil or self.fTank.valid == false then return end
+	-- Check the Focused Tank --
+	if entity.type ~= "storage-tank" then return end
+	-- Get the Fluid --
+	local fluidName = nil
+	local fluidAmount = nil
+	for k, i in pairs(entity.get_fluid_contents()) do
+		fluidName = k
+		fluidAmount = i
+	end
+	-- Check the Fluid --
+	if fluidName == nil or fluidAmount == nil or fluidName ~= "water" then return end
+	-- Insert the Fluid inside the Factory Tank --
+	local amountRm = self.fTank.insert_fluid({name=fluidName, amount=math.min(fluidAmount, _mfWaterDrainPerSecond)})
+	if amountRm > 0 then
+		-- Retrieve the Fluid --
+		entity.remove_fluid{name=fluidName, amount=amountRm}
+		-- Create the Laser --
+		self.ent.surface.create_entity{name="BlueBeam2", duration=60, position=self.ent.position, target=entity.position, source=self.ent.position}
+	end
+end
+
 -------------------------------------------- Fluid Laser --------------------------------------------
 function MF:updateFluidLaser(entity)
 	-- Check if a laser should be created --
-	if technologyUnlocked("FluidDrain1", getForce(self.player)) == false or self.fluidLaserActivated == false then return false end 
+	if technologyUnlocked("FluidDrain1", getForce(self.player)) == false or self.fluidLaserActivated == false then return false end
 	-- Create the Laser --
 	if entity.type == "storage-tank" and self.IDModule > 0 then
 		if self.ccS ~= nil then

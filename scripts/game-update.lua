@@ -276,7 +276,7 @@ end
 -- Called when a Shortcut is pressed --
 function onShortcut(event)
 	local player = getPlayer(event.player_index)
-	if event.input_name == "TTGUIKey" then
+	if event.input_name == "TTGUIKey" and player.gui.screen.mfTooltipGUI ~= nil then
 		local set = getPlayerVariable(player.name, "TTGUILocked")
 		if set == true then
 			setPlayerVariable(player.name, "TTGUILocked", false)
