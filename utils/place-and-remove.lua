@@ -162,6 +162,20 @@ function somethingWasPlaced(event, isRobot)
 			MF.fChest = event.created_entity
 		end
 	end
+
+	-- Save the Factory Tank --
+	if event.created_entity.name == "FactoryTank" then
+		if MF ~= nil and MF.fTank ~= nil and MF.fTank.valid == true then
+			if isPlayer == true then creator.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }}) end
+			event.created_entity.destroy()
+			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
+				creator.get_main_inventory().insert(event.stack)
+			end
+			return
+		else
+			MF.fTank = event.created_entity
+		end
+	end
 	
 	-- Save the Ghost inside the Construction Table --
 	if event.created_entity ~= nil and event.created_entity.valid == true and event.created_entity.name == "entity-ghost" and
@@ -329,6 +343,13 @@ function somethingWasRemoved(event)
 		end
 		return
 	end
+	-- Remove the Factory Tank --
+	if event.entity.name == "FactoryTank" then
+		if MF ~= nil then
+			MF.fTank = nil
+		end
+		return
+	end
 	-- Remove the Dimensional Accumulator --
 	if event.entity.name == "DimensionalAccumulator" then
 		removedDimensionalAccumulator(event)
@@ -449,6 +470,7 @@ end
 -- Return false if the item can't be placed outside the Mobile Factory --
 function canBePlacedOutside(name)
 	if name == "FactoryChest" then return false end
+	if name == "FactoryTank" then return false end
 	if name == "DimensionalAccumulator" then return false end
 	return true
 end

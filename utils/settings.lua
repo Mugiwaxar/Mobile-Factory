@@ -17,6 +17,7 @@ _mfShieldComsuption = 25000
 -- Mobile Factory Lasers settings --
 _mfBaseLaserRadius = 10
 _mfBaseLaserNumber = 1
+_mfWaterDrainPerSecond = 10000
 
 -- Mobile Factory Energy Drain settings --
 _mfEnergyDrain = 10000000

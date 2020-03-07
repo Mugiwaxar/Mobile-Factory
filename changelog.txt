@@ -1,4 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.112
+Date: 07/03/2020
+  Features:
+    - Added the Water Laser: The Mobile Factory will drain Water from Tanks around to the Factory Tank (No Technology needed)
+    - Added the Factory Tank: A tank filled by the Mobile Factory Water Laser
+    - Added Erya Tank MK1: A Fluids Storage Tank make with Erya
+    - New Technology: Erya Tank MK1, Unlock the Erya Tank MK1
+  Graphics:
+    - Changed the Factory Chest Icon
+  Bugfixes:
+    - Fixed a crash related to the TooltipGUI and headless servers
+    - Fixed a crash that append while a Waprtorio Warp
+---------------------------------------------------------------------------------------------------
 Version: 0.0.111
 Date: 04/03/2020
   Bugfixes:
