@@ -30,6 +30,9 @@ function createMFSurface(MF)
 	-- Place the Factory Chest --
 	MF.fChest = createEntity(MF.fS, -0, -7, "FactoryChest", getForce(MF.player).name)
 	MF.fChest.last_user = MF.player
+	-- Place the Factory Tank --
+	MF.fTank = createEntity(MF.fS, -0, 7, "FactoryTank", getForce(MF.player).name)
+	MF.fTank.last_user = MF.player
 end
 
 -- Create the Mobile Factory Control room -
