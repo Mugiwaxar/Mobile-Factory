@@ -1,52 +1,28 @@
--- Create Big Chest entity (Copy from base Chest) --
+---------------------------- FACTORY CHEST ----------------------------
+
 -- Entity --
-mfC = {} table.deepcopy("data.raw.container.iron-chest")
-mfC.type = "container"
+local mfC = table.deepcopy(data.raw.container["compilatron-chest"])
 mfC.name = "FactoryChest"
-mfC.icon = "__base__/graphics/icons/iron-chest.png"
-mfC.order = "z"
-mfC.icon_size = 32
-mfC.flags = {"placeable-neutral", "player-creation"}
+mfC.icon_size = 40
 mfC.minable = {mining_time = 0.5, result = "FactoryChest"}
-mfC.max_health = 200
-mfC.corpse = "small-remnants"
-mfC.open_sound = { filename = "__base__/sound/metallic-chest-open.ogg", volume=0.65 }
-mfC.close_sound = { filename = "__base__/sound/metallic-chest-close.ogg", volume = 0.7 }
-mfC.resistances ={}
 mfC.collision_box = {{-2, -2}, {2, 2}}
 mfC.selection_box = {{-2, -2}, {2, 2}}
-mfC.fast_replaceable_group = "container"
+mfC.fast_replaceable_group = nil
 mfC.inventory_size = 20
-mfC.vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 }
-mfC.picture =
-    {
-      layers =
-      {
-        {
-            filename = "__Mobile_Factory_Graphics__/graphics/entity/FactoryChest.png",
-            priority = "extra-high",
-            width = 66,
-            height = 76,
-            shift = util.by_pixel(-0.5, -0.5),
-            scale = 2
-        }
-      }
-    }
-mfC.circuit_wire_connection_point = circuit_connector_definitions["chest"].points
-mfC.circuit_connector_sprites = circuit_connector_definitions["chest"].sprites
-mfC.circuit_wire_max_distance = default_circuit_wire_max_distance
+mfC.picture.layers[1].scale = 4
+mfC.picture.layers[1].hr_version.scale = 2
 data:extend{mfC}
 
 -- Item --
 local fcI = {}
 fcI.type = "item"
 fcI.name = "FactoryChest"
-fcI.icon = "__Mobile_Factory_Graphics__/graphics/icones/FactoryChest.png"
-fcI.icon_size = 32
+fcI.icon = "__Mobile_Factory__/graphics/FactoryChestI.png"
+fcI.icon_size = 40
 fcI.subgroup = "DimensionalStuff"
 fcI.order = "A"
 fcI.place_result = "FactoryChest"
-fcI.stack_size = 10
+fcI.stack_size = 1
 data:extend{fcI}
 
 -- Recipe --
