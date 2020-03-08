@@ -55,7 +55,7 @@ daE.working_sound =
           height = 189,
           repeat_count = repeat_count,
           shift = util.by_pixel(0, -11),
-          tint = tint,
+          -- tint = tint,
           animation_speed = 0.5,
           scale = 0.5
       },

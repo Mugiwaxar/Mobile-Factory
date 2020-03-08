@@ -5,6 +5,7 @@ local ftE = table.deepcopy(data.raw["storage-tank"]["storage-tank"])
 ftE.name = "FactoryTank"
 ftE.minable = {mining_time = 0.5, result = "FactoryTank"}
 ftE.fast_replaceable_group = nil
+ftE.next_upgrade = nil
 ftE.fluid_box.base_area = 10000
 ftE.pictures.picture.sheets[1] = ftE.pictures.picture.sheets[1].hr_version
 ftE.pictures.picture.sheets[1].filename = "__Mobile_Factory__/graphics/FactoryTankE.png"
