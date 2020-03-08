@@ -7,7 +7,7 @@ dpE.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalPlant.png"
 dpE.icon_size = 32
 dpE.minable = {mining_time = 0.3, result = "DimensionalPlant"}
 dpE.crafting_categories = {"Elements"}
-dpE.animation = make_4way_animation_from_spritesheet({ 
+dpE.animation = make_4way_animation_from_spritesheet({
 	layers =
 		{
 		{

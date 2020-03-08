@@ -1,4 +1,4 @@
-function createEryaItem(name, iconSize, subgroup, order, stackSize, REnergy, RIngredients, TUnit, prerequisites)
+function createEryaItem(name, iconSize, subgroup, order, stackSize, REnergy, RIngredients, TUnit, prerequisites, resultCount)
     local erI = {}
     erI.type = "item"
     erI.name = name
@@ -17,6 +17,7 @@ function createEryaItem(name, iconSize, subgroup, order, stackSize, REnergy, RIn
     erR.enabled = false
     erR.ingredients = RIngredients
     erR.result = name
+    erR.result_count = resultCount
     data:extend{erR}
 
     local erT = {}
@@ -150,8 +151,38 @@ createEryaItem
     0.2,
     {{"EryaPlate",2}},
     {count=80,time=1,ingredients={{"EryaSample", 1}}},
-    "Erya"
+    "Erya",
+    5
 )
+
+-- Erya Item Mover --
+local eimE = table.deepcopy(data.raw["transport-belt"]["EryaBelt1"])
+eimE.name = "EryaItemMover"
+eimE.minable = {mining_time = 0.15, result = "EryaBelt1"}
+eimE.speed = 0.4
+eimE.belt_animation_set.animation_set.filename = "__Mobile_Factory__/graphics/EryaItemMoverE.png"
+eimE.belt_animation_set.animation_set.frame_count = 1
+eimE.belt_animation_set.animation_set.scale = 0.25
+data:extend{eimE}
+
+createEryaItem
+(
+    "EryaItemMover",
+    64,
+    "EryaLogistic",
+    "d2",
+    200,
+    0.2,
+    {{"EryaPlate",20},{"DimensionalCrystal", 1}},
+    {count=280,time=1,ingredients={{"EryaSample", 1}}},
+    "EryaBelt1",
+    10
+)
+data.raw.item.EryaItemMover.icon = "__Mobile_Factory__/graphics/EryaItemMoverI.png"
+data.raw.item.EryaItemMover.icon_size = 128
+data.raw.technology.EryaItemMover.icon = "__Mobile_Factory__/graphics/EryaItemMoverI.png"
+data.raw.technology.EryaItemMover.icon_size = 128
+
 
 -- Erya Underground Belt MK1 --
 local erubE = table.deepcopy(data.raw["underground-belt"]["underground-belt"])

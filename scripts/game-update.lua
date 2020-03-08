@@ -78,13 +78,13 @@ function updateValues()
 	-- Delete all Animations and Sprites --
 	rendering.clear("Mobile_Factory")
 
-	for k, j in pairs(global) do
-		if type(j) == "table" then
-			dprint(k .. ":" .. table_size(j))
-		else
-			dprint(k)
-		end
-	end
+	-- for k, j in pairs(global) do
+		-- if type(j) == "table" then
+			-- dprint(k .. ":" .. table_size(j))
+		-- else
+			-- dprint(k)
+		-- end
+	-- end
 end
 
 -- When a technology is finished --

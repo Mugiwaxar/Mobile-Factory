@@ -13,8 +13,9 @@ function beforeWarp(new_surface, new_planet_table, old_surface, old_planet_table
 		if MF.ent ~= nil and MF.ent.valid == true then
 			MF.lastPosX = MF.ent.position.x
 			MF.lastPosY = MF.ent.position.y
+			local name = MF.ent.name
 			MF.ent.teleport(MF.ent.position, new_surface["newsurface"].name)
-			MF.ent = new_surface["newsurface"].find_entity({MF.lastPosX,MF.lastPosY})
+			MF.ent = new_surface["newsurface"].find_entity(name, {MF.lastPosX,MF.lastPosY})
 		end
 	end
 end
