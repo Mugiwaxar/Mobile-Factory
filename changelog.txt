@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.113
+Date: 08/03/2020
+  Features:
+    - Added Erya Item Mover: A extremely fast way to move Items
+    - New Technology: Erya Item Mover: Unlock the Erya Item Mover
+  Bugfixes:
+    - Fixed a crash related to Warptorio (Honktown)
+    - Fixed a loading crash with some Mods
+---------------------------------------------------------------------------------------------------
 Version: 0.0.112
 Date: 07/03/2020
   Features:
@@ -10,7 +19,7 @@ Date: 07/03/2020
     - Changed the Factory Chest Icon
   Bugfixes:
     - Fixed a crash related to the TooltipGUI and headless servers
-    - Fixed a crash that append while a Waprtorio Warp
+    - Fixed a crash that happened during a Waprtorio Warp
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.111
 Date: 04/03/2020
