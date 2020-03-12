@@ -168,7 +168,7 @@ data:extend{eimE}
 createEryaItem
 (
     "EryaItemMover",
-    64,
+    128,
     "EryaLogistic",
     "d2",
     200,
@@ -179,9 +179,7 @@ createEryaItem
     10
 )
 data.raw.item.EryaItemMover.icon = "__Mobile_Factory__/graphics/EryaItemMoverI.png"
-data.raw.item.EryaItemMover.icon_size = 128
 data.raw.technology.EryaItemMover.icon = "__Mobile_Factory__/graphics/EryaItemMoverI.png"
-data.raw.technology.EryaItemMover.icon_size = 128
 
 
 -- Erya Underground Belt MK1 --
@@ -213,10 +211,40 @@ createEryaItem
     "e",
     100,
     0.3,
-    {{"EryaPlate",8}},
+    {{"EryaPlate",10}},
     {count=130,time=1,ingredients={{"EryaSample", 1}}},
-    "EryaBelt1"
+    "EryaBelt1",
+    2
 )
+
+-- Erya Extrem Underground Belt --
+local erxubE = table.deepcopy(data.raw["underground-belt"].EryaUndergroundBelt1)
+erxubE.name = "EryaUndergroundBelt2"
+erxubE.minable = {mining_time = 0.15, result = "EryaUndergroundBelt2"}
+erxubE.speed = 0.4
+erxubE.max_distance = 30
+erxubE.belt_animation_set = eimE.belt_animation_set
+erxubE.structure.direction_in.sheet.filename = "__Mobile_Factory__/graphics/EryaUndergroundBelt2E.png"
+erxubE.structure.direction_out.sheet.filename = "__Mobile_Factory__/graphics/EryaUndergroundBelt2E.png"
+erxubE.structure.direction_in_side_loading.sheet.filename = "__Mobile_Factory__/graphics/EryaUndergroundBelt2E.png"
+erxubE.structure.direction_out_side_loading.sheet.filename = "__Mobile_Factory__/graphics/EryaUndergroundBelt2E.png"
+data:extend{erxubE}
+
+createEryaItem
+(
+    "EryaUndergroundBelt2",
+    64,
+    "EryaLogistic",
+    "e",
+    100,
+    0.5,
+    {{"EryaPlate",30},{"DimensionalCrystal",1}},
+    {count=10,time=60,ingredients={{"EryaSample", 10},{"DimensionalCrystal",1}}},
+    "EryaUndergroundBelt1",
+    6
+)
+data.raw.item.EryaUndergroundBelt2.icon = "__Mobile_Factory__/graphics/EryaUndergroundBelt2I.png"
+data.raw.technology.EryaUndergroundBelt2.icon = "__Mobile_Factory__/graphics/EryaUndergroundBelt2I.png"
 
 -- Erya Splitter MK1 --
 local erSE = table.deepcopy(data.raw.splitter.splitter)
@@ -257,6 +285,134 @@ createEryaItem
     "EryaBelt1"
 )
 
+-- Erya Loader --
+local erlE = table.deepcopy(data.raw["loader-1x1"]["loader-1x1"])
+erlE.name = "EryaLoader1"
+erlE.minable = {mining_time = 0.2, result = "EryaLoader1"}
+erlE.speed = 0.04
+erlE.belt_animation_set = erbE.belt_animation_set
+erlE.structure.direction_in.sheet = nil
+erlE.structure.direction_in.sheets =
+{
+    {
+        filename = "__Mobile_Factory__/graphics/loader/EryaLoader1E.png",
+        width = 300,
+        height = 300,
+        scale = 64/375
+    }
+    -- },
+    -- {
+    --     filename = "__Mobile_Factory__/graphics/loader/EryaLoader1S.png",
+    --     width = 300,
+    --     height = 300,
+    --     scale = 64/300,
+    --     frames = 1,
+    --     draw_as_shadow = true,
+    --     priority = "low"
+    -- }
+}
+erlE.structure.direction_out.sheet = nil
+erlE.structure.direction_out.sheets =
+{
+    {
+        filename = "__Mobile_Factory__/graphics/loader/EryaLoader1E.png",
+        width = 300,
+        height = 300,
+        scale = 64/375,
+        y = 300
+    }
+    -- },
+    -- {
+    --     filename = "__Mobile_Factory__/graphics/loader/EryaLoader1S.png",
+    --     width = 300,
+    --     height = 300,
+    --     scale = 64/300,
+    --     frames = 1,
+    --     draw_as_shadow = true,
+    --     priority = "low"
+    -- }
+}
+data:extend{erlE}
+
+createEryaItem
+(
+    "EryaLoader1",
+    128,
+    "EryaLogistic",
+    "g",
+    100,
+    0.2,
+    {{"EryaPlate",10}, {"EryaCircuit",4}},
+    {count=130,time=1,ingredients={{"EryaSample", 1}}},
+    "EryaBelt1"
+)
+data.raw.item.EryaLoader1.icon = "__Mobile_Factory__/graphics/loader/EryaLoader1I.png"
+data.raw.technology.EryaLoader1.icon = "__Mobile_Factory__/graphics/loader/EryaLoader1I.png"
+
+-- Erya Extrem Loader --
+local erxlE = table.deepcopy(data.raw["loader-1x1"].EryaLoader1)
+erxlE.name = "EryaLoader2"
+erxlE.minable = {mining_time = 0.2, result = "EryaLoader2"}
+erxlE.speed = 0.4
+erxlE.belt_animation_set = eimE.belt_animation_set
+erxlE.structure.direction_in.sheet = nil
+erxlE.structure.direction_in.sheets =
+{
+    {
+        filename = "__Mobile_Factory__/graphics/loader/EryaLoader2E.png",
+        width = 300,
+        height = 300,
+        scale = 64/375
+    }
+    -- },
+    -- {
+    --     filename = "__Mobile_Factory__/graphics/loader/EryaLoader1S.png",
+    --     width = 300,
+    --     height = 300,
+    --     scale = 64/300,
+    --     frames = 1,
+    --     draw_as_shadow = true,
+    --     priority = "low"
+    -- }
+}
+erxlE.structure.direction_out.sheet = nil
+erxlE.structure.direction_out.sheets =
+{
+    {
+        filename = "__Mobile_Factory__/graphics/loader/EryaLoader2E.png",
+        width = 300,
+        height = 300,
+        scale = 64/375,
+        y = 300
+    }
+    -- },
+    -- {
+    --     filename = "__Mobile_Factory__/graphics/loader/EryaLoader1S.png",
+    --     width = 300,
+    --     height = 300,
+    --     scale = 64/300,
+    --     frames = 1,
+    --     draw_as_shadow = true,
+    --     priority = "low"
+    -- }
+}
+data:extend{erxlE}
+
+createEryaItem
+(
+    "EryaLoader2",
+    128,
+    "EryaLogistic",
+    "g2",
+    100,
+    0.4,
+    {{"EryaPlate",50}, {"EryaCircuit",20},{"DimensionalCrystal",1}},
+    {count=15,time=60,ingredients={{"EryaSample", 12},{"DimensionalCrystal",1}}},
+    "EryaLoader1",
+    5
+)
+data.raw.item.EryaLoader2.icon = "__Mobile_Factory__/graphics/loader/EryaLoader2I.png"
+data.raw.technology.EryaLoader2.icon = "__Mobile_Factory__/graphics/loader/EryaLoader2I.png"
 
 -- Erya Inserter MK1 --
 local eriE = table.deepcopy(data.raw.inserter.inserter)
@@ -286,7 +442,7 @@ createEryaItem
     "EryaInserter1",
     64,
     "EryaLogistic",
-    "g",
+    "h",
     30,
     0.5,
     {{"EryaMachineFrame1",1}, {"EryaCircuit",4}},
@@ -491,7 +647,7 @@ createEryaItem
     "EryaPipe1",
     64,
     "EryaLogistic",
-    "h",
+    "i",
     100,
     0.5,
     {{"EryaPlate",4}},
@@ -529,7 +685,7 @@ createEryaItem
     "EryaPipeToGround1",
     64,
     "EryaLogistic",
-    "i",
+    "j",
     20,
     0.5,
     {{"EryaPlate",16}},
@@ -569,7 +725,7 @@ createEryaItem
     "EryaPump1",
     64,
     "EryaLogistic",
-    "j",
+    "k",
     20,
     0.5,
     {{"EryaMachineFrame1",1},{"EryaCircuit",4}},
