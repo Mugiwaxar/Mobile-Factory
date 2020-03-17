@@ -353,6 +353,25 @@ function Util.itemToLabel(item, amount, guiElement)
 	label.style.font = "LabelFont"
 end
 
+-- Util: Create a frame from a Fluid --
+function Util.fluidToFrame(fluid, amount, guiElement)
+	-- Check value --
+	if fluid == nil or amount == nil or game.fluid_prototypes[fluid] == nil then return end
+	-- Create the Frame --
+	local frame = guiElement.add{type="frame", direction="horizontal"}
+	frame.style.minimal_width = 75
+	frame.style.margin = 0
+	frame.style.padding = 0
+	-- Add the Icon and the Tooltip to the frame --
+	local sprite = frame.add{type="sprite", tooltip=game.fluid_prototypes[fluid].localised_name, sprite="fluid/" .. fluid}
+	sprite.style.padding = 0
+	sprite.style.margin = 0
+	-- Add the amount label --
+	local label = frame.add{type="label", caption=Util.toRNumber(amount)}
+	label.style.padding = 0
+	label.style.margin = 0
+end
+
 -- Util: Randomize Table --
 function Util.shuffle(array)
 	for i = table_size(array), 2, -1 do

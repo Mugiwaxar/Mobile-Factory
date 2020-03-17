@@ -596,13 +596,4 @@ function MF:updateAccumulators()
 			end
 		end
 	end
-	-- Control Center --
-	if self.ccS ~= nil then
-		local accumulator = self.ccS.find_entity("DimensionalAccumulator", {2,12})
-		if accumulator == nil or accumulator.valid == false then
-			game.print("Unable to charge the Control Center accumulator")
-		else
-			accumulator.energy = accumulator.electric_buffer_size
-		end
-	end
 end

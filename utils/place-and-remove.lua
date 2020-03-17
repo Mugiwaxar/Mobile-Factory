@@ -85,6 +85,13 @@ function somethingWasPlaced(event, isRobot)
 		return
 	end
 	
+	-- Deep Tank Ghost --
+	if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true and event.created_entity.name == "entity-ghost" and event.stack.name == "DeepTank" then
+		if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheCCCArea"}}) end
+		event.created_entity.destroy()
+		return
+	end
+
 	-- Ghost --
 	if isPlayer == true and string.match(event.created_entity.surface.name, _mfSurfaceName) == nil and event.stack ~= nil and event.stack.valid_for_read == true and event.created_entity.name == "entity-ghost" then
 		if canBePlacedOutside(event.stack.name) == false then
@@ -96,7 +103,7 @@ function somethingWasPlaced(event, isRobot)
 	
 	-- Blueprint --
 	if isPlayer == true and string.match(event.created_entity.surface.name, _mfSurfaceName) == nil and event.stack ~= nil and event.stack.valid_for_read == true and event.stack.is_blueprint == true then
-	if event.stack.name == "DeepStorage" then
+	if event.stack.name == "DeepStorage" or event.stack.name == "DeepTank" then
 		if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheCCCArea"}}) end
 			event.created_entity.destroy()
 			return
@@ -108,13 +115,8 @@ function somethingWasPlaced(event, isRobot)
 		end
 	end
 	
-	-- Allow to place things in the Control Center --
+	-- Allow to place Deep Storage inside the Control Center --
 	if event.created_entity.name == "DeepStorage" and string.match(event.created_entity.surface.name, _mfControlSurfaceName) then
-		-------------------------------------------------------------------------------------------------- GetTile? -------------------------------------------------------------------
-		-------------------------------------------------------------------------------------------------- GetTile? -------------------------------------------------------------------
-		-------------------------------------------------------------------------------------------------- GetTile? -------------------------------------------------------------------
-		-------------------------------------------------------------------------------------------------- GetTile? -------------------------------------------------------------------
-		-------------------------------------------------------------------------------------------------- GetTile? -------------------------------------------------------------------
 		local tile = event.created_entity.surface.find_tiles_filtered{position=event.created_entity.position, radius=1, limit=1}
 		if tile[1] ~= nil and tile[1].valid == true and tile[1].name == "BuildTile" then
 			placedDeepStorage(event)
@@ -123,6 +125,22 @@ function somethingWasPlaced(event, isRobot)
 				if tags ~= nil then
 					global.deepStorageTable[event.created_entity.unit_number].inventoryItem = tags.inventoryItem
 					global.deepStorageTable[event.created_entity.unit_number].inventoryCount = tags.inventoryCount
+				end
+			end
+			return
+		end
+	end
+
+	-- Allow to place Deep Tank inside the Control Center --
+	if event.created_entity.name == "DeepTank" and string.match(event.created_entity.surface.name, _mfControlSurfaceName) then
+		local tile = event.created_entity.surface.find_tiles_filtered{position=event.created_entity.position, radius=1, limit=1}
+		if tile[1] ~= nil and tile[1].valid == true and tile[1].name == "BuildTile" then
+			placedDeepTank(event)
+			if event.stack ~= nil then
+				local tags = event.stack.get_tag("Infos")
+				if tags ~= nil then
+					global.deepTankTable[event.created_entity.unit_number].inventoryFluid = tags.inventoryFluid
+					global.deepTankTable[event.created_entity.unit_number].inventoryCount = tags.inventoryCount
 				end
 			end
 			return
@@ -140,7 +158,7 @@ function somethingWasPlaced(event, isRobot)
 	end
 	
 	-- Prevent to place things out of the Control Center --
-	if event.created_entity.name == "DeepStorage" then
+	if event.created_entity.name == "DeepStorage" or event.created_entity.name == "DeepTank" then
 		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheCCCArea"}}) end
 		event.created_entity.destroy()
 		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
@@ -459,6 +477,16 @@ function somethingWasRemoved(event)
 			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.DeepStorageC", obj.inventoryItem, obj.inventoryCount}}
 		end
 		removedDeepStorage(event)
+		return
+	end
+	-- Remove the Deep Tank --
+	if event.entity.name == "DeepTank" then
+		local obj = global.deepTankTable[event.entity.unit_number]
+		if obj ~= nil and obj.inventoryFluid ~= nil and event.buffer ~= nil and event.buffer[1] ~= nil then
+			event.buffer[1].set_tag("Infos", {inventoryFluid=obj.inventoryFluid, inventoryCount=obj.inventoryCount})
+			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.DeepTankC", obj.inventoryFluid, obj.inventoryCount}}
+		end
+		removedDeepTank(event)
 		return
 	end
 	-- Remove the Erya Structure --

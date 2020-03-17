@@ -262,15 +262,15 @@ function GUI.onGuiElemChanged(event)
 	if event.element.type == "choose-elem-button" and event.element.get_mod() == "Mobile_Factory" then
 		local id = event.element.name
 
-		-- If this is a Dimensional Tank --
+		-- If this is a Deep Tank --
 		if string.match(id, "TF") then
-			-- Get
+			-- Get the Deep Tank ID --
 			id = tonumber(split(id, "TF")[1])
-			if MF.varTable.tanks[id] == nil then return end
+			if global.deepTankTable[id] == nil then return end
 			if event.element.elem_value ~= nil then
-				MF.varTable.tanks[id].filter = event.element.elem_value
+				global.deepTankTable[id].filter = event.element.elem_value
 			else
-				MF.varTable.tanks[id].filter = nil
+				global.deepTankTable[id].filter = nil
 			end
 		end
 

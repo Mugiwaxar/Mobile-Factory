@@ -122,6 +122,6 @@ ocT.unit = {
 		{"DimensionalCrystal", 1}
 	}
 }
-ocT.prerequisites = {"DimensionalCrystal"}
+ocT.prerequisites = {"MatterSerialization"}
 ocT.effects = {{type="unlock-recipe", recipe="OreCleaner"}}
 data:extend{ocT}

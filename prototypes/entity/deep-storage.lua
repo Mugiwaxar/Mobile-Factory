@@ -16,6 +16,7 @@ dsE.resistances ={}
 dsE.collision_box = {{-1.75, -1.45}, {1.75, 1.2}}
 dsE.selection_box = {{-2.4, -1.7}, {2.4, 1.7}}
 dsE.fast_replaceable_group = nil
+dsE.next_upgrade = nil
 dsE.inventory_size = 0
 dsE.vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 }
 dsE.picture =
@@ -71,8 +72,8 @@ dsR.ingredients =
     }
 dsR.result = "DeepStorage"
 data:extend{dsR}
-	
--- Deep Storage Technologie --
+
+-- Technologie --
 local dsT = {}
 dsT.name = "DeepStorage"
 dsT.type = "technology"
@@ -86,23 +87,9 @@ dsT.unit = {
 		{"DimensionalCrystal", 1}
 	}
 }
-dsT.prerequisites = {"ControlCenter"}
+dsT.prerequisites = {"ControlCenter", "MatterSerialization"}
 dsT.effects = {
 	{type="nothing", effect_description={"description.DeepStorage"}},
 	{type="unlock-recipe", recipe="DeepStorage"}
 }
 data:extend{dsT}
-
-
-
-
-
-
-
-
-
-
-
-
-
-

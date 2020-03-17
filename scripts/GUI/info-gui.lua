@@ -263,7 +263,7 @@ function GUI.createInfoGui(gui, player)
 	mfInfoFlow2.mfTanksTitle.caption = {"gui-description.mfTanksTitle"}
 	
 	-- Create the Tank Flow --
-	local mfTankFlow = mfInfoFlow2.add{type="flow", name = "mfTankFlow", direction="vertical"}
+	local mfTankFlow = mfInfoFlow2.add{type="scroll-pane", name = "mfTankFlow", direction="vertical"}
 	mfTankFlow.style.width = 255
 	
 	------------------------------------------ FLOW 5 -------------------------------------
@@ -444,55 +444,48 @@ end
 function GUI.updateTankFrame(player, MF)
 	-- Get the GUI --
 	gui = player.gui
-	if MF.ccS == nil or MF.varTable.tanks == nil or getPlayerVariable(player.name, "GUIUpdateInfoGUI") ~= true then return end
+	if MF.ccS == nil or getPlayerVariable(player.name, "GUIUpdateInfoGUI") ~= true then return end
 	-- Get the Tank Flow --
 	local tankFlow = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow2.mfTankFlow
 	-- Clear the Tank Flow --
 	tankFlow.clear()
 	-- Look for all Tanks --
-	for k, id in pairs(MF.varTable.tanks) do
-		-- Get the Tank --
-		local tank = id.ent
-		if tank ~= nil and tank.valid == true then
-			-- Get the Tank capacity --
-			local tCapacity = math.floor(tank.fluidbox.get_capacity(1))
-			local fName
-			local fAmount
-			for k, i in pairs(tank.get_fluid_contents()) do
-				-- Get the fluid name --
-				fName = k
-				-- Get the Fluid amount --
-				fAmount = math.floor(i)
-			end
-			-- Set Fluid to unknow 0 if the Tank is empty --
-			if fName == nil then fName = "Empty" end
-			if fAmount == nil then fAmount = 0 end
-			-- Create the Frame --
-			luaGuiElement = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow2.mfTankFlow
-			local TankFrame = luaGuiElement.add{type="frame", direction="horizontal"}
-			-- Create the Flow --
-			local TankFlow = TankFrame.add{type="flow", direction="vertical"}
-			-- Create Tank Labels --
-			local TankLabel = TankFlow.add{type="label"}
-			TankLabel.caption = {"", {"gui-description.Tank" .. k .. "Label"}, ": ", fName, " ", Util.toRNumber(fAmount), "/", Util.toRNumber(tCapacity)}
-			TankLabel.style.font = "LabelFont"
-			TankLabel.style.font_color = {214, 3, 220}
-			-- Create Tank ProgressBar -
-			local TankBar = TankFlow.add{type="progressbar"}
-			TankBar.value = fAmount/tCapacity
-			TankBar.style.maximal_width = 200
-			TankBar.style.color = {214, 3, 220}
-			-- Create Tank Filter --
-			local TankFilter = TankFrame.add{type="choose-elem-button", elem_type="fluid", name="TF" .. tostring(k)}
-			TankFilter.style.maximal_height = 25
-			TankFilter.style.maximal_width = 25
-			if TankFilter.elem_value == nil and MF.varTable.tanks[k].filter ~= nil then
-					TankFilter.elem_value = MF.varTable.tanks[k].filter
-			end
-			MF.varTable.tanks[k].filter = TankFilter.elem_value
-			-- Make the Frame visible --
-			gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow2.visible = true
+	for k, deepTank in pairs(global.deepTankTable) do
+		-- Ckeck if the Deep Storage belong to this Player --
+		if deepTank.player ~= player.name then goto continue end
+		-- Create the Fluid Variables --
+		local fName = deepTank.inventoryFluid
+		local fAmount = deepTank.inventoryCount
+		local tCapacity = _dtMaxFluid
+		-- Set Fluid to 0 if the Tank is empty --
+		if fName == nil then fName = "Empty" end
+		if fAmount == nil then fAmount = 0 end
+		-- Create the Frame --
+		luaGuiElement = gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow2.mfTankFlow
+		local TankFrame = luaGuiElement.add{type="frame", direction="horizontal"}
+		-- Create the Flow --
+		local TankFlow = TankFrame.add{type="flow", direction="vertical"}
+		-- Create Tank Labels --
+		local TankLabel = TankFlow.add{type="label"}
+		TankLabel.caption = {"", {"gui-description.DeepTank"}, " ", deepTank.ID, ": ", fName, " ", Util.toRNumber(fAmount), "/", Util.toRNumber(tCapacity)}
+		TankLabel.style.font = "LabelFont"
+		TankLabel.style.font_color = {214, 3, 220}
+		-- Create Tank ProgressBar -
+		local TankBar = TankFlow.add{type="progressbar"}
+		TankBar.value = fAmount/tCapacity
+		TankBar.style.maximal_width = 200
+		TankBar.style.color = {214, 3, 220}
+		-- Create Tank Filter --
+		local TankFilter = TankFrame.add{type="choose-elem-button", elem_type="fluid", name="TF" .. tostring(k)}
+		TankFilter.style.maximal_height = 25
+		TankFilter.style.maximal_width = 25
+		if TankFilter.elem_value == nil and deepTank.filter ~= nil then
+				TankFilter.elem_value = deepTank.filter
 		end
+		deepTank.filter = TankFilter.elem_value
+		-- Make the Frame visible --
+		gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow2.visible = true
+	::continue::
 	end
 end
 
