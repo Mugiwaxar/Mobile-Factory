@@ -106,7 +106,5 @@ pMT.effects = {
 	{type="unlock-recipe", recipe="EnergyPowerModule"},
 	{type="unlock-recipe", recipe="EnergyEfficiencyModule"},
 	{type="unlock-recipe", recipe="EnergyFocusModule"},
-	{type="unlock-recipe", recipe="DistributionModule"},
-	{type="unlock-recipe", recipe="DrainModule"}
 }
 data:extend{pMT}

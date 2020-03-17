@@ -1,5 +1,6 @@
 -- Convert Dimensional Tanks to Deep Tank and create the Constructible Area --
 for k, MF in pairs(global.MFTable) do
+    MF.IDModule = nil
     if MF.varTable.tanks ~= nil and table_size(MF.varTable.tanks) > 0 then
         createTilesSurface(MF.ccS, -90, -27, -10, -15, "BuildTile")
         for k2, tank in pairs(MF.varTable.tanks) do
@@ -27,3 +28,7 @@ for k, MF in pairs(global.MFTable) do
     createTilesSurface(MF.ccS, -4, 10, 3, 14, "VoidTile")
     MF.varTable.tanks = nil
 end
+if table_size(global.lfpTable or {}) > 0 then
+    game.print("The Logistic Fluid Poles was removed, use the Fluid Interactor instead")
+end
+global.lfpTable = nil

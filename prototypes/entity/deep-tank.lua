@@ -90,6 +90,7 @@ dtT.unit = {
 dtT.prerequisites = {"ControlCenter", "MatterSerialization"}
 dtT.effects = {
 	{type="nothing", effect_description={"description.DeepTank"}},
-	{type="unlock-recipe", recipe="DeepTank"}
+	{type="unlock-recipe", recipe="DeepTank"},
+	{type="unlock-recipe", recipe="FluidInteractor"}
 }
 data:extend{dtT}

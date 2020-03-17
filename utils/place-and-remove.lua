@@ -217,12 +217,6 @@ function somethingWasPlaced(event, isRobot)
 		return
 	end
 	
-	-- Save the Logistic Fluid Pole --
-	if event.created_entity.name == "LogisticFluidPole" then
-		placedLogisticPowerPole(event)
-		return
-	end
-	
 	-- Save the Matter Serializer --
 	if event.created_entity.name == "MatterSerializer" then
 		placedMatterSerializer(event)
@@ -232,6 +226,12 @@ function somethingWasPlaced(event, isRobot)
 	-- Save the Matter Printer --
 	if event.created_entity.name == "MatterPrinter" then
 		placedMatterPrinter(event)
+		return
+	end
+
+	-- Save the Fluid Interactor --
+	if event.created_entity.name == "FluidInteractor" then
+		placedFluidInteractor(event)
 		return
 	end
 	
@@ -378,11 +378,6 @@ function somethingWasRemoved(event)
 		removedPowerDrainPole(event)
 		return
 	end
-	-- Remove the Logistic Fluid Pole --
-	if event.entity.name == "LogisticFluidPole" then
-		removedLogisticPowerPole(event)
-		return
-	end
 	-- Remove the Matter Serializer --
 	if event.entity.name == "MatterSerializer" then
 		removedMatterSerializer(event)
@@ -391,6 +386,11 @@ function somethingWasRemoved(event)
 	-- Remove the Matter Printer --
 	if event.entity.name == "MatterPrinter" then
 		removedMatterPrinter(event)
+		return
+	end
+	-- Remove the Fluid Interactor --
+	if event.entity.name == "FluidInteractor" then
+		removedFluidInteractor(event)
 		return
 	end
 	-- Remove the Data Center --

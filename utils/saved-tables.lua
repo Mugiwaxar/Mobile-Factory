@@ -10,12 +10,6 @@ function placedPowerDrainPole(event)
 	global.pdpTable[event.created_entity.unit_number] = PDP:new(event.created_entity)
 end
 
--- Save the Logistic Fluid Pole in a table --
-function placedLogisticPowerPole(event)
-	if global.lfpTable == nil then global.lfpTable = {} end
-	global.lfpTable[event.created_entity.unit_number] = event.created_entity
-end
-
 -- Save the Matter Serializer in a table --
 function placedMatterSerializer(event)
 	if global.matterSerializerTable == nil then global.matterSerializerTable = {} end
@@ -26,6 +20,12 @@ end
 function placedMatterPrinter(event)
 	if global.matterPrinterTable == nil then global.matterPrinterTable = {} end
 	global.matterPrinterTable[event.created_entity.unit_number] = MP:new(event.created_entity)
+end
+
+-- Save the Fluid Interactor in a table --
+function placedFluidInteractor(event)
+	if global.fluidInteractorTable == nil then global.fluidInteractorTable = {} end
+	global.fluidInteractorTable[event.created_entity.unit_number] = FI:new(event.created_entity)
 end
 
 -- Save the Data Center in a table --
@@ -115,12 +115,6 @@ function removedPowerDrainPole(event)
 	global.pdpTable[event.entity.unit_number] = nil
 end
 
--- Remove the Logistic Fluid Pole from the table --
-function removedLogisticPowerPole(event)
-	if global.lfpTable == nil then global.lfpTable = {} return end
-	global.lfpTable[event.entity.unit_number] = nil
-end
-
 -- Remove the Matter Serializer from the table --
 function removedMatterSerializer(event)
 	if global.matterSerializerTable == nil then global.matterSerializerTable = {} return end
@@ -133,6 +127,13 @@ function removedMatterPrinter(event)
 	if global.matterPrinterTable == nil then global.matterPrinterTable = {} return end
 	if global.matterPrinterTable[event.entity.unit_number] ~= nil then global.matterPrinterTable[event.entity.unit_number]:remove() end
 	global.matterPrinterTable[event.entity.unit_number] = nil
+end
+
+-- Remove the Fluid Interactor from the table --
+function removedFluidInteractor(event)
+	if global.fluidInteractorTable == nil then global.fluidInteractorTable = {} return end
+	if global.fluidInteractorTable[event.entity.unit_number] ~= nil then global.fluidInteractorTable[event.entity.unit_number]:remove() end
+	global.fluidInteractorTable[event.entity.unit_number] = nil
 end
 
 -- Remove the Data Center from the table --

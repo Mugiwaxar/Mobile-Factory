@@ -8,7 +8,7 @@ OC = {
 	charge = 0,
 	totalCharge = 0,
 	oreTable = nil,
-	selectedInv = 0,
+	selectedInv = nil,
 	animID = 0,
 	animTick = 0,
 	updateTick = 1,
@@ -162,7 +162,10 @@ end
 -- Change the Targeted Inventory --
 function OC:changeInventory(ID)
 	-- Check the ID --
-	if ID == nil then self.selectedInv = nil end
+	if ID == nil then
+		self.selectedInv = nil
+		return
+	end
 	-- Select the Inventory --
 	self.selectedInv = nil
 	for k, deepStorage in pairs(global.deepStorageTable) do
@@ -208,8 +211,6 @@ function OC:collectOres(event)
 	if table_size(self.oreTable) <= 0 then return end
 	-- Return if there are not Quatron Charge remaining --
 	if self.charge <= 0 then return end
-	-- Check the selected Inventory --
-	if self.selectedInv == nil then return end
 	-- Create the OrePath and randomNum variable --
 	local orePath = nil
 	local randomNum  = 0
@@ -232,15 +233,13 @@ function OC:collectOres(event)
 	if oreName == nil then return end
 	-- Try to find a Deep Storage if the Selected Inventory is All --
 	local dataInv = self.selectedInv
-	if dataInv == 0 then
+	if dataInv == nil then
 		for k, dp in pairs(global.deepStorageTable) do
 			if self.player == dp.player and dp:canAccept(oreName) == true then
 				dataInv = dp
 			end
 		end
 	end
-	-- Check if a Data Inventory was found --
-	if dataInv == 0 then return end
 	-- Check the Data Inventory --
 	if dataInv == nil or getmetatable(dataInv) == nil then return end
 	-- Check if the Ore type is the same as the selected Inventory --

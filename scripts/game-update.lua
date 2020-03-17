@@ -26,7 +26,6 @@ end
 -- Update all entities --
 function updateEntities(event)
 	-- Update --
-	if event.tick%_eventTick64 == 0 then updateLogisticFluidPoles() end
 	if event.tick%_eventTick110 == 0 then updateMiningJet() end
 	if event.tick%_eventTick45 == 0 then updateConstructionJet() end
 	if event.tick%_eventTick41 == 0 then updateRepairJet() end
@@ -52,7 +51,6 @@ function updateValues()
 	if global.MFTable == nil then global.MFTable = {} end
 	if global.accTable == nil then global.accTable = {} end
 	if global.pdpTable == nil then global.pdpTable = {} end
-	if global.lfpTable == nil then global.lfpTable = {} end
 	if global.deepStorageTable == nil then global.deepStorageTable = {} end
 	if global.deepTankTable == nil then global.deepTankTable = {} end
 	if global.dataNetworkTable == nil then global.dataNetworkTable = {} end
@@ -60,6 +58,7 @@ function updateValues()
 	if global.dataNetworkIDRedTable == nil then global.dataNetworkIDRedTable = {} end
 	if global.matterSerializerTable == nil then global.matterSerializerTable = {} end
 	if global.matterPrinterTable == nil then global.matterPrinterTable = {} end
+	if global.fluidInteractorTable == nil then global.fluidInteractorTable = {} end
 	if global.dataCenterTable == nil then global.dataCenterTable = {} end
 	if global.dataStorageTable == nil then global.dataStorageTable = {} end
 	if global.wirelessDataTransmitterTable == nil then global.wirelessDataTransmitterTable = {} end

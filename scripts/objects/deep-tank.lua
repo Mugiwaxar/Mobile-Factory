@@ -133,7 +133,7 @@ function DTK:canAccept(name)
 	return true
 end
 
--- Add Items --
+-- Add Fluid --
 function DTK:addFluid(name, count)
 	if self:canAccept(name) == true then
         self.inventoryFluid = name

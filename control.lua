@@ -24,6 +24,7 @@ require("scripts/objects/data-center-mf.lua")
 require("scripts/objects/data-storage.lua")
 require("scripts/objects/matter-serializer.lua")
 require("scripts/objects/matter-printer.lua")
+require("scripts/objects/fluid-interactor.lua")
 require("scripts/objects/wireless-data-transmitter.lua")
 require("scripts/objects/wireless-data-receiver.lua")
 require("scripts/objects/energy-cube.lua")
@@ -67,13 +68,13 @@ function onInit()
 	global.dataCenterTable = {}
 	global.matterSerializerTable = {}
 	global.matterPrinterTable = {}
+	global.fluidInteractorTable = {}
 	global.dataStorageTable = {}
 	global.deepTankTable = {}
 	global.wirelessDataTransmitterTable = {}
 	global.wirelessDataReceiverTable = {}
 	global.energyCubesTable = {}
 	global.deepStorageTable = {}
-	global.lfpTable = {}
 	global.oreCleanerTable = {}
 	global.fluidExtractorTable = {}
 	global.miningJetTable = {}
@@ -122,6 +123,10 @@ function onLoad()
 	-- Set MatterPrinter Metatables --
 	for k, mp in pairs(global.matterPrinterTable or {}) do
 		MP:rebuild(mp)
+	end
+	-- Set FluidInteractor Metatables --
+	for k, fi in pairs(global.fluidInteractorTable or {}) do
+		FI:rebuild(fi)
 	end
 	-- Set Wireless Data Transmitter Metatables --
 	for k, wdt in pairs(global.wirelessDataTransmitterTable or {}) do
@@ -233,6 +238,7 @@ script.on_event(defines.events.on_gui_elem_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_gui_checked_state_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_gui_selection_state_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_gui_text_changed, GUI.onGuiElemChanged)
+script.on_event(defines.events.on_gui_switch_state_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_research_finished, technologyFinished)
 script.on_event(defines.events.on_selected_entity_changed, selectedEntityChanged)
 script.on_event(defines.events.on_marked_for_deconstruction, markedForDeconstruction)
