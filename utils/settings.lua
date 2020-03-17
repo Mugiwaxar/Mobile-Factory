@@ -52,6 +52,9 @@ _lfpFluidDrain = 10000
 _lfpFluidLaser = 1
 _lfpFluidConsomption = 10
 
+-- Deep Tank settings --
+_dtMaxFluid = 10000000
+
 -- Matter Serialization settings --
 _mfBaseMaxItems = 10000
 _mfDataStorageCapacity = 1000

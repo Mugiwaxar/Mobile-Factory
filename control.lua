@@ -33,6 +33,7 @@ require("scripts/objects/construction-jet.lua")
 require("scripts/objects/repair-jet.lua")
 require("scripts/objects/combat-jet.lua")
 require("scripts/objects/deep-storage.lua")
+require("scripts/objects/deep-tank.lua")
 require("scripts/objects/MFPlayer.lua")
 require("scripts/objects/erya-structure.lua")
 
@@ -67,6 +68,7 @@ function onInit()
 	global.matterSerializerTable = {}
 	global.matterPrinterTable = {}
 	global.dataStorageTable = {}
+	global.deepTankTable = {}
 	global.wirelessDataTransmitterTable = {}
 	global.wirelessDataReceiverTable = {}
 	global.energyCubesTable = {}
@@ -164,6 +166,10 @@ function onLoad()
 	-- Set The Deep Storage Metatables --
 	for k, dsr in pairs(global.deepStorageTable or {}) do
 		DSR:rebuild(dsr)
+	end
+	-- Set The Deep Tank Metatables --
+	for k, dtk in pairs(global.deepTankTable or {}) do
+		DTK:rebuild(dtk)
 	end
 	-- Set Erya Structures Metatables --
 	for k, es in pairs(global.eryaTable or {}) do

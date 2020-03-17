@@ -63,7 +63,7 @@ wdrI.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessD
 wdrI.icon_size = 64
 wdrI.place_result = "WirelessDataReceiver"
 wdrI.subgroup = "DataSerialization"
-wdrI.order = "f"
+wdrI.order = "f2"
 wdrI.stack_size = 10
 data:extend{wdrI}
 

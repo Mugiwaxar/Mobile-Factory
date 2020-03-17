@@ -37,3 +37,24 @@ ca1T.unit = {
 ca1T.prerequisites = {"ControlCenter", "DimensionalCrystal"}
 ca1T.effects = {{type="nothing", effect_description={"description.ConstructibleArea1"}}}
 data:extend{ca1T}
+
+-- Unlock Constructible Area 2 --
+local ca2T = {}
+ca2T.name = "ConstructibleArea2"
+ca2T.type = "technology"
+ca2T.icons = 
+	{
+		{icon="__base__/graphics/terrain/tutorial-grid/tutorial-grid-o.png", tint={32,165,3}}
+	}
+ca2T.icon_size = 32
+ca2T.unit = {
+	count=3,
+	time=60,
+	ingredients={
+		{"DimensionalSample", 300},
+		{"DimensionalCrystal", 1}
+	}
+}
+ca2T.prerequisites = {"ControlCenter", "DimensionalCrystal"}
+ca2T.effects = {{type="nothing", effect_description={"description.ConstructibleArea2"}}}
+data:extend{ca2T}

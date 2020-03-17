@@ -89,6 +89,12 @@ function placedDeepStorage(event)
 	global.deepStorageTable[event.created_entity.unit_number] = DSR:new(event.created_entity)
 end
 
+-- Save the Deep Tank --
+function placedDeepTank(event)
+	if global.deepTankTable == nil then global.deepTankTable = {} end
+	global.deepTankTable[event.created_entity.unit_number] = DTK:new(event.created_entity)
+end
+
 -- Save the Erya Structure --
 function placedEryaStructure(event)
 	if global.eryaTable == nil then global.eryaTable  = {} end
@@ -197,6 +203,13 @@ function removedDeepStorage(event)
 	if global.deepStorageTable == nil then global.deepStorageTable = {} return end
 	if global.deepStorageTable[event.entity.unit_number] ~= nil then global.deepStorageTable[event.entity.unit_number]:remove() end
 	global.deepStorageTable[event.entity.unit_number] = nil
+end
+
+-- Remove the Deep Tank from the table --
+function removedDeepTank(event)
+	if global.deepTankTable == nil then global.deepTankTable = {} return end
+	if global.deepTankTable[event.entity.unit_number] ~= nil then global.deepTankTable[event.entity.unit_number]:remove() end
+	global.deepTankTable[event.entity.unit_number] = nil
 end
 
 -- Remove the Erya Structure from the table --

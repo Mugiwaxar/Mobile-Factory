@@ -46,6 +46,7 @@ function UpSys.scanObjs()
   UpSys.addTable(global.repairJetTable)
   UpSys.addTable(global.combatJetTable)
   UpSys.addTable(global.deepStorageTable)
+  UpSys.addTable(global.deepTankTable)
   UpSys.addTable(global.pdpTable)
 
   -- Save the last scan tick --

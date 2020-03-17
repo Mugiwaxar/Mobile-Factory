@@ -54,6 +54,7 @@ function updateValues()
 	if global.pdpTable == nil then global.pdpTable = {} end
 	if global.lfpTable == nil then global.lfpTable = {} end
 	if global.deepStorageTable == nil then global.deepStorageTable = {} end
+	if global.deepTankTable == nil then global.deepTankTable = {} end
 	if global.dataNetworkTable == nil then global.dataNetworkTable = {} end
 	if global.dataNetworkIDGreenTable == nil then global.dataNetworkIDGreenTable = {} end
 	if global.dataNetworkIDRedTable == nil then global.dataNetworkIDRedTable = {} end
@@ -93,18 +94,10 @@ function technologyFinished(event)
 		if event.research.force.name == MF.player then
 			if event.research.name == "ControlCenter" then updateFactoryFloorForCC(MF) end
 			if event.research.name == "UpgradeModules" then createControlCenterEqualizer(MF) end
-			if event.research.name == "StorageTankMK1_1" then createMK1Tank1(MF) end
-			if event.research.name == "StorageTankMK1_2" then createMK1Tank2(MF) end
-			if event.research.name == "StorageTankMK1_3" then createMK1Tank3(MF) end
-			if event.research.name == "StorageTankMK1_4" then createMK1Tank4(MF) end
-			if event.research.name == "StorageTankMK1_5" then createMK1Tank5(MF) end
-			if event.research.name == "StorageTankMK2_1" then upgradeTank(1, MF) end
-			if event.research.name == "StorageTankMK2_2" then upgradeTank(2, MF) end
-			if event.research.name == "StorageTankMK2_3" then upgradeTank(3, MF) end
-			if event.research.name == "StorageTankMK2_4" then upgradeTank(4, MF) end
-			if event.research.name == "StorageTankMK2_5" then upgradeTank(5, MF) end
 			if event.research.name == "DeepStorage" then createDeepStorageArea(MF) end
+			if event.research.name == "DeepTank" then createDeepTankArea(MF) end
 			if event.research.name == "ConstructibleArea1" then createConstructibleArea1(MF) end
+			if event.research.name == "ConstructibleArea2" then createConstructibleArea2(MF) end
 		end
 	end
 end
@@ -113,18 +106,10 @@ end
 function checkTechnologies(MF)
 	if technologyUnlocked("ControlCenter", getForce(MF.player)) == true and MF.varTable.tech.ControlCenter ~= true then updateFactoryFloorForCC(MF) end
 	if technologyUnlocked("UpgradeModules", getForce(MF.player)) == true and MF.varTable.tech.UpgradeModules ~= true then createControlCenterEqualizer(MF) end
-	if technologyUnlocked("StorageTankMK1_1", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK11 ~= true then createMK1Tank1(MF) end
-	if technologyUnlocked("StorageTankMK1_2", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK12 ~= true then createMK1Tank2(MF) end
-	if technologyUnlocked("StorageTankMK1_3", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK13 ~= true then createMK1Tank3(MF) end
-	if technologyUnlocked("StorageTankMK1_4", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK14 ~= true then createMK1Tank4(MF) end
-	if technologyUnlocked("StorageTankMK1_5", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK15 ~= true then createMK1Tank5(MF) end
-	if technologyUnlocked("StorageTankMK2_1", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK21 ~= true then upgradeTank(1, MF) end
-	if technologyUnlocked("StorageTankMK2_2", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK22 ~= true then upgradeTank(2, MF) end
-	if technologyUnlocked("StorageTankMK2_3", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK23 ~= true then upgradeTank(3, MF) end
-	if technologyUnlocked("StorageTankMK2_4", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK24 ~= true then upgradeTank(4, MF) end
-	if technologyUnlocked("StorageTankMK2_5", getForce(MF.player)) == true and MF.varTable.tech.StorageTankMK25 ~= true then upgradeTank(5, MF) end
 	if technologyUnlocked("DeepStorage", getForce(MF.player)) == true and MF.varTable.tech.DeepStorage ~= true then createDeepStorageArea(MF) end
+	if technologyUnlocked("DeepTank", getForce(MF.player)) == true and MF.varTable.tech.DeepTank ~= true then createDeepTankArea(MF) end
 	if technologyUnlocked("ConstructibleArea1", getForce(MF.player)) == true and MF.varTable.tech.ConstructibleArea1 ~= true then createConstructibleArea1(MF) end
+	if technologyUnlocked("ConstructibleArea2", getForce(MF.player)) == true and MF.varTable.tech.ConstructibleArea2 ~= true then createConstructibleArea2(MF) end
 end
 
 function selectedEntityChanged(event)

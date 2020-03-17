@@ -44,10 +44,7 @@ ez.animation_shadow =
   }
 ez.energy_source =
   {
-    type = "electric",
-    usage_priority = "secondary-input",
-	render_no_power_icon = false,
-	render_no_network_icon = false
+    type = "void"
   }
 ez.vehicle_impact_sound =  { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 }
 ez.distribution_effectivity = 0.5

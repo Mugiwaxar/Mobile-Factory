@@ -121,6 +121,6 @@ lfpT.unit = {
 		{"DimensionalSample", 1}
 	}
 }
-lfpT.prerequisites = {"StorageTankMK1_1"}
+lfpT.prerequisites = {"DeepTank"}
 lfpT.effects = {{type="unlock-recipe", recipe="LogisticFluidPole"}}
 data:extend{lfpT}
