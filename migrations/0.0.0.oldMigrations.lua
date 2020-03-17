@@ -30,9 +30,6 @@ end
 
 -- Unlocking Recipes --
 unlockRecipeForAll("DimensionalOre")
-unlockRecipeForAll("DistributionModule", "EnergyPowerModule")
-unlockRecipeForAll("DrainModule", "EnergyPowerModule")
-unlockRecipeForAll("ModuleID1", "StorageTankMK1")
 unlockRecipeForAll("mfShieldEquipment", "MFShield")
 unlockRecipeForAll("DataCenter", "MatterSerialization")
 unlockRecipeForAll("DataCenterMF", "MatterSerialization")

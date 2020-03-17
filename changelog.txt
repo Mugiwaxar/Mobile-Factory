@@ -1,4 +1,30 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.115
+Date: 17/03/2020
+  Major Features:
+    - Fluid Materialization:
+    - Now, you can use the Fluid Interactor to send and retrieve Fluids via the Data Network
+    - Fluids can be stored in Deep Tanks, a 10 ML capacity tank that can only be placed inside the Control Center
+  Features:
+    - Added the Deep Tank, a Fluid Storage Tank with 10 ML of capacity that replace the Dimmensional Tank (Can only be placed inside the Control Center)
+    - Added the Constructible Area 2: A new Contructible Area inside the Control Center
+    - Added the Fluid Interactor
+    - New Technology: Fluid Serialization, Unlock the Deep Tank, the Fluid Interactor and a new Constructible Area inside the Control Center
+    - New Technology: Constructible Area 2, Unlock a new Constructible Area inside the Control Center
+    - The Internal Inventory Data Center now send the Deep Tanks Inventories via signals
+  Changes:
+    - The Deep Storage Technology require now the Matter Serialization Technology
+    - The Ore Cleaning Technology require now the Matter Serialization Technology
+    - The Fluid Extraction Technology require now the Matter Serialization Technology
+    - The Fluid Transmission Technology require now the Deep Tank Technology
+    - The Fluid Drain Technology require now the Deep Tank Technology
+    - Removed the Dimensional Accumulator and the Dimensional Substation inside the Control Center
+    - Removed all Dimensional Tank Technologies
+    - Removed all Dimensional Tanks (MK1 and MK2)
+    - Removed the Logistic Fluid Pole
+    - Removed Module ID 1/2/3/4/5 (Not used anymore)
+    - Removed Distribution/Drain Modules (Not used anymore)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.114
 Date: 12/03/2020
   Features:
@@ -7,7 +33,7 @@ Date: 12/03/2020
     - Added Erya Extrem Underground Belt: A extremly fast underground Belt made from Erya
     - New Technology: Erya Loader, Unlock the Erya Loader
     - New Technology: Erya Extrem Loader, Unlock the Erya Extrem Loader
-    - New Technology: Erya Extrem Underground Belt-
+    - New Technology: Erya Extrem Underground Belt
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.113
 Date: 08/03/2020

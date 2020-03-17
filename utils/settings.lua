@@ -52,6 +52,9 @@ _lfpFluidDrain = 10000
 _lfpFluidLaser = 1
 _lfpFluidConsomption = 10
 
+-- Deep Tank settings --
+_dtMaxFluid = 10000000
+
 -- Matter Serialization settings --
 _mfBaseMaxItems = 10000
 _mfDataStorageCapacity = 1000
@@ -61,6 +64,7 @@ _mfMSEnergyDrainPerUpdate = 3000
 _mfMPEnergyDrainPerUpdate = 3000
 _mfWDTEnergyDrainPerUpdate = 70000
 _mfWDREnergyDrainPerUpdate = 30000
+_mfFIEnergyDrainPerUpdate = 4500
 
 -- Ore Cleaner settings --
 _mfOreCleanerMaxCharge = 1000
@@ -123,7 +127,6 @@ _eventTick41=41 -- Repair Jets --
 _eventTick45=45 -- Construction Jets --
 _eventTick55=55 -- GUI --
 _eventTick60=60 -- Mobile Factory Lasers/Jump Drive --
-_eventTick64=64 -- Logistic Fluid Poles --
 _eventTick73=73 -- Combat Jets --
 _eventTick80=80 -- Mobile Factory Internal Inventory --
 _eventTick90=90 -- Mobile Factory Entities Scan --

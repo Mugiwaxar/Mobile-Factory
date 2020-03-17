@@ -127,6 +127,21 @@ function DCMF:update()
 			end
 		end
 	end
+
+	-- Create the Deep Tanks Signals --
+	for k, dtk in pairs(global.deepTankTable) do
+		-- Create and send the Signal --
+		if Util.canUse(self.player, dtk.ent) then
+			if dtk.inventoryFluid ~= nil and game.fluid_prototypes[dtk.inventoryFluid] ~= nil then
+				local signal = {signal={type="fluid", name=dtk.inventoryFluid} ,count=dtk.inventoryCount}
+				self.ent.get_control_behavior().set_signal(i, signal)
+				-- Increament the Slot --
+				i = i + 1
+				-- Stop if there are to much Items --
+				if i > 999 then break end
+			end
+		end
+	end
 	
 end
 -- Tooltip Infos --

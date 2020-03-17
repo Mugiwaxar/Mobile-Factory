@@ -63,7 +63,7 @@ wdtI.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessD
 wdtI.icon_size = 64
 wdtI.place_result = "WirelessDataTransmitter"
 wdtI.subgroup = "DataSerialization"
-wdtI.order = "e"
+wdtI.order = "f1"
 wdtI.stack_size = 10
 data:extend{wdtI}
 

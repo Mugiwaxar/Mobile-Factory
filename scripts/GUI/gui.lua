@@ -262,15 +262,15 @@ function GUI.onGuiElemChanged(event)
 	if event.element.type == "choose-elem-button" and event.element.get_mod() == "Mobile_Factory" then
 		local id = event.element.name
 
-		-- If this is a Dimensional Tank --
+		-- If this is a Deep Tank --
 		if string.match(id, "TF") then
-			-- Get
+			-- Get the Deep Tank ID --
 			id = tonumber(split(id, "TF")[1])
-			if MF.varTable.tanks[id] == nil then return end
+			if global.deepTankTable[id] == nil then return end
 			if event.element.elem_value ~= nil then
-				MF.varTable.tanks[id].filter = event.element.elem_value
+				global.deepTankTable[id].filter = event.element.elem_value
 			else
-				MF.varTable.tanks[id].filter = nil
+				global.deepTankTable[id].filter = nil
 			end
 		end
 
@@ -291,7 +291,7 @@ function GUI.onGuiElemChanged(event)
 		end
 	end
 	
-	------- Read if the Element comes from an Wireless Data Receiver -------
+	------- Read if the Element comes from a Wireless Data Receiver -------
 	if string.match(event.element.name, "WDR") then
 		-- Find the Receiver ID --
 		local ID = split(event.element.name, "WDR")
@@ -331,7 +331,7 @@ function GUI.onGuiElemChanged(event)
 		oreCleaner:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
 	end
 	
-	------- Read if the Element comes from an Fluid Extractor -------
+	------- Read if the Element comes from a Fluid Extractor -------
 	if string.match(event.element.name, "FE") then
 		-- Find the Fluid Extractor ID --
 		local ID = split(event.element.name, "FE")
@@ -348,10 +348,10 @@ function GUI.onGuiElemChanged(event)
 		-- Check if a Fluid Extractor was found --
 		if fluidExtractor == nil then return end
 		-- Change the Fluid Extractor targeted Dimensional Tank --
-		fluidExtractor:changeDimTank(tonumber(event.element.items[event.element.selected_index]))
+		fluidExtractor:changeDimTank(tonumber(event.element.items[event.element.selected_index][4]))
 	end
 	
-	------- Read if the Element comes from an Matter Serializer -------
+	------- Read if the Element comes from a Matter Serializer -------
 	if string.match(event.element.name, "MS") then
 		-- Find the Matter Serializer ID --
 		local ID = split(event.element.name, "MS")
@@ -370,7 +370,8 @@ function GUI.onGuiElemChanged(event)
 		-- Change the Matter Serializer targeted Inventory --
 		matterS:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
 	end
-	------- Read if the Element comes from an Matter Printer -------
+	
+	------- Read if the Element comes from a Matter Printer -------
 	if string.match(event.element.name, "MP") then
 		-- Find the Matter Printer ID --
 		local ID = split(event.element.name, "MP")
@@ -389,10 +390,61 @@ function GUI.onGuiElemChanged(event)
 		-- Change the Matter Printer targeted Inventory --
 		matterP:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
 	end
+
+	------- Read if the Element comes from a Fluid Interactor Mode -------
+	if string.match(event.element.name, "FIMode") then
+		local ID = split(event.element.name, "FIMode")
+		ID = tonumber(ID[1])
+		-- Check the ID --
+		if ID == nil then return end
+		-- Find the Fluid Manipulator --
+		local fluidI = nil
+		for k, fi in pairs(global.fluidInteractorTable) do
+			if valid(fi) == true and fi.ent.unit_number == ID then
+				fluidI = fi
+			end
+		end
+		-- Check if a Fluid Interactor was found --
+		if fluidI == nil then return end
+		-- Change the Mode --
+		fluidI:changeMode(event.element.switch_state)
+	end
+
+	------- Read if the Element comes from a Fluid Interactor Target -------
+	if string.match(event.element.name, "FITarget") then
+		local ID = split(event.element.name, "FIMode")
+		ID = tonumber(ID[1])
+		-- Check the ID --
+		if ID == nil then return end
+		-- Find the Fluid Manipulator --
+		local fluidI = nil
+		for k, fi in pairs(global.fluidInteractorTable) do
+			if valid(fi) == true and fi.ent.unit_number == ID then
+				fluidI = fi
+			end
+		end
+		-- Check if a Fluid Interactor was found --
+		if fluidI == nil then return end
+		-- Change the Fluid Interactor Target --
+		fluidI:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
+	end
+
 	------- Read if the Element comes from The Mobile Factory Power Laser -------
 	if string.match(event.element.name, "MFPL") then
 		-- Change the Matter Serializer targeted Inventory --
-		MF:changePowerLaserMode(event.element.selected_index)
+		MF:changePowerLaserMode(event.element.switch_state)
+	end
+
+	------- Read if the Element comes from the Mobile Factory Fluid Laser mode -------
+	if string.match(event.element.name, "MFFMode") then
+		-- Change the Mode --
+		MF:fluidLaserMode(event.element.switch_state)
+	end
+
+	------- Read if the Element comes from the Mobile Factory Fluid Laser Target -------
+	if string.match(event.element.name, "MFFTarget") then
+		-- Change the Fluid Interactor Target --
+		MF:fluidLaserTarget(tonumber(event.element.items[event.element.selected_index][4]))
 	end
 	
 	------- Read if the Element comes from a Mining Jet Flag -------

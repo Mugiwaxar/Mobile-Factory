@@ -33,6 +33,7 @@ function UpSys.scanObjs()
   UpSys.addTable(global.dataCenterTable)
   UpSys.addTable(global.matterSerializerTable)
   UpSys.addTable(global.matterPrinterTable)
+  UpSys.addTable(global.fluidInteractorTable)
   UpSys.addTable(global.dataStorageTable)
   UpSys.addTable(global.energyCubesTable)
   UpSys.addTable(global.oreCleanerTable)
@@ -46,6 +47,7 @@ function UpSys.scanObjs()
   UpSys.addTable(global.repairJetTable)
   UpSys.addTable(global.combatJetTable)
   UpSys.addTable(global.deepStorageTable)
+  UpSys.addTable(global.deepTankTable)
   UpSys.addTable(global.pdpTable)
 
   -- Save the last scan tick --
@@ -172,95 +174,4 @@ function Erya.updateEryaStructures(event)
     end
     global.updateEryaIndex = global.updateEryaIndex + 1
   end
-end
-
--- Fill/Empty tank --
-function updateLogisticFluidPoles()
-	for k, entity in pairs(global.lfpTable) do
-    if entity == nil or entity.valid == false or entity.last_user == nil then
-      global.lfpTable[k] = nil
-      goto continue
-    end
-    local MF = getMF(entity.last_user.name)
-    if MF == nil then
-      global.lfpTable[k] = nil
-      goto continue
-    end
-		local powerMD = 0
-		local efficiencyMD = 0
-		local focusMD = 0
-		local methodMD
-		local tankMDS
-		local tankMD
-		for name, count in pairs(entity.get_inventory(defines.inventory.beacon_modules).get_contents()) do
-			if name == "EnergyPowerModule" then powerMD = powerMD + count end
-			if name == "EnergyEfficiencyModule" then efficiencyMD = efficiencyMD + count end
-			if name == "EnergyFocusModule" then focusMD = focusMD + count end
-			if name == "DistributionModule" then methodMD = "DistributionModule" end
-			if name == "DrainModule" then methodMD = "DrainModule" end
-			if string.match(name, "ModuleID") then tankMDS = name end
-		end
-		if tankMDS ~= nil then
-			tankMD = split(tankMDS, "D")[2]
-			tankMD = tonumber(tankMD)
-		end
-		if methodMD ~= nil and tankMD ~= nil and tankMD > 0 then
-			local lfpRadius = _lfpFluidRadius + powerMD
-			local lfpDrain = _lfpFluidDrain * (efficiencyMD + 1)
-			local lfpLaser = _lfpFluidLaser + focusMD
-			local entities = entity.surface.find_entities_filtered{position=entity.position, radius=lfpRadius}
-			i = 1
-			for k2, pTank in pairs(entities) do
-				if pTank == nil or pTank.valid ~= true or Util.canUse(MF.player, pTank) == false then goto continue2 end
-        if i > lfpLaser then break end
-        if pTank.type ~= "storage-tank" then goto continue2 end
-        if pTank.fluidbox.get_capacity(1) < 1000 then goto continue2 end
-        local ccTank
-        local filter
-        if MF.varTable.tanks ~= nil and MF.varTable.tanks[tankMD] ~= nil then
-          filter = MF.varTable.tanks[tankMD].filter
-          ccTank = MF.varTable.tanks[tankMD].ent
-        end
-        if filter == nil or ccTank == nil then goto continue2 end
-
-        if methodMD == "DistributionModule" then
-          local name
-          local amount
-          for k3, i in pairs(ccTank.get_fluid_contents()) do
-            name = k3
-            amount = i
-          end
-          if name ~= nil and MF.internalEnergy > _lfpFluidConsomption * math.min(amount, lfpDrain) then
-            local amountRm = pTank.insert_fluid({name=name, amount=math.min(amount, lfpDrain)})
-            ccTank.remove_fluid{name=name, amount = amountRm}
-            if amountRm > 0 then
-              entity.surface.create_entity{name="PurpleBeam", duration=60, position=entity.position, target=pTank.position, source={entity.position.x, entity.position.y-4.5}}
-              MF.internalEnergy = MF.internalEnergy - (_lfpFluidConsomption*amountRm)
-              i = i + 1
-            end
-          end
-        end
-
-        if methodMD == "DrainModule" then
-          local name
-          local amount
-          for k, i in pairs(pTank.get_fluid_contents()) do
-            name = k
-            amount = i
-          end
-          if name ~= nil and name == filter and MF.internalEnergy > _lfpFluidConsomption * math.min(amount, lfpDrain) then
-            local amountRm = ccTank.insert_fluid({name=name, amount=math.min(amount, lfpDrain)})
-            pTank.remove_fluid{name=name, amount=amountRm}
-            if amountRm > 0 then
-              entity.surface.create_entity{name="PurpleBeam", duration=60, position=entity.position, target=pTank.position, source={entity.position.x, entity.position.y-4.5}}
-              MF.internalEnergy = MF.internalEnergy - (_lfpFluidConsomption*amountRm)
-              i = i + 1
-            end
-          end
-        end
-        ::continue2::
-			end
-    end
-    ::continue::
-	end
 end

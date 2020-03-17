@@ -9,7 +9,7 @@ FE = {
 	totalCharge = 0,
 	updateTick = 60,
 	lastUpdate = 0;
-	selectedDimTank = nil,
+	selectedInv = nil,
 	mfTooFar = false
 }
 
@@ -50,7 +50,7 @@ end
 
 -- Copy Settings --
 function FE:copySettings(obj)
-	self.selectedDimTank = obj.selectedDimTank
+	self.selectedInv = obj.selectedInv
 end
 
 -- Update --
@@ -95,22 +95,18 @@ function FE:getTooltipInfos(GUI)
 	local ChargeBar = feFrame.add{type="progressbar", value=self.charge/_mfFEMaxCharge}
 	local PurityLabel = feFrame.add{type="label", caption={"", {"gui-description.Purity"}, ": ", self.purity}}
 	local PurityBar = feFrame.add{type="progressbar", value=self.purity/100}
-	local targetLabel = feFrame.add{type="label", caption={"", {"gui-description.FETarget"}, ":"}}
 
 	-- Update Style --
 	nameLabel.style.bottom_margin = 5
 	SpeedLabel.style.font = "LabelFont"
 	ChargeLabel.style.font = "LabelFont"
 	PurityLabel.style.font = "LabelFont"
-	targetLabel.style.top_margin = 7
-	targetLabel.style.font = "LabelFont"
 	nameLabel.style.font_color = {108, 114, 229}
 	SpeedLabel.style.font_color = {39,239,0}
 	ChargeLabel.style.font_color = {39,239,0}
 	ChargeBar.style.color = {176,50,176}
 	PurityLabel.style.font_color = {39,239,0}
 	PurityBar.style.color = {255, 255, 255}
-	targetLabel.style.font_color = {108, 114, 229}
 	
 	-- Create the Mobile Factory Too Far Label --
 	if self.MFTooFar == true then
@@ -121,34 +117,48 @@ function FE:getTooltipInfos(GUI)
 
 	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
 	
-	-- Create the Dimensional Tank Selection --
-	local dimTanks = {{"gui-description.Any"}}
+	-- Create the targeted Inventory label --
+	local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
+	targetLabel.style.top_margin = 7
+	targetLabel.style.font = "LabelFont"
+	targetLabel.style.font_color = {108, 114, 229}
+
+	local invs = {{"", {"gui-description.All"}}}
 	local selectedIndex = 1
 	local i = 1
-	for k, dimTank in pairs(self.MF.varTable.tanks) do
-		if dimTank ~= nil then
+	for k, deepTank in pairs(global.deepTankTable) do
+		if deepTank ~= nil and deepTank.ent ~= nil and Util.canUse(self.player, deepTank.ent) then
 			i = i + 1
-			dimTanks[k+1] = tostring(k)
-			if self.selectedDimTank == dimTank then
+			local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
+			if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
+				itemText = {"", " (", game.fluid_prototypes[deepTank.filter].localised_name, " - ", deepTank.player, ")"}
+			elseif deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
+				itemText = {"", " (", game.fluid_prototypes[deepTank.inventoryFluid].localised_name, " - ", deepTank.player, ")"}
+			end
+			invs[k+1] = {"", {"gui-description.DT"}, " ", tostring(deepTank.ID), itemText}
+			if self.selectedInv == deepTank then
 				selectedIndex = i
 			end
 		end
 	end
-	if selectedIndex ~= nil and selectedIndex > table_size(dimTanks) then selectedIndex = nil end
-	local dimTankSelection = feFrame.add{type="list-box", name="FE" .. self.ent.unit_number, items=dimTanks, selected_index=selectedIndex}
-	dimTankSelection.style.width = 50
+	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
+	local invSelection = GUI.add{type="list-box", name="FE" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
+	invSelection.style.width = 100
 end
 
 -- Change the Targeted Dimensional Tank --
 function FE:changeDimTank(ID)
 	-- Check the ID --
-	if ID == nil then self.selectedDimTank = nil end
+	if ID == nil then
+		self.selectedInv = nil
+		return
+	end
 	-- Select the Ore Silo --
-	self.selectedDimTank = nil
-	for k, dimTank in pairs(self.MF.varTable.tanks) do
+	self.selectedInv = nil
+	for k, dimTank in pairs(global.deepTankTable) do
 		if dimTank ~= nil and dimTank.ent ~= nil and dimTank.ent.valid == true then
-			if ID == k then
-				self.selectedDimTank = dimTank
+			if ID == dimTank.ID then
+				self.selectedInv = dimTank
 			end
 		end
 	end
@@ -174,17 +184,28 @@ function FE:extractFluids(event)
 	local resource = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=1, type="resource", limit=1}
 	resource = resource[1]
 	if resource == nil or resource.valid == false then return end
+	-- Find the Focused Tank --
+	local inventory = self.selectedInv
+	if inventory == nil then
+		-- Auto Select the Ore Silo --
+		inventory = nil
+		for k, dimTank in pairs(global.deepTankTable) do
+			if dimTank ~= nil and dimTank.ent ~= nil and dimTank.ent.valid == true then
+				if dimTank:canAccept(resource.name) then
+					inventory = dimTank
+					break
+				end
+			end
+		end
+	end
+	-- Check the Selected Inventory --
+	if inventory == nil then return end
 	-- Calcule the amount that can be extracted --
 	local amount = math.min(resource.amount, self:fluidPerExtraction())
-	-- Find the Focused Tank and Filter --
-	if self.selectedDimTank == nil then return end
-	local filter = self.selectedDimTank.filter
-	local tank = self.selectedDimTank.ent
-	if filter == nil or tank == nil then return end
-	-- Test if the Filter accept this Fluid --
-	if resource.name ~= filter then return end
-	-- Send the Fluid to the Tank --
-	local amountAdded = tank.insert_fluid({name=resource.name, amount=amount})
+	-- Check if the Distant Tank can accept the fluid --
+	if inventory:canAccept(resource.name, amount) == false then return end
+	-- Send the Fluid --
+	local amountAdded = inventory:addFluid(resource.name, amount)
 	-- Test if Fluid was sended --
 	if amountAdded > 0 then
 		self.charge = self.charge - 10

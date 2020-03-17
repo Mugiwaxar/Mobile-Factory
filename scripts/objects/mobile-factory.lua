@@ -26,10 +26,12 @@ MF = {
 	energyLaserActivated = false,
 	fluidLaserActivated = false,
 	itemLaserActivated = false,
+	selectedInventory = nil,
 	IDModule = 0,
 	internalEnergyDistributionActivated = false,
 	sendQuatronActivated = false,
-	selectedPowerLaserMode = 1,
+	selectedPowerLaserMode = "input", -- input, output
+	selectedFluidLaserMode = "input", -- input, output
 	varTable = nil
 }
 
@@ -93,18 +95,99 @@ function MF:getTooltipInfos(GUI)
 
 	-- Create the Power laser Label --
 	if technologyUnlocked("EnergyDrain1", getForce(self.player)) then
+
+
 		-- Create the Power Laser label --
 		local connectedL = GUI.add{type="label"}
 		connectedL.style.font = "LabelFont"
-		connectedL.caption = "Power Laser Mode:"
+		connectedL.caption = {"",{"gui-description.PowerLaser"}, ":"}
 		connectedL.style.font_color = {92, 232, 54}
 
-		-- Create the Power Laser Selection --
-		local laserMode = {{"gui-description.Drain"}, {"gui-description.Send"}}
-		if self.selectedPowerLaserMode ~= nil and self.selectedPowerLaserMode > table_size(laserMode) then selectedIndex = nil end
-		local networkSelection = GUI.add{type="list-box", name="MFPL" .. self.ent.unit_number, items=laserMode, selected_index=self.selectedPowerLaserMode}
-		networkSelection.style.margin = 5
-		networkSelection.style.width = 75
+		local state = "left"
+
+		if self.selectedPowerLaserMode == "output" then state = "right" end
+		
+		local modeSwitch = GUI.add{type="switch", name="MFPL", allow_none_state=false, switch_state=state}
+		modeSwitch.left_label_caption = {"gui-description.Drain"}
+		modeSwitch.left_label_tooltip = {"gui-description.DrainTT"}
+		modeSwitch.right_label_caption = {"gui-description.Send"}
+		modeSwitch.right_label_tooltip = {"gui-description.SendTT"}
+	end
+
+	if technologyUnlocked("FluidDrain1", getForce(self.player)) then
+		-- Create the Fluid Laser Mode Selection --
+		-- Create the Mode Label --
+		local modeLabel = GUI.add{type="label", caption={"",{"gui-description.FluidLaser"}, ":"}}
+		modeLabel.style.top_margin = 7
+		modeLabel.style.font = "LabelFont"
+		modeLabel.style.font_color = {92, 232, 54}
+
+		local state = "left"
+
+		if self.selectedFluidLaserMode == "output" then state = "right" end
+		
+		local modeSwitch = GUI.add{type="switch", name="MFFMode", allow_none_state=false, switch_state=state}
+		modeSwitch.left_label_caption = {"gui-description.Input"}
+		modeSwitch.left_label_tooltip = {"gui-description.InputTT"}
+		modeSwitch.right_label_caption = {"gui-description.Output"}
+		modeSwitch.right_label_tooltip = {"gui-description.OutputTT"}
+
+		-- Create the Inventory Selection --
+		-- Create the targeted Inventory label --
+		local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
+		targetLabel.style.top_margin = 7
+		targetLabel.style.font = "LabelFont"
+		targetLabel.style.font_color = {108, 114, 229}
+
+		-- Create the List --
+		local invs = {{"", {"gui-description.Any"}}}
+		local selectedIndex = 1
+		local i = 1
+		for k, deepTank in pairs(global.deepTankTable) do
+			if deepTank ~= nil and deepTank.ent ~= nil and Util.canUse(self.player, deepTank.ent) then
+				i = i + 1
+				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
+				if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
+					itemText = {"", " (", game.fluid_prototypes[deepTank.filter].localised_name, " - ", deepTank.player, ")"}
+				elseif deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
+					itemText = {"", " (", game.fluid_prototypes[deepTank.inventoryFluid].localised_name, " - ", deepTank.player, ")"}
+				end
+				invs[k+1] = {"", {"gui-description.DT"}, " ", tostring(deepTank.ID), itemText}
+				if self.selectedInv == deepTank then
+					selectedIndex = i
+				end
+			end
+		end
+		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
+		local invSelection = GUI.add{type="list-box", name="MFFTarget", items=invs, selected_index=selectedIndex}
+		invSelection.style.width = 100
+	end
+end
+
+-- Change the Mode --
+function MF:fluidLaserMode(mode)
+    if mode == "left" then
+        self.selectedFluidLaserMode = "input"
+    elseif mode == "right" then
+        self.selectedFluidLaserMode = "output"
+    end
+end
+
+-- Change the Fluid Laser Targeted Inventory --
+function MF:fluidLaserTarget(ID)
+	-- Check the ID --
+    if ID == nil then
+        self.selectedInv = nil
+        return
+    end
+	-- Select the Inventory --
+	self.selectedInv = nil
+	for k, deepTank in pairs(global.deepTankTable) do
+		if valid(deepTank) then
+			if ID == deepTank.ID then
+				self.selectedInv = deepTank
+			end
+		end
 	end
 end
 
@@ -192,8 +275,11 @@ end
 
 -- Change the Power Laser to Drain or Send mode --
 function MF:changePowerLaserMode(mode)
-	if mode == nil then return end
-	self.selectedPowerLaserMode = mode
+	if mode == "left" then
+        self.selectedPowerLaserMode = "input"
+    elseif mode == "right" then
+        self.selectedPowerLaserMode = "output"
+    end
 end
 
 -- Scan all Entities around the Mobile Factory --
@@ -253,7 +339,7 @@ function MF:updateEnergyLaser(entity)
 	-- Exclude Mobile Factory, Character, Power Drain Pole and Entities with 0 energy --
 	if mobileFactory == false and entity.type ~= "character" and entity.name ~= "PowerDrainPole" and entity.name ~= "OreCleaner" and entity.name ~= "FluidExtractor" and entity.energy ~= nil and entity.electric_buffer_size ~= nil then
 		----------------------- Drain Power -------------------------
-		if self.selectedPowerLaserMode == 1 and entity.energy > 0 then
+		if self.selectedPowerLaserMode == "input" and entity.energy > 0 then
 			-- Missing Internal Energy or Structure Energy --
 			local energyDrain = math.min(self.maxInternalEnergy - self.internalEnergy, entity.energy)
 			-- EnergyDrain or LaserDrain Caparity --
@@ -269,7 +355,7 @@ function MF:updateEnergyLaser(entity)
 				-- One less Beam to the Beam capacity --
 				return true
 			end
-		elseif self.selectedPowerLaserMode == 2 and entity.energy < entity.electric_buffer_size then
+		elseif self.selectedPowerLaserMode == "output" and entity.energy < entity.electric_buffer_size then
 			-- Structure missing Energy or Laser Power --
 			local energySend = math.min(entity.electric_buffer_size - entity.energy , self:getLaserEnergyDrain())
 			-- Energy Send or Mobile Factory Energy --
@@ -318,42 +404,54 @@ end
 function MF:updateFluidLaser(entity)
 	-- Check if a laser should be created --
 	if technologyUnlocked("FluidDrain1", getForce(self.player)) == false or self.fluidLaserActivated == false then return false end
-	-- Create the Laser --
-	if entity.type == "storage-tank" and self.IDModule > 0 then
-		if self.ccS ~= nil then
-			-- Get the Internal Tank --
-			local name
-			local ccTank
-			if self.varTable.tanks ~= nil and self.varTable.tanks[self.IDModule] ~= nil then
-				filter = self.varTable.tanks[self.IDModule].filter
-				ccTank = self.varTable.tanks[self.IDModule].ent
-			end
-			if filter ~= nil and ccTank ~= nil then
-				-- Get the focused Tank --
-				local name
-				local amount
-				pTank = entity
-				for k, i in pairs(pTank.get_fluid_contents()) do
-					name = k
-					amount = i
-				end
-				if name ~= nil and name == filter and self.internalEnergy > _lfpFluidConsomption * math.min(amount, self:getLaserFluidDrain()) then
-					-- Add fluid to the Internal Tank --
-					local amountRm = ccTank.insert_fluid({name=name, amount=math.min(amount, self:getLaserFluidDrain())})
-					-- Remove fluid from the focused Tank --
-					pTank.remove_fluid{name=name, amount=amountRm}
-					if amountRm > 0 then
-						-- Create the Laser --
-						self.ent.surface.create_entity{name="PurpleBeam", duration=60, position=self.ent.position, target=pTank.position, source=self.ent.position}
-						-- Drain Energy --
-						self.internalEnergy = self.internalEnergy - (_mfFluidConsomption*amountRm)
-						-- One less Beam to the Beam capacity --
-						return true
-					end
-				end
-			end
-		end
+	if entity.type ~= "storage-tank" or self.selectedInv == nil then return false end
+
+	-- Get both Tanks and their characteristics --
+    local localTank = entity
+    local distantTank = self.selectedInv
+    local localFluid = nil
+	local localAmount = nil
+	
+	-- Get the Fluid inside the local Tank --
+    for k, i in pairs(localTank.get_fluid_contents()) do
+        localFluid = k
+        localAmount = i
 	end
+	
+	-- Input mode --
+    if self.selectedFluidLaserMode == "input" then
+        -- Check the local and distant Tank --
+        if localFluid == nil or localAmount == nil then return end
+        if distantTank:canAccept(localFluid) == false then return end
+        -- Send the Fluid --
+        local amountAdded = distantTank:addFluid(localFluid, localAmount)
+        -- Remove the local Fluid --
+		localTank.remove_fluid{name=localFluid, amount=amountAdded}
+		if amountAdded > 0 then
+			-- Create the Laser --
+			self.ent.surface.create_entity{name="PurpleBeam", duration=60, position=self.ent.position, target=localTank.position, source=self.ent.position}
+			-- Drain Energy --
+			self.internalEnergy = self.internalEnergy - (_mfFluidConsomption*amountAdded)
+			-- One less Beam to the Beam capacity --
+			return true
+		end
+    elseif self.selectedFluidLaserMode == "output" then
+        -- Check the local and distant Tank --
+        if localFluid ~= nil and localFluid ~= distantTank.inventoryFluid then return end
+        if distantTank.inventoryFluid == nil or distantTank.inventoryCount == 0 then return end
+        -- Get the Fluid --
+        local amountAdded = localTank.insert_fluid({name=distantTank.inventoryFluid, amount=distantTank.inventoryCount})
+        -- Remove the distant Fluid --
+		distantTank:getFluid(distantTank.inventoryFluid, amountAdded)
+		if amountAdded > 0 then
+			-- Create the Laser --
+			self.ent.surface.create_entity{name="PurpleBeam", duration=60, position=self.ent.position, target=localTank.position, source=self.ent.position}
+			-- Drain Energy --
+			self.internalEnergy = self.internalEnergy - (_mfFluidConsomption*amountAdded)
+			-- One less Beam to the Beam capacity --
+			return true
+		end
+    end
 end
 
 -------------------------------------------- Logistic Laser --------------------------------------------
@@ -566,18 +664,10 @@ function MF:scanModules()
 	local powerMD = 0
 	local efficiencyMD = 0
 	local focusMD = 0
-	local tankMDS
 	for name, count in pairs(equalizer.get_inventory(defines.inventory.beacon_modules).get_contents()) do
 		if name == "EnergyPowerModule" then powerMD = powerMD + count end
 		if name == "EnergyEfficiencyModule" then efficiencyMD = efficiencyMD + count end
 		if name == "EnergyFocusModule" then focusMD = focusMD + count end
-		if string.match(name, "ModuleID") then tankMDS = name end
-	end
-	if tankMDS ~= nil then
-		tankMD = split(tankMDS, "D")[2]
-		self.IDModule = tonumber(tankMD)
-	else
-		self.IDModule = 0
 	end
 	self.laserRadiusMultiplier = powerMD
 	self.laserDrainMultiplier = efficiencyMD
@@ -594,15 +684,6 @@ function MF:updateAccumulators()
 				entity.energy = entity.energy + _mfBaseEnergyAccSend
 				self.internalEnergy = self.internalEnergy - _mfBaseEnergyAccSend
 			end
-		end
-	end
-	-- Control Center --
-	if self.ccS ~= nil then
-		local accumulator = self.ccS.find_entity("DimensionalAccumulator", {2,12})
-		if accumulator == nil or accumulator.valid == false then
-			game.print("Unable to charge the Control Center accumulator")
-		else
-			accumulator.energy = accumulator.electric_buffer_size
 		end
 	end
 end
