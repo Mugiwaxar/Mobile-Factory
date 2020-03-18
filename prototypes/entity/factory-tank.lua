@@ -8,7 +8,7 @@ ftE.fast_replaceable_group = nil
 ftE.next_upgrade = nil
 ftE.fluid_box.base_area = 10000
 ftE.pictures.picture.sheets[1] = ftE.pictures.picture.sheets[1].hr_version
-ftE.pictures.picture.sheets[1].filename = "__Mobile_Factory__/graphics/FactoryTankE.png"
+ftE.pictures.picture.sheets[1].filename = "__Mobile_Factory_Graphics__/graphics/entity/FactoryTankE.png"
 ftE.pictures.picture.sheets[1].hr_version = nil
 data:extend{ftE}
 
@@ -16,7 +16,7 @@ data:extend{ftE}
 local ftI = {}
 ftI.type = "item"
 ftI.name = "FactoryTank"
-ftI.icon = "__Mobile_Factory__/graphics/FactoryTankI.png"
+ftI.icon = "__Mobile_Factory_Graphics__/graphics/icones/FactoryTankI.png"
 ftI.icon_size = 64
 ftI.subgroup = "DimensionalStuff"
 ftI.order = "A2"

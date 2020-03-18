@@ -17,7 +17,7 @@ data:extend{mfC}
 local fcI = {}
 fcI.type = "item"
 fcI.name = "FactoryChest"
-fcI.icon = "__Mobile_Factory__/graphics/FactoryChestI.png"
+fcI.icon = "__Mobile_Factory_Graphics__/graphics/icones/FactoryChestI.png"
 fcI.icon_size = 40
 fcI.subgroup = "DimensionalStuff"
 fcI.order = "A"

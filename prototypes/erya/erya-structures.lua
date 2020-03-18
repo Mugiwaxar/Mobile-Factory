@@ -110,7 +110,7 @@ local erTE = table.deepcopy(data.raw["storage-tank"]["storage-tank"])
 erTE.name = "EryaTank1"
 erTE.minable = {mining_time = 0.3, result = "EryaTank1"}
 erTE.pictures.picture.sheets[1] = erTE.pictures.picture.sheets[1].hr_version
-erTE.pictures.picture.sheets[1].filename = "__Mobile_Factory__/graphics/EryaTank1E.png"
+erTE.pictures.picture.sheets[1].filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaTank1E.png"
 erTE.pictures.picture.sheets[1].hr_version = nil
 erTE.fluid_box.base_area = 400
 data:extend{erTE}
@@ -127,8 +127,6 @@ createEryaItem
     {count=120,time=1,ingredients={{"EryaSample", 1}}},
     "Erya"
 )
-data.raw.item.EryaTank1.icon = "__Mobile_Factory__/graphics/EryaTank1I.png"
-data.raw.technology.EryaTank1.icon = "__Mobile_Factory__/graphics/EryaTank1I.png"
 
 
 -- Erya Belt MK1 --
@@ -160,7 +158,7 @@ local eimE = table.deepcopy(data.raw["transport-belt"]["EryaBelt1"])
 eimE.name = "EryaItemMover"
 eimE.minable = {mining_time = 0.15, result = "EryaBelt1"}
 eimE.speed = 0.4
-eimE.belt_animation_set.animation_set.filename = "__Mobile_Factory__/graphics/EryaItemMoverE.png"
+eimE.belt_animation_set.animation_set.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaItemMoverE.png"
 eimE.belt_animation_set.animation_set.frame_count = 1
 eimE.belt_animation_set.animation_set.scale = 0.25
 data:extend{eimE}
@@ -178,8 +176,6 @@ createEryaItem
     "EryaBelt1",
     10
 )
-data.raw.item.EryaItemMover.icon = "__Mobile_Factory__/graphics/EryaItemMoverI.png"
-data.raw.technology.EryaItemMover.icon = "__Mobile_Factory__/graphics/EryaItemMoverI.png"
 
 
 -- Erya Underground Belt MK1 --
@@ -224,10 +220,10 @@ erxubE.minable = {mining_time = 0.15, result = "EryaUndergroundBelt2"}
 erxubE.speed = 0.4
 erxubE.max_distance = 30
 erxubE.belt_animation_set = eimE.belt_animation_set
-erxubE.structure.direction_in.sheet.filename = "__Mobile_Factory__/graphics/EryaUndergroundBelt2E.png"
-erxubE.structure.direction_out.sheet.filename = "__Mobile_Factory__/graphics/EryaUndergroundBelt2E.png"
-erxubE.structure.direction_in_side_loading.sheet.filename = "__Mobile_Factory__/graphics/EryaUndergroundBelt2E.png"
-erxubE.structure.direction_out_side_loading.sheet.filename = "__Mobile_Factory__/graphics/EryaUndergroundBelt2E.png"
+erxubE.structure.direction_in.sheet.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaUndergroundBelt2E.png"
+erxubE.structure.direction_out.sheet.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaUndergroundBelt2E.png"
+erxubE.structure.direction_in_side_loading.sheet.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaUndergroundBelt2E.png"
+erxubE.structure.direction_out_side_loading.sheet.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaUndergroundBelt2E.png"
 data:extend{erxubE}
 
 createEryaItem
@@ -243,8 +239,6 @@ createEryaItem
     "EryaUndergroundBelt1",
     6
 )
-data.raw.item.EryaUndergroundBelt2.icon = "__Mobile_Factory__/graphics/EryaUndergroundBelt2I.png"
-data.raw.technology.EryaUndergroundBelt2.icon = "__Mobile_Factory__/graphics/EryaUndergroundBelt2I.png"
 
 -- Erya Splitter MK1 --
 local erSE = table.deepcopy(data.raw.splitter.splitter)
@@ -295,7 +289,7 @@ erlE.structure.direction_in.sheet = nil
 erlE.structure.direction_in.sheets =
 {
     {
-        filename = "__Mobile_Factory__/graphics/loader/EryaLoader1E.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/Erya/loaders/EryaLoader1E.png",
         width = 300,
         height = 300,
         scale = 64/375
@@ -315,7 +309,7 @@ erlE.structure.direction_out.sheet = nil
 erlE.structure.direction_out.sheets =
 {
     {
-        filename = "__Mobile_Factory__/graphics/loader/EryaLoader1E.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/Erya/loaders/EryaLoader1E.png",
         width = 300,
         height = 300,
         scale = 64/375,
@@ -346,8 +340,6 @@ createEryaItem
     {count=130,time=1,ingredients={{"EryaSample", 1}}},
     "EryaBelt1"
 )
-data.raw.item.EryaLoader1.icon = "__Mobile_Factory__/graphics/loader/EryaLoader1I.png"
-data.raw.technology.EryaLoader1.icon = "__Mobile_Factory__/graphics/loader/EryaLoader1I.png"
 
 -- Erya Extrem Loader --
 local erxlE = table.deepcopy(data.raw["loader-1x1"].EryaLoader1)
@@ -359,7 +351,7 @@ erxlE.structure.direction_in.sheet = nil
 erxlE.structure.direction_in.sheets =
 {
     {
-        filename = "__Mobile_Factory__/graphics/loader/EryaLoader2E.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/Erya/loaders/EryaLoader2E.png",
         width = 300,
         height = 300,
         scale = 64/375
@@ -379,7 +371,7 @@ erxlE.structure.direction_out.sheet = nil
 erxlE.structure.direction_out.sheets =
 {
     {
-        filename = "__Mobile_Factory__/graphics/loader/EryaLoader2E.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/Erya/loaders/EryaLoader2E.png",
         width = 300,
         height = 300,
         scale = 64/375,
@@ -411,8 +403,6 @@ createEryaItem
     "EryaLoader1",
     5
 )
-data.raw.item.EryaLoader2.icon = "__Mobile_Factory__/graphics/loader/EryaLoader2I.png"
-data.raw.technology.EryaLoader2.icon = "__Mobile_Factory__/graphics/loader/EryaLoader2I.png"
 
 -- Erya Inserter MK1 --
 local eriE = table.deepcopy(data.raw.inserter.inserter)
