@@ -99,6 +99,9 @@ end
 
 -- Update the tooltip with a new Entity --
 function GUI.updateTooltip(player, ent)
+	-- Stop Updating if the Player is choosing a filter --
+	if getPlayerVariable(player.name, "GUIUpdateInfoGUI") == false then return end
+
 	-- Clear the Tooltip GUI --
 	player.gui.screen.mfTooltipGUI.mainTooltipFrame.mainTooltipScrollPane.clear()
 	if player.gui.screen.mfTooltipGUI.caption ~= "" then

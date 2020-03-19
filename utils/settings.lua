@@ -17,7 +17,6 @@ _mfShieldComsuption = 25000
 -- Mobile Factory Lasers settings --
 _mfBaseLaserRadius = 10
 _mfBaseLaserNumber = 1
-_mfWaterDrainPerSecond = 10000
 
 -- Mobile Factory Energy Drain settings --
 _mfEnergyDrain = 10000000
@@ -38,6 +37,18 @@ _mfJumpEnergyDrain = 1000000
 _mfMaxFuelValue = 4000000
 _mfFuelMultiplicator = 1
 
+-- Mobile Factory Sync Area settings --
+_mfSyncAreaPosition = {x=0, y=0}
+_mfSyncAreaRadius = 10
+_mfSyncAreaAllowedTypes =
+{
+    resource=true,
+    container=true,
+    ["storage-tank"]=true,
+    accumulator=true
+
+}
+
 -- Mobile Factory Internal Distrubution --
 _mfBaseEnergyAccSend = 1000000
 
@@ -45,12 +56,6 @@ _mfBaseEnergyAccSend = 1000000
 _pdpEnergyRadius = 10
 _pdpEnergyDrain = 1000000
 _pdpEnergyLaser = 1
-
--- Logistic Fluid Pole settings --
-_lfpFluidRadius = 10
-_lfpFluidDrain = 10000
-_lfpFluidLaser = 1
-_lfpFluidConsomption = 10
 
 -- Deep Tank settings --
 _dtMaxFluid = 10000000
@@ -60,10 +65,9 @@ _mfBaseMaxItems = 10000
 _mfDataStorageCapacity = 1000
 _mfDCEnergyDrainPerUpdate = 100000
 _mfDSEnergyDrainPerUpdate = 8000
-_mfMSEnergyDrainPerUpdate = 3000
-_mfMPEnergyDrainPerUpdate = 3000
 _mfWDTEnergyDrainPerUpdate = 70000
 _mfWDREnergyDrainPerUpdate = 30000
+_mfMIEnergyDrainPerUpdate = 2500
 _mfFIEnergyDrainPerUpdate = 4500
 
 -- Ore Cleaner settings --
@@ -120,8 +124,8 @@ _mfEryaFrostlayer[6] = {{-5,-5},{-5,-4},{-5,-3},{-5,-2},{-5,-1},{-5,0},{-5,1},{-
 
 -- Event Tick --
 _eventTick5=5 -- Teleportation --
-_eventTick21=21 -- Factory Chest --
 _eventTick27=27 -- Mobile Factory Fuel --
+_eventTick30=30 -- Mobile Factory Sync Area
 _eventTick38=38 -- Dimensional Accumulator --
 _eventTick41=41 -- Repair Jets --
 _eventTick45=45 -- Construction Jets --

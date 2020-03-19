@@ -219,17 +219,7 @@ function GUI.createMainGUI(player, gui)
 	mfGUIExtFF2.style.horizontal_align = "left"
 	mfGUIExtFF2.style.vertical_align = "top"
 	
-	-- Create the extended frame third flow --
-	-- local mfGUIExtFF3 = mfGUIExtendedFrame.add{type="flow", name="mfGUIExtFF3", direction="horizontal"}
-	-- Set Style --
-	-- mfGUIExtFF3.style.padding = 0
-	-- mfGUIExtFF3.style.margin = 0
-	-- mfGUIExtFF3.style.horizontal_align = "left"
-	-- mfGUIExtFF3.style.vertical_align = "top"
-	
-	
 	------------ BUTTONS ---------
-	
 	
 	-- Add CallMF Button --
 	mfGUIExtFF1.add{
@@ -257,6 +247,19 @@ function GUI.createMainGUI(player, gui)
 	-- Set Style --
 	mfGUIExtFF1.PortOutside.style.maximal_height = _GUIButtonsSize
 	mfGUIExtFF1.PortOutside.style.maximal_width = _GUIButtonsSize
+
+	-- Add SyncArea Button --
+	mfGUIExtFF1.add{
+		type="sprite-button",
+		name="SyncArea",
+		sprite="SyncAreaIcon",
+		hovered_sprite="SyncAreaIconDisabled",
+		resize_to_sprite=false,
+		tooltip={"gui-description.syncAreaButton"}
+	}
+	-- Set Style --
+	mfGUIExtFF1.SyncArea.style.maximal_height = _GUIButtonsSize
+	mfGUIExtFF1.SyncArea.style.maximal_width = _GUIButtonsSize
 	
 	-- Add FindMF Button --
 	mfGUIExtFF1.add{
@@ -477,9 +480,17 @@ function GUI.mainGUIUpdate(player)
 		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.PortOutside.visible = false
 	end
 	
+	-- Update the SyncArea button --
+	if MF.syncAreaEnabled == true then
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.SyncArea.sprite = "SyncAreaIcon"
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.SyncArea.hovered_sprite = "SyncAreaIconDisabled"
+	else
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.SyncArea.sprite = "SyncAreaIconDisabled"
+		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.SyncArea.hovered_sprite = "SyncAreaIcon"
+	end
+	
 	-- Update the FindMF Button --
 	player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = false
-	
 	if MF == nil or MF.ent == nil then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
 	if MF.ent ~= nil and MF.ent.valid == false then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
 	if MF.fS == nil or MF.fS.valid == false then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end

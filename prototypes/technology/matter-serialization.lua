@@ -15,11 +15,10 @@ msT.unit = {
 	}
 }
 msT.prerequisites = {"DimensionalCrystal"}
-msT.effects = 
+msT.effects =
 {
 	{type="nothing", effect_description={"description.MatterSerialization"}},
-	{type="unlock-recipe", recipe="MatterSerializer"},
-	{type="unlock-recipe", recipe="MatterPrinter"},
+	{type="unlock-recipe", recipe="MatterInteractor"},
 	{type="unlock-recipe", recipe="DataStorage"},
 	{type="unlock-recipe", recipe="DataCenter"},
 	{type="unlock-recipe", recipe="DataCenterMF"},

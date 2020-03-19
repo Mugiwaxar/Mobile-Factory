@@ -1,6 +1,4 @@
 require("prototypes/entity/mobile-factory.lua")
-require("prototypes/entity/factory-chest.lua")
-require("prototypes/entity/factory-tank.lua")
 require("prototypes/entity/dimensional-lab.lua")
 require("prototypes/entity/dimensional-substation.lua")
 require("prototypes/entity/dimensional-furnace.lua")
@@ -11,8 +9,6 @@ require("prototypes/entity/crystallizer.lua")
 require("prototypes/entity/dimensional-plant.lua")
 require("prototypes/entity/basic-solar-panel.lua")
 require("prototypes/entity/data-center.lua")
-require("prototypes/entity/matter-serializer.lua")
-require("prototypes/entity/matter-printer.lua")
 require("prototypes/entity/data-storage.lua")
 require("prototypes/entity/wireless-data-transmitter.lua")
 require("prototypes/entity/wireless-data-receiver.lua")
@@ -20,6 +16,7 @@ require("prototypes/entity/energy-cube.lua")
 require("prototypes/entity/deep-storage.lua")
 require("prototypes/entity/deep-tank.lua")
 require("prototypes/entity/fluid-interactor.lua")
+require("prototypes/entity/matter-interactor.lua")
 require("prototypes/entity/ore-cleaner.lua")
 require("prototypes/entity/fluid-extractor.lua")
 require("prototypes/entity/jet.lua")
@@ -476,6 +473,26 @@ data:extend{
 		type = "sprite",
 		name = "MFIconExc",
 		filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIconExc.png",
+		size = 32,
+		flags = {"icon"}
+	}
+}
+
+data:extend{
+    {
+        type = "sprite",
+        name = "SyncAreaIcon",
+        filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIconSyncArea.png",
+        size = 32,
+        flags = {"icon"}
+    }
+}
+
+data:extend{
+	{
+		type = "sprite",
+		name = "SyncAreaIconDisabled",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIconSyncAreaDisabled.png",
 		size = 32,
 		flags = {"icon"}
 	}

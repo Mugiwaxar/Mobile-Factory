@@ -9,8 +9,6 @@ MF = {
 	lastPosY = 0,
 	fS = nil,
 	ccS = nil,
-	fChest = nil,
-	fTank = nil,
 	II = nil,
 	dataCenter = nil,
 	entitiesAround = nil,
@@ -32,6 +30,11 @@ MF = {
 	sendQuatronActivated = false,
 	selectedPowerLaserMode = "input", -- input, output
 	selectedFluidLaserMode = "input", -- input, output
+	syncAreaID = 0,
+	syncAreaInsideID = 0,
+	syncAreaEnabled = true,
+	syncAreaScanned = false,
+	clonedResourcesTable = nil, -- {original, cloned}
 	varTable = nil
 }
 
@@ -42,6 +45,7 @@ function MF:new()
 	setmetatable(t, mt)
 	mt.__index = MF
 	t.entitiesAround = {}
+	t.clonedResourcesTable = {}
 	t.varTable = {}
 	t.varTable.tech = {}
 	t.varTable.tanks = {}
@@ -208,8 +212,6 @@ function MF:update(event)
 	if tick%_eventTick60 == 0 then self:updateLasers() end
 	-- Update the Fuel --
 	if tick%_eventTick27 == 0 then self:updateFuel() end
-	-- Update the Factory Chest --
-	if event.tick%_eventTick21 == 0 then self:syncFChest() end
 	-- Scan Entities Around --
 	if tick%_eventTick90 == 0 then self:scanEnt() end
 	-- Update the Shield --
@@ -227,13 +229,8 @@ function MF:update(event)
 		self:SendQuatronToOC(event)
 		self:SendQuatronToFE(event)
 	end
-end
-
--- Synchronize Factory Chest --
-function MF:syncFChest()
-	if self.ent ~= nil and self.ent.valid == true and self.fChest ~= nil and self.fChest.valid == true then
-		synchronizeInventory(self.ent.get_inventory(defines.inventory.car_trunk), self.fChest.get_inventory(defines.inventory.chest), nil, true)
-	end
+	-- Update the Sync Area --
+	if tick%_eventTick30 == 0 then self:updateSyncArea() end
 end
 
 -- Return the Lasers radius --
@@ -319,7 +316,6 @@ function MF:updateLasers()
 	for k, entity in pairs(self.entitiesAround or {}) do
 		if entity ~= nil and entity.valid == true then
 			local laserUsed = false
-			self:updateWaterLaser(entity)
 			if self:updateEnergyLaser(entity) == true then laserUsed = true end
 			if self:updateFluidLaser(entity) == true then laserUsed = true end
 			if self:updateLogisticLaser(entity) == true then laserUsed = true end
@@ -372,31 +368,6 @@ function MF:updateEnergyLaser(entity)
 				return true
 			end
 		end
-	end
-end
-
--------------------------------------------- Water Laser --------------------------------------------
-function MF:updateWaterLaser(entity)
-	-- Check the Factory Tank --
-	if self.fTank == nil or self.fTank.valid == false then return end
-	-- Check the Focused Tank --
-	if entity.type ~= "storage-tank" then return end
-	-- Get the Fluid --
-	local fluidName = nil
-	local fluidAmount = nil
-	for k, i in pairs(entity.get_fluid_contents()) do
-		fluidName = k
-		fluidAmount = i
-	end
-	-- Check the Fluid --
-	if fluidName == nil or fluidAmount == nil or fluidName ~= "water" then return end
-	-- Insert the Fluid inside the Factory Tank --
-	local amountRm = self.fTank.insert_fluid({name=fluidName, amount=math.min(fluidAmount, _mfWaterDrainPerSecond)})
-	if amountRm > 0 then
-		-- Retrieve the Fluid --
-		entity.remove_fluid{name=fluidName, amount=amountRm}
-		-- Create the Laser --
-		self.ent.surface.create_entity{name="BlueBeam2", duration=60, position=self.ent.position, target=entity.position, source=self.ent.position}
 	end
 end
 
@@ -641,7 +612,7 @@ function MF:factoryTeleportBox()
 	end
 	-- Factory to Control Center --
 	if technologyUnlocked("ControlCenter", getForce(self.player)) == true and self.fS ~= nil and self.fS ~= nil then
-		local entities = self.fS.find_entities_filtered{area={{-3,-34},{3,-31}}, type="character"}
+		local entities = self.fS.find_entities_filtered{area={{-3,-34},{3,-32}}, type="character"}
 		for k, entity in pairs(entities) do
 			teleportPlayerToControlCenter(entity.player, self)
 		end
@@ -685,5 +656,155 @@ function MF:updateAccumulators()
 				self.internalEnergy = self.internalEnergy - _mfBaseEnergyAccSend
 			end
 		end
+	end
+end
+
+-- Update the Sync Area --
+function MF:updateSyncArea()
+	if self.ent == nil or self.ent.valid == false then return end
+
+	-- Check if the Mobile Factory is moving or the Sync Area is disabled --
+	if self.syncAreaEnabled == false or self.ent.speed ~= 0 then
+		if self.syncAreaScanned == false then return end
+		rendering.destroy(self.syncAreaID)
+		rendering.destroy(self.syncAreaInsideID)
+		self.syncAreaID = 0
+		self.syncAreaInsideID = 0
+		self.syncAreaScanned = false
+		self:unCloneSyncArea()
+		return
+	end
+
+	-- Create the Circle --
+	if self.syncAreaID == 0 then
+		self.syncAreaID = rendering.draw_circle{color={108,52,131}, radius=_mfSyncAreaRadius, width=1, filled=false,target=self.ent, surface=self.ent.surface}
+		self.syncAreaInsideID = rendering.draw_circle{color={108,52,131}, radius=_mfSyncAreaRadius, width=1, filled=false,target=_mfSyncAreaPosition, surface=self.fS}
+	end
+
+	-- Scan the Area if needed --
+	if self.syncAreaScanned == false then
+		self:syncAreaScan()
+		self.syncAreaScanned = true
+		return
+	end
+
+	-- Update Cloned Entity --
+	for k, ent in pairs(self.clonedResourcesTable) do
+		self:updateClonedEntity(ent)
+	end
+end
+
+-- Scan around the Mobile Factory for the Sync Area --
+function MF:syncAreaScan()
+	self.clonedResourcesTable = {}
+
+	-- Cloning Tiles --
+	local radius = _mfSyncAreaRadius + 1
+	local bdb = {{self.ent.position.x - radius, self.ent.position.y - radius},{self.ent.position.x + radius, self.ent.position.y + radius}}
+	local clonedBdb = {{_mfSyncAreaPosition.x - radius, _mfSyncAreaPosition.y - radius},{_mfSyncAreaPosition.x + radius, _mfSyncAreaPosition.y + radius}}
+	self.ent.surface.clone_area{source_area=bdb, destination_area=clonedBdb, destination_surface=self.fS, clone_entities=false, clone_decoratives=false, clear_destination_entities=false}
+	createSyncAreaMFSurface(self.fS)
+
+	-- Look for Entities around the Mobile Factory --
+	local entTableOut = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=_mfSyncAreaRadius}
+	-- Look for Entities inside the Sync Area --
+	local entTableIn = self.fS.find_entities_filtered{position=_mfSyncAreaPosition, radius=_mfSyncAreaRadius}
+
+	-- Clone Outside Entities --
+	for k, ent in pairs(entTableOut) do
+		if _mfSyncAreaAllowedTypes[ent.type] == true then
+			self:cloneEntity(ent, "in")
+		end
+	end
+
+	-- Clone Inside Entities --
+	for k, ent in pairs(entTableIn) do
+		if _mfSyncAreaAllowedTypes[ent.type] == true then
+			self:cloneEntity(ent, "out")
+		end
+	end
+
+end
+
+-- Clone an Entity --
+function MF:cloneEntity(ent, side) -- side: in (Clone inside), out (Clone outside)
+	if self.ent == nil or self.ent.valid == false then return end
+	local posX = 0
+	local posY = 0
+	local surface = nil
+	-- Calcul the position and set the Surface --
+	if side == "in" then
+		posX = ent.position.x - round(self.ent.position.x) + _mfSyncAreaPosition.x
+		posY = ent.position.y - round(self.ent.position.y) + _mfSyncAreaPosition.y
+		surface = self.fS
+	end
+	if side == "out" then
+		posX = round(self.ent.position.x) + ent.position.x - _mfSyncAreaPosition.x
+		posY = round(self.ent.position.y) + ent.position.y - _mfSyncAreaPosition.y
+		surface = self.ent.surface
+	end
+	-- Clone the Entity --
+	-- if self.ent.surface.can_place_entity{name=ent.name, position={posX, posY}} then
+		local clone = ent.clone{position={posX, posY}, surface=surface}
+		table.insert(self.clonedResourcesTable,  {original=ent, cloned=clone})
+		if ent.type == "container" then
+			clone.get_inventory(defines.inventory.chest).clear()
+		end
+		if ent.type == "storage-tank" then
+			clone.clear_fluid_inside()
+		end
+		if ent.type == "accumulator" then
+			ent.energy = 0
+		end
+	-- end
+end
+
+function MF:unCloneSyncArea()
+	-- Set default Tiles --
+	createSyncAreaMFSurface(self.fS, true)
+	-- Remove all cloned Entities --
+	for k, ents in pairs(self.clonedResourcesTable) do
+		ents.cloned.destroy()
+	end
+	self.clonedResourcesTable = {}
+end
+
+function MF:updateClonedEntity(ents)
+	-- Check the Entities --
+	if ents == nil then return end
+	if ents.original == nil or ents.original.valid == false then
+		ents.cloned.destroy()
+		return
+	end
+	if ents.cloned == nil or ents.cloned.valid == false then
+		ents.original.destroy()
+		return
+	end
+	-- If the Entity is a resource --
+	if ents.original.type == "resource" then
+		if ents.cloned.amount < ents.original.amount then
+			ents.original.amount = ents.cloned.amount
+		end
+		if ents.cloned.amount > ents.original.amount then
+			ents.cloned.amount = ents.original.amount
+		end
+		if ents.original.amount <= 0 then
+			ents.original.destroy()
+			ents.cloned.destroy()
+		end
+	end
+	-- If the Entity is a Chest --
+	if ents.original.type == "container" then
+		Util.syncChest(ents.original, ents.cloned)
+	end
+
+	-- If the Entity is a Storage Tank --
+	if ents.original.type == "storage-tank" then
+		Util.syncTank(ents.original, ents.cloned)
+	end
+
+	-- If the Entity is an Accumulator --
+	if ents.original.type == "accumulator" then
+		Util.syncAccumulator(ents.original, ents.cloned)
 	end
 end

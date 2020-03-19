@@ -22,8 +22,7 @@ require("scripts/objects/data-network.lua")
 require("scripts/objects/data-center.lua")
 require("scripts/objects/data-center-mf.lua")
 require("scripts/objects/data-storage.lua")
-require("scripts/objects/matter-serializer.lua")
-require("scripts/objects/matter-printer.lua")
+require("scripts/objects/matter-interactor.lua")
 require("scripts/objects/fluid-interactor.lua")
 require("scripts/objects/wireless-data-transmitter.lua")
 require("scripts/objects/wireless-data-receiver.lua")
@@ -66,8 +65,7 @@ function onInit()
 	global.dataNetworkIDGreenTable = {}
 	global.dataNetworkIDRedTable = {}
 	global.dataCenterTable = {}
-	global.matterSerializerTable = {}
-	global.matterPrinterTable = {}
+	global.matterInteractorTable = {}
 	global.fluidInteractorTable = {}
 	global.dataStorageTable = {}
 	global.deepTankTable = {}
@@ -116,13 +114,9 @@ function onLoad()
 	for k, ds in  pairs(global.dataStorageTable or {}) do
 		DS:rebuild(ds)
 	end
-	-- Set MatterSerializer Metatables --
-	for k, ms in pairs(global.matterSerializerTable or {}) do
-		MS:rebuild(ms)
-	end
-	-- Set MatterPrinter Metatables --
-	for k, mp in pairs(global.matterPrinterTable or {}) do
-		MP:rebuild(mp)
+	-- Set MatterInteractor Metatables --
+	for k, mi in pairs(global.matterInteractorTable or {}) do
+		MI:rebuild(mi)
 	end
 	-- Set FluidInteractor Metatables --
 	for k, fi in pairs(global.fluidInteractorTable or {}) do

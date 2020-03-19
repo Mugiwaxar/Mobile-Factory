@@ -10,16 +10,10 @@ function placedPowerDrainPole(event)
 	global.pdpTable[event.created_entity.unit_number] = PDP:new(event.created_entity)
 end
 
--- Save the Matter Serializer in a table --
-function placedMatterSerializer(event)
-	if global.matterSerializerTable == nil then global.matterSerializerTable = {} end
-	global.matterSerializerTable[event.created_entity.unit_number] = MS:new(event.created_entity)
-end
-
--- Save the Matter Printer in a table --
-function placedMatterPrinter(event)
-	if global.matterPrinterTable == nil then global.matterPrinterTable = {} end
-	global.matterPrinterTable[event.created_entity.unit_number] = MP:new(event.created_entity)
+-- Save the Matter Interactor in a table --
+function placedMatterInteractor(event)
+	if global.matterInteractorTable == nil then global.matterInteractorTable = {} end
+	global.matterInteractorTable[event.created_entity.unit_number] = MI:new(event.created_entity)
 end
 
 -- Save the Fluid Interactor in a table --
@@ -115,18 +109,11 @@ function removedPowerDrainPole(event)
 	global.pdpTable[event.entity.unit_number] = nil
 end
 
--- Remove the Matter Serializer from the table --
-function removedMatterSerializer(event)
-	if global.matterSerializerTable == nil then global.matterSerializerTable = {} return end
-	if global.matterSerializerTable[event.entity.unit_number] ~= nil then global.matterSerializerTable[event.entity.unit_number]:remove() end
-	global.matterSerializerTable[event.entity.unit_number] = nil
-end
-
--- Remove the Matter Printer from the table --
-function removedMatterPrinter(event)
-	if global.matterPrinterTable == nil then global.matterPrinterTable = {} return end
-	if global.matterPrinterTable[event.entity.unit_number] ~= nil then global.matterPrinterTable[event.entity.unit_number]:remove() end
-	global.matterPrinterTable[event.entity.unit_number] = nil
+-- Remove the Matter Interactor from the table --
+function removedMatterInteractor(event)
+	if global.matterInteractorTable == nil then global.matterInteractorTable = {} return end
+	if global.matterInteractorTable[event.entity.unit_number] ~= nil then global.matterInteractorTable[event.entity.unit_number]:remove() end
+	global.matterInteractorTable[event.entity.unit_number] = nil
 end
 
 -- Remove the Fluid Interactor from the table --

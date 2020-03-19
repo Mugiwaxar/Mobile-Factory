@@ -1,4 +1,26 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.116
+Date: 18/03/2020
+  Major Features:
+    - Added the Sync Area:
+    - Tiles (Water too), Resources(Ores, Fluids) and some Structures will be cloned and synchronized between the space around the Mobile Factory and an special zone named the Sync Area
+    - This Area is inside the Mobile Factory, and need no technology to be used
+    - For the moment, only Chests and Tanks will Synchronize. The Original one will send its content to the Cloned one
+  Features:
+    - Added the Matter Interactor: Can send and retrieve Items from the Data Network (Inventory and Deep Storages)
+  Gui:
+    - Added a new Button to the Main GUI: Enable and Disable the Sync Area
+  Changes:
+    - The Mobile Factory now produce a passive amount of Polution
+    - Removed the Water Laser
+    - Removed the Factory Tank
+    - Removed the Factory Chest
+    - Removed the Matter Serializer (Use the Matter Interactor)
+    - Removed the Matter Printer (Use the Matter Interactor)
+  Bugfixes:
+    - The Deep Tank selection for the Fluid Interactor now work correctly
+    - All Technology related to the Control Center should now be correctly unlocked
+---------------------------------------------------------------------------------------------------
 Version: 0.0.115
 Date: 17/03/2020
   Major Features:
@@ -8,7 +30,7 @@ Date: 17/03/2020
   Features:
     - Added the Deep Tank, a Fluid Storage Tank with 10 ML of capacity that replace the Dimmensional Tank (Can only be placed inside the Control Center)
     - Added the Constructible Area 2: A new Contructible Area inside the Control Center
-    - Added the Fluid Interactor
+    - Added the Fluid Interactor: A new Matter Serialization Structure that can send and retrieve Fluids via the Data Network (Work with Deep Tank)
     - New Technology: Fluid Serialization, Unlock the Deep Tank, the Fluid Interactor and a new Constructible Area inside the Control Center
     - New Technology: Constructible Area 2, Unlock a new Constructible Area inside the Control Center
     - The Internal Inventory Data Center now send the Deep Tanks Inventories via signals
@@ -17,7 +39,6 @@ Date: 17/03/2020
     - The Ore Cleaning Technology require now the Matter Serialization Technology
     - The Fluid Extraction Technology require now the Matter Serialization Technology
     - The Fluid Transmission Technology require now the Deep Tank Technology
-    - The Fluid Drain Technology require now the Deep Tank Technology
     - Removed the Dimensional Accumulator and the Dimensional Substation inside the Control Center
     - Removed all Dimensional Tank Technologies
     - Removed all Dimensional Tanks (MK1 and MK2)
@@ -69,7 +90,7 @@ Date: 03/03/2020
     - Erya Tech is a easy way to create things
     - Erya Structures consume environmental heat instead of Energy
   Features:
-    - Added new Tile: Snow Tile 1, Snow will appear near Erya Structures who consume heat
+    - Added new Tile: Snow Tile 1, Snow will appear near Erya Structures which consume heat
     - Added Erya Collector: Must be placed over Water to start collecting Erya Powder
     - Added Erya Powder: A powder that transform environmental heat into energy
     - Added Erya Sample: A Sample of Erya Powder to make researches
@@ -82,19 +103,19 @@ Date: 03/03/2020
     - Added Erya Belt MK1: A basic Belt made from Erya
     - Added Erya Underground Belt MK1: A basic underground Belt made from Erya
     - Added Erya Splitter MK1: A basic Splitter made with Erya
-    - Added Erya Inserter: An Inserter who work with environmental heat
-    - Added Erya Mining Drill MK1: A small Mining Drill who work with environmental heal
-    - Added Erya Pumpjack MK1: A basic Pumpjack who work with environmental heat
-    - Added Erya Assembling Machine MK1: A small Assembling Machine who work with environmental heat
+    - Added Erya Inserter: An Inserter which work with environmental heat
+    - Added Erya Mining Drill MK1: A small Mining Drill which work with environmental heal
+    - Added Erya Pumpjack MK1: A basic Pumpjack which work with environmental heat
+    - Added Erya Assembling Machine MK1: A small Assembling Machine which work with environmental heat
     - Added Erya Pipe: A simple pipe made from Erya
     - Added Erya Pipe To Ground: A simple Pipe To Ground made with Erya
-    - Added Erya Pump MK1: A basic Pump who use environmental heat to work
+    - Added Erya Pump MK1: A basic Pump which use environmental heat to work
     - Added Erya Wall MK1: A basic Wall made with Erya
     - Added Erya Gate MK1: A basic Gate made with Erya
-    - Added Erya Radar: A Radar who use environmental heat to work
-    - Added Erya Furnace MK1: A Furnace who use environmental heat to work
-    - Added Erya Refinery MK1: A Refinery who use environmental heat to work
-    - Added Erya Chemical Plant MK1: A Chemical Plant who use environmental heat to work
+    - Added Erya Radar: A Radar which use environmental heat to work
+    - Added Erya Furnace MK1: A Furnace which use environmental heat to work
+    - Added Erya Refinery MK1: A Refinery which use environmental heat to work
+    - Added Erya Chemical Plant MK1: A Chemical Plant which use environmental heat to work
     - New Technology: Erya Tech, Unlock the Erya Collector, Erya Powder, Erya Sample, Erya Plate, Erya Wire, Erya Circuit, Erya Machine Frame MK1
     - New Technology: Erya Lamp, Unlock the Erya Lamp
     - New Technology: Erya Chest MK1, Unlock the Erya Chest MK1
@@ -213,7 +234,7 @@ Date: 18/02/2020
     - The Player can choose if the Structures shared by other Players will be used or not
     - The Mobile Factory can now be Locked to prevent other Players to enter
   Gui:
-    - The Tooltip GUI now show to who belong a Structure
+    - The Tooltip GUI now show to whom belong a Structure
     - Added a new Tab to the Option GUI: MF (Mobile Factory)
     - Added a new Option to the MF Tab: Share Structures -> Allow other Players to interact with your Structures (Drain/Send Power, Items, Fluid, ...)
     - Added a new Option to the MF Tab: Use Shared Structures -> Share your Structures with other Players (Drain/Send Power, Items, Fluid, ...)
@@ -538,7 +559,7 @@ Date: 09/01/2020
 Version: 0.0.65
 Date: 08/01/2020
   Features:
-    - Added the Hovering Factory, a Mobile Factory who can fly above Structures and Water
+    - Added the Hovering Factory, a Mobile Factory which can fly above Structures and Water
     - The Mobile Factory can now send Energy outside via its Power Drain Laser (Must be set throught the Tooltip GUI)
   Bugfixes:
     - The Mobile Factory will no longer drain its own Power

@@ -166,35 +166,7 @@ function somethingWasPlaced(event, isRobot)
 		end
 		return
 	end
-	
-	-- Save the Factory Chest --
-	if event.created_entity.name == "FactoryChest" then
-		if MF ~= nil and MF.fChest ~= nil and MF.fChest.valid == true then
-			if isPlayer == true then creator.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }}) end
-			event.created_entity.destroy()
-			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
-				creator.get_main_inventory().insert(event.stack)
-			end
-			return
-		else
-			MF.fChest = event.created_entity
-		end
-	end
 
-	-- Save the Factory Tank --
-	if event.created_entity.name == "FactoryTank" then
-		if MF ~= nil and MF.fTank ~= nil and MF.fTank.valid == true then
-			if isPlayer == true then creator.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }}) end
-			event.created_entity.destroy()
-			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
-				creator.get_main_inventory().insert(event.stack)
-			end
-			return
-		else
-			MF.fTank = event.created_entity
-		end
-	end
-	
 	-- Save the Ghost inside the Construction Table --
 	if event.created_entity ~= nil and event.created_entity.valid == true and event.created_entity.name == "entity-ghost" and
 	MF ~= nil and MF.ent ~= nil and MF.ent.valid == true and event.created_entity.surface.name == MF.ent.surface.name then
@@ -203,6 +175,18 @@ function somethingWasPlaced(event, isRobot)
 			global.constructionTable = {}
 		end
 		table.insert(global.constructionTable,{ent=event.created_entity, item=event.created_entity.ghost_prototype.items_to_place_this[1].name, name=event.created_entity.ghost_name, position=event.created_entity.position, direction=event.created_entity.direction or 1, mission="Construct"})
+	end
+
+	-- Clone the Entity if it is inside the Sync Area --
+	if _mfSyncAreaAllowedTypes[event.created_entity.type] == true and MF.ent ~= nil and MF.ent.valid and MF.syncAreaEnabled == true and MF.ent.speed == 0 then
+		-- Outside to Inside --
+		if event.created_entity.surface == MF.ent.surface and Util.distance(event.created_entity.position, MF.ent.position) < _mfSyncAreaRadius then
+			MF:cloneEntity(event.created_entity, "in")
+		end
+		-- Inside to Outside --
+		if event.created_entity.surface == MF.fS and Util.distance(event.created_entity.position, _mfSyncAreaPosition) < _mfSyncAreaRadius then
+			MF:cloneEntity(event.created_entity, "out")
+		end
 	end
 	
 	-- Save the Dimensional Accumulator --
@@ -216,16 +200,10 @@ function somethingWasPlaced(event, isRobot)
 		placedPowerDrainPole(event)
 		return
 	end
-	
-	-- Save the Matter Serializer --
-	if event.created_entity.name == "MatterSerializer" then
-		placedMatterSerializer(event)
-		return
-	end
-	
-	-- Save the Matter Printer --
-	if event.created_entity.name == "MatterPrinter" then
-		placedMatterPrinter(event)
+
+	-- Save the Matter Interactor --
+	if event.created_entity.name == "MatterInteractor" then
+		placedMatterInteractor(event)
 		return
 	end
 
@@ -354,20 +332,6 @@ function somethingWasRemoved(event)
 		end
 		return
 	end
-	-- Remove the Factory Chest --
-	if event.entity.name == "FactoryChest" then
-		if MF ~= nil then
-			MF.fChest = nil
-		end
-		return
-	end
-	-- Remove the Factory Tank --
-	if event.entity.name == "FactoryTank" then
-		if MF ~= nil then
-			MF.fTank = nil
-		end
-		return
-	end
 	-- Remove the Dimensional Accumulator --
 	if event.entity.name == "DimensionalAccumulator" then
 		removedDimensionalAccumulator(event)
@@ -378,14 +342,9 @@ function somethingWasRemoved(event)
 		removedPowerDrainPole(event)
 		return
 	end
-	-- Remove the Matter Serializer --
-	if event.entity.name == "MatterSerializer" then
-		removedMatterSerializer(event)
-		return
-	end
-	-- Remove the Matter Printer --
-	if event.entity.name == "MatterPrinter" then
-		removedMatterPrinter(event)
+	-- Remove the Matter Interactor --
+	if event.entity.name == "MatterInteractor" then
+		removedMatterInteractor(event)
 		return
 	end
 	-- Remove the Fluid Interactor --

@@ -1,0 +1,9 @@
+{
+	"entity":
+	[
+		["FactoryChest", "TempChest"],
+		["FactoryTank", "TempTank"],
+		["MatterSerializer", "MatterInteractor"],
+		["MatterPrinter", "MatterInteractor"]
+	]
+}
