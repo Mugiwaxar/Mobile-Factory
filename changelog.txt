@@ -1,11 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.117
+Date: 19/03/2020
+  Bugfixes:
+    - Fixed a crash on load
+    - (Maybe) Fixed a GUI bug
+---------------------------------------------------------------------------------------------------
 Version: 0.0.116
 Date: 18/03/2020
   Major Features:
     - Added the Sync Area:
-    - Tiles (Water too), Resources(Ores, Fluids) and some Structures will be cloned and synchronized between the space around the Mobile Factory and an special zone named the Sync Area
-    - This Area is inside the Mobile Factory, and need no technology to be used
-    - For the moment, only Chests and Tanks will Synchronize. The Original one will send its content to the Cloned one
+    - Tiles (Water too), Resources(Ores, Fluids) and some Structures will be cloned and synchronized between the space around the Mobile Factory and a special zone named the Sync Area
+    - This Area is inside the Mobile Factory, and needs no technology to be used
+    - For now, only Chests, Tanks and accumulators will Synchronize. 
   Features:
     - Added the Matter Interactor: Can send and retrieve Items from the Data Network (Inventory and Deep Storages)
   Gui:
@@ -19,7 +25,7 @@ Date: 18/03/2020
     - Removed the Matter Printer (Use the Matter Interactor)
   Bugfixes:
     - The Deep Tank selection for the Fluid Interactor now work correctly
-    - All Technology related to the Control Center should now be correctly unlocked
+    - All Technologies related to the Control Center should now be correctly unlocked
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.115
 Date: 17/03/2020

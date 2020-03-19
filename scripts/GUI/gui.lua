@@ -62,6 +62,8 @@ function GUI.buttonClicked(event)
 	local player = getPlayer(event.player_index)
 	if player == nil then return end
 
+	setPlayerVariable(player.name, "GUIUpdateInfoGUI", true)
+
 	-- Get the Mobile Factory --
 	local MF = getMF(player.name)
 	if MF == nil then return end

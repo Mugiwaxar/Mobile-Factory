@@ -553,7 +553,7 @@ end
 
 -- Check if the Player can interact with the Structure --
 function Util.canUse(playerName, structure)
-	if playerName == nil or structure == nil or structure.last_user == nil then return false end
+	if playerName == nil or structure == nil or structure.valid == false or structure.last_user == nil then return false end
 	if playerName == structure.last_user.name then return true end
 	local MF1 = getMF(playerName)
 	local MF2 = getMF(structure.last_user.name)
