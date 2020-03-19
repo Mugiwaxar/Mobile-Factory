@@ -2,12 +2,13 @@
 
 -- Entity --
 fiE = table.deepcopy(data.raw["storage-tank"]["storage-tank"])
-fiE.type = "storage-tank"
 fiE.name = "FluidInteractor"
 fiE.minable = {mining_time = 0.2, result = "FluidInteractor"}
 fiE.flags = {"not-rotatable"}
 fiE.collision_box = {{-1.5, -1.5}, {1.5, 1.5}}
 fiE.selection_box = fiE.collision_box
+fiE.fast_replaceable_group = nil
+fiE.next_upgrade = nil
 fiE.fluid_box =
     {
       base_area = 100,
@@ -56,7 +57,7 @@ fiI.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/FluidInter
 fiI.icon_size = 128
 fiI.place_result = "FluidInteractor"
 fiI.subgroup = "DataSerialization"
-fiI.order = "f1"
+fiI.order = "e2"
 fiI.stack_size = 10
 data:extend{fiI}
 

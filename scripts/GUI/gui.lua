@@ -123,6 +123,12 @@ function GUI.buttonClicked(event)
 	if event.element.name == "PortOutside" then
 		teleportPlayerOutside(player)
 	end
+
+	-- SyncArea button --
+	if event.element.name == "SyncArea" then
+		if MF.syncAreaEnabled == true then MF.syncAreaEnabled = false
+		elseif MF.syncAreaEnabled == false then MF.syncAreaEnabled = true end
+	end
 	
 	-- MFTPInside button --
 	if event.element.name == "MFTPInside" then
@@ -285,6 +291,17 @@ function GUI.onGuiElemChanged(event)
 			end
 		end
 
+		-- If this is a Matter Interactor --
+		if string.match(id, "MIFilter") then
+			id = tonumber(split(id, "MIFilter")[1])
+			if global.matterInteractorTable[id] == nil then return end
+			if event.element.elem_value ~= nil then
+				global.matterInteractorTable[id].selectedFilter = event.element.elem_value
+			else
+				global.matterInteractorTable[id].selectedFilter = nil
+			end
+		end
+
 		-- Re-enable the GUI --
 		if player ~= nil then
 			setPlayerVariable(player.name, "GUIUpdateInfoGUI", true)
@@ -391,6 +408,44 @@ function GUI.onGuiElemChanged(event)
 		matterP:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
 	end
 
+	------- Read if the Element comes from a Matter Interactor Mode -------
+	if string.match(event.element.name, "MIMode") then
+		local ID = split(event.element.name, "MIMode")
+		ID = tonumber(ID[1])
+		-- Check the ID --
+		if ID == nil then return end
+		-- Find the Matter Manipulator --
+		local matterI = nil
+		for k, mi in pairs(global.matterInteractorTable) do
+			if valid(mi) == true and mi.ent.unit_number == ID then
+				matterI = mi
+			end
+		end
+		-- Check if a Fluid Interactor was found --
+		if matterI == nil then return end
+		-- Change the Mode --
+		matterI:changeMode(event.element.switch_state)
+	end
+
+	------- Read if the Element comes from a Matter Interactor Target -------
+	if string.match(event.element.name, "MITarget") then
+		local ID = split(event.element.name, "MITarget")
+		ID = tonumber(ID[1])
+		-- Check the ID --
+		if ID == nil then return end
+		-- Find the Matter Manipulator --
+		local matterI = nil
+		for k, mi in pairs(global.matterInteractorTable) do
+			if valid(mi) == true and mi.ent.unit_number == ID then
+				matterI = mi
+			end
+		end
+		-- Check if a Fluid Interactor was found --
+		if matterI == nil then return end
+		-- Change the Fluid Interactor Target --
+		matterI:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
+	end
+
 	------- Read if the Element comes from a Fluid Interactor Mode -------
 	if string.match(event.element.name, "FIMode") then
 		local ID = split(event.element.name, "FIMode")
@@ -412,7 +467,7 @@ function GUI.onGuiElemChanged(event)
 
 	------- Read if the Element comes from a Fluid Interactor Target -------
 	if string.match(event.element.name, "FITarget") then
-		local ID = split(event.element.name, "FIMode")
+		local ID = split(event.element.name, "FITarget")
 		ID = tonumber(ID[1])
 		-- Check the ID --
 		if ID == nil then return end

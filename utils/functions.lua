@@ -1,25 +1,95 @@
--- Put all items in inventory1 to inventory2 --
-function synchronizeInventory(inventory1, inventory2, filter, ignoreDrone)
-	-- Get the content of the Inventory 1 --
-	local allItems = inventory1.get_contents()
-	-- Itinerate all items --
-	for item, amount in pairs(allItems) do
-		-- Check if this is a drone --
-		if ignoreDrone == true and (item == "MiningJet" or item == "ConstructionJet" or item == "RepairJet" or item == "CombatJet" )then
+-- Transfer Chest1 to Chest2 --
+function Util.syncChest(chest1, chest2)
+	local itemsTable = {}
+	-- Get the Inventories --
+	local inv1 = chest1.get_inventory(defines.inventory.chest)
+	local inv2 = chest2.get_inventory(defines.inventory.chest)
+	-- Itinerate the Inventory 1 --
+	for item, count in pairs(inv1.get_contents()) do
+		if itemsTable[item] ~= nil then
+			itemsTable[item] = itemsTable[item] + count
 		else
-			-- Test if there are a filter --
-			if filter == nil or (filter ~= nil and filter == item) then 
-				-- Insert items --
-				local count = inventory2.insert({name=item, count=amount})
-				-- Remove items from the Inventory 1 --
-				if count > 0 then
-					inventory1.remove({name=item, count=count})
-				else
-					break
-				end
-			end
+			itemsTable[item] = count
 		end
 	end
+	-- Itinerate the Inventory 2 --
+	for item, count in pairs(inv2.get_contents()) do
+		if itemsTable[item] ~= nil then
+			itemsTable[item] = itemsTable[item] + count
+		else
+			itemsTable[item] = count
+		end
+	end
+	-- Clears Inventories --
+	inv1.clear()
+	inv2.clear()
+	-- Fill the Inventories --
+	for item, count in pairs(itemsTable) do
+	local count1 = math.floor(count/2)
+	local count2 = math.ceil(count/2)
+
+		if count1 > 0 then
+			inv1.insert({name=item, count=count1})
+		end
+		if count2 > 0 then
+			inv2.insert({name=item, count=count2})
+		end
+	end
+end
+
+-- Transfer Tank1 to Tank2 --
+function Util.syncTank(tank1, tank2)
+	-- Check the Tanks --
+	if tank1.fluidbox[1] == nil and tank2.fluidbox[1] == nil then return end
+	-- Get Tanks Fluid --
+	local t1FluidName = nil
+	local t1FluidAmount = 0
+	local t1FluidTemperature = nil
+	local t2FluidName = nil
+	local t2FluidAmount = 0
+	local t2FluidTemperature = nil
+	if tank1.fluidbox[1] ~= nil then
+		t1FluidName = tank1.fluidbox[1].name
+		t1FluidAmount = tank1.fluidbox[1].amount
+		t1FluidTemperature = tank1.fluidbox[1].temperature
+
+	end
+	if tank2.fluidbox[1] ~= nil then
+		t2FluidName = tank2.fluidbox[1].name
+		t2FluidAmount = tank2.fluidbox[1].amount
+		t2FluidTemperature = tank2.fluidbox[1].temperature
+	end
+
+	-- Clear the Tanks --
+	tank1.clear_fluid_inside()
+	tank2.clear_fluid_inside()
+
+	-- Check the Fluids --
+	if t1FluidName ~= nil and t2FluidName ~= nil and t1FluidName ~= t2FluidName then return end
+	if t1FluidName == nil then t1FluidTemperature = t2FluidTemperature end
+	if t2FluidName == nil then t2FluidTemperature = t1FluidTemperature end
+
+	-- Calcul total Fluid --
+	local fluidName = t1FluidName or t2FluidName
+	local fluidAmount = math.floor((t1FluidAmount + t2FluidAmount) / 2)
+	local fluidTemperature = math.floor((t1FluidTemperature + t2FluidTemperature) / 2)
+
+
+	-- Check the Amount of Fluid --
+	if fluidAmount <= 0 then return end
+
+	-- Set Tanks Fluid --
+	tank1.fluidbox[1] = {name=fluidName, amount=fluidAmount, temperature=fluidTemperature}
+	tank2.fluidbox[1] = {name=fluidName, amount=fluidAmount, temperature=fluidTemperature}
+end
+
+-- Equilize the Energy between two Accumulators --
+function Util.syncAccumulator(accu1, accu2)
+	-- Calcul the total energy --	
+	local totalEnergy = accu1.energy + accu2.energy
+	-- Set the Energy of the Accumulators --
+	accu1.energy = totalEnergy / 2
+	accu2.energy = totalEnergy / 2
 end
 
 -- Advenced print --
@@ -35,6 +105,12 @@ function dprintKeys(t)
 	end
 	dprint("------------")
 end
+
+-- Round a Number --
+function round(n)
+	return n % 1 >= 0.5 and math.ceil(n) or math.floor(n)
+end
+	
 
 -- Return a splitted table of a string --
 function split(str, char)
@@ -85,8 +161,9 @@ end
 function unlockRecipeForAll(recipeName, techCondition)
 	if recipeName == nil then return end
 	for k, force in pairs(game.forces) do
-		if techCondition ~= nil and technologyUnlocked(techCondition, force) == false then return end
-		force.recipes[recipeName].enabled = true
+		if techCondition ~= nil and technologyUnlocked(techCondition, force) == true then
+			force.recipes[recipeName].enabled = true
+		end
 	end
 end
 
@@ -94,11 +171,7 @@ end
 function technologyUnlocked(name, force)
 	if force == nil then force = game.forces["player"] end
 	if force == nil then return false end
-	for _, force2 in pairs(game.forces) do
-		if force2.name == force.name and force.technologies[name] ~= nil and force.technologies[name].researched then
-			return true
-		end
-	end
+	if force.technologies[name] ~= nil and force.technologies[name].researched then return true end
 	return false
 end
 

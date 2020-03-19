@@ -32,17 +32,7 @@ end
 
 -- Create Factory to Control Center floor --
 function updateFactoryFloorForCC(MF)
-	if MF.fS == nil or MF.fS.valid == false then
-		game.print("Surface error")
-		return
-	end
-	local tilesTable = {}
-	for x = -3, 2 do
-	  for y = -34, -32 do
-		table.insert(tilesTable, {name="refined-hazard-concrete-left",position={x,y}})
-		end
-	end
-	MF.fS.set_tiles(tilesTable)
+	createTilesSurface(MF.fS, -3, -34, 3, -32, "refined-hazard-concrete-left")
 	-- Create Control Center surface --
 	if MF.ccS == nil then createControlRoom(MF) end
 	-- Valid the Technology --

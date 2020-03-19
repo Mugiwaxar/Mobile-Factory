@@ -23,16 +23,11 @@ function createMFSurface(MF)
 	newSurface.force_generate_chunk_requests()
 	-- Set tiles --
 	createTilesSurface(newSurface, -50, -50, 50, 50, "tutorial-grid")
-	createTilesSurface(newSurface, -3, -3, 3, 3, "refined-concrete")
-	createTilesSurface(newSurface, -1, -1, 1, 1, "refined-hazard-concrete-left")
+	createTilesSurface(newSurface, _mfSyncAreaPosition.x - _mfSyncAreaRadius, _mfSyncAreaPosition.y - _mfSyncAreaRadius, _mfSyncAreaPosition.x + _mfSyncAreaRadius, _mfSyncAreaPosition.y + _mfSyncAreaRadius, "dirt-7")
+	createTilesSurface(newSurface, _mfSyncAreaPosition.x - 2, _mfSyncAreaPosition.y - 4, _mfSyncAreaPosition.x + 2, _mfSyncAreaPosition.y + 4, "DimensionalTile")
+	createTilesSurface(newSurface, -2, -2, 2, 2, "refined-hazard-concrete-right")
 	-- Save variable --
 	MF.fS = newSurface
-	-- Place the Factory Chest --
-	MF.fChest = createEntity(MF.fS, -0, -7, "FactoryChest", getForce(MF.player).name)
-	MF.fChest.last_user = MF.player
-	-- Place the Factory Tank --
-	MF.fTank = createEntity(MF.fS, -0, 7, "FactoryTank", getForce(MF.player).name)
-	MF.fTank.last_user = MF.player
 end
 
 -- Create the Mobile Factory Control room -
@@ -59,20 +54,11 @@ function createControlRoom(MF)
 	-- Set tiles --
 	createTilesSurface(newSurface, -10, -10, 10, 10, "tutorial-grid")
 	-- Set TP tiles --
-	createTilesSurface(newSurface, -3, 5, 2, 7, "refined-hazard-concrete-right")
-	-- Set Accumulator/Substation tiles --
-	createTilesSurface(newSurface, -4, 10, 3, 13, "tutorial-grid")
+	createTilesSurface(newSurface, -3, 5, 3, 7, "refined-hazard-concrete-right")
 	-- Remove unwanted tiles --
 	local newTiles = newSurface.find_tiles_filtered{area={{-100,-100},{100,100}}}
 	-- Save variable --
 	MF.ccS = newSurface
-	-- Create Entities --
-	local dimSub = createEntity(MF.ccS, -2, 10, "DimensionalSubstation", getForce(MF.player).name)
-	dimSub.minable = nil
-	dimSub.last_user = MF.player
-	local DimAcc = createEntity(MF.ccS, 2, 12, "DimensionalAccumulator", getForce(MF.player).name)
-	DimAcc.minable = nil
-	DimAcc.last_user = MF.player
 end
 
 -- Create a new Entity --
@@ -80,4 +66,16 @@ function createEntity(surface, posX, posY, entityName, force)
 	if surface == nil then game.print("createEntity: Surface nul") return end
 	if force == nil then force = "player" end
 	return surface.create_entity{name=entityName, position={posX,posY}, force=force}
+end
+
+-- Create the Sync Area Surface --
+function createSyncAreaMFSurface(surface, dirt)
+	local radius = _mfSyncAreaRadius + 1
+	if dirt == true then
+		createTilesSurface(surface, _mfSyncAreaPosition.x - radius, _mfSyncAreaPosition.y - radius, _mfSyncAreaPosition.x + radius, _mfSyncAreaPosition.y + radius, "dirt-7")
+	end
+	createTilesSurface(surface, _mfSyncAreaPosition.x - 2, _mfSyncAreaPosition.y - 4, _mfSyncAreaPosition.x + 2, _mfSyncAreaPosition.y + 4, "DimensionalTile")
+	createTilesSurface(surface, _mfSyncAreaPosition.x - 4, _mfSyncAreaPosition.y - 2, _mfSyncAreaPosition.x + 4, _mfSyncAreaPosition.y + 2, "DimensionalTile")
+	createTilesSurface(surface, _mfSyncAreaPosition.x - 3, _mfSyncAreaPosition.y - 3, _mfSyncAreaPosition.x + 3, _mfSyncAreaPosition.y + 3, "DimensionalTile")
+	createTilesSurface(surface, -1, -1, 1, 1, "refined-hazard-concrete-right")
 end

@@ -56,8 +56,7 @@ function updateValues()
 	if global.dataNetworkTable == nil then global.dataNetworkTable = {} end
 	if global.dataNetworkIDGreenTable == nil then global.dataNetworkIDGreenTable = {} end
 	if global.dataNetworkIDRedTable == nil then global.dataNetworkIDRedTable = {} end
-	if global.matterSerializerTable == nil then global.matterSerializerTable = {} end
-	if global.matterPrinterTable == nil then global.matterPrinterTable = {} end
+	if global.matterInteractorTable == nil then global.matterInteractorTable = {} end
 	if global.fluidInteractorTable == nil then global.fluidInteractorTable = {} end
 	if global.dataCenterTable == nil then global.dataCenterTable = {} end
 	if global.dataStorageTable == nil then global.dataStorageTable = {} end
@@ -90,7 +89,7 @@ end
 -- When a technology is finished --
 function technologyFinished(event)
 	for k, MF in pairs(global.MFTable) do
-		if event.research.force.name == MF.player then
+		if event.research.force.name == getMFPlayer(MF.player).ent.force.name then
 			if event.research.name == "ControlCenter" then updateFactoryFloorForCC(MF) end
 			if event.research.name == "UpgradeModules" then createControlCenterEqualizer(MF) end
 			if event.research.name == "DeepStorage" then createDeepStorageArea(MF) end

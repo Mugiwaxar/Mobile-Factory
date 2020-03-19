@@ -363,7 +363,7 @@ function GUI.updatePlayerInfoGUI(player)
 	-- Fluid Laser Consomption --
 	if technologyUnlocked("FluidDrain1", getForce(player.name)) then
 		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidConsumptionLabel.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidConsumptionLabel.caption = {"", {"gui-description.FluidConsumptionLabel"}, ": ", Util.toRNumber(MF:getLaserFluidDrain()*_lfpFluidConsomption), "W"}
+		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.FluidConsumptionLabel.caption = {"", {"gui-description.FluidConsumptionLabel"}, ": ", Util.toRNumber(MF:getLaserFluidDrain()*_mfFluidConsomption), "W"}
 	end
 	
 	-- Item Laser Drain --

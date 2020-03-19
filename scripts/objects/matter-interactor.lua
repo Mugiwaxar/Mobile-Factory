@@ -1,29 +1,29 @@
--- FLUID INTERACTOR OBJECT --
+-- MATTER INTERACTOR OBJECT --
 
--- Create the Fluid Interactor base object --
-FI = {
+-- Create the Matter Interactor base object --
+MI = {
 	ent = nil,
 	player = "",
 	MF = nil,
 	entID = 0,
     stateSprite = 0,
-    levelSprite = 0,
 	active = false,
-	consumption = _mfFIEnergyDrainPerUpdate,
+	consumption = _mfMIEnergyDrainPerUpdate,
 	updateTick = 60,
 	lastUpdate = 0,
-	dataNetwork = nil,
+    dataNetwork = nil,
+    selectedFilter = nil,
     selectedInv = 0,
     selectedMode = "input" -- input or output
 }
 
 -- Constructor --
-function FI:new(object)
+function MI:new(object)
 	if object == nil then return end
 	local t = {}
 	local mt = {}
 	setmetatable(t, mt)
-	mt.__index = FI
+	mt.__index = MI
 	t.ent = object
 	if object.last_user == nil then return end
 	t.player = object.last_user.name
@@ -31,23 +31,22 @@ function FI:new(object)
 	t.entID = object.unit_number
     UpSys.addObj(t)
     -- Draw the state Sprite --
-	t.stateSprite = rendering.draw_sprite{sprite="FluidInteractorSprite1", target=object, surface=object.surface, render_layer=131}
+	t.stateSprite = rendering.draw_sprite{sprite="MatterInteractorSprite1", target=object, surface=object.surface, render_layer=131}
 	return t
 end
 
 -- Reconstructor --
-function FI:rebuild(object)
+function MI:rebuild(object)
 	if object == nil then return end
 	local mt = {}
-	mt.__index = FI
+	mt.__index = MI
 	setmetatable(object, mt)
 end
 
 -- Destructor --
-function FI:remove()
+function MI:remove()
 	-- Destroy the Sprites --
 	rendering.destroy(self.stateSprite)
-	rendering.destroy(self.levelSprite)
 	-- Remove from the Update System --
 	UpSys.removeObj(self)
 	-- Remove from the Data Network --
@@ -57,23 +56,26 @@ function FI:remove()
 end
 
 -- Is valid --
-function FI:valid()
+function MI:valid()
 	if self.ent ~= nil and self.ent.valid then return true end
 	return false
 end
 
 -- Copy Settings --
-function FI:copySettings(obj)
-	if obj.selectedInv ~= nil then
+function MI:copySettings(obj)
+    if obj.selectedFilter ~= nil then
+        self.selectedFilter = obj.selectedFilter
+    end
+    if obj.selectedInv ~= nil then
 		self.selectedInv = obj.selectedInv
     end
     if obj.selectedMode ~= nil then
 		self.mode = obj.mode
-	end
+    end
 end
 
 -- Update --
-function FI:update()
+function MI:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	
@@ -82,24 +84,8 @@ function FI:update()
 		self:remove()
 		return
     end
-    
-    -- Update the level Sprite --
-    local amount = nil
-    local capacity = self.ent.fluidbox.get_capacity(1)
-    for k3, i in pairs(self.ent.get_fluid_contents()) do
-        amount = math.floor(i)
-    end
-    rendering.destroy(self.levelSprite)
-    if amount ~= nil then
-        local spriteNumber = math.floor(amount/capacity*10)
-        if spriteNumber == 0 then
-            rendering.destroy(self.levelSprite)
-        else
-            self.levelSprite = rendering.draw_sprite{sprite="FluidInteractorSprite3" .. spriteNumber, target=self.ent, surface=self.ent.surface, render_layer=131}
-        end
-    end
-	
-	-- Try to find a connected Data Network --
+
+    -- Try to find a connected Data Network --
 	local obj = Util.getConnectedDN(self)
 	if obj ~= nil and valid(obj.dataNetwork) then
 		self.dataNetwork = obj.dataNetwork
@@ -120,12 +106,12 @@ function FI:update()
 
     if self.active == false then return end
 
-    -- Update Inventory --
     self:updateInventory()
+
 end
 
 -- Tooltip Infos --
-function FI:getTooltipInfos(GUI)
+function MI:getTooltipInfos(GUI)
 
 	-- Create the Belongs to Label --
 	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
@@ -155,7 +141,7 @@ function FI:getTooltipInfos(GUI)
 	-- Create the text and style variables --
 	local text = ""
 	local style = {}
-	-- Check if the Fluid Interactor is linked with a Data Center --
+	-- Check if the Matter Interactor is linked with a Data Center --
 	if valid(self.dataNetwork) == true and valid(self.dataNetwork.dataCenter) == true then
 		text = {"", {"gui-description.LinkedTo"}, ": ", self.dataNetwork.dataCenter.invObj.name}
 		style = {92, 232, 54}
@@ -171,9 +157,22 @@ function FI:getTooltipInfos(GUI)
 	
     if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
     
-    -- Create the Mode Selection --
     if valid(self.dataNetwork) == true and valid(self.dataNetwork.dataCenter) == true and self.dataNetwork.dataCenter.invObj.isII == true then
-        -- Create the Mode Label --
+        -- Create the Filter --
+        local filterLabel = GUI.add{type="label", caption={"",{"gui-description.SelectFilter"}, ":"}}
+        filterLabel.style.top_margin = 7
+		filterLabel.style.font = "LabelFont"
+        filterLabel.style.font_color = {108, 114, 229}
+
+		local filter = GUI.add{type="choose-elem-button", elem_type="item", name="MIFilter" .. tostring(self.ent.unit_number), tooltip={"gui-description.SelectFilterTT"}}
+		filter.style.maximal_height = 25
+		filter.style.maximal_width = 25
+		if filter.elem_value == nil and self.selectedFilter ~= nil then
+            filter.elem_value = self.selectedFilter
+		end
+        self.selectedFilter = filter.elem_value
+
+        -- Create the Mode Selection --
         local modeLabel = GUI.add{type="label", caption={"",{"gui-description.SelectMode"}, ":"}}
         modeLabel.style.top_margin = 7
 		modeLabel.style.font = "LabelFont"
@@ -183,47 +182,44 @@ function FI:getTooltipInfos(GUI)
 
         if self.selectedMode == "output" then state = "right" end
         
-        local modeSwitch = GUI.add{type="switch", name="FIMode" .. self.ent.unit_number, allow_none_state=false, switch_state=state}
+        local modeSwitch = GUI.add{type="switch", name="MIMode" .. self.ent.unit_number, allow_none_state=false, switch_state=state}
         modeSwitch.left_label_caption = {"gui-description.Input"}
         modeSwitch.left_label_tooltip = {"gui-description.InputTT"}
         modeSwitch.right_label_caption = {"gui-description.Output"}
         modeSwitch.right_label_tooltip = {"gui-description.OutputTT"}
-    end
 
-	-- Create the Inventory Selection --
-	if valid(self.dataNetwork) == true and valid(self.dataNetwork.dataCenter) == true and self.dataNetwork.dataCenter.invObj.isII == true then
-		-- Create the targeted Inventory label --
+	    -- Create the Inventory Selection --
 		local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
 		targetLabel.style.top_margin = 7
 		targetLabel.style.font = "LabelFont"
 		targetLabel.style.font_color = {108, 114, 229}
 
-		local invs = {{"", {"gui-description.Any"}}}
+		local invs = {self.dataNetwork.dataCenter.invObj.name or {"gui-description.Any"}}
 		local selectedIndex = 1
 		local i = 1
-		for k, deepTank in pairs(global.deepTankTable) do
-			if deepTank ~= nil and deepTank.ent ~= nil and Util.canUse(self.player, deepTank.ent) then
+		for k, deepStorage in pairs(global.deepStorageTable) do
+			if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(self.player, deepStorage.ent) then
 				i = i + 1
-				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
-				if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
-					itemText = {"", " (", game.fluid_prototypes[deepTank.filter].localised_name, " - ", deepTank.player, ")"}
-				elseif deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
-					itemText = {"", " (", game.fluid_prototypes[deepTank.inventoryFluid].localised_name, " - ", deepTank.player, ")"}
+				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepStorage.player, ")"}
+				if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
+					itemText = {"", " (", game.item_prototypes[deepStorage.filter].localised_name, " - ", deepStorage.player, ")"}
+				elseif deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
+					itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, " - ", deepStorage.player, ")"}
 				end
-				invs[k+1] = {"", {"gui-description.DT"}, " ", tostring(deepTank.ID), itemText}
-				if self.selectedInv == deepTank then
+				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
+				if self.selectedInv == deepStorage then
 					selectedIndex = i
 				end
 			end
 		end
 		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-		local invSelection = GUI.add{type="list-box", name="FITarget" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
+		local invSelection = GUI.add{type="list-box", name="MITarget" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
 		invSelection.style.width = 100
 	end
 end
 
 -- Change the Mode --
-function FI:changeMode(mode)
+function MI:changeMode(mode)
     if mode == "left" then
         self.selectedMode = "input"
     elseif mode == "right" then
@@ -232,7 +228,7 @@ function FI:changeMode(mode)
 end
 
 -- Change the Targeted Inventory --
-function FI:changeInventory(ID)
+function MI:changeInventory(ID)
 	-- Check the ID --
     if ID == nil then
         self.selectedInv = nil
@@ -240,63 +236,67 @@ function FI:changeInventory(ID)
     end
 	-- Select the Inventory --
 	self.selectedInv = nil
-	for k, deepTank in pairs(global.deepTankTable) do
-		if valid(deepTank) then
-			if ID == deepTank.ID then
-				self.selectedInv = deepTank
+	for k, deepStorage in pairs(global.deepStorageTable) do
+		if valid(deepStorage) then
+			if ID == deepStorage.ID then
+				self.selectedInv = deepStorage
 			end
 		end
 	end
 end
 
 -- Set Active --
-function FI:setActive(set)
+function MI:setActive(set)
     self.active = set
     if set == true then
         -- Create the Active Sprite --
         rendering.destroy(self.stateSprite)
-        self.stateSprite = rendering.draw_sprite{sprite="FluidInteractorSprite2", target=self.ent, surface=self.ent.surface, render_layer=131}
+        self.stateSprite = rendering.draw_sprite{sprite="MatterInteractorSprite2", target=self.ent, surface=self.ent.surface, render_layer=131}
     else
         -- Create the Inactive Sprite --
         rendering.destroy(self.stateSprite)
-        self.stateSprite = rendering.draw_sprite{sprite="FluidInteractorSprite1", target=self.ent, surface=self.ent.surface, render_layer=131}
+        self.stateSprite = rendering.draw_sprite{sprite="MatterInteractorSprite1", target=self.ent, surface=self.ent.surface, render_layer=131}
     end
 end
 
--- Update the Tank Inventory --
-function FI:updateInventory()
-    -- Check the selected Inventory --
-    if self.selectedInv == 0 or valid(self.selectedInv) == false then return end
-
-    -- Get both Tanks and their characteristics --
-    local localTank = self.ent
-    local distantTank = self.selectedInv
-    local localFluid = nil
-    local localAmount = nil
-
-    -- Get the Fluid inside the local Tank --
-    for k, i in pairs(localTank.get_fluid_contents()) do
-        localFluid = k
-        localAmount = i
+-- Update the Inventory --
+function MI:updateInventory()
+    -- Get the Internal Inventory
+    local inv = self.ent.get_inventory(defines.inventory.chest)
+    -- Get the targeted Inventory --
+    local dataInv = self.selectedInv
+    if dataInv == 0 then
+        dataInv = self.dataNetwork.dataCenter.invObj
     end
+    -- Check the Data Inventory --
+    if valid(dataInv) == false then return end
 
     -- Input mode --
     if self.selectedMode == "input" then
-        -- Check the local and distant Tank --
-        if localFluid == nil or localAmount == nil then return end
-        if distantTank:canAccept(localFluid) == false then return end
-        -- Send the Fluid --
-        local amountAdded = distantTank:addFluid(localFluid, localAmount)
-        -- Remove the local Fluid --
-		localTank.remove_fluid{name=localFluid, amount=amountAdded}
-	-- Output mode --
+        -- Itinerate the Inventory --
+        for item, count in pairs(inv.get_contents()) do
+            -- Add Items to the Data Inventory --
+            local amountAdded = dataInv:addItem(item, count)
+            -- Remove Items from the local Inventory --
+            if amountAdded > 0 then
+                inv.remove({name=item, count=amountAdded})
+            end
+        end
+    -- Output mode --
     elseif self.selectedMode == "output" then
-        -- Check the local and distant Tank --
-        if localFluid ~= nil and localFluid ~= distantTank.inventoryFluid then return end
-        if distantTank.inventoryFluid == nil or distantTank.inventoryCount == 0 then return end
-        -- Get the Fluid --
-        local amountAdded = localTank.insert_fluid({name=distantTank.inventoryFluid, amount=distantTank.inventoryCount})
-        -- Remove the distant Fluid --
-        distantTank:getFluid(distantTank.inventoryFluid, amountAdded)
+        -- Return if the Filter is nil --
+        if self.selectedFilter == nil then return end
+        -- Check if the Item still exist --
+        if game.item_prototypes[self.selectedFilter] == nil then return end
+        -- Get Items count from the Data Inventory --
+        local returnedItems = dataInv:hasItem(self.selectedFilter)
+        -- Return if there are no Items --
+        if returnedItems <= 0 then return end
+        -- Insert requested Item inside the local Inventory --
+        local addedItems = inv.insert({name=self.selectedFilter, count=returnedItems})
+        -- Remove Item from the Data Inventory --
+	    dataInv:getItem(self.selectedFilter, addedItems)
     end
+
+
 end
