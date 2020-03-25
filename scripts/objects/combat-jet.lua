@@ -86,38 +86,32 @@ function CBJ:update()
 end
 
 -- Tooltip Infos --
-function CBJ:getTooltipInfos(GUI)
+function CBJ:getTooltipInfos(GUIObj, gui, justCreated)
 
-	-- Create the Belongs to Label --
-	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
-	belongsToL.style.font = "LabelFont"
-	belongsToL.style.font_color = _mfOrange
+	-- Create the Title --
+	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
 
 	-- Create the Current Work Label --
-	local work = GUI.add{type="label", caption={"", {"gui-description." .. self.currentOrder}}}
-	work.style.font = "LabelFont"
-	work.style.font_color = _mfBlue
-    
-    -- Create the Mission Label --
-	if self.target ~= nil then
-		local mission = GUI.add{type="label", caption={"",{"gui-description.Defend"}, ": {", self.target.x, ";", self.target.y, "}"}}
-		mission.style.font = "LabelFont"
-		mission.style.font_color = _mfGreen
-	end
-	
+	GUIObj:addLabel("", frame, {"gui-description." .. self.currentOrder}, _mfOrange)
+
 	-- Create the Mobile Factory Full Label --
 	if self.MFFull == true then
-		local mfFull = GUI.add{type="label", caption={"", {"gui-description.MFTrunkFull"}}}
-		mfFull.style.font = "LabelFont"
-		mfFull.style.font_color = _mfRed
+		GUIObj:addLabel("", frame, {"gui-description.MFTrunkFull"}, _mfRed)
 	end
-	
+
 	-- Create the Mobile Factory No Found Label --
 	if self.MFNotFound == true then
-		local mfNoFound = GUI.add{type="label", caption={"", {"gui-description.MFNotFound"}}}
-		mfNoFound.style.font = "LabelFont"
-		mfNoFound.style.font_color = _mfRed
+		GUIObj:addLabel("", frame, {"gui-description.MFNotFound"}, _mfRed)
 	end
+
+    -- Create the Mission Label --
+	if self.target ~= nil then
+		GUIObj:addDualLabel(frame, {"", {"gui-description.Mission"}, ": "}, {"", {"gui-description.Defend"}, ": {", self.target.x, ";", self.target.y, "}"}, _mfOrange, _mfGreen)
+	end
+
+	-- Create the Health Label --
+	GUIObj:addDualLabel(frame, {"", {"gui-description.JetHealth"}, ": "}, math.ceil(self.ent.health) .. "/" .. self.ent.prototype.max_health, _mfOrange, _mfGreen)
+
 end
 
 -- Is the Jet Iddle ? --

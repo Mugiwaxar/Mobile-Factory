@@ -95,57 +95,56 @@ function CJ:update()
 end
 
 -- Tooltip Infos --
-function CJ:getTooltipInfos(GUI)
+function CJ:getTooltipInfos(GUIObj, gui, justCreated)
 
-	-- Create the Belongs to Label --
-	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
-	belongsToL.style.font = "LabelFont"
-	belongsToL.style.font_color = _mfOrange
+	-- Create the Title --
+	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
 
 	-- Create the Current Work Label --
-	local work = GUI.add{type="label", caption={"", {"gui-description." .. self.currentOrder}}}
-	work.style.font = "LabelFont"
-	work.style.font_color = _mfBlue
-	
-	-- Create the Mission Label --
-	if self.target ~= nil then
-		local mission = GUI.add{type="label", caption={"",{"gui-description.Mission"}, ": ", {"gui-description." .. self.target.mission}, " ", {"entity-name." .. self.target.name}}}
-		mission.style.font = "LabelFont"
-		mission.style.font_color = _mfGreen
-	end
-	
-	-- Create the Invalid Structure Label --
-	if self.invalidStructure == true then
-		local invalidStructureL = GUI.add{type="label", caption={"", {"gui-description.InvalidStructure"}}}
-		invalidStructureL.style.font = "LabelFont"
-		invalidStructureL.style.font_color = _mfRed
-	end
-	
+	GUIObj:addLabel("", frame, {"gui-description." .. self.currentOrder}, _mfOrange)
+
 	-- Create the Mobile Factory Full Label --
 	if self.MFFull == true then
-		local mfFull = GUI.add{type="label", caption={"", {"gui-description.MFTrunkFull"}}}
-		mfFull.style.font = "LabelFont"
-		mfFull.style.font_color = _mfRed
+		GUIObj:addLabel("", frame, {"gui-description.MFTrunkFull"}, _mfRed)
 	end
-	
+
 	-- Create the Mobile Factory No Found Label --
 	if self.MFNotFound == true then
-		local mfNoFound = GUI.add{type="label", caption={"", {"gui-description.MFNotFound"}}}
-		mfNoFound.style.font = "LabelFont"
-		mfNoFound.style.font_color = _mfRed
+		GUIObj:addLabel("", frame, {"gui-description.MFNotFound"}, _mfRed)
 	end
-	
+
+	-- Create the Mission Label --
+	if self.target ~= nil then
+		GUIObj:addDualLabel(frame, {"", {"gui-description.Mission"}, ": "}, {"", {"gui-description." .. self.target.mission}, " ", {"entity-name." .. self.target.name}}, _mfOrange, _mfGreen)
+	end
+
+	-- Create the Invalid Structure Label --
+	if self.invalidStructure == true then
+		GUIObj:addLabel("", frame, {"gui-description.InvalidStructure"}, _mfRed)
+	end
+
 	-- Create the Inventory Full Label --
 	if self.TargetInventoryFull == true then
-		local invFull = GUI.add{type="label", caption={"", {"gui-description.TargetInventoryFull"}}}
-		invFull.style.font = "LabelFont"
-		invFull.style.font_color = _mfRed
+		GUIObj:addLabel("", frame, {"gui-description.TargetInventoryFull"}, _mfRed)
 	end
-	
+
+	-- Create the Inventory Title --
+	local invFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
+	invFrame.visible = false
+
+	-- Create the Items Table --
+	local table = GUIObj:addTable("", invFrame, 5)
+
 	-- Create the Inventory List --
 	if self.inventoryItem ~= nil then
-		Util.itemToFrame(self.inventoryItem, 1, GUI)
+		invFrame.visible = true
+		-- Check the Item --
+		if self.inventoryItem == nil or game.item_prototypes[self.inventoryItem] == nil then goto continue end
+		-- Create the Button
+		Util.itemToFrame(self.inventoryItem, 1, GUIObj, table)
+		::continue::
 	end
+	
 end
 
 -- Is the Jet Iddle ? --

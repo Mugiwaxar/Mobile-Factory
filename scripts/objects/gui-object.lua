@@ -89,6 +89,8 @@ end
 -- Create a Title Label --
 function GO:addTitledFrame(name, gui, direction, text, color, save)
     local frame = self:addFrame(name, gui, direction, save)
+    frame.style.vertically_stretchable = true
+    frame.style.horizontally_stretchable = true
     local titleFrame = self:addFrame("", frame, "horizontal")
     local titleFlow = self:addFlow("", titleFrame, "horizontal")
     local label = self:addLabel("", titleFlow, text, color, "", false, "TitleFont")
