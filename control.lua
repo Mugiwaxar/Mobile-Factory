@@ -246,7 +246,7 @@ script.on_event(defines.events.on_research_finished, technologyFinished)
 script.on_event(defines.events.on_selected_entity_changed, selectedEntityChanged)
 script.on_event(defines.events.on_marked_for_deconstruction, markedForDeconstruction)
 script.on_event(defines.events.on_entity_settings_pasted, settingsPasted)
--- script.on_event("TTGUIKey", onShortcut)
+script.on_event("OpenTTGUI", onShortcut)
 
 -- Add command to insert Mobile Factory to the player inventory --
 -- commands.add_command("GetMobileFactory", "Add the Mobile Factory to the player inventory", addMobileFactory)

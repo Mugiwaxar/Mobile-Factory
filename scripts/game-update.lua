@@ -260,17 +260,15 @@ end
 
 -- Called when a Shortcut is pressed --
 function onShortcut(event)
-	-- local player = getPlayer(event.player_index)
-	-- if event.input_name == "TTGUIKey" and player.gui.screen.mfTooltipGUI ~= nil then
-	-- 	local set = getPlayerVariable(player.name, "TTGUILocked")
-	-- 	if set == true then
-	-- 		setPlayerVariable(player.name, "TTGUILocked", false)
-	-- 		player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite = "LockIcon"
-	-- 	else
-	-- 		setPlayerVariable(player.name, "TTGUILocked", true)
-	-- 		player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite = "LockIconReed"
-	-- 	end
-	-- end
+	local player = getPlayer(event.player_index)
+	-- Tooltip GUI Key --
+	if event.input_name == "OpenTTGUI" then
+		local ent =player.selected
+		if ent ~= nil and ent.valid == true and _mfTooltipGUI[ent.name] ~= nil then
+			event.entity = ent
+			GUI.guiOpened(event)
+		end
+	end
 end
 
 -- Damage all Players that aren't on a safe position --

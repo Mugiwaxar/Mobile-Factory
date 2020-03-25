@@ -17,11 +17,14 @@ function GUI.createTooltipGUI(player, obj)
 	local mainSrollPane = GUIObj:addScrollPane("MainScrollPane", GUIObj.gui, 350, true)
 	GUIObj.MainScrollPane.style.minimal_height = 50
 
+	-- Add the Main Flow --
+	local mainFlow = GUIObj:addFlow("MainFlow", mainSrollPane, "horizontal")
+
 	-- Add the Infos Flow --
-	GUIObj:addFlow("InfosFrame", mainSrollPane, "vertical", true)
+	GUIObj:addFlow("InfosFrame", mainFlow, "horizontal", true)
 
 	-- Add the Settings Flow --
-	GUIObj:addFlow("SettingsFrame", mainSrollPane, "vertical", true)
+	GUIObj:addFlow("SettingsFrame", mainFlow, "horizontal", true)
 	GUIObj.SettingsFrame.visible = false
 
 	-- Update the GUI --

@@ -683,13 +683,13 @@ setStackTo1000("uranium-ore")
 
 
 -------------------- SHORTCUTS --------------------
--- data:extend{
--- 	{
--- 	type = "custom-input",
--- 	name = "TTGUIKey",
--- 	key_sequence = "mouse-button-3"
--- 	}
--- }
+data:extend{
+	{
+	type = "custom-input",
+	name = "OpenTTGUI",
+	key_sequence = "mouse-button-1"
+	}
+}
 
 -------------------- Styles --------------------
 local outer_frame_light = outer_frame_light()

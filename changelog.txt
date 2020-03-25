@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.119
+Date: 25/03/2020
+  Gui:
+    - Added a GUI for the Jets (Key to open can be configured, default -> Left click)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.118
 Date: 25/03/2020
   Major Features:
@@ -9,7 +14,7 @@ Date: 25/03/2020
     - Rewrite of the Options GUI
     - Removed the Tooltip GUI, click on the Structures to open their corresponding GUI
     - All GUIs can now be closed by pressing the Escape Key
-    - A GUI will be automatically closed when another GUI is openned
+    - A GUI will be automatically closed when another GUI is opened
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.117
 Date: 19/03/2020
