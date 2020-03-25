@@ -8,10 +8,6 @@ function teleportPlayerInside(player, MF)
 	if player.name ~= MF.player and MF.locked == true then return end
 	-- Check Internal Surface and Player --
 	if MF.fS == nil then player.print({"", {"gui-description.FSLost"}}) return end
-	-- Save the visited Factory once variable --
-	if MF.ent ~= nil and MF.ent.last_user ~= nil and player.name == MF.ent.last_user.name then
-		setPlayerVariable(player.name, "VisitedFactory", true)
-	end
 	-- Get the Player direction --
 	local direction = player.walking_state.direction
 	-- Calcul the future position --

@@ -143,26 +143,37 @@ function INV:getBestQuatron()
 	return 0
 end
 
+-- Get the Tooltip --
+function INV:getTooltipInfos(GUIObj, gui)
+	
+	-- Create the Title --
+	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
+
+	-- Create the total Items Label --
+	GUIObj:addDualLabel(frame, {"", {"gui-description.INVTotalItems"}, ":"}, Util.toRNumber(self.usedCapacity) .. "/" .. Util.toRNumber(self.maxCapacity), _mfOrange, _mfGreen, nil, nil, self.usedCapacity .. "/" .. self.maxCapacity)
+
+	-- Create the Number of Data Storage Label --
+	GUIObj:addDualLabel(frame, {"", {"gui-description.INVTotalDataStorages"}, ":"}, self.dataStoragesCount, _mfOrange, _mfGreen)
+
+	-- Create the Item List Flow --
+	local listFlow = GUIObj:addFlow("", frame, "vertical")
+
+	-- Create the Items Table --
+	local table = GUIObj:addTable("", frame, 5)
+
+	-- Look for all Items --
+	for name, count in pairs(self.inventory) do
+		-- Check the Item --
+		if name == nil or count == nil or count == 0 or game.item_prototypes[name] == nil then goto continue end
+		-- Create the Button --
+		Util.itemToFrame(name, count, GUIObj, table)
+		::continue::
+	end
+
+end
+
 -- Return the Inventory Frame --
 function INV:getFrame(guiElement)
-
-	-- Create the Title Label --
-	local title = guiElement.add{type="label"}
-	title.style.font = "TitleFont"
-	title.caption = (self.name)
-	
-	-- Create the Amount label --
-	local amount = guiElement.add{type="label"}
-	amount.style.font = "LabelFont"
-	amount.caption = {"", {"gui-description.InventoryAmount"}, ": ", Util.toRNumber(self.usedCapacity), "/", Util.toRNumber(self.maxCapacity)}
-	amount.style.font_color = {108, 114, 229}
-	
-	-- Create the Data Storage Label --
-	local dataStorage = guiElement.add{type="label"}
-	dataStorage.style.font = "LabelFont"
-	dataStorage.caption = {"", {"gui-description.dataStorage"}, ": ", self.dataStoragesCount}
-	dataStorage.style.font_color = {108, 114, 229}
-	dataStorage.style.bottom_margin = 7
 	
 	-- Create the Inventory List Flow --
 	local invList = guiElement.add{type="flow", direction="vertical"}

@@ -88,33 +88,33 @@ end
 
 
 -- Tooltip Infos --
-function EC:getTooltipInfos(GUI)
+-- function EC:getTooltipInfos(GUI)
 
-	-- Create the Belongs to Label --
-	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
-	belongsToL.style.font = "LabelFont"
-	belongsToL.style.font_color = _mfOrange
+-- 	-- Create the Belongs to Label --
+-- 	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
+-- 	belongsToL.style.font = "LabelFont"
+-- 	belongsToL.style.font_color = _mfOrange
 
-	-- Create the Data Network label --
-	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
-	if self.dataNetwork ~= nil then
-		DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
-	end
-	local dataNetworkL = GUI.add{type="label"}
-	dataNetworkL.style.font = "LabelFont"
-	dataNetworkL.caption = DNText
-	dataNetworkL.style.font_color = {155, 0, 168}
+-- 	-- Create the Data Network label --
+-- 	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
+-- 	if self.dataNetwork ~= nil then
+-- 		DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
+-- 	end
+-- 	local dataNetworkL = GUI.add{type="label"}
+-- 	dataNetworkL.style.font = "LabelFont"
+-- 	dataNetworkL.caption = DNText
+-- 	dataNetworkL.style.font_color = {155, 0, 168}
 
-	-- Create the Out Of Power Label --
-	if self.dataNetwork ~= nil then
-		if self.dataNetwork.outOfPower == true then
-			local dataNetworOOPower = GUI.add{type="label"}
-			dataNetworOOPower.style.font = "LabelFont"
-			dataNetworOOPower.caption = {"", {"gui-description.OutOfPower"}}
-			dataNetworOOPower.style.font_color = {231, 5, 5}
-		end
-	end
-end
+-- 	-- Create the Out Of Power Label --
+-- 	if self.dataNetwork ~= nil then
+-- 		if self.dataNetwork.outOfPower == true then
+-- 			local dataNetworOOPower = GUI.add{type="label"}
+-- 			dataNetworOOPower.style.font = "LabelFont"
+-- 			dataNetworOOPower.caption = {"", {"gui-description.OutOfPower"}}
+-- 			dataNetworOOPower.style.font_color = {231, 5, 5}
+-- 		end
+-- 	end
+-- end
 
 
 

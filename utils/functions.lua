@@ -123,6 +123,27 @@ function split(str, char)
    return parts
 end
 
+-- Return the localised Entity Name --
+function Util.getLocEntityName(entName)
+	if game.entity_prototypes[entName] ~= nil then
+		return game.entity_prototypes[entName].localised_name
+	end
+end
+
+-- Return the localised Item Name --
+function Util.getLocItemName(itemName)
+	if game.item_prototypes[itemName] ~= nil then
+		return game.item_prototypes[itemName].localised_name
+	end
+end
+
+-- Return the localised Fluid Name --
+function Util.getLocFluidName(fluidName)
+	if game.fluid_prototypes[fluidName] ~= nil then
+		return game.fluid_prototypes[fluidName].localised_name
+	end
+end
+
 -- Check if an Object is valid --
 function valid(obj)
 	if obj == nil then return false end
@@ -389,60 +410,25 @@ function Util.addMobileFactory(player)
 end
 
 -- Util: Create a frame from an Item --
-function Util.itemToFrame(item, amount, guiElement)
+function Util.itemToFrame(name, count, GUIObj, gui)
 	-- Check value --
-	if item == nil or amount == nil or game.item_prototypes[item] == nil then return end
-	-- Create the Frame --
-	local frame = guiElement.add{type="frame", direction="horizontal"}
-	frame.style.minimal_width = 75
-	frame.style.margin = 0
-	frame.style.padding = 0
-	-- Add the Icon and the Tooltip to the frame --
-	local sprite = frame.add{type="sprite", tooltip=game.item_prototypes[item].localised_name, sprite="item/" .. item}
-	sprite.style.padding = 0
-	sprite.style.margin = 0
-	-- Add the amount label --
-	local label = frame.add{type="label", caption=Util.toRNumber(amount)}
-	label.style.padding = 0
-	label.style.margin = 0
-end
-
--- Util: Create a text Label from an Item --
-function Util.itemToLabel(item, amount, guiElement)
-	-- Check value --
-	if item == nil or amount == nil then return end
-	-- Create the Frame --
-	local frame = guiElement.add{type="flow", direction="horizontal"}
-	frame.style.margin = 0
-	frame.style.padding = 0
-	-- Add the Icon and the Tooltip to the frame --
-	local sprite = frame.add{type="sprite", tooltip=game.item_prototypes[item].localised_name, sprite="item/" .. item}
-	sprite.style.padding = 0
-	sprite.style.margin = 0
-	-- Add the amount label --
-	local label = frame.add{type="label", caption=Util.toRNumber(amount)}
-	label.style.padding = 0
-	label.style.margin = 0
-	label.style.font = "LabelFont"
+	if name == nil or count == nil or game.item_prototypes[name] == nil then return end
+	-- Create the Button --
+	local button = GUIObj:addButton("", gui, "item/" .. name, "item/" .. name, {"", Util.getLocItemName(name), ": ", Util.toRNumber(count)}, 37, true, true, count)
+	button.style = "MF_Fake_Button_Blue"
+	button.style.padding = 0
+	button.style.margin = 0
 end
 
 -- Util: Create a frame from a Fluid --
-function Util.fluidToFrame(fluid, amount, guiElement)
+function Util.fluidToFrame(name, count, GUIObj, gui)
 	-- Check value --
-	if fluid == nil or amount == nil or game.fluid_prototypes[fluid] == nil then return end
-	-- Create the Frame --
-	local frame = guiElement.add{type="frame", direction="horizontal"}
-	frame.style.minimal_width = 75
-	frame.style.margin = 0
-	frame.style.padding = 0
-	-- Add the Icon and the Tooltip to the frame --
-	local sprite = frame.add{type="sprite", tooltip=game.fluid_prototypes[fluid].localised_name, sprite="fluid/" .. fluid}
-	sprite.style.padding = 0
-	sprite.style.margin = 0
-	-- Add the amount label --
-	local label = frame.add{type="label", caption=Util.toRNumber(amount)}
-	label.style.padding = 0
-	label.style.margin = 0
+	if name == nil or count == nil or game.fluid_prototypes[name] == nil then return end
+	-- Create the Button --
+	local button = GUIObj:addButton("", gui, "fluid/" .. name, "fluid/" .. name, {"", Util.getLocFluidName(name), ": ", Util.toRNumber(count)}, 37, true, true, count)
+	button.style = "MF_Fake_Button_Purple"
+	button.style.padding = 0
+	button.style.margin = 0
 end
 
 -- Util: Randomize Table --
@@ -488,7 +474,8 @@ end
 
 -- Transform big numbers to readable numbers --
 function Util.toRNumber(number)
-	local rNumber = number
+	if number == nil then return 0 end
+	local rNumber = number .. " "
 	if number >= 1000 and number < 1000000 then
 		rNumber = tostring(math.floor(number/10)/100) .. " k"
 	elseif number >= 1000000 and number < 1000000000 then

@@ -146,60 +146,23 @@ function WDT:update()
 end
 
 -- Tooltip Info --
-function WDT:getTooltipInfos(GUI)
+function WDT:getTooltipInfos(GUIObj, gui)
 
-	-- Create the Belongs to Label --
-	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
-	belongsToL.style.font = "LabelFont"
-	belongsToL.style.font_color = _mfOrange
+	-- Create the Data Network Frame --
+	local DNFrame = GUIObj:addDataNetworkFrame(gui, self)
 
-	-- Create the Data Network label --
-	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
-	if self.dataNetwork ~= nil then
-		DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
-	end
-	local dataNetworkL = GUI.add{type="label"}
-	dataNetworkL.style.font = "LabelFont"
-	dataNetworkL.caption = DNText
-	dataNetworkL.style.font_color = {155, 0, 168}
-
-	-- Create the Out Of Power Label --
-	if self.dataNetwork ~= nil then
-		if self.dataNetwork.outOfPower == true then
-			local dataNetworOOPower = GUI.add{type="label"}
-			dataNetworOOPower.style.font = "LabelFont"
-			dataNetworOOPower.caption = {"", {"gui-description.OutOfPower"}}
-			dataNetworOOPower.style.font_color = {231, 5, 5}
-		end
-	end
-
-	-- Create the in conflict Label --
-	if self.inConflict == true then
-		local dataNetworConflict = GUI.add{type="label"}
-		dataNetworConflict.style.font = "LabelFont"
-		dataNetworConflict.caption = {"", {"gui-description.WirelessTransmitterConflict"}}
-		dataNetworConflict.style.font_color = {231, 5, 5}
-	end
-	
-	-- Create the ID label --
-	local IDL = GUI.add{type="label"}
-	IDL.style.font = "LabelFont"
-	IDL.caption = {"", {"gui-description.TransmitterID"}, ": ", tostring(self.entID)}
-	IDL.style.font_color = {92, 232, 54}
+	-- Check the Connected state --
+	if DNFrame == false then return end
 
 	-- Create the Connected Receivers Label --
-	local CRL = GUI.add{type="label"}
-	CRL.style.font = "LabelFont"
-	CRL.caption = {"", {"gui-description.ConnectedReceiver"}, ":"}
-	CRL.style.font_color = {92, 232, 54}
+	local connectedLabel = GUIObj:addLabel("", DNFrame, {"", {"gui-description.ConnectedReceiver"}}, _mfOrange)
+	connectedLabel.visible = false
 
 	-- List all Receivers --
 	for k, wdr in pairs(global.wirelessDataReceiverTable) do
 		if wdr.linkedTransmitter == self then
-			local RL = GUI.add{type="label"}
-			RL.style.font = "LabelFont"
-			RL.caption = wdr.entID
-			RL.style.font_color = {155, 0, 168}
+			connectedLabel.visible = true
+			GUIObj:addSimpleButton("WDTCam," .. wdr.ent.unit_number, DNFrame, wdr.entID, {"gui-description.ShowWDR"})
 		end
 	end
 

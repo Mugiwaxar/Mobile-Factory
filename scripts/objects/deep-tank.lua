@@ -64,55 +64,59 @@ function DTK:update()
 	end
 	
 	-- Remove the Fluid if it doesn't exist anymore --
-	if game.fluid_prototypes[self.inventoryFluid] == nil then
+	if self.inventoryFluid ~= nil and game.fluid_prototypes[self.inventoryFluid] == nil then
 		self.inventoryFluid = nil
 		self.inventoryCount = 0
 		return
 	end
+
+	-- Remove the Fluid Filter if it doesn't exist anymore --
+	if self.filtrer ~= nil and game.fluid_prototypes[self.filtrer] == nil then
+		self.filtrer = nil
+		return
+	end
 	
 	-- Display the Item Icon --
-	if self.inventoryFluid == nil then return end
-	local sprite = "fluid/" .. self.inventoryFluid
+	if self.inventoryFluid == nil and self.filter == nil then return end
+	local sprite = "fluid/" .. (self.inventoryFluid or self.filter)
 	rendering.draw_sprite{sprite=sprite, target=self.ent, surface=self.ent.surface, time_to_live=self.updateTick + 1, target_offset={0,-0.35}, render_layer=131}
 end
 
 -- Tooltip Infos --
-function DTK:getTooltipInfos(GUI)
+function DTK:getTooltipInfos(GUIObj, gui, justCreated)
 
-	-- Create the Belongs to Label --
-	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
-	belongsToL.style.font = "LabelFont"
-	belongsToL.style.font_color = _mfOrange
+	-- Create the Title --
+	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
 
-	-- Create the ID label --
-	local IDL = GUI.add{type="label"}
-	IDL.style.font = "LabelFont"
-	IDL.caption = {"", {"gui-description.DeepTank"}, ": ", tostring(self.ID)}
-	IDL.style.font_color = {92, 232, 54}
-
-	-- Create the Inventory List --
-	if self.inventoryFluid ~= nil and self.inventoryCount > 0 then
-		Util.fluidToFrame(self.inventoryFluid, self.inventoryCount, GUI)
+	-- Create the Fluid Frame --
+	if self.inventoryFluid ~= nil or self.filter ~= nil then
+		Util.fluidToFrame(self.inventoryFluid or self.filter, self.inventoryCount or 0, GUIObj, frame)
 	end
 
-	-- Create the Filter Display --
-	if self.filter ~= nil and game.fluid_prototypes[self.filter] ~= nil then
-		local fDisplayL = GUI.add{type="label"}
-		fDisplayL.style.font = "LabelFont"
-		fDisplayL.caption = {"", {"gui-description.Filter"}, ": "}
-		fDisplayL.style.font_color = {92, 232, 54}
-		fDisplayL.style.top_margin = 10
+	-- Create the Fluid Name Label --
+	local fluidName = Util.getLocFluidName(self.inventoryFluid) or Util.getLocFluidName(self.filter) or {"gui-description.Empty"}
+	GUIObj:addDualLabel(frame, {"", {"gui-description.FluidName"}, ":"}, fluidName, _mfOrange, _mfGreen)
 
-		local sprite = "fluid/" .. self.filter
-		local fDisplayI = GUI.add{type="sprite", sprite=sprite}
-		fDisplayI.tooltip = self.filter
+	-- Create the Fluid Amount Label --
+	local fluidAmount = self.inventoryCount or 0
+	GUIObj:addDualLabel(frame, {"", {"gui-description.Amount"}, ":"}, Util.toRNumber(fluidAmount) .. "/" .. Util.toRNumber(_dtMaxFluid), _mfOrange, _mfGreen, nil, nil, fluidAmount .. "/" .. _dtMaxFluid)
+
+	-- Create the Filter Label --
+	local filterName = Util.getLocFluidName(self.filter) or {"gui-description.None"}
+	GUIObj:addDualLabel(frame, {"", {"gui-description.Filter"}, ":"}, filterName, _mfOrange, _mfGreen)
+
+	-- Create the Filter Selection --
+	if justCreated == true and canModify(getPlayer(gui.player_index).name, self.ent) == true then
+		GUIObj.SettingsFrame.visible = true
+		local titleFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
+		GUIObj:addLabel("", titleFrame, {"gui-description.ChangeFilter"}, _mfOrange)
+		GUIObj:addFilter("TF" .. tostring(self.ent.unit_number), titleFrame, {"gui-description.FilterSelect"}, true, "fluid", 40)
 	end
 
-	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
-
-	-- Add the Set Filter Button --
-	local fButton = GUI.add{type="button", name = "MFInfos", caption={"", {"gui-description.SetFilter"}}}
-	fButton.style.width = 100
+	-- Update the Filter --
+	if game.fluid_prototypes[self.filter] ~= nil and GUIObj["TF" .. tostring(self.ent.unit_number)] ~= nil then
+		GUIObj["TF" .. tostring(self.ent.unit_number)].elem_value = self.filter
+	end
 
 end
 

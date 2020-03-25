@@ -49,6 +49,7 @@ function updateValues()
 	if global.floorIsLavaActivated == nil then global.floorIsLavaActivated = false end
 	if global.playersTable == nil then global.playersTable = {} end
 	if global.MFTable == nil then global.MFTable = {} end
+	if global.GUITable == nil then global.GUITable = {} end
 	if global.accTable == nil then global.accTable = {} end
 	if global.pdpTable == nil then global.pdpTable = {} end
 	if global.deepStorageTable == nil then global.deepStorageTable = {} end
@@ -159,6 +160,7 @@ function initPlayer(event)
 		global.playersTable[player.name].MF = MF
 		Util.addMobileFactory(player)
 		setPlayerVariable(player.name, "GotInventory", true)
+		GUI.createMFMainGUI(player)
 	end
 end
 
@@ -258,17 +260,17 @@ end
 
 -- Called when a Shortcut is pressed --
 function onShortcut(event)
-	local player = getPlayer(event.player_index)
-	if event.input_name == "TTGUIKey" and player.gui.screen.mfTooltipGUI ~= nil then
-		local set = getPlayerVariable(player.name, "TTGUILocked")
-		if set == true then
-			setPlayerVariable(player.name, "TTGUILocked", false)
-			player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite = "LockIcon"
-		else
-			setPlayerVariable(player.name, "TTGUILocked", true)
-			player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite = "LockIconReed"
-		end
-	end
+	-- local player = getPlayer(event.player_index)
+	-- if event.input_name == "TTGUIKey" and player.gui.screen.mfTooltipGUI ~= nil then
+	-- 	local set = getPlayerVariable(player.name, "TTGUILocked")
+	-- 	if set == true then
+	-- 		setPlayerVariable(player.name, "TTGUILocked", false)
+	-- 		player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite = "LockIcon"
+	-- 	else
+	-- 		setPlayerVariable(player.name, "TTGUILocked", true)
+	-- 		player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite = "LockIconReed"
+	-- 	end
+	-- end
 end
 
 -- Damage all Players that aren't on a safe position --

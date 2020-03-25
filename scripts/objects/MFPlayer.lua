@@ -16,7 +16,6 @@ function MFP:new(player)
     t.ent = player
     t.name = player.name
     t.varTable = {}
-    t.varTable.VisitedFactory = false
 	return t
 end
 

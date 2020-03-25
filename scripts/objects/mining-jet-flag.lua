@@ -75,49 +75,49 @@ function MJF:update()
 end
 
 -- Tooltip Infos --
-function MJF:getTooltipInfos(GUI)
+function MJF:getTooltipInfos(GUIObj, gui, justCreated)
 
-	-- Create the Belongs to Label --
-	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
-	belongsToL.style.font = "LabelFont"
-	belongsToL.style.font_color = _mfOrange
+	-- Create the Title --
+	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
 
-	-- Create the Total Ore Path Label --
-	local pathLabel = GUI.add{type="label", caption={"", tonumber(table_size(self.oreTable)), " ", {"gui-description.OrePathsFound"}, ":"}}
-	pathLabel.style.font = "LabelFont"
-	pathLabel.style.font_color = _mfBlue
+	-- Create the Resource Label --
+	GUIObj:addDualLabel(frame, {"", {"gui-description.NumberOfOrePath"}, ": "}, table_size(self.oreTable), _mfOrange, _mfGreen)
 
 	-- Create the Inventory Full Label --
 	if self.TargetInventoryFull == true then
-		local invFull = GUI.add{type="label", caption={"", {"gui-description.TargetInventoryFull"}}}
-		invFull.style.font = "LabelFont"
-		invFull.style.font_color = _mfRed
-	end
-	
-	-- Create the Mobile Factory No Found Label --
-	if self.MFNotFound == true then
-		local mfNoFound = GUI.add{type="label", caption={"", {"gui-description.MFNotFound"}}}
-		mfNoFound.style.font = "LabelFont"
-		mfNoFound.style.font_color = _mfRed
+		GUIObj:addLabel("", frame, {"gui-description.InvalidTargetInventory"}, _mfRed)
 	end
 
-	-- Create the Targed Label --
-	local targetLabel = GUI.add{type="label", caption={"", {"gui-description.InternalInventory"}, ":"}}
-	targetLabel.style.font = "LabelFont"
-	targetLabel.style.font_color = _mfBlue
-	
+	if self.MFNotFound == true then
+		GUIObj:addLabel("", frame, {"gui-description.MFNotFound"}, _mfRed)
+	end
+
+	-- Create the Inventory Title --
+	local invFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
+	invFrame.visible = false
+
+	-- Create the Items Table --
+	local table = GUIObj:addTable("", invFrame, 5)
+
 	-- Create the Inventory Frame --
 	for name, count in pairs(self.inventory) do
-		Util.itemToFrame(name, count, GUI)
+		invFrame.visible = true
+		-- Check the Item --
+		if name == nil or count == nil or count == 0 or game.item_prototypes[name] == nil then goto continue end
+		-- Create the Button
+		Util.itemToFrame(name, count, GUIObj, table)
+		::continue::
 	end
 
-	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
+	-- Stop of the Settings can't be Modified --
+	if canModify(getPlayer(gui.player_index).name, self.ent) == false or justCreated ~= true then return end
 
-	-- Create the targeted Inventory label --
-	local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
-	targetLabel.style.top_margin = 7
-	targetLabel.style.font = "LabelFont"
-	targetLabel.style.font_color = {108, 114, 229}
+	-- Create the Title --
+	local settingFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
+	GUIObj.SettingsFrame.visible = true
+
+	-- Create the Select Deep Storage Label --
+	GUIObj:addLabel("", settingFrame, {"", {"gui-description.TargetedStorage"}}, _mfOrange)
 
 	local invs = {{"gui-description.All"}}
 	local selectedIndex = 1
@@ -136,8 +136,7 @@ function MJF:getTooltipInfos(GUI)
 		end
 	end
 	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-	local invSelection = GUI.add{type="list-box", name="MJF" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
-	invSelection.style.width = 100
+	GUIObj:addDropDown("MJF" .. self.ent.unit_number, settingFrame, invs, selectedIndex)
 end
 
 -- Change the Targeted Inventory --

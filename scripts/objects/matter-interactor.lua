@@ -111,111 +111,67 @@ function MI:update()
 end
 
 -- Tooltip Infos --
-function MI:getTooltipInfos(GUI)
+function MI:getTooltipInfos(GUIObj, gui, justCreated)
 
-	-- Create the Belongs to Label --
-	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
-	belongsToL.style.font = "LabelFont"
-	belongsToL.style.font_color = _mfOrange
+	-- Create the Data Network Frame --
+	GUIObj:addDataNetworkFrame(gui, self)
 
-	-- Create the Data Network label --
-	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
-	if self.dataNetwork ~= nil then
-		DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
-	end
-	local dataNetworkL = GUI.add{type="label"}
-	dataNetworkL.style.font = "LabelFont"
-	dataNetworkL.caption = DNText
-	dataNetworkL.style.font_color = {155, 0, 168}
+	-- Create the Inventory Title --
+	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
 
-	-- Create the Out Of Power Label --
-	if self.dataNetwork ~= nil then
-		if self.dataNetwork.outOfPower == true then
-			local dataNetworOOPower = GUI.add{type="label"}
-			dataNetworOOPower.style.font = "LabelFont"
-			dataNetworOOPower.caption = {"", {"gui-description.OutOfPower"}}
-			dataNetworOOPower.style.font_color = {231, 5, 5}
-		end
+	-- Create the Filter Label --
+	local filterName = Util.getLocItemName(self.selectedFilter) or {"gui-description.None"}
+	GUIObj:addDualLabel(frame, {"", {"gui-description.Filter"}, ":"}, filterName, _mfOrange, _mfGreen)
+
+	-- Create the Inventory Button --
+	GUIObj:addSimpleButton("MIOpenI," .. tostring(self.ent.unit_number), frame, {"gui-description.OpenInventory"})
+
+	-- Update the Filter --
+	if game.item_prototypes[self.selectedFilter] ~= nil and GUIObj["MIFilter" .. tostring(self.ent.unit_number)] ~= nil then
+		GUIObj["MIFilter" .. tostring(self.ent.unit_number)].elem_value = self.selectedFilter
 	end
 	
-	-- Create the text and style variables --
-	local text = ""
-	local style = {}
-	-- Check if the Matter Interactor is linked with a Data Center --
-	if valid(self.dataNetwork) == true and valid(self.dataNetwork.dataCenter) == true then
-		text = {"", {"gui-description.LinkedTo"}, ": ", self.dataNetwork.dataCenter.invObj.name}
-		style = {92, 232, 54}
-	else
-		text = {"gui-description.Unlinked"}
-		style = {231, 5, 5}
-	end
-	-- Create the Link label --
-	local link = GUI.add{type="label"}
-	link.style.font = "LabelFont"
-	link.caption = text
-	link.style.font_color = style
+	-- Check if the Parameters can be modified --
+	if canModify(getPlayer(gui.player_index).name, self.ent) == false or justCreated ~= true or valid(self.dataNetwork) == false then return end
 	
-    if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
-    
-    if valid(self.dataNetwork) == true and valid(self.dataNetwork.dataCenter) == true and self.dataNetwork.dataCenter.invObj.isII == true then
-        -- Create the Filter --
-        local filterLabel = GUI.add{type="label", caption={"",{"gui-description.SelectFilter"}, ":"}}
-        filterLabel.style.top_margin = 7
-		filterLabel.style.font = "LabelFont"
-        filterLabel.style.font_color = {108, 114, 229}
+	-- Create the Parameters Title --
+	local titleFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
+	GUIObj.SettingsFrame.visible = true
 
-		local filter = GUI.add{type="choose-elem-button", elem_type="item", name="MIFilter" .. tostring(self.ent.unit_number), tooltip={"gui-description.SelectFilterTT"}}
-		filter.style.maximal_height = 25
-		filter.style.maximal_width = 25
-		if filter.elem_value == nil and self.selectedFilter ~= nil then
-            filter.elem_value = self.selectedFilter
-		end
-        self.selectedFilter = filter.elem_value
+	-- Create the Filter Selection --
+	GUIObj:addLabel("", titleFrame, {"gui-description.ChangeFilter"}, _mfOrange)
+	local filter = GUIObj:addFilter("MIFilter" .. tostring(self.ent.unit_number), titleFrame, {"gui-description.FilterSelect"}, true, "item", 40)
+	if game.item_prototypes[self.selectedFilter] ~= nil then filter.elem_value = self.selectedFilter end
 
-        -- Create the Mode Selection --
-        local modeLabel = GUI.add{type="label", caption={"",{"gui-description.SelectMode"}, ":"}}
-        modeLabel.style.top_margin = 7
-		modeLabel.style.font = "LabelFont"
-        modeLabel.style.font_color = {108, 114, 229}
+	-- Create the Mode Selection --
+	GUIObj:addLabel("", titleFrame, {"gui-description.SelectMode"}, _mfOrange)
+	local state = "left"
+	if self.selectedMode == "output" then state = "right" end
+	GUIObj:addSwitch("MIMode" .. self.ent.unit_number, titleFrame, {"gui-description.Input"}, {"gui-description.Output"}, {"gui-description.InputTT"}, {"gui-description.OutputTT"}, state)
 
-        local state = "left"
+	-- Create the Inventory Selection --
+	GUIObj:addLabel("", titleFrame, {"gui-description.MSTarget"}, _mfOrange)
 
-        if self.selectedMode == "output" then state = "right" end
-        
-        local modeSwitch = GUI.add{type="switch", name="MIMode" .. self.ent.unit_number, allow_none_state=false, switch_state=state}
-        modeSwitch.left_label_caption = {"gui-description.Input"}
-        modeSwitch.left_label_tooltip = {"gui-description.InputTT"}
-        modeSwitch.right_label_caption = {"gui-description.Output"}
-        modeSwitch.right_label_tooltip = {"gui-description.OutputTT"}
-
-	    -- Create the Inventory Selection --
-		local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
-		targetLabel.style.top_margin = 7
-		targetLabel.style.font = "LabelFont"
-		targetLabel.style.font_color = {108, 114, 229}
-
-		local invs = {self.dataNetwork.dataCenter.invObj.name or {"gui-description.Any"}}
-		local selectedIndex = 1
-		local i = 1
-		for k, deepStorage in pairs(global.deepStorageTable) do
-			if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(self.player, deepStorage.ent) then
-				i = i + 1
-				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepStorage.player, ")"}
-				if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
-					itemText = {"", " (", game.item_prototypes[deepStorage.filter].localised_name, " - ", deepStorage.player, ")"}
-				elseif deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
-					itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, " - ", deepStorage.player, ")"}
-				end
-				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
-				if self.selectedInv == deepStorage then
-					selectedIndex = i
-				end
+	local invs = {self.dataNetwork.dataCenter.invObj.name or {"gui-description.None"}}
+	local selectedIndex = 1
+	local i = 1
+	for k, deepStorage in pairs(global.deepStorageTable) do
+		if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(self.player, deepStorage.ent) then
+			i = i + 1
+			local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepStorage.player, ")"}
+			if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
+				itemText = {"", " (", game.item_prototypes[deepStorage.filter].localised_name, " - ", deepStorage.player, ")"}
+			elseif deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
+				itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, " - ", deepStorage.player, ")"}
+			end
+			invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
+			if self.selectedInv == deepStorage then
+				selectedIndex = i
 			end
 		end
-		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-		local invSelection = GUI.add{type="list-box", name="MITarget" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
-		invSelection.style.width = 100
 	end
+	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
+	GUIObj:addDropDown("MITarget" .. self.ent.unit_number, titleFrame, invs, selectedIndex)
 end
 
 -- Change the Mode --
