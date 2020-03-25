@@ -145,55 +145,11 @@ function DCMF:update()
 	
 end
 -- Tooltip Infos --
-function DCMF:getTooltipInfos(GUI)
-
-	-- Create the Belongs to Label --
-	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
-	belongsToL.style.font = "LabelFont"
-	belongsToL.style.font_color = _mfOrange
-	
-	-- Create the Data Network label --
-	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
-	if self.dataNetwork ~= nil then
-		DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
-	end
-	local dataNetworkL = GUI.add{type="label"}
-	dataNetworkL.style.font = "LabelFont"
-	dataNetworkL.caption = DNText
-	dataNetworkL.style.font_color = {155, 0, 168}
-	
-	-- Create the Out Of Power Label --
-	if self.dataNetwork ~= nil then
-		if self.dataNetwork.outOfPower == true then
-			local dataNetworOOPower = GUI.add{type="label"}
-			dataNetworOOPower.style.font = "LabelFont"
-			dataNetworOOPower.caption = {"", {"gui-description.OutOfPower"}}
-			dataNetworOOPower.style.font_color = {231, 5, 5}
-		end
-	end
-
-	-- Create the in conflict Label --
-	if self.inConflict == true then
-		local dataNetworConflict = GUI.add{type="label"}
-		dataNetworConflict.style.font = "LabelFont"
-		dataNetworConflict.caption = {"", {"gui-description.DataCenterConflict"}}
-		dataNetworConflict.style.font_color = {231, 5, 5}
-	end
-
-	-- Create the Total Energy label --
-	local totalEnergy = GUI.add{type="label"}
-	totalEnergy.style.font = "LabelFont"
-	totalEnergy.caption = {"", {"gui-description.CNTotalEnergy"}, ": ", math.floor(self.dataNetwork:availablePower()/10000) / 100, " MJ"}
-	totalEnergy.style.font_color = {92, 232, 54}
-	
-	-- Create the Consumption label --
-	local consumption = GUI.add{type="label"}
-	consumption.style.font = "LabelFont"
-	consumption.caption = {"", {"gui-description.CNConsumption"}, ": ", self.dataNetwork:powerConsumption()/1000, " kW"}
-	consumption.style.font_color = {231, 5, 5}
-	
-	-- Return Inventory Frame --
-	self.invObj:getFrame(GUI)
+function DCMF:getTooltipInfos(GUIObj, gui)
+	-- Create the Data Network Frame --
+	GUIObj:addDataNetworkFrame(gui, self)
+	-- Create the Inventory Frame --
+	self.invObj:getTooltipInfos(GUIObj, gui)
 end
 
 -- Set Active --

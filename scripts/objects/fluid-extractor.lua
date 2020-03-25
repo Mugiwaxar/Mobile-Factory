@@ -10,7 +10,8 @@ FE = {
 	updateTick = 60,
 	lastUpdate = 0;
 	selectedInv = nil,
-	mfTooFar = false
+	mfTooFar = false,
+	resource = nil
 }
 
 -- Constructor --
@@ -24,6 +25,7 @@ function FE:new(object)
 	if object.last_user == nil then return end
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
+	resource = object.surface.find_entities_filtered{position=object.position, radius=1, type="resource", limit=1}[1]
 	UpSys.addObj(t)
 	return t
 end
@@ -77,52 +79,47 @@ function FE:update(event)
 end
 
 -- Tooltip Infos --
-function FE:getTooltipInfos(GUI)
+function FE:getTooltipInfos(GUIObj, gui, justCreated)
 
-	--------------- Make the Frame ----------------
-	local feFrame = GUI.add{type="frame", direction="vertical"}
-	feFrame.style.width = 150
+	-- Create the Title --
+	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
 
-	-- Create the Belongs to Label --
-	local belongsToL = feFrame.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
-	belongsToL.style.font = "LabelFont"
-	belongsToL.style.font_color = _mfOrange
-		
-	-- Create Labels and Bares --
-	local nameLabel = feFrame.add{type="label", caption={"", {"gui-description.FluidExtractor"}}}
-	local SpeedLabel = feFrame.add{type="label", caption={"", {"gui-description.Speed"}, ": ", self:fluidPerExtraction(), " u/s"}}
-	local ChargeLabel = feFrame.add{type="label", caption={"", {"gui-description.Charge"}, ": ", self.charge}}
-	local ChargeBar = feFrame.add{type="progressbar", value=self.charge/_mfFEMaxCharge}
-	local PurityLabel = feFrame.add{type="label", caption={"", {"gui-description.Purity"}, ": ", self.purity}}
-	local PurityBar = feFrame.add{type="progressbar", value=self.purity/100}
+	-- Create the Quatron Charge --
+	GUIObj:addDualLabel(frame, {"", {"gui-description.Charge"}, ": "}, self.charge, _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", frame, "", "", false, _mfPurple, self.charge/_mfFEMaxCharge, 100)
 
-	-- Update Style --
-	nameLabel.style.bottom_margin = 5
-	SpeedLabel.style.font = "LabelFont"
-	ChargeLabel.style.font = "LabelFont"
-	PurityLabel.style.font = "LabelFont"
-	nameLabel.style.font_color = {108, 114, 229}
-	SpeedLabel.style.font_color = {39,239,0}
-	ChargeLabel.style.font_color = {39,239,0}
-	ChargeBar.style.color = {176,50,176}
-	PurityLabel.style.font_color = {39,239,0}
-	PurityBar.style.color = {255, 255, 255}
-	
-	-- Create the Mobile Factory Too Far Label --
-	if self.MFTooFar == true then
-		local mfTooFarL = feFrame.add{type="label", caption={"", {"gui-description.MFTooFar"}}}
-		mfTooFarL.style.font = "LabelFont"
-		mfTooFarL.style.font_color = _mfRed
+	-- Create the Quatron Purity --
+	GUIObj:addDualLabel(frame, {"", {"gui-description.Purity"}, ": "}, self.purity, _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", frame, "", "", false, _mfPurple, self.purity/100, 100)
+
+	-- Create the Speed --
+	GUIObj:addDualLabel(frame, {"", {"gui-description.Speed"}, ": "}, self:fluidPerExtraction() .. " u/s", _mfOrange, _mfGreen)
+
+	-- Check the Resource --
+	if self.resource ~= nil and self.resource.valid == true then
+		local fluidName = self.resource.prototype.mineable_properties.products[1].name
+		-- Create the Resource Type --
+		GUIObj:addDualLabel(frame, {"", {"gui-description.ResouceType"}, ": "}, Util.getLocFluidName(fluidName), _mfOrange, _mfGreen)
+		-- Create the Resource Amount --
+		GUIObj:addDualLabel(frame, {"", {"gui-description.ResourceAmount"}, ": "}, self.resource.amount, _mfOrange, _mfGreen)
 	end
 
-	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
-	
-	-- Create the targeted Inventory label --
-	local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
-	targetLabel.style.top_margin = 7
-	targetLabel.style.font = "LabelFont"
-	targetLabel.style.font_color = {108, 114, 229}
+	-- Create the Mobile Factory Too Far Label --
+	if self.MFTooFar == true then
+		GUIObj:addLabel("", frame, {"", {"gui-description.MFTooFar"}}, _mfRed)
+	end
 
+	-- Stop of the Settings can't be Modified --
+	if canModify(getPlayer(gui.player_index).name, self.ent) == false or justCreated ~= true then return end
+
+	-- Create the Title --
+	local settingFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
+	GUIObj.SettingsFrame.visible = true
+
+	-- Create the Select Tank Label --
+	GUIObj:addLabel("", settingFrame, {"", {"gui-description.TargetedTank"}}, _mfOrange)
+
+	-- Create the Tank List --
 	local invs = {{"", {"gui-description.All"}}}
 	local selectedIndex = 1
 	local i = 1
@@ -142,8 +139,7 @@ function FE:getTooltipInfos(GUI)
 		end
 	end
 	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-	local invSelection = GUI.add{type="list-box", name="FE" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
-	invSelection.style.width = 100
+	GUIObj:addDropDown("FE" .. self.ent.unit_number, settingFrame, invs, selectedIndex)
 end
 
 -- Change the Targeted Dimensional Tank --
@@ -178,12 +174,13 @@ end
 
 -- Extract Fluids --
 function FE:extractFluids(event)
+	-- Check the Resource --
+	self.resource = self.resource or self.ent.surface.find_entities_filtered{position=self.ent.position, radius=1, type="resource", limit=1}[1]
+	if self.resource == nil or self.resource.valid == false then return end
+	local resourceName = self.resource.prototype.mineable_properties.products[1].name
+	if resourceName == nil then return end
 	-- Check the Quatron Charge --
 	if self.charge < 10 then return end
-	-- Get the Fluid Path --
-	local resource = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=1, type="resource", limit=1}
-	resource = resource[1]
-	if resource == nil or resource.valid == false then return end
 	-- Find the Focused Tank --
 	local inventory = self.selectedInv
 	if inventory == nil then
@@ -191,7 +188,7 @@ function FE:extractFluids(event)
 		inventory = nil
 		for k, dimTank in pairs(global.deepTankTable) do
 			if dimTank ~= nil and dimTank.ent ~= nil and dimTank.ent.valid == true then
-				if dimTank:canAccept(resource.name) then
+				if dimTank:canAccept(resourceName) then
 					inventory = dimTank
 					break
 				end
@@ -201,21 +198,21 @@ function FE:extractFluids(event)
 	-- Check the Selected Inventory --
 	if inventory == nil then return end
 	-- Calcule the amount that can be extracted --
-	local amount = math.min(resource.amount, self:fluidPerExtraction())
+	local amount = math.min(self.resource.amount, self:fluidPerExtraction())
 	-- Check if the Distant Tank can accept the fluid --
-	if inventory:canAccept(resource.name, amount) == false then return end
+	if inventory:canAccept(resourceName, amount) == false then return end
 	-- Send the Fluid --
-	local amountAdded = inventory:addFluid(resource.name, amount)
+	local amountAdded = inventory:addFluid(resourceName, amount)
 	-- Test if Fluid was sended --
 	if amountAdded > 0 then
 		self.charge = self.charge - 10
 		-- Make a Beam --
 		self.ent.surface.create_entity{name="BigPurpleBeam", duration=59, position=self.ent.position, target=self.MF.ent.position, source=self.ent.position}
 		-- Remove amount from the FluidPath --
-		resource.amount = math.max(resource.amount - amountAdded, 1)
+		self.resource.amount = math.max(self.resource.amount - amountAdded, 1)
 		-- Remove the FluidPath if amount == 0 --
-		if resource.amount < 2 then
-			resource.destroy()
+		if self.resource.amount < 2 then
+			self.resource.destroy()
 		end
 	end
 end

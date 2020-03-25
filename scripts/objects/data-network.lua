@@ -11,7 +11,7 @@ DN = {
 	dataStorageTable = nil,
 	signalsTable = nil, -- {obj, signal}
 	totalEnergy = 0,
-	powerConsumption = 0,
+	totalConsumption = 0,
 	outOfPower = true,
 	updateTick = 60,
 	lastUpdate = 0
@@ -85,6 +85,31 @@ function DN:update()
 	self:updateSignals()
 end
 
+-- Get the Tooltip --
+function DN:getTooltipInfos(GUIObj, gui, obj)
+	
+	-- Create the Title --
+	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.DataNetwork"}, _mfOrange)
+
+	-- Create the Belongs to Label --
+	GUIObj:addDualLabel(frame, {"", {"gui-description.BelongsTo"}, ":"}, obj.player, _mfOrange, _mfGreen)
+
+	-- Create the Total Energy Label --
+	GUIObj:addDualLabel(frame, {"", {"gui-description.DNTotalEnergy"}, ":"}, Util.toRNumber(self.totalEnergy) .. "J", _mfOrange, _mfYellow)
+
+	-- Create the Consumption Label --
+	GUIObj:addDualLabel(frame, {"", {"gui-description.DNTotalConsumption"}, ":"}, Util.toRNumber(self.totalConsumption) .. "W", _mfOrange, _mfYellow)
+
+	-- Create the Out Of Power Label --
+	if self.outOfPower == true then
+		GUIObj:addLabel("", frame, {"gui-description.DNOutOfPower"}, _mfRed)
+	end
+
+	-- Return the frame --
+	return frame
+
+end
+
 -- Register Object --
 function DN:addObject(obj)
 	if valid(obj) == false then return end
@@ -130,25 +155,25 @@ end
 -- Return the available Power --
 function DN:availablePower()
 	-- Calcule the Total Power available --
-	local totalPower = 0
+	self.totalEnergy = 0
 	for k, obj in pairs(self.energyCubeTable) do
 		if valid(obj) then
-			totalPower = totalPower + obj.ent.energy
+			self.totalEnergy = self.totalEnergy + obj.ent.energy
 		end
 	end
-	return totalPower
+	return self.totalEnergy
 end
 
 -- Return the Power Consumption --
 function DN:powerConsumption()
 	-- Calcule the total Power Consumption --
-	local totalConsumption = 0
+	self.totalConsumption = 0
 	for k, obj in pairs(self.entitiesTable) do
 		if obj.active == true or (obj.ent ~= nil and string.match(obj.ent.name, "DataCenter")) then
-			totalConsumption = totalConsumption + (obj.consumption or 0)
+			self.totalConsumption = self.totalConsumption + (obj.consumption or 0)
 		end
 	end
-	return totalConsumption
+	return self.totalConsumption
 end
 
 -- Return the number of Data Storage --

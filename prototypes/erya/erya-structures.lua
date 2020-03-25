@@ -113,6 +113,8 @@ erTE.pictures.picture.sheets[1] = erTE.pictures.picture.sheets[1].hr_version
 erTE.pictures.picture.sheets[1].filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaTank1E.png"
 erTE.pictures.picture.sheets[1].hr_version = nil
 erTE.fluid_box.base_area = 400
+erTE.fast_replaceable_group = nil
+erTE.next_upgrade = nil
 data:extend{erTE}
 
 createEryaItem

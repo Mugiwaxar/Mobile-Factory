@@ -5,141 +5,252 @@ require("scripts/GUI/tooltip-gui.lua")
 require("scripts/GUI/options.lua")
 require("utils/functions.lua")
 
-function GUI.createPlayerGui(player)
-	-- Get the GUI --
-	local gui = player.gui
-	-- Create the Main GUI --
-	GUI.createMainGUI(player, gui)
-	-- Create the Info GUI --
-	GUI.createInfoGui(gui, player)
-	-- Create the Option GUI --
-	GUI.createOptionGUI(gui, player)
-	-- Create the Option GUI --
-	GUI.createTooltipGUI(gui, player)
+-- Create a new GUI --
+function GUI.createGUI(name, MFPlayer, direction, visible, posX, posY)
+	if visible == nil then visible = false end
+	if posX == nil then posX = 0 end
+	if posY == nil then posY = 0 end
+	local newGUIObj = GO:new(name, MFPlayer, direction)
+	newGUIObj.gui.location = {posX,posY}
+	newGUIObj.gui.style.margin = 0
+	newGUIObj.gui.style.padding = 0
+	return newGUIObj
 end
 
--- Update the GUI of all player --
+-- Create a top Bar --
+function GUI.createTopBar(GUIObj, minimalWidth, title)
+
+	-- Create the Menu Bar --
+	local topBar = GUIObj:addFrame("", GUIObj.gui, "vertical")
+	local topBarFlow = GUIObj:addFlow("", topBar, "horizontal")
+	topBarFlow.style.vertical_align = "center"
+
+	-- Add the Draggable Area 1 --
+	local dragArea1 = GUIObj:addEmptyWidget("", topBarFlow, GUIObj.gui, 20, nil)
+	dragArea1.style.minimal_width = minimalWidth
+
+	-- Add the Title Label --
+	local barTitle = title or {"gui-description." .. GUIObj.gui.name .. "Title"}
+	GUIObj:addLabel("", topBarFlow, barTitle, _mfOrange, nil, false, "TitleFont")
+
+	-- Add the Draggable Area 2 --
+	local dragArea2 = GUIObj:addEmptyWidget("", topBarFlow, GUIObj.gui, 20, nil)
+	dragArea2.style.minimal_width = minimalWidth
+
+	-- Add the Close Button --
+	GUIObj:addButton(GUIObj.gui.name.. "CloseButton", topBarFlow, "CloseIcon", "CloseIcon", {"gui-description.closeButton"}, 15)
+
+	-- Return the TopBar --
+	return topBar
+
+end
+
+-- Create a Camera Frame --
+function GUI.createCamera(MFPlayer, name, ent, size, zoom)
+
+	-- Create the Frame --
+	local frameObj = GUI.createGUI("Camera" .. name, MFPlayer, "vertical", true)
+	frameObj.style.width = size
+	frameObj.style.height = size
+	
+	-- Add the Top Bar --
+	GUI.createTopBar(frameObj, nil, name)
+	
+	-- Create the Camera --
+    local camera = frameObj.gui.add{type="camera", position=ent.position, surface=ent.surface, zoom=zoom or 1}
+    camera.style.vertically_stretchable = true
+	camera.style.horizontally_stretchable = true
+
+	-- Center the Frame --
+	frameObj.force_auto_center()
+
+	-- Return the Frame --
+	return frameObj
+	
+end
+
+-- Update all GUIs --
 function GUI.updateAllGUIs()
-	-- List all player connected end update it GUI --
-	for k, player in pairs(game.connected_players) do
-		GUI.updatePlayerGUI(player)
+	for k, gui in pairs(global.GUITable) do
+		if valid(gui) then gui:update() end
 	end
 end
 
--- Update a Player GUI --
-function GUI.updatePlayerGUI(player)
-	-- Test if a player got an updated GUI else create --
-	if getPlayerVariable(player.name, "VisitedFactory") == true then
-		if getPlayerVariable(player.name, "GUICreated") ~= true then
-			GUI.createPlayerGui(player)
-			setPlayerVariable(player.name, "GUICreated", true)
-		end
+-- A GUI was oppened --
+function GUI.guiOpened(event)
+
+	-- Check the Entity --
+	if event.entity == nil or event.entity.valid == false then return end
+
+	-- Get the Player --
+	local player = getPlayer(event.player_index)
+
+	-- Check the Player --
+	if player == nil or player.valid == false then return end
+
+	-- Check the Bypass --
+	if getMFPlayer(player.name).varTable.bypassGUI == true then
+		getMFPlayer(player.name).varTable.bypassGUI = false
+		return
+	end
+
+	-- Check if a GUI exist --
+	local obj = nil
+	if _mfTooltipGUI[event.entity.name] ~= nil then
+		obj = global[_mfTooltipGUI[event.entity.name]][event.entity.unit_number]
+	elseif string.match(event.entity.name, "MobileFactory") then
+		obj = global.MFTable[player.name]
 	else
-		if player.gui.screen.mfGUI ~= nil then
-			player.gui.screen.mfGUI.destroy()
-		end
-		if player.surface.name == _mfSurfaceName or player.surface.name == _mfControlSurfaceName then
-			setPlayerVariable(player.name, "VisitedFactory", true)
-		end
+		return
 	end
+
+	-- Check the Object --
+	if valid(obj) == false or obj.getTooltipInfos == nil then return end
+
+	-- Create and save the Tooltip gui --
+	player.opened = GUI.createTooltipGUI(player, obj).gui
 	
-	-- Test if player got his GUI else return
-	if player.gui.screen.mfGUI == nil or player.gui.screen.mfGUI.valid == false then return end
-	
-	-- Update the Main GUI --
-	GUI.mainGUIUpdate(player)
-	-- Update the Player Info GUI --
-	GUI.updatePlayerInfoGUI(player)
-	-- Update the Tooltip GUI --
-	GUI.updateTooltip(player, getPlayerVariable(player.name, "lastEntitySelected"))
 end
 
+-- A GUI was closed --
+function GUI.guiClosed(event)
+	
+	-- Check the Element --
+	if event.element == nil or event.element.valid ~= true then return end
+
+	-- Close the Option GUI --
+	if event.element.name == "MFOptionGUI" then
+		global.GUITable.MFOptionGUI.destroy()
+		global.GUITable.MFOptionGUI = nil
+		return
+	end
+
+	-- Close the Info GUI --
+	if event.element.name == "MFInfoGUI" then
+		global.GUITable.MFInfoGUI.destroy()
+		global.GUITable.MFInfoGUI = nil
+		return
+	end
+
+	-- Close the Tootip GUI --
+	if event.element.name == "MFTooltipGUI" then
+		global.GUITable.MFTooltipGUI.destroy()
+		global.GUITable.MFTooltipGUI = nil
+		return
+	end
+
+	-- Close Camera GUI --
+	if string.match(event.element.name, "Camera") then
+		local cameraName = event.element.name
+		if global.GUITable[cameraName] ~= nil then
+			global.GUITable[cameraName].destroy()
+			global.GUITable[cameraName] = nil
+		end
+		return
+	end
+
+end
 
 -- When a GUI Button is clicked --
 function GUI.buttonClicked(event)
-	
+
 	-- Get the Player --
 	local player = getPlayer(event.player_index)
 	if player == nil then return end
 
-	setPlayerVariable(player.name, "GUIUpdateInfoGUI", true)
-
 	-- Get the Mobile Factory --
 	local MF = getMF(player.name)
 	if MF == nil then return end
-	
-	-- Disable the info GUI Tanks update when the player is choosing a filter --
-	if event.element.type == "choose-elem-button" and event.element.get_mod() == "Mobile_Factory" then
-		setPlayerVariable(player.name, "GUIUpdateInfoGUI", false)
-	end
-	
-	
-	-- Move GUI Button --
-	if event.element.name == "MoveButton" then
-		if player.gui.screen.mfGUI.caption == "" then
-			player.gui.screen.mfGUI.caption = "Mobile Factory"
-			player.gui.screen.mfGUI.location.y = player.gui.screen.mfGUI.location.y + 10
+
+	-- Get the Main GUI Object --
+	local mainGUI = global.GUITable.MFMainGUI
+
+	-- Open Options GUI Button --
+	if event.element.name == "MainGUIOptionButton" then
+		if global.GUITable.MFOptionGUI == nil then
+			local GUIObj = GUI.createOptionGUI(player)
+			player.opened = GUIObj.gui
 		else
-			player.gui.screen.mfGUI.caption = ""
-			player.gui.screen.mfGUI.location.y = player.gui.screen.mfGUI.location.y - 10
+			global.GUITable.MFOptionGUI.destroy()
+			global.GUITable.MFOptionGUI = nil
 		end
+		return
 	end
-	
-	-- Reduce GUI Button --
-	if event.element.name == "ReduceButton" then
-		if player.gui.screen.mfGUI.mfGUICenterFrame.visible == false then
-			player.gui.screen.mfGUI.mfGUICenterFrame.visible = true
-			player.gui.screen.mfGUI.mfGUIMenuFrame.ReduceButton.sprite = "ArrowIconUp"
-			player.gui.screen.mfGUI.mfGUIMenuFrame.ReduceButton.hovered_sprite = "ArrowIconUpOv"
+
+	-- Open Info GUI Button --
+	if event.element.name == "MainGUIInfosButton" then
+		if global.GUITable.MFInfoGUI == nil then
+			local GUIObj = GUI.createInfoGui(player)
+			player.opened = GUIObj.gui
 		else
-			player.gui.screen.mfGUI.mfGUICenterFrame.visible = false
-			player.gui.screen.mfGUI.mfGUIMenuFrame.ReduceButton.sprite = "ArrowIconDown"
-			player.gui.screen.mfGUI.mfGUIMenuFrame.ReduceButton.hovered_sprite = "ArrowIconDownOv"
+			global.GUITable.MFInfoGUI.destroy()
+			global.GUITable.MFInfoGUI = nil
 		end
+		return
 	end
-	
-	-- Extend GUI Button --
-	if event.element.name == "ArrowButton" then
-		if player.gui.screen.mfGUI.mfGUIExtendedFrame.visible == false then
-			player.gui.screen.mfGUI.mfGUIExtendedFrame.visible = true
-			player.gui.screen.mfGUI.mfGUIbottomFrame.ArrowButton.sprite = "ArrowIconUp"
-			player.gui.screen.mfGUI.mfGUIbottomFrame.ArrowButton.hovered_sprite = "ArrowIconUpOv"
+
+	-- Extend or reduce the Main GUI --
+	if event.element.name == "MainGUIReduceButton" then
+		local leftSprite = "ArrowIconLeft"
+		local rightSprite = "ArrowIconRight"
+		if mainGUI.MFplayer.varTable.MainGUIDirection == "left" then
+			leftSprite = "ArrowIconRight"
+			rightSprite = "ArrowIconLeft"
+		end
+		local columns = ((math.floor((table_size(mainGUI.MFMainGUIFrame3.children)-1 ))))
+		local decal = 235
+		if columns > 0 then decal = decal + 62 + (38 * (columns-1)) end
+		if mainGUI.MFMainGUIFrame2.visible == false then
+			if mainGUI.MFplayer.varTable.MainGUIDirection == "left" then mainGUI.location = {mainGUI.location.x - decal, mainGUI.location.y} end
+			mainGUI.MFMainGUIFrame2.visible = true
+			mainGUI.MFMainGUIFrame3.visible = true
+			mainGUI.MainGUIReduceButton.sprite = leftSprite
+			mainGUI.MainGUIReduceButton.hovered_sprite = leftSprite
 		else
-			player.gui.screen.mfGUI.mfGUIExtendedFrame.visible = false
-			player.gui.screen.mfGUI.mfGUIbottomFrame.ArrowButton.sprite = "ArrowIconDown"
-			player.gui.screen.mfGUI.mfGUIbottomFrame.ArrowButton.hovered_sprite = "ArrowIconDownOv"
+			if mainGUI.MFplayer.varTable.MainGUIDirection == "left" then mainGUI.location = {mainGUI.location.x + decal, mainGUI.location.y} end
+			mainGUI.MFMainGUIFrame2.visible = false
+			mainGUI.MFMainGUIFrame3.visible = false
+			mainGUI.MainGUIReduceButton.sprite = rightSprite
+			mainGUI.MainGUIReduceButton.hovered_sprite = rightSprite
 		end
+		GUI.updateMFMainGUI(global.GUITable.MFMainGUI)
+		return
 	end
-	
+
 	-- CallMF Button --
-	if event.element.name == "CallMF" then
+	if event.element.name == "CallMFButton" then
 		callMobileFactory(player)
-	end
-	
-	-- Fix Mobile Factory Button --
-	if event.element.name == "FindMF" then
-		fixMB(event)
+		return
 	end
 
 	-- PortOutside button --
-	if event.element.name == "PortOutside" then
+	if event.element.name == "PortOutsideButton" then
 		teleportPlayerOutside(player)
+		return
 	end
 
 	-- SyncArea button --
-	if event.element.name == "SyncArea" then
+	if event.element.name == "SyncAreaButton" then
 		if MF.syncAreaEnabled == true then MF.syncAreaEnabled = false
 		elseif MF.syncAreaEnabled == false then MF.syncAreaEnabled = true end
+		return
 	end
-	
+
+	-- Fix Mobile Factory Button --
+	if event.element.name == "FindMFButton" then
+		fixMB(event)
+		return
+	end
+
 	-- MFTPInside button --
-	if event.element.name == "MFTPInside" then
+	if event.element.name == "TPInsideButton" then
 		if MF.tpEnabled == true then MF.tpEnabled = false
 		elseif MF.tpEnabled == false then MF.tpEnabled = true end
+		return
 	end
 
 	-- MFLock button --
-	if event.element.name == "MFLock" then
+	if event.element.name == "LockMFButton" then
 		if MF.locked == true then
 			MF.locked = false
 			player.print({"gui-description.MFUnlocked"})
@@ -147,105 +258,163 @@ function GUI.buttonClicked(event)
 			MF.locked = true
 			player.print({"gui-description.MFLocked"})
 		end
+		return
 	end
-	
-	-- Show/Hide the Mobile Factory Info GUI --
-	if event.element.name == "MFInfos" then
-		if player.gui.screen.mfInfoGUI.visible == false then
-			player.gui.screen.mfInfoGUI.visible = true
-			setPlayerVariable(player.name, "GUIUpdateInfoGUI", true)
-		else
-			player.gui.screen.mfInfoGUI.visible = false
-			setPlayerVariable(player.name, "GUIUpdateInfoGUI", false)
-		end
-	end
-	
-	-- Show/Hide the Tooltip GUI --
-	if event.element.name == "MFInspect" then
-		if player.gui.screen.mfTooltipGUI.visible == false then
-			player.gui.screen.mfTooltipGUI.visible = true
-			setPlayerVariable(player.name, "GUIUpdateTooltipGUI", true)
-		else
-			player.gui.screen.mfTooltipGUI.visible = false
-			setPlayerVariable(player.name, "GUIUpdateTooltipGUI", false)
-		end
-	end
-	
+
 	-- EnergyDrain button --
-	if event.element.name == "EnergyDrain" then
+	if event.element.name == "EnergyDrainButton" then
 		if MF.energyLaserActivated == true then MF.energyLaserActivated = false
 		elseif MF.energyLaserActivated == false then MF.energyLaserActivated = true end
+		return
 	end
-	
+
 	-- FluidDrain button --
-	if event.element.name == "FluidDrain" then
+	if event.element.name == "FluidDrainButton" then
 		if MF.fluidLaserActivated == true then MF.fluidLaserActivated = false
 		elseif MF.fluidLaserActivated == false then MF.fluidLaserActivated = true end
+		return
 	end
-	
+
 	-- ItemDrain button --
-	if event.element.name == "ItemDrain" then
+	if event.element.name == "ItemDrainButton" then
 		if MF.itemLaserActivated == true then MF.itemLaserActivated = false
 		elseif MF.itemLaserActivated == false then MF.itemLaserActivated = true end
+		return
 	end
-	
+
 	-- EnergyDistribution button --
-	if event.element.name == "EnergyDistribution" then
+	if event.element.name == "EnergyDistributionButton" then
 		if MF.internalEnergyDistributionActivated == true then MF.internalEnergyDistributionActivated = false
 		elseif MF.internalEnergyDistributionActivated == false then MF.internalEnergyDistributionActivated = true end
+		return
 	end
-	
+
 	-- Send Quatron button --
-	if event.element.name == "SendQuatron" then
+	if event.element.name == "SendQuatronButton" then
 		if MF.sendQuatronActivated == true then MF.sendQuatronActivated = false
 		elseif MF.sendQuatronActivated == false then MF.sendQuatronActivated = true end
+		return
 	end
-	
-	-- Open Options GUI Button --
-	if event.element.name == "optionButton" then
-		player.gui.screen.mfOptionGUI.visible = true
-	end
-	
+
 	-- Close Info GUI Button --
-	if event.element.name == "CloseButton" then
-		player.gui.screen.mfInfoGUI.visible = false
-		setPlayerVariable(player.name, "GUIUpdateInfoGUI", false)
+	if event.element.name == "MFInfoGUICloseButton" then
+		if global.GUITable.MFInfoGUI ~= nil then
+			global.GUITable.MFInfoGUI.destroy()
+			global.GUITable.MFInfoGUI = nil
+		end
+		return
 	end
-	
+
 	-- Close Options GUI Button --
-	if event.element.name == "OptCloseButton" then
-		player.gui.screen.mfOptionGUI.visible = false
-	end
-	
-	-- Lock Tooltip GUI button --
-	if event.element.name == "TTLockButton" then
-		if player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite == "LockIcon" then
-			player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite = "LockIconReed"
-			setPlayerVariable(player.name, "TTGUILocked", true)
-		else
-			player.gui.screen.mfTooltipGUI.mfTTGUIMenuBar.TTLockButton.sprite = "LockIcon"
-			setPlayerVariable(player.name, "TTGUILocked", false)
+	if event.element.name == "MFOptionGUICloseButton" then
+		if global.GUITable.MFOptionGUI ~= nil then
+			global.GUITable.MFOptionGUI.destroy()
+			global.GUITable.MFOptionGUI = nil
 		end
+		return
 	end
-	
-	-- Move Tooltip GUI Button --
-	if event.element.name == "TTMoveButton" then
-		if player.gui.screen.mfTooltipGUI.caption == "" then
-			player.gui.screen.mfTooltipGUI.caption = {"gui-description.tooltipGUI"}
-			player.gui.screen.mfTooltipGUI.location.y = player.gui.screen.mfTooltipGUI.location.y + 10
-		else
-			player.gui.screen.mfTooltipGUI.caption = ""
-			player.gui.screen.mfTooltipGUI.location.y = player.gui.screen.mfTooltipGUI.location.y - 10
-		end
-	end
-	
+
 	-- Close Tooltip GUI Button --
-	if event.element.name == "TTCloseButton" then
-		player.gui.screen.mfTooltipGUI.visible = false
+	if event.element.name == "MFTooltipGUICloseButton" then
+		if global.GUITable.MFTooltipGUI ~= nil then
+			global.GUITable.MFTooltipGUI.destroy()
+			global.GUITable.MFTooltipGUI = nil
+		end
+		return
 	end
-	
+
+	-- Close Camera Button --
+	if string.match(event.element.name, "Camera") then
+		local text = string.gsub(event.element.name, "CloseButton", "")
+		if global.GUITable[text] ~= nil then
+			global.GUITable[text].destroy()
+			global.GUITable[text] = nil
+		end
+		return
+	end
+
+	-- Info GUI Deep Tank Button --
+	if string.match(event.element.name, "DTB") then
+		-- Get the Deep Tank ID --
+		local id = tonumber(split(event.element.name, "DTB")[1])
+		if global.deepTankTable[id] == nil then return end
+		GUI.updateDeepTankInfo(global.GUITable.MFInfoGUI, id)
+		return
+	end
+
+	-- Info GUI Deep Storage Button --
+	if string.match(event.element.name, "DSRB") then
+		-- Get the Deep Storage ID --
+		local id = tonumber(split(event.element.name, "DSRB")[1])
+		if global.deepStorageTable[id] == nil then return end
+		GUI.updateDeepStorageInfo(global.GUITable.MFInfoGUI, id)
+		return
+	end
+
+	-- Info GUI Inventory Item Button -> Deep Tank --
+	if string.match(event.element.name, "INVBDT") then
+		-- Get the Fluid --
+		local id = tonumber(split(event.element.name, ",")[2])
+		GUI.updateInventoryInfo(global.GUITable.MFInfoGUI, id, "DT")
+		return
+	end
+
+	-- Info GUI Inventory Item Button -> Deep Storage --
+	if string.match(event.element.name, "INVBDSR") then
+		-- Get the Item --
+		local id = tonumber(split(event.element.name, ",")[2])
+		GUI.updateInventoryInfo(global.GUITable.MFInfoGUI, id, "DSR")
+		return
+	end
+
+	-- Info GUI Inventory Item Button -> Inventory --
+	if string.match(event.element.name, "INVBINV") then
+		-- Get the Item --
+		local item = split(event.element.name, ",")[2]
+		local amount = split(event.element.name, ",")[3]
+		GUI.updateInventoryInfo(global.GUITable.MFInfoGUI, nil, "INV", item, amount)
+		return
+	end
+
+	-- If this is a Mobile Factory Button -> Open Inventory --
+	if string.match(event.element.name, "MFOpenI") then
+		-- Get the Object --
+		local objId = split(event.element.name, ",")[2]
+		local ent = global.MFTable[objId].ent
+		if ent ~= nil and ent.valid == true then
+			getMFPlayer(player.name).varTable.bypassGUI = true
+			player.opened = ent
+		end
+		return
+	end
+
+	-- If this is a Mater Interactor Button -> Open Inventory --
+	if string.match(event.element.name, "MIOpenI") then
+		-- Get the Object --
+		local objId = tonumber(split(event.element.name, ",")[2])
+		local ent = global.matterInteractorTable[objId].ent
+		if ent ~= nil and ent.valid == true then
+			getMFPlayer(player.name).varTable.bypassGUI = true
+			player.opened = ent
+		end
+		return
+	end
+
+	-- If this is a Wireless Data Transmitter Button -> Show WDR --
+	if string.match(event.element.name, "WDTCam") then
+		-- Get the Object --
+		local objId = tonumber(split(event.element.name, ",")[2])
+		local ent = global.wirelessDataReceiverTable[objId].ent
+		if ent ~= nil and ent.valid == true then
+			local cameraObj = GUI.createCamera(getMFPlayer(player.name), ent.unit_number, ent, 250, 0.5)
+			cameraObj:addDualLabel(cameraObj.gui, {"", {"gui-description.Position"}, ":"}, "{".. ent.position.x .. ";" .. ent.position.y .. "}", _mfOrange, _mfGreen)
+			player.opened = cameraObj.gui
+		end
+		return
+	end
+
 	-- Update the GUI --
-	GUI.updatePlayerGUI(player)
+	GUI.updateAllGUIs(player)
 	
 end
 
@@ -264,11 +433,26 @@ function GUI.onGuiElemChanged(event)
 	if MF == nil then return end
 	
 	------- Read if the Element came from the Option GUI -------
-	GUI.readOptions(event.element, player, player.gui)
+	GUI.readOptions(event.element, player)
+	if event.element == nil or event.element.valid == false then return end
 	
 	------- Save the filter -------
 	if event.element.type == "choose-elem-button" and event.element.get_mod() == "Mobile_Factory" then
 		local id = event.element.name
+
+		-- If this is a Deep Storage --
+		if string.match(id, "DSRF") then
+			id = tonumber(split(id, "DSRF")[1])
+			if global.deepStorageTable[id] == nil then return end
+			if event.element.elem_value ~= nil then
+				global.deepStorageTable[id].filter = event.element.elem_value
+			else
+				global.deepStorageTable[id].filter = nil
+			end
+			if global.GUITable["MFInfoGUI"] ~= nil then GUI.updateDeepStorageInfo(global.GUITable["MFInfoGUI"], id) end
+			GUI.updateAllGUIs()
+			return
+		end
 
 		-- If this is a Deep Tank --
 		if string.match(id, "TF") then
@@ -280,17 +464,9 @@ function GUI.onGuiElemChanged(event)
 			else
 				global.deepTankTable[id].filter = nil
 			end
-		end
-
-		-- If this is a Deep Storage --
-		if string.match(id, "DSRF") then
-			id = tonumber(split(id, "DSRF")[1])
-			if global.deepStorageTable[id] == nil then return end
-			if event.element.elem_value ~= nil then
-				global.deepStorageTable[id].filter = event.element.elem_value
-			else
-				global.deepStorageTable[id].filter = nil
-			end
+			if global.GUITable["MFInfoGUI"] ~= nil then GUI.updateDeepTankInfo(global.GUITable["MFInfoGUI"], id) end
+			GUI.updateAllGUIs()
+			return
 		end
 
 		-- If this is a Matter Interactor --
@@ -302,11 +478,8 @@ function GUI.onGuiElemChanged(event)
 			else
 				global.matterInteractorTable[id].selectedFilter = nil
 			end
-		end
-
-		-- Re-enable the GUI --
-		if player ~= nil then
-			setPlayerVariable(player.name, "GUIUpdateInfoGUI", true)
+			GUI.updateAllGUIs()
+			return
 		end
 	end
 	

@@ -25,7 +25,6 @@ MF = {
 	fluidLaserActivated = false,
 	itemLaserActivated = false,
 	selectedInventory = nil,
-	IDModule = 0,
 	internalEnergyDistributionActivated = false,
 	sendQuatronActivated = false,
 	selectedPowerLaserMode = "input", -- input, output
@@ -88,63 +87,41 @@ function MF:valid()
 end
 
 -- Tooltip Infos --
-function MF:getTooltipInfos(GUI)
+function MF:getTooltipInfos(GUIObj, gui, justCreated)
 
-	-- Create the Belongs to Label --
-	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
-	belongsToL.style.font = "LabelFont"
-	belongsToL.style.font_color = _mfOrange
+	-- Create the Inventory Title --
+	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
 
-	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
+	-- Create the Inventory Button --
+	GUIObj:addSimpleButton("MFOpenI," ..GUIObj.MFplayer.name, frame, {"gui-description.OpenInventory"})
 
-	-- Create the Power laser Label --
+	-- Check if the Parameters can be modified --
+	if canModify(getPlayer(gui.player_index).name, self.ent) == false or justCreated ~= true then return end
+
+	-- Create the Lasers Title --
+	local LasersFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Lasers"}, _mfOrange)
+	GUIObj.SettingsFrame.visible = true
+	LasersFrame.visible = false
+
+	-- Create the Power laser Settings --
 	if technologyUnlocked("EnergyDrain1", getForce(self.player)) then
-
-
-		-- Create the Power Laser label --
-		local connectedL = GUI.add{type="label"}
-		connectedL.style.font = "LabelFont"
-		connectedL.caption = {"",{"gui-description.PowerLaser"}, ":"}
-		connectedL.style.font_color = {92, 232, 54}
-
+		LasersFrame.visible = true
+		GUIObj:addLabel("", LasersFrame, {"", {"gui-description.PowerLaser"}}, _mfOrange)
 		local state = "left"
-
 		if self.selectedPowerLaserMode == "output" then state = "right" end
-		
-		local modeSwitch = GUI.add{type="switch", name="MFPL", allow_none_state=false, switch_state=state}
-		modeSwitch.left_label_caption = {"gui-description.Drain"}
-		modeSwitch.left_label_tooltip = {"gui-description.DrainTT"}
-		modeSwitch.right_label_caption = {"gui-description.Send"}
-		modeSwitch.right_label_tooltip = {"gui-description.SendTT"}
+		GUIObj:addSwitch("MFPL" .. self.ent.unit_number, LasersFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.DrainTT"}, {"gui-description.SendTT"}, state)
 	end
 
+	-- Create the Fluid Lasers Settings --
 	if technologyUnlocked("FluidDrain1", getForce(self.player)) then
-		-- Create the Fluid Laser Mode Selection --
-		-- Create the Mode Label --
-		local modeLabel = GUI.add{type="label", caption={"",{"gui-description.FluidLaser"}, ":"}}
-		modeLabel.style.top_margin = 7
-		modeLabel.style.font = "LabelFont"
-		modeLabel.style.font_color = {92, 232, 54}
-
+		LasersFrame.visible = true
+		GUIObj:addLabel("", LasersFrame, {"", {"gui-description.FluidLaser"}}, _mfOrange)
 		local state = "left"
-
 		if self.selectedFluidLaserMode == "output" then state = "right" end
-		
-		local modeSwitch = GUI.add{type="switch", name="MFFMode", allow_none_state=false, switch_state=state}
-		modeSwitch.left_label_caption = {"gui-description.Input"}
-		modeSwitch.left_label_tooltip = {"gui-description.InputTT"}
-		modeSwitch.right_label_caption = {"gui-description.Output"}
-		modeSwitch.right_label_tooltip = {"gui-description.OutputTT"}
-
-		-- Create the Inventory Selection --
-		-- Create the targeted Inventory label --
-		local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
-		targetLabel.style.top_margin = 7
-		targetLabel.style.font = "LabelFont"
-		targetLabel.style.font_color = {108, 114, 229}
-
-		-- Create the List --
-		local invs = {{"", {"gui-description.Any"}}}
+		GUIObj:addSwitch("MFFMode" .. self.ent.unit_number, LasersFrame, {"gui-description.Input"}, {"gui-description.Output"}, {"gui-description.InputTT"}, {"gui-description.OutputTT"}, state)
+		GUIObj:addLabel("", LasersFrame, {"", {"gui-description.MSTarget"}}, _mfOrange)
+		-- Create the Target List --
+		local invs = {{"", {"gui-description.None"}}}
 		local selectedIndex = 1
 		local i = 1
 		for k, deepTank in pairs(global.deepTankTable) do
@@ -163,8 +140,7 @@ function MF:getTooltipInfos(GUI)
 			end
 		end
 		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-		local invSelection = GUI.add{type="list-box", name="MFFTarget", items=invs, selected_index=selectedIndex}
-		invSelection.style.width = 100
+		GUIObj:addDropDown("MFFTarget" .. self.ent.unit_number, LasersFrame, invs, selectedIndex)
 	end
 end
 
@@ -238,6 +214,15 @@ function MF:getLaserRadius()
 	return _mfBaseLaserRadius + (self.laserRadiusMultiplier * 2)
 end
 
+-- Return the number of Lasers --
+function MF:getLaserNumber()
+	return _mfBaseLaserNumber + self.laserNumberMultiplier
+end
+
+function MF:getLaserPower()
+	return self.laserDrainMultiplier + 1
+end
+
 -- Return the Energy Lasers Drain --
 function MF:getLaserEnergyDrain()
 	return _mfEnergyDrain * (self.laserDrainMultiplier + 1)
@@ -251,11 +236,6 @@ end
 -- Return the Logistic Lasers Drain --
 function MF:getLaserItemDrain()
 	return _mfItemsDrain * (self.laserDrainMultiplier + 1)
-end
-
--- Return the number of Lasers --
-function MF:getLaserNumber()
-	return _mfBaseLaserNumber + self.laserNumberMultiplier
 end
 
 -- Return the Shield --

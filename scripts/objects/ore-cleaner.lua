@@ -92,49 +92,39 @@ function OC:update(event)
 end
 
 -- Tooltip Infos --
-function OC:getTooltipInfos(GUI)
-	local ocFrame = GUI.add{type="frame", direction="vertical"}
-	ocFrame.style.width = 150
+function OC:getTooltipInfos(GUIObj, gui, justCreated)
+	
+	-- Create the Title --
+	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
 
-	-- Create the Belongs to Label --
-	local belongsToL = ocFrame.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
-	belongsToL.style.font = "LabelFont"
-	belongsToL.style.font_color = _mfOrange
-		
-	-- Create Labels and Bares --
-	local nameLabel = ocFrame.add{type="label", caption={"", {"gui-description.OreCleaner"}}}
-	local SpeedLabel = ocFrame.add{type="label", caption={"", {"gui-description.Speed"}, ": ", self:orePerExtraction() * (60/_mfOreCleanerExtractionTicks), " ores/s"}}
-	local ChargeLabel = ocFrame.add{type="label", caption={"", {"gui-description.Charge"}, ": ", self.charge}}
-	local ChargeBar = ocFrame.add{type="progressbar", value=self.charge/_mfOreCleanerMaxCharge}
-	local PurityLabel = ocFrame.add{type="label", caption={"", {"gui-description.Purity"}, ": ", math.floor(self.purity*100)/100}}
-	local PurityBar = ocFrame.add{type="progressbar", value=self.purity/100}
-	
-	-- Update Style --
-	nameLabel.style.bottom_margin = 5
-	SpeedLabel.style.font = "LabelFont"
-	ChargeLabel.style.font = "LabelFont"
-	PurityLabel.style.font = "LabelFont"
-	nameLabel.style.font_color = {108, 114, 229}
-	SpeedLabel.style.font_color = {39,239,0}
-	ChargeLabel.style.font_color = {39,239,0}
-	ChargeBar.style.color = {176,50,176}
-	PurityLabel.style.font_color = {39,239,0}
-	PurityBar.style.color = {255, 255, 255}
-	
+	-- Create the Quatron Charge --
+	GUIObj:addDualLabel(frame, {"", {"gui-description.Charge"}, ": "}, self.charge, _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", frame, "", "", false, _mfPurple, self.charge/_mfFEMaxCharge, 100)
+
+	-- Create the Quatron Purity --
+	GUIObj:addDualLabel(frame, {"", {"gui-description.Purity"}, ": "}, self.purity, _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", frame, "", "", false, _mfPurple, self.purity/100, 100)
+
+	-- Create the Speed --
+	GUIObj:addDualLabel(frame, {"", {"gui-description.Speed"}, ": "}, self:orePerExtraction() .. " ore/s", _mfOrange, _mfGreen)
+
+	-- Create the Resource Label --
+	GUIObj:addDualLabel(frame, {"", {"gui-description.NumberOfOrePath"}, ": "}, table_size(self.oreTable), _mfOrange, _mfGreen)
+
 	-- Create the Mobile Factory Too Far Label --
 	if self.MFTooFar == true then
-		local mfTooFarL = ocFrame.add{type="label", caption={"", {"gui-description.MFTooFar"}}}
-		mfTooFarL.style.font = "LabelFont"
-		mfTooFarL.style.font_color = _mfRed
+		GUIObj:addLabel("", frame, {"", {"gui-description.MFTooFar"}}, _mfRed)
 	end
-	
-	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
-	
-	-- Create the targeted Inventory label --
-	local targetLabel = ocFrame.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
-	targetLabel.style.top_margin = 7
-	targetLabel.style.font = "LabelFont"
-	targetLabel.style.font_color = {108, 114, 229}
+
+	-- Stop of the Settings can't be Modified --
+	if canModify(getPlayer(gui.player_index).name, self.ent) == false or justCreated ~= true then return end
+
+	-- Create the Title --
+	local settingFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
+	GUIObj.SettingsFrame.visible = true
+
+	-- Create the Select Storage Label --
+	GUIObj:addLabel("", settingFrame, {"", {"gui-description.TargetedStorage"}}, _mfOrange)
 
 	local invs = {{"gui-description.All"}}
 	local selectedIndex = 1
@@ -155,8 +145,7 @@ function OC:getTooltipInfos(GUI)
 		end
 	end
 	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-	local invSelection = ocFrame.add{type="list-box", name="OC" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
-	invSelection.style.width = 100
+	GUIObj:addDropDown("OC" .. self.ent.unit_number, settingFrame, invs, selectedIndex)
 end
 
 -- Change the Targeted Inventory --

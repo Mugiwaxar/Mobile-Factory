@@ -157,66 +157,25 @@ function WDR:update()
 end
 
 -- Tooltip Info --
-function WDR:getTooltipInfos(GUI)
+function WDR:getTooltipInfos(GUIObj, gui, justCreated)
 
-	-- Create the Belongs to Label --
-	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
-	belongsToL.style.font = "LabelFont"
-	belongsToL.style.font_color = _mfOrange
+	-- Create the Data Network Frame --
+	local DNFrame = GUIObj:addDataNetworkFrame(gui, self)
 
-	-- Create the Data Network label --
-	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
-	if self.dataNetwork ~= nil then
-		DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
-	end
-	local dataNetworkL = GUI.add{type="label"}
-	dataNetworkL.style.font = "LabelFont"
-	dataNetworkL.caption = DNText
-	dataNetworkL.style.font_color = {155, 0, 168}
-
-	-- Create the Out Of Power Label --
-	if self.dataNetwork ~= nil then
-		if self.dataNetwork.outOfPower == true then
-			local dataNetworOOPower = GUI.add{type="label"}
-			dataNetworOOPower.style.font = "LabelFont"
-			dataNetworOOPower.caption = {"", {"gui-description.OutOfPower"}}
-			dataNetworOOPower.style.font_color = {231, 5, 5}
-		end
+	-- Create the Connected Label --
+	if self.linkedTransmitter ~= nil and DNFrame ~= false and valid(self.linkedTransmitter) == true  then
+		GUIObj:addLabel("", DNFrame, {"", {"gui-description.ConnectedTransmitter"}}, _mfGreen)
 	end
 	
-	-- Create the in conflict Label --
-	if self.inConflict == true then
-		local dataNetworConflict = GUI.add{type="label"}
-		dataNetworConflict.style.font = "LabelFont"
-		dataNetworConflict.caption = {"", {"gui-description.WirelessReceiverConflict"}}
-		dataNetworConflict.style.font_color = {231, 5, 5}
-	end
+	-- Check if the Parameters can be modified --
+	if canModify(getPlayer(gui.player_index).name, self.ent) == false or justCreated ~= true then return end
 
-	-- Create the ID label --
-	local IDL = GUI.add{type="label"}
-	IDL.style.font = "LabelFont"
-	IDL.caption = {"", {"gui-description.ReceiverID"}, ": ", tostring(self.entID)}
-	IDL.style.font_color = {92, 232, 54}
-
-	-- Create the Connected label --
-	local connectedText = {"", {"gui-description.NoLink"}}
-	local connectedL = GUI.add{type="label"}
-	if self.linkedTransmitter ~= nil then
-		if valid(self.linkedTransmitter) == true then
-			connectedText = {"", {"gui-description.Connected"}, " ", tostring(self.linkedTransmitter.ent.unit_number)}
-			connectedL.style.font_color = {92, 232, 54}
-		else
-			connectedText = {"", {"gui-description.NoWDTFound"}}
-			connectedL.style.font_color = {231, 5, 5}
-		end
-	end
-	connectedL.style.font = "LabelFont"
-	connectedL.caption = connectedText
-	
-	if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
+	-- Create the Parameters Title --
+	local titleFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
+	GUIObj.SettingsFrame.visible = true
 
 	-- Create the Transmitter Selection --
-	local transmitters = {{"gui-description.Any"}}
+	local transmitters = {{"gui-description.None"}}
 	local selectedIndex = 1
 	local i = 1
 	for k, transmitter in pairs(global.wirelessDataTransmitterTable) do
@@ -229,9 +188,7 @@ function WDR:getTooltipInfos(GUI)
 		end
 	end
 	if selectedIndex ~= nil and selectedIndex > table_size(transmitters) then selectedIndex = nil end
-	local networkSelection = GUI.add{type="list-box", name="WDR" .. self.ent.unit_number, items=transmitters, selected_index=selectedIndex}
-	networkSelection.style.margin = 5
-	networkSelection.style.width = 70
+	GUIObj:addDropDown("WDR" .. self.ent.unit_number, titleFrame, transmitters, selectedIndex)
 end
 
 -- Set Active --

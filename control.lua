@@ -14,6 +14,7 @@ require("utils/cc-extension.lua")
 require("scripts/game-update.lua")
 require("utils/warptorio.lua")
 require("scripts/objects/mobile-factory.lua")
+require("scripts/objects/gui-object.lua")
 require("scripts/objects/power-drain-pole.lua")
 require("scripts/objects/ore-cleaner.lua")
 require("scripts/objects/fluid-extractor.lua")
@@ -59,6 +60,7 @@ function onInit()
 	-- Tables --
 	global.playersTable = {}
 	global.MFTable = {}
+	global.GUITable = {}
 	global.accTable = {}
 	global.pdpTable = {}
 	global.dataNetworkTable = {}
@@ -68,11 +70,11 @@ function onInit()
 	global.matterInteractorTable = {}
 	global.fluidInteractorTable = {}
 	global.dataStorageTable = {}
-	global.deepTankTable = {}
 	global.wirelessDataTransmitterTable = {}
 	global.wirelessDataReceiverTable = {}
 	global.energyCubesTable = {}
 	global.deepStorageTable = {}
+	global.deepTankTable = {}
 	global.oreCleanerTable = {}
 	global.fluidExtractorTable = {}
 	global.miningJetTable = {}
@@ -97,6 +99,10 @@ function onLoad()
 	-- Set MF Metatables --
 	for k, mf in  pairs(global.MFTable or {}) do
 		MF:rebuild(mf)
+	end
+	-- Set GUI Objects Metatables --
+	for k, go in pairs(global.GUITable or {}) do
+		GO:rebuild(go)
 	end
 	-- Set PDP Metatables --
 	for k, pdp in  pairs(global.pdpTable or {}) do
@@ -180,9 +186,9 @@ end
 function onConfigurationChanged()
 	-- Update all Variables --
 	updateValues()
-	-- Update all GUI --
+	-- Recreated the Main GUI --
 	for k, player in pairs(game.players) do
-		GUI.createPlayerGui(player)
+		GUI.createMFMainGUI(player)
 	end
 end
 
@@ -227,17 +233,20 @@ script.on_event(defines.events.on_robot_mined_tile, onRobotRemoveSomething)
 script.on_event(defines.events.script_raised_destroy, onPlayerRemoveSomethings)
 script.on_event(defines.events.on_entity_died, onEntityIsDestroyed, _mfEntityFilter)
 script.on_event(defines.events.on_post_entity_died, onGhostPlacedByDie, _mfEntityFilter)
+script.on_event(defines.events.on_gui_opened, GUI.guiOpened)
+script.on_event(defines.events.on_gui_closed, GUI.guiClosed)
 script.on_event(defines.events.on_gui_click, GUI.buttonClicked)
 script.on_event(defines.events.on_gui_elem_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_gui_checked_state_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_gui_selection_state_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_gui_text_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_gui_switch_state_changed, GUI.onGuiElemChanged)
+script.on_event(defines.events.on_gui_selected_tab_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_research_finished, technologyFinished)
 script.on_event(defines.events.on_selected_entity_changed, selectedEntityChanged)
 script.on_event(defines.events.on_marked_for_deconstruction, markedForDeconstruction)
 script.on_event(defines.events.on_entity_settings_pasted, settingsPasted)
-script.on_event("TTGUIKey", onShortcut)
+-- script.on_event("TTGUIKey", onShortcut)
 
 -- Add command to insert Mobile Factory to the player inventory --
 -- commands.add_command("GetMobileFactory", "Add the Mobile Factory to the player inventory", addMobileFactory)

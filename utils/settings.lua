@@ -122,6 +122,30 @@ _mfEryaFrostlayer[4] = {{-3,-3},{-3,-2},{-3,-1},{-3,0},{-3,1},{-3,2},{-3,3},{-2,
 _mfEryaFrostlayer[5] = {{-4,-4},{-4,-3},{-4,-2},{-4,-1},{-4,0},{-4,1},{-4,2},{-4,3},{-4,4},{-3,-4},{-3,4},{-2,-4},{-2,4},{-1,-4},{-1,4},{0,-4},{0,4},{1,-4},{1,4},{2,-4},{2,4},{3,-4},{3,4},{4,-4},{4,-3},{4,-2},{4,-1},{4,0},{4,1},{4,2},{4,3},{4,4}}
 _mfEryaFrostlayer[6] = {{-5,-5},{-5,-4},{-5,-3},{-5,-2},{-5,-1},{-5,0},{-5,1},{-5,2},{-5,3},{-5,4},{-5,5},{-4,-5},{-4,5},{-3,-5},{-3,5},{-2,-5},{-2,5},{-1,-5},{-1,5},{0,-5},{0,5},{1,-5},{1,5},{2,-5},{2,5},{3,-5},{3,5},{4,-5},{4,5},{5,-5},{5,-4},{5,-3},{5,-2},{5,-1},{5,0},{5,1},{5,2},{5,3},{5,4},{5,5}}
 
+-- Entity GUI --
+_mfTooltipGUI =
+{
+    DataCenter = "dataCenterTable",
+    DataCenterMF = "dataCenterTable",
+    DataStorage = "dataStorageTable",
+    DeepStorage = "deepStorageTable",
+    DeepTank = "deepTankTable",
+    FluidExtractor = "fluidExtractorTable",
+    OreCleaner = "oreCleanerTable",
+    MatterInteractor = "matterInteractorTable",
+    FluidInteractor = "fluidInteractorTable",
+    WirelessDataTransmitter = "wirelessDataTransmitterTable",
+    WirelessDataReceiver = "wirelessDataReceiverTable",
+    MiningJetFlagMK1 = "jetFlagTable",
+    MiningJetFlagMK2 = "jetFlagTable",
+    MiningJetFlagMK3 = "jetFlagTable",
+    MiningJetFlagMK4 = "jetFlagTable",
+    MiningJet = "miningJetTable",
+    ConstructionJet = "constructionJetTable",
+    RepairJet = "repairJetTable",
+    CombatJet = "combatJetTable"
+}
+
 -- Event Tick --
 _eventTick5=5 -- Teleportation --
 _eventTick27=27 -- Mobile Factory Fuel --
@@ -140,8 +164,10 @@ _eventTick150=150 -- Floor Is Lava Update --
 _eventTick242=242 -- Data Network ID Tables Check --
 _eventTick1200=1200 -- Factory Pollution --
 
+_mfWhite = {255,255,255}
 _mfBlue = {108, 114, 229}
 _mfGreen = {92, 232, 54}
 _mfPurple = {155, 0, 168}
 _mfRed = {231, 5, 5}
-_mfOrange = {211, 84, 0}
+_mfOrange = {255, 131, 0}
+_mfYellow = {244, 208, 63}

@@ -1,596 +1,184 @@
 -- Create the Main GUI --
-function GUI.createMainGUI(player, gui)
-	
-	-- Determine the GUI location with the screen resolution --
-	local resolutionWidth = player.display_resolution.width -- / player.display_scale
-	local resolutionHeight = player.display_resolution.height -- / player.display_scale
-	local posX = resolutionWidth / 100 * 77.5
-	local posY = 0 -- resolutionHeight / 100 * 35
-	local iPosX = 200
-	local iPosY = 200
+function GUI.createMFMainGUI(player)
 
-	-- Verify if the Main GUI exist, save the positions and destroy it --
-	if gui.screen.mfGUI ~= nil and gui.screen.mfGUI.valid == true then
-		posX = gui.screen.mfGUI.location.x
-		posY = gui.screen.mfGUI.location.y
-		gui.screen.mfGUI.destroy()
+	local posX = 300
+	local posY = 0
+	local visible = true
+
+	if global.GUITable.MFMainGUI ~= nil then
+		posX = global.GUITable.MFMainGUI.location.x
+		posY = global.GUITable.MFMainGUI.location.y
+		visible = global.GUITable.MFMainGUI.MFMainGUIFrame2.visible
 	end
 
 	-- Create the GUI --
-	local mfGUI = gui.screen.add{type="frame", name="mfGUI", direction="vertical"}
-	-- Set the GUI position end style --
-	mfGUI.location = {posX, posY}
-	mfGUI.style.padding = 0
-	mfGUI.style.horizontal_align = "center"
-	
-	---------------------------------------------------- TOP FLOW ---------------------------------------------------
-	
-	-- Create the Menu Flow --
-	local mfGUIMenuFrame = mfGUI.add{type="flow", name="mfGUIMenuFrame", direction="horizontal"}
-	-- Set Style --
-	mfGUIMenuFrame.style.padding = 0
-	mfGUIMenuFrame.style.margin = 0
-	mfGUIMenuFrame.style.horizontal_align = "right"
-	mfGUIMenuFrame.style.minimal_width = 150
+	local GUIObj = GUI.createGUI("MFMainGUI", getMFPlayer(player.name), "horizontal", true, posX, posY)
+	local mfGUI = GUIObj.gui
 
-	-- Add MFInfos Button to top Flow --
-	mfGUIMenuFrame.add{
-		type="sprite-button",
-		name="MFInfos",
-		sprite="MFIconI",
-		hovered_sprite="MFIconI",
-		resize_to_sprite=false,
-		tooltip={"gui-description.MFInfosButton"}
-	}
-	-- Set Style --
-	mfGUIMenuFrame.MFInfos.style.maximal_width = 15
-	mfGUIMenuFrame.MFInfos.style.maximal_height = 15
-	mfGUIMenuFrame.MFInfos.style.padding = 0
-	mfGUIMenuFrame.MFInfos.style.margin = 0
-	
-	-- Add MFInspect Button to top Flow --
-	mfGUIMenuFrame.add{
-		type="sprite-button",
-		name="MFInspect",
-		sprite="InspectI",
-		resize_to_sprite=false,
-		tooltip={"gui-description.MFInspectButton"}
-	}
-	-- Set Style --
-	mfGUIMenuFrame.MFInspect.style.maximal_width = 15
-	mfGUIMenuFrame.MFInspect.style.maximal_height = 15
-	mfGUIMenuFrame.MFInspect.style.padding = 0
-	mfGUIMenuFrame.MFInspect.style.margin = 0
+	-- Create the Main Frame --
+	local MFMainGUIMainFlow = GUIObj:addFlow("MFMainGUIMainFlow", mfGUI, "horizontal")
 
-	-- Add the Option Button to top Flow --
-	mfGUIMenuFrame.add{
-		type="sprite-button",
-		name="optionButton",
-		sprite="OptionIcon",
-		resize_to_sprite=false,
-		tooltip={"gui-description.optionButton"}
-	}
-	-- Set style --
-	mfGUIMenuFrame.optionButton.style.maximal_width = 15
-	mfGUIMenuFrame.optionButton.style.maximal_height = 15
-	mfGUIMenuFrame.optionButton.style.padding = 0
-	mfGUIMenuFrame.optionButton.style.margin = 0
+	-- Create the Frames --
+	local MFMainGUIFrame1 = nil
+	local MFMainGUIFrame2 = nil
+	local MFMainGUIFrame3 = nil
+	local ExtendButtonSprite = "ArrowIconLeft"
+	if GUIObj.MFplayer.varTable.MainGUIDirection == "left" then
+		MFMainGUIFrame3 = GUIObj:addFrame("MFMainGUIFrame3", MFMainGUIMainFlow, "horizontal", true)
+		MFMainGUIFrame2 = GUIObj:addFrame("MFMainGUIFrame2", MFMainGUIMainFlow, "vertical", true)
+		MFMainGUIFrame1 = GUIObj:addFrame("MFMainGUIFlow1", MFMainGUIMainFlow, "vertical")
+		if visible == true then ExtendButtonSprite = "ArrowIconRight" end
+	else
+		MFMainGUIFrame1 = GUIObj:addFrame("MFMainGUIFlow1", MFMainGUIMainFlow, "vertical")
+		MFMainGUIFrame2 = GUIObj:addFrame("MFMainGUIFrame2", MFMainGUIMainFlow, "vertical", true)
+		MFMainGUIFrame3 = GUIObj:addFrame("MFMainGUIFrame3", MFMainGUIMainFlow, "horizontal", true)
+		if visible == false then ExtendButtonSprite = "ArrowIconRight" end
+	end
 
-	-- Add the move Button to top Flow --
-	mfGUIMenuFrame.add{
-		type="sprite-button",
-		name="MoveButton",
-		sprite="MoveIcon",
-		hovered_sprite="MoveIconOv",
-		resize_to_sprite=false,
-		tooltip={"gui-description.moveGuiFrameButton"}
-	}
-	-- Set style --
-	mfGUIMenuFrame.MoveButton.style.maximal_width = 15
-	mfGUIMenuFrame.MoveButton.style.maximal_height = 15
-	mfGUIMenuFrame.MoveButton.style.padding = 0
-	
-	-- Add the reduce Button to top Flow --
-	mfGUIMenuFrame.add{
-		type="sprite-button",
-		name="ReduceButton",
-		sprite="ArrowIconDown",
-		hovered_sprite="ArrowIconDownOv",
-		resize_to_sprite=false,
-		tooltip={"gui-description.reduceButton"}
-	}
-	-- Set style --
-	mfGUIMenuFrame.ReduceButton.style.maximal_width = 15
-	mfGUIMenuFrame.ReduceButton.style.maximal_height = 15
-	mfGUIMenuFrame.ReduceButton.style.right_margin = 0
-	mfGUIMenuFrame.ReduceButton.style.padding = 0
+	-- Add the Draggable Area  --
+	GUIObj:addEmptyWidget("MainGUIDragArea", MFMainGUIFrame1, mfGUI, 15, 15)
 
----------------------------------------------- CENTER FLOW --------------------------------------------
-	-- Create the center Flow --
-	local mfGUICenterFrame = mfGUI.add{type="flow", name="mfGUICenterFrame", direction="vertical"}
-	-- Set Style --
-	mfGUICenterFrame.style.padding = 0
-	mfGUICenterFrame.style.vertical_align = "top"
-	
-	
-	-- Create position Labels --
-	mfGUICenterFrame.add{type="label", name="mfposition"}
-	mfGUICenterFrame.mfposition.style.font = "LabelFont"
-	mfGUICenterFrame.mfposition.style.font_color = {39,239,0}
-	mfGUICenterFrame.mfposition.style.margin = 0
-	mfGUICenterFrame.mfposition.style.padding = 0
-	
-	-- Create health Labels --
-	mfGUICenterFrame.add{type="label", name="mfHealth"}
-	mfGUICenterFrame.mfHealth.style.font = "LabelFont"
-	mfGUICenterFrame.mfHealth.style.font_color = {255,0,0}
-	mfGUICenterFrame.mfHealth.style.margin = 0
-	mfGUICenterFrame.mfHealth.style.padding = 0
-	
-	-- Create health ProgressBar -
-	mfGUICenterFrame.add{type="progressbar", name="HealthBar"}
-	mfGUICenterFrame.HealthBar.style.maximal_width = 150
-	mfGUICenterFrame.HealthBar.style.color = {255, 0, 0}
-	
-	-- Create Shield Labels --
-	mfGUICenterFrame.add{type="label", name="mfShield"}
-	mfGUICenterFrame.mfShield.style.font = "LabelFont"
-	mfGUICenterFrame.mfShield.style.font_color = {0,80,255}
-	mfGUICenterFrame.mfShield.style.margin = 0
-	mfGUICenterFrame.mfShield.style.padding = 0
-	mfGUICenterFrame.mfShield.visible = false
-	
-	-- Create Shield ProgressBar -
-	mfGUICenterFrame.add{type="progressbar", name="ShieldBar"}
-	mfGUICenterFrame.ShieldBar.style.maximal_width = 150
-	mfGUICenterFrame.ShieldBar.style.color = {0, 80, 255}
-	mfGUICenterFrame.ShieldBar.visible = false
-	
-	-- Create JumpCharge Labels --
-	mfGUICenterFrame.add{type="label", name="JumpCharge"}
-	mfGUICenterFrame.JumpCharge.style.font = "LabelFont"
-	mfGUICenterFrame.JumpCharge.style.font_color = {211,84,0}
-	mfGUICenterFrame.JumpCharge.style.margin = 0
-	mfGUICenterFrame.JumpCharge.style.padding = 0
-	
-	-- Create health ProgressBar -
-	mfGUICenterFrame.add{type="progressbar", name="JumpChargeBar"}
-	mfGUICenterFrame.JumpChargeBar.style.maximal_width = 150
-	mfGUICenterFrame.JumpChargeBar.style.color = {211, 84, 0}
-	
-	-- Create Internal Energy Labels --
-	mfGUICenterFrame.add{type="label", name="InernalEnergy"}
-	mfGUICenterFrame.InernalEnergy.style.font = "LabelFont"
-	mfGUICenterFrame.InernalEnergy.style.font_color = {230, 233, 37}
-	mfGUICenterFrame.InernalEnergy.style.margin = 0
-	mfGUICenterFrame.InernalEnergy.style.padding = 0
-	
-	-- Create Internal Energy ProgressBar -
-	mfGUICenterFrame.add{type="progressbar", name="InternalEnergyBar"}
-	mfGUICenterFrame.InternalEnergyBar.style.maximal_width = 150
-	mfGUICenterFrame.InternalEnergyBar.style.color = {230, 233, 37}
+	-- Add All Buttons --
+	GUIObj:addButton("MainGUIOptionButton", MFMainGUIFrame1, "OptionIcon", "OptionIcon", {"gui-description.optionButton"}, 15)
+	GUIObj:addButton("MainGUIInfosButton", MFMainGUIFrame1, "MFIconI", "MFIconI", {"gui-description.MFInfosButton"}, 15)
+	GUIObj:addButton("MainGUIReduceButton", MFMainGUIFrame1, ExtendButtonSprite, ExtendButtonSprite, {"gui-description.MFInspectButton"}, 15, true)
 
+	-- Make the GUI visible or not --
+	MFMainGUIFrame2.visible = visible
+	MFMainGUIFrame3.visible = visible
 
-	-- Create the bottom Flow --
-	local mfGUIbottomFrame = mfGUI.add{type="flow", name="mfGUIbottomFrame", direction="vertical"}
-	-- Set Style --
-	mfGUIbottomFrame.style.horizontal_align = "center"
-	mfGUIbottomFrame.style.horizontally_stretchable = true
-
-	-- Create the bottom arrow --
-	mfGUIbottomFrame.add{
-		type="sprite-button",
-		name="ArrowButton",
-		sprite="ArrowIconDown",
-		hovered_sprite="ArrowIconDownOv",
-		resize_to_sprite=false,
-		tooltip={"gui-description.openExtendedGui"}
-	}
-	mfGUIbottomFrame.ArrowButton.style.maximal_width = 100
-	mfGUIbottomFrame.ArrowButton.style.maximal_height = 15
-	
-	
-	--------------------------------- EXTENDED FRAME -------------------------------
-	
-	-- Create the extended frame --
-	local mfGUIExtendedFrame = mfGUI.add{type="frame", name="mfGUIExtendedFrame", direction="vertical"}
-	-- Set Visibility --
-	mfGUIExtendedFrame.visible = false
-	mfGUIExtendedFrame.style.padding = 0
-	mfGUIExtendedFrame.style.margin = 0
-	-- Set Style --
-	mfGUIExtendedFrame.style.horizontally_stretchable = true
-	
-	----------- FLOWS ------------
-	
-	-- Create the extended frame first flow --
-	local mfGUIExtFF1 = mfGUIExtendedFrame.add{type="flow", name="mfGUIExtFF1", direction="horizontal"}
-	-- Set Style --
-	mfGUIExtFF1.style.padding = 0
-	mfGUIExtFF1.style.margin = 0
-	mfGUIExtFF1.style.horizontal_align = "left"
-	mfGUIExtFF1.style.vertical_align = "top"
-	
-	-- Create the extended frame second flow --
-	local mfGUIExtFF2 = mfGUIExtendedFrame.add{type="flow", name="mfGUIExtFF2", direction="horizontal"}
-	-- Set Style --
-	mfGUIExtFF2.style.padding = 0
-	mfGUIExtFF2.style.margin = 0
-	mfGUIExtFF2.style.horizontal_align = "left"
-	mfGUIExtFF2.style.vertical_align = "top"
-	
-	------------ BUTTONS ---------
-	
-	-- Add CallMF Button --
-	mfGUIExtFF1.add{
-		type="sprite-button",
-		name="CallMF",
-		sprite="MFIcon",
-		hovered_sprite="MFIcon",
-		resize_to_sprite=false,
-		tooltip={"gui-description.callMFButton"}
-	}
-	-- Set Style --
-	mfGUIExtFF1.CallMF.style.maximal_height = _GUIButtonsSize
-	mfGUIExtFF1.CallMF.style.maximal_width = _GUIButtonsSize
-	
-	-- Add PortOutside Button --
-	mfGUIExtFF1.add{
-		type="sprite-button",
-		name="PortOutside",
-		sprite="PortIcon",
-		hovered_sprite="PortIcon",
-		resize_to_sprite=false,
-		tooltip={"gui-description.teleportOutsideButton"},
-		visible=false
-	}
-	-- Set Style --
-	mfGUIExtFF1.PortOutside.style.maximal_height = _GUIButtonsSize
-	mfGUIExtFF1.PortOutside.style.maximal_width = _GUIButtonsSize
-
-	-- Add SyncArea Button --
-	mfGUIExtFF1.add{
-		type="sprite-button",
-		name="SyncArea",
-		sprite="SyncAreaIcon",
-		hovered_sprite="SyncAreaIconDisabled",
-		resize_to_sprite=false,
-		tooltip={"gui-description.syncAreaButton"}
-	}
-	-- Set Style --
-	mfGUIExtFF1.SyncArea.style.maximal_height = _GUIButtonsSize
-	mfGUIExtFF1.SyncArea.style.maximal_width = _GUIButtonsSize
-	
-	-- Add FindMF Button --
-	mfGUIExtFF1.add{
-		type="sprite-button",
-		name="FindMF",
-		sprite="MFIconExc",
-		hovered_sprite="MFIconExc",
-		resize_to_sprite=false,
-		visible = false,
-		tooltip={"gui-description.fixMFButton"}
-	}
-	-- Set Style --
-	mfGUIExtFF1.FindMF.style.maximal_height = _GUIButtonsSize
-	mfGUIExtFF1.FindMF.style.maximal_width = _GUIButtonsSize
-	
-	-- Add MFTPInside Button --
-	mfGUIExtFF1.add{
-		type="sprite-button",
-		name="MFTPInside",
-		sprite="MFTPIcon",
-		hovered_sprite="MFTPIcon",
-		resize_to_sprite=false,
-		tooltip={"gui-description.MFTPInside"}
-	}
-	-- Set Style --
-	mfGUIExtFF1.MFTPInside.style.maximal_height = _GUIButtonsSize
-	mfGUIExtFF1.MFTPInside.style.maximal_width = _GUIButtonsSize
-
-	-- Add MFLock Button --
-	mfGUIExtFF1.add{
-		type="sprite-button",
-		name="MFLock",
-		sprite="LockMFCIcon",
-		hovered_sprite="LockMFOIcon",
-		resize_to_sprite=false,
-		tooltip={"gui-description.LockMF"}
-	}
-	-- Set Style --
-	mfGUIExtFF1.MFLock.style.maximal_height = _GUIButtonsSize
-	mfGUIExtFF1.MFLock.style.maximal_width = _GUIButtonsSize
-	
-	-- Add EnergyDrain Button --
-	mfGUIExtFF2.add{
-		type="sprite-button",
-		name="EnergyDrain",
-		sprite="EnergyDrainIcon",
-		hovered_sprite="EnergyDrainIconDisabled",
-		resize_to_sprite=false,
-		tooltip={"gui-description.mfEnergyDrainButton"},
-		visible=false
-	}
-	-- Set Style --
-	mfGUIExtFF2.EnergyDrain.style.maximal_height = _GUIButtonsSize
-	mfGUIExtFF2.EnergyDrain.style.maximal_width = _GUIButtonsSize
-	
-	-- Add FluidDrain Button --
-	mfGUIExtFF2.add{
-		type="sprite-button",
-		name="FluidDrain",
-		sprite="FluidDrainIcon",
-		hovered_sprite="FluidDrainIconDisabled",
-		resize_to_sprite=false,
-		tooltip={"gui-description.mfFluidDrainButton"},
-		visible=false
-	}
-	-- Set Style --
-	mfGUIExtFF2.FluidDrain.style.maximal_height = _GUIButtonsSize
-	mfGUIExtFF2.FluidDrain.style.maximal_width = _GUIButtonsSize
-	
-	-- Add Item Drain Button --
-	mfGUIExtFF2.add{
-		type="sprite-button",
-		name="ItemDrain",
-		sprite="ItemDrainIcon",
-		hovered_sprite="ItemDrainIconDisabled",
-		resize_to_sprite=false,
-		tooltip={"gui-description.mfItemDrainButton"},
-		visible=false
-	}
-	-- Set Style --
-	mfGUIExtFF2.ItemDrain.style.maximal_height = _GUIButtonsSize
-	mfGUIExtFF2.ItemDrain.style.maximal_width = _GUIButtonsSize
-	
-	-- Add EnergyDistribution Button --
-	mfGUIExtFF2.add{
-		type="sprite-button",
-		name="EnergyDistribution",
-		sprite="EnergyDistributionIcon",
-		hovered_sprite="EnergyDistributionIconDisabled",
-		resize_to_sprite=false,
-		tooltip={"gui-description.mfDistribute"},
-		visible=false
-	}
-	-- Set Style --
-	mfGUIExtFF2.EnergyDistribution.style.maximal_height = _GUIButtonsSize
-	mfGUIExtFF2.EnergyDistribution.style.maximal_width = _GUIButtonsSize
-	
-	-- Add Send Quatron Button --
-	mfGUIExtFF2.add{
-		type="sprite-button",
-		name="SendQuatron",
-		sprite="QuatronIcon",
-		hovered_sprite="QuatronIconDisabled",
-		resize_to_sprite=false,
-		tooltip={"gui-description.mfSendQuatron"},
-		visible=false
-	}
-	-- Set Style --
-	mfGUIExtFF2.SendQuatron.style.maximal_height = _GUIButtonsSize
-	mfGUIExtFF2.SendQuatron.style.maximal_width = _GUIButtonsSize
+	-- Update the GUI and return the GUI Object --
+	GUI.updateMFMainGUI(GUIObj)
+	return mfGUI
 
 end
 
-function GUI.mainGUIUpdate(player)
+function GUI.updateMFMainGUI(GUIObj)
 
-	-- Get the Mobile Factory --
-	local MF = getMF(player.name)
-	if MF == nil then return end
+	-- Get MF and Player --
+	local MF = GUIObj.MF
+	local player = GUIObj.MFplayer.ent
 
--- Update the Mobile Factory positions --
-	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
-		player.gui.screen.mfGUI.mfGUICenterFrame.mfposition.caption = {"", {"gui-description.mfPosition"}, ": (", math.floor(MF.ent.position.x), " ; ", math.floor(MF.ent.position.y), ")  ", MF.ent.surface.name}
-	else
-		player.gui.screen.mfGUI.mfGUICenterFrame.mfposition.caption = {"", {"gui-description.mfPosition"}, ": ", {"gui-description.Unknow"}}
-	end
-	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfposition.caption = {"", {"gui-description.mfPosition"}, ": (", math.floor(MF.ent.position.x), " ; ", math.floor(MF.ent.position.y), ")  ", MF.ent.surface.name}
-	else
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfposition.caption = {"", {"gui-description.mfPosition"}, ": ", {"gui-description.Unknow"}}
-	end
+	-- Clear the Frame --
+	GUIObj.MFMainGUIFrame2.clear()
 
-	-- Update the Mobile Factory health --
-	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
-		player.gui.screen.mfGUI.mfGUICenterFrame.mfHealth.caption = {"", {"gui-description.mfHealth"}, ": ", math.floor(MF.ent.health), "/", MF.ent.prototype.max_health}
-		player.gui.screen.mfGUI.mfGUICenterFrame.HealthBar.value = MF.ent.health / MF.ent.prototype.max_health
-	else
-		player.gui.screen.mfGUI.mfGUICenterFrame.mfHealth.caption = {"", {"gui-description.mfHealth"}, ": ", {"gui-description.Unknow"}}
-	end
-	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfHealth.caption = {"", {"gui-description.mfHealth"}, ": ", math.floor(MF.ent.health), "/", MF.ent.prototype.max_health}
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.HealthBar.value = MF.ent.health / MF.ent.prototype.max_health
-	else
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfHealth.caption = {"", {"gui-description.mfHealth"}, ": ", {"gui-description.Unknow"}}
-	end
-	
-	-- Update the Mobile Factory Shield --
-	if MF:maxShield() > 0 then
-		if player.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab1Frame.mfOptTab1Pane.GUIShieldOpt.state == true then
-			player.gui.screen.mfGUI.mfGUICenterFrame.mfShield.visible = true
+	-------------------------------------------------------- Get Information Variables --------------------------------------------------------
+	local mfPositionText = {"", {"gui-description.mfPosition"}, ": ", {"gui-description.Unknow"}}
+	local mfHealthValue = 0
+	local mfHealthText = {"", {"gui-description.mfHealth"}, ": ", {"gui-description.Unknow"}}
+	local mfShielValue = 0
+	local mfShieldText = {"", {"gui-description.mfShield"}, ": ", {"gui-description.Unknow"}}
+	local mfEnergyValue = 0
+	local mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", {"gui-description.Unknow"}}
+	local mfQuatronValue = 0
+	local mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", {"gui-description.Unknow"}, "\n", {"gui-description.mQuatronPurity"}, ": ", {"gui-description.Unknow"}}
+	local mfJumpDriveValue = 0
+	local mfJumpDriveText = {"", {"gui-description.mfJumpTimer"}, ": ", {"gui-description.Unknow"}}
+
+	if MF.ent ~= nil and MF.ent.valid == true then
+		mfPositionText = {"", {"gui-description.mfPosition"}, ": (", math.floor(MF.ent.position.x), " ; ", math.floor(MF.ent.position.y), ")  ", MF.ent.surface.name}
+		mfHealthValue = MF.ent.health / MF.ent.prototype.max_health
+		mfHealthText = {"", {"gui-description.mfHealth"}, ": ", math.floor(MF.ent.health), "/", MF.ent.prototype.max_health}
+		mfShielValue = 0
+		mfShieldText = {"", {"gui-description.mfShield"}, ": ", 0}
+		if MF:maxShield() > 0 then
+			mfShielValue = MF:shield() / MF:maxShield()
+			mfShieldText = {"", {"gui-description.mfShield"}, ": ", math.floor(MF:shield()), "/", MF:maxShield()}
 		end
-		if player.gui.screen.mfOptionGUI.mfOptTabbedPane.mfOptTab1Frame.mfOptTab1Pane.GUIShieldBarOpt.state == true then
-			player.gui.screen.mfGUI.mfGUICenterFrame.ShieldBar.visible = true
-		end
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfShield.visible = true
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ShieldBar.visible = true
-		if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
-			player.gui.screen.mfGUI.mfGUICenterFrame.mfShield.caption = {"", {"gui-description.mfShield"}, ": ", math.floor(MF:shield()), "/", MF:maxShield()}
-			player.gui.screen.mfGUI.mfGUICenterFrame.ShieldBar.value = MF:shield() / MF:maxShield()
-		else
-			player.gui.screen.mfGUI.mfGUICenterFrame.mfShield.caption = {"", {"gui-description.mfShield"}, ": ", {"gui-description.Unknow"}}
-		end
-		if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
-			player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfShield.caption = {"", {"gui-description.mfShield"}, ": ", math.floor(MF:shield()), "/", MF:maxShield()}
-			player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ShieldBar.value = MF:shield() / MF:maxShield()
-		else
-			player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfShield.caption = {"", {"gui-description.mfShield"}, ": ", {"gui-description.Unknow"}}
-		end
-	else
-		player.gui.screen.mfGUI.mfGUICenterFrame.mfShield.visible = false
-		player.gui.screen.mfGUI.mfGUICenterFrame.ShieldBar.visible = false
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.mfShield.visible = false
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.ShieldBar.visible = false
-	end
-	
-	-- Update the Mobile Factory Jump Charge --
-	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
-		local chargePercent = math.floor(100 - MF.jumpTimer / MF.baseJumpTimer * 100)
-		player.gui.screen.mfGUI.mfGUICenterFrame.JumpCharge.caption = {"", {"gui-description.mfJumpTimer"}, ": ", chargePercent, "% (", MF.jumpTimer, "s)"}
-		player.gui.screen.mfGUI.mfGUICenterFrame.JumpChargeBar.value = chargePercent / 100
-	else
-		player.gui.screen.mfGUI.mfGUICenterFrame.JumpCharge.caption = {"", {"gui-description.mfJumpTimer"}, ": ", {"gui-description.Unknow"}}
-	end
-	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
-		local chargePercent = math.floor(100 - MF.jumpTimer / MF.baseJumpTimer * 100)
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.JumpCharge.caption = {"", {"gui-description.mfJumpTimer"}, ": ", chargePercent, "% (", MF.jumpTimer, "s)"}
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.JumpChargeBar.value = chargePercent / 100
-	else
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.JumpCharge.caption = {"", {"gui-description.mfJumpTimer"}, ": ", {"gui-description.Unknow"}}
-	end
-	
-	-- Update the Mobile Factory Internal Energy Charge --
-	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
-		local chargePercent = math.floor(100 - MF.internalEnergy / MF.maxInternalEnergy * 100)
-		player.gui.screen.mfGUI.mfGUICenterFrame.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF.internalEnergy), "J/", Util.toRNumber(MF.maxInternalEnergy), "J"}
-		player.gui.screen.mfGUI.mfGUICenterFrame.InternalEnergyBar.value = 1 - chargePercent / 100
-	else
-		player.gui.screen.mfGUI.mfGUICenterFrame.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": ", {"gui-description.Unknow"}}
-	end
-	if MF ~= nil and MF.ent ~= nil and MF.ent.valid then
-		local chargePercent = math.floor(100 - MF.internalEnergy / MF.maxInternalEnergy * 100)
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF.internalEnergy), "J/", Util.toRNumber(MF.maxInternalEnergy), "J"}
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.InternalEnergyBar.value = 1 - chargePercent / 100
-	else
-		player.gui.screen.mfInfoGUI.mfInfoMainFlow.mfInfoFlow1.InernalEnergy.caption = {"", {"gui-description.mfEnergyCharge"}, ": ", {"gui-description.Unknow"}}
-	end
-	
-	-- Update the CallMF Button --
-	if Util.isOutside(player) == false then
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.CallMF.visible = false
-	else
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.CallMF.visible = true
-	end
-	
-	-- Update the PortOutside button --
-	if Util.isOutside(player) == false then
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.PortOutside.visible = true
-	else
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.PortOutside.visible = false
-	end
-	
-	-- Update the SyncArea button --
-	if MF.syncAreaEnabled == true then
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.SyncArea.sprite = "SyncAreaIcon"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.SyncArea.hovered_sprite = "SyncAreaIconDisabled"
-	else
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.SyncArea.sprite = "SyncAreaIconDisabled"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.SyncArea.hovered_sprite = "SyncAreaIcon"
-	end
-	
-	-- Update the FindMF Button --
-	player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = false
-	if MF == nil or MF.ent == nil then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
-	if MF.ent ~= nil and MF.ent.valid == false then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
-	if MF.fS == nil or MF.fS.valid == false then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
-	if (MF.ccS == nil or MF.ccS.valid == false) and technologyUnlocked("ControlCenter", getForce(player.name)) then player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.FindMF.visible = true end
-	
-	-- Update the MFTPInside Icone --
-	if MF.tpEnabled == true then
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFTPInside.sprite = "MFTPIcon"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFTPInside.hovered_sprite = "MFTPIconDisabled"
-	else
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFTPInside.sprite = "MFTPIconDisabled"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFTPInside.hovered_sprite = "MFTPIcon"
+		mfEnergyValue = 1 - (math.floor(100 - MF.internalEnergy / MF.maxInternalEnergy * 100)) / 100
+		mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF.internalEnergy), "J/", Util.toRNumber(MF.maxInternalEnergy), "J"}
+		mfQuatronValue = 0
+		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", 0, "\n", {"gui-description.mQuatronPurity"}, ": ", 0}
+		mfJumpDriveValue = (math.floor(100 - MF.jumpTimer / MF.baseJumpTimer * 100)) / 100
+		mfJumpDriveText = {"", {"gui-description.mfJumpTimer"}, ": ", math.floor(100 - MF.jumpTimer / MF.baseJumpTimer * 100), "% (", MF.jumpTimer, "s)"}
 	end
 
-	-- Update the MFLock Icone --
-	if MF.locked == true then
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFLock.sprite = "LockMFCIcon"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFLock.hovered_sprite = "LockMFOIcon"
-	else
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFLock.sprite = "LockMFOIcon"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF1.MFLock.hovered_sprite = "LockMFCIcon"
-	end
+	-------------------------------------------------------- Update Information --------------------------------------------------------
+	GUIObj:addLabel("PositionLabel", GUIObj.MFMainGUIFrame2, mfPositionText, _mfGreen, "Mobile Factory")
+	GUIObj:addProgressBar("HealBar", GUIObj.MFMainGUIFrame2, "", mfHealthText, false, _mfRed, mfHealthValue)
+	GUIObj:addProgressBar("ShieldBar", GUIObj.MFMainGUIFrame2, "", mfShieldText, false, _mfBlue, mfShielValue)
+	GUIObj:addProgressBar("EnergyBar", GUIObj.MFMainGUIFrame2, "", mfEnergyText, false, _mfYellow, mfEnergyValue)
+	GUIObj:addProgressBar("QuatronBar", GUIObj.MFMainGUIFrame2, "", mfQuatronText, false, _mfPurple, mfQuatronValue)
+	GUIObj:addProgressBar("JumpDriveBar", GUIObj.MFMainGUIFrame2, "", mfJumpDriveText, false, _mfOrange, mfJumpDriveValue)
 
-	-- Update Energy Drain Button --
-	if technologyUnlocked("EnergyDrain1", getForce(player.name)) then
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDrain.visible = true
-	else
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDrain.visible = false 
-	end
-	
-	-- Update Fluid Drain Button --
-	if technologyUnlocked("FluidDrain1", getForce(player.name)) then
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.FluidDrain.visible = true
-	else
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.FluidDrain.visible = false 
-	end
-	
-	-- Update Item Drain Button --
-	if technologyUnlocked("TechItemDrain", getForce(player.name)) then
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.ItemDrain.visible = true
-	else
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.ItemDrain.visible = false 
-	end
-	
-	-- Update Energy Distribution Button --
-	if technologyUnlocked("EnergyDistribution1", getForce(player.name)) then
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDistribution.visible = true
-	else
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDistribution.visible = false 
-	end
-	
-	-- Update Send Quatron Button --
-	if technologyUnlocked("OreCleaner", getForce(player.name)) or technologyUnlocked("FluidExtractor", getForce(player.name)) then
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.visible = true
-	else
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.visible = false 
-	end
+	-- Set Style --
+	GUIObj.MFMainGUIFrame2.JumpDriveBar.style.bottom_padding = 1
 
-	-- Update the Energy Drain Icon --
-	if MF.energyLaserActivated == true then
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDrain.sprite = "EnergyDrainIcon"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDrain.hovered_sprite = "EnergyDrainIconDisabled"
-	else
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDrain.sprite = "EnergyDrainIconDisabled"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDrain.hovered_sprite = "EnergyDrainIcon"
-	end
+	-------------------------------------------------------- Get Buttons Variables --------------------------------------------------------
+	local showCallMFButton = Util.isOutside(player)
+	local showPortOutsideButton = not Util.isOutside(player)
+	local syncAreaSprite = MF.syncAreaEnabled == true and "SyncAreaIcon" or "SyncAreaIconDisabled"
+	local syncAreaHovSprite = MF.syncAreaEnabled == true and "SyncAreaIconDisabled" or "SyncAreaIcon"
+	local showFindMFButton = (MF.ent ~= nil and MF.ent.valid == false) and true or false
+	local tpInsideSprite = MF.tpEnabled == true and "MFTPIcon" or "MFTPIconDisabled"
+	local tpInsideHovSprite = MF.tpEnabled == true and "MFTPIconDisabled" or "MFTPIcon"
+	local lockMFSprite = MF.locked == true and "LockMFCIcon" or "LockMFOIcon"
+	local lockMFHovSprite = MF.locked == true and "LockMFOIcon" or "LockMFCIcon"
+	local showEnergyDrainButton = technologyUnlocked("EnergyDrain1", getForce(player.name)) and true or false
+	local energyDrainSprite = MF.energyLaserActivated == true and "EnergyDrainIcon" or "EnergyDrainIconDisabled"
+	local energyDrainHovSprite = MF.energyLaserActivated == true and "EnergyDrainIconDisabled" or "EnergyDrainIcon"
+	local showFluidDrainButton = technologyUnlocked("FluidDrain1", getForce(player.name)) and true or false
+	local fluidDrainSprite = MF.fluidLaserActivated == true and "FluidDrainIcon" or "FluidDrainIconDisabled"
+	local fluidDrainHovSprite = MF.fluidLaserActivated == true and "FluidDrainIconDisabled" or "FluidDrainIcon"
+	local showItemDrainButton = technologyUnlocked("TechItemDrain", getForce(player.name)) and true or false
+	local itemDrainSprite = MF.itemLaserActivated == true and "ItemDrainIcon" or "ItemDrainIconDisabled"
+	local itemDrainHovSprite = MF.itemLaserActivated == true and "ItemDrainIconDisabled" or "ItemDrainIcon"
+	local showEnergyDistributionButton = technologyUnlocked("EnergyDistribution1", getForce(player.name)) and true or false
+	local energyDistributionSprite = MF.internalEnergyDistributionActivated == true and "EnergyDistributionIcon" or "EnergyDistributionIconDisabled"
+	local energyDistributionHovSprite = MF.internalEnergyDistributionActivated == true and "EnergyDistributionIconDisabled" or "EnergyDistributionIcon"
+	local showSendQuatronButton = (technologyUnlocked("OreCleaner", getForce(player.name)) or technologyUnlocked("FluidExtractor", getForce(player.name))) and true or false
+	local sendQuatronSprite = MF.sendQuatronActivated == true and "QuatronIcon" or "QuatronIconDisabled"
+	local sendQuatronHovSprite = MF.sendQuatronActivated == true and "QuatronIconDisabled" or "QuatronIcon"
 	
-	-- Update the Fluid Drain Icon --
-	if MF.fluidLaserActivated == true then
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.FluidDrain.sprite = "FluidDrainIcon"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.FluidDrain.hovered_sprite = "FluidDrainIconDisabled"
-	else
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.FluidDrain.sprite = "FluidDrainIconDisabled"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.FluidDrain.hovered_sprite = "FluidDrainIcon"
+
+	-------------------------------------------------------- Update all Buttons --------------------------------------------------------
+	local buttonsSize = 15
+	GUI.addButtonToMainGui(GUIObj, {name="CallMFButton", sprite="MFIcon", hovSprite="MFIcon", tooltip={"gui-description.callMFButton"}, size=buttonsSize, save=false, visible=showCallMFButton})
+	GUI.addButtonToMainGui(GUIObj, {name="PortOutsideButton", sprite="PortIcon", hovSprite="PortIcon", tooltip={"gui-description.teleportOutsideButton"}, size=buttonsSize, save=false, visible=showPortOutsideButton})
+	GUI.addButtonToMainGui(GUIObj, {name="SyncAreaButton", sprite=syncAreaSprite, hovSprite=syncAreaHovSprite, tooltip={"gui-description.syncAreaButton"}, size=buttonsSize, save=false})
+	GUI.addButtonToMainGui(GUIObj, {name="FindMFButton", sprite="MFIconExc", hovSprite="MFIconExc", tooltip={"gui-description.fixMFButton"}, size=buttonsSize, save=false, visible=showFindMFButton})
+	GUI.addButtonToMainGui(GUIObj, {name="TPInsideButton", sprite=tpInsideSprite, hovSprite=tpInsideHovSprite, tooltip={"gui-description.MFTPInside"}, size=buttonsSize, save=false})
+	GUI.addButtonToMainGui(GUIObj, {name="LockMFButton", sprite=lockMFSprite, hovSprite=lockMFHovSprite, tooltip={"gui-description.LockMF"}, size=buttonsSize, save=false})
+	GUI.addButtonToMainGui(GUIObj, {name="EnergyDrainButton", sprite=energyDrainSprite, hovSprite=energyDrainHovSprite, tooltip={"gui-description.mfEnergyDrainButton"}, size=buttonsSize, save=false, visible=showEnergyDrainButton})
+	GUI.addButtonToMainGui(GUIObj, {name="FluidDrainButton", sprite=fluidDrainSprite, hovSprite=fluidDrainHovSprite, tooltip={"gui-description.mfFluidDrainButton"}, size=buttonsSize, save=false, visible=showFluidDrainButton})
+	GUI.addButtonToMainGui(GUIObj, {name="ItemDrainButton", sprite=itemDrainSprite, hovSprite=itemDrainHovSprite, tooltip={"gui-description.mfItemDrainButton"}, size=buttonsSize, save=false, visible=showItemDrainButton})
+	GUI.addButtonToMainGui(GUIObj, {name="EnergyDistributionButton", sprite=energyDistributionSprite, hovSprite=energyDistributionHovSprite, tooltip={"gui-description.mfDistribute"}, size=buttonsSize, save=false, visible=showEnergyDistributionButton})
+	GUI.addButtonToMainGui(GUIObj, {name="SendQuatronButton", sprite=sendQuatronSprite, hovSprite=sendQuatronHovSprite, tooltip={"gui-description.mfSendQuatron"}, size=buttonsSize, save=false, visible=showSendQuatronButton})
+
+	GUI.renderMainGuiButtons(GUIObj)
+end
+
+-- Add a Button to the Main GUI --
+function GUI.addButtonToMainGui(GUIObj, button)
+	if GUIObj.buttonsTable == nil then GUIObj.buttonsTable = {} end
+	GUIObj.buttonsTable[button.name] = button
+end
+
+-- Render all Buttons of the Main GUI --
+function GUI.renderMainGuiButtons(GUIObj)
+	-- Clear the Frame --
+	GUIObj.MFMainGUIFrame3.clear()
+	-- Make the Frame visible --
+	if GUIObj.MFMainGUIFrame2.visible == true then GUIObj.MFMainGUIFrame3.visible = true end
+	-- Create values --
+	local i = 0
+	local y = 1
+	-- Create the first Flow --
+	local flow = GUIObj:addFlow("buttonFlow" .. y, GUIObj.MFMainGUIFrame3, "vertical")
+	-- Itinerate the Buttons Table --
+	for k, button in pairs(GUIObj.buttonsTable or {}) do
+		if button.visible == false then goto continue end
+		if GUIObj.MFplayer.varTable["Show" .. button.name] == false then goto continue end
+		-- Create a new Flow --
+		if i % 4 == 0 then
+			y = y + 1
+			flow = GUIObj:addFlow("buttonFlow" .. y, GUIObj.MFMainGUIFrame3, "vertical")
+		end
+		-- Add the Button --
+		GUIObj:addButton(button.name, flow, button.sprite, button.hovSprite, button.tooltip, button.size, button.save)
+		i = i + 1
+		::continue::
 	end
-	
-	-- Update the Item Drain Icon --
-	if MF.itemLaserActivated == true then
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.ItemDrain.sprite = "ItemDrainIcon"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.ItemDrain.hovered_sprite = "ItemDrainIconDisabled"
-	else
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.ItemDrain.sprite = "ItemDrainIconDisabled"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.ItemDrain.hovered_sprite = "ItemDrainIcon"
-	end
-	
-	-- Update Energy Distribution Icon --
-	if MF.internalEnergyDistributionActivated == true then
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDistribution.sprite = "EnergyDistributionIcon"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDistribution.hovered_sprite = "EnergyDistributionIconDisabled"
-	else
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDistribution.sprite = "EnergyDistributionIconDisabled"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.EnergyDistribution.hovered_sprite = "EnergyDistributionIcon"
-	end
-	
-	-- Update Send Quatron Icon --
-	if MF.sendQuatronActivated == true then
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.sprite = "QuatronIcon"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.hovered_sprite = "QuatronIconDisabled"
-	else
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.sprite = "QuatronIconDisabled"
-		player.gui.screen.mfGUI.mfGUIExtendedFrame.mfGUIExtFF2.SendQuatron.hovered_sprite = "QuatronIcon"
-	end
+	-- Make the Frame invisible if no Button was added --
+	if i == 0 then GUIObj.MFMainGUIFrame3.visible = false end
 end

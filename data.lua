@@ -358,25 +358,6 @@ data:extend{
 
 
 ----------------------- ADD SPRITES -----------------------
-data:extend{
-    {
-        type = "sprite",
-        name = "MoveIcon",
-        filename = "__Mobile_Factory_Graphics__/graphics/icones/moveIcon.png",
-        size = 32,
-        flags = {"icon"}
-    }
-}
-
-data:extend{
-    {
-        type = "sprite",
-        name = "MoveIconOv",
-        filename = "__Mobile_Factory_Graphics__/graphics/icones/moveIconOv.png",
-        size = 32,
-        flags = {"icon"}
-    }
-}
 
 data:extend{
     {
@@ -401,8 +382,9 @@ data:extend{
 data:extend{
     {
         type = "sprite",
-        name = "ArrowIconDown",
-        filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconDown.png",
+        name = "ArrowIconLeft",
+		-- filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconLeft.png",
+		filename = "__Mobile_Factory__/graphics/ArrowIconLeft.png",
         size = 32,
         flags = {"icon"}
     }
@@ -411,28 +393,9 @@ data:extend{
 data:extend{
     {
         type = "sprite",
-        name = "ArrowIconDownOv",
-        filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconDownOv.png",
-        size = 32,
-        flags = {"icon"}
-    }
-}
-
-data:extend{
-    {
-        type = "sprite",
-        name = "ArrowIconUp",
-        filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconUp.png",
-        size = 32,
-        flags = {"icon"}
-    }
-}
-
-data:extend{
-    {
-        type = "sprite",
-        name = "ArrowIconUpOv",
-        filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconUpOv.png",
+        name = "ArrowIconRight",
+		-- filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconRight.png",
+		filename = "__Mobile_Factory__/graphics/ArrowIconRight.png",
         size = 32,
         flags = {"icon"}
     }
@@ -523,16 +486,6 @@ data:extend{
         type = "sprite",
         name = "MFIconI",
         filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIconI.png",
-        size = 32,
-        flags = {"icon"}
-    }
-}
-
-data:extend{
-    {
-        type = "sprite",
-        name = "InspectI",
-        filename = "__Mobile_Factory_Graphics__/graphics/icones/MGlass.png",
         size = 32,
         flags = {"icon"}
     }
@@ -672,7 +625,7 @@ data:extend{
 	{
     type = "font",
     name = "TitleFont",
-	size = 18,
+	size = 16,
     from = "default-bold"
 	}
 }
@@ -686,6 +639,14 @@ data:extend{
 	}
 }
 
+data:extend{
+	{
+    type = "font",
+    name = "LabelFont2",
+	size = 14,
+    from = "default"
+	}
+}
 
 ------------------------- ADD SOUNDS ---------------------
 data:extend{
@@ -722,10 +683,128 @@ setStackTo1000("uranium-ore")
 
 
 -------------------- SHORTCUTS --------------------
-data:extend{
+-- data:extend{
+-- 	{
+-- 	type = "custom-input",
+-- 	name = "TTGUIKey",
+-- 	key_sequence = "mouse-button-3"
+-- 	}
+-- }
+
+-------------------- Styles --------------------
+local outer_frame_light = outer_frame_light()
+outer_frame_light.base.center = {position = {42,8}, size=1}
+data.raw["gui-style"].default.MF_Inventory_scroll_pan =
+{
+	type = 'scroll_pane_style',
+	padding = 0,
+	extra_padding_when_activated = 0,
+	extra_right_padding_when_activated = -12,
+	graphical_set = outer_frame_light,
+	background_graphical_set = {
+		base = {
+			position = {282, 17},
+			corner_size = 8,
+			overall_tiling_horizontal_padding = 0,
+			overall_tiling_horizontal_size = 37,
+			overall_tiling_horizontal_spacing = 0,
+			overall_tiling_vertical_padding = 0,
+			overall_tiling_vertical_size = 37,
+			overall_tiling_vertical_spacing = 0
+	  	}
+	  }
+}
+
+data.raw["gui-style"].default.MF_DeepST_scroll_pan =
+{
+	type = "scroll_pane_style",
+	graphical_set =
 	{
-	type = "custom-input",
-	name = "TTGUIKey",
-	key_sequence = "mouse-button-3"
+		base =
+		{
+		position = {17, 0},
+		corner_size = 8,
+		center = {position = {42, 8}, size = 1},
+		top = {},
+		left_top = {},
+		right_top = {},
+		draw_type = "outer"
+		},
+		shadow = default_inner_glow(hard_shadow_color, 0.5)
+	},
+	background_graphical_set =
+	{
+		position = {282, 17},
+		corner_size = 8,
+		overall_tiling_vertical_size = 47,
+		overall_tiling_vertical_spacing = 0,
+		overall_tiling_vertical_padding = 0,
+		overall_tiling_horizontal_padding = 0
+	}
+}
+
+local purpleTint = {150, 50, 160}
+local lightPurpleTint = {200, 120, 220}
+data.raw["gui-style"].default.MF_Purple_Button_Purple =
+{
+	type = "button_style",
+	parent = "shortcut_bar_button",
+	default_graphical_set =
+	{
+		base = {position = {346, 759}, corner_size = 8, tint=purpleTint},
+		shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	},
+	hovered_graphical_set =
+	{
+		base = {position = {346, 759}, corner_size = 8, tint=lightPurpleTint},
+		shadow = offset_by_2_default_glow(default_dirt_color, 0.5),
+		glow = offset_by_2_default_glow({132, 177, 198, 127}, 0.5)
+	},
+	clicked_graphical_set =
+	{
+		base = {position = {363, 759}, corner_size = 8, tint=lightPurpleTint},
+		shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	}
+}
+
+data.raw["gui-style"].default.MF_Fake_Button_Blue =
+{
+	type = "button_style",
+	parent = "shortcut_bar_button",
+	default_graphical_set =
+	{
+		base = {position = {312, 759}, corner_size = 8},
+        shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	},
+	hovered_graphical_set =
+	{
+		base = {position = {312, 759}, corner_size = 8},
+        shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	},
+	clicked_graphical_set =
+	{
+		base = {position = {312, 759}, corner_size = 8},
+        shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	}
+}
+
+data.raw["gui-style"].default.MF_Fake_Button_Purple =
+{
+	type = "button_style",
+	parent = "shortcut_bar_button",
+	default_graphical_set =
+	{
+		base = {position = {346, 759}, corner_size = 8, tint=purpleTint},
+		shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	},
+	hovered_graphical_set =
+	{
+		base = {position = {346, 759}, corner_size = 8, tint=purpleTint},
+		shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	},
+	clicked_graphical_set =
+	{
+		base = {position = {346, 759}, corner_size = 8, tint=purpleTint},
+		shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
 	}
 }

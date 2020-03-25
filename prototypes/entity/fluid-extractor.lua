@@ -27,7 +27,7 @@ feE.energy_usage = "1J"
 feE.mining_speed = 0
 feE.module_specification =
     {
-      module_slots = 0
+      module_slots = 1
     }
 feE.animations =
     {

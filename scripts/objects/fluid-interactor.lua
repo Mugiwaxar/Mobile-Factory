@@ -125,101 +125,47 @@ function FI:update()
 end
 
 -- Tooltip Infos --
-function FI:getTooltipInfos(GUI)
+function FI:getTooltipInfos(GUIObj, gui, justCreated)
 
-	-- Create the Belongs to Label --
-	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
-	belongsToL.style.font = "LabelFont"
-	belongsToL.style.font_color = _mfOrange
-
-	-- Create the Data Network label --
-	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
-	if self.dataNetwork ~= nil then
-		DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
-	end
-	local dataNetworkL = GUI.add{type="label"}
-	dataNetworkL.style.font = "LabelFont"
-	dataNetworkL.caption = DNText
-	dataNetworkL.style.font_color = {155, 0, 168}
-
-	-- Create the Out Of Power Label --
-	if self.dataNetwork ~= nil then
-		if self.dataNetwork.outOfPower == true then
-			local dataNetworOOPower = GUI.add{type="label"}
-			dataNetworOOPower.style.font = "LabelFont"
-			dataNetworOOPower.caption = {"", {"gui-description.OutOfPower"}}
-			dataNetworOOPower.style.font_color = {231, 5, 5}
-		end
-	end
+	-- Create the Data Network Frame --
+	GUIObj:addDataNetworkFrame(gui, self)
 	
-	-- Create the text and style variables --
-	local text = ""
-	local style = {}
-	-- Check if the Fluid Interactor is linked with a Data Center --
-	if valid(self.dataNetwork) == true and valid(self.dataNetwork.dataCenter) == true then
-		text = {"", {"gui-description.LinkedTo"}, ": ", self.dataNetwork.dataCenter.invObj.name}
-		style = {92, 232, 54}
-	else
-		text = {"gui-description.Unlinked"}
-		style = {231, 5, 5}
-	end
-	-- Create the Link label --
-	local link = GUI.add{type="label"}
-	link.style.font = "LabelFont"
-	link.caption = text
-	link.style.font_color = style
+    -- Check if the Parameters can be modified --
+	if canModify(getPlayer(gui.player_index).name, self.ent) == false or justCreated ~= true or valid(self.dataNetwork) == false then return end
 	
-    if canModify(getPlayer(GUI.player_index).name, self.ent) == false then return end
-    
-    -- Create the Mode Selection --
-    if valid(self.dataNetwork) == true and valid(self.dataNetwork.dataCenter) == true and self.dataNetwork.dataCenter.invObj.isII == true then
-        -- Create the Mode Label --
-        local modeLabel = GUI.add{type="label", caption={"",{"gui-description.SelectMode"}, ":"}}
-        modeLabel.style.top_margin = 7
-		modeLabel.style.font = "LabelFont"
-        modeLabel.style.font_color = {108, 114, 229}
+	-- Create the Parameters Title --
+	local titleFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
+	GUIObj.SettingsFrame.visible = true
 
-        local state = "left"
-
-        if self.selectedMode == "output" then state = "right" end
-        
-        local modeSwitch = GUI.add{type="switch", name="FIMode" .. self.ent.unit_number, allow_none_state=false, switch_state=state}
-        modeSwitch.left_label_caption = {"gui-description.Input"}
-        modeSwitch.left_label_tooltip = {"gui-description.InputTT"}
-        modeSwitch.right_label_caption = {"gui-description.Output"}
-        modeSwitch.right_label_tooltip = {"gui-description.OutputTT"}
-    end
+	-- Create the Mode Selection --
+	GUIObj:addLabel("", titleFrame, {"gui-description.SelectMode"}, _mfOrange)
+	local state = "left"
+	if self.selectedMode == "output" then state = "right" end
+	GUIObj:addSwitch("FIMode" .. self.ent.unit_number, titleFrame, {"gui-description.Input"}, {"gui-description.Output"}, {"gui-description.InputTT"}, {"gui-description.OutputTT"}, state)
 
 	-- Create the Inventory Selection --
-	if valid(self.dataNetwork) == true and valid(self.dataNetwork.dataCenter) == true and self.dataNetwork.dataCenter.invObj.isII == true then
-		-- Create the targeted Inventory label --
-		local targetLabel = GUI.add{type="label", caption={"", {"gui-description.MSTarget"}, ":"}}
-		targetLabel.style.top_margin = 7
-		targetLabel.style.font = "LabelFont"
-		targetLabel.style.font_color = {108, 114, 229}
-
-		local invs = {{"", {"gui-description.Any"}}}
-		local selectedIndex = 1
-		local i = 1
-		for k, deepTank in pairs(global.deepTankTable) do
-			if deepTank ~= nil and deepTank.ent ~= nil and Util.canUse(self.player, deepTank.ent) then
-				i = i + 1
-				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
-				if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
-					itemText = {"", " (", game.fluid_prototypes[deepTank.filter].localised_name, " - ", deepTank.player, ")"}
-				elseif deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
-					itemText = {"", " (", game.fluid_prototypes[deepTank.inventoryFluid].localised_name, " - ", deepTank.player, ")"}
-				end
-				invs[k+1] = {"", {"gui-description.DT"}, " ", tostring(deepTank.ID), itemText}
-				if self.selectedInv == deepTank then
-					selectedIndex = i
-				end
+	GUIObj:addLabel("", titleFrame, {"gui-description.MSTarget"}, _mfOrange)
+	
+	local invs = {{"", {"gui-description.None"}}}
+	local selectedIndex = 1
+	local i = 1
+	for k, deepTank in pairs(global.deepTankTable) do
+		if deepTank ~= nil and deepTank.ent ~= nil and Util.canUse(self.player, deepTank.ent) then
+			i = i + 1
+			local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
+			if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
+				itemText = {"", " (", game.fluid_prototypes[deepTank.filter].localised_name, " - ", deepTank.player, ")"}
+			elseif deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
+				itemText = {"", " (", game.fluid_prototypes[deepTank.inventoryFluid].localised_name, " - ", deepTank.player, ")"}
+			end
+			invs[k+1] = {"", {"gui-description.DT"}, " ", tostring(deepTank.ID), itemText}
+			if self.selectedInv == deepTank then
+				selectedIndex = i
 			end
 		end
-		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-		local invSelection = GUI.add{type="list-box", name="FITarget" .. self.ent.unit_number, items=invs, selected_index=selectedIndex}
-		invSelection.style.width = 100
 	end
+	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
+	GUIObj:addDropDown("FITarget" .. self.ent.unit_number, titleFrame, invs, selectedIndex)
 end
 
 -- Change the Mode --

@@ -97,37 +97,41 @@ function MJ:update()
 end
 
 -- Tooltip Infos --
-function MJ:getTooltipInfos(GUI)
+function MJ:getTooltipInfos(GUIObj, gui, justCreated)
 
-	-- Create the Belongs to Label --
-	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
-	belongsToL.style.font = "LabelFont"
-	belongsToL.style.font_color = _mfOrange
+	-- Create the Title --
+	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
 
 	-- Create the Current Work Label --
-	local work = GUI.add{type="label", caption={"", {"gui-description." .. self.currentOrder}}}
-	work.style.font = "LabelFont"
-	work.style.font_color = _mfBlue
-	
+	GUIObj:addLabel("", frame, {"gui-description." .. self.currentOrder}, _mfOrange)
+
 	-- Create the Mobile Factory Full Label --
 	if self.MFFull == true then
-		local mfFull = GUI.add{type="label", caption={"", {"gui-description.MFTrunkFull"}}}
-		mfFull.style.font = "LabelFont"
-		mfFull.style.font_color = _mfRed
+		GUIObj:addLabel("", frame, {"gui-description.MFTrunkFull"}, _mfRed)
 	end
-	
+
 	-- Create the Mobile Factory No Found Label --
 	if self.MFNotFound == true then
-		local mfNoFound = GUI.add{type="label", caption={"", {"gui-description.MFNotFound"}}}
-		mfNoFound.style.font = "LabelFont"
-		mfNoFound.style.font_color = _mfRed
+		GUIObj:addLabel("", frame, {"gui-description.MFNotFound"}, _mfRed)
 	end
+	
+	-- Create the Inventory Title --
+	local invFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
+	invFrame.visible = false
+
+	-- Create the Items Table --
+	local table = GUIObj:addTable("", invFrame, 5)
 	
 	-- Create the Inventory List --
 	if self.inventoryItem ~= nil and self.inventoryCount > 0 then
-		Util.itemToFrame(self.inventoryItem, self.inventoryCount, GUI)
+		invFrame.visible = true
+		-- Check the Item --
+		if self.inventoryItem == nil or self.inventoryCount == nil or self.inventoryCount == 0 or game.item_prototypes[self.inventoryItem] == nil then goto continue end
+		-- Create the Button
+		Util.itemToFrame(self.inventoryItem, self.inventoryCount, GUIObj, table)
+		::continue::
 	end
-	
+
 end
 
 -- Is the Jet Iddle ? --

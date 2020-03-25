@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.118
+Date: 25/03/2020
+  Major Features:
+    - Total rewrite of all GUIs -> Created the GUI API
+  Gui:
+    - Rewrite of the Mobile Factory GUI
+    - Rewrite of the Information GUI
+    - Rewrite of the Options GUI
+    - Removed the Tooltip GUI, click on the Structures to open their corresponding GUI
+    - All GUIs can now be closed by pressing the Escape Key
+    - A GUI will be automatically closed when another GUI is openned
+---------------------------------------------------------------------------------------------------
 Version: 0.0.117
 Date: 19/03/2020
   Bugfixes:
@@ -334,7 +346,7 @@ Date: 09/02/2020
   Scripting:
     - Mining Jets are now send by the Mobile Factory (Not longer requested by the Flag)
   Translation:
-    - All sentences are now localized
+    - All sentences are now localised
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.90
 Date: 03/02/2020
@@ -617,7 +629,7 @@ Date: 06/01/2020
     - Ore Cleaners will lose all its Quatron Charge and Purity when removed
     - The Ore Cleaner will now extract 30 Ores per seconde by level of Purity (instead of 120)
   Bugfixes:
-    - The Tooltip GUI will not change when you hover an entity without Tooltip Informations
+    - The Tooltip GUI will not change when you hover an entity without Tooltip Information
     - Corrected a bug that prevented the Mobile Factory to send Quatron Charge to all Fluid Extractor
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.61
@@ -679,8 +691,8 @@ Date: 21/12/2019
     - The base Fluid Extractor extraction rate is now 30 u/s (Instead of 100 u/s) multiplied per the Quatron Purity
   Gui:
     - Removed the Structures Tab from the Info GUI
-    - Informations about the Ore Cleaner are now visible throught the Tooltip Gui
-    - Informations about the Fluid Extractors are now visible throught the Tooltip Gui
+    - Information about the Ore Cleaner are now visible throught the Tooltip Gui
+    - Information about the Fluid Extractors are now visible throught the Tooltip Gui
   Scripting:
     - The Fluid Extractor is now OOP
     - Minor rewrite for Quatron Charge sended by the Mobile Factory
@@ -726,7 +738,7 @@ Date: 15/12/2019
     - Matter Serialization:
     - Replace the Inventory Pad technology, a new way to transfer items between the Circuit Network via Matter Serialization and Deserialization
     - Tooltip GUI:
-    - Display informations about the Mobile Factory mod Structures
+    - Display information about the Mobile Factory mod Structures
   Features:
     - Added the Data Storage: The main structure for the Data Serialization
     - Added the Internal Inventory Data Storage: Same as the Data Storage but have the Mobile Factory Internal Inventory inside
@@ -1126,7 +1138,7 @@ Date: 30.09.2019
     - Fixe: Logistic Fluid Poles will not transfer fluid to Factorissimo building anymore
     - Potential fixe for Logistic Fluid Poles sometimes fill modded empty pipes
   Translation:
-    - The GUI is now localized
+    - The GUI is now localised
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.17
 Date: 29.09.2019
