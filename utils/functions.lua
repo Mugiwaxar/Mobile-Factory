@@ -397,15 +397,19 @@ end
 function Util.addMobileFactory(player)
 	-- Get the Player Inventory --
 	local inv = player.get_main_inventory()
-	-- Add a Mobile Factory to the player inventaire --
-	if inv.can_insert({name="MobileFactory"}) then
-		-- Can insert --
-		inv.insert({name="MobileFactory", count=1})
-		player.print({"", {"gui-description.MFInsertedInsideInventory"}})
-	else
-		-- Can't insert --
-		player.print({"", {"gui-description.MFNotInsertedInsideInventory"}})
+    -- Give player Mobile Factory at start --
+	if settings.startup["MF-first-MF"].value == "player creation" then
+		-- Add a Mobile Factory to the player inventaire --
+		if inv.can_insert({name="MobileFactory"}) then
+			-- Can insert --
+			inv.insert({name="MobileFactory", count=1})
+			player.print({"", {"gui-description.MFInsertedInsideInventory"}})
+		else
+			-- Can't insert --
+			player.print({"", {"gui-description.MFNotInsertedInsideInventory"}})
+		end
 	end
+	-- give Dimensional tiles, primarily for floor-is-lava --
 	inv.insert({name="DimensionalTile", count=300})
 end
 

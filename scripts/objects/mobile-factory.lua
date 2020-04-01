@@ -668,85 +668,207 @@ function MF:updateSyncArea()
 		return
 	end
 
-	-- Update Cloned Entity --
-	for k, ent in pairs(self.clonedResourcesTable) do
-		self:updateClonedEntity(ent)
-	end
+	-- Update Cloned Entities and Remove Invalid Pairs --
+	self:updateClonedEntities(ent)
 end
 
 -- Scan around the Mobile Factory for the Sync Area --
 function MF:syncAreaScan()
 	self.clonedResourcesTable = {}
-
 	-- Cloning Tiles --
 	local radius = _mfSyncAreaRadius + 1
 	local bdb = {{self.ent.position.x - radius, self.ent.position.y - radius},{self.ent.position.x + radius, self.ent.position.y + radius}}
 	local clonedBdb = {{_mfSyncAreaPosition.x - radius, _mfSyncAreaPosition.y - radius},{_mfSyncAreaPosition.x + radius, _mfSyncAreaPosition.y + radius}}
-	self.ent.surface.clone_area{source_area=bdb, destination_area=clonedBdb, destination_surface=self.fS, clone_entities=false, clone_decoratives=false, clear_destination_entities=false}
-	createSyncAreaMFSurface(self.fS)
+
+	local inside = self.fS
+	local outside = self.ent.surface
+	local obstructed = false
+	local distancesInBools = {}
+	local distancesOutBools = {}
+
+	-- Look for Entities inside the Sync Area --
+	local entTableIn = inside.find_entities_filtered{area = clonedBdb, build_type}
+
+	-- Check if Entities inside Can't be Placed Outside --
+	for k, ent in pairs(entTableIn) do
+		-- may not need to do the if
+		local posX = math.floor(self.ent.position.x) + (ent.position.x - _mfSyncAreaPosition.x)
+		local posY = math.floor(self.ent.position.y) + (ent.position.y - _mfSyncAreaPosition.y)
+		
+		distancesInBools[k] = Util.distance(ent.position, _mfSyncAreaPosition) < _mfSyncAreaRadius
+
+		if outside.entity_prototype_collides(ent.name, {posX, posY}, false) == true then
+			obstructed = true
+			break
+		end
+	end
+	if obstructed == true then return end
 
 	-- Look for Entities around the Mobile Factory --
-	local entTableOut = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=_mfSyncAreaRadius}
-	-- Look for Entities inside the Sync Area --
-	local entTableIn = self.fS.find_entities_filtered{position=_mfSyncAreaPosition, radius=_mfSyncAreaRadius}
+	local entTableOut = outside.find_entities_filtered{area = bdb}
+	-- Check if Entities inside Can't be Placed Iutside --
+	for k, ent in pairs(entTableOut) do
+		local posX = (ent.position.x - math.floor(self.ent.position.x)) + _mfSyncAreaPosition.x
+		local posY = (ent.position.y - math.floor(self.ent.position.y)) + _mfSyncAreaPosition.y
+
+		distancesOutBools[k] = Util.distance(ent.position, {math.floor(self.ent.position.x), math.floor(self.ent.position.y)}) < _mfSyncAreaRadius
+		if _mfSyncAreaAllowedTypes[ent.type] == true and distancesOutBools[k] == true then
+			if inside.entity_prototype_collides(ent.name, {posX, posY}, false) == true then
+				obstructed = true
+				break
+			end
+		end
+	end
+	if obstructed == true then return end
+
+
+	-- Clone Area to Sync Area --
+	-- cloning the area can destroy inside entities (invalid tile placement), thus we checked first
+	outside.clone_area{source_area=bdb, destination_area=clonedBdb, destination_surface=inside, clone_entities=false, clone_decoratives=false, clear_destination_entities=false}
+	createSyncAreaMFSurface(inside)
 
 	-- Clone Outside Entities --
 	for k, ent in pairs(entTableOut) do
-		if _mfSyncAreaAllowedTypes[ent.type] == true then
+		if _mfSyncAreaAllowedTypes[ent.type] == true and distancesOutBools[k] == true then
 			self:cloneEntity(ent, "in")
 		end
 	end
 
 	-- Clone Inside Entities --
 	for k, ent in pairs(entTableIn) do
-		if _mfSyncAreaAllowedTypes[ent.type] == true then
+		if _mfSyncAreaAllowedTypes[ent.type] == true and distancesInBools[k] == true then
 			self:cloneEntity(ent, "out")
 		end
+		if ent.type == "mining-drill" then
+			ent.update_connections()
+		end
 	end
-
 end
 
 -- Clone an Entity --
 function MF:cloneEntity(ent, side) -- side: in (Clone inside), out (Clone outside)
-	if self.ent == nil or self.ent.valid == false then return end
+	if self.ent == nil or self.ent.valid == false then return nil end
 	local posX = 0
 	local posY = 0
 	local surface = nil
+	local clone = nil
 	-- Calcul the position and set the Surface --
 	if side == "in" then
-		posX = ent.position.x - round(self.ent.position.x) + _mfSyncAreaPosition.x
-		posY = ent.position.y - round(self.ent.position.y) + _mfSyncAreaPosition.y
+		posX = ent.position.x - math.floor(self.ent.position.x) + _mfSyncAreaPosition.x
+		posY = ent.position.y - math.floor(self.ent.position.y) + _mfSyncAreaPosition.y
 		surface = self.fS
 	end
 	if side == "out" then
-		posX = round(self.ent.position.x) + ent.position.x - _mfSyncAreaPosition.x
-		posY = round(self.ent.position.y) + ent.position.y - _mfSyncAreaPosition.y
+		posX = math.floor(self.ent.position.x) + ent.position.x - _mfSyncAreaPosition.x
+		posY = math.floor(self.ent.position.y) + ent.position.y - _mfSyncAreaPosition.y
 		surface = self.ent.surface
 	end
 	-- Clone the Entity --
-	-- if self.ent.surface.can_place_entity{name=ent.name, position={posX, posY}} then
-		local clone = ent.clone{position={posX, posY}, surface=surface}
-		table.insert(self.clonedResourcesTable,  {original=ent, cloned=clone})
-		if ent.type == "container" then
-			clone.get_inventory(defines.inventory.chest).clear()
-		end
-		if ent.type == "storage-tank" then
-			clone.clear_fluid_inside()
-		end
-		if ent.type == "accumulator" then
-			ent.energy = 0
-		end
-	-- end
+	clone = ent.clone{position={posX, posY}, surface=surface}
+	table.insert(self.clonedResourcesTable,  {original=ent, cloned=clone})
+	if ent.type == "container" then
+		clone.get_inventory(defines.inventory.chest).clear()
+	end
+	if ent.type == "storage-tank" then
+		clone.clear_fluid_inside()
+	end
+	if ent.type == "accumulator" then
+		clone.energy = 0
+	end
+	return clone
+end
+
+-- Return Items From Chest2 to Chest1 --
+local function uncloneChest(chest1, chest2)
+	local inv1 = chest1.get_inventory(defines.inventory.chest)
+	local inv2 = chest2.get_inventory(defines.inventory.chest)
+
+	for item, count in pairs(inv2.get_contents()) do
+		inv1.insert({name = item, count = count})
+	end
+	inv2.clear()
+end
+
+-- Return Fluid From Tank2 to Tank1 --
+local function uncloneStorageTank(tank1, tank2)
+	-- Check the Tanks --
+	if tank1.fluidbox[1] == nil and tank2.fluidbox[1] == nil then return end
+	-- Get Tanks Fluid --
+	local t1FluidName = nil
+	local t1FluidAmount = 0
+	local t1FluidTemperature = nil
+	local t2FluidName = nil
+	local t2FluidAmount = 0
+	local t2FluidTemperature = nil
+	if tank1.fluidbox[1] ~= nil then
+		t1FluidName = tank1.fluidbox[1].name
+		t1FluidAmount = tank1.fluidbox[1].amount
+		t1FluidTemperature = tank1.fluidbox[1].temperature
+
+	end
+	if tank2.fluidbox[1] ~= nil then
+		t2FluidName = tank2.fluidbox[1].name
+		t2FluidAmount = tank2.fluidbox[1].amount
+		t2FluidTemperature = tank2.fluidbox[1].temperature
+	end
+
+	-- Clear Tank2 --
+	tank2.clear_fluid_inside()
+
+	-- Check the Fluids --
+	if t1FluidName ~= nil and t2FluidName ~= nil and t1FluidName ~= t2FluidName then return end
+	if t1FluidName == nil then t1FluidTemperature = t2FluidTemperature end
+	if t2FluidName == nil then t2FluidTemperature = t1FluidTemperature end
+
+	-- Calcul total Fluid --
+	local fluidName = t1FluidName or t2FluidName
+	local fluidAmount = math.floor(t1FluidAmount + t2FluidAmount)
+	local fluidTemperature = math.floor(t1FluidTemperature + t2FluidTemperature)/2
+
+
+	-- Check the Amount of Fluid --
+	if fluidAmount <= 0 then return end
+
+	-- Give Tank1 all Fluid --
+	tank1.fluidbox[1] = {name=fluidName, amount=fluidAmount, temperature=fluidTemperature}
+end
+
+-- Send Energy from cloned Accu2 --
+local function uncloneAccumulator(accu1, accu2)
+	-- Calcul the total energy --	
+	local totalEnergy = accu1.energy + accu2.energy
+	-- Set the Energy of the Accu1 --
+	accu1.energy = totalEnergy
 end
 
 function MF:unCloneSyncArea()
 	-- Set default Tiles --
 	createSyncAreaMFSurface(self.fS, true)
+
+	-- Update Before Trying to Unclone -- 
+	self:updateClonedEntities()
 	-- Remove all cloned Entities --
-	for k, ents in pairs(self.clonedResourcesTable) do
+	for i, ents in pairs(self.clonedResourcesTable) do
+		if ents.original.type == "container" then
+			uncloneChest(ents.original, ents.cloned)
+		elseif ents.original.type == "storage-tank" then
+			uncloneStorageTank(ents.original, ents.cloned)
+		elseif ents.original.type == "accumulator" then
+			uncloneAccumulator(ents.original, ents.cloned)
+		end
 		ents.cloned.destroy()
 	end
 	self.clonedResourcesTable = {}
+end
+
+function MF:updateClonedEntities()
+	for i, ents in pairs(self.clonedResourcesTable) do
+		self:updateClonedEntity(ents)
+		if ents.original == nil or ents.original.valid == false then
+			-- only checking original because both are invalid after updating
+			table.remove(self.clonedResourcesTable, i)
+		end
+	end
 end
 
 function MF:updateClonedEntity(ents)
@@ -760,8 +882,9 @@ function MF:updateClonedEntity(ents)
 		ents.original.destroy()
 		return
 	end
-	-- If the Entity is a resource --
+
 	if ents.original.type == "resource" then
+		-- If the Entity is a resource --
 		if ents.cloned.amount < ents.original.amount then
 			ents.original.amount = ents.cloned.amount
 		end
@@ -772,19 +895,14 @@ function MF:updateClonedEntity(ents)
 			ents.original.destroy()
 			ents.cloned.destroy()
 		end
-	end
-	-- If the Entity is a Chest --
-	if ents.original.type == "container" then
+	elseif ents.original.type == "container" then
+		-- If the Entity is a Chest --
 		Util.syncChest(ents.original, ents.cloned)
-	end
-
-	-- If the Entity is a Storage Tank --
-	if ents.original.type == "storage-tank" then
+	elseif ents.original.type == "storage-tank" then
+		-- If the Entity is a Storage Tank --
 		Util.syncTank(ents.original, ents.cloned)
-	end
-
-	-- If the Entity is an Accumulator --
-	if ents.original.type == "accumulator" then
+	elseif ents.original.type == "accumulator" then
+		-- If the Entity is an Accumulator --
 		Util.syncAccumulator(ents.original, ents.cloned)
 	end
 end
