@@ -44,7 +44,8 @@ mf2R.energy_required = 1.5
 mf2R.enabled = false
 mf2R.ingredients =
     {
-      {"DimensionalPlate", 10}
+		{"MachineFrame", 2},
+		{"DimensionalPlate", 6}
     }
 mf2R.result = "MachineFrame2"
 data:extend{mf2R}

@@ -78,7 +78,7 @@ end
 
 -- A GUI was oppened --
 function GUI.guiOpened(event)
-
+	-- this function executes from shortcut key (v0.0.120), not real on_gui_opened event --
 	-- Check the Entity --
 	if event.entity == nil or event.entity.valid == false then return end
 
@@ -87,6 +87,12 @@ function GUI.guiOpened(event)
 
 	-- Check the Player --
 	if player == nil or player.valid == false then return end
+
+	-- do not open custom GUI if player is connecting wires --
+	local cursorStack = player.cursor_stack
+	if cursorStack and cursorStack.valid_for_read then
+		if cursorStack.name == "green-wire" or cursorStack.name == "red-wire" then return end
+	end
 
 	-- Check the Bypass --
 	if getMFPlayer(player.name).varTable.bypassGUI == true then
@@ -114,7 +120,6 @@ end
 
 -- A GUI was closed --
 function GUI.guiClosed(event)
-	
 	-- Check the Element --
 	if event.element == nil or event.element.valid ~= true then return end
 

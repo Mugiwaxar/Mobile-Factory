@@ -15,8 +15,9 @@ data.raw.car.GTMobileFactory.equipment_grid = "MFEquipmentGridGT"
 data.raw.car.GTMobileFactory.inventory_size = 3
 data.raw.recipe.GTMobileFactory.ingredients =
 {
-      {"CrystalizedCircuit", 35},
-      {"MachineFrame3", 15},
+	{"car", 1},
+    {"CrystalizedCircuit", 35},
+    {"MachineFrame3", 15}
 }
 data.raw.technology.GTMobileFactory.unit =
 {
@@ -43,8 +44,10 @@ data.raw.car.HMobileFactory.animation.layers[3].shift = util.by_pixel(17.75, 80)
 data.raw.car.HMobileFactory.selection_priority = 120
 data.raw.recipe.HMobileFactory.ingredients =
 {
-      {"CrystalizedCircuit", 28},
-      {"MachineFrame3", 25},
+	{"MobileFactory", 1},
+    {"CrystalizedCircuit", 20},
+    {"MachineFrame3", 25},
+	{"EnergyCore", 1}
 }
 data.raw.technology.HMobileFactory.unit =
 {
@@ -55,23 +58,3 @@ data.raw.technology.HMobileFactory.unit =
 			{"DimensionalCrystal", 2}
 		}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

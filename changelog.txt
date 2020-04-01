@@ -1,4 +1,23 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.120
+Date: 01/04/2020
+  Features:
+    - Added setting for how the player obtains their (first) Mobile Factory
+    - Added setting for which "science packs" a Dimensional Lab can use
+  Bugfixes:
+    - Don't open custom GUI if player is connecting wires
+  Changes:
+    - Honktown (right now) is developing Mobile Factory for the foreseeable future, as Mugiwaxar (aka Dexy) had something more urgent to do
+    - Mobile Factory GT now requires a car
+    - Hovering Factory a bit more costly and requires Mobile Factory
+    - Machine Frame 2's now require 2x Machine Frame 1 (plates reduced, slightly less overall cost). Update your logistics!
+    - take all items when mining a sync'd chest on either side
+    - if a sync-area entity would collide with something that could destroy it, don't sync (checks full square)
+    - if an outside-MF sync-entity can't be placed inside because it would collide, don't sync
+    - drills in sync-area will start up after sync area is established
+    - no loss of items/fluid/energy when un-cloning sync area, unless there's too much
+
+---------------------------------------------------------------------------------------------------
 Version: 0.0.119
 Date: 25/03/2020
   Gui:
