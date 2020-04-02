@@ -461,7 +461,8 @@ function somethingWasRemoved(event)
 	end
 
 	-- Return Sync Area Items from Chests --
-	if _mfSyncAreaAllowedTypes[removed_ent.type] == true and MF.ent ~= nil and MF.ent.valid and MF.syncAreaEnabled == true and MF.ent.speed == 0 then
+--	if _mfSyncAreaAllowedTypes[removed_ent.type] == true and MF ~= nil and MF.ent ~= nil and MF.ent.valid and MF.syncAreaEnabled == true and MF.ent.speed == 0 then
+	if removed_ent.type == "container" and MF ~= nil and MF.ent ~= nil and MF.ent.valid and MF.syncAreaEnabled == true and MF.ent.speed == 0 then
 		local taker = nil
 		local inserted = 0
 
@@ -470,7 +471,7 @@ function somethingWasRemoved(event)
 		if not taker then return end -- should not be possible
 
 		-- Either Side --
-		if removed_ent.type == "container" then
+--		if removed_ent.type == "container" then
 			local invOriginal = nil
 			local invCloned = nil
 
@@ -501,7 +502,7 @@ function somethingWasRemoved(event)
 					end
 				end
 			end
-		end
+--		end
 	end
 end
 

@@ -702,7 +702,16 @@ function MF:syncAreaScan()
 			break
 		end
 	end
-	if obstructed == true then return end
+	if obstructed == true then
+		local player = nil
+		if self.player ~= "" then
+			player = getPlayer(self.player)
+			if player.connected then
+				player.create_local_flying_text{text={"info.MF-sync-collision"}, position = self.ent.position}
+			end
+		end
+		return
+	end
 
 	-- Look for Entities around the Mobile Factory --
 	local entTableOut = outside.find_entities_filtered{area = bdb}
@@ -719,7 +728,16 @@ function MF:syncAreaScan()
 			end
 		end
 	end
-	if obstructed == true then return end
+	if obstructed == true then
+		local player = nil
+		if self.player ~= "" then
+			player = getPlayer(self.player)
+			if player.connected then
+				player.create_local_flying_text{text={"info.MF-sync-collision"}, position = self.ent.position}
+			end
+		end
+		return
+	end
 
 
 	-- Clone Area to Sync Area --
