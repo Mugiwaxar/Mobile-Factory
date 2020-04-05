@@ -129,7 +129,7 @@ function playerDriveStatChange(event)
 	-- Teleport the player out of reach from Mobile Factoty teleport box --
 	local player = getPlayer(event.player_index)
 	local entity = event.entity
-	if entity == nil or entity.valid == false or player == nil or player.valid == false and string.match(entity.name, "MobileFactory") == false then return end
+	if entity == nil or entity.valid == false or player == nil or player.valid == false or string.find(entity.name, "MobileFactory") == nil then return end
 	if entity.surface.can_place_entity{name="character", position = {entity.position.x + 5, entity.position.y}} then
 		player.teleport({entity.position.x + 5, entity.position.y}, entity.surface)
 	elseif entity.surface.can_place_entity{name="character", position = {entity.position.x -5, entity.position.y}} then
