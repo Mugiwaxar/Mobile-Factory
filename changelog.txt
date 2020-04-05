@@ -1,5 +1,10 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.121
+Date: 05/04/2020
+  Bugfixes:
+    - player would get teleported back to previous surface if it was from a car-teleport (chronotrain)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.121
 Date: 02/04/2020
   Changes:
     - create flying text if sync area is obstructed
