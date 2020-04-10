@@ -188,7 +188,7 @@ function FE:extractFluids(event)
 		inventory = nil
 		for k, dimTank in pairs(global.deepTankTable) do
 			if dimTank ~= nil and dimTank.ent ~= nil and dimTank.ent.valid == true then
-				if dimTank:canAccept(resourceName) then
+				if dimTank:canAccept({name = resourceName}) then
 					inventory = dimTank
 					break
 				end
@@ -200,9 +200,12 @@ function FE:extractFluids(event)
 	-- Calcule the amount that can be extracted --
 	local amount = math.min(self.resource.amount, self:fluidPerExtraction())
 	-- Check if the Distant Tank can accept the fluid --
-	if inventory:canAccept(resourceName, amount) == false then return end
+	if inventory:canAccept({name = resourceName, amount = amount}) == false then return end
 	-- Send the Fluid --
-	local amountAdded = inventory:addFluid(resourceName, amount)
+	--there is no temperature_min, temperature_max for products
+	--will not work for a resource that can provide two fluids (which would require two outputs on pump)
+	local temp = self.resource.prototype.mineable_properties.products[1].temperature or 15
+	local amountAdded = inventory:addFluid({name = resourceName, amount = amount, temperature = temp})
 	-- Test if Fluid was sended --
 	if amountAdded > 0 then
 		self.charge = self.charge - 10

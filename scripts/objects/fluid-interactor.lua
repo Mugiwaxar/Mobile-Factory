@@ -218,31 +218,32 @@ function FI:updateInventory()
     local localTank = self.ent
     local distantTank = self.selectedInv
     local localFluid = nil
-    local localAmount = nil
 
     -- Get the Fluid inside the local Tank --
-    for k, i in pairs(localTank.get_fluid_contents()) do
-        localFluid = k
-        localAmount = i
+    for i=1,#localTank.fluidbox do
+		if localTank.fluidbox[i] then
+			localFluid = localTank.fluidbox[i]
+			break
+		end
     end
+    if localFluid == nil then return end
 
     -- Input mode --
     if self.selectedMode == "input" then
         -- Check the local and distant Tank --
-        if localFluid == nil or localAmount == nil then return end
         if distantTank:canAccept(localFluid) == false then return end
         -- Send the Fluid --
-        local amountAdded = distantTank:addFluid(localFluid, localAmount)
+        local amountAdded = distantTank:addFluid(localFluid)
         -- Remove the local Fluid --
-		localTank.remove_fluid{name=localFluid, amount=amountAdded}
+		localTank.remove_fluid{name=localFluid.name, amount=amountAdded, minimum_temperature = -200, maximum_temperature = 1000000}
 	-- Output mode --
     elseif self.selectedMode == "output" then
         -- Check the local and distant Tank --
-        if localFluid ~= nil and localFluid ~= distantTank.inventoryFluid then return end
+        if localFluid.name ~= distantTank.inventoryFluid then return end
         if distantTank.inventoryFluid == nil or distantTank.inventoryCount == 0 then return end
         -- Get the Fluid --
-        local amountAdded = localTank.insert_fluid({name=distantTank.inventoryFluid, amount=distantTank.inventoryCount})
+        local amountAdded = localTank.insert_fluid({name=distantTank.inventoryFluid, amount=distantTank.inventoryCount, localFluid.temperature})
         -- Remove the distant Fluid --
-        distantTank:getFluid(distantTank.inventoryFluid, amountAdded)
+        distantTank:getFluid({name = distantTank.inventoryFluid, amount = amountAdded})
     end
 end

@@ -1,10 +1,18 @@
 -- Called when something is placed --
 function somethingWasPlaced(event, isRobot)
-	local cent = event.created_entity
-	-- Get the Entity if needed
-	if cent == nil and event.entity ~= nil then
-		cent = event.entity
+	--script_raised_revive uses entity, and breaks every single save<Entity> function
+	local fake_event = {}
+	for k, v in pairs(event) do
+		fake_event[k] = v
 	end
+	if fake_event.entity and fake_event.created_entity == nil then
+		fake_event.created_entity = fake_event.entity
+	end
+	event = fake_event
+
+	-- Get the Entity
+	local cent = event.created_entity
+
 	-- This is a Player or not --
 	local isPlayer = false
 	-- Creator variable --
@@ -16,7 +24,6 @@ function somethingWasPlaced(event, isRobot)
 		isPlayer = true
 		creator = getPlayer(event.player_index)
 	end
-
 
 	-- Get the Player Mobile Factory --
 	local MF = nil

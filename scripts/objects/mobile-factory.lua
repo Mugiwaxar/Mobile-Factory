@@ -146,20 +146,20 @@ end
 
 -- Change the Mode --
 function MF:fluidLaserMode(mode)
-    if mode == "left" then
-        self.selectedFluidLaserMode = "input"
-    elseif mode == "right" then
-        self.selectedFluidLaserMode = "output"
-    end
+	if mode == "left" then
+		self.selectedFluidLaserMode = "input"
+	elseif mode == "right" then
+		self.selectedFluidLaserMode = "output"
+	end
 end
 
 -- Change the Fluid Laser Targeted Inventory --
 function MF:fluidLaserTarget(ID)
 	-- Check the ID --
-    if ID == nil then
-        self.selectedInv = nil
-        return
-    end
+	if ID == nil then
+		self.selectedInv = nil
+		return
+	end
 	-- Select the Inventory --
 	self.selectedInv = nil
 	for k, deepTank in pairs(global.deepTankTable) do
@@ -253,10 +253,10 @@ end
 -- Change the Power Laser to Drain or Send mode --
 function MF:changePowerLaserMode(mode)
 	if mode == "left" then
-        self.selectedPowerLaserMode = "input"
-    elseif mode == "right" then
-        self.selectedPowerLaserMode = "output"
-    end
+		self.selectedPowerLaserMode = "input"
+	elseif mode == "right" then
+		self.selectedPowerLaserMode = "output"
+	end
 end
 
 -- Scan all Entities around the Mobile Factory --
@@ -358,26 +358,26 @@ function MF:updateFluidLaser(entity)
 	if entity.type ~= "storage-tank" or self.selectedInv == nil then return false end
 
 	-- Get both Tanks and their characteristics --
-    local localTank = entity
-    local distantTank = self.selectedInv
-    local localFluid = nil
-	local localAmount = nil
+	local localTank = entity
+	local distantTank = self.selectedInv
+	local localFluid = nil
 	
 	-- Get the Fluid inside the local Tank --
-    for k, i in pairs(localTank.get_fluid_contents()) do
-        localFluid = k
-        localAmount = i
+	for i=1,#localTank.fluidbox do
+		if localTank.fluidbox[i] then
+			localFluid = localTank.fluidbox[i]
+		end
 	end
+	if localFluid == nil then return end
 	
 	-- Input mode --
-    if self.selectedFluidLaserMode == "input" then
-        -- Check the local and distant Tank --
-        if localFluid == nil or localAmount == nil then return end
-        if distantTank:canAccept(localFluid) == false then return end
-        -- Send the Fluid --
-        local amountAdded = distantTank:addFluid(localFluid, localAmount)
-        -- Remove the local Fluid --
-		localTank.remove_fluid{name=localFluid, amount=amountAdded}
+	if self.selectedFluidLaserMode == "input" then
+		-- Check the local and distant Tank --
+		if distantTank:canAccept(localFluid) == false then return end
+		-- Send the Fluid --
+		local amountAdded = distantTank:addFluid(localFluid)
+		-- Remove the local Fluid --
+		localTank.remove_fluid({name=localFluid, amount=amountAdded})
 		if amountAdded > 0 then
 			-- Create the Laser --
 			self.ent.surface.create_entity{name="PurpleBeam", duration=60, position=self.ent.position, target=localTank.position, source=self.ent.position}
@@ -386,14 +386,14 @@ function MF:updateFluidLaser(entity)
 			-- One less Beam to the Beam capacity --
 			return true
 		end
-    elseif self.selectedFluidLaserMode == "output" then
-        -- Check the local and distant Tank --
-        if localFluid ~= nil and localFluid ~= distantTank.inventoryFluid then return end
-        if distantTank.inventoryFluid == nil or distantTank.inventoryCount == 0 then return end
-        -- Get the Fluid --
-        local amountAdded = localTank.insert_fluid({name=distantTank.inventoryFluid, amount=distantTank.inventoryCount})
-        -- Remove the distant Fluid --
-		distantTank:getFluid(distantTank.inventoryFluid, amountAdded)
+	elseif self.selectedFluidLaserMode == "output" then
+		-- Check the local and distant Tank --
+		if localFluid.name ~= distantTank.inventoryFluid then return end
+		if distantTank.inventoryFluid == nil or distantTank.inventoryCount == 0 then return end
+		-- Get the Fluid --
+		local amountAdded = localTank.insert_fluid({name=distantTank.inventoryFluid, amount=distantTank.inventoryCount})
+		-- Remove the distant Fluid --
+		distantTank:getFluid({name = distantTank.inventoryFluid, amount = amountAdded})
 		if amountAdded > 0 then
 			-- Create the Laser --
 			self.ent.surface.create_entity{name="PurpleBeam", duration=60, position=self.ent.position, target=localTank.position, source=self.ent.position}
@@ -402,7 +402,7 @@ function MF:updateFluidLaser(entity)
 			-- One less Beam to the Beam capacity --
 			return true
 		end
-    end
+	end
 end
 
 -------------------------------------------- Logistic Laser --------------------------------------------
