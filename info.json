@@ -1,6 +1,6 @@
 {
 	"name": "Mobile_Factory",
-	"version": "0.0.122",
+	"version": "0.0.123",
 	"title": "Mobile Factory",
 	"author": "Mugiwaxar",
 	"dependencies": ["base >= 0.18", "Mobile_Factory_Graphics >= 0.0.6"],
