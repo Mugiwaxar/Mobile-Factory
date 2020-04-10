@@ -134,19 +134,19 @@ end
 function DTK:canAccept(fluid)
 	if self.filter == nil then return false end
 	if self.filter ~= nil and self.filter ~= fluid.name then return false end
-    if self.inventoryFluid.name ~= nil and self.inventoryFluid.name ~= fluid.name then return false end
+    if self.inventoryFluid ~= nil and self.inventoryFluid.name ~= fluid.name then return false end
     if self.inventoryCount >= _dtMaxFluid then return false end
 	return true
 end
 
 -- Add Fluid --
 function DTK:addFluid(fluid)
-	if self:canAccept(fluid.name) == true then
+	if self:canAccept(fluid) == true then
         self.inventoryFluid = fluid.name
         local maxAdded = _dtMaxFluid - self.inventoryCount
         local added = math.min(fluid.amount, maxAdded)
 		-- fluid.temperature should always be non-nil, 15 is default temperature
-		local self.inventoryTemperature = (self.inventoryTemperature * self.inventoryCount + added * fluid.temperature) / (self.inventoryCount + added)
+		self.inventoryTemperature = (self.inventoryTemperature * self.inventoryCount + added * fluid.temperature) / (self.inventoryCount + added)
 		self.inventoryCount = self.inventoryCount + added
 		return added
 	end
