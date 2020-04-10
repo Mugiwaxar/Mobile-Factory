@@ -226,23 +226,24 @@ function FI:updateInventory()
 			break
 		end
     end
-    if localFluid == nil then return end
 
     -- Input mode --
     if self.selectedMode == "input" then
+		-- Do Nothing if no Fluid
+		if localFluid == nil then return end
         -- Check the local and distant Tank --
         if distantTank:canAccept(localFluid) == false then return end
         -- Send the Fluid --
         local amountAdded = distantTank:addFluid(localFluid)
         -- Remove the local Fluid --
-		localTank.remove_fluid{name=localFluid.name, amount=amountAdded, minimum_temperature = -200, maximum_temperature = 1000000}
+		localTank.remove_fluid{name=localFluid.name, amount=amountAdded, minimum_temperature = -300, maximum_temperature = 1e7}
 	-- Output mode --
     elseif self.selectedMode == "output" then
         -- Check the local and distant Tank --
-        if localFluid.name ~= distantTank.inventoryFluid then return end
+        if localFluid and localFluid.name ~= distantTank.inventoryFluid then return end
         if distantTank.inventoryFluid == nil or distantTank.inventoryCount == 0 then return end
         -- Get the Fluid --
-        local amountAdded = localTank.insert_fluid({name=distantTank.inventoryFluid, amount=distantTank.inventoryCount, localFluid.temperature})
+        local amountAdded = localTank.insert_fluid({name=distantTank.inventoryFluid, amount=distantTank.inventoryCount, temperature = distantTank.inventoryTemperature})
         -- Remove the distant Fluid --
         distantTank:getFluid({name = distantTank.inventoryFluid, amount = amountAdded})
     end
