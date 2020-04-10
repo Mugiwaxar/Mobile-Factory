@@ -1,8 +1,11 @@
 ---------------------------------------------------------------------------------------------------
-Version: 0.0.121
-Date: 05/04/2020
+Version: 0.0.122
+Date: 10/04/2020
+  Features:
+    - add temperature to Deep Tank interactions (gui addition eventually)
   Bugfixes:
-    - player would get teleported back to previous surface if it was from a car-teleport (chronotrain)
+    - player would get teleported back to previous surface if it was from a vehicle interaction teleport (Chronotrain)
+    - script_raised_revive would break MF recording functions
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.121
 Date: 02/04/2020

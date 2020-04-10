@@ -9,6 +9,7 @@ DTK = {
 	lastUpdate = 0,
 	inventoryFluid = nil,
 	inventoryCount = 0,
+	inventoryTemperature = 15,
 	ID = 0,
 	filter = nil
 }
@@ -67,12 +68,13 @@ function DTK:update()
 	if self.inventoryFluid ~= nil and game.fluid_prototypes[self.inventoryFluid] == nil then
 		self.inventoryFluid = nil
 		self.inventoryCount = 0
+		self.inventoryTemperature = 0
 		return
 	end
 
 	-- Remove the Fluid Filter if it doesn't exist anymore --
-	if self.filtrer ~= nil and game.fluid_prototypes[self.filtrer] == nil then
-		self.filtrer = nil
+	if self.filter ~= nil and game.fluid_prototypes[self.filter] == nil then
+		self.filter = nil
 		return
 	end
 	
@@ -129,20 +131,22 @@ function DTK:hasFluid(name)
 end
 
 -- Return if the Fluid can be accepted --
-function DTK:canAccept(name)
+function DTK:canAccept(fluid)
 	if self.filter == nil then return false end
-	if self.filter ~= nil and self.filter ~= name then return false end
-    if self.inventoryFluid ~= nil and self.inventoryFluid ~= name then return false end
+	if self.filter ~= nil and self.filter ~= fluid.name then return false end
+    if self.inventoryFluid.name ~= nil and self.inventoryFluid.name ~= fluid.name then return false end
     if self.inventoryCount >= _dtMaxFluid then return false end
 	return true
 end
 
 -- Add Fluid --
-function DTK:addFluid(name, count)
-	if self:canAccept(name) == true then
-        self.inventoryFluid = name
+function DTK:addFluid(fluid)
+	if self:canAccept(fluid.name) == true then
+        self.inventoryFluid = fluid.name
         local maxAdded = _dtMaxFluid - self.inventoryCount
-        local added = math.min(count, maxAdded)
+        local added = math.min(fluid.amount, maxAdded)
+		-- fluid.temperature should always be non-nil, 15 is default temperature
+		local self.inventoryTemperature = (self.inventoryTemperature * self.inventoryCount + added * fluid.temperature) / (self.inventoryCount + added)
 		self.inventoryCount = self.inventoryCount + added
 		return added
 	end
@@ -150,9 +154,9 @@ function DTK:addFluid(name, count)
 end
 
 -- Remove Items --
-function DTK:getFluid(name, count)
-	if self.inventoryFluid ~= nil and self.inventoryFluid == name then
-		local removed = math.min(count, self.inventoryCount)
+function DTK:getFluid(fluid)
+	if self.inventoryFluid ~= nil and self.inventoryFluid == fluid.name then
+		local removed = math.min(fluid.amount, self.inventoryCount)
 		self.inventoryCount = self.inventoryCount - removed
 		if self.inventoryCount == 0 then self.inventoryFluid = nil end
 	end
