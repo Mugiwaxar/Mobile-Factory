@@ -14,5 +14,12 @@ data:extend({
 	default_value = "all",
 	allowed_values = {"all", "add vanilla", "dimensional only"},
 	order = "agb"
+  },
+  {
+	type = "bool-setting",
+	name = "MF-enable-erya",
+	setting_type = "startup",
+	default_value = true,
+	order = "agc"
   }
 })
