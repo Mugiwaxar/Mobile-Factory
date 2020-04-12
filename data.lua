@@ -55,10 +55,12 @@ require("prototypes/technology/matter-serialization.lua")
 require("prototypes/gun/tank-guns.lua")
 require("prototypes/animation/shield.lua")
 require("prototypes/animation/red-energy-orb.lua")
-require("prototypes/erya/erya-intermediates.lua")
-require("prototypes/erya/erya-collector.lua")
-require("prototypes/erya/erya-structures.lua")
-require("prototypes/winter/snow-tiles.lua")
+if settings.startup["MF-enable-erya"].value == true then
+	require("prototypes/erya/erya-intermediates.lua")
+	require("prototypes/erya/erya-collector.lua")
+	require("prototypes/erya/erya-structures.lua")
+	require("prototypes/winter/snow-tiles.lua")
+end
 if mods["omnimatter"] then require("utils/omnimatter.lua") end
 
 
@@ -73,13 +75,6 @@ data:extend{
 	},
 	{
 		type="item-group",
-		name="Erya",
-		icon="__Mobile_Factory_Graphics__/graphics/Erya/EryaPowder.png",
-		icon_size="256",
-		order="y"
-	},
-	{
-		type="item-group",
 		name="Elements",
 		icon="__Mobile_Factory_Graphics__/graphics/icones/Elements.png",
 		icon_size="32",
@@ -87,6 +82,17 @@ data:extend{
 	}
 }
 
+if settings.startup["MF-enable-erya"].value == true then
+	data:extend{
+		{
+			type="item-group",
+			name="Erya",
+			icon="__Mobile_Factory_Graphics__/graphics/Erya/EryaPowder.png",
+			icon_size="256",
+			order="y"
+		}
+	}
+end
 
 ----------------- ADD ITEM-SUBGROUP CATEGORY --------------
 data:extend{
@@ -188,50 +194,52 @@ data:extend{
 	}
 }
 
-data:extend{
-	{
-		type="item-subgroup",
-		name="EryaRessources",
-		group="Erya",
-		order="a"
+if settings.startup["MF-enable-erya"].value == true then
+	data:extend{
+		{
+			type="item-subgroup",
+			name="EryaRessources",
+			group="Erya",
+			order="a"
+		}
 	}
-}
 
-data:extend{
-	{
-		type="item-subgroup",
-		name="EryaIntermediates",
-		group="Erya",
-		order="b"
+	data:extend{
+		{
+			type="item-subgroup",
+			name="EryaIntermediates",
+			group="Erya",
+			order="b"
+		}
 	}
-}
 
-data:extend{
-	{
-		type="item-subgroup",
-		name="EryaLogistic",
-		group="Erya",
-		order="c"
+	data:extend{
+		{
+			type="item-subgroup",
+			name="EryaLogistic",
+			group="Erya",
+			order="c"
+		}
 	}
-}
 
-data:extend{
-	{
-		type="item-subgroup",
-		name="EryaProduction",
-		group="Erya",
-		order="d"
+	data:extend{
+		{
+			type="item-subgroup",
+			name="EryaProduction",
+			group="Erya",
+			order="d"
+		}
 	}
-}
 
-data:extend{
-	{
-		type="item-subgroup",
-		name="EryaWar",
-		group="Erya",
-		order="e"
+	data:extend{
+		{
+			type="item-subgroup",
+			name="EryaWar",
+			group="Erya",
+			order="e"
+		}
 	}
-}
+end
 
 data:extend{
 	{
@@ -294,14 +302,15 @@ data:extend{
 	}
 }
 
-data:extend{
-	{
-		type="recipe-category",
-		name="EryaPowder",
-		order="d"
+if settings.startup["MF-enable-erya"].value == true then
+	data:extend{
+		{
+			type="recipe-category",
+			name="EryaPowder",
+			order="d"
+		}
 	}
-}
-
+end
 ------------------ ADD EQUIPMENT CATEGORY ----------------
 data:extend{
 	{

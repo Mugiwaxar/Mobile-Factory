@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.124
+Date: 12/04/2020
+  Features:
+    - setting for enabling/disabling Erya Technology (default enabled)
+    - Combat Jets return if too far from Mobile Factory (in excess of twice the distance in Jet options - full attack area but no further)
+  Changes:
+    - change Combat Jet distance description to be accurate
+    - made collision boxes for Fluid Interactor and Wireless Data Receiver smaller (they couldn't be placed next to each-other)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.123
 Date: 10/04/2020
   Bugfixes:
