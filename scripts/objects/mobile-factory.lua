@@ -377,7 +377,7 @@ function MF:updateFluidLaser(entity)
 		-- Send the Fluid --
 		local amountAdded = distantTank:addFluid(localFluid)
 		-- Remove the local Fluid --
-		localTank.remove_fluid({name=localFluid, amount=amountAdded, minimum_temperature = -300, maximum_temperature = 1e7})
+		localTank.remove_fluid({name=localFluid.name, amount=amountAdded, minimum_temperature = -300, maximum_temperature = 1e7})
 		if amountAdded > 0 then
 			-- Create the Laser --
 			self.ent.surface.create_entity{name="PurpleBeam", duration=60, position=self.ent.position, target=localTank.position, source=self.ent.position}
