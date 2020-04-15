@@ -1,6 +1,7 @@
 -- Create the Mobile Factory Object --
 MF = {
 	ent = nil,
+	playerIndex = nil,
 	player = "",
 	updateTick = 1,
 	lastUpdate = 0,
@@ -56,8 +57,8 @@ end
 -- Constructor for a placed Mobile Factory --
 function MF:construct(object)
 	if object == nil then return end
-	if self.fS == nil then createMFSurface(self) end
-	if self.ccS == nil then createControlRoom(self) end
+	if self.fS == nil or self.fS.valid == false then self.fS = nil createMFSurface(self) end
+	if self.ccS == nil or self.ccS.valid == false then self.ccS = nil createControlRoom(self) end
 	self.ent = object
 	self.lastSurface = object.surface
 	self.lastPosX = object.position.x
@@ -173,6 +174,13 @@ end
 
 -- Update the Mobile Factory --
 function MF:update(event)
+	if self.fS ~= nil and self.fS.valid == false then
+		self.fS = nil
+	end
+	if self.ccS ~= nil and self.ccS.valid == false then
+		self.ccS = nil
+	end
+
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	-- Get the current tick --
@@ -591,14 +599,14 @@ function MF:factoryTeleportBox()
 		end
 	end
 	-- Factory to Control Center --
-	if technologyUnlocked("ControlCenter", getForce(self.player)) == true and self.fS ~= nil and self.fS ~= nil then
+	if technologyUnlocked("ControlCenter", getForce(self.player)) == true and self.fS ~= nil then
 		local entities = self.fS.find_entities_filtered{area={{-3,-34},{3,-32}}, type="character"}
 		for k, entity in pairs(entities) do
 			teleportPlayerToControlCenter(entity.player, self)
 		end
 	end
 	-- Control Center to Factory --
-	if technologyUnlocked("ControlCenter", getForce(self.player)) == true and self.ccS ~= nil and self.fS~= nil then
+	if technologyUnlocked("ControlCenter", getForce(self.player)) == true and self.ccS ~= nil and self.fS ~= nil then
 		local entities = self.ccS.find_entities_filtered{area={{-3,5},{3,8}}, type="character"}
 		for k, entity in pairs(entities) do
 			teleportPlayerToFactory(entity.player, self)
@@ -628,7 +636,7 @@ end
 -- Recharge inroom Dimensional Accumulator --
 function MF:updateAccumulators()
 	-- Factory --
-	if self.fS ~= nil and self.fS.valid == true and technologyUnlocked("EnergyDistribution1", getForce(self.player)) and self.internalEnergyDistributionActivated and self.internalEnergy > 0 then
+	if self.fS ~= nil and technologyUnlocked("EnergyDistribution1", getForce(self.player)) and self.internalEnergyDistributionActivated and self.internalEnergy > 0 then
 		for k, entity in pairs(global.accTable) do
 			if entity == nil or entity.valid == false then global.accTable[k] = nil return end
 			if self.internalEnergy > _mfBaseEnergyAccSend and entity.energy < entity.electric_buffer_size then
@@ -639,19 +647,35 @@ function MF:updateAccumulators()
 	end
 end
 
+local function removeSync(self)
+	if self.syncAreaScanned == false then return end
+	rendering.destroy(self.syncAreaID)
+	rendering.destroy(self.syncAreaInsideID)
+	self.syncAreaID = 0
+	self.syncAreaInsideID = 0
+	self.syncAreaScanned = false
+	self:unCloneSyncArea()
+end
+
 -- Update the Sync Area --
 function MF:updateSyncArea()
 	if self.ent == nil or self.ent.valid == false then return end
 
+	local radius = 2 * _mfSyncAreaRadius
+	local nearbyMFs = self.ent.surface.count_entities_filtered{position = self.ent.position, radius = radius, name = {"MobileFactory","GTMobileFactory","HMobileFactory"}, limit = 2}
+
 	-- Check if the Mobile Factory is moving or the Sync Area is disabled --
 	if self.syncAreaEnabled == false or self.ent.speed ~= 0 then
-		if self.syncAreaScanned == false then return end
-		rendering.destroy(self.syncAreaID)
-		rendering.destroy(self.syncAreaInsideID)
-		self.syncAreaID = 0
-		self.syncAreaInsideID = 0
-		self.syncAreaScanned = false
-		self:unCloneSyncArea()
+		removeSync(self)
+		return
+	end
+
+	if nearbyMFs > 1 then
+		local player = getPlayer(self.player)
+		if player.connected then
+			player.create_local_flying_text{text={"info.MF-sync-too-close"}, position = self.ent.position}
+		end
+		removeSync(self)
 		return
 	end
 
@@ -738,7 +762,6 @@ function MF:syncAreaScan()
 		end
 		return
 	end
-
 
 	-- Clone Area to Sync Area --
 	-- cloning the area can destroy inside entities (invalid tile placement), thus we checked first

@@ -29,7 +29,7 @@ function placedDataCenter(event)
 end
 
 -- Save the Data Center MF --
-function placedDataCenterMF(event)
+function placedDataCenterMF(event, MF)
 	if global.dataCenterTable == nil then global.dataCenterTable = {} end
 	global.dataCenterTable[event.created_entity.unit_number] = DCMF:new(event.created_entity)
 	if MF ~= nil then MF.dataCenter = global.dataCenterTable[event.created_entity.unit_number] end

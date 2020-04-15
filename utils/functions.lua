@@ -204,16 +204,30 @@ end
 
 -- Return the Player Mobile Factory --
 function getMF(playerName)
-	if playerName == nil then return nil end
-	return global.MFTable[playerName]
+	if playerName == nil then return nil
+	elseif type(playerName) == "number" then return global.MFTable[game.players[playername].name]
+	elseif type(playerName) == "string" then return global.MFTable[playerName]
+	else error("bad argument to getMF()") end
 end
 
 -- Return the MFPlayer Object --
 function getMFPlayer(playerName)
-	if playerName == nil then return nil end
-	local MFPlayer = global.playersTable[playerName]
-	if MFPlayer == nil then MFPlayer = global.playersTable[getPlayer(playerName).name] end
-	return MFPlayer
+	if playerName == nil then return nil
+	elseif type(playerName) == "number" then return global.playersTable[game.players[playerName].name]
+	elseif type(playerName) == "string" then return global.playersTable[playerName]
+	else error("bad argument to getMFPlayer()") end
+end
+
+function Util.valueToObj(inTable, key, value)
+	if value == nil then return nil end
+	local Obj = nil
+	for _, v in pairs(inTable) do
+		if v.key == value then
+			Obj = v
+			break
+		end
+	end
+	return Obj
 end
 
 -- Return the Player Force Name --

@@ -25,9 +25,13 @@ function createMFSurface(MF)
 	createTilesSurface(newSurface, -50, -50, 50, 50, "tutorial-grid")
 	createTilesSurface(newSurface, _mfSyncAreaPosition.x - _mfSyncAreaRadius, _mfSyncAreaPosition.y - _mfSyncAreaRadius, _mfSyncAreaPosition.x + _mfSyncAreaRadius, _mfSyncAreaPosition.y + _mfSyncAreaRadius, "dirt-7")
 	createTilesSurface(newSurface, _mfSyncAreaPosition.x - 2, _mfSyncAreaPosition.y - 4, _mfSyncAreaPosition.x + 2, _mfSyncAreaPosition.y + 4, "DimensionalTile")
+	createTilesSurface(newSurface, _mfSyncAreaPosition.x - 4, _mfSyncAreaPosition.y - 2, _mfSyncAreaPosition.x + 4, _mfSyncAreaPosition.y + 2, "DimensionalTile")
+	createTilesSurface(newSurface, _mfSyncAreaPosition.x - 3, _mfSyncAreaPosition.y - 3, _mfSyncAreaPosition.x + 3, _mfSyncAreaPosition.y + 3, "DimensionalTile")
 	createTilesSurface(newSurface, -2, -2, 2, 2, "refined-hazard-concrete-right")
 	-- Save variable --
 	MF.fS = newSurface
+	-- Apply Researches If Needed --
+	if technologyUnlocked("ControlCenter", getForce(MF.player)) then _MFResearches["ControlCenter"](MF) end
 end
 
 -- Create the Mobile Factory Control room -
@@ -59,6 +63,13 @@ function createControlRoom(MF)
 	local newTiles = newSurface.find_tiles_filtered{area={{-100,-100},{100,100}}}
 	-- Save variable --
 	MF.ccS = newSurface
+	-- Apply Technologies if Needed --
+	local force = getForce(MF.player)
+	for research, func in pairs(_MFResearches) do
+		if research ~= "ControlCenter" and technologyUnlocked(research, force) then
+			func(MF)
+		end
+	end
 end
 
 -- Create a new Entity --

@@ -89,26 +89,21 @@ end
 
 -- When a technology is finished --
 function technologyFinished(event)
+	local func = _MFResearches[event.research.name]
+	if func == nil then return end
 	for k, MF in pairs(global.MFTable) do
 		if event.research.force.name == getMFPlayer(MF.player).ent.force.name then
-			if event.research.name == "ControlCenter" then updateFactoryFloorForCC(MF) end
-			if event.research.name == "UpgradeModules" then createControlCenterEqualizer(MF) end
-			if event.research.name == "DeepStorage" then createDeepStorageArea(MF) end
-			if event.research.name == "DeepTank" then createDeepTankArea(MF) end
-			if event.research.name == "ConstructibleArea1" then createConstructibleArea1(MF) end
-			if event.research.name == "ConstructibleArea2" then createConstructibleArea2(MF) end
+			func(MF)
 		end
 	end
 end
 
 -- Check all Technologies of a Player Mobile Factory --
 function checkTechnologies(MF)
-	if technologyUnlocked("ControlCenter", getForce(MF.player)) == true and MF.varTable.tech.ControlCenter ~= true then updateFactoryFloorForCC(MF) end
-	if technologyUnlocked("UpgradeModules", getForce(MF.player)) == true and MF.varTable.tech.UpgradeModules ~= true then createControlCenterEqualizer(MF) end
-	if technologyUnlocked("DeepStorage", getForce(MF.player)) == true and MF.varTable.tech.DeepStorage ~= true then createDeepStorageArea(MF) end
-	if technologyUnlocked("DeepTank", getForce(MF.player)) == true and MF.varTable.tech.DeepTank ~= true then createDeepTankArea(MF) end
-	if technologyUnlocked("ConstructibleArea1", getForce(MF.player)) == true and MF.varTable.tech.ConstructibleArea1 ~= true then createConstructibleArea1(MF) end
-	if technologyUnlocked("ConstructibleArea2", getForce(MF.player)) == true and MF.varTable.tech.ConstructibleArea2 ~= true then createConstructibleArea2(MF) end
+	local force = getForce(MF.player)
+	for research, func in pairs(_MFResearches) do
+		if technologyUnlocked(research, force) == true and MF.varTable.tech[research] ~= true then func(MF) end
+	end
 end
 
 function selectedEntityChanged(event)
@@ -154,6 +149,7 @@ function initPlayer(event)
 		MF.II = INV:new("Internal Inventory")
 		MF.II.MF = MF
 		MF.II.isII = true
+		MF.index = player.index
 		MF.player = player.name
 		createMFSurface(MF)
 		createControlRoom(MF)
@@ -263,7 +259,7 @@ function onShortcut(event)
 	local player = getPlayer(event.player_index)
 	-- Tooltip GUI Key --
 	if event.input_name == "OpenTTGUI" then
-		local ent =player.selected
+		local ent = player.selected
 		if ent ~= nil and ent.valid == true and _mfTooltipGUI[ent.name] ~= nil then
 			event.entity = ent
 			GUI.guiOpened(event)
