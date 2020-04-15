@@ -171,3 +171,5 @@ _mfPurple = {155, 0, 168}
 _mfRed = {231, 5, 5}
 _mfOrange = {255, 131, 0}
 _mfYellow = {244, 208, 63}
+
+_MFResearches = {}

@@ -4,11 +4,12 @@ function GUI.createMFMainGUI(player)
 	local posX = 300
 	local posY = 0
 	local visible = true
+	local playerIndex = player.index
 
-	if global.GUITable.MFMainGUI ~= nil then
-		posX = global.GUITable.MFMainGUI.location.x
-		posY = global.GUITable.MFMainGUI.location.y
-		visible = global.GUITable.MFMainGUI.MFMainGUIFrame2.visible
+	if global.GUITable["MFMainGUI"..playerIndex] ~= nil then
+		posX = global.GUITable["MFMainGUI"..playerIndex].location.x
+		posY = global.GUITable["MFMainGUI"..playerIndex].location.y
+		visible = global.GUITable["MFMainGUI"..playerIndex].MFMainGUIFrame2.visible
 	end
 
 	-- Create the GUI --

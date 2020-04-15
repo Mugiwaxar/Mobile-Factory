@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.126
+Date: 15/04/2020
+  Changes:
+    - MF's in multiplayer can't sync if too close, flying-text warning
+    - newgame+ compatibility (regenerates MF internal surface! - looking into possibility of keeping)
+  Bugfixes:
+    - GUI open/close issues in multiplayer
+    - opening MF in multiplayer now shows proper owner/entity if it is usable (yvelis mod)
+    - possibly fixed desync from placing two internal inventories in same MF?
+    - ownership issues for Internal Inventory Data Center on mining
+---------------------------------------------------------------------------------------------------
 Version: 0.0.125
 Date: 13/04/2020
   Bugfixes:

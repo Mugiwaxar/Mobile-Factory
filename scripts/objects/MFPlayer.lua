@@ -1,6 +1,7 @@
 -- Create the MFPlayer Object --
 MFP = {
     ent = nil,
+	index = nil,
     name = nil,
     MF = nil,
     varTable = nil
@@ -14,6 +15,7 @@ function MFP:new(player)
 	setmetatable(t, mt)
     mt.__index = MF
     t.ent = player
+	t.index = player.index
     t.name = player.name
     t.varTable = {}
 	return t

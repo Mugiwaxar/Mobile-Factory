@@ -115,6 +115,7 @@ function DCMF:update()
 	
 	-- Create the Deep Storages Signals --
 	for k, ds in pairs(global.deepStorageTable) do
+		-- this would get laggy with lots of DS, store by MFPlayer->accessibleMFs? --
 		-- Create and send the Signal --
 		if Util.canUse(self.player, ds.ent) then
 			if ds.inventoryItem ~= nil and game.item_prototypes[ds.inventoryItem] ~= nil then

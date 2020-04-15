@@ -21,7 +21,8 @@ function GO:new(name, MFplayer, direction)
     t.MFplayer = MFplayer
     t.elements = {}
     t:createGUI(MFplayer.ent.gui.screen, name, direction)
-    global.GUITable[t.name] = t
+	-- migration code, blarg
+    global.GUITable[t.name..t.MFplayer.index] = t
     return t
 end
 

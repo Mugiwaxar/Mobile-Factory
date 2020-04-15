@@ -95,17 +95,26 @@ function GUI.guiOpened(event)
 	end
 
 	-- Check the Bypass --
-	if getMFPlayer(player.name).varTable.bypassGUI == true then
-		getMFPlayer(player.name).varTable.bypassGUI = false
+	if getMFPlayer(player.index).varTable.bypassGUI == true then
+		getMFPlayer(player.index).varTable.bypassGUI = false
 		return
 	end
+
+	-- Check Permissions --
+	if Util.canUse(player.name, event.entity) == false then return end
 
 	-- Check if a GUI exist --
 	local obj = nil
 	if _mfTooltipGUI[event.entity.name] ~= nil then
 		obj = global[_mfTooltipGUI[event.entity.name]][event.entity.unit_number]
 	elseif string.match(event.entity.name, "MobileFactory") then
-		obj = global.MFTable[player.name]
+		-- testing this for now
+		for _, MFObj in pairs(global.MFTable) do
+			if MFObj.ent == event.entity then
+				obj = MFObj
+				break
+			end
+		end
 	else
 		return
 	end
@@ -123,33 +132,45 @@ function GUI.guiClosed(event)
 	-- Check the Element --
 	if event.element == nil or event.element.valid ~= true then return end
 
+	-- Get the Player --
+	local playerIndex = event.player_index
+	local player = getPlayer(playerIndex)
+
+	--[[
+		these can be compacted into:
+		if global.GUITable[event.element.name..playerIndex] then
+			global.GUITable[event.element.name..playerIndex].destroy()
+			global.GUITable[event.element.name..playerIndex] = nil
+		end
+		I think
+	--]]
 	-- Close the Option GUI --
 	if event.element.name == "MFOptionGUI" then
-		global.GUITable.MFOptionGUI.destroy()
-		global.GUITable.MFOptionGUI = nil
+		global.GUITable["MFOptionGUI"..playerIndex].destroy()
+		global.GUITable["MFOptionGUI"..playerIndex] = nil
 		return
 	end
 
 	-- Close the Info GUI --
 	if event.element.name == "MFInfoGUI" then
-		global.GUITable.MFInfoGUI.destroy()
-		global.GUITable.MFInfoGUI = nil
+		global.GUITable["MFInfoGUI"..playerIndex].destroy()
+		global.GUITable["MFInfoGUI"..playerIndex] = nil
 		return
 	end
 
 	-- Close the Tootip GUI --
 	if event.element.name == "MFTooltipGUI" then
-		global.GUITable.MFTooltipGUI.destroy()
-		global.GUITable.MFTooltipGUI = nil
+		global.GUITable["MFTooltipGUI"..playerIndex].destroy()
+		global.GUITable["MFTooltipGUI"..playerIndex] = nil
 		return
 	end
 
 	-- Close Camera GUI --
 	if string.match(event.element.name, "Camera") then
 		local cameraName = event.element.name
-		if global.GUITable[cameraName] ~= nil then
-			global.GUITable[cameraName].destroy()
-			global.GUITable[cameraName] = nil
+		if global.GUITable[cameraName..playerIndex] ~= nil then
+			global.GUITable[cameraName..playerIndex].destroy()
+			global.GUITable[cameraName..playerIndex] = nil
 		end
 		return
 	end
@@ -158,38 +179,37 @@ end
 
 -- When a GUI Button is clicked --
 function GUI.buttonClicked(event)
-
 	-- Get the Player --
-	local player = getPlayer(event.player_index)
-	if player == nil then return end
+	local playerIndex = event.player_index
+	local player = getPlayer(playerIndex)
 
 	-- Get the Mobile Factory --
 	local MF = getMF(player.name)
 	if MF == nil then return end
 
 	-- Get the Main GUI Object --
-	local mainGUI = global.GUITable.MFMainGUI
+	local mainGUI = global.GUITable["MFMainGUI"..playerIndex]
 
 	-- Open Options GUI Button --
 	if event.element.name == "MainGUIOptionButton" then
-		if global.GUITable.MFOptionGUI == nil then
+		if global.GUITable["MFOptionGUI"..playerIndex] == nil then
 			local GUIObj = GUI.createOptionGUI(player)
 			player.opened = GUIObj.gui
 		else
-			global.GUITable.MFOptionGUI.destroy()
-			global.GUITable.MFOptionGUI = nil
+			global.GUITable["MFOptionGUI"..playerIndex].destroy()
+			global.GUITable["MFOptionGUI"..playerIndex] = nil
 		end
 		return
 	end
 
 	-- Open Info GUI Button --
 	if event.element.name == "MainGUIInfosButton" then
-		if global.GUITable.MFInfoGUI == nil then
+		if global.GUITable["MFInfoGUI"..playerIndex] == nil then
 			local GUIObj = GUI.createInfoGui(player)
 			player.opened = GUIObj.gui
 		else
-			global.GUITable.MFInfoGUI.destroy()
-			global.GUITable.MFInfoGUI = nil
+			global.GUITable["MFInfoGUI"..playerIndex].destroy()
+			global.GUITable["MFInfoGUI"..playerIndex] = nil
 		end
 		return
 	end
@@ -218,7 +238,7 @@ function GUI.buttonClicked(event)
 			mainGUI.MainGUIReduceButton.sprite = rightSprite
 			mainGUI.MainGUIReduceButton.hovered_sprite = rightSprite
 		end
-		GUI.updateMFMainGUI(global.GUITable.MFMainGUI)
+		GUI.updateMFMainGUI(global.GUITable["MFMainGUI"..playerIndex])
 		return
 	end
 
@@ -303,27 +323,27 @@ function GUI.buttonClicked(event)
 
 	-- Close Info GUI Button --
 	if event.element.name == "MFInfoGUICloseButton" then
-		if global.GUITable.MFInfoGUI ~= nil then
-			global.GUITable.MFInfoGUI.destroy()
-			global.GUITable.MFInfoGUI = nil
+		if global.GUITable["MFInfoGUI"..playerIndex] ~= nil then
+			global.GUITable["MFInfoGUI"..playerIndex].destroy()
+			global.GUITable["MFInfoGUI"..playerIndex] = nil
 		end
 		return
 	end
 
 	-- Close Options GUI Button --
 	if event.element.name == "MFOptionGUICloseButton" then
-		if global.GUITable.MFOptionGUI ~= nil then
-			global.GUITable.MFOptionGUI.destroy()
-			global.GUITable.MFOptionGUI = nil
+		if global.GUITable["MFOptionGUI"..playerIndex] ~= nil then
+			global.GUITable["MFOptionGUI"..playerIndex].destroy()
+			global.GUITable["MFOptionGUI"..playerIndex] = nil
 		end
 		return
 	end
 
 	-- Close Tooltip GUI Button --
 	if event.element.name == "MFTooltipGUICloseButton" then
-		if global.GUITable.MFTooltipGUI ~= nil then
-			global.GUITable.MFTooltipGUI.destroy()
-			global.GUITable.MFTooltipGUI = nil
+		if global.GUITable["MFTooltipGUI"..playerIndex] ~= nil then
+			global.GUITable["MFTooltipGUI"..playerIndex].destroy()
+			global.GUITable["MFTooltipGUI"..playerIndex] = nil
 		end
 		return
 	end
@@ -331,9 +351,9 @@ function GUI.buttonClicked(event)
 	-- Close Camera Button --
 	if string.match(event.element.name, "Camera") then
 		local text = string.gsub(event.element.name, "CloseButton", "")
-		if global.GUITable[text] ~= nil then
-			global.GUITable[text].destroy()
-			global.GUITable[text] = nil
+		if global.GUITable[text..playerIndex] ~= nil then
+			global.GUITable[text..playerIndex].destroy()
+			global.GUITable[text..playerIndex] = nil
 		end
 		return
 	end
@@ -343,7 +363,7 @@ function GUI.buttonClicked(event)
 		-- Get the Deep Tank ID --
 		local id = tonumber(split(event.element.name, "DTB")[1])
 		if global.deepTankTable[id] == nil then return end
-		GUI.updateDeepTankInfo(global.GUITable.MFInfoGUI, id)
+		GUI.updateDeepTankInfo(global.GUITable["MFInfoGUI"..playerIndex], id)
 		return
 	end
 
@@ -352,7 +372,7 @@ function GUI.buttonClicked(event)
 		-- Get the Deep Storage ID --
 		local id = tonumber(split(event.element.name, "DSRB")[1])
 		if global.deepStorageTable[id] == nil then return end
-		GUI.updateDeepStorageInfo(global.GUITable.MFInfoGUI, id)
+		GUI.updateDeepStorageInfo(global.GUITable["MFInfoGUI"..playerIndex], id)
 		return
 	end
 
@@ -360,7 +380,7 @@ function GUI.buttonClicked(event)
 	if string.match(event.element.name, "INVBDT") then
 		-- Get the Fluid --
 		local id = tonumber(split(event.element.name, ",")[2])
-		GUI.updateInventoryInfo(global.GUITable.MFInfoGUI, id, "DT")
+		GUI.updateInventoryInfo(global.GUITable["MFInfoGUI"..playerIndex], id, "DT")
 		return
 	end
 
@@ -368,7 +388,7 @@ function GUI.buttonClicked(event)
 	if string.match(event.element.name, "INVBDSR") then
 		-- Get the Item --
 		local id = tonumber(split(event.element.name, ",")[2])
-		GUI.updateInventoryInfo(global.GUITable.MFInfoGUI, id, "DSR")
+		GUI.updateInventoryInfo(global.GUITable["MFInfoGUI"..playerIndex], id, "DSR")
 		return
 	end
 
@@ -377,7 +397,7 @@ function GUI.buttonClicked(event)
 		-- Get the Item --
 		local item = split(event.element.name, ",")[2]
 		local amount = split(event.element.name, ",")[3]
-		GUI.updateInventoryInfo(global.GUITable.MFInfoGUI, nil, "INV", item, amount)
+		GUI.updateInventoryInfo(global.GUITable["MFInfoGUI"..playerIndex], nil, "INV", item, amount)
 		return
 	end
 
@@ -430,7 +450,8 @@ function GUI.onGuiElemChanged(event)
 	-- Return if the Element is not valid --
 	if event.element == nil or event.element.valid == false then return end
 	-- Get the Player --
-	local player = getPlayer(event.player_index)
+	local playerIndex = event.player_index
+	local player = getPlayer(playerIndex)
 	-- Return if the Player is not valid --
 	if player == nil then return end
 	-- Get the Mobile Factory --
@@ -454,7 +475,7 @@ function GUI.onGuiElemChanged(event)
 			else
 				global.deepStorageTable[id].filter = nil
 			end
-			if global.GUITable["MFInfoGUI"] ~= nil then GUI.updateDeepStorageInfo(global.GUITable["MFInfoGUI"], id) end
+			if global.GUITable["MFInfoGUI"..playerIndex] ~= nil then GUI.updateDeepStorageInfo(global.GUITable["MFInfoGUI"..playerIndex], id) end
 			GUI.updateAllGUIs()
 			return
 		end
@@ -469,7 +490,7 @@ function GUI.onGuiElemChanged(event)
 			else
 				global.deepTankTable[id].filter = nil
 			end
-			if global.GUITable["MFInfoGUI"] ~= nil then GUI.updateDeepTankInfo(global.GUITable["MFInfoGUI"], id) end
+			if global.GUITable["MFInfoGUI"..playerIndex] ~= nil then GUI.updateDeepTankInfo(global.GUITable["MFInfoGUI"..playerIndex], id) end
 			GUI.updateAllGUIs()
 			return
 		end

@@ -1,14 +1,14 @@
 -- Called when something is placed --
 function somethingWasPlaced(event, isRobot)
-	--script_raised_revive uses entity, and breaks every single save<Entity> function
-	local fake_event = {}
+	-- script_raised_revive uses entity, and breaks every single save<Entity> function --
+	local fakeEvent = {}
 	for k, v in pairs(event) do
-		fake_event[k] = v
+		fakeEvent[k] = v
 	end
-	if fake_event.entity and fake_event.created_entity == nil then
-		fake_event.created_entity = fake_event.entity
+	if fakeEvent.entity and fakeEvent.created_entity == nil then
+		fakeEvent.created_entity = fakeEvent.entity
 	end
-	event = fake_event
+	event = fakeEvent
 
 	-- Get the Entity
 	local cent = event.created_entity
@@ -25,11 +25,10 @@ function somethingWasPlaced(event, isRobot)
 		creator = getPlayer(event.player_index)
 	end
 
-	-- Get the Player Mobile Factory --
 	local MF = nil
 	if cent ~= nil and cent.last_user ~= nil then MF = getMF(cent.last_user.name) end
 	if isPlayer == true then MF = getMF(creator.name) end
-	
+
 	-- Prevent to place Tiles inside the Control Center --
 	if creator ~= nil and event.tiles ~= nil and string.match(creator.surface.name, _mfControlSurfaceName) then
 		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then 
@@ -336,11 +335,16 @@ function somethingWasRemoved(event)
 	local removed_ent = event.entity
 	-- Get the Player Mobile Factory --
 	local MF = nil
+--[[
+	-- last user can change during online play
 	if removed_ent.last_user ~= nil then
+		log("removed_ent.last_user: "..removed_ent.last_user.name)
 		MF = getMF(removed_ent.last_user.name)
 	end
+--]]
 	-- The Mobile Factory was removed --
 	if string.match(removed_ent.name, "MobileFactory") then
+		MF = Util.valueToObj(removed_ent)
 		if MF ~= nil then
 			MF:remove(removed_ent)
 		end
@@ -384,6 +388,7 @@ function somethingWasRemoved(event)
 	end
 	-- Remove the Data Center MF --
 	if removed_ent.name == "DataCenterMF" then
+		MF = Util.valueToObj(global.MFTable, "dataCenter", removed_ent)
 		if MF ~= nil then MF.dataCenter = nil end
 		removedDataCenterMF(event)
 		return
@@ -468,8 +473,18 @@ function somethingWasRemoved(event)
 	end
 
 	-- Return Sync Area Items from Chests --
---	if _mfSyncAreaAllowedTypes[removed_ent.type] == true and MF ~= nil and MF.ent ~= nil and MF.ent.valid and MF.syncAreaEnabled == true and MF.ent.speed == 0 then
-	if removed_ent.type == "container" and MF ~= nil and MF.ent ~= nil and MF.ent.valid and MF.syncAreaEnabled == true and MF.ent.speed == 0 then
+	if removed_ent.type == "container" then
+		for _, MFObj in pairs(global.MFTable) do
+			if MFObj.ent ~= nil and MFObj.ent.valid and MFObj.syncAreaEnabled == true and MFObj.ent.speed == 0 
+			and ((removed_ent.surface == MFObj.ent.surface and Util.distance(removed_ent.position, MFObj.ent.position) < _mfSyncAreaRadius)
+					or (removed_ent.surface == MFObj.fS and Util.distance(removed_ent.position, _mfSyncAreaPosition) < _mfSyncAreaRadius))
+				then
+				MF = MFObj
+				break
+			end
+		end
+		if MF == nil then return end
+
 		local taker = nil
 		local inserted = 0
 
@@ -477,39 +492,32 @@ function somethingWasRemoved(event)
 		if event.player_index then taker = getPlayer(event.player_index) end
 		if not taker then return end -- should not be possible
 
-		-- Either Side --
---		if removed_ent.type == "container" then
-			local invOriginal = nil
-			local invCloned = nil
+		local invOriginal = nil
+		local invCloned = nil
 
-			if (removed_ent.surface == MF.ent.surface and Util.distance(removed_ent.position, MF.ent.position) < _mfSyncAreaRadius)
-					or (removed_ent.surface == MF.fS and Util.distance(removed_ent.position, _mfSyncAreaPosition) < _mfSyncAreaRadius)
-				then
-				for i, ents in pairs(MF.clonedResourcesTable) do
-					if removed_ent == ents.original or removed_ent == ents.cloned then
-						local items = {}
-						invOriginal = ents.original.get_inventory(defines.inventory.chest)
-						for itemName, itemCount in pairs(invOriginal.get_contents()) do
-							if not items[itemName] then items[itemName] = 0 end
-							items[itemName] = items[itemName] + itemCount
-						end
-						invOriginal.clear()
+		for i, ents in pairs(MF.clonedResourcesTable) do
+			if removed_ent == ents.original or removed_ent == ents.cloned then
+				local items = {}
+				invOriginal = ents.original.get_inventory(defines.inventory.chest)
+				for itemName, itemCount in pairs(invOriginal.get_contents()) do
+					if not items[itemName] then items[itemName] = 0 end
+					items[itemName] = items[itemName] + itemCount
+				end
+				invOriginal.clear()
 
-						invCloned = ents.cloned.get_inventory(defines.inventory.chest)
-						for itemName, itemCount in pairs(invCloned.get_contents()) do
-							if not items[itemName] then items[itemName] = 0 end
-							items[itemName] = items[itemName] + itemCount
-						end
-						invCloned.clear()
+				invCloned = ents.cloned.get_inventory(defines.inventory.chest)
+				for itemName, itemCount in pairs(invCloned.get_contents()) do
+					if not items[itemName] then items[itemName] = 0 end
+					items[itemName] = items[itemName] + itemCount
+				end
+				invCloned.clear()
 
-						for itemName, itemCount in pairs(items) do
-							inserted = taker.insert({name = itemName, count = itemCount})
-							if inserted ~= itemCount then taker.surface.spill_item_stack(taker.position, {name = itemName, count = itemCount - inserted}, true, nil, false) end
-						end
-					end
+				for itemName, itemCount in pairs(items) do
+					inserted = taker.insert({name = itemName, count = itemCount})
+					if inserted ~= itemCount then taker.surface.spill_item_stack(taker.position, {name = itemName, count = itemCount - inserted}, true, nil, false) end
 				end
 			end
---		end
+		end
 	end
 end
 

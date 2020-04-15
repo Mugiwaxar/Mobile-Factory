@@ -1,10 +1,12 @@
 -- Read changed Options from the Options GUI --
 function GUI.readOptions(option, player)
+	local playerIndex = player.index
+
 	local name = option.name
 
 	-- Get the Mobile Factory and GUIObject --
 	local MF = getMF(player.name)
-	local GUIObj = global.GUITable["MFOptionGUI"]
+	local GUIObj = global.GUITable["MFOptionGUI"..playerIndex]
 
 	------------------- MF -------------------
 	if name == "MFShareOpt" then
@@ -26,7 +28,7 @@ function GUI.readOptions(option, player)
 	if string.match(name, "MGS") then
 		local buttonName = split(name, ",")[2]
 		GUIObj.MFplayer.varTable["Show" .. buttonName] = option.state
-		GUI.updateMFMainGUI(global.GUITable.MFMainGUI)
+		GUI.updateMFMainGUI(global.GUITable["MFMainGUI"..playerIndex])
 	end
 
 	------------------- Game -------------------
