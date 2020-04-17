@@ -34,7 +34,7 @@ end
 function updateFactoryFloorForCC(MF)
 	createTilesSurface(MF.fS, -3, -34, 3, -32, "refined-hazard-concrete-left")
 	-- Create Control Center surface --
-	if MF.ccS == nil or MF.ccs.valid == false then MF.ccs = nil createControlRoom(MF) end
+	if MF.ccS == nil or MF.ccS.valid == false then MF.ccS = nil createControlRoom(MF) end
 	-- Valid the Technology --
 	MF.varTable.tech.ControlCenter = true
 end

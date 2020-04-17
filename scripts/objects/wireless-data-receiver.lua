@@ -139,7 +139,7 @@ function WDR:update()
 				i = i + 1
 				-- Stop if there are to much Items --
 				if i > 999 then break end
-			elseif item.signal.name ~= nil and game.item_prototypes[item.signal.name] ~= nil then
+			elseif item.signal.name ~= nil and ((game.item_prototypes[item.signal.name] ~= nil) or (game.fluid_prototypes[item.signal.name] ~= nil)) then
 				self.ent.get_control_behavior().set_signal(i, {signal={type=item.signal.type, name=item.signal.name}, count=item.count})
 				if self.lastSignal[item.signal.name] ~= nil then
 					self.lastSignal[item.signal.name].count = self.lastSignal[item.signal.name].count + item.count
