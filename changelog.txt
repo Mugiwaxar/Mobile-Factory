@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.129
+Date: 23/04/2020
+  Features:
+    - Added setting for initial research to be auto-researched. Used for compatibility with
+          science-cost changers and difficulty-increasing players
+  Changes:
+    - tweaked many of the locale strings to have better English and more useful descriptions
+    - added MF, Dim. Ore-to-stone, and Dim. Tile recipes to initial research
+---------------------------------------------------------------------------------------------------
 Version: 0.0.128
 Date: 22/04/2020
   Bugfixes:

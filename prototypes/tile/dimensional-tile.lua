@@ -33,8 +33,8 @@ data:extend{dtI}
 local dtR = {}
 dtR.type = "recipe"
 dtR.name = "DimensionalTile"
+dtR.enabled = false
 dtR.energy_required = 1.3
-dtR.enabled = true
 dtR.ingredients =
     {
 		{"DimensionalOre", 8}

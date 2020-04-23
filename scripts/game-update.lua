@@ -140,7 +140,7 @@ end
 function initPlayer(event)
 	local player = getPlayer(event.player_index)
 	if player == nil then return end
-	player.force.technologies["DimensionalOre"].researched = true
+	--player.force.technologies["DimensionalOre"].researched = true
 	if getMFPlayer(player.name) == nil then
 		global.playersTable[player.name] = MFP:new(player)
 		-- Mobile Factory Object --

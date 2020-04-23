@@ -200,6 +200,7 @@ data:extend{mfI}
 local mfR = {}
 mfR.type = "recipe"
 mfR.name = "MobileFactory"
+mfR.enabled = false
 mfR.energy_required = 10
 mfR.ingredients =
     {

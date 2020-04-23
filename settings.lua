@@ -21,5 +21,12 @@ data:extend({
 	setting_type = "startup",
 	default_value = true,
 	order = "agc"
+  },
+  {
+	type = "bool-setting",
+	name = "MF-initial-research-complete",
+	setting_type = "startup",
+	default_value = true,
+	order = "agd"
   }
 })
