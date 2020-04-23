@@ -23,7 +23,33 @@ function createMFSurface(MF)
 	newSurface.force_generate_chunk_requests()
 	-- Set tiles --
 	createTilesSurface(newSurface, -50, -50, 50, 50, "tutorial-grid")
-	createTilesSurface(newSurface, _mfSyncAreaPosition.x - _mfSyncAreaRadius, _mfSyncAreaPosition.y - _mfSyncAreaRadius, _mfSyncAreaPosition.x + _mfSyncAreaRadius, _mfSyncAreaPosition.y + _mfSyncAreaRadius, "dirt-7")
+    -- Workaround if Default Sync dirt-7 Tile Is Missing -- 
+    local tileName
+    if game.tile_prototypes[global.syncTile] == nil then
+      global.syncTile = nil
+      for tileName in pairs(game.tile_prototypes) do
+        if string.find(tileName, "grass") then
+          global.syncTile = tileName
+          break
+        end
+      end
+
+      -- Alien Biomes or another mod leaves grass-1 alone but makes all the dirt colorful
+      if global.syncTile == nil then
+        for tileName in pairs(game.tile_prototypes) do
+          if string.find(tileName, "dirt") then
+            global.syncTile = tileName
+            break
+          end
+        end      
+      end
+      if global.syncTile == nil then
+        error("Unable to find suitable tile for Sync Area.")
+      end
+    end
+
+
+	createTilesSurface(newSurface, _mfSyncAreaPosition.x - _mfSyncAreaRadius, _mfSyncAreaPosition.y - _mfSyncAreaRadius, _mfSyncAreaPosition.x + _mfSyncAreaRadius, _mfSyncAreaPosition.y + _mfSyncAreaRadius, global.syncTile)
 	createTilesSurface(newSurface, _mfSyncAreaPosition.x - 2, _mfSyncAreaPosition.y - 4, _mfSyncAreaPosition.x + 2, _mfSyncAreaPosition.y + 4, "DimensionalTile")
 	createTilesSurface(newSurface, _mfSyncAreaPosition.x - 4, _mfSyncAreaPosition.y - 2, _mfSyncAreaPosition.x + 4, _mfSyncAreaPosition.y + 2, "DimensionalTile")
 	createTilesSurface(newSurface, _mfSyncAreaPosition.x - 3, _mfSyncAreaPosition.y - 3, _mfSyncAreaPosition.x + 3, _mfSyncAreaPosition.y + 3, "DimensionalTile")
@@ -83,7 +109,7 @@ end
 function createSyncAreaMFSurface(surface, dirt)
 	local radius = _mfSyncAreaRadius + 1
 	if dirt == true then
-		createTilesSurface(surface, _mfSyncAreaPosition.x - radius, _mfSyncAreaPosition.y - radius, _mfSyncAreaPosition.x + radius, _mfSyncAreaPosition.y + radius, "dirt-7")
+		createTilesSurface(surface, _mfSyncAreaPosition.x - radius, _mfSyncAreaPosition.y - radius, _mfSyncAreaPosition.x + radius, _mfSyncAreaPosition.y + radius, global.syncTile)
 	end
 	createTilesSurface(surface, _mfSyncAreaPosition.x - 2, _mfSyncAreaPosition.y - 4, _mfSyncAreaPosition.x + 2, _mfSyncAreaPosition.y + 4, "DimensionalTile")
 	createTilesSurface(surface, _mfSyncAreaPosition.x - 4, _mfSyncAreaPosition.y - 2, _mfSyncAreaPosition.x + 4, _mfSyncAreaPosition.y + 2, "DimensionalTile")
