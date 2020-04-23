@@ -172,4 +172,9 @@ _mfRed = {231, 5, 5}
 _mfOrange = {255, 131, 0}
 _mfYellow = {244, 208, 63}
 
+-- Table of Researches to Simplify Surface Generation/Check Events --
 _MFResearches = {}
+
+
+-- Table of Recipes Unlocked by Initial Research --
+_MFStartingRecipes = {"MobileFactory", "DimensionalTile", "mfStone"}

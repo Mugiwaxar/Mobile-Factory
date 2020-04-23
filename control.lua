@@ -54,7 +54,11 @@ function onInit()
 	-- Repair Jet Update --
 	global.repairJetIndex = 0
 	-- Research --
-	game.forces["player"].technologies["DimensionalOre"].researched = true
+	for _, force in pairs(game.forces) do
+		if settings.startup["MF-initial-research-complete"] and settings.startup["MF-initial-research-complete"].value == true then
+			force.technologies["DimensionalOre"].researched = true
+		end
+	end
 	-- Floor Is Lava --
 	global.floorIsLavaActivated = false
 	-- Tables --
@@ -212,6 +216,14 @@ _mfEntityFilterWithCBJ = {
 	{filter = "name", name = "CombatJet", mode = "or"}
 }
 
+local function onForceCreated(event)
+  local force = event.force
+
+  if force.valid and settings.startup["MF-initial-research-complete"] and settings.startup["MF-initial-research-complete"].value == true then
+    force.technologies["DimensionalOre"].researched = true
+  end
+end
+
 -- Events --
 script.on_init(onInit)
 script.on_load(onLoad)
@@ -247,13 +259,8 @@ script.on_event(defines.events.on_research_finished, technologyFinished)
 script.on_event(defines.events.on_selected_entity_changed, selectedEntityChanged)
 script.on_event(defines.events.on_marked_for_deconstruction, markedForDeconstruction)
 script.on_event(defines.events.on_entity_settings_pasted, settingsPasted)
+script.on_event(defines.events.on_force_created, onForceCreated)
 script.on_event("OpenTTGUI", onShortcut)
 
 -- Add command to insert Mobile Factory to the player inventory --
 -- commands.add_command("GetMobileFactory", "Add the Mobile Factory to the player inventory", addMobileFactory)
-
-
-
-
-
-
