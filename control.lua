@@ -86,6 +86,7 @@ function onInit()
 	global.combatJetTable = {}
 	global.eryaTable = {}
 	global.eryaIndexedTable = {}
+    global.syncTile = "dirt-7"
 end
 
 -- When a save is loaded --
