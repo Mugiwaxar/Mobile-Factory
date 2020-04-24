@@ -7,6 +7,7 @@ wdtE.type = "constant-combinator"
 wdtE.name = "WirelessDataTransmitter"
 wdtE.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessDataTransmitterI.png"
 wdtE.icon_size = 64
+wdtE.icon_mipmaps = 1
 wdtE.minable = {mining_time = 0.2, result = "WirelessDataTransmitter"}
 wdtE.max_health = 200
 wdtE.corpse = "big-remnants"
