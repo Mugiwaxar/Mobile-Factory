@@ -7,6 +7,7 @@ wdrE.type = "constant-combinator"
 wdrE.name = "WirelessDataReceiver"
 wdrE.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessDataReceiverI.png"
 wdrE.icon_size = 64
+wdrE.icon_mipmaps = 1
 wdrE.minable = {mining_time = 0.5, result = "WirelessDataReceiver"}
 wdrE.max_health = 200
 wdrE.corpse = "big-remnants"

@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.130
+Date: 24/04/2020
+  Changes:
+    - jet "default distance" in description is now accurate, has min/max description
+  Bugfixes:
+    - min and max distance for jets (10-1000)
+    - migration to fix a stuck game because of invalid distance
+    - fix mipmap level warning in log (if one uses table.deepcopy, entity.icon_mipmaps = 1 for simple icons)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.129
 Date: 23/04/2020
   Features:
