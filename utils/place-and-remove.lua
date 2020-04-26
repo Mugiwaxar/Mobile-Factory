@@ -73,7 +73,7 @@ function somethingWasPlaced(event, isRobot)
 			newMobileFactory(cent)
 		end
 	end
-	
+
 	-- Prevent to place listed entities outside the Mobile Factory --
 	if string.match(cent.surface.name, _mfSurfaceName) == nil then
 		if canBePlacedOutside(cent.name) == false then
@@ -128,7 +128,7 @@ function somethingWasPlaced(event, isRobot)
 		local tile = cent.surface.find_tiles_filtered{position=cent.position, radius=1, limit=1}
 		if tile[1] ~= nil and tile[1].valid == true and tile[1].name == "BuildTile" then
 			placedDeepStorage(event)
-			if event.stack ~= nil then
+			if event.stack ~= nil and event.stack.valid_for_read == true then
 				local tags = event.stack.get_tag("Infos")
 				if tags ~= nil then
 					global.deepStorageTable[cent.unit_number].inventoryItem = tags.inventoryItem
@@ -144,7 +144,7 @@ function somethingWasPlaced(event, isRobot)
 		local tile = cent.surface.find_tiles_filtered{position=cent.position, radius=1, limit=1}
 		if tile[1] ~= nil and tile[1].valid == true and tile[1].name == "BuildTile" then
 			placedDeepTank(event)
-			if event.stack ~= nil then
+			if event.stack ~= nil and event.stack.valid_for_read == true then
 				local tags = event.stack.get_tag("Infos")
 				if tags ~= nil then
 					global.deepTankTable[cent.unit_number].inventoryFluid = tags.inventoryFluid
@@ -157,9 +157,9 @@ function somethingWasPlaced(event, isRobot)
 	
 	-- Prevent to place things inside the Control Center --
 	if string.match(cent.surface.name, _mfControlSurfaceName) then
-		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.CCNotPlaceable"}}) end
 		cent.destroy()
 		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
+			creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.CCNotPlaceable"}})
 			creator.get_main_inventory().insert(event.stack)
 		end
 		return
@@ -167,9 +167,9 @@ function somethingWasPlaced(event, isRobot)
 	
 	-- Prevent to place things out of the Control Center --
 	if cent.name == "DeepStorage" or cent.name == "DeepTank" then
-		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheCCCArea"}}) end
 		cent.destroy()
 		if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
+			creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheCCCArea"}})
 			creator.get_main_inventory().insert(event.stack)
 		end
 		return
@@ -228,7 +228,7 @@ function somethingWasPlaced(event, isRobot)
 	-- Save the Data Center --
 	if cent.name == "DataCenter" then
 		placedDataCenter(event)
-		if event.stack ~= nil then
+		if event.stack ~= nil and event.stack.valid_for_read == true then
 			local tags = event.stack.get_tag("Infos")
 			if tags ~= nil then
 				global.dataCenterTable[cent.unit_number].invObj.inventory = tags.inventory
@@ -252,7 +252,7 @@ function somethingWasPlaced(event, isRobot)
 	-- Save the Energy Cube --
 	if string.match(cent.name, "EnergyCube") then
 		placedEnergyCube(event)
-		if event.stack ~= nil then
+		if event.stack ~= nil and event.stack.valid_for_read == true then
 			local tags = event.stack.get_tag("Infos")
 			if tags ~= nil then
 				global.energyCubesTable[cent.unit_number].ent.energy = tags.energy
@@ -264,9 +264,9 @@ function somethingWasPlaced(event, isRobot)
 	-- Save the Data Center MF --
 	if cent.name == "DataCenterMF" then
 		if MF ~= nil and valid(MF.dataCenter) == true then
-			if isPlayer == true then creator.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }}) end
 			cent.destroy()
 			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
+				creator.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
 				creator.get_main_inventory().insert(event.stack)
 			end
 			return
@@ -285,7 +285,7 @@ function somethingWasPlaced(event, isRobot)
 	-- Save the Ore Cleaner --
 	if cent.name == "OreCleaner" then
 		placedOreCleaner(event)
-		if event.stack ~= nil then
+		if event.stack ~= nil and event.stack.valid_for_read == true then
 			local tags = event.stack.get_tag("Infos")
 			if tags ~= nil then
 				global.oreCleanerTable[cent.unit_number].purity = tags.purity
@@ -299,7 +299,7 @@ function somethingWasPlaced(event, isRobot)
 	-- Save the Fluid Extractor --
 	if cent.name == "FluidExtractor" then
 		placedFluidExtractor(event)
-		if event.stack ~= nil then
+		if event.stack ~= nil and event.stack.valid_for_read == true then
 			local tags = event.stack.get_tag("Infos")
 			if tags ~= nil then
 				global.fluidExtractorTable[cent.unit_number].purity = tags.purity
@@ -313,7 +313,7 @@ function somethingWasPlaced(event, isRobot)
 	-- Save the Jet Flag --
 	if string.match(cent.name, "Flag") then
 		placedJetFlag(event)
-		if event.stack ~= nil then
+		if event.stack ~= nil and event.stack.valid_for_read == true then
 			local tags = event.stack.get_tag("Infos")
 			if tags ~= nil then
 				global.jetFlagTable[cent.unit_number].inventory = tags.inventory

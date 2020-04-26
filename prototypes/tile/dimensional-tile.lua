@@ -3,7 +3,10 @@
 -- Entity --
 local dtE = table.deepcopy(data.raw.tile["refined-concrete"])
 dtE.name = "DimensionalTile"
-dtE.minable = {mining_time = 0.1, result = "DimensionalTile"}
+dtE.minable = {
+	mining_time = .1,
+    result = "DimensionalTile"
+}
 dtE.variants.material_background =
 {
     picture = "__Mobile_Factory_Graphics__/graphics/entity/DimensionalTileE.png",
@@ -25,7 +28,7 @@ dtI.place_as_tile =
     {
       result = "DimensionalTile",
       condition_size = 1,
-      condition = {}
+      condition = { "water-tile" }
     }
 data:extend{dtI}
 
