@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.133
+Date: 26/04/2020
+  Changes:
+    - use find_non_colliding_position instead of the old way for placing MF after call request
+  Bugfixes:
+    - script_raised_built + MF never placed caused error
+---------------------------------------------------------------------------------------------------
 Version: 0.0.132
 Date: 26/04/2020
   Bugfixes:

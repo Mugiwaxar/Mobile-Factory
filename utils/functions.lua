@@ -166,6 +166,9 @@ function mfPlaceable(player, MF)
 		return nil
 	end
 	-- Try to a position near the Player --
+	return player.surface.find_noncolliding_position(MF.ent.name, player.position, 10, 1, true)
+--[[
+	-- Try to a position near the Player --
 	if player.surface.can_place_entity{name=MF.ent.name, position={player.position.x+5, player.position.y}} == false then
 		if player.surface.can_place_entity{name=MF.ent.name, position={player.position.x-5, player.position.y}} == false then
 			if player.surface.can_place_entity{name=MF.ent.name, position={player.position.x, player.position.y+5}} == false then
@@ -176,6 +179,7 @@ function mfPlaceable(player, MF)
 			else return {player.position.x, player.position.y+5} end
 		else return {player.position.x-5, player.position.y} end
 	else return {player.position.x+5, player.position.y} end
+--]]
 end
 
 -- Unlock a recipe for all Players --
