@@ -186,7 +186,7 @@ function somethingWasPlaced(event, isRobot)
 	end
 
 	-- Clone the Entity if it is inside the Sync Area --
-	if _mfSyncAreaAllowedTypes[cent.type] == true and MF.ent ~= nil and MF.ent.valid and MF.syncAreaEnabled == true and MF.ent.speed == 0 then
+	if _mfSyncAreaAllowedTypes[cent.type] == true and MF ~= nil and MF.ent ~= nil and MF.ent.valid and MF.syncAreaEnabled == true and MF.ent.speed == 0 then
 		-- Outside to Inside --
 		if cent.surface == MF.ent.surface and Util.distance(cent.position, MF.ent.position) < _mfSyncAreaRadius
 				and not MF.fS.entity_prototype_collides(cent.name, {_mfSyncAreaPosition.x + (cent.position.x - math.floor(MF.ent.position.x)), _mfSyncAreaPosition.y + (cent.position.y - math.floor(MF.ent.position.y))}, false)
