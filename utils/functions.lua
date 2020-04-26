@@ -167,8 +167,8 @@ function mfPlaceable(player, MF)
 	end
 	-- Try to a position near the Player --
 	if player.surface.can_place_entity{name=MF.ent.name, position={player.position.x+5, player.position.y}} == false then
-		if player.surface.can_place_entity{MF.ent.name, position={player.position.x-5, player.position.y}} == false then
-			if player.surface.can_place_entity{MF.ent.name, position={player.position.x, player.position.y+5}} == false then
+		if player.surface.can_place_entity{name=MF.ent.name, position={player.position.x-5, player.position.y}} == false then
+			if player.surface.can_place_entity{name=MF.ent.name, position={player.position.x, player.position.y+5}} == false then
 				if player.surface.can_place_entity{MF.ent.name, position={player.position.x, player.position.y-5}} == false then
 					player.print({"", {"gui-description.MFPlacedNoEnoughtSpace"}})
 					return nil

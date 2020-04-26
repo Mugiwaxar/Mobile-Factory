@@ -1,6 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.132
+Date: 26/04/2020
+  Bugfixes:
+    - missing name= keys passed to can_place_entity, mfPlaceable error
+---------------------------------------------------------------------------------------------------
 Version: 0.0.131
-Date: 24/04/2020
+Date: 25/04/2020
   Changes:
     - Dimensional Tile can't be placed onto void
   Bugfixes:
