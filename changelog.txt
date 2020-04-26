@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.131
+Date: 24/04/2020
+  Changes:
+    - Dimensional Tile can't be placed onto void
+  Bugfixes:
+    - valid_for_read checks on item stack while placing some MF entities (mod compatibility?)
+    - variable could go un-inited and error when establishing Sync Area
+---------------------------------------------------------------------------------------------------
 Version: 0.0.130
 Date: 24/04/2020
   Changes:

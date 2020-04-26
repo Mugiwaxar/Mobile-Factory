@@ -91,6 +91,8 @@ function onInit()
 	global.eryaTable = {}
 	global.eryaIndexedTable = {}
     global.syncTile = "dirt-7"
+	-- Validate the Tile Used for the Sync Area --
+	validateSyncAreaTile()
 end
 
 -- When a save is loaded --
@@ -195,6 +197,9 @@ function onConfigurationChanged()
 	for k, player in pairs(game.players) do
 		GUI.createMFMainGUI(player)
 	end
+
+	-- Validate the Tile Used for the Sync Area --
+	validateSyncAreaTile()
 end
 
 -- Filters --
