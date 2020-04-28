@@ -42,7 +42,7 @@ function GUI.createMFMainGUI(player)
 	-- Add All Buttons --
 	GUIObj:addButton("MainGUIOptionButton", MFMainGUIFrame1, "OptionIcon", "OptionIcon", {"gui-description.optionButton"}, 15)
 	GUIObj:addButton("MainGUIInfosButton", MFMainGUIFrame1, "MFIconI", "MFIconI", {"gui-description.MFInfosButton"}, 15)
-	GUIObj:addButton("MainGUIReduceButton", MFMainGUIFrame1, ExtendButtonSprite, ExtendButtonSprite, {"gui-description.MFInspectButton"}, 15, true)
+	GUIObj:addButton("MainGUIReduceButton", MFMainGUIFrame1, ExtendButtonSprite, ExtendButtonSprite, {"gui-description.reduceButton"}, 15, true)
 
 	-- Make the GUI visible or not --
 	MFMainGUIFrame2.visible = visible
