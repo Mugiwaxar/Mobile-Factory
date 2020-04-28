@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.134
+Date: 27/04/2020
+  Changes:
+    - add missing locale string for reduce button
+    - "Mobile Factory" option tab: fix first option and clarify settings
+    - little things all over the locale
+---------------------------------------------------------------------------------------------------
 Version: 0.0.133
 Date: 26/04/2020
   Changes:

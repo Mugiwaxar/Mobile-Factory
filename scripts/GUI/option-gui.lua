@@ -96,7 +96,7 @@ function GUI.updateOptionGUIMFTab(GUIObj)
 
 	-- Add all Options --
 	GUI.addOption("", scrollPane, "title", false, {text={"gui-description.MFOpt"}}, playerIndex)
-	GUI.addOption("MFShareOpt", scrollPane, "checkbox", false, {text={"gui-description.MFShareSettingOpt"}, tooltip={"gui-description.MFShareSettingOptTT"}, state=GUIObj.MF.varTable.shareStructures or false}, playerIndex)
+	GUI.addOption("MFShareOpt", scrollPane, "checkbox", false, {text={"gui-description.MFShareOpt"}, tooltip={"gui-description.MFShareOptTT"}, state=GUIObj.MF.varTable.shareStructures or false}, playerIndex)
 	GUI.addOption("MFUseShareOpt", scrollPane, "checkbox", false, {text={"gui-description.MFUseShareOpt"}, tooltip={"gui-description.MFUseShareOptTT"}, state=GUIObj.MF.varTable.useSharedStructures or false}, playerIndex)
 	GUI.addOption("MFShareSettingOpt", scrollPane, "checkbox", false, {text={"gui-description.MFShareSettingOpt"}, tooltip={"gui-description.MFShareSettingOptTT"}, state=GUIObj.MF.varTable.allowToModify or false}, playerIndex)
 
