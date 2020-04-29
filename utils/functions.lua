@@ -166,7 +166,7 @@ function mfPlaceable(player, MF)
 		return nil
 	end
 	-- Try to a position near the Player --
-	return player.surface.find_noncolliding_position(MF.ent.name, player.position, 10, 1, true)
+	return player.surface.find_non_colliding_position(MF.ent.name, player.position, 10, 1, true)
 --[[
 	-- Try to a position near the Player --
 	if player.surface.can_place_entity{name=MF.ent.name, position={player.position.x+5, player.position.y}} == false then

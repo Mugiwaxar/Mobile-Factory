@@ -234,18 +234,26 @@ local function onForceCreated(event)
 end
 
 local function onPlayerSetupBlueprint(event)
-  local player = game.players[event.player_index]
-  local mapping = event.mapping.get()
-  local bp = player.blueprint_to_setup
+	local player = game.players[event.player_index]
+	local mapping = event.mapping.get()
+	local bp = player.blueprint_to_setup
+	if bp.valid_for_read == false then
+		local cursor = player.cursor_stack
+		if cursor and cursor.valid_for_read and cursor.name == "blueprint" then
+			bp = cursor
+			--return
+		end
+	end
+	if bp == nil or bp.valid_for_read == false then return end
 
-  local nameToTable = {
-	["MatterInteractor"] = "matterInteractorTable",
-	["FluidInteractor"] = "fluidInteractorTable",
-	["WirelessDataReceiver"] = "wirelessDataReceiverTable",
-	["OreCleaner"] = "oreCleanerTable",
-	["DeepStorage"] = "deepStorageTable",
-	["DeepTank"] = "deepTankTable",
-  }
+	local nameToTable = {
+		["MatterInteractor"] = "matterInteractorTable",
+		["FluidInteractor"] = "fluidInteractorTable",
+		["WirelessDataReceiver"] = "wirelessDataReceiverTable",
+		["OreCleaner"] = "oreCleanerTable",
+		["DeepStorage"] = "deepStorageTable",
+		["DeepTank"] = "deepTankTable",
+	}
 
 	for index, ent in pairs(mapping) do
 		local saveTable = nameToTable[ent.name]

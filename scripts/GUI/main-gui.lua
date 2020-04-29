@@ -7,9 +7,18 @@ function GUI.createMFMainGUI(player)
 	local playerIndex = player.index
 
 	if global.GUITable["MFMainGUI"..playerIndex] ~= nil then
-		posX = global.GUITable["MFMainGUI"..playerIndex].location.x
-		posY = global.GUITable["MFMainGUI"..playerIndex].location.y
-		visible = global.GUITable["MFMainGUI"..playerIndex].MFMainGUIFrame2.visible
+		if player.valid and global.GUITable["MFMainGUI"..playerIndex].valid then
+			posX = global.GUITable["MFMainGUI"..playerIndex].location.x
+			posY = global.GUITable["MFMainGUI"..playerIndex].location.y
+			visible = global.GUITable["MFMainGUI"..playerIndex].MFMainGUIFrame2.visible
+		else
+			--[[
+				Honktown - I believe a player being deleted and a new player with the same index caused a collision...
+					The player was valid (Assuming everyone in game.players is) but the gui object is not.
+			--]]
+			global.GUITable["MFMainGUI"..playerIndex] = nil
+			--return
+		end
 	end
 
 	-- Create the GUI --
