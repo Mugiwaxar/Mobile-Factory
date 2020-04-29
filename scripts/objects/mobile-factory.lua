@@ -49,7 +49,7 @@ function MF:new()
 	t.varTable = {}
 	t.varTable.tech = {}
 	t.varTable.tanks = {}
-	t.varTable.jets = {}
+	t.varTable.jets = { ["cjTableSize"] = _MFConstructionJetDefaultTableSize }
 	UpSys.addObj(t)
 	return t
 end
