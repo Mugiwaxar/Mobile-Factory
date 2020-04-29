@@ -102,6 +102,8 @@ _mfHPRepairedPerUpdate = -35
 _mfConstructionJetEnergyNeeded = 2500000
 _MFConstructionJetDefaultMaxDistance = 130
 
+_MFConstructionJetDefaultTableSize = 1000
+
 -- Repair Jet --
 _mfRepairJetEnergyNeeded = 4000000
 _MFRepairJetDefaultMaxDistance = 130

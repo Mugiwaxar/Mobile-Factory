@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.138
+Date: 29/04/2020
+  BugFixes:
+    - no error if GUI was never moved between save/load
+    - missed default value _MFConstructionJetDefaultTableSize somehow
+---------------------------------------------------------------------------------------------------
 Version: 0.0.137
 Date: 29/04/2020
   BugFixes:
