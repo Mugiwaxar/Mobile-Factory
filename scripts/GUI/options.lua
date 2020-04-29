@@ -60,6 +60,12 @@ function GUI.readOptions(option, player)
 			MF.varTable.jets.cbjMaxDistance = _MFCombatJetDefaultMaxDistance
 		end
 	end
+	if name == "ConstructionJetTableSizeOpt" then
+		MF.varTable.jets.cjTableSize = tonumber(option.text)
+		if MF.varTable.jets.cjTableSize == nil or MF.varTable.jets.cjTableSize < 1000 or MF.varTable.jets.cjTableSize > 25000 then
+			MF.varTable.jets.cjTableSize = _MFConstructionJetDefaultTableSize
+		end
+	end
 	if name == "FloorIsLavaOpt" then
 		global.floorIsLavaActivated = option.state
 		if global.floorIsLavaActivated == true then

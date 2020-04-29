@@ -1,4 +1,27 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.135
+Date: 28/04/2020
+  Features:
+    - blueprinting will transfer some settings (experimental):
+        ***only can copy settings if the player blueprinting matches the set Deep Storages and Deep Tanks***
+        ***however, if player has Storages/Tanks matching the copied filter, it will try to use them***
+        ***attempted to make usable across saves (makes a guess if the exact Storage/Tank is not found)***
+        Matter Interactor: (if matching) Deep Storage, (else) Deep Storage filter, self-filter (always set), Mode
+        Fluid Interactor: (if matching) Deep Tank, (else) Deep Tank Filter, Mode. No temperature support at the moment.
+  Changes:
+    - check for necessary tiles, and error with specific message if we're missing any
+    - Construction Jets can place Tiles
+    - Construction Jets can queue 1000 ghost, but a "Jets" option permits <= 25,000 for mass tile placement
+         (performance concern - I can increase max if it's not that bad)
+	- "too many" ghosts keeps existing construction table, and ignores new ghosts (previously emptied the table)
+	- "too many ghosts" is a localized string that prints only to MF owner that places ghosts
+  Scripting:
+    - use ghost.revive() instead of destroying and creating a thing for construction jets
+    - the construction ghost table is global at present (but size option is not).
+                  This is bad. Will try to get to it by next version. (ghosts should be stored per-player / MF)
+  BugFixes:
+    - input/output would not be set on copy/pasting with Matter Interactor and Fluid Interactor
+---------------------------------------------------------------------------------------------------
 Version: 0.0.134
 Date: 27/04/2020
   Changes:

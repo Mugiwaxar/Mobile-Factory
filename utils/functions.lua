@@ -584,3 +584,30 @@ function canModify(playerName, structure)
 	end
 	return false
 end
+
+-- Check if We Have Necessary Tiles --
+function checkNeededTiles()
+	local tilesToCheck = {
+		"BuildTile",
+		"tutorial-grid",
+		"VoidTile",
+		"DimensionalTile",
+	}
+
+	for _, tile in pairs(tilesToCheck) do
+		if game.tile_prototypes[tile] == nil then
+			error("Missing "..tile..". This is likely because you have more than 255 tiles.")
+		end
+	end
+end
+
+function entityToBluePrintTags(entity, fromTable)
+	local tags = nil
+	local obj = fromTable[entity.unit_number]
+
+	if obj and obj.settingsToTags then
+		tags = obj:settingsToTags()
+	end
+
+	return tags
+end

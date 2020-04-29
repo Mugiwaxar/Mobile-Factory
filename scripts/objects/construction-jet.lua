@@ -181,14 +181,18 @@ function CJ:build()
 	end
 	self.currentOrder = "Build"
 	self.ent.set_command({type=defines.command.stop})
+--[[
 	-- Destroy the Gost --
 	self.target.ent.destroy()
-	-- Create the Entity --
-	local ent = self.ent.surface.create_entity{name=self.target.name, position=self.target.position, direction=self.target.direction, force=self.ent.force, player=self.player, raise_built=true}
+--]]
+	-- Revive the Ghost (Preserves recipes, modules, etc) --
+	local _, ent = self.target.ent.revive({raise_revive = true})
 	-- Empty the Inventory --
 	self.inventoryItem = nil
 	-- Make the Beam --
-	self.ent.surface.create_entity{name="GreenBeam", duration=15, position=self.ent.position, target=ent.position, source=self.ent.position}
+	if ent then -- a ghost can be placed underneath a cliff... one exception where the ghost won't be revived correctly
+		self.ent.surface.create_entity{name="GreenBeam", duration=15, position=self.ent.position, target=ent.position, source=self.ent.position}
+	end
 	-- Return to the Mobile Factory --
 	self:goMF()
 end

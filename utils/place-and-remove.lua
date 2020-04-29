@@ -176,13 +176,17 @@ function somethingWasPlaced(event, isRobot)
 	end
 
 	-- Save the Ghost inside the Construction Table --
-	if cent ~= nil and cent.valid == true and cent.name == "entity-ghost" and
+	if cent ~= nil and cent.valid == true and (cent.name == "entity-ghost" or cent.name == "tile-ghost") and
 	MF ~= nil and MF.ent ~= nil and MF.ent.valid == true and cent.surface.name == MF.ent.surface.name then
-		if table_size(global.constructionTable) > 1000 then
-			game.print("Mobile Factory: To many Blueprint inside the Construction Table")
-			global.constructionTable = {}
+		if table_size(global.constructionTable) >= MF.varTable.jets.cjTableSize then
+			local player = getPlayer(MF.playerIndex)
+			if player then
+				player.print({"info.cjTooManyGhosts", MF.varTable.jets.cjTableSize})
+			end
+			--global.constructionTable = {}
+		else
+			table.insert(global.constructionTable,{ent=cent, item=cent.ghost_prototype.items_to_place_this[1].name, name=cent.ghost_name, position=cent.position, direction=cent.direction or 1, mission="Construct"})
 		end
-		table.insert(global.constructionTable,{ent=cent, item=cent.ghost_prototype.items_to_place_this[1].name, name=cent.ghost_name, position=cent.position, direction=cent.direction or 1, mission="Construct"})
 	end
 
 	-- Clone the Entity if it is inside the Sync Area --
