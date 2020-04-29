@@ -91,9 +91,12 @@ end
 function technologyFinished(event)
 	local func = _MFResearches[event.research.name]
 	if func == nil then return end
-	for k, MF in pairs(global.MFTable) do
-		if event.research.force.name == getMFPlayer(MF.player).ent.force.name then
-			func(MF)
+	for index, player in pairs(game.players) do
+		if player.valid == true then -- should always be valid?
+			local mfPlayer = getMFPlayer(player.name)
+			if valid(mfPlayer) and valid(mfPlayer.MF) and event.research.force == player.force then
+				func(mfPlayer.MF)
+			end
 		end
 	end
 end

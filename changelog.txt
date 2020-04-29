@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.136
+Date: 29/04/2020
+  Corrections:
+    - version 0.0.135: PASTING settings defaults to (always is?) current player.
+        Blueprinting store vague details but
+            tries to match when the ghost is built, as best as it can.
+  Changes:
+    - Bilka added support in newgame+. Mobile Factory surface and Control Center aren't reset.
+  BugFixes:
+    - fix invalid player error on_research_finished (hopefully)
+
+---------------------------------------------------------------------------------------------------
 Version: 0.0.135
 Date: 28/04/2020
   Features:
