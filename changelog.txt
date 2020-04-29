@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.137
+Date: 29/04/2020
+  BugFixes:
+    - Don't use an invalid GUI for a valid player
+    - find_non_colliding_position error (spelling)
+    - copy pasting multiple entities fix
+---------------------------------------------------------------------------------------------------
 Version: 0.0.136
 Date: 29/04/2020
   Corrections:
