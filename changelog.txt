@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.139
+Date: 29/04/2020
+  Changes:
+    - update graphics dependency
+  BugFixes:
+    - initialize cjTableSize (ghost construction table limit) for every *new* player
+        if still error'ing (rare case) go to MF options ui, jets tab (should fix itself? set value to 1000)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.138
 Date: 29/04/2020
   BugFixes:
