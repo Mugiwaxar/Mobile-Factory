@@ -284,6 +284,7 @@ createEryaItem
 -- Erya Loader --
 local erlE = table.deepcopy(data.raw["loader-1x1"]["loader-1x1"])
 erlE.name = "EryaLoader1"
+erlE.flags = {"placeable-neutral", "player-creation"}
 erlE.minable = {mining_time = 0.2, result = "EryaLoader1"}
 erlE.speed = 0.04
 erlE.belt_animation_set = erbE.belt_animation_set
@@ -345,6 +346,7 @@ createEryaItem
 
 -- Erya Extrem Loader --
 local erxlE = table.deepcopy(data.raw["loader-1x1"].EryaLoader1)
+erxlE.flags = {"placeable-neutral", "player-creation"}
 erxlE.name = "EryaLoader2"
 erxlE.minable = {mining_time = 0.2, result = "EryaLoader2"}
 erxlE.speed = 0.4
@@ -842,6 +844,7 @@ createEryaItem
 local errE = table.deepcopy(data.raw.radar.radar)
 errE.name = "EryaRadar1"
 errE.minable = {mining_time = 0.5, result = "EryaRadar1"}
+errE.energy_per_nearby_scan = "2J"
 errE.energy_usage = "1W"
 errE.energy_source = {type="void"}
 errE.pictures.layers[1] = errE.pictures.layers[1].hr_version

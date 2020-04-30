@@ -8,7 +8,7 @@ function GUI.createMFMainGUI(player)
 
 	local existingGUI = global.GUITable["MFMainGUI"..playerIndex]
 	if existingGUI ~= nil then
-		if player.valid and existingGUI.valid then -- probably don't need player.valid...
+		if player.valid and valid(existingGUI) then -- probably don't need player.valid...
 			if existingGUI.location then
 				-- no location if it has not been moved/set
 				posX = existingGUI.location.x
