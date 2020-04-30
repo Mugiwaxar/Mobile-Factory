@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.141
+Date: 30/04/2020
+  BugFixes:
+    - Erya Loader 1 and Extrem can be blueprinted / copy-pasted
+    - Erya Radar works now. Does a nearby scan every 2 seconds
+---------------------------------------------------------------------------------------------------
 Version: 0.0.140
 Date: 30/04/2020
   BugFixes:
