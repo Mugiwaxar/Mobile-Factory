@@ -27,6 +27,7 @@ ocE.input_fluid_patch_window_flow_sprites = nil
 ocE.input_fluid_patch_window_base_sprites = nil
 ocE.monitor_visualization_tint = nil
 ocE.fast_replaceable_group = nil
+ocE.next_upgrade = nil
 ocE.input_fluid_box =
     {
       pipe_connections =
