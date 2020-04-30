@@ -63,6 +63,7 @@ feE.animations =
       }
     }
 feE.fast_replaceable_group = nil
+feE.next_upgrade = nil
 data:extend{feE}
 
 -- Item --
