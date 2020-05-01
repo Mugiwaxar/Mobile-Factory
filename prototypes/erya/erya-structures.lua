@@ -397,7 +397,7 @@ erxlE.structure.direction_out.sheets =
     --     priority = "low"
     -- }
 }
-erslE.next_upgrade = nil
+erxlE.next_upgrade = nil
 data:extend{erxlE}
 
 createEryaItem
