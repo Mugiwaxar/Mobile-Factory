@@ -336,47 +336,47 @@ end
 function somethingWasRemoved(event)
 	-- Check if the Entity is valid --
 	if event.entity == nil or event.entity.valid == false then return end
-	local removed_ent = event.entity
+	local removedEnt = event.entity
 	-- Get the Player Mobile Factory --
 	local MF = nil
 --[[
 	-- last user can change during online play
-	if removed_ent.last_user ~= nil then
-		log("removed_ent.last_user: "..removed_ent.last_user.name)
-		MF = getMF(removed_ent.last_user.name)
+	if removedEnt.last_user ~= nil then
+		log("removedEnt.last_user: "..removedEnt.last_user.name)
+		MF = getMF(removedEnt.last_user.name)
 	end
 --]]
 	-- The Mobile Factory was removed --
-	if string.match(removed_ent.name, "MobileFactory") then
-		MF = Util.valueToObj(removed_ent)
+	if string.match(removedEnt.name, "MobileFactory") then
+		MF = Util.valueToObj(removedEnt)
 		if MF ~= nil then
-			MF:remove(removed_ent)
+			MF:remove(removedEnt)
 		end
 		return
 	end
 	-- Remove the Dimensional Accumulator --
-	if removed_ent.name == "DimensionalAccumulator" then
+	if removedEnt.name == "DimensionalAccumulator" then
 		removedDimensionalAccumulator(event)
 		return
 	end
 	-- Remove the Power Drain Pole --
-	if removed_ent.name == "PowerDrainPole" then
+	if removedEnt.name == "PowerDrainPole" then
 		removedPowerDrainPole(event)
 		return
 	end
 	-- Remove the Matter Interactor --
-	if removed_ent.name == "MatterInteractor" then
+	if removedEnt.name == "MatterInteractor" then
 		removedMatterInteractor(event)
 		return
 	end
 	-- Remove the Fluid Interactor --
-	if removed_ent.name == "FluidInteractor" then
+	if removedEnt.name == "FluidInteractor" then
 		removedFluidInteractor(event)
 		return
 	end
 	-- Remove the Data Center --
-	if removed_ent.name == "DataCenter" then
-		local obj = global.dataCenterTable[removed_ent.unit_number]
+	if removedEnt.name == "DataCenter" then
+		local obj = global.dataCenterTable[removedEnt.unit_number]
 		if obj ~= nil and table_size(obj.invObj.inventory) > 0 and event.buffer ~= nil and event.buffer[1] ~= nil then
 			obj.invObj:rescan()
 			event.buffer[1].set_tag("Infos", {inventory=obj.invObj.inventory})
@@ -386,31 +386,31 @@ function somethingWasRemoved(event)
 		return
 	end
 	-- Remove the Data Storage --
-	if removed_ent.name == "DataStorage" then
+	if removedEnt.name == "DataStorage" then
 		removedDataStorage(event)
 		return
 	end
 	-- Remove the Data Center MF --
-	if removed_ent.name == "DataCenterMF" then
-		MF = Util.valueToObj(global.MFTable, "dataCenter", removed_ent)
+	if removedEnt.name == "DataCenterMF" then
+		MF = Util.valueToObj(global.MFTable, "dataCenter", removedEnt)
 		if MF ~= nil then MF.dataCenter = nil end
 		removedDataCenterMF(event)
 		return
 	end
 	-- Remove the Wireless Data Transmitter --
-	if removed_ent.name == "WirelessDataTransmitter" then
+	if removedEnt.name == "WirelessDataTransmitter" then
 		removedWirelessDataTransmitter(event)
 		return
 	end
 	-- Remove the Wireless Data Receiver --
-	if removed_ent.name == "WirelessDataReceiver" then
+	if removedEnt.name == "WirelessDataReceiver" then
 		removedWirelessDataReceiver(event)
 		return
 	end
 	-- Remove the Energy Cube --
-	if string.match(removed_ent.name, "EnergyCube") then
+	if string.match(removedEnt.name, "EnergyCube") then
 		removedEnergyCube(event)
-		local obj = global.energyCubesTable[removed_ent.unit_number]
+		local obj = global.energyCubesTable[removedEnt.unit_number]
 		if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and obj.ent.energy > 0 and event.buffer ~= nil and event.buffer[1] ~= nil then
 			event.buffer[1].set_tag("Infos", {energy=obj.ent.energy})
 			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.EnergyCubeC", Util.toRNumber(math.floor(obj.ent.energy))}, "J"}
@@ -418,8 +418,8 @@ function somethingWasRemoved(event)
 		return
 	end
 	-- Remove the Ore Cleaner --
-	if removed_ent.name == "OreCleaner" then
-		local obj = global.oreCleanerTable[removed_ent.unit_number]
+	if removedEnt.name == "OreCleaner" then
+		local obj = global.oreCleanerTable[removedEnt.unit_number]
 		if obj ~= nil and event.buffer ~= nil and event.buffer[1] ~= nil then
 			event.buffer[1].set_tag("Infos", {purity=obj.purity, charge=obj.charge, totalCharge=obj.totalCharge})
 			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.OreCleanerC", obj.purity, obj.charge, obj.totalCharge}}
@@ -428,8 +428,8 @@ function somethingWasRemoved(event)
 		return
 	end
 	-- Remove the Fluid Extractor --
-	if removed_ent.name == "FluidExtractor" then
-		local obj = global.fluidExtractorTable[removed_ent.unit_number]
+	if removedEnt.name == "FluidExtractor" then
+		local obj = global.fluidExtractorTable[removedEnt.unit_number]
 		if obj ~= nil and event.buffer ~= nil and event.buffer[1] ~= nil then
 			event.buffer[1].set_tag("Infos", {purity=obj.purity, charge=obj.charge, totalCharge=obj.totalCharge})
 			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.FluidExtractorC", obj.purity, obj.charge, obj.totalCharge}}
@@ -438,8 +438,8 @@ function somethingWasRemoved(event)
 		return
 	end
 	-- Remove the Jet Flag --
-	if string.match(removed_ent.name, "Flag") then
-		local obj = global.jetFlagTable[removed_ent.unit_number]
+	if string.match(removedEnt.name, "Flag") then
+		local obj = global.jetFlagTable[removedEnt.unit_number]
 		if obj ~= nil and table_size(obj.inventory) > 0 and event.buffer ~= nil and event.buffer[1] ~= nil then
 			event.buffer[1].set_tag("Infos", {inventory=obj.inventory})
 			local total = 0
@@ -452,8 +452,8 @@ function somethingWasRemoved(event)
 		return
 	end
 	-- Remove the Deep Storage --
-	if removed_ent.name == "DeepStorage" then
-		local obj = global.deepStorageTable[removed_ent.unit_number]
+	if removedEnt.name == "DeepStorage" then
+		local obj = global.deepStorageTable[removedEnt.unit_number]
 		if obj ~= nil and obj.inventoryItem ~= nil and event.buffer ~= nil and event.buffer[1] ~= nil then
 			event.buffer[1].set_tag("Infos", {inventoryItem=obj.inventoryItem, inventoryCount=obj.inventoryCount})
 			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.DeepStorageC", obj.inventoryItem, obj.inventoryCount}}
@@ -462,8 +462,8 @@ function somethingWasRemoved(event)
 		return
 	end
 	-- Remove the Deep Tank --
-	if removed_ent.name == "DeepTank" then
-		local obj = global.deepTankTable[removed_ent.unit_number]
+	if removedEnt.name == "DeepTank" then
+		local obj = global.deepTankTable[removedEnt.unit_number]
 		if obj ~= nil and obj.inventoryFluid ~= nil and event.buffer ~= nil and event.buffer[1] ~= nil then
 			event.buffer[1].set_tag("Infos", {inventoryFluid=obj.inventoryFluid, inventoryCount=obj.inventoryCount})
 			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.DeepTankC", obj.inventoryFluid, obj.inventoryCount}}
@@ -472,16 +472,16 @@ function somethingWasRemoved(event)
 		return
 	end
 	-- Remove the Erya Structure --
-	if eryaSave(removed_ent.name) then
+	if eryaSave(removedEnt.name) then
 		removedEryaStructure(event)
 	end
 
 	-- Return Sync Area Items from Chests --
-	if removed_ent.type == "container" then
+	if removedEnt.type == "container" then
 		for _, MFObj in pairs(global.MFTable) do
 			if MFObj.ent ~= nil and MFObj.ent.valid and MFObj.syncAreaEnabled == true and MFObj.ent.speed == 0 
-			and ((removed_ent.surface == MFObj.ent.surface and Util.distance(removed_ent.position, MFObj.ent.position) < _mfSyncAreaRadius)
-					or (removed_ent.surface == MFObj.fS and Util.distance(removed_ent.position, _mfSyncAreaPosition) < _mfSyncAreaRadius))
+			and ((removedEnt.surface == MFObj.ent.surface and Util.distance(removedEnt.position, MFObj.ent.position) < _mfSyncAreaRadius)
+					or (removedEnt.surface == MFObj.fS and Util.distance(removedEnt.position, _mfSyncAreaPosition) < _mfSyncAreaRadius))
 				then
 				MF = MFObj
 				break
@@ -500,7 +500,7 @@ function somethingWasRemoved(event)
 		local invCloned = nil
 
 		for i, ents in pairs(MF.clonedResourcesTable) do
-			if removed_ent == ents.original or removed_ent == ents.cloned then
+			if removedEnt == ents.original or removedEnt == ents.cloned then
 				local items = {}
 				invOriginal = ents.original.get_inventory(defines.inventory.chest)
 				for itemName, itemCount in pairs(invOriginal.get_contents()) do
