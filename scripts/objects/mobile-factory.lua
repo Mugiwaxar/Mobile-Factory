@@ -723,7 +723,7 @@ function MF:syncAreaScan()
 
 		--if outside.entity_prototype_collides(ent.name, {posX, posY}, false, ent.direction) == true then
 		-- if we can place it, including marking obstructions for deconstruction... would overlap entities if we have friendly chests etc on the other side
-		if outside.can_place_entity(ent.name, {posX, posY}, ent.direction, ent.force, defines.build_check_type.ghost_place, true) == false then
+		if outside.can_place_entity{name = ent.name, position = {posX, posY}, direction = ent.direction, force = ent.force, build_check_type = defines.build_check_type.ghost_place, forced = true} == false then
 			obstructed = true
 			break
 		end
