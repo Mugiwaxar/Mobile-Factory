@@ -1,10 +1,12 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.141
-Date: 30/04/2020
+Date: 01/05/2020
+  Changes:
+    - attempt to make sync collision detection less aggressive
   BugFixes:
     - Erya Loader 1 and Extrem can be blueprinted / copy-pasted
-    - Erya Radar works now. Does a nearby scan every 2 seconds
-    - set next_upgrade to nil for OreCleaner, Fluid Extractor and unset Erya structures
+    - Erya Radar works now. Does a nearby scan every 5 seconds (enjoy)
+    - set next_upgrade to nil for OreCleaner, Fluid Extractor and unset Erya structures (compatibility patch)
     - trying to fix invalid player -> MainGUI error again
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.140

@@ -718,10 +718,12 @@ function MF:syncAreaScan()
 		-- may not need to do the if
 		local posX = math.floor(self.ent.position.x) + (ent.position.x - _mfSyncAreaPosition.x)
 		local posY = math.floor(self.ent.position.y) + (ent.position.y - _mfSyncAreaPosition.y)
-		
+
 		distancesInBools[k] = Util.distance(ent.position, _mfSyncAreaPosition) < _mfSyncAreaRadius
 
-		if outside.entity_prototype_collides(ent.name, {posX, posY}, false) == true then
+		--if outside.entity_prototype_collides(ent.name, {posX, posY}, false, ent.direction) == true then
+		-- if we can place it, including marking obstructions for deconstruction... would overlap entities if we have friendly chests etc on the other side
+		if outside.can_place_entity(ent.name, {posX, posY}, ent.direction, ent.force, defines.build_check_type.ghost_place, true) == false then
 			obstructed = true
 			break
 		end
@@ -806,15 +808,17 @@ function MF:cloneEntity(ent, side) -- side: in (Clone inside), out (Clone outsid
 	end
 	-- Clone the Entity --
 	clone = ent.clone{position={posX, posY}, surface=surface}
-	table.insert(self.clonedResourcesTable,  {original=ent, cloned=clone})
-	if ent.type == "container" then
-		clone.get_inventory(defines.inventory.chest).clear()
-	end
-	if ent.type == "storage-tank" then
-		clone.clear_fluid_inside()
-	end
-	if ent.type == "accumulator" then
-		clone.energy = 0
+	if clone ~= nil then
+		table.insert(self.clonedResourcesTable,  {original=ent, cloned=clone})
+		if ent.type == "container" then
+			clone.get_inventory(defines.inventory.chest).clear()
+		end
+		if ent.type == "storage-tank" then
+			clone.clear_fluid_inside()
+		end
+		if ent.type == "accumulator" then
+			clone.energy = 0
+		end
 	end
 	return clone
 end

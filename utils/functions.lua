@@ -149,6 +149,7 @@ function valid(obj)
 	if obj == nil then return false end
 	if getmetatable(obj) == nil then return false end
 	if obj.valid == nil then return false end
+	if type(obj.valid) == "boolean" then return obj.valid end
 	if obj:valid() ~= true then return false end
 	return true
 end
