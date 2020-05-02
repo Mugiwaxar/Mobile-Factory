@@ -169,6 +169,7 @@ end
 
 -- Beggin the Mining Process --
 function MJ:mine()
+	local production = 1
 	-- Check if the Flag still exist --
 	if valid(self.flag) == false then
 		self.isMining = false
@@ -176,11 +177,15 @@ function MJ:mine()
 		return
 	end
 
+	-- Enhance Mining Amount and Inventory Size (Default disabled!) --
+	-- if the bonus is stored in the entity or an "MFForce", it needs to be calculated less
+	if false then production = 1 + self.ent.force.mining_drill_productivity_bonus end
+	local invSize = math.floor(_mfMiningJetInventorySize * production)
 	-- Check if the Ore Path is still valid --
 	if self.targetOre == nil or self.targetOre.valid == false or self.targetOre.amount <= 0 then
 		self.isMining = false
 		-- Take Another Ore Path or return to the Flag --
-		if self.inventoryCount >= _mfMiningJetInventorySize then
+		if self.inventoryCount >= (invSize) then
 			self:goToFlag()
 		else
 			self:takeAnotherPath()
@@ -194,15 +199,15 @@ function MJ:mine()
 	self.ent.set_command({type=defines.command.stop})
 	
 	-- Mine Ore --
-	local oreExtracted = math.min(_mfMiningJetOrePerUpdate, self.targetOre.amount, _mfMiningJetInventorySize - self.inventoryCount)
-	
+	local oreExtracted = math.min(_mfMiningJetOrePerUpdate, self.targetOre.amount, invSize - self.inventoryCount)
+
 	-- Add Ore to the Inventory --
 	self.inventoryItem = self.targetOre.prototype.mineable_properties.products[1].name
-	self.inventoryCount = self.inventoryCount + oreExtracted
-	
+	self.inventoryCount = math.floor(self.inventoryCount + oreExtracted * production)
+
 	-- Remove Ores from the Ore Path --
 	self.targetOre.amount = math.max(self.targetOre.amount - oreExtracted, 1)
-	
+
 	-- Make the Beam --
 	if oreExtracted > 0 then
 		-- Make the Beam --
@@ -215,7 +220,7 @@ function MJ:mine()
 		self.isMining = false
 		self.flag:removeOrePath(self.targetOre)
 		-- Take Another Ore Path or return home --
-		if self.inventoryCount >= _mfMiningJetInventorySize then
+		if self.inventoryCount >= (_mfMiningJetInventorySize * production) then
 			self:goToFlag()
 		else
 			self:takeAnotherPath()
@@ -224,7 +229,7 @@ function MJ:mine()
 	end
 	
 	-- Go back to the Flag if the Inventory is full --
-	if self.inventoryCount >= _mfMiningJetInventorySize then
+	if self.inventoryCount >= invSize then
 		self.isMining = false
 		self:goToFlag()
 		return

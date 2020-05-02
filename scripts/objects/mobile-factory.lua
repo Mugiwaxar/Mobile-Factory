@@ -719,11 +719,11 @@ function MF:syncAreaScan()
 		local posX = math.floor(self.ent.position.x) + (ent.position.x - _mfSyncAreaPosition.x)
 		local posY = math.floor(self.ent.position.y) + (ent.position.y - _mfSyncAreaPosition.y)
 
-		distancesInBools[k] == Util.distance(ent.position, _mfSyncAreaPosition) < _mfSyncAreaRadius)
+		distancesInBools[k] = Util.distance(ent.position, _mfSyncAreaPosition) < _mfSyncAreaRadius
 
 		--if outside.entity_prototype_collides(ent.name, {posX, posY}, false, ent.direction) == true then
 		-- if we can place it, including marking obstructions for deconstruction... would overlap entities if we have friendly chests etc on the other side
-		if outside.can_place_entity(ent.name, {posX, posY}, ent.direction, force = ent.force, defines.build_check_type.ghost_place, true) == false then
+		if outside.can_place_entity(ent.name, {posX, posY}, ent.direction, ent.force, defines.build_check_type.ghost_place, true) == false then
 			obstructed = true
 			break
 		end
