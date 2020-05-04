@@ -29,7 +29,9 @@ end
 -- Save the Fluid Interactor in a table --
 function placedFluidInteractor(event)
 	if global.fluidInteractorTable == nil then global.fluidInteractorTable = {} end
-	global.fluidInteractorTable[event.created_entity.unit_number] = FI:new(event.created_entity)
+	local newFI = FI:new(event.created_entity)
+	global.fluidInteractorTable[event.created_entity.unit_number] = newFI
+	objApplyTags(newFI, event.tags)
 end
 
 -- Save the Data Center in a table --

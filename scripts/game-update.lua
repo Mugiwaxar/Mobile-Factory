@@ -152,7 +152,7 @@ function initPlayer(event)
 		MF.II = INV:new("Internal Inventory")
 		MF.II.MF = MF
 		MF.II.isII = true
-		MF.index = player.index
+		MF.playerIndex = player.index
 		MF.player = player.name
 		createMFSurface(MF)
 		createControlRoom(MF)
