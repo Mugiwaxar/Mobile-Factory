@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.142
+Date: 03/05/2020
+  Changes:
+    - Erya Radar scan rate and dish rotation speed decreased
+  BugFixes:
+    - Fluid Interactor didn't have blueprint settings applied
+    - place and remove error from not setting MF.playerIndex
+---------------------------------------------------------------------------------------------------
 Version: 0.0.141
 Date: 01/05/2020
   Changes:

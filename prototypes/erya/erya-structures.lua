@@ -852,12 +852,13 @@ createEryaItem
 local errE = table.deepcopy(data.raw.radar.radar)
 errE.name = "EryaRadar1"
 errE.minable = {mining_time = 0.5, result = "EryaRadar1"}
-errE.energy_per_nearby_scan = "5J"
+errE.energy_per_nearby_scan = "15J"
 errE.energy_usage = "1W"
 errE.energy_source = {type="void"}
 errE.pictures.layers[1] = errE.pictures.layers[1].hr_version
 errE.pictures.layers[1].filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaRadar1E.png"
 errE.pictures.layers[1].hr_version = nil
+errE.rotation_speed = errE.rotation_speed / 3
 errE.next_upgrade = nil
 data:extend{errE}
 
