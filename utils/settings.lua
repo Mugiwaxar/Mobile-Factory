@@ -49,6 +49,25 @@ _mfSyncAreaAllowedTypes =
 
 }
 
+-- Mobile Factory Sync Area extra entity information needed --
+_mfSyncAreaExtraDetails = {
+	["item-entity"] = {"stack"},
+	["entity-ghost"] = {"inner_name"},
+	["tile-ghost"] = {"inner_name"},
+
+}
+-- Mobile Factory Sync Area, ignored for collision, entity types --
+_mfSyncAreaIgnoredTypes = {
+	beam = true,
+	["flying_text"] = true,
+	["fire"] = true,
+	["particle"] = true,
+    ["projectile"] = true,
+	["highlight-box"] = true,
+	["speech-bubble"] = true,
+	["item-request-proxy"] = true,
+}
+
 -- Mobile Factory Internal Distrubution --
 _mfBaseEnergyAccSend = 1000000
 

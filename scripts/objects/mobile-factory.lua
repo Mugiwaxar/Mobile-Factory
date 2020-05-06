@@ -713,19 +713,38 @@ function MF:syncAreaScan()
 	-- Look for Entities inside the Sync Area --
 	local entTableIn = inside.find_entities_filtered{area = clonedBdb, build_type}
 
+--[[
+	-- 06-05-2020: suggestion from Klonan, with idea/contributions from Optera
+	-- this is complicated. I don't need entities for obstruction detection, but I need them for cloning
+	tiles = outside.find_tiles_filtered{position = sync-area, radius = sync-area-radius}
+	inside.count_entities_filtered{area = {{tile.position.x, tile.position.y}, {tile.position.x + 1, tile.position.y + 1}}, collision_mask = tile.prototype.collision_mask, limit = 1}
+--]]
 	-- Check if Entities inside Can't be Placed Outside --
 	for k, ent in pairs(entTableIn) do
-		-- may not need to do the if
-		local posX = math.floor(self.ent.position.x) + (ent.position.x - _mfSyncAreaPosition.x)
-		local posY = math.floor(self.ent.position.y) + (ent.position.y - _mfSyncAreaPosition.y)
+		if not _mfSyncAreaIgnoredTypes[ent.type] then
+			local posX = math.floor(self.ent.position.x) + (ent.position.x - _mfSyncAreaPosition.x)
+			local posY = math.floor(self.ent.position.y) + (ent.position.y - _mfSyncAreaPosition.y)
 
-		distancesInBools[k] = Util.distance(ent.position, _mfSyncAreaPosition) < _mfSyncAreaRadius
+			distancesInBools[k] = Util.distance(ent.position, _mfSyncAreaPosition) < _mfSyncAreaRadius
 
-		--if outside.entity_prototype_collides(ent.name, {posX, posY}, false, ent.direction) == true then
-		-- if we can place it, including marking obstructions for deconstruction... would overlap entities if we have friendly chests etc on the other side
-		if outside.can_place_entity{name = ent.name, position = {posX, posY}, direction = ent.direction, force = ent.force, build_check_type = defines.build_check_type.ghost_place, forced = true} == false then
-			obstructed = true
-			break
+			-- if we can place it, including marking obstructions for deconstruction... would overlap entities if we have friendly chests etc on the other side
+			local arg = {
+				name = ent.name,
+				position = {posX, posY},
+				direction = ent.direction,
+				force = ent.force,
+				build_check_type = defines.build_check_type.ghost_place,
+				forced = true
+			}
+			if _mfSyncAreaExtraDetails[ent.type] then
+				for _, key in pairs(_mfSyncAreaExtraDetails[ent.type]) do
+					arg[key] = ent[key]
+				end
+			end
+ 			if outside.can_place_entity(arg) == false then
+				obstructed = true
+				break
+			end
 		end
 	end
 	if obstructed == true then
@@ -743,12 +762,12 @@ function MF:syncAreaScan()
 	local entTableOut = outside.find_entities_filtered{area = bdb}
 	-- Check if Entities inside Can't be Placed Iutside --
 	for k, ent in pairs(entTableOut) do
-		local posX = (ent.position.x - math.floor(self.ent.position.x)) + _mfSyncAreaPosition.x
-		local posY = (ent.position.y - math.floor(self.ent.position.y)) + _mfSyncAreaPosition.y
+		if _mfSyncAreaAllowedTypes[ent.type] == true then
+			local posX = (ent.position.x - math.floor(self.ent.position.x)) + _mfSyncAreaPosition.x
+			local posY = (ent.position.y - math.floor(self.ent.position.y)) + _mfSyncAreaPosition.y
 
-		distancesOutBools[k] = Util.distance(ent.position, {math.floor(self.ent.position.x), math.floor(self.ent.position.y)}) < _mfSyncAreaRadius
-		if _mfSyncAreaAllowedTypes[ent.type] == true and distancesOutBools[k] == true then
-			if inside.entity_prototype_collides(ent.name, {posX, posY}, false) == true then
+			distancesOutBools[k] = Util.distance(ent.position, {math.floor(self.ent.position.x), math.floor(self.ent.position.y)}) < _mfSyncAreaRadius
+			if distancesOutBools[k] and inside.entity_prototype_collides(ent.name, {posX, posY}, false) == true then
 				obstructed = true
 				break
 			end
