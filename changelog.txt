@@ -1,5 +1,11 @@
 ---------------------------------------------------------------------------------------------------
-Version: 0.0.142
+Version: 0.0.144
+Date: 06/05/2020
+  Bugfixes:
+    - prevent certain entity types from error'ing the sync area scan
+
+---------------------------------------------------------------------------------------------------
+Version: 0.0.143
 Date: 06/05/2020
   Changes:
     - patches of Dimensional Fluid are "grouped" more on map (more dots will be highlighted together)
