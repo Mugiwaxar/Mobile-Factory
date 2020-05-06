@@ -1,5 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.144
+Date: 06/05/2020
   Bugfixes:
     - prevent certain entity types from error'ing the sync area scan
 
