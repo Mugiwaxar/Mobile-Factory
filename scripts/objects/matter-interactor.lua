@@ -196,6 +196,9 @@ function MI:changeInventory(ID)
 		if valid(deepStorage) then
 			if ID == deepStorage.ID then
 				self.selectedInv = deepStorage
+				if self.selectedInv.filter then
+					self.selectedFilter = self.selectedInv.filter
+				end
 			end
 		end
 	end

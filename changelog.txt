@@ -1,5 +1,14 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.142
+Date: 06/05/2020
+  Changes:
+    - patches of Dimensional Fluid are "grouped" more on map (more dots will be highlighted together)
+    - selecting a Deep Storage with the Matter Interactor will automatically set MI filter if DS has one
+  Scripting:
+    - Possible improvement to performance with large numbers of mining jets and many ore paths
+
+---------------------------------------------------------------------------------------------------
+Version: 0.0.142
 Date: 03/05/2020
   Changes:
     - Erya Radar scan rate and dish rotation speed decreased
