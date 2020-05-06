@@ -1,5 +1,11 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.142
+Date: 04/05/2020
+  Changes:
+    - patches of Dimensional Fluid are "grouped" more on map (more dots will be highlighted together)
+
+---------------------------------------------------------------------------------------------------
+Version: 0.0.142
 Date: 03/05/2020
   Changes:
     - Erya Radar scan rate and dish rotation speed decreased
