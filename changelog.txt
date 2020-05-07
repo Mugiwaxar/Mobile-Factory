@@ -1,5 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.147
+Date: 07/05/2020
+  Bugfixes:
+    - missed curly brackets on out-in obstruction string
+---------------------------------------------------------------------------------------------------
 Version: 0.0.146
+Date: 07/05/2020
   Changes:
 	- reworked Matter Interactor interface
     - print name of obstruction entity for sync-area (and which cloning direction)
