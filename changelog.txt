@@ -1,7 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.146
   Changes:
-    - print name of obstruction entity for sync-area (doesn't say inside/outside)
+	- reworked Matter Interactor interface
+    - print name of obstruction entity for sync-area (and which cloning direction)
   Scripting:
     - added "knownbugs.txt", mostly for bugs that strange edge cases I may or may not fix
 ---------------------------------------------------------------------------------------------------

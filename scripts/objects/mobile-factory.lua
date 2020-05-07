@@ -755,7 +755,7 @@ function MF:syncAreaScan()
 				end
 			end
  			if arg and outside.can_place_entity(arg) == false then
-				obstructed = arg.name
+				obstructed = ent.localised_name or ent.name
 				break
 			end
 		end
@@ -765,7 +765,7 @@ function MF:syncAreaScan()
 		if self.player ~= "" then
 			player = getPlayer(self.player)
 			if player.connected then
-				player.create_local_flying_text{text={"", "info.MF-sync-collision", "\n"..obstructed}, position = self.ent.position}
+				player.create_local_flying_text{text={"", {"info.MF-sync-collision-in-out"}, ": "..obstructed}, position = self.ent.position}
 			end
 		end
 		return
@@ -781,7 +781,7 @@ function MF:syncAreaScan()
 
 			distancesOutBools[k] = Util.distance(ent.position, {math.floor(self.ent.position.x), math.floor(self.ent.position.y)}) < _mfSyncAreaRadius
 			if distancesOutBools[k] and inside.entity_prototype_collides(ent.name, {posX, posY}, false) == true then
-				obstructed = ent.name
+				obstructed = ent.localised_name or ent.name
 				break
 			end
 		end
@@ -791,7 +791,7 @@ function MF:syncAreaScan()
 		if self.player ~= "" then
 			player = getPlayer(self.player)
 			if player.connected then
-				player.create_local_flying_text{text={"", "info.MF-sync-collision", "\n"..obstructed}, position = self.ent.position}
+				player.create_local_flying_text{text={"", "info.MF-sync-collision-out-in", ": "..obstructed}, position = self.ent.position}
 			end
 		end
 		return

@@ -7,5 +7,6 @@ for _, MI in pairs(global.matterInteractorTable) do
 		else
 			MI.selectedPlayer = MI.player
 		end
+		MI.lastSelectedPlayer = ""
 	end
 end

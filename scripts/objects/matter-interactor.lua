@@ -14,6 +14,7 @@ MI = {
     dataNetwork = nil,
     selectedFilter = nil,
     selectedMode = "input", -- input or output
+	lastSelectedPlayer = "",
 	selectedPlayer = "",
     selectedInv = 0,
 }
@@ -134,10 +135,18 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	end
 	
 	-- Check if the Parameters can be modified --
-	if canModify(getPlayer(gui.player_index).name, self.ent) == false or justCreated ~= true or valid(self.dataNetwork) == false then return end
+	if canModify(getPlayer(gui.player_index).name, self.ent) == false or valid(self.dataNetwork) == false then return end
+
+	if self.lastSelectedPlayer ~= self.selectedPlayer then
+		self.lastSelectedPlayer = self.selectedPlayer
+		self.selectedInv = 0
+		if valid(GUIObj.settingsFrame) and valid(GUIObj.settingsFrame["titleFrame"..self.ent.unit_number]) then GUIObj.SettingsFrame["titleFrame"..self.ent.unit_number].destroy() end
+		justCreated = true
+	end
+	if justCreated ~= true then return end
 	
 	-- Create the Parameters Title --
-	local titleFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
+	local titleFrame = GUIObj:addTitledFrame("titleFrame"..self.ent.unit_number, GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
 	GUIObj.SettingsFrame.visible = true
 
 	-- Create the Filter Selection --
@@ -151,10 +160,15 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	if self.selectedMode == "output" then state = "right" end
 	GUIObj:addSwitch("MIMode" .. self.ent.unit_number, titleFrame, {"gui-description.Input"}, {"gui-description.Output"}, {"gui-description.InputTT"}, {"gui-description.OutputTT"}, state)
 
-	local playerInvs = {[self.player] = true}
-	local invs = {self.dataNetwork.dataCenter.invObj.name or {"gui-description.None"}}
-	local selectedIndex = 1
 	if valid(game.players[self.selectedPlayer]) == false then self.selectedPlayer = self.player end
+	local playerInvs = {[self.player] = true}
+	local invs = {}
+	if self.selectedPlayer == self.player then
+		table.insert(invs, self.dataNetwork.dataCenter.invObj.name or {"gui-description.None"})
+	else
+		table.insert(invs, {"gui-description.None"})
+	end
+	local selectedIndex = 1
 
 	local i = 1
 
@@ -171,12 +185,8 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 				end
 
 				if item then
-					--table.insert(playerInvs[player], {"", "[img=item/"..item.."] ", game.item_prototypes[item].localised_name, " - ", "(", player, ")"})
-					--invs[k+1] = {"", "[img=item/"..item.."] ", game.item_prototypes[item].localised_name}
 					invs[k+1] = {"", "[img=item/"..item.."] ", game.item_prototypes[item].localised_name, " - ", deepStorage.ID}
 				else
-					--invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
-					--playerInvs[player][k+1] = {"", {"gui-description.Empty"}, " - ", "(", deepStorage.player, ")"}
 					invs[k+1] = {"", {"gui-description.Empty"}, " - ", "(", deepStorage.player, ")"}
 				end
 				if self.selectedInv == deepStorage then
@@ -188,8 +198,7 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	if selectedIndex > table_size(invs) then selectedIndex = nil end
 
 	-- Create the Player Selection --
-	--if table_size(playerInvs) > 1 then
-	if true then
+	if table_size(playerInvs) > 1 then
 		local selectedPlayer = self.selectedPlayer
 		local playerArray = {}
 		for k in pairs(playerInvs) do
@@ -218,6 +227,8 @@ end
 -- Change the Target Player --
 function MI:changePlayer(playerName)
     if type(playerName) ~= "string" then return end
+	lastSelectedPlayer = self.selectedPlayer
+
 	if game.players[playerName] then
 		self.selectedPlayer = playerName
 	else
