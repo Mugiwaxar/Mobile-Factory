@@ -706,7 +706,7 @@ function MF:syncAreaScan()
 
 	local inside = self.fS
 	local outside = self.ent.surface
-	local obstructed = false
+	local obstructed = nil
 	local distancesInBools = {}
 	local distancesOutBools = {}
 
@@ -736,23 +736,36 @@ function MF:syncAreaScan()
 				build_check_type = defines.build_check_type.ghost_place,
 				forced = true
 			}
+			-- Will create_entity Fail Without More Details? --
 			if _mfSyncAreaExtraDetails[ent.type] then
 				for _, key in pairs(_mfSyncAreaExtraDetails[ent.type]) do
-					arg[key] = ent[key]
+					-- LuaItemStack vs SimpleItemStack (dictionary) --
+					if key == "stack" then
+						--unsure if stack could ever be invalid, but reading would cause an error
+						if ent.stack.valid_for_read then
+							arg.stack = {name = ent.stack.name, count = ent.stack.count}
+						else
+							--this is such a hackjob
+							arg = nil
+							break
+						end
+					else
+						arg[key] = ent[key]
+					end
 				end
 			end
- 			if outside.can_place_entity(arg) == false then
-				obstructed = true
+ 			if arg and outside.can_place_entity(arg) == false then
+				obstructed = ent.localised_name or ent.name
 				break
 			end
 		end
 	end
-	if obstructed == true then
+	if obstructed then
 		local player = nil
 		if self.player ~= "" then
 			player = getPlayer(self.player)
 			if player.connected then
-				player.create_local_flying_text{text={"info.MF-sync-collision"}, position = self.ent.position}
+				player.create_local_flying_text{text={"", {"info.MF-sync-collision-in-out"}, ": "..obstructed}, position = self.ent.position}
 			end
 		end
 		return
@@ -768,17 +781,17 @@ function MF:syncAreaScan()
 
 			distancesOutBools[k] = Util.distance(ent.position, {math.floor(self.ent.position.x), math.floor(self.ent.position.y)}) < _mfSyncAreaRadius
 			if distancesOutBools[k] and inside.entity_prototype_collides(ent.name, {posX, posY}, false) == true then
-				obstructed = true
+				obstructed = ent.localised_name or ent.name
 				break
 			end
 		end
 	end
-	if obstructed == true then
+	if obstructed then
 		local player = nil
 		if self.player ~= "" then
 			player = getPlayer(self.player)
 			if player.connected then
-				player.create_local_flying_text{text={"info.MF-sync-collision"}, position = self.ent.position}
+				player.create_local_flying_text{text={"", "info.MF-sync-collision-out-in", ": "..obstructed}, position = self.ent.position}
 			end
 		end
 		return

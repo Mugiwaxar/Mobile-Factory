@@ -1,0 +1,13 @@
+1.
+	Version: 0.0.145
+	Date: 07-05-2020
+
+	Description:
+	Placing LabTiles (not stone brick, Dim. Tiles, etc) can destroy Equalizer and kill player.
+
+	createTilesAtPosition does not pass the oldTile to set_tiles if the new tile is tutorial-grid or void. Somehow this *not* replacement triggers the destroy check.
+
+	To rebuild the Equalizer, un-research the UpgradeModules Technology and re-research it.
+
+	Status:
+	2020-05-07 - reproducible, unresolved, not intending to fix
