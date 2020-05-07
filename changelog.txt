@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.146
+  Changes:
+    - print name of obstruction entity for sync-area (doesn't say inside/outside)
+  Scripting:
+    - added "knownbugs.txt", mostly for bugs that strange edge cases I may or may not fix
+---------------------------------------------------------------------------------------------------
 Version: 0.0.145
 Date: 07/05/2020
   Bugfixes:

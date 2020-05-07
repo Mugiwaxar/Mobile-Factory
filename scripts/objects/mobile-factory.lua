@@ -706,7 +706,7 @@ function MF:syncAreaScan()
 
 	local inside = self.fS
 	local outside = self.ent.surface
-	local obstructed = false
+	local obstructed = nil
 	local distancesInBools = {}
 	local distancesOutBools = {}
 
@@ -741,7 +741,7 @@ function MF:syncAreaScan()
 				for _, key in pairs(_mfSyncAreaExtraDetails[ent.type]) do
 					-- LuaItemStack vs SimpleItemStack (dictionary) --
 					if key == "stack" then
-						--unsure if stack could ever be invalid, but it would cause an error
+						--unsure if stack could ever be invalid, but reading would cause an error
 						if ent.stack.valid_for_read then
 							arg.stack = {name = ent.stack.name, count = ent.stack.count}
 						else
@@ -755,17 +755,17 @@ function MF:syncAreaScan()
 				end
 			end
  			if arg and outside.can_place_entity(arg) == false then
-				obstructed = true
+				obstructed = arg.name
 				break
 			end
 		end
 	end
-	if obstructed == true then
+	if obstructed then
 		local player = nil
 		if self.player ~= "" then
 			player = getPlayer(self.player)
 			if player.connected then
-				player.create_local_flying_text{text={"info.MF-sync-collision"}, position = self.ent.position}
+				player.create_local_flying_text{text={"", "info.MF-sync-collision", "\n"..obstructed}, position = self.ent.position}
 			end
 		end
 		return
@@ -781,17 +781,17 @@ function MF:syncAreaScan()
 
 			distancesOutBools[k] = Util.distance(ent.position, {math.floor(self.ent.position.x), math.floor(self.ent.position.y)}) < _mfSyncAreaRadius
 			if distancesOutBools[k] and inside.entity_prototype_collides(ent.name, {posX, posY}, false) == true then
-				obstructed = true
+				obstructed = ent.name
 				break
 			end
 		end
 	end
-	if obstructed == true then
+	if obstructed then
 		local player = nil
 		if self.player ~= "" then
 			player = getPlayer(self.player)
 			if player.connected then
-				player.create_local_flying_text{text={"info.MF-sync-collision"}, position = self.ent.position}
+				player.create_local_flying_text{text={"", "info.MF-sync-collision", "\n"..obstructed}, position = self.ent.position}
 			end
 		end
 		return

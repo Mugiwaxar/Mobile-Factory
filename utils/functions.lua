@@ -399,6 +399,7 @@ function createTilesAtPosition(position, radius, surface, tileName, force)
 			tilesFind = surface.find_tiles_filtered{area={{posX, posY},{posX+1, posY+1}}}
 			local replace = true
 			for k, tile in pairs(tilesFind) do
+				-- this check can somehow destroy Equalizer and kill player. See knownbugs.txt[1]
 				if tileName == "tutorial-grid" and tile.name ~= "VoidTile" then
 					replace = false
 				end
