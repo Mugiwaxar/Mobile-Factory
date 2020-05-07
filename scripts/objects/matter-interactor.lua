@@ -13,8 +13,9 @@ MI = {
 	lastUpdate = 0,
     dataNetwork = nil,
     selectedFilter = nil,
+    selectedMode = "input", -- input or output
+	selectedPlayer = "",
     selectedInv = 0,
-    selectedMode = "input" -- input or output
 }
 
 -- Constructor --
@@ -27,6 +28,7 @@ function MI:new(object)
 	t.ent = object
 	if object.last_user == nil then return end
 	t.player = object.last_user.name
+	t.selectedPlayer = t.player
 	t.MF = getMF(t.player)
 	t.entID = object.unit_number
     UpSys.addObj(t)
@@ -149,28 +151,58 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	if self.selectedMode == "output" then state = "right" end
 	GUIObj:addSwitch("MIMode" .. self.ent.unit_number, titleFrame, {"gui-description.Input"}, {"gui-description.Output"}, {"gui-description.InputTT"}, {"gui-description.OutputTT"}, state)
 
-	-- Create the Inventory Selection --
-	GUIObj:addLabel("", titleFrame, {"gui-description.MSTarget"}, _mfOrange)
-
+	local playerInvs = {[self.player] = true}
 	local invs = {self.dataNetwork.dataCenter.invObj.name or {"gui-description.None"}}
 	local selectedIndex = 1
+	if valid(game.players[self.selectedPlayer]) == false then self.selectedPlayer = self.player end
+
 	local i = 1
+
 	for k, deepStorage in pairs(global.deepStorageTable) do
 		if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(self.player, deepStorage.ent) then
-			i = i + 1
-			local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepStorage.player, ")"}
-			if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
-				itemText = {"", " (", game.item_prototypes[deepStorage.filter].localised_name, " - ", deepStorage.player, ")"}
-			elseif deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
-				itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, " - ", deepStorage.player, ")"}
-			end
-			invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
-			if self.selectedInv == deepStorage then
-				selectedIndex = i
+			if not playerInvs[deepStorage.player] then playerInvs[deepStorage.player] = true end
+			if self.selectedPlayer == deepStorage.player then
+				i = i + 1
+				local item
+				if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
+					item = deepStorage.filter
+				elseif deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
+					item = deepStorage.inventoryItem
+				end
+
+				if item then
+					--table.insert(playerInvs[player], {"", "[img=item/"..item.."] ", game.item_prototypes[item].localised_name, " - ", "(", player, ")"})
+					--invs[k+1] = {"", "[img=item/"..item.."] ", game.item_prototypes[item].localised_name}
+					invs[k+1] = {"", "[img=item/"..item.."] ", game.item_prototypes[item].localised_name, " - ", deepStorage.ID}
+				else
+					--invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
+					--playerInvs[player][k+1] = {"", {"gui-description.Empty"}, " - ", "(", deepStorage.player, ")"}
+					invs[k+1] = {"", {"gui-description.Empty"}, " - ", "(", deepStorage.player, ")"}
+				end
+				if self.selectedInv == deepStorage then
+					selectedIndex = i
+				end
 			end
 		end
 	end
-	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
+	if selectedIndex > table_size(invs) then selectedIndex = nil end
+
+	-- Create the Player Selection --
+	--if table_size(playerInvs) > 1 then
+	if true then
+		local selectedPlayer = self.selectedPlayer
+		local playerArray = {}
+		for k in pairs(playerInvs) do
+			table.insert(playerArray, {"", k})
+			if k == selectedPlayer then selectedPlayer = #playerArray end
+		end
+		GUIObj:addLabel("", titleFrame, {"gui-description.MSPlayerTarget"}, _mfOrange)
+		if playerInvs[self.selectedPlayer] == nil then self.selectedPlayer = self.player end
+		GUIObj:addDropDown("MIPlayerTarget" .. self.ent.unit_number, titleFrame, playerArray, selectedPlayer)
+	end
+
+	-- Create the Inventory Selection --
+	GUIObj:addLabel("", titleFrame, {"gui-description.MSTarget"}, _mfOrange)
 	GUIObj:addDropDown("MITarget" .. self.ent.unit_number, titleFrame, invs, selectedIndex)
 end
 
@@ -181,6 +213,16 @@ function MI:changeMode(mode)
     elseif mode == "right" then
         self.selectedMode = "output"
     end
+end
+
+-- Change the Target Player --
+function MI:changePlayer(playerName)
+    if type(playerName) ~= "string" then return end
+	if game.players[playerName] then
+		self.selectedPlayer = playerName
+	else
+		self.selectedPlayer = self.player
+	end
 end
 
 -- Change the Targeted Inventory --
