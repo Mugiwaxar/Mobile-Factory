@@ -1,6 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.147
 Date: 07/05/2020
+  Changes:
+    - CyberWizard (cyberwizard2261) joined the Mobile Factory "dev team"
   Bugfixes:
     - missed curly brackets on out-in obstruction string
 ---------------------------------------------------------------------------------------------------
