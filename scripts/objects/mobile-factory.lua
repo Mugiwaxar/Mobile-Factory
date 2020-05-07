@@ -736,12 +736,25 @@ function MF:syncAreaScan()
 				build_check_type = defines.build_check_type.ghost_place,
 				forced = true
 			}
+			-- Will create_entity Fail Without More Details? --
 			if _mfSyncAreaExtraDetails[ent.type] then
 				for _, key in pairs(_mfSyncAreaExtraDetails[ent.type]) do
-					arg[key] = ent[key]
+					-- LuaItemStack vs SimpleItemStack (dictionary) --
+					if key == "stack" then
+						--unsure if stack could ever be invalid, but it would cause an error
+						if ent.stack.valid_for_read then
+							arg.stack = {name = ent.stack.name, count = ent.stack.count}
+						else
+							--this is such a hackjob
+							arg = nil
+							break
+						end
+					else
+						arg[key] = ent[key]
+					end
 				end
 			end
- 			if outside.can_place_entity(arg) == false then
+ 			if arg and outside.can_place_entity(arg) == false then
 				obstructed = true
 				break
 			end
