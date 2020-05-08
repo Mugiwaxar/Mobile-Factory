@@ -82,6 +82,7 @@ end
 -- Create the Sync Area Surface --
 function createSyncAreaMFSurface(surface, dirt)
 	local radius = _mfSyncAreaRadius + 1
+	validateSyncAreaTile()
 	if dirt == true then
 		createTilesSurface(surface, _mfSyncAreaPosition.x - radius, _mfSyncAreaPosition.y - radius, _mfSyncAreaPosition.x + radius, _mfSyncAreaPosition.y + radius, global.syncTile)
 	end

@@ -599,14 +599,14 @@ function MF:factoryTeleportBox()
 		end
 	end
 	-- Factory to Control Center --
-	if technologyUnlocked("ControlCenter", getForce(self.player)) == true and self.fS ~= nil then
+	if technologyUnlocked("ControlCenter", getForce(self.player)) ~= nil and self.fS ~= nil then
 		local entities = self.fS.find_entities_filtered{area={{-3,-34},{3,-32}}, type="character"}
 		for k, entity in pairs(entities) do
 			teleportPlayerToControlCenter(entity.player, self)
 		end
 	end
 	-- Control Center to Factory --
-	if technologyUnlocked("ControlCenter", getForce(self.player)) == true and self.ccS ~= nil and self.fS ~= nil then
+	if technologyUnlocked("ControlCenter", getForce(self.player)) ~= nil and self.ccS ~= nil and self.fS ~= nil then
 		local entities = self.ccS.find_entities_filtered{area={{-3,5},{3,8}}, type="character"}
 		for k, entity in pairs(entities) do
 			teleportPlayerToFactory(entity.player, self)
@@ -616,7 +616,7 @@ end
 
 -- Scan modules inside the Equalizer --
 function MF:scanModules()
-	if technologyUnlocked("UpgradeModules", getForce(self.player)) == false then return end
+	if technologyUnlocked("UpgradeModules", getForce(self.player)) == nil then return end
 	if self.ccS == nil then return end
 	local equalizer = self.ccS.find_entity("Equalizer", {1, -16})
 	if equalizer == nil or equalizer.valid == false then return end
@@ -693,7 +693,7 @@ function MF:updateSyncArea()
 	end
 
 	-- Update Cloned Entities and Remove Invalid Pairs --
-	self:updateClonedEntities(ent)
+	self:updateClonedEntities(self.ent)
 end
 
 -- Scan around the Mobile Factory for the Sync Area --

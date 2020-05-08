@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.148
+Date: 08/05/2020
+  Bugfixes:
+    - Fixed some crashes when loading old saves
+    - Fixed crash that can happen when removing certain structures from a Data Network
+---------------------------------------------------------------------------------------------------
 Version: 0.0.147
 Date: 07/05/2020
   Changes:
@@ -9,7 +15,7 @@ Date: 07/05/2020
 Version: 0.0.146
 Date: 07/05/2020
   Changes:
-	- reworked Matter Interactor interface
+    - reworked Matter Interactor interface
     - print name of obstruction entity for sync-area (and which cloning direction)
   Scripting:
     - added "knownbugs.txt", mostly for bugs that strange edge cases I may or may not fix
@@ -104,8 +110,8 @@ Date: 28/04/2020
     - Construction Jets can place Tiles
     - Construction Jets can queue 1000 ghost, but a "Jets" option permits <= 25,000 for mass tile placement
          (performance concern - I can increase max if it's not that bad)
-	- "too many" ghosts keeps existing construction table, and ignores new ghosts (previously emptied the table)
-	- "too many ghosts" is a localized string that prints only to MF owner that places ghosts
+    - "too many" ghosts keeps existing construction table, and ignores new ghosts (previously emptied the table)
+    - "too many ghosts" is a localized string that prints only to MF owner that places ghosts
   Scripting:
     - use ghost.revive() instead of destroying and creating a thing for construction jets
     - the construction ghost table is global at present (but size option is not).

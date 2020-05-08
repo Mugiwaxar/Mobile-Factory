@@ -5,14 +5,14 @@ local playerIndex = nil
 local player = nil
 local MF
 
-for key, MFPlayer in pairs(global.playersTable) do
-	if MFPlayer.playerIndex == nil then
+for key, MFPlayer in pairs(global.playersTable or {}) do
+	if MFPlayer.playerIndex == nil and MFPlayer.name ~= nil then
 		player = getPlayer(MFPlayer.name) -- names are not unique! only indices are!
 		MFPlayer.index = player.index
 	end
 end
 
-for _, MF in pairs(global.MFTable) do
+for _, MF in pairs(global.MFTable or {}) do
 	if MF.playerIndex == nil then
 		player = getPlayer(MF.player)
 		MF.playerIndex = player.index
@@ -21,7 +21,7 @@ end
 
 local newGUIObjs = {}
 
-for key, GUIObj in pairs(global.GUITable) do
+for key, GUIObj in pairs(global.GUITable or {}) do
 	if string.match(key, "%d$") == nil then
 		if GUIObj.gui and GUIObj.gui.valid then
 			playerIndex = GUIObj.gui.player_index
@@ -31,6 +31,6 @@ for key, GUIObj in pairs(global.GUITable) do
 	end
 end
 
-for key, GUIObj in pairs(newGUIObjs) do
+for key, GUIObj in pairs(newGUIObjs or {}) do
 	global.GUITable[key] = GUIObj
 end

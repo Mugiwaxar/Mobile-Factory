@@ -169,8 +169,12 @@ function DN:powerConsumption()
 	-- Calcule the total Power Consumption --
 	self.totalConsumption = 0
 	for k, obj in pairs(self.entitiesTable) do
-		if obj.active == true or (obj.ent ~= nil and string.match(obj.ent.name, "DataCenter")) then
-			self.totalConsumption = self.totalConsumption + (obj.consumption or 0)
+		if valid(obj) == false then
+			self.entitiesTable[k] = nil
+		else
+			if obj.active == true or (obj.ent ~= nil and string.match(obj.ent.name, "DataCenter")) then
+				self.totalConsumption = self.totalConsumption + (obj.consumption or 0)
+			end
 		end
 	end
 	return self.totalConsumption

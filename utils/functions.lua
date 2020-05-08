@@ -210,7 +210,7 @@ end
 -- Return the Player Mobile Factory --
 function getMF(playerName)
 	if playerName == nil then return nil
-	elseif type(playerName) == "number" then return global.MFTable[game.players[playername].name]
+	elseif type(playerName) == "number" then return global.MFTable[game.players[playerName].name]
 	elseif type(playerName) == "string" then return global.MFTable[playerName]
 	else error("bad argument to getMF()") end
 end
@@ -235,9 +235,11 @@ function Util.valueToObj(inTable, key, value)
 	return Obj
 end
 
--- Return the Player Force Name --
+-- Return the Player Force --
 function getForce(playerName)
-	return game.players[playerName].force
+	if game.players[playerName] ~= nil then
+		return game.players[playerName].force
+	end
 end
 
 -- Get player specific variable --
