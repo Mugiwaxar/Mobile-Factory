@@ -210,7 +210,7 @@ end
 -- Return the Player Mobile Factory --
 function getMF(playerName)
 	if playerName == nil then return nil
-	elseif type(playerName) == "number" then return global.MFTable[game.players[playername].name]
+	elseif type(playerName) == "number" then return global.MFTable[game.players[playerName].name]
 	elseif type(playerName) == "string" then return global.MFTable[playerName]
 	else error("bad argument to getMF()") end
 end
