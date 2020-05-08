@@ -235,9 +235,11 @@ function Util.valueToObj(inTable, key, value)
 	return Obj
 end
 
--- Return the Player Force Name --
+-- Return the Player Force --
 function getForce(playerName)
-	return game.players[playerName].force
+	if game.players[playerName] ~= nil then
+		return game.players[playerName].force
+	end
 end
 
 -- Get player specific variable --
