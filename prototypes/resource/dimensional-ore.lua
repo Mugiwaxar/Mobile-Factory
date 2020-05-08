@@ -88,19 +88,23 @@ dmT.type = "technology"
 dmT.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalOreI.png"
 dmT.icon_size = 256
 dmT.unit = {
-	count=1,
+	count=100,
 	time=1,
 	ingredients={
 	{"DimensionalSample", 1}
 	}
 }
-dmT.effects = nil
+dmT.effects = {}
+for _, recipe in pairs(_MFStartingRecipes) do
+  table.insert(dmT.effects, {type = "unlock-recipe", recipe = recipe})
+end
 data:extend{dmT}
 
 -- Dimensional Ore to Stone Recipe --
 local sR = {}
 sR.type = "recipe"
 sR.name = "mfStone"
+sR.enabled = false
 sR.energy_required = 0.3
 sR.ingredients =
     {

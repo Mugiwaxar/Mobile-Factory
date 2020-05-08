@@ -163,6 +163,7 @@ eimE.speed = 0.4
 eimE.belt_animation_set.animation_set.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaItemMoverE.png"
 eimE.belt_animation_set.animation_set.frame_count = 1
 eimE.belt_animation_set.animation_set.scale = 0.25
+eimE.next_upgrade = nil
 data:extend{eimE}
 
 createEryaItem
@@ -199,6 +200,7 @@ erubE.structure.direction_in_side_loading.sheet.hr_version = nil
 erubE.structure.direction_out_side_loading.sheet = erubE.structure.direction_out_side_loading.sheet.hr_version
 erubE.structure.direction_out_side_loading.sheet.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaUndergroundBelt1E.png"
 erubE.structure.direction_out_side_loading.sheet.hr_version = nil
+erubE.next_upgrade = nil
 data:extend{erubE}
 
 createEryaItem
@@ -226,6 +228,7 @@ erxubE.structure.direction_in.sheet.filename = "__Mobile_Factory_Graphics__/grap
 erxubE.structure.direction_out.sheet.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaUndergroundBelt2E.png"
 erxubE.structure.direction_in_side_loading.sheet.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaUndergroundBelt2E.png"
 erxubE.structure.direction_out_side_loading.sheet.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaUndergroundBelt2E.png"
+erxubE.next_upgrade = nil
 data:extend{erxubE}
 
 createEryaItem
@@ -266,6 +269,7 @@ erSE.structure_patch.east.hr_version = nil
 erSE.structure_patch.west = erSE.structure_patch.west.hr_version
 erSE.structure_patch.west.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaSplitter1WestEOP.png"
 erSE.structure_patch.west.hr_version = nil
+erSE.next_upgrade = nil
 data:extend{erSE}
 
 createEryaItem
@@ -284,6 +288,7 @@ createEryaItem
 -- Erya Loader --
 local erlE = table.deepcopy(data.raw["loader-1x1"]["loader-1x1"])
 erlE.name = "EryaLoader1"
+erlE.flags = {"placeable-neutral", "player-creation"}
 erlE.minable = {mining_time = 0.2, result = "EryaLoader1"}
 erlE.speed = 0.04
 erlE.belt_animation_set = erbE.belt_animation_set
@@ -328,6 +333,7 @@ erlE.structure.direction_out.sheets =
     --     priority = "low"
     -- }
 }
+erlE.next_upgrade = nil
 data:extend{erlE}
 
 createEryaItem
@@ -345,6 +351,7 @@ createEryaItem
 
 -- Erya Extrem Loader --
 local erxlE = table.deepcopy(data.raw["loader-1x1"].EryaLoader1)
+erxlE.flags = {"placeable-neutral", "player-creation"}
 erxlE.name = "EryaLoader2"
 erxlE.minable = {mining_time = 0.2, result = "EryaLoader2"}
 erxlE.speed = 0.4
@@ -390,6 +397,7 @@ erxlE.structure.direction_out.sheets =
     --     priority = "low"
     -- }
 }
+erxlE.next_upgrade = nil
 data:extend{erxlE}
 
 createEryaItem
@@ -427,6 +435,7 @@ eriE.hand_open_picture.hr_version = nil
 eriE.platform_picture.sheet = eriE.platform_picture.sheet.hr_version
 eriE.platform_picture.sheet.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaInserter1E.png"
 eriE.platform_picture.sheet.hr_version = nil
+eriE.next_upgrade = nil
 data:extend{eriE}
 
 createEryaItem
@@ -471,6 +480,7 @@ ermdE.shadow_animations.west.hr_version.scale = 1/4
 ermdE.collision_box = {{ -1.4/2, -1.4/2}, {1.4/2, 1.4/2}}
 ermdE.selection_box = {{ -1.5/2, -1.5/2}, {1.5/2, 1.5/2}}
 ermdE.input_fluid_box = nil
+ermdE.next_upgrade = nil
 data:extend{ermdE}
 
 createEryaItem
@@ -669,7 +679,7 @@ erptgE.pictures.left.hr_version = nil
 erptgE.pictures.right = erptgE.pictures.right.hr_version
 erptgE.pictures.right.filename = "__Mobile_Factory_Graphics__/graphics/Erya/pipes/hr-pipe-to-ground-right.png"
 erptgE.pictures.right.hr_version = nil
-
+erptgE.next_upgrade = nil
 data:extend{erptgE}
 
 createEryaItem
@@ -709,7 +719,7 @@ erp1E.animations.south.hr_version = nil
 erp1E.animations.west = erp1E.animations.west.hr_version
 erp1E.animations.west.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaPump1WestE.png"
 erp1E.animations.west.hr_version = nil
-
+erp1E.next_upgrade = nil
 data:extend{erp1E}
 
 createEryaItem
@@ -767,7 +777,7 @@ erwE.pictures.ending_left.layers[1].hr_version = nil
 erwE.pictures.filling = erwE.pictures.filling.hr_version
 erwE.pictures.filling.filename = "__Mobile_Factory_Graphics__/graphics/Erya/walls/hr-wall-filling.png"
 erwE.pictures.filling.hr_version = nil
-
+erwE.next_upgrade = nil
 data:extend{erwE}
 
 createEryaItem
@@ -821,7 +831,7 @@ ergE.vertical_rail_base.hr_version = nil
 ergE.horizontal_rail_base = ergE.horizontal_rail_base.hr_version
 ergE.horizontal_rail_base.filename = "__Mobile_Factory_Graphics__/graphics/Erya/gates/hr-gate-rail-base-horizontal.png"
 ergE.horizontal_rail_base.hr_version = nil
-
+ergE.next_upgrade = nil
 data:extend{ergE}
 
 createEryaItem
@@ -842,11 +852,14 @@ createEryaItem
 local errE = table.deepcopy(data.raw.radar.radar)
 errE.name = "EryaRadar1"
 errE.minable = {mining_time = 0.5, result = "EryaRadar1"}
+errE.energy_per_nearby_scan = "15J"
 errE.energy_usage = "1W"
 errE.energy_source = {type="void"}
 errE.pictures.layers[1] = errE.pictures.layers[1].hr_version
 errE.pictures.layers[1].filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaRadar1E.png"
 errE.pictures.layers[1].hr_version = nil
+errE.rotation_speed = errE.rotation_speed / 3
+errE.next_upgrade = nil
 data:extend{errE}
 
 createEryaItem
@@ -872,6 +885,7 @@ erfE.energy_source = {type="void"}
 erfE.animation.layers[1] = erfE.animation.layers[1].hr_version
 erfE.animation.layers[1].filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaFurnace1E.png"
 erfE.animation.layers[1].hr_version = nil
+erfE.next_upgrade = nil
 data:extend{erfE}
 
 createEryaItem
@@ -911,7 +925,7 @@ errfE.animation.south.layers[1].hr_version = nil
 errfE.animation.west.layers[1] = errfE.animation.west.layers[1].hr_version
 errfE.animation.west.layers[1].filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaRefinery1E.png"
 errfE.animation.west.layers[1].hr_version = nil
-
+errfE.next_upgrade = nil
 data:extend{errfE}
 
 createEryaItem
@@ -951,7 +965,7 @@ ercpE.animation.south.layers[1].hr_version = nil
 ercpE.animation.west.layers[1] = ercpE.animation.west.layers[1].hr_version
 ercpE.animation.west.layers[1].filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaChemicalPlant1E.png"
 ercpE.animation.west.layers[1].hr_version = nil
-
+ercpE.next_upgrade = nil
 data:extend{ercpE}
 
 createEryaItem

@@ -1,4 +1,5 @@
 -- COMBAT JET --
+require "utils.functions"
 
 -- Create the Combat Jet base Object --
 CBJ = {
@@ -61,6 +62,11 @@ function CBJ:update()
 		return
     end
 
+	-- Return to Mobile Factory because of Distance --
+	if self.currentOrder ~= "GoMF" and self.MF.ent ~= nil and self.MF.ent.valid == true and Util.distance(self.ent.position, self.MF.ent.position) > 2 * self.MF.varTable.jets.cbjMaxDistance then
+		self:goMF(defines.distraction.none)
+		return
+	end
 
 	-- Give a command to the Jet --
 	if self.ent.health <= 600 and self.currentOrder == "Fight" then

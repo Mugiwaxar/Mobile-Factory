@@ -1,3 +1,11 @@
+
+-- Apply Settings Stored in Ghost Tags --
+function objApplyTags(obj, tags)
+	if tags and valid(obj) and obj.tagsToSettings then
+		obj:tagsToSettings(tags)
+	end
+end
+
 -- Save the Dimensional Accumulator in a table --
 function placedDimensionalAccumulator(event)
 	if global.accTable == nil then global.accTable = {} end
@@ -13,13 +21,17 @@ end
 -- Save the Matter Interactor in a table --
 function placedMatterInteractor(event)
 	if global.matterInteractorTable == nil then global.matterInteractorTable = {} end
-	global.matterInteractorTable[event.created_entity.unit_number] = MI:new(event.created_entity)
+	local newMI = MI:new(event.created_entity)
+	global.matterInteractorTable[event.created_entity.unit_number] = newMI
+	objApplyTags(newMI, event.tags)
 end
 
 -- Save the Fluid Interactor in a table --
 function placedFluidInteractor(event)
 	if global.fluidInteractorTable == nil then global.fluidInteractorTable = {} end
-	global.fluidInteractorTable[event.created_entity.unit_number] = FI:new(event.created_entity)
+	local newFI = FI:new(event.created_entity)
+	global.fluidInteractorTable[event.created_entity.unit_number] = newFI
+	objApplyTags(newFI, event.tags)
 end
 
 -- Save the Data Center in a table --
@@ -29,7 +41,7 @@ function placedDataCenter(event)
 end
 
 -- Save the Data Center MF --
-function placedDataCenterMF(event)
+function placedDataCenterMF(event, MF)
 	if global.dataCenterTable == nil then global.dataCenterTable = {} end
 	global.dataCenterTable[event.created_entity.unit_number] = DCMF:new(event.created_entity)
 	if MF ~= nil then MF.dataCenter = global.dataCenterTable[event.created_entity.unit_number] end
@@ -80,13 +92,17 @@ end
 -- Save the Deep Storage --
 function placedDeepStorage(event)
 	if global.deepStorageTable == nil then global.deepStorageTable = {} end
-	global.deepStorageTable[event.created_entity.unit_number] = DSR:new(event.created_entity)
+	local newDSR = DSR:new(event.created_entity)
+	global.deepStorageTable[event.created_entity.unit_number] = newDSR
+	objApplyTags(newDSR, event.tags)
 end
 
 -- Save the Deep Tank --
 function placedDeepTank(event)
 	if global.deepTankTable == nil then global.deepTankTable = {} end
-	global.deepTankTable[event.created_entity.unit_number] = DTK:new(event.created_entity)
+	local newDTK = DTK:new(event.created_entity)
+	global.deepTankTable[event.created_entity.unit_number] = newDTK
+	objApplyTags(newDTK, event.tags)
 end
 
 -- Save the Erya Structure --
@@ -94,8 +110,6 @@ function placedEryaStructure(event)
 	if global.eryaTable == nil then global.eryaTable  = {} end
 	global.eryaTable[event.created_entity.unit_number] = ES:new(event.created_entity)
 end
-
-
 
 -- Remove the Dimensional Accumulator from the table --
 function removedDimensionalAccumulator(event)

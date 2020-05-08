@@ -1,4 +1,238 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.147
+Date: 07/05/2020
+  Changes:
+    - CyberWizard (cyberwizard2261) joined the Mobile Factory "dev team"
+  Bugfixes:
+    - missed curly brackets on out-in obstruction string
+---------------------------------------------------------------------------------------------------
+Version: 0.0.146
+Date: 07/05/2020
+  Changes:
+	- reworked Matter Interactor interface
+    - print name of obstruction entity for sync-area (and which cloning direction)
+  Scripting:
+    - added "knownbugs.txt", mostly for bugs that strange edge cases I may or may not fix
+---------------------------------------------------------------------------------------------------
+Version: 0.0.145
+Date: 07/05/2020
+  Bugfixes:
+    - actually fix dropped items from causing a sync error
+---------------------------------------------------------------------------------------------------
+Version: 0.0.144
+Date: 06/05/2020
+  Bugfixes:
+    - prevent certain entity types from error'ing the sync area scan
+
+---------------------------------------------------------------------------------------------------
+Version: 0.0.143
+Date: 06/05/2020
+  Changes:
+    - patches of Dimensional Fluid are "grouped" more on map (more dots will be highlighted together)
+    - selecting a Deep Storage with the Matter Interactor will automatically set MI filter if DS has one
+  Scripting:
+    - Possible improvement to performance with large numbers of mining jets and many ore paths
+
+---------------------------------------------------------------------------------------------------
+Version: 0.0.142
+Date: 03/05/2020
+  Changes:
+    - Erya Radar scan rate and dish rotation speed decreased
+  BugFixes:
+    - Fluid Interactor didn't have blueprint settings applied
+    - place and remove error from not setting MF.playerIndex
+---------------------------------------------------------------------------------------------------
+Version: 0.0.141
+Date: 01/05/2020
+  Changes:
+    - attempt to make sync collision detection less aggressive
+  BugFixes:
+    - Erya Loader 1 and Extrem can be blueprinted / copy-pasted
+    - Erya Radar works now. Does a nearby scan every 5 seconds (enjoy)
+    - set next_upgrade to nil for OreCleaner, Fluid Extractor and unset Erya structures (compatibility patch)
+    - trying to fix invalid player -> MainGUI error again
+---------------------------------------------------------------------------------------------------
+Version: 0.0.140
+Date: 30/04/2020
+  BugFixes:
+    - actually fix the invalid guielement error
+---------------------------------------------------------------------------------------------------
+Version: 0.0.139
+Date: 29/04/2020
+  Changes:
+    - update graphics dependency
+  BugFixes:
+    - initialize cjTableSize (ghost construction table limit) for every *new* player
+        if still error'ing (rare case) go to MF options ui, jets tab (should fix itself? set value to 1000)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.138
+Date: 29/04/2020
+  BugFixes:
+    - no error if GUI was never moved between save/load
+    - missed default value _MFConstructionJetDefaultTableSize somehow
+---------------------------------------------------------------------------------------------------
+Version: 0.0.137
+Date: 29/04/2020
+  BugFixes:
+    - Don't use an invalid GUI for a valid player
+    - find_non_colliding_position error (spelling)
+    - copy pasting multiple entities fix
+---------------------------------------------------------------------------------------------------
+Version: 0.0.136
+Date: 29/04/2020
+  Corrections:
+    - version 0.0.135: PASTING settings defaults to (always is?) current player.
+        Blueprinting store vague details but
+            tries to match when the ghost is built, as best as it can.
+  Changes:
+    - Bilka added support in newgame+. Mobile Factory surface and Control Center aren't reset.
+  BugFixes:
+    - fix invalid player error on_research_finished (hopefully)
+
+---------------------------------------------------------------------------------------------------
+Version: 0.0.135
+Date: 28/04/2020
+  Features:
+    - blueprinting will transfer some settings (experimental):
+        ***only can copy settings if the player blueprinting matches the set Deep Storages and Deep Tanks***
+        ***however, if player has Storages/Tanks matching the copied filter, it will try to use them***
+        ***attempted to make usable across saves (makes a guess if the exact Storage/Tank is not found)***
+        Matter Interactor: (if matching) Deep Storage, (else) Deep Storage filter, self-filter (always set), Mode
+        Fluid Interactor: (if matching) Deep Tank, (else) Deep Tank Filter, Mode. No temperature support at the moment.
+  Changes:
+    - check for necessary tiles, and error with specific message if we're missing any
+    - Construction Jets can place Tiles
+    - Construction Jets can queue 1000 ghost, but a "Jets" option permits <= 25,000 for mass tile placement
+         (performance concern - I can increase max if it's not that bad)
+	- "too many" ghosts keeps existing construction table, and ignores new ghosts (previously emptied the table)
+	- "too many ghosts" is a localized string that prints only to MF owner that places ghosts
+  Scripting:
+    - use ghost.revive() instead of destroying and creating a thing for construction jets
+    - the construction ghost table is global at present (but size option is not).
+                  This is bad. Will try to get to it by next version. (ghosts should be stored per-player / MF)
+  BugFixes:
+    - input/output would not be set on copy/pasting with Matter Interactor and Fluid Interactor
+---------------------------------------------------------------------------------------------------
+Version: 0.0.134
+Date: 27/04/2020
+  Changes:
+    - add missing locale string for reduce button
+    - "Mobile Factory" option tab: fix first option and clarify settings
+    - little things all over the locale
+---------------------------------------------------------------------------------------------------
+Version: 0.0.133
+Date: 26/04/2020
+  Changes:
+    - use find_non_colliding_position instead of the old way for placing MF after call request
+  Bugfixes:
+    - script_raised_built + MF never placed caused error
+---------------------------------------------------------------------------------------------------
+Version: 0.0.132
+Date: 26/04/2020
+  Bugfixes:
+    - missing name= keys passed to can_place_entity, mfPlaceable error
+---------------------------------------------------------------------------------------------------
+Version: 0.0.131
+Date: 25/04/2020
+  Changes:
+    - Dimensional Tile can't be placed onto void
+  Bugfixes:
+    - valid_for_read checks on item stack while placing some MF entities (mod compatibility?)
+    - variable could go un-inited and error when establishing Sync Area
+---------------------------------------------------------------------------------------------------
+Version: 0.0.130
+Date: 24/04/2020
+  Changes:
+    - jet "default distance" in description is now accurate, has min/max description
+  Bugfixes:
+    - min and max distance for jets (10-1000)
+    - migration to fix a stuck game because of invalid distance
+    - fix mipmap level warning in log (if one uses table.deepcopy, entity.icon_mipmaps = 1 for simple icons)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.129
+Date: 23/04/2020
+  Features:
+    - Added setting for initial research to be auto-researched. Used for compatibility with
+          science-cost changers and difficulty-increasing players
+  Changes:
+    - tweaked many of the locale strings to have better English and more useful descriptions
+    - added MF, Dim. Ore-to-stone, and Dim. Tile recipes to initial research
+---------------------------------------------------------------------------------------------------
+Version: 0.0.128
+Date: 22/04/2020
+  Bugfixes:
+    - Try to use other tile for sync area if dirt-7 is missing (hoping our other tiles still exist)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.127
+Date: 17/04/2020
+  Bugfixes:
+    - typo lead to 'ccs' nil field error
+    - wireless receiver now shows deep tank fluids
+---------------------------------------------------------------------------------------------------
+Version: 0.0.126
+Date: 15/04/2020
+  Changes:
+    - MF's in multiplayer can't sync if too close, flying-text warning
+    - newgame+ compatibility (regenerates MF internal surface! - looking into possibility of keeping)
+  Bugfixes:
+    - GUI open/close issues in multiplayer
+    - opening MF in multiplayer now shows proper owner/entity if it is usable (yvelis mod)
+    - possibly fixed desync from placing two internal inventories in same MF?
+    - ownership issues for Internal Inventory Data Center on mining
+---------------------------------------------------------------------------------------------------
+Version: 0.0.125
+Date: 13/04/2020
+  Bugfixes:
+    - input fluid laser error
+---------------------------------------------------------------------------------------------------
+Version: 0.0.124
+Date: 12/04/2020
+  Features:
+    - setting for enabling/disabling Erya Technology (default enabled)
+    - Combat Jets return if too far from Mobile Factory (in excess of twice the distance in Jet options - full attack area but no further)
+  Changes:
+    - change Combat Jet distance description to be accurate
+    - made collision boxes for Fluid Interactor and Wireless Data Receiver smaller (they couldn't be placed next to each-other)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.123
+Date: 10/04/2020
+  Bugfixes:
+    - patch for fluid interactor bug introduced in previous patch
+---------------------------------------------------------------------------------------------------
+Version: 0.0.122
+Date: 10/04/2020
+  Features:
+    - add temperature to Deep Tank interactions (gui addition eventually)
+  Bugfixes:
+    - player would get teleported back to previous surface if it was from a vehicle interaction teleport (Chronotrain)
+    - script_raised_revive would break MF recording functions
+---------------------------------------------------------------------------------------------------
+Version: 0.0.121
+Date: 02/04/2020
+  Changes:
+    - create flying text if sync area is obstructed
+  Bugfixes:
+    - fix sync bug when mining an entity
+---------------------------------------------------------------------------------------------------
+Version: 0.0.120
+Date: 01/04/2020
+  Features:
+    - Added setting for how the player obtains their (first) Mobile Factory
+    - Added setting for which "science packs" a Dimensional Lab can use
+  Bugfixes:
+    - Don't open custom GUI if player is connecting wires
+  Changes:
+    - Honktown (right now) is developing Mobile Factory for the foreseeable future, as Mugiwaxar (aka Dexy) had something more urgent to do
+    - Mobile Factory GT now requires a car
+    - Hovering Factory a bit more costly and requires Mobile Factory
+    - Machine Frame 2's now require 2x Machine Frame 1 (plates reduced, slightly less overall cost). Update your logistics!
+    - take all items when mining a sync'd chest on either side
+    - if a sync-area entity would collide with something that could destroy it, don't sync (checks full square)
+    - if an outside-MF sync-entity can't be placed inside because it would collide, don't sync
+    - drills in sync-area will start up after sync area is established
+    - no loss of items/fluid/energy when un-cloning sync area, unless there's too much
+
+---------------------------------------------------------------------------------------------------
 Version: 0.0.119
 Date: 25/03/2020
   Gui:

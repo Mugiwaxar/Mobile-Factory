@@ -14,6 +14,7 @@ dmFR.infinite = true
 dmFR.minimum = 60000
 dmFR.normal = 300000
 dmFR.infinite_depletion_amount = 10
+dmFR.resource_patch_search_radius = 9
 dmFR.collision_box = data.raw.resource["crude-oil"].collision_box
 dmFR.selection_box = data.raw.resource["crude-oil"].selection_box
 dmFR.minable = {

@@ -23,11 +23,15 @@ function createMFSurface(MF)
 	newSurface.force_generate_chunk_requests()
 	-- Set tiles --
 	createTilesSurface(newSurface, -50, -50, 50, 50, "tutorial-grid")
-	createTilesSurface(newSurface, _mfSyncAreaPosition.x - _mfSyncAreaRadius, _mfSyncAreaPosition.y - _mfSyncAreaRadius, _mfSyncAreaPosition.x + _mfSyncAreaRadius, _mfSyncAreaPosition.y + _mfSyncAreaRadius, "dirt-7")
+	createTilesSurface(newSurface, _mfSyncAreaPosition.x - _mfSyncAreaRadius, _mfSyncAreaPosition.y - _mfSyncAreaRadius, _mfSyncAreaPosition.x + _mfSyncAreaRadius, _mfSyncAreaPosition.y + _mfSyncAreaRadius, global.syncTile)
 	createTilesSurface(newSurface, _mfSyncAreaPosition.x - 2, _mfSyncAreaPosition.y - 4, _mfSyncAreaPosition.x + 2, _mfSyncAreaPosition.y + 4, "DimensionalTile")
+	createTilesSurface(newSurface, _mfSyncAreaPosition.x - 4, _mfSyncAreaPosition.y - 2, _mfSyncAreaPosition.x + 4, _mfSyncAreaPosition.y + 2, "DimensionalTile")
+	createTilesSurface(newSurface, _mfSyncAreaPosition.x - 3, _mfSyncAreaPosition.y - 3, _mfSyncAreaPosition.x + 3, _mfSyncAreaPosition.y + 3, "DimensionalTile")
 	createTilesSurface(newSurface, -2, -2, 2, 2, "refined-hazard-concrete-right")
 	-- Save variable --
 	MF.fS = newSurface
+	-- Apply Researches If Needed --
+	if technologyUnlocked("ControlCenter", getForce(MF.player)) then _MFResearches["ControlCenter"](MF) end
 end
 
 -- Create the Mobile Factory Control room -
@@ -59,6 +63,13 @@ function createControlRoom(MF)
 	local newTiles = newSurface.find_tiles_filtered{area={{-100,-100},{100,100}}}
 	-- Save variable --
 	MF.ccS = newSurface
+	-- Apply Technologies if Needed --
+	local force = getForce(MF.player)
+	for research, func in pairs(_MFResearches) do
+		if research ~= "ControlCenter" and technologyUnlocked(research, force) then
+			func(MF)
+		end
+	end
 end
 
 -- Create a new Entity --
@@ -72,10 +83,42 @@ end
 function createSyncAreaMFSurface(surface, dirt)
 	local radius = _mfSyncAreaRadius + 1
 	if dirt == true then
-		createTilesSurface(surface, _mfSyncAreaPosition.x - radius, _mfSyncAreaPosition.y - radius, _mfSyncAreaPosition.x + radius, _mfSyncAreaPosition.y + radius, "dirt-7")
+		createTilesSurface(surface, _mfSyncAreaPosition.x - radius, _mfSyncAreaPosition.y - radius, _mfSyncAreaPosition.x + radius, _mfSyncAreaPosition.y + radius, global.syncTile)
 	end
 	createTilesSurface(surface, _mfSyncAreaPosition.x - 2, _mfSyncAreaPosition.y - 4, _mfSyncAreaPosition.x + 2, _mfSyncAreaPosition.y + 4, "DimensionalTile")
 	createTilesSurface(surface, _mfSyncAreaPosition.x - 4, _mfSyncAreaPosition.y - 2, _mfSyncAreaPosition.x + 4, _mfSyncAreaPosition.y + 2, "DimensionalTile")
 	createTilesSurface(surface, _mfSyncAreaPosition.x - 3, _mfSyncAreaPosition.y - 3, _mfSyncAreaPosition.x + 3, _mfSyncAreaPosition.y + 3, "DimensionalTile")
 	createTilesSurface(surface, -1, -1, 1, 1, "refined-hazard-concrete-right")
+end
+
+function validateSyncAreaTile()
+	-- Workaround if Un-Inited, Simpler Than Migration --
+	if global.syncTile == nil then
+		global.syncTile = "dirt-7"
+	end
+	-- Workaround if Default Sync Tile dirt-7 Is Missing --
+	if game.tile_prototypes[global.syncTile] == nil then
+		global.syncTile = nil
+
+		-- Check for grass-1 First --
+		for tileName in pairs(game.tile_prototypes) do
+			-- Alien Biomes (or other mod) leaves grass-1 alone, but makes all dirt colorful
+			if string.find(tileName, "grass") then
+				global.syncTile = tileName
+				break
+			end
+		end
+
+		if global.syncTile == nil then
+			for tileName in pairs(game.tile_prototypes) do
+				if string.find(tileName, "dirt") then
+					global.syncTile = tileName
+					break
+				end
+			end			
+		end
+		if global.syncTile == nil then
+			error("Unable to find suitable tile for Sync Area.")
+		end
+	end
 end

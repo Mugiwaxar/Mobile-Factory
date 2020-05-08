@@ -149,6 +149,7 @@ function valid(obj)
 	if obj == nil then return false end
 	if getmetatable(obj) == nil then return false end
 	if obj.valid == nil then return false end
+	if type(obj.valid) == "boolean" then return obj.valid end
 	if obj:valid() ~= true then return false end
 	return true
 end
@@ -166,9 +167,12 @@ function mfPlaceable(player, MF)
 		return nil
 	end
 	-- Try to a position near the Player --
+	return player.surface.find_non_colliding_position(MF.ent.name, player.position, 10, 1, true)
+--[[
+	-- Try to a position near the Player --
 	if player.surface.can_place_entity{name=MF.ent.name, position={player.position.x+5, player.position.y}} == false then
-		if player.surface.can_place_entity{MF.ent.name, position={player.position.x-5, player.position.y}} == false then
-			if player.surface.can_place_entity{MF.ent.name, position={player.position.x, player.position.y+5}} == false then
+		if player.surface.can_place_entity{name=MF.ent.name, position={player.position.x-5, player.position.y}} == false then
+			if player.surface.can_place_entity{name=MF.ent.name, position={player.position.x, player.position.y+5}} == false then
 				if player.surface.can_place_entity{MF.ent.name, position={player.position.x, player.position.y-5}} == false then
 					player.print({"", {"gui-description.MFPlacedNoEnoughtSpace"}})
 					return nil
@@ -176,6 +180,7 @@ function mfPlaceable(player, MF)
 			else return {player.position.x, player.position.y+5} end
 		else return {player.position.x-5, player.position.y} end
 	else return {player.position.x+5, player.position.y} end
+--]]
 end
 
 -- Unlock a recipe for all Players --
@@ -204,16 +209,30 @@ end
 
 -- Return the Player Mobile Factory --
 function getMF(playerName)
-	if playerName == nil then return nil end
-	return global.MFTable[playerName]
+	if playerName == nil then return nil
+	elseif type(playerName) == "number" then return global.MFTable[game.players[playername].name]
+	elseif type(playerName) == "string" then return global.MFTable[playerName]
+	else error("bad argument to getMF()") end
 end
 
 -- Return the MFPlayer Object --
 function getMFPlayer(playerName)
-	if playerName == nil then return nil end
-	local MFPlayer = global.playersTable[playerName]
-	if MFPlayer == nil then MFPlayer = global.playersTable[getPlayer(playerName).name] end
-	return MFPlayer
+	if playerName == nil then return nil
+	elseif type(playerName) == "number" then return global.playersTable[game.players[playerName].name]
+	elseif type(playerName) == "string" then return global.playersTable[playerName]
+	else error("bad argument to getMFPlayer()") end
+end
+
+function Util.valueToObj(inTable, key, value)
+	if value == nil then return nil end
+	local Obj = nil
+	for _, v in pairs(inTable) do
+		if v.key == value then
+			Obj = v
+			break
+		end
+	end
+	return Obj
 end
 
 -- Return the Player Force Name --
@@ -380,6 +399,7 @@ function createTilesAtPosition(position, radius, surface, tileName, force)
 			tilesFind = surface.find_tiles_filtered{area={{posX, posY},{posX+1, posY+1}}}
 			local replace = true
 			for k, tile in pairs(tilesFind) do
+				-- this check can somehow destroy Equalizer and kill player. See knownbugs.txt[1]
 				if tileName == "tutorial-grid" and tile.name ~= "VoidTile" then
 					replace = false
 				end
@@ -397,15 +417,19 @@ end
 function Util.addMobileFactory(player)
 	-- Get the Player Inventory --
 	local inv = player.get_main_inventory()
-	-- Add a Mobile Factory to the player inventaire --
-	if inv.can_insert({name="MobileFactory"}) then
-		-- Can insert --
-		inv.insert({name="MobileFactory", count=1})
-		player.print({"", {"gui-description.MFInsertedInsideInventory"}})
-	else
-		-- Can't insert --
-		player.print({"", {"gui-description.MFNotInsertedInsideInventory"}})
+    -- Give player Mobile Factory at start --
+	if settings.startup["MF-first-MF"].value == "player creation" then
+		-- Add a Mobile Factory to the player inventaire --
+		if inv.can_insert({name="MobileFactory"}) then
+			-- Can insert --
+			inv.insert({name="MobileFactory", count=1})
+			player.print({"", {"gui-description.MFInsertedInsideInventory"}})
+		else
+			-- Can't insert --
+			player.print({"", {"gui-description.MFNotInsertedInsideInventory"}})
+		end
 	end
+	-- give Dimensional tiles, primarily for floor-is-lava --
 	inv.insert({name="DimensionalTile", count=300})
 end
 
@@ -561,4 +585,31 @@ function canModify(playerName, structure)
 		return
 	end
 	return false
+end
+
+-- Check if We Have Necessary Tiles --
+function checkNeededTiles()
+	local tilesToCheck = {
+		"BuildTile",
+		"tutorial-grid",
+		"VoidTile",
+		"DimensionalTile",
+	}
+
+	for _, tile in pairs(tilesToCheck) do
+		if game.tile_prototypes[tile] == nil then
+			error("Missing "..tile..". This is likely because you have more than 255 tiles.")
+		end
+	end
+end
+
+function entityToBluePrintTags(entity, fromTable)
+	local tags = nil
+	local obj = fromTable[entity.unit_number]
+
+	if obj and obj.settingsToTags then
+		tags = obj:settingsToTags()
+	end
+
+	return tags
 end

@@ -54,7 +54,11 @@ function onInit()
 	-- Repair Jet Update --
 	global.repairJetIndex = 0
 	-- Research --
-	game.forces["player"].technologies["DimensionalOre"].researched = true
+	for _, force in pairs(game.forces) do
+		if settings.startup["MF-initial-research-complete"] and settings.startup["MF-initial-research-complete"].value == true then
+			force.technologies["DimensionalOre"].researched = true
+		end
+	end
 	-- Floor Is Lava --
 	global.floorIsLavaActivated = false
 	-- Tables --
@@ -86,6 +90,11 @@ function onInit()
 	global.combatJetTable = {}
 	global.eryaTable = {}
 	global.eryaIndexedTable = {}
+    global.syncTile = "dirt-7"
+	-- Validate the Tile Used for the Sync Area --
+	validateSyncAreaTile()
+	-- Ensure All Needed Tiles are Present --
+	checkNeededTiles()
 end
 
 -- When a save is loaded --
@@ -182,14 +191,19 @@ function onLoad()
 	end
 end
 
--- When the configuration have changed --
+-- When the configuration has changed --
 function onConfigurationChanged()
 	-- Update all Variables --
 	updateValues()
-	-- Recreated the Main GUI --
+	-- Recreate the Main GUI --
 	for k, player in pairs(game.players) do
 		GUI.createMFMainGUI(player)
 	end
+
+	-- Validate the Tile Used for the Sync Area --
+	validateSyncAreaTile()
+	-- Ensure All Needed Tiles are Present --
+	checkNeededTiles()
 end
 
 -- Filters --
@@ -210,6 +224,54 @@ _mfEntityFilterWithCBJ = {
 	{filter = "type", type = "fish", mode = "and", invert = true},
 	{filter = "name", name = "CombatJet", mode = "or"}
 }
+
+local function onForceCreated(event)
+  local force = event.force
+
+  if force.valid and settings.startup["MF-initial-research-complete"] and settings.startup["MF-initial-research-complete"].value == true then
+    force.technologies["DimensionalOre"].researched = true
+  end
+end
+
+local function onPlayerSetupBlueprint(event)
+	local player = game.players[event.player_index]
+	local mapping = event.mapping.get()
+	local bp = player.blueprint_to_setup
+	if bp.valid_for_read == false then
+		local cursor = player.cursor_stack
+		if cursor and cursor.valid_for_read and cursor.name == "blueprint" then
+			bp = cursor
+			--return
+		end
+	end
+	if bp == nil or bp.valid_for_read == false then return end
+
+	local nameToTable = {
+		["MatterInteractor"] = "matterInteractorTable",
+		["FluidInteractor"] = "fluidInteractorTable",
+		["WirelessDataReceiver"] = "wirelessDataReceiverTable",
+		["OreCleaner"] = "oreCleanerTable",
+		["DeepStorage"] = "deepStorageTable",
+		["DeepTank"] = "deepTankTable",
+	}
+
+	for index, ent in pairs(mapping) do
+		local saveTable = nameToTable[ent.name]
+		if ent.valid == true and saveTable ~= nil then
+			if global[saveTable] == nil then
+				-- Create Table If Nothing Was Ever Placed --
+				global[saveTable] = {}
+			end
+			saveTable = global[saveTable]
+			local tags = entityToBluePrintTags(ent, saveTable)
+			if tags ~= nil then
+				for tag, value in pairs(tags) do
+					bp.set_blueprint_entity_tag(index, tag, value)
+				end
+			end
+		end
+    end
+end
 
 -- Events --
 script.on_init(onInit)
@@ -246,13 +308,9 @@ script.on_event(defines.events.on_research_finished, technologyFinished)
 script.on_event(defines.events.on_selected_entity_changed, selectedEntityChanged)
 script.on_event(defines.events.on_marked_for_deconstruction, markedForDeconstruction)
 script.on_event(defines.events.on_entity_settings_pasted, settingsPasted)
+script.on_event(defines.events.on_force_created, onForceCreated)
+script.on_event(defines.events.on_player_setup_blueprint, onPlayerSetupBlueprint)
 script.on_event("OpenTTGUI", onShortcut)
 
 -- Add command to insert Mobile Factory to the player inventory --
 -- commands.add_command("GetMobileFactory", "Add the Mobile Factory to the player inventory", addMobileFactory)
-
-
-
-
-
-

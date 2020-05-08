@@ -4,11 +4,23 @@ function GUI.createMFMainGUI(player)
 	local posX = 300
 	local posY = 0
 	local visible = true
+	local playerIndex = player.index
 
-	if global.GUITable.MFMainGUI ~= nil then
-		posX = global.GUITable.MFMainGUI.location.x
-		posY = global.GUITable.MFMainGUI.location.y
-		visible = global.GUITable.MFMainGUI.MFMainGUIFrame2.visible
+	local existingGUI = global.GUITable["MFMainGUI"..playerIndex]
+	if valid(player) == true then
+		if valid(existingGUI) then
+			if existingGUI.location then
+				-- no location if it has not been moved/set
+				posX = existingGUI.location.x
+				posY = existingGUI.location.y
+			end
+			visible = existingGUI.MFMainGUIFrame2.visible
+		else
+			global.GUITable["MFMainGUI"..playerIndex] = nil
+		end
+	else
+		global.GUITable["MFMainGUI"..playerIndex] = nil
+		return nil
 	end
 
 	-- Create the GUI --
@@ -41,7 +53,7 @@ function GUI.createMFMainGUI(player)
 	-- Add All Buttons --
 	GUIObj:addButton("MainGUIOptionButton", MFMainGUIFrame1, "OptionIcon", "OptionIcon", {"gui-description.optionButton"}, 15)
 	GUIObj:addButton("MainGUIInfosButton", MFMainGUIFrame1, "MFIconI", "MFIconI", {"gui-description.MFInfosButton"}, 15)
-	GUIObj:addButton("MainGUIReduceButton", MFMainGUIFrame1, ExtendButtonSprite, ExtendButtonSprite, {"gui-description.MFInspectButton"}, 15, true)
+	GUIObj:addButton("MainGUIReduceButton", MFMainGUIFrame1, ExtendButtonSprite, ExtendButtonSprite, {"gui-description.reduceButton"}, 15, true)
 
 	-- Make the GUI visible or not --
 	MFMainGUIFrame2.visible = visible

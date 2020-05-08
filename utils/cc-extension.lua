@@ -34,7 +34,7 @@ end
 function updateFactoryFloorForCC(MF)
 	createTilesSurface(MF.fS, -3, -34, 3, -32, "refined-hazard-concrete-left")
 	-- Create Control Center surface --
-	if MF.ccS == nil then createControlRoom(MF) end
+	if MF.ccS == nil or MF.ccS.valid == false then MF.ccS = nil createControlRoom(MF) end
 	-- Valid the Technology --
 	MF.varTable.tech.ControlCenter = true
 end
@@ -84,3 +84,10 @@ function createConstructibleArea2(MF)
 	-- Valid the Technology --
 	MF.varTable.tech.ConstructibleArea2 = true
 end
+
+_MFResearches["ControlCenter"] = updateFactoryFloorForCC
+_MFResearches["UpgradeModules"] = createControlCenterEqualizer
+_MFResearches["DeepStorage"] = createDeepStorageArea
+_MFResearches["DeepTank"] = createDeepTankArea
+_MFResearches["ConstructibleArea1"] = createConstructibleArea1
+_MFResearches["ConstructibleArea2"] = createConstructibleArea2

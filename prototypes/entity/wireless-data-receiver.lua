@@ -7,10 +7,11 @@ wdrE.type = "constant-combinator"
 wdrE.name = "WirelessDataReceiver"
 wdrE.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/WirelessDataReceiverI.png"
 wdrE.icon_size = 64
+wdrE.icon_mipmaps = 1
 wdrE.minable = {mining_time = 0.5, result = "WirelessDataReceiver"}
 wdrE.max_health = 200
 wdrE.corpse = "big-remnants"
-wdrE.collision_box = {{-1, -1}, {1, 1}}
+wdrE.collision_box = {{-.9, -.9}, {.9, .9}}
 wdrE.selection_box = wdrE.collision_box
 wdrE.item_slot_count = 999
 wdrE.circuit_wire_max_distance = 20

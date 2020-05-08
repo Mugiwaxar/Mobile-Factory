@@ -21,7 +21,7 @@ function GO:new(name, MFplayer, direction)
     t.MFplayer = MFplayer
     t.elements = {}
     t:createGUI(MFplayer.ent.gui.screen, name, direction)
-    global.GUITable[t.name] = t
+    global.GUITable[t.name..t.MFplayer.index] = t
     return t
 end
 
@@ -330,10 +330,10 @@ function GO:addTextField(name, gui, text, tooltip, save, numeric, allowDecimal, 
 end
 
 -- Add a Drop Down --
-function GO:addDropDown(name, gui, items, selected, save)
+function GO:addDropDown(name, gui, items, selected, save, tooltip)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
-    local dropDown = gui.add{type="drop-down", name=name, items=items, selected_index=selected}
+    local dropDown = gui.add{type="drop-down", name=name, items=items, selected_index=selected, tooltip=tooltip}
     dropDown.style.maximal_width = 200
     -- Save the Drop Down inside the elements Table --
     if save == true then

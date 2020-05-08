@@ -49,6 +49,25 @@ _mfSyncAreaAllowedTypes =
 
 }
 
+-- Mobile Factory Sync Area extra entity information needed --
+_mfSyncAreaExtraDetails = {
+	["item-entity"] = {"stack"},
+	["entity-ghost"] = {"inner_name"},
+	["tile-ghost"] = {"inner_name"},
+
+}
+-- Mobile Factory Sync Area, ignored for collision, entity types --
+_mfSyncAreaIgnoredTypes = {
+	beam = true,
+	["flying_text"] = true,
+	["fire"] = true,
+	["particle"] = true,
+    ["projectile"] = true,
+	["highlight-box"] = true,
+	["speech-bubble"] = true,
+	["item-request-proxy"] = true,
+}
+
 -- Mobile Factory Internal Distrubution --
 _mfBaseEnergyAccSend = 1000000
 
@@ -101,6 +120,8 @@ _mfEntitiesScanedPerUpdate = 30
 _mfHPRepairedPerUpdate = -35
 _mfConstructionJetEnergyNeeded = 2500000
 _MFConstructionJetDefaultMaxDistance = 130
+
+_MFConstructionJetDefaultTableSize = 1000
 
 -- Repair Jet --
 _mfRepairJetEnergyNeeded = 4000000
@@ -171,3 +192,10 @@ _mfPurple = {155, 0, 168}
 _mfRed = {231, 5, 5}
 _mfOrange = {255, 131, 0}
 _mfYellow = {244, 208, 63}
+
+-- Table of Researches to Simplify Surface Generation/Check Events --
+_MFResearches = {}
+
+
+-- Table of Recipes Unlocked by Initial Research --
+_MFStartingRecipes = {"MobileFactory", "DimensionalTile", "mfStone"}

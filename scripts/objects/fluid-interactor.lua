@@ -68,7 +68,7 @@ function FI:copySettings(obj)
 		self.selectedInv = obj.selectedInv
     end
     if obj.selectedMode ~= nil then
-		self.mode = obj.mode
+		self.selectedMode = obj.selectedMode
 	end
 end
 
@@ -218,31 +218,69 @@ function FI:updateInventory()
     local localTank = self.ent
     local distantTank = self.selectedInv
     local localFluid = nil
-    local localAmount = nil
 
     -- Get the Fluid inside the local Tank --
-    for k, i in pairs(localTank.get_fluid_contents()) do
-        localFluid = k
-        localAmount = i
+    for i=1,#localTank.fluidbox do
+		if localTank.fluidbox[i] then
+			localFluid = localTank.fluidbox[i]
+			break
+		end
     end
 
     -- Input mode --
     if self.selectedMode == "input" then
+		-- Do Nothing if no Fluid
+		if localFluid == nil then return end
         -- Check the local and distant Tank --
-        if localFluid == nil or localAmount == nil then return end
         if distantTank:canAccept(localFluid) == false then return end
         -- Send the Fluid --
-        local amountAdded = distantTank:addFluid(localFluid, localAmount)
+        local amountAdded = distantTank:addFluid(localFluid)
         -- Remove the local Fluid --
-		localTank.remove_fluid{name=localFluid, amount=amountAdded}
+		localTank.remove_fluid{name=localFluid.name, amount=amountAdded, minimum_temperature = -300, maximum_temperature = 1e7}
 	-- Output mode --
     elseif self.selectedMode == "output" then
         -- Check the local and distant Tank --
-        if localFluid ~= nil and localFluid ~= distantTank.inventoryFluid then return end
+        if localFluid and localFluid.name ~= distantTank.inventoryFluid then return end
         if distantTank.inventoryFluid == nil or distantTank.inventoryCount == 0 then return end
         -- Get the Fluid --
-        local amountAdded = localTank.insert_fluid({name=distantTank.inventoryFluid, amount=distantTank.inventoryCount})
+        local amountAdded = localTank.insert_fluid({name=distantTank.inventoryFluid, amount=distantTank.inventoryCount, temperature = distantTank.inventoryTemperature})
         -- Remove the distant Fluid --
-        distantTank:getFluid(distantTank.inventoryFluid, amountAdded)
+        distantTank:getFluid({name = distantTank.inventoryFluid, amount = amountAdded})
     end
+end
+
+function FI:settingsToTags()
+    local tags = {}
+    local filter = nil
+	local ID = nil
+
+	-- Get Deep Tank and Filter --
+	if self.selectedInv and valid(self.selectedInv) then
+		ID = self.selectedInv.ID
+		filter = self.selectedInv.filter
+	end
+
+	tags["deepTankID"] = ID
+	tags["deepTankFilter"] = filter
+    tags["selectedMode"] = self.selectedMode
+	return tags
+end
+
+function FI:tagsToSettings(tags)
+	local ID = tags["deepTankID"]
+	local filter = tags["deepTankFilter"]
+	--self.selectedInv = tags["selectedInv"]
+	for k, deepTank in pairs(global.deepTankTable) do
+		if valid(deepTank) and deepTank.player == self.player then
+			if deepTank.ID == ID and filter == deepTank.filter then
+				self.selectedInv = deepTank
+				break
+			elseif filter == deepTank.filter then
+				self.selectedInv = deepTank
+			end
+		end
+	end
+
+	-- be careful of a nil selectedMode
+    if tags["selectedMode"] then self.selectedMode = tags["selectedMode"] end
 end

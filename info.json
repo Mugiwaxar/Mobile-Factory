@@ -1,9 +1,9 @@
 {
 	"name": "Mobile_Factory",
-	"version": "0.0.119",
+	"version": "0.0.147",
 	"title": "Mobile Factory",
 	"author": "Mugiwaxar",
-	"dependencies": ["base >= 0.18", "Mobile_Factory_Graphics >= 0.0.6"],
+	"dependencies": ["base >= 0.18", "Mobile_Factory_Graphics >= 0.0.7"],
 	"description": "A mod with many features where you can make a Mobile Factory, build you base inside and travel around the world. The mod contain a way to transfer items via the Circuit Network, some nice way to mine Ore or extract Fluid, many new chemical elements, Jets who will work for you, Data Storage of Items, and many more ...",
 	"factorio_version": "0.18",
 	"homepage":"ttps://mobile-factory.fandom.com/wiki/Mobile_Factory_Wiki"

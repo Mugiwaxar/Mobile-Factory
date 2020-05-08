@@ -6,6 +6,7 @@ dcE.type = "constant-combinator"
 dcE.name = "DataCenter"
 dcE.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataCenterI.png"
 dcE.icon_size = 64
+dcE.icon_mipmaps = 1
 dcE.minable = {mining_time = 0.5, result = "DataCenter"}
 dcE.max_health = 200
 dcE.corpse = "big-remnants"
@@ -59,6 +60,7 @@ data:extend{dcE}
 dcEMF = table.deepcopy(data.raw["constant-combinator"].DataCenter)
 dcEMF.name = "DataCenterMF"
 dcEMF.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataCenterMFI.png"
+dcEMF.icon_mipmaps = 1
 dcEMF.minable = {mining_time = 0.5, result = "DataCenterMF"}
 dcEMF.sprites.sheets =
 	{	{
