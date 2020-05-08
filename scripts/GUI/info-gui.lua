@@ -412,7 +412,7 @@ end
 -- Update the Inventory GUI Frame --
 function GUI.updateInventoryFrame(GUIObj)
 
-	-- Get the GUI, MF and Player--
+	-- Get the MF --
 	local MF = GUIObj.MF
 
 	-- Get the Inventory Scroll Pane --
@@ -421,54 +421,8 @@ function GUI.updateInventoryFrame(GUIObj)
 	-- Clear the Inventory List --
 	InventoryScrollPanel.clear()
 
-	-- Create the Table --
-	local table = GUIObj:addTable("", InventoryScrollPanel, 5)
-
-
-	-- Look for all Deep Tank --
-	for k, deepTank in pairs(global.deepTankTable) do
-		-- Get Variables --
-		local name = deepTank.inventoryFluid
-		local count = deepTank.inventoryCount
-		-- Check the Item --
-		if name == nil or count == nil or count == 0 or game.fluid_prototypes[name] == nil then goto continue end
-		-- Create the Button --
-		local buttonName = "INVBDT" .. "," .. deepTank.ent.unit_number
-		local button = GUIObj:addButton(buttonName, table, "fluid/" .. name, "fluid/" .. name, {"", Util.getLocFluidName(name), ": ", Util.toRNumber(count)}, 37, true, true, count)
-		button.style = "MF_Purple_Button_Purple"
-		button.style.padding = 0
-		button.style.margin = 0
-		::continue::
-	end
-
-	-- Look for all Deep Storage --
-	for k, deepStorage in pairs(global.deepStorageTable) do
-		-- Get Variables --
-		local name = deepStorage.inventoryItem
-		local count = deepStorage.inventoryCount
-		-- Check the Item --
-		if name == nil or count == nil or count == 0 or game.item_prototypes[name] == nil then goto continue  end
-		-- Create the Button --
-		local buttonName = "INVBDSR" .. "," .. deepStorage.ent.unit_number
-		local button = GUIObj:addButton(buttonName, table, "item/" .. name, "item/" .. name, {"", Util.getLocItemName(name), ": ", Util.toRNumber(count)}, 37, true, true, count)
-		button.style = "shortcut_bar_button_green"
-		button.style.padding = 0
-		button.style.margin = 0
-		::continue::
-	end
-
-	-- Look for all Items --
-	for name, count in pairs(MF.II.inventory) do
-		-- Check the Item --
-		if name == nil or count == nil or count == 0 or game.item_prototypes[name] == nil then goto continue  end
-		-- Create the Button --
-		local buttonName = "INVBINV" .. "," .. name .. "," .. count
-		local button = GUIObj:addButton(buttonName, table, "item/" .. name, "item/" .. name, {"", Util.getLocItemName(name), ": ", Util.toRNumber(count)}, 37, true, true, count)
-		button.style = "shortcut_bar_button_blue"
-		button.style.padding = 0
-		button.style.margin = 0
-		::continue::
-	end
+	-- Create the Inventory List --
+	createDNInventoryFrame(GUIObj, InventoryScrollPanel, GUIObj.MFplayer, "INV", MF.II, 5, true, true, true)
 
 	-- Clean the Inventory Information Flow --
 	GUIObj.InventoryInfoFlow.clear()

@@ -228,6 +228,12 @@ function somethingWasPlaced(event, isRobot)
 		placedFluidInteractor(event)
 		return
 	end
+
+	-- Save the Network Explorer --
+	if cent.name == "NetworkExplorer" then
+		placedNetworkExplorer(event)
+		return
+	end
 	
 	-- Save the Data Center --
 	if cent.name == "DataCenter" then
@@ -334,11 +340,14 @@ end
 
 -- When something is removed or destroyed --
 function somethingWasRemoved(event)
+
 	-- Check if the Entity is valid --
 	if event.entity == nil or event.entity.valid == false then return end
 	local removedEnt = event.entity
+
 	-- Get the Player Mobile Factory --
 	local MF = nil
+
 --[[
 	-- last user can change during online play
 	if removedEnt.last_user ~= nil then
@@ -346,6 +355,7 @@ function somethingWasRemoved(event)
 		MF = getMF(removedEnt.last_user.name)
 	end
 --]]
+
 	-- The Mobile Factory was removed --
 	if string.match(removedEnt.name, "MobileFactory") then
 		MF = Util.valueToObj(removedEnt)
@@ -354,26 +364,37 @@ function somethingWasRemoved(event)
 		end
 		return
 	end
+
 	-- Remove the Dimensional Accumulator --
 	if removedEnt.name == "DimensionalAccumulator" then
 		removedDimensionalAccumulator(event)
 		return
 	end
+
 	-- Remove the Power Drain Pole --
 	if removedEnt.name == "PowerDrainPole" then
 		removedPowerDrainPole(event)
 		return
 	end
+
 	-- Remove the Matter Interactor --
 	if removedEnt.name == "MatterInteractor" then
 		removedMatterInteractor(event)
 		return
 	end
+
 	-- Remove the Fluid Interactor --
 	if removedEnt.name == "FluidInteractor" then
 		removedFluidInteractor(event)
 		return
 	end
+
+	-- Remove the Network Explorer --
+	if removedEnt.name == "NetworkExplorer" then
+		removedNetworkExplorer(event)
+		return
+	end
+
 	-- Remove the Data Center --
 	if removedEnt.name == "DataCenter" then
 		local obj = global.dataCenterTable[removedEnt.unit_number]
@@ -385,11 +406,13 @@ function somethingWasRemoved(event)
 		removedDataCenter(event)
 		return
 	end
+
 	-- Remove the Data Storage --
 	if removedEnt.name == "DataStorage" then
 		removedDataStorage(event)
 		return
 	end
+
 	-- Remove the Data Center MF --
 	if removedEnt.name == "DataCenterMF" then
 		MF = Util.valueToObj(global.MFTable, "dataCenter", removedEnt)
@@ -397,16 +420,19 @@ function somethingWasRemoved(event)
 		removedDataCenterMF(event)
 		return
 	end
+
 	-- Remove the Wireless Data Transmitter --
 	if removedEnt.name == "WirelessDataTransmitter" then
 		removedWirelessDataTransmitter(event)
 		return
 	end
+
 	-- Remove the Wireless Data Receiver --
 	if removedEnt.name == "WirelessDataReceiver" then
 		removedWirelessDataReceiver(event)
 		return
 	end
+
 	-- Remove the Energy Cube --
 	if string.match(removedEnt.name, "EnergyCube") then
 		removedEnergyCube(event)
@@ -417,6 +443,7 @@ function somethingWasRemoved(event)
 		end
 		return
 	end
+
 	-- Remove the Ore Cleaner --
 	if removedEnt.name == "OreCleaner" then
 		local obj = global.oreCleanerTable[removedEnt.unit_number]
@@ -427,6 +454,7 @@ function somethingWasRemoved(event)
 		removedOreCleaner(event)
 		return
 	end
+
 	-- Remove the Fluid Extractor --
 	if removedEnt.name == "FluidExtractor" then
 		local obj = global.fluidExtractorTable[removedEnt.unit_number]
@@ -437,6 +465,7 @@ function somethingWasRemoved(event)
 		removedFluidExtractor(event)
 		return
 	end
+
 	-- Remove the Jet Flag --
 	if string.match(removedEnt.name, "Flag") then
 		local obj = global.jetFlagTable[removedEnt.unit_number]
@@ -451,6 +480,7 @@ function somethingWasRemoved(event)
 		removedJetFlag(event)
 		return
 	end
+
 	-- Remove the Deep Storage --
 	if removedEnt.name == "DeepStorage" then
 		local obj = global.deepStorageTable[removedEnt.unit_number]
@@ -461,6 +491,7 @@ function somethingWasRemoved(event)
 		removedDeepStorage(event)
 		return
 	end
+	
 	-- Remove the Deep Tank --
 	if removedEnt.name == "DeepTank" then
 		local obj = global.deepTankTable[removedEnt.unit_number]
@@ -471,6 +502,7 @@ function somethingWasRemoved(event)
 		removedDeepTank(event)
 		return
 	end
+
 	-- Remove the Erya Structure --
 	if eryaSave(removedEnt.name) then
 		removedEryaStructure(event)

@@ -413,3 +413,103 @@ function GO:addDataNetworkFrame(gui, obj)
         return false
 	end
 end
+
+-- Create a Data Network Inventory Frame --
+function createDNInventoryFrame(GUIObj, gui, MFplayer, buttonFirstName, inventory, columnsNumber, showDeepTank, showDeepStorage, showInventory, filter)
+
+    -- Create the Table --
+    local table = GUIObj:addTable("", gui, columnsNumber or 5)
+
+    -- Look for all Deep Tank --
+    if showDeepTank == true then
+        for k, deepTank in pairs(global.deepTankTable) do
+            -- Check if the Deep Tank Belong to the Player --
+            if deepTank.player ~= MFplayer.name then goto continue end
+            -- Get Variables --
+            local name = deepTank.inventoryFluid
+            local count = deepTank.inventoryCount
+            -- Check the Filter --
+            if MFplayer.varTable.tmpLocal ~= nil and Util.getLocFluidName(name)[1] ~= nil then
+                local locName = MFplayer.varTable.tmpLocal[Util.getLocFluidName(name)[1]]
+                if filter ~= nil and filter ~= "" and locName ~= nil and MFplayer.varTable.tmpLocal ~= nil and string.match(string.lower(locName), string.lower(filter)) == nil then goto continue end
+            end
+            -- Create the Button --
+            local buttonName = buttonFirstName .. "BDT" .. "," .. deepTank.ent.unit_number
+            local button = GUIObj:addButton(buttonName, table, "fluid/" .. name, "fluid/" .. name, {"", Util.getLocFluidName(name), ": ", Util.toRNumber(count)}, 37, true, true, count)
+            button.style = "MF_Purple_Button_Purple"
+            button.style.padding = 0
+            button.style.margin = 0
+            ::continue::
+        end
+    end
+
+    -- Look for all Deep Storage --
+    if showDeepStorage == true then
+        for k, deepStorage in pairs(global.deepStorageTable) do
+            -- Check if the Deep Storage Belong to the Player --
+            if deepStorage.player ~= MFplayer.name then goto continue end
+            -- Get Variables --
+            local name = deepStorage.inventoryItem
+            local count = deepStorage.inventoryCount
+            -- Check the Item --
+            if name == nil or count == nil or count == 0 or game.item_prototypes[name] == nil then goto continue end
+            -- Check the Filter --
+            if MFplayer.varTable.tmpLocal ~= nil and Util.getLocItemName(name)[1] ~= nil then
+                local locName = MFplayer.varTable.tmpLocal[Util.getLocItemName(name)[1]]
+                if filter ~= nil and filter ~= "" and locName ~= nil and MFplayer.varTable.tmpLocal ~= nil and string.match(string.lower(locName), string.lower(filter)) == nil then goto continue end
+            end
+            -- Create the Button --
+            local buttonName = buttonFirstName .. "BDSR" .. "," .. deepStorage.ent.unit_number
+            local button = GUIObj:addButton(buttonName, table, "item/" .. name, "item/" .. name, {"", Util.getLocItemName(name), ": ", Util.toRNumber(count)}, 37, true, true, count)
+            button.style = "shortcut_bar_button_green"
+            button.style.padding = 0
+            button.style.margin = 0
+            ::continue::
+        end
+    end
+
+    -- Look for all Items --
+    if showInventory == true then
+        for name, count in pairs(inventory.inventory) do
+            -- Check the Item --
+            if name == nil or count == nil or count == 0 or game.item_prototypes[name] == nil then goto continue  end
+            -- Check the Filter --
+            if MFplayer.varTable.tmpLocal ~= nil and Util.getLocItemName(name)[1] ~= nil then
+                local locName = MFplayer.varTable.tmpLocal[Util.getLocItemName(name)[1]]
+                if filter ~= nil and filter ~= "" and locName ~= nil and MFplayer.varTable.tmpLocal ~= nil and string.match(string.lower(locName), string.lower(filter)) == nil then goto continue end
+            end
+            -- Create the Button --
+            local buttonName = buttonFirstName .. "BINV" .. "," .. name .. "," .. count
+            local button = GUIObj:addButton(buttonName, table, "item/" .. name, "item/" .. name, {"", Util.getLocItemName(name), ": ", Util.toRNumber(count)}, 37, true, true, count)
+            button.style = "shortcut_bar_button_blue"
+            button.style.padding = 0
+            button.style.margin = 0
+            ::continue::
+        end
+    end
+end
+
+function createPlayerInventoryFrame(GUIObj, gui, MFplayer, columnsNumber, buttonFirstName, filter)
+
+    -- Create the Table --
+    local table = GUIObj:addTable("", gui, columnsNumber or 5)
+
+    -- Look for all Items --
+    for name, count in pairs(MFplayer.ent.get_main_inventory().get_contents()) do
+        -- Check the Item --
+        if name == nil or count == nil or count == 0 or game.item_prototypes[name] == nil then goto continue  end
+        -- Check the Filter --
+        if MFplayer.varTable.tmpLocal ~= nil and Util.getLocItemName(name)[1] ~= nil then
+            local locName = MFplayer.varTable.tmpLocal[Util.getLocItemName(name)[1]]
+            if filter ~= nil and filter ~= "" and locName ~= nil and MFplayer.varTable.tmpLocal ~= nil and string.match(string.lower(locName), string.lower(filter)) == nil then goto continue end
+        end
+        -- Create the Button --
+        local buttonName = buttonFirstName .. "BPINV" .. "," .. name .. "," .. count
+        local button = GUIObj:addButton(buttonName, table, "item/" .. name, "item/" .. name, {"", Util.getLocItemName(name), ": ", Util.toRNumber(count)}, 37, true, true, count)
+        button.style = "shortcut_bar_button_blue"
+        button.style.padding = 0
+        button.style.margin = 0
+        ::continue::
+    end
+
+end
