@@ -1,7 +1,7 @@
 ---------------------------------- DATA STORAGE ---------------------------
 
 -- Entity --
-dsE = {}
+local dsE = {}
 dsE.type = "container"
 dsE.name = "DataStorage"
 dsE.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataStorageI.png"
@@ -77,7 +77,7 @@ dsR.result = "DataStorage"
 data:extend{dsR}
 
 -- Animation --
-sdA = {}
+local sdA = {}
 sdA.name = "DataStorageA"
 sdA.type = "animation"
 sdA.frame_count = 120

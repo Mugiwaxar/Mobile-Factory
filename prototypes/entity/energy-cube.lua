@@ -67,7 +67,7 @@ ec1I.place_result = "EnergyCubeMK1"
 ec1I.icon = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK1I.png"
 ec1I.icon_size = 64
 ec1I.subgroup = "DataSerialization"
-ec1I.order = "g"
+ec1I.order = "h"
 ec1I.stack_size = 10
 data:extend{ec1I}
 
