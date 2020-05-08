@@ -693,7 +693,7 @@ function MF:updateSyncArea()
 	end
 
 	-- Update Cloned Entities and Remove Invalid Pairs --
-	self:updateClonedEntities(ent)
+	self:updateClonedEntities(self.ent)
 end
 
 -- Scan around the Mobile Factory for the Sync Area --
