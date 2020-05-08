@@ -107,8 +107,10 @@ function MI:update()
 		self:setActive(false)
     end
 
+	-- Stop if not active --
     if self.active == false then return end
 
+	-- Update the Inventory --
     self:updateInventory()
 
 end

@@ -16,6 +16,7 @@ function GUI.createTooltipGUI(player, obj)
 	-- Add the Main Scroll Pane --
 	local mainSrollPane = GUIObj:addScrollPane("MainScrollPane", GUIObj.gui, 350, true)
 	GUIObj.MainScrollPane.style.minimal_height = 50
+	GUIObj.MainScrollPane.style.maximal_height = 800
 
 	-- Add the Main Flow --
 	local mainFlow = GUIObj:addFlow("MainFlow", mainSrollPane, "horizontal")

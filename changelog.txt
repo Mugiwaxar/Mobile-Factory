@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.149
+Date: 08/05/2020
+  Bugfixes:
+    - Information GUI Inventory should now only display what's belong to you
+---------------------------------------------------------------------------------------------------
 Version: 0.0.148
 Date: 08/05/2020
   Bugfixes:
@@ -44,7 +49,7 @@ Version: 0.0.142
 Date: 03/05/2020
   Changes:
     - Erya Radar scan rate and dish rotation speed decreased
-  BugFixes:
+  Bugfixes:
     - Fluid Interactor didn't have blueprint settings applied
     - place and remove error from not setting MF.playerIndex
 ---------------------------------------------------------------------------------------------------
@@ -52,7 +57,7 @@ Version: 0.0.141
 Date: 01/05/2020
   Changes:
     - attempt to make sync collision detection less aggressive
-  BugFixes:
+  Bugfixes:
     - Erya Loader 1 and Extrem can be blueprinted / copy-pasted
     - Erya Radar works now. Does a nearby scan every 5 seconds (enjoy)
     - set next_upgrade to nil for OreCleaner, Fluid Extractor and unset Erya structures (compatibility patch)
@@ -60,39 +65,39 @@ Date: 01/05/2020
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.140
 Date: 30/04/2020
-  BugFixes:
+  Bugfixes:
     - actually fix the invalid guielement error
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.139
 Date: 29/04/2020
   Changes:
     - update graphics dependency
-  BugFixes:
+  Bugfixes:
     - initialize cjTableSize (ghost construction table limit) for every *new* player
         if still error'ing (rare case) go to MF options ui, jets tab (should fix itself? set value to 1000)
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.138
 Date: 29/04/2020
-  BugFixes:
+  Bugfixes:
     - no error if GUI was never moved between save/load
     - missed default value _MFConstructionJetDefaultTableSize somehow
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.137
 Date: 29/04/2020
-  BugFixes:
+  Bugfixes:
     - Don't use an invalid GUI for a valid player
     - find_non_colliding_position error (spelling)
     - copy pasting multiple entities fix
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.136
 Date: 29/04/2020
-  Corrections:
+  Bugfixes:
     - version 0.0.135: PASTING settings defaults to (always is?) current player.
         Blueprinting store vague details but
             tries to match when the ghost is built, as best as it can.
   Changes:
     - Bilka added support in newgame+. Mobile Factory surface and Control Center aren't reset.
-  BugFixes:
+  Bugfixes:
     - fix invalid player error on_research_finished (hopefully)
 
 ---------------------------------------------------------------------------------------------------
@@ -116,7 +121,7 @@ Date: 28/04/2020
     - use ghost.revive() instead of destroying and creating a thing for construction jets
     - the construction ghost table is global at present (but size option is not).
                   This is bad. Will try to get to it by next version. (ghosts should be stored per-player / MF)
-  BugFixes:
+  Bugfixes:
     - input/output would not be set on copy/pasting with Matter Interactor and Fluid Interactor
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.134

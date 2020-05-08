@@ -1,7 +1,7 @@
 ----------------------------------- FLUID INTERACTOR -----------------------------------
 
 -- Entity --
-miE = table.deepcopy(data.raw.container["iron-chest"])
+local miE = table.deepcopy(data.raw.container["iron-chest"])
 miE.name = "MatterInteractor"
 miE.minable = {mining_time = 0.2, result = "MatterInteractor"}
 miE.inventory_size = 1
@@ -63,7 +63,7 @@ miR.ingredients =
 miR.result = "MatterInteractor"
 data:extend{miR}
 
--- Create all Sprite --
+-- Create all Sprites --
 local miS1 = {}
 miS1.type = "sprite"
 miS1.name = "MatterInteractorSprite1"

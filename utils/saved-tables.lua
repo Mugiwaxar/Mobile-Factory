@@ -34,6 +34,12 @@ function placedFluidInteractor(event)
 	objApplyTags(newFI, event.tags)
 end
 
+-- Save the Network Explorer in a table --
+function placedNetworkExplorer(event)
+	if global.networkExplorerTable == nil then global.networkExplorerTable = {} end
+	global.networkExplorerTable[event.created_entity.unit_number] = NE:new(event.created_entity)
+end
+
 -- Save the Data Center in a table --
 function placedDataCenter(event)
 	if global.dataCenterTable == nil then global.dataCenterTable = {} end
@@ -135,6 +141,13 @@ function removedFluidInteractor(event)
 	if global.fluidInteractorTable == nil then global.fluidInteractorTable = {} return end
 	if global.fluidInteractorTable[event.entity.unit_number] ~= nil then global.fluidInteractorTable[event.entity.unit_number]:remove() end
 	global.fluidInteractorTable[event.entity.unit_number] = nil
+end
+
+-- Remove the Network Explorer from the table --
+function removedNetworkExplorer(event)
+	if global.networkExplorerTable == nil then global.networkExplorerTable = {} return end
+	if global.networkExplorerTable[event.entity.unit_number] ~= nil then global.networkExplorerTable[event.entity.unit_number]:remove() end
+	global.networkExplorerTable[event.entity.unit_number] = nil
 end
 
 -- Remove the Data Center from the table --

@@ -25,6 +25,7 @@ require("scripts/objects/data-center-mf.lua")
 require("scripts/objects/data-storage.lua")
 require("scripts/objects/matter-interactor.lua")
 require("scripts/objects/fluid-interactor.lua")
+require("scripts/objects/network-explorer.lua")
 require("scripts/objects/wireless-data-transmitter.lua")
 require("scripts/objects/wireless-data-receiver.lua")
 require("scripts/objects/energy-cube.lua")
@@ -73,6 +74,7 @@ function onInit()
 	global.dataCenterTable = {}
 	global.matterInteractorTable = {}
 	global.fluidInteractorTable = {}
+	global.networkExplorerTable = {}
 	global.dataStorageTable = {}
 	global.wirelessDataTransmitterTable = {}
 	global.wirelessDataReceiverTable = {}
@@ -136,6 +138,10 @@ function onLoad()
 	-- Set FluidInteractor Metatables --
 	for k, fi in pairs(global.fluidInteractorTable or {}) do
 		FI:rebuild(fi)
+	end
+	-- Set NetworkExplorer Metatables --
+	for k, ne in pairs(global.networkExplorerTable or {}) do
+		NE:rebuild(ne)
 	end
 	-- Set Wireless Data Transmitter Metatables --
 	for k, wdt in pairs(global.wirelessDataTransmitterTable or {}) do
@@ -210,6 +216,7 @@ end
 _mfEntityFilter = {
 	{filter = "type", type = "unit", invert = true},
 	{filter = "type", type = "tree", mode = "and", invert = true},
+	{filter = "type", type = "simple-entity", mode = "and", invert = true},
 	{filter = "type", type = "unit-spawner", mode = "and", invert = true},
 	{filter = "type", type = "turret", mode = "and", invert = true},
 	{filter = "type", type = "fish", mode = "and", invert = true}
@@ -310,6 +317,7 @@ script.on_event(defines.events.on_marked_for_deconstruction, markedForDeconstruc
 script.on_event(defines.events.on_entity_settings_pasted, settingsPasted)
 script.on_event(defines.events.on_force_created, onForceCreated)
 script.on_event(defines.events.on_player_setup_blueprint, onPlayerSetupBlueprint)
+script.on_event(defines.events.on_string_translated, onStringTranslated)
 script.on_event("OpenTTGUI", onShortcut)
 
 -- Add command to insert Mobile Factory to the player inventory --

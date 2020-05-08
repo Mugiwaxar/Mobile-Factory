@@ -438,8 +438,43 @@ function GUI.buttonClicked(event)
 		return
 	end
 
-	-- Update the GUI --
-	GUI.updateAllGUIs(player)
+	-- If this is a Network Explorer --
+	if string.match(event.element.name, "NE") then
+		local count = 1
+		if event.alt == true then count = 10 end
+		if event.control == true then count = 100 end
+		if event.shift == true then count = nil end
+		if event.button == defines.mouse_button_type.right then count = -1 end
+		if event.button == defines.mouse_button_type.right and event.shift == true then count = 99999999 end
+		-- If it's a Deep Tank, do nothing --
+		if string.match(event.element.name, "NEBDT") then
+			return
+		end
+		-- If it's a Deep Storage --
+		if string.match(event.element.name, "BDS") then
+			local objId = tonumber(split(event.element.name, ",")[4])
+			local obj = global.deepStorageTable[objId]
+			NE.transferItemsFromDS(obj, getMFPlayer(playerIndex).ent.get_main_inventory(), count)
+		end
+		-- If it's a Data Network Inventory --
+		if string.match(event.element.name, "BINV") then
+			local objId = tonumber(split(event.element.name, ",")[2])
+			local obj = global.networkExplorerTable[objId]
+			NE.transferItemsFromDNInv(obj, getMFPlayer(playerIndex).ent.get_main_inventory(), split(event.element.name, ",")[4], count)
+		end
+		-- If it's a player Inventory --
+		if string.match(event.element.name, "BPINV") then
+			local objId = tonumber(split(event.element.name, ",")[2])
+			local obj = global.networkExplorerTable[objId]
+			NE.transferItemsFromPInv(getMFPlayer(playerIndex).ent.get_main_inventory(), getMFPlayer(playerIndex).name, obj, split(event.element.name, ",")[4], count)
+		end
+		-- Update all GUIs --
+		GUI.updateAllGUIs(player)
+		return
+	end
+
+	-- Update the GUI (Never used ?)--
+	-- GUI.updateAllGUIs(player)
 	
 end
 
@@ -741,4 +776,10 @@ function GUI.onGuiElemChanged(event)
 		-- Change the Mining Jet Flag targeted Inventory --
 		mjFlag:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
 	end
+end
+
+-- Called when a Localized Name is requested --
+function onStringTranslated(event)
+	if getMFPlayer(event.player_index).varTable.tmpLocal == nil then getMFPlayer(event.player_index).varTable.tmpLocal = {} end
+	getMFPlayer(event.player_index).varTable.tmpLocal[event.localised_string[1]] = event.result
 end
