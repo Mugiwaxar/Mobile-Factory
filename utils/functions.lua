@@ -224,15 +224,13 @@ function getMFPlayer(playerName)
 end
 
 function Util.valueToObj(inTable, key, value)
-	if value == nil then return nil end
-	local Obj = nil
-	for _, v in pairs(inTable) do
-		if v.key == value then
-			Obj = v
-			break
+	if type(inTable) ~= "table" or key == nil or value == nil then return end
+	for _, obj in pairs(inTable) do
+		if obj[key] == value then
+			return obj
 		end
 	end
-	return Obj
+	return nil
 end
 
 -- Return the Player Force --

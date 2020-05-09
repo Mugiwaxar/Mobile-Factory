@@ -80,6 +80,7 @@ function MF:remove()
 	self.ent = nil
 	self.internalEnergy = 0
 	self.jumpTimer = _mfBaseJumpTimer
+	self:removeSyncArea()
 end
 
 -- Is valid --
@@ -647,7 +648,7 @@ function MF:updateAccumulators()
 	end
 end
 
-local function removeSync(self)
+function MF:removeSyncArea()
 	if self.syncAreaScanned == false then return end
 	rendering.destroy(self.syncAreaID)
 	rendering.destroy(self.syncAreaInsideID)
@@ -666,7 +667,7 @@ function MF:updateSyncArea()
 
 	-- Check if the Mobile Factory is moving or the Sync Area is disabled --
 	if self.syncAreaEnabled == false or self.ent.speed ~= 0 then
-		removeSync(self)
+		self:removeSyncArea()
 		return
 	end
 
@@ -675,7 +676,7 @@ function MF:updateSyncArea()
 		if player.connected then
 			player.create_local_flying_text{text={"info.MF-sync-too-close"}, position = self.ent.position}
 		end
-		removeSync(self)
+		self:removeSyncArea()
 		return
 	end
 
