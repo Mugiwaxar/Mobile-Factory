@@ -34,6 +34,12 @@ function placedFluidInteractor(event)
 	objApplyTags(newFI, event.tags)
 end
 
+-- Save the Data Assembler in a table --
+function placedDataAssembler(event)
+	if global.dataAssemblerTable == nil then global.dataAssemblerTable = {} end
+	global.dataAssemblerTable[event.created_entity.unit_number] = DA:new(event.created_entity)
+end
+
 -- Save the Network Explorer in a table --
 function placedNetworkExplorer(event)
 	if global.networkExplorerTable == nil then global.networkExplorerTable = {} end
@@ -141,6 +147,13 @@ function removedFluidInteractor(event)
 	if global.fluidInteractorTable == nil then global.fluidInteractorTable = {} return end
 	if global.fluidInteractorTable[event.entity.unit_number] ~= nil then global.fluidInteractorTable[event.entity.unit_number]:remove() end
 	global.fluidInteractorTable[event.entity.unit_number] = nil
+end
+
+-- Remove the Data Assembler from the table --
+function removedDataAssembler(event)
+	if global.dataAssemblerTable == nil then global.dataAssemblerTable = {} return end
+	if global.dataAssemblerTable[event.entity.unit_number] ~= nil then global.dataAssemblerTable[event.entity.unit_number]:remove() end
+	global.dataAssemblerTable[event.entity.unit_number] = nil
 end
 
 -- Remove the Network Explorer from the table --

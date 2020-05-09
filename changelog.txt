@@ -1,6 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.150
+Date: 09/05/2020
+  Features:
+    - Added the Data Assembler: Allow you to create Items/fluid directly from the Data Network
+    - The Network Explorer now display how many Items are inside the connected Data Center
+  Bugfixes:
+    - Fixed a crash related to Information GUI
+---------------------------------------------------------------------------------------------------
 Version: 0.0.149
 Date: 08/05/2020
+  Features:
+    - Added Network Explorer: Let you explore a Data Network and send/retrieve Items
   Bugfixes:
     - Information GUI Inventory should now only display what's belong to you
 ---------------------------------------------------------------------------------------------------

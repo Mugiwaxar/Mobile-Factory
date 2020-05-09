@@ -214,6 +214,7 @@ function DN:drainPower(amount)
 	return true
 end
 
+-- Update all Signals --
 function DN:updateSignals()
 	-- Clear the Table --
 	self.signalsTable = {}
@@ -227,4 +228,155 @@ function DN:updateSignals()
 			receiver:getSignals(self.signalsTable)
 		end
 	end
+end
+
+-- Return how many Items the Data Network has --
+function DN:hasItem(item)
+	-- Check the Data Center --
+	if self.dataCenter == nil then return 0 end
+	local amount = 0
+	local playerName = self.dataCenter.player
+	-- Check the Deep Storages --
+	for k, deepStorage in pairs(global.deepStorageTable) do
+		if deepStorage.player == playerName then
+			amount = amount + deepStorage:hasItem(item)
+		end
+	end
+	-- Check the Data Center --
+	amount = amount + self.dataCenter.invObj:hasItem(item)
+	-- Return the Amount --
+	return amount
+end
+
+-- Return the Fluid amount the Data Network has --
+function DN:hasFluid(fluid)
+	-- Check the Data Center --
+	if self.dataCenter == nil then return 0 end
+	local amount = 0
+	local playerName = self.dataCenter.player
+	-- Check the Deep Tank --
+	for k, deepTank in pairs(global.deepTankTable) do
+		if deepTank.player == playerName then
+			amount = amount + deepTank:hasFluid(fluid)
+		end
+	end
+	-- Return the Amount --
+	return amount
+end
+
+-- Get Items from the Data Network --
+function DN:getItem(item, amount)
+	-- Check if the Item still exist --
+	if game.item_prototypes[item] == nil then return 0 end
+	-- Check the Data Center --
+	if self.dataCenter == nil then return 0 end
+	-- Set the Amount of Item to retrieve left --
+	local amountLeft = amount
+	local playerName = self.dataCenter.player
+	-- Check the Deep Storages --
+	for k, deepStorage in pairs(global.deepStorageTable) do
+		if deepStorage.player == playerName then
+			local amountGot = deepStorage:getItem(item, amountLeft)
+			amountLeft = amountLeft - amountGot
+			if amountLeft <= 0 then return amount end
+		end
+	end
+	-- Check the Data Center --
+	amountLeft = amountLeft - self.dataCenter.invObj:getItem(item, amountLeft)
+	-- Return the amount removed --
+	return amount - amountLeft
+end
+
+-- Get Fluid form the Data Network --
+function DN:getFluid(fluid, amount)
+	-- Check if the Fluid still exist --
+	if game.fluid_prototypes[fluid] == nil then return 0 end
+	-- Check the Data Center --
+	if self.dataCenter == nil then return 0 end
+	-- Set the Amount of Item to retrieve left --
+	local amountLeft = amount
+	local playerName = self.dataCenter.player
+	-- Check the Deep Tanks --
+	for k, deepTank in pairs(global.deepTankTable) do
+		if deepTank.player == playerName then
+			local amountGot = deepTank:getFluid({name=fluid, amount=amountLeft})
+			amountLeft = amountLeft - amountGot
+			if amountLeft <= 0 then return amount end
+		end
+	end
+	-- Return the amount removed --
+	return amount - amountLeft
+end
+
+-- Check if the Data Network can accept a Item --
+function DN:canAcceptItem(item, amount)
+	-- Check the Data Center --
+	if self.dataCenter == nil then return 0 end
+	local playerName = self.dataCenter.player
+	-- Check the Deep Storages --
+	for k, deepStorage in pairs(global.deepStorageTable) do
+		if deepStorage.player == playerName and deepStorage:canAccept(item) then
+			return true
+		end
+	end
+	-- Check the Data Center --
+	if self.dataCenter.invObj:canAccept(amount) then return true end
+	return false
+end
+
+-- Check if the Data Network can accept a Fluid --
+function DN:canAcceptFluid(fluid, amount)
+	-- Check the Data Center --
+	if self.dataCenter == nil then return 0 end
+	local playerName = self.dataCenter.player
+	-- Check the Deep Tanks --
+	for k, deepTank in pairs(global.deepTankTable) do
+		if deepTank.player == playerName and deepTank:canAccept({name=fluid, amount=amount}) then
+			return true
+		end
+	end
+	return false
+end
+
+-- Send Items to the Data Network --
+function DN:addItems(item, amount)
+	-- Check if the Item still exist --
+	if game.item_prototypes[item] == nil then return 0 end
+	-- Check the Data Center --
+	if self.dataCenter == nil then return 0 end
+	-- Set the Amount of Item to send left --
+	local amountLeft = amount
+	local playerName = self.dataCenter.player
+	-- Check the Deep Storages --
+	for k, deepStorage in pairs(global.deepStorageTable) do
+		if deepStorage.player == playerName and deepStorage:canAccept(item) then
+			deepStorage:addItem(item, amount)
+			return amount
+		end
+	end
+	-- Check the Data Center --
+	amountLeft = amountLeft - self.dataCenter.invObj:addItem(item, amountLeft)
+	-- Return the amount added --
+	return amount - amountLeft
+end
+
+-- Send Fluid to the Data Network --
+function DN:addFluid(fluid, amount, temperature)
+	-- Check if the Fluid still exist --
+	if game.fluid_prototypes[fluid] == nil then return 0 end
+	-- Check the Data Center --
+	if self.dataCenter == nil then return 0 end
+	-- Set the Amount of Item to retrieve left --
+	local amountLeft = amount
+	local playerName = self.dataCenter.player
+	-- Check the Deep Tanks --
+	for k, deepTank in pairs(global.deepTankTable) do
+		if deepTank.player == playerName then
+			local amountSend = deepTank:addFluid({name=fluid, amount=amountLeft, temperature=temperature})
+			amountLeft = amountLeft - amountSend
+			if amountLeft <= 0 then return amount end
+		end
+	end
+	-- Return the amount added --
+	return amount - amountLeft
 end

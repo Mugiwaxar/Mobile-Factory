@@ -109,7 +109,13 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 	end
 
 	-- Create the Inventory Title --
-	local inventoryFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
+	local inventoryFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.NetworkInventory"}, _mfOrange)
+
+	-- Create the total Items Label --
+	if self.dataNetwork ~= nil and self.dataNetwork.dataCenter ~= nil and self.dataNetwork.dataCenter.invObj ~= nil then
+		local inv = self.dataNetwork.dataCenter.invObj
+		GUIObj:addDualLabel(inventoryFrame, {"", {"gui-description.INVTotalItems"}, ":"}, Util.toRNumber(inv.usedCapacity) .. "/" .. Util.toRNumber(inv.maxCapacity), _mfOrange, _mfGreen, nil, nil, inv.usedCapacity .. "/" .. inv.maxCapacity)
+	end
 
 	-- Create the Inventory Scroll Pane --
 	local inventoryScrollPane = GUIObj:addScrollPane("InventoryScrollPane", inventoryFrame, 500, true)
@@ -158,17 +164,18 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 
 		GUIObj.SettingsFrame.visible = true
 		local titleFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Information"}, _mfOrange)
+		local flow = GUIObj:addFlow("", titleFrame, "horizontal")
+		GUIObj:addLabel("Label", flow, {"", {"gui-description.ItemSearchText"}, ":"}, _mfOrange, "", false)
+		local textField = GUIObj:addTextField(self.entID .. ":SearchTextField", flow, "", {"gui-description.ItemSearchTextTT"}, true, false, false, false, false)
+		textField.style.maximal_width = 130
+		flow.style.vertical_align = "center"
+		flow.style.bottom_padding = 10
 		GUIObj:addLabel("", titleFrame, {"gui-description.ItemTransferText"}, _mfGreen)
 		GUIObj:addLabel("", titleFrame, {"gui-description.ItemTransferText2"}, _mfGreen)
 		GUIObj:addLabel("", titleFrame, {"gui-description.ItemTransferText3"}, _mfGreen)
 		GUIObj:addLabel("", titleFrame, {"gui-description.ItemTransferText4"}, _mfGreen)
 		GUIObj:addLabel("", titleFrame, {"gui-description.ItemTransferText5"}, _mfGreen)
 		GUIObj:addLabel("", titleFrame, {"gui-description.ItemTransferText6"}, _mfGreen)
-		local flow = GUIObj:addFlow("", titleFrame, "horizontal")
-		GUIObj:addLabel("Label", flow, {"", {"gui-description.ItemSearchText"}, ":"}, _mfOrange, "", false)
-		local textField = GUIObj:addTextField(self.entID .. ":SearchTextField", flow, "", {"gui-description.ItemSearchTextTT"}, true, false, false, false, false)
-		textField.style.maximal_width = 130
-		flow.style.vertical_align = "center"
 	end
 	
 end

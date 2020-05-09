@@ -469,12 +469,38 @@ function GUI.buttonClicked(event)
 			NE.transferItemsFromPInv(getMFPlayer(playerIndex).ent.get_main_inventory(), getMFPlayer(playerIndex).name, obj, split(event.element.name, ",")[4], count)
 		end
 		-- Update all GUIs --
-		GUI.updateAllGUIs(player)
+		GUI.updateAllGUIs()
+		return
+	end
+
+	-- If this is a Data Assembler --
+	if string.match(event.element.name, "DA") and event.element.type == "sprite-button" then
+		-- If a Recipe must be added --
+		if string.match(event.element.name, "DAAddR") then
+			local GUIObj = global.GUITable["MFTooltipGUI" .. playerIndex]
+			local objID = tonumber(split(event.element.name, ",")[2])
+			local obj = global.dataAssemblerTable[objID]
+			if valid(obj) == false then return end
+			local recipe = GUIObj.DARecipe.elem_value
+			local amount = GUIObj.DAAmount.text
+			GUIObj.DARecipe.elem_value = nil
+			GUIObj.DAAmount.text = ""
+			obj:addRecipe(recipe, amount)
+		end
+		if string.match(event.element.name, "DARem") and event.button == defines.mouse_button_type.right then
+			local objID = tonumber(split(event.element.name, ",")[2])
+			local obj = global.dataAssemblerTable[objID]
+			local recipeID = tonumber(split(event.element.name, ",")[3])
+			if valid(obj) == false then return end
+			obj:removeRecipe(recipeID)
+		end
+		-- Update all GUIs --
+		GUI.updateAllGUIs()
 		return
 	end
 
 	-- Update the GUI (Never used ?)--
-	-- GUI.updateAllGUIs(player)
+	-- GUI.updateAllGUIs()
 	
 end
 

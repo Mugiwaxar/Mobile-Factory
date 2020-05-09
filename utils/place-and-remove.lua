@@ -229,6 +229,12 @@ function somethingWasPlaced(event, isRobot)
 		return
 	end
 
+	-- Save the Data Assembler --
+	if cent.name == "DataAssembler" then
+		placedDataAssembler(event)
+		return
+	end
+
 	-- Save the Network Explorer --
 	if cent.name == "NetworkExplorer" then
 		placedNetworkExplorer(event)
@@ -386,6 +392,12 @@ function somethingWasRemoved(event)
 	-- Remove the Fluid Interactor --
 	if removedEnt.name == "FluidInteractor" then
 		removedFluidInteractor(event)
+		return
+	end
+
+	-- Remove the Data Assembler --
+	if removedEnt.name == "DataAssembler" then
+		removedDataAssembler(event)
 		return
 	end
 
