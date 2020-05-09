@@ -354,19 +354,11 @@ function somethingWasRemoved(event)
 	-- Get the Player Mobile Factory --
 	local MF = nil
 
---[[
-	-- last user can change during online play
-	if removedEnt.last_user ~= nil then
-		log("removedEnt.last_user: "..removedEnt.last_user.name)
-		MF = getMF(removedEnt.last_user.name)
-	end
---]]
-
 	-- The Mobile Factory was removed --
 	if string.match(removedEnt.name, "MobileFactory") then
-		MF = Util.valueToObj(removedEnt)
+		MF = Util.valueToObj(global.MFTable, "ent", removedEnt)
 		if MF ~= nil then
-			MF:remove(removedEnt)
+			MF:remove()
 		end
 		return
 	end
