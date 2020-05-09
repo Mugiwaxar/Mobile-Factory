@@ -135,7 +135,8 @@ function DTK:canAccept(fluid)
 	if self.filter == nil then return false end
 	if self.filter ~= nil and self.filter ~= fluid.name then return false end
     if self.inventoryFluid ~= nil and self.inventoryFluid ~= fluid.name then return false end
-    if self.inventoryCount >= _dtMaxFluid then return false end
+	if self.inventoryCount >= _dtMaxFluid then return false end
+	if fluid.amount ~= nil and fluid.amount > _dtMaxFluid - self.inventoryCount then return false end
 	return true
 end
 

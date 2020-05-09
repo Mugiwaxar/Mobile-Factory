@@ -89,6 +89,7 @@ _mfWDREnergyDrainPerUpdate = 30000
 _mfMIEnergyDrainPerUpdate = 2500
 _mfFIEnergyDrainPerUpdate = 4500
 _mfNEEnergyDrainPerUpdate = 3000
+_mfDAEnergyDrainPerUpdate = 1200
 
 -- Ore Cleaner settings --
 _mfOreCleanerMaxCharge = 1000
@@ -156,6 +157,7 @@ _mfTooltipGUI =
     OreCleaner = "oreCleanerTable",
     MatterInteractor = "matterInteractorTable",
     FluidInteractor = "fluidInteractorTable",
+    DataAssembler = "dataAssemblerTable",
     NetworkExplorer = "networkExplorerTable",
     WirelessDataTransmitter = "wirelessDataTransmitterTable",
     WirelessDataReceiver = "wirelessDataReceiverTable",

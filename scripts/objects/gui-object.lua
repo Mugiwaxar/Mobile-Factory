@@ -310,11 +310,14 @@ function GO:addLabel(name, gui, text, color, tooltip, save, font)
 end
 
 -- Add a dual Label --
-function GO:addDualLabel(gui, text1, text2, color1, color2, font, tooltip1, tooltip2)
+function GO:addDualLabel(gui, text1, text2, color1, color2, font, tooltip1, tooltip2, name, save)
     -- Create the Frame --
     local flow = self:addFlow("", gui, "horizontal")
     self:addLabel("Label1", flow, text1, color1, tooltip1, false, font)
     self:addLabel("Label2", flow, text2, color2, tooltip2, false, font)
+    if save == true then
+        self.elements[name] = flow
+    end
     return flow
 end
 
@@ -428,6 +431,8 @@ function createDNInventoryFrame(GUIObj, gui, MFplayer, buttonFirstName, inventor
             -- Get Variables --
             local name = deepTank.inventoryFluid
             local count = deepTank.inventoryCount
+            -- Check the Item --
+		    if name == nil or count == nil or count == 0 or game.fluid_prototypes[name] == nil then goto continue end
             -- Check the Filter --
             if MFplayer.varTable.tmpLocal ~= nil and Util.getLocFluidName(name)[1] ~= nil then
                 local locName = MFplayer.varTable.tmpLocal[Util.getLocFluidName(name)[1]]

@@ -25,6 +25,7 @@ require("scripts/objects/data-center-mf.lua")
 require("scripts/objects/data-storage.lua")
 require("scripts/objects/matter-interactor.lua")
 require("scripts/objects/fluid-interactor.lua")
+require("scripts/objects/data-assembler.lua")
 require("scripts/objects/network-explorer.lua")
 require("scripts/objects/wireless-data-transmitter.lua")
 require("scripts/objects/wireless-data-receiver.lua")
@@ -74,6 +75,7 @@ function onInit()
 	global.dataCenterTable = {}
 	global.matterInteractorTable = {}
 	global.fluidInteractorTable = {}
+	global.dataAssemblerTable = {}
 	global.networkExplorerTable = {}
 	global.dataStorageTable = {}
 	global.wirelessDataTransmitterTable = {}
@@ -138,6 +140,10 @@ function onLoad()
 	-- Set FluidInteractor Metatables --
 	for k, fi in pairs(global.fluidInteractorTable or {}) do
 		FI:rebuild(fi)
+	end
+	-- Set DataAssembler Metatables --
+	for k, da in pairs(global.dataAssemblerTable or {}) do
+		DA:rebuild(da)
 	end
 	-- Set NetworkExplorer Metatables --
 	for k, ne in pairs(global.networkExplorerTable or {}) do

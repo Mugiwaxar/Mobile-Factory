@@ -57,7 +57,7 @@ neI.icon = "__Mobile_Factory__/graphics/NetworkExplorerI.png"
 neI.icon_size = 128
 neI.place_result = "NetworkExplorer"
 neI.subgroup = "DataSerialization"
-neI.order = "g"
+neI.order = "h"
 neI.stack_size = 5
 data:extend{neI}
 

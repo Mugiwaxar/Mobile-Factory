@@ -17,6 +17,7 @@ require("prototypes/entity/deep-storage.lua")
 require("prototypes/entity/deep-tank.lua")
 require("prototypes/entity/fluid-interactor.lua")
 require("prototypes/entity/matter-interactor.lua")
+require("prototypes/entity/data-assembler.lua")
 require("prototypes/entity/network-explorer.lua")
 require("prototypes/entity/ore-cleaner.lua")
 require("prototypes/entity/fluid-extractor.lua")
@@ -414,6 +415,17 @@ data:extend{
 data:extend{
     {
         type = "sprite",
+        name = "PlusIcon",
+		-- filename = "__Mobile_Factory_Graphics__/graphics/icones/PlusIcon.png",
+		filename = "__Mobile_Factory__/graphics/PlusIcon.png",
+        size = 32,
+        flags = {"icon"}
+    }
+}
+
+data:extend{
+    {
+        type = "sprite",
         name = "OptionIcon",
         filename = "__Mobile_Factory_Graphics__/graphics/icones/OptionIcon.png",
         size = 32,
@@ -753,6 +765,34 @@ data.raw["gui-style"].default.MF_DeepST_scroll_pan =
 	}
 }
 
+data.raw["gui-style"].default.MF_DA_scroll_pan =
+{
+	type = "scroll_pane_style",
+	graphical_set =
+	{
+		base =
+		{
+		position = {17, 0},
+		corner_size = 8,
+		center = {position = {42, 8}, size = 1},
+		top = {},
+		left_top = {},
+		right_top = {},
+		draw_type = "outer"
+		},
+		shadow = default_inner_glow(hard_shadow_color, 0.5)
+	},
+	background_graphical_set =
+	{
+		position = {282, 17},
+		corner_size = 8,
+		overall_tiling_vertical_size = 53,
+		overall_tiling_vertical_spacing = 0,
+		overall_tiling_vertical_padding = 0,
+		overall_tiling_horizontal_padding = 0
+	}
+}
+
 local purpleTint = {150, 50, 160}
 local lightPurpleTint = {200, 120, 220}
 data.raw["gui-style"].default.MF_Purple_Button_Purple =
@@ -794,6 +834,48 @@ data.raw["gui-style"].default.MF_Fake_Button_Blue =
 	clicked_graphical_set =
 	{
 		base = {position = {312, 759}, corner_size = 8},
+        shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	}
+}
+
+data.raw["gui-style"].default.MF_Fake_Button_Green =
+{
+	type = "button_style",
+	parent = "shortcut_bar_button",
+	default_graphical_set =
+	{
+		base = {position = {312, 792}, corner_size = 8},
+        shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	},
+	hovered_graphical_set =
+	{
+		base = {position = {312, 792}, corner_size = 8},
+        shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	},
+	clicked_graphical_set =
+	{
+		base = {position = {312, 792}, corner_size = 8},
+        shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	}
+}
+
+data.raw["gui-style"].default.MF_Fake_Button_Red =
+{
+	type = "button_style",
+	parent = "shortcut_bar_button",
+	default_graphical_set =
+	{
+		base = {position = {312, 776}, corner_size = 8},
+        shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	},
+	hovered_graphical_set =
+	{
+		base = {position = {312, 776}, corner_size = 8},
+        shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	},
+	clicked_graphical_set =
+	{
+		base = {position = {312, 776}, corner_size = 8},
         shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
 	}
 }

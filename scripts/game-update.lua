@@ -59,6 +59,7 @@ function updateValues()
 	if global.dataNetworkIDRedTable == nil then global.dataNetworkIDRedTable = {} end
 	if global.matterInteractorTable == nil then global.matterInteractorTable = {} end
 	if global.fluidInteractorTable == nil then global.fluidInteractorTable = {} end
+	if global.dataAssemblerTable == nil then global.dataAssemblerTable = {} end
 	if global.networkExplorerTable == nil then global.networkExplorerTable = {} end
 	if global.dataCenterTable == nil then global.dataCenterTable = {} end
 	if global.dataStorageTable == nil then global.dataStorageTable = {} end

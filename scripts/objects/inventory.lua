@@ -73,7 +73,10 @@ function INV:hasItem(item)
 end
 
 -- Return if the Item can be accepted --
-function INV:canAccept(name)
+function INV:canAccept(number)
+	if number ~= nil then
+		if self:remCap() >= number then return true end
+	end
 	if self:remCap() > 0 then return true end
 	return false
 end
@@ -82,7 +85,7 @@ end
 function INV:addItem(item, amount)
 
 	-- Check if the Item can be accepted --
-	if self:canAccept(item) == false then return 0 end
+	if self:canAccept() == false then return 0 end
 
 	-- Calcule the amount of items that can be inserted --
 	local capableAmount = math.min(amount, self:remCap())
