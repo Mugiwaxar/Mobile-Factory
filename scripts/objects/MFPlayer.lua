@@ -3,7 +3,8 @@ MFP = {
     ent = nil,
 	index = nil,
     name = nil,
-    MF = nil,
+	MF = nil,
+	GUI = nil,
     varTable = nil
 }
 
@@ -16,7 +17,8 @@ function MFP:new(player)
     mt.__index = MF
     t.ent = player
 	t.index = player.index
-    t.name = player.name
+	t.name = player.name
+	t.GUI = {}
     t.varTable = {}
 	return t
 end

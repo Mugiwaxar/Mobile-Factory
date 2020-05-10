@@ -66,7 +66,6 @@ function onInit()
 	-- Tables --
 	global.playersTable = {}
 	global.MFTable = {}
-	global.GUITable = {}
 	global.accTable = {}
 	global.pdpTable = {}
 	global.dataNetworkTable = {}
@@ -114,8 +113,10 @@ function onLoad()
 		MF:rebuild(mf)
 	end
 	-- Set GUI Objects Metatables --
-	for k, go in pairs(global.GUITable or {}) do
-		GO:rebuild(go)
+	for k, player in pairs(global.playersTable or {}) do
+		for k2, go in pairs(player.GUI or {}) do
+			GO:rebuild(go)
+		end
 	end
 	-- Set PDP Metatables --
 	for k, pdp in  pairs(global.pdpTable or {}) do

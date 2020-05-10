@@ -95,7 +95,7 @@ function MF:getTooltipInfos(GUIObj, gui, justCreated)
 	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
 
 	-- Create the Inventory Button --
-	GUIObj:addSimpleButton("MFOpenI," ..GUIObj.MFplayer.name, frame, {"gui-description.OpenInventory"})
+	GUIObj:addSimpleButton("MFOpenI," ..GUIObj.MFPlayer.name, frame, {"gui-description.OpenInventory"})
 
 	-- Check if the Parameters can be modified --
 	if canModify(getPlayer(gui.player_index).name, self.ent) == false or justCreated ~= true then return end

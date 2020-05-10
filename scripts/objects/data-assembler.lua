@@ -156,6 +156,9 @@ function DA:getTooltipInfos(GUIObj, gui, justCreated)
 	-- Add the Information --
 	if justCreated == true then
 
+		-- Add the Data Assembler to the GUI --
+		GUIObj.DA = self
+
 		-- Show the Settings Flow --
 		GUIObj.SettingsFrame.visible = true
 
@@ -252,7 +255,8 @@ function DA:createFrame(GUIObj, gui, recipe, id)
 			self.recipeTable[id] = nil
 			return
 		end
-		local ingredientButton = GUIObj:addButton("", ingredientsFlow, ingredient.sprite, ingredient.sprite, ingredient.name, 30, false, true, self.dataNetwork:hasItem(ingredient.name) or 0)
+		local storedAmount = ingredient.type == "item" and self.dataNetwork:hasItem(ingredient.name) or self.dataNetwork:hasFluid(ingredient.name)
+		local ingredientButton = GUIObj:addButton("", ingredientsFlow, ingredient.sprite, ingredient.sprite, ingredient.name, 30, false, true, storedAmount or 0)
 		ingredientButton.style = ingredient.missing == true and "MF_Fake_Button_Red" or "MF_Fake_Button_Green"
 		ingredientButton.style.padding = 0
 		ingredientButton.style.margin = 0
@@ -260,7 +264,9 @@ function DA:createFrame(GUIObj, gui, recipe, id)
 
 	-- Create the Progress Bar --
 	local barColor = self.quatronCharge > 0 and _mfGreen or _mfRed
-	GUIObj:addProgressBar("", processFlow, "", "", false, barColor, recipe.progress / recipe.recipePrototype.energy, 150)
+	local PBar = GUIObj:addProgressBar("", processFlow, "", "", false, barColor, recipe.progress / recipe.recipePrototype.energy, 150)
+	if GUIObj.PBarsTable == nil then GUIObj.PBarsTable = {} end
+	GUIObj.PBarsTable[PBar] = recipe
 
 	-- Check the Product --
 	if game.item_prototypes[recipe.mainProduct.name] == nil and game.fluid_prototypes[recipe.mainProduct.name] == nil then
@@ -270,11 +276,23 @@ function DA:createFrame(GUIObj, gui, recipe, id)
 
 	-- Create the Result Flow --
 	local resultFlow = GUIObj:addFlow("", frame, "vertical")
-	local productButton = GUIObj:addButton("", resultFlow, recipe.mainProduct.sprite, recipe.mainProduct.sprite, recipe.mainProduct.name, 50, false, true, self.dataNetwork:hasItem(recipe.mainProduct.name) or 0)
+	local storedAmount = recipe.mainProduct.type == "item" and self.dataNetwork:hasItem(recipe.mainProduct.name) or self.dataNetwork:hasFluid(recipe.mainProduct.name)
+	local productButton = GUIObj:addButton("", resultFlow, recipe.mainProduct.sprite, recipe.mainProduct.sprite, recipe.mainProduct.name, 50, false, true, storedAmount or 0)
 	productButton.style = recipe.inventoryFull == true and "MF_Fake_Button_Red" or "MF_Fake_Button_Green"
 	productButton.style.padding = 0
 	productButton.style.margin = 0
 
+end
+
+-- Update all Progress Bars --
+function DA:updatePBars(GUIObj)
+	local barColor = self.quatronCharge > 0 and _mfGreen or _mfRed
+	for PBar, recipe in pairs(GUIObj.PBarsTable or {}) do
+		if valid(PBar) == true and recipe ~= nil then
+			PBar.value = recipe.progress / recipe.recipePrototype.energy
+			PBar.style.color = barColor
+		end
+	end
 end
 
 -- Get the next Recipe ID --

@@ -173,6 +173,7 @@ _mfTooltipGUI =
 
 -- Event Tick --
 _eventTick5=5 -- Teleportation --
+_eventTick7=7 -- Data Assembler GUI Progress Bars --
 _eventTick27=27 -- Mobile Factory Fuel --
 _eventTick30=30 -- Mobile Factory Sync Area
 _eventTick38=38 -- Dimensional Accumulator --
