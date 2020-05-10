@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.154
+Date: 10/05/2020
+  Scripting:
+    - Some Data Assembler improvements done
+    - The Information GUI and the Network Explorer show 0 Item/Fluid if a Deep Tank or a Deep Storage still have a Filter set
+  Bugfixes:
+    - Fixed a Localisation crash
+---------------------------------------------------------------------------------------------------
 Version: 0.0.153
 Date: 09/05/2020
   Bugfixes:

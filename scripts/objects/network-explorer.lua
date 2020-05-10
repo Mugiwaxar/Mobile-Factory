@@ -152,13 +152,13 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 			GUIObj.MFplayer.ent.request_translation(Util.getLocItemName(name))
 		end
 		for k, deepStorage in pairs(global.deepStorageTable) do
-			if deepStorage.inventoryItem ~= nil then
-				GUIObj.MFplayer.ent.request_translation(Util.getLocItemName(deepStorage.inventoryItem))
+			if deepStorage.inventoryItem ~= nil or deepStorage.filter ~= nil then
+				GUIObj.MFplayer.ent.request_translation(Util.getLocItemName(deepStorage.inventoryItem or deepStorage.filter))
 			end
 		end
 		for k, deepTank in pairs(global.deepTankTable) do
-			if deepTank.inventoryFluid ~= nil then
-				GUIObj.MFplayer.ent.request_translation(Util.getLocFluidName(deepTank.inventoryFluid))
+			if deepTank.inventoryFluid ~= nil or deepTank.filter ~= nil then
+				GUIObj.MFplayer.ent.request_translation(Util.getLocFluidName(deepTank.inventoryFluid or deepTank.filter))
 			end
 		end
 

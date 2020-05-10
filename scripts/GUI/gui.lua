@@ -807,5 +807,6 @@ end
 -- Called when a Localized Name is requested --
 function onStringTranslated(event)
 	if getMFPlayer(event.player_index).varTable.tmpLocal == nil then getMFPlayer(event.player_index).varTable.tmpLocal = {} end
+	if event.localised_string[1] == nil then return end
 	getMFPlayer(event.player_index).varTable.tmpLocal[event.localised_string[1]] = event.result
 end
