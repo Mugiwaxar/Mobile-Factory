@@ -766,7 +766,7 @@ function MF:syncAreaScan()
 		if self.player ~= "" then
 			player = getPlayer(self.player)
 			if player.connected then
-				player.create_local_flying_text{text={"", {"info.MF-sync-collision-in-out"}, ": ", obstructed}}, position = self.ent.position}
+				player.create_local_flying_text{text={"", {"info.MF-sync-collision-in-out"}, ": ", obstructed}, position = self.ent.position}
 			end
 		end
 		return
