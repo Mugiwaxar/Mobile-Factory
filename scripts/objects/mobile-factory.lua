@@ -80,6 +80,7 @@ function MF:remove()
 	self.ent = nil
 	self.internalEnergy = 0
 	self.jumpTimer = _mfBaseJumpTimer
+	self:removeSyncArea()
 end
 
 -- Is valid --
@@ -647,7 +648,7 @@ function MF:updateAccumulators()
 	end
 end
 
-local function removeSync(self)
+function MF:removeSyncArea()
 	if self.syncAreaScanned == false then return end
 	rendering.destroy(self.syncAreaID)
 	rendering.destroy(self.syncAreaInsideID)
@@ -666,7 +667,7 @@ function MF:updateSyncArea()
 
 	-- Check if the Mobile Factory is moving or the Sync Area is disabled --
 	if self.syncAreaEnabled == false or self.ent.speed ~= 0 then
-		removeSync(self)
+		self:removeSyncArea()
 		return
 	end
 
@@ -675,7 +676,7 @@ function MF:updateSyncArea()
 		if player.connected then
 			player.create_local_flying_text{text={"info.MF-sync-too-close"}, position = self.ent.position}
 		end
-		removeSync(self)
+		self:removeSyncArea()
 		return
 	end
 
@@ -755,7 +756,7 @@ function MF:syncAreaScan()
 				end
 			end
  			if arg and outside.can_place_entity(arg) == false then
-				obstructed = ent.localised_name or ent.name
+				obstructed = ent.localised_name or {"", ent.name}
 				break
 			end
 		end
@@ -765,7 +766,7 @@ function MF:syncAreaScan()
 		if self.player ~= "" then
 			player = getPlayer(self.player)
 			if player.connected then
-				player.create_local_flying_text{text={"", {"info.MF-sync-collision-in-out"}, ": "..obstructed}, position = self.ent.position}
+				player.create_local_flying_text{text={"", {"info.MF-sync-collision-in-out"}, ": ", obstructed}, position = self.ent.position}
 			end
 		end
 		return
@@ -781,7 +782,7 @@ function MF:syncAreaScan()
 
 			distancesOutBools[k] = Util.distance(ent.position, {math.floor(self.ent.position.x), math.floor(self.ent.position.y)}) < _mfSyncAreaRadius
 			if distancesOutBools[k] and inside.entity_prototype_collides(ent.name, {posX, posY}, false) == true then
-				obstructed = ent.localised_name or ent.name
+				obstructed = ent.localised_name or {"", ent.name}
 				break
 			end
 		end
@@ -791,7 +792,7 @@ function MF:syncAreaScan()
 		if self.player ~= "" then
 			player = getPlayer(self.player)
 			if player.connected then
-				player.create_local_flying_text{text={"", {"info.MF-sync-collision-out-in"}, ": "..obstructed}, position = self.ent.position}
+				player.create_local_flying_text{text={"", {"info.MF-sync-collision-out-in"}, ": ", obstructed}, position = self.ent.position}
 			end
 		end
 		return
