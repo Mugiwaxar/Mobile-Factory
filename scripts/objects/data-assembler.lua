@@ -9,14 +9,17 @@ DA = {
     stateSprite = 0,
 	active = false,
 	consumption = _mfDAEnergyDrainPerUpdate,
-	updateTick = 60,
+	updateTick = 5,
+	completeUpdateTick = 60,
 	lastUpdate = 0,
+	lastCompleteUpdate = 0,
 	dataNetwork = nil,
 	recipeID = 0,
 	recipeTable = nil, -- [id]{recipePrototype, sprite, amount, progress, ingredients{name, type, amount, sprite, missing}, mainProduct{name, type, amount, sprite}, missingIngredient, inventoryFull, toManyInInventory}
 	activeRecipe = 0,
 	quatronLevel = 0,
-	quatronCharge = 0
+	quatronCharge = 0,
+	lastRecipeUpdatedID = 1
 }
 
 -- Constructor --
@@ -66,6 +69,7 @@ end
 
 -- Update --
 function DA:update()
+	
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	
@@ -73,7 +77,24 @@ function DA:update()
 	if valid(self) == false then
 		self:remove()
 		return
-    end
+	end
+
+	-- Update and Process a Recipe --
+	if self.active == true then
+		if self.lastRecipeUpdatedID > table_size(self.recipeTable) then self.lastRecipeUpdatedID = 1 end
+		local i = 1
+		for k, recipe in pairs(self.recipeTable) do
+			if i == self.lastRecipeUpdatedID then
+				self:updateRecipe(recipe, k)
+			end
+			i = i + 1
+		end
+		self.lastRecipeUpdatedID = self.lastRecipeUpdatedID + 1
+	end
+	
+	-- Stop the express Update --
+	if game.tick - self.lastCompleteUpdate < self.completeUpdateTick then return end
+	self.lastCompleteUpdate = game.tick
 
     -- Try to find a connected Data Network --
 	local obj = Util.getConnectedDN(self)
@@ -98,7 +119,7 @@ function DA:update()
 	if self.active == false then return end
 
 	-- Get Quatron Charge if needed --
-	if self.quatronCharge <= 0 and valid(self.dataNetwork) then
+	if self.quatronCharge <= 15 then
 		local quatron = self.dataNetwork.dataCenter.invObj:getBestQuatron()
 		if quatron > 0 then
 			self.quatronLevel = quatron
@@ -106,17 +127,6 @@ function DA:update()
 		end
 	end
 	
-	-- Update all Recipes --
-	self.activeRecipe = 0
-	for k, recipe in pairs(self.recipeTable) do
-		self:updateRecipe(recipe, k)
-	end
-
-	-- Process all Recipes --
-	for k, recipe in pairs(self.recipeTable) do
-		self:processRecipe(recipe, k)
-	end
-
 end
 
 -- Tooltip Infos --
@@ -173,7 +183,7 @@ function DA:getTooltipInfos(GUIObj, gui, justCreated)
 		GUIObj:addDualLabel(informationFrame, {"gui-description.Quatronlevel"}, self.quatronLevel, _mfOrange, _mfGreen, nil, "", "", "QuatronLevel", true)
 
 		-- Create the Quatron Charge Dual Label --
-		GUIObj:addDualLabel(informationFrame, {"gui-description.QuatronCharge"}, self.quatronCharge, _mfOrange, _mfGreen, nil, "", "",  "QuatronCharge", true)
+		GUIObj:addDualLabel(informationFrame, {"gui-description.QuatronCharge"}, math.floor(self.quatronCharge), _mfOrange, _mfGreen, nil, "", "",  "QuatronCharge", true)
 
 		-- Add the help Label --
 		GUIObj:addLabel("", informationFrame, {"gui-description.DataAssemblerText1"}, _mfGreen)
@@ -185,7 +195,7 @@ function DA:getTooltipInfos(GUIObj, gui, justCreated)
 
 	-- Update the Quatron Level and Charge --
 	if GUIObj.QuatronLevel ~= nil then GUIObj.QuatronLevel.Label2.caption = self.quatronLevel end
-	if GUIObj.QuatronCharge ~= nil then GUIObj.QuatronCharge.Label2.caption = self.quatronCharge end
+	if GUIObj.QuatronCharge ~= nil then GUIObj.QuatronCharge.Label2.caption = math.floor(self.quatronCharge) end
 	
 end
 
@@ -242,7 +252,7 @@ function DA:createFrame(GUIObj, gui, recipe, id)
 			self.recipeTable[id] = nil
 			return
 		end
-		local ingredientButton = GUIObj:addButton("", ingredientsFlow, ingredient.sprite, ingredient.sprite, ingredient.name, 30, false, true, ingredient.amount)
+		local ingredientButton = GUIObj:addButton("", ingredientsFlow, ingredient.sprite, ingredient.sprite, ingredient.name, 30, false, true, self.dataNetwork:hasItem(ingredient.name) or 0)
 		ingredientButton.style = ingredient.missing == true and "MF_Fake_Button_Red" or "MF_Fake_Button_Green"
 		ingredientButton.style.padding = 0
 		ingredientButton.style.margin = 0
@@ -260,7 +270,7 @@ function DA:createFrame(GUIObj, gui, recipe, id)
 
 	-- Create the Result Flow --
 	local resultFlow = GUIObj:addFlow("", frame, "vertical")
-	local productButton = GUIObj:addButton("", resultFlow, recipe.mainProduct.sprite, recipe.mainProduct.sprite, recipe.mainProduct.name, 50, false, true, recipe.mainProduct.amount)
+	local productButton = GUIObj:addButton("", resultFlow, recipe.mainProduct.sprite, recipe.mainProduct.sprite, recipe.mainProduct.name, 50, false, true, self.dataNetwork:hasItem(recipe.mainProduct.name) or 0)
 	productButton.style = recipe.inventoryFull == true and "MF_Fake_Button_Red" or "MF_Fake_Button_Green"
 	productButton.style.padding = 0
 	productButton.style.margin = 0
@@ -277,7 +287,6 @@ end
 function DA:addRecipe(name, amount)
 
 	-- Check the Values --
-	if valid(self.dataNetwork) == nil then return end
 	if name == nil then return end
 	amount = tonumber(amount)
 	if amount == 0 then return end
@@ -333,8 +342,6 @@ end
 
 -- Update a Recipe --
 function DA:updateRecipe(recipe, id)
-	-- Check the Data Network --
-	if valid(self.dataNetwork) == nil then return end
 
 	-- Check the Recipe --
 	if recipe == nil or recipe.recipePrototype == nil or game.recipe_prototypes[recipe.recipePrototype.name] == nil then
@@ -342,40 +349,14 @@ function DA:updateRecipe(recipe, id)
 		return
 	end
 
-	-- Check if the Recipe need Ingredients --
-	if recipe.missingIngredient == true then
-		self:getIngredients(recipe)
-	end
-
-	-- Check if the recipe must be done --
-	self:toManyInInventory(recipe, id)
-
-	-- Increase number of active Recipe if needed --
-	if recipe.missingIngredient == false and recipe.toManyInInventory == false then
-		self.activeRecipe = self.activeRecipe + 1
-	end
-
-end
-
--- Process a Recip --
-function DA:processRecipe(recipe, id)
-	-- Check the Data Network --
-	if valid(self.dataNetwork) == nil then return end
-	-- Process the Recipe --
-	if recipe.missingIngredient == true or recipe.toManyInInventory == true then return end
-	if recipe.progress < recipe.recipePrototype.energy then
-		if self.quatronCharge > 0 then
-			recipe.progress = recipe.progress + math.max(0.05, (self.quatronLevel/4)/self.activeRecipe)
-			if recipe.progress > recipe.recipePrototype.energy then recipe.progress = recipe.recipePrototype.energy end
-			self.quatronCharge = self.quatronCharge - 1
-		end
-	else
+	-- Check if the Recipe has terminated --
+	if recipe.progress >= recipe.recipePrototype.energy then
 		-- Send the Items to the Data Network --
 		if recipe.mainProduct.type == "item" then
 			if self.dataNetwork:canAcceptItem(recipe.mainProduct.name, recipe.mainProduct.amount) then
 				self.dataNetwork:addItems(recipe.mainProduct.name, recipe.mainProduct.amount)
 				recipe.inventoryFull = false
-				recipe.progress = 0
+				recipe.progress = recipe.progress - recipe.recipePrototype.energy
 				recipe.missingIngredient = true
 			else
 				recipe.inventoryFull = true
@@ -387,7 +368,7 @@ function DA:processRecipe(recipe, id)
 			if self.dataNetwork:canAcceptFluid(recipe.mainProduct.name, recipe.mainProduct.amount) then
 				self.dataNetwork:addFluid(recipe.mainProduct.name, recipe.mainProduct.amount, 15)
 				recipe.inventoryFull = false
-				recipe.progress = 0
+				recipe.progress = recipe.progress - recipe.recipePrototype.energy
 				recipe.missingIngredient = true
 			else
 				recipe.inventoryFull = true
@@ -395,13 +376,33 @@ function DA:processRecipe(recipe, id)
 			end
 		end
 	end
+
+
+	-- Check if the Recipe need Ingredients --
+	if recipe.missingIngredient == true then
+		self:getIngredients(recipe)
+	end
+
+	-- Check if the recipe must be done --
+	self:toManyInInventory(recipe, id)
+
+	-- Check if the Recipe can be processed --
+	if recipe.missingIngredient == true or recipe.toManyInInventory == true or recipe.progress >= recipe.recipePrototype.energy or self.quatronCharge <= 0 then return end
+
+	-- Process the Recipe --
+	self:processRecipe(recipe)
+
+end
+
+-- Process a Recip --
+function DA:processRecipe(recipe)
+	recipe.progress = recipe.progress + ((1/ (self.completeUpdateTick / self.updateTick) ) * (self.quatronLevel/4))
+	self.quatronCharge = self.quatronCharge - 1/12
+	if self.quatronCharge < 0 then self.quatronCharge = 0 end
 end
 
 -- Check if the Recipe can get all Ingredients --
 function DA:getIngredients(recipe)
-
-	-- Check the Values --
-	if valid(self.dataNetwork) == nil then return end
 
 	-- Check the Ingredients list --
 	local missingIngredients = false

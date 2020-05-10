@@ -42,8 +42,8 @@ daE.picture =
     }
     daE.circuit_wire_connection_point =
 {
-	wire = {red={0,-1.3}, green={0,-1.3}},
-	shadow = {red={-0.05,-1.3}, green={-0.05,-1.3}}
+	wire = {red={0,-1.2}, green={0,-1.2}},
+	shadow = {red={-0.05,-1.2}, green={-0.05,-1.2}}
 }
 daE.circuit_connector_sprites = nil
 daE.circuit_wire_max_distance = 20
