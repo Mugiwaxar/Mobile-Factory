@@ -756,7 +756,7 @@ function MF:syncAreaScan()
 				end
 			end
  			if arg and outside.can_place_entity(arg) == false then
-				obstructed = ent.localised_name or {ent.name}
+				obstructed = ent.localised_name or {"", ent.name}
 				break
 			end
 		end
@@ -782,7 +782,7 @@ function MF:syncAreaScan()
 
 			distancesOutBools[k] = Util.distance(ent.position, {math.floor(self.ent.position.x), math.floor(self.ent.position.y)}) < _mfSyncAreaRadius
 			if distancesOutBools[k] and inside.entity_prototype_collides(ent.name, {posX, posY}, false) == true then
-				obstructed = ent.localised_name or {ent.name}
+				obstructed = ent.localised_name or {"", ent.name}
 				break
 			end
 		end
