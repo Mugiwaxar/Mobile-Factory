@@ -5,8 +5,9 @@ function GUI.createMFMainGUI(player)
 	local posY = 0
 	local visible = true
 	local playerIndex = player.index
+	local MFPlayer = getMFPlayer(playerIndex)
 
-	local existingGUI = global.GUITable["MFMainGUI"..playerIndex]
+	local existingGUI = MFPlayer.GUI["MFMainGUI"]
 	if valid(player) == true then
 		if valid(existingGUI) then
 			if existingGUI.location then
@@ -16,10 +17,10 @@ function GUI.createMFMainGUI(player)
 			end
 			visible = existingGUI.MFMainGUIFrame2.visible
 		else
-			global.GUITable["MFMainGUI"..playerIndex] = nil
+			MFPlayer.GUI["MFMainGUI"] = nil
 		end
 	else
-		global.GUITable["MFMainGUI"..playerIndex] = nil
+		MFPlayer.GUI["MFMainGUI"] = nil
 		return nil
 	end
 
@@ -35,7 +36,7 @@ function GUI.createMFMainGUI(player)
 	local MFMainGUIFrame2 = nil
 	local MFMainGUIFrame3 = nil
 	local ExtendButtonSprite = "ArrowIconLeft"
-	if GUIObj.MFplayer.varTable.MainGUIDirection == "left" then
+	if GUIObj.MFPlayer.varTable.MainGUIDirection == "left" then
 		MFMainGUIFrame3 = GUIObj:addFrame("MFMainGUIFrame3", MFMainGUIMainFlow, "horizontal", true)
 		MFMainGUIFrame2 = GUIObj:addFrame("MFMainGUIFrame2", MFMainGUIMainFlow, "vertical", true)
 		MFMainGUIFrame1 = GUIObj:addFrame("MFMainGUIFlow1", MFMainGUIMainFlow, "vertical")
@@ -69,7 +70,7 @@ function GUI.updateMFMainGUI(GUIObj)
 
 	-- Get MF and Player --
 	local MF = GUIObj.MF
-	local player = GUIObj.MFplayer.ent
+	local player = GUIObj.MFPlayer.ent
 
 	-- Clear the Frame --
 	GUIObj.MFMainGUIFrame2.clear()
@@ -180,7 +181,7 @@ function GUI.renderMainGuiButtons(GUIObj)
 	-- Itinerate the Buttons Table --
 	for k, button in pairs(GUIObj.buttonsTable or {}) do
 		if button.visible == false then goto continue end
-		if GUIObj.MFplayer.varTable["Show" .. button.name] == false then goto continue end
+		if GUIObj.MFPlayer.varTable["Show" .. button.name] == false then goto continue end
 		-- Create a new Flow --
 		if i % 4 == 0 then
 			y = y + 1

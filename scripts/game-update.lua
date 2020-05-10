@@ -18,7 +18,7 @@ function onTick(event)
 	-- Update all Erya Structures --
 	Erya.updateEryaStructures(event)
 	-- Update all GUI --
-	if event.tick%_eventTick55 == 0 then GUI.updateAllGUIs() end
+	GUI.updateAllGUIs()
 	-- Update the Floor Is Lava --
 	if event.tick%_eventTick150 == 0 and global.floorIsLavaActivated == true then updateFloorIsLava() end
 end
@@ -49,7 +49,6 @@ function updateValues()
 	if global.floorIsLavaActivated == nil then global.floorIsLavaActivated = false end
 	if global.playersTable == nil then global.playersTable = {} end
 	if global.MFTable == nil then global.MFTable = {} end
-	if global.GUITable == nil then global.GUITable = {} end
 	if global.accTable == nil then global.accTable = {} end
 	if global.pdpTable == nil then global.pdpTable = {} end
 	if global.deepStorageTable == nil then global.deepStorageTable = {} end

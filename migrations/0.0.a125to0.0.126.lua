@@ -19,18 +19,21 @@ for _, MF in pairs(global.MFTable or {}) do
 	end
 end
 
-local newGUIObjs = {}
 
-for key, GUIObj in pairs(global.GUITable or {}) do
-	if string.match(key, "%d$") == nil then
-		if GUIObj.gui and GUIObj.gui.valid then
-			playerIndex = GUIObj.gui.player_index
-			newGUIObjs[key..playerIndex] = GUIObj
-		end
-		global.GUITable[key] = nil
-	end
-end
+-- Not needed anymore, GUI are stored inside MFPlayer --
 
-for key, GUIObj in pairs(newGUIObjs or {}) do
-	global.GUITable[key] = GUIObj
-end
+-- local newGUIObjs = {}
+
+-- for key, GUIObj in pairs(global.GUITable or {}) do
+-- 	if string.match(key, "%d$") == nil then
+-- 		if GUIObj.gui and GUIObj.gui.valid then
+-- 			playerIndex = GUIObj.gui.player_index
+-- 			newGUIObjs[key..playerIndex] = GUIObj
+-- 		end
+-- 		global.GUITable[key] = nil
+-- 	end
+-- end
+
+-- for key, GUIObj in pairs(newGUIObjs or {}) do
+-- 	global.GUITable[key] = GUIObj
+-- end

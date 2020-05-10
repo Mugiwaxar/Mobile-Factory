@@ -30,8 +30,9 @@ end
 -- Add an Option to a Tab --
 function GUI.addOption(name, gui, type, save, table, playerIndex) -- table{text, text2, text3, tooltip, tooltip2, tooltip3, state}
 
-	-- Get the GUI Object --
-	local GUIObj = global.GUITable["MFOptionGUI"..playerIndex]
+	-- Get the MFPlayer and the GUI Object --
+	local MFPlayer = getMFPlayer(playerIndex)
+	local GUIObj = MFPlayer.GUI["MFOptionGUI"]
 
 	-- If this is a Title --
 	if type == "title" then
@@ -106,6 +107,7 @@ end
 function GUI.updateOptionGUIGUITab(GUIObj)
 
 	local playerIndex = GUIObj.GUITab.player_index
+	local MFPlayer = getMFPlayer(playerIndex)
 
 	-- Create the Scroll Pane --
 	local scrollPane = GUIObj:addScrollPane("MFTabScrollPane", GUIObj.GUITab, 500)
@@ -113,12 +115,12 @@ function GUI.updateOptionGUIGUITab(GUIObj)
 
 	-- Add all Options --
 	GUI.addOption("", scrollPane, "title", false, {text={"gui-description.MainGUIOpt"}}, playerIndex)
-	GUI.addOption("MainGuiDirectionSwitch", scrollPane, "switch", false, {text={"gui-description.Left"}, text2={"gui-description.Right"}, text3={"gui-description.MainGUIDirection"}, tooltip3={"gui-description.MainGUIDirectionTT"}, state=GUIObj.MFplayer.varTable.MainGUIDirection or "right"}, playerIndex)
+	GUI.addOption("MainGuiDirectionSwitch", scrollPane, "switch", false, {text={"gui-description.Left"}, text2={"gui-description.Right"}, text3={"gui-description.MainGUIDirection"}, tooltip3={"gui-description.MainGUIDirectionTT"}, state=GUIObj.MFPlayer.varTable.MainGUIDirection or "right"}, playerIndex)
 
 	-- Add a CheckBox for each Buttons --
-	for k, button in pairs(global.GUITable["MFMainGUI"..playerIndex].buttonsTable) do
+	for k, button in pairs(MFPlayer.GUI["MFMainGUI"].buttonsTable) do
 		local state = true
-		if GUIObj.MFplayer.varTable["Show" .. button.name] == false then state = false end
+		if GUIObj.MFPlayer.varTable["Show" .. button.name] == false then state = false end
 		GUI.addOption("MGS," .. button.name, scrollPane, "checkbox", false, {text={"", {"gui-description.MainGUIButtons"}, " ", button.name}, state=state}, playerIndex)
 	end
 
@@ -148,7 +150,7 @@ function GUI.updateOptionGUIGameTab(GUIObj)
 	-- Add Floor Is Lava Option --
 	GUI.addOption("", scrollPane, "title", false, {text={"gui-description.FloorIsLavaTitle"}}, playerIndex)
 	local FILOption = GUI.addOption("FloorIsLavaOpt", scrollPane, "checkbox", false, {text={"gui-description.FloorIsLavaOpt"}, tooltip={"gui-description.FloorIsLavaOptTT"}, state=global.floorIsLavaActivated or false}, playerIndex)
-	FILOption.enabled = GUIObj.MFplayer.ent.admin
+	FILOption.enabled = GUIObj.MFPlayer.ent.admin
 end
 
 -- Update the SystemTab --
@@ -163,5 +165,5 @@ function GUI.updateOptionGUISystemTab(GUIObj)
 	-- Add Performances Options --
 	GUI.addOption("", scrollPane, "title", false, {text={"gui-description.PerfOpt"}}, playerIndex)
 	local tickOpt = GUI.addOption("UpdatePerTickOpt", scrollPane, "numberfield", false, {text=global.entsUpPerTick or 100, text2={"gui-description.SystemPerfEntsPerTick"}, tooltip={"gui-description.SystemPerfEntsPerTickTT"}}, playerIndex)
-	tickOpt.UpdatePerTickOpt.enabled = GUIObj.MFplayer.ent.admin
+	tickOpt.UpdatePerTickOpt.enabled = GUIObj.MFPlayer.ent.admin
 end

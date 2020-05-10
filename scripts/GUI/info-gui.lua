@@ -89,7 +89,7 @@ function GUI.updateButtonsBar(GUIObj)
 	-- Get GUI, MF and player --
 	local buttonsBar = GUIObj.MFInfoGUIButtonBar
 	local MF = GUIObj.MF
-	local player = GUIObj.MFplayer.ent
+	local player = GUIObj.MFPlayer.ent
 
 	-- Clear the Bar --
 	buttonsBar.clear()
@@ -142,7 +142,7 @@ function GUI.updateMFInfos(GUIObj)
 	-- Get GUI, MF and player --
 	local infosFlow = GUIObj.InfosFlow
 	local MF = GUIObj.MF
-	local player = GUIObj.MFplayer.ent
+	local player = GUIObj.MFPlayer.ent
 
 	-------------------------------------------------------- Get Mobile Factory Information Variables --------------------------------------------------------
 	local mfPositionText = {"", {"gui-description.mfPosition"}, ": ", {"gui-description.Unknow"}}
@@ -239,7 +239,7 @@ end
 function GUI.updateTankFrame(GUIObj)
 
 	-- Get the GUI, MF and Player--
-	local player = GUIObj.MFplayer.ent
+	local player = GUIObj.MFPlayer.ent
 
 	-- Get the Tank Scroll Pane --
 	local tankScrollPane = GUIObj.TanksScrollPane
@@ -329,7 +329,7 @@ end
 function GUI.updateDeepStorageFrame(GUIObj)
 
 	-- Get the GUI, MF and Player--
-	local player = GUIObj.MFplayer.ent
+	local player = GUIObj.MFPlayer.ent
 
 	-- Get the Deep Storage Scroll Pane --
 	local storageScrollPane = GUIObj.StorageScrollPane
@@ -422,7 +422,7 @@ function GUI.updateInventoryFrame(GUIObj)
 	InventoryScrollPanel.clear()
 
 	-- Create the Inventory List --
-	createDNInventoryFrame(GUIObj, InventoryScrollPanel, GUIObj.MFplayer, "INV", MF.II, 5, true, true, true)
+	createDNInventoryFrame(GUIObj, InventoryScrollPanel, GUIObj.MFPlayer, "INV", MF.II, 5, true, true, true)
 
 	-- Clean the Inventory Information Flow --
 	GUIObj.InventoryInfoFlow.clear()

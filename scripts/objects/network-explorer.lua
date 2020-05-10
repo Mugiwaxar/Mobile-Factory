@@ -125,7 +125,7 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 	inventoryScrollPane.style.vertically_stretchable = true
 
 	-- Create the Inventory List --
-	createDNInventoryFrame(GUIObj, inventoryScrollPane, GUIObj.MFplayer, "NE," .. self.entID .. ",", self.dataNetwork.dataCenter.invObj, 8, true, true, true, searchText)
+	createDNInventoryFrame(GUIObj, inventoryScrollPane, GUIObj.MFPlayer, "NE," .. self.entID .. ",", self.dataNetwork.dataCenter.invObj, 8, true, true, true, searchText)
 
 	-- Create the Player Inventory Title --
 	local playerInventoryFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.PlayerInventory"}, _mfOrange)
@@ -138,27 +138,27 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 	playerInventoryScrollPane.style.vertically_stretchable = true
 
 	-- Create the Player Inventory List --
-	createPlayerInventoryFrame(GUIObj, playerInventoryScrollPane, GUIObj.MFplayer, 8, "NE," .. self.entID .. ",", searchText)
+	createPlayerInventoryFrame(GUIObj, playerInventoryScrollPane, GUIObj.MFPlayer, 8, "NE," .. self.entID .. ",", searchText)
 
 	-- Create the Informations Frame --
 	if justCreated == true then
 
 		-- Create the Localised name List --
-		GUIObj.MFplayer.varTable.tmpLocal = {}
+		GUIObj.MFPlayer.varTable.tmpLocal = {}
 		for name, count in pairs(self.dataNetwork.dataCenter.invObj.inventory) do
-			GUIObj.MFplayer.ent.request_translation(Util.getLocItemName(name))
+			GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(name))
 		end
-		for name, count in pairs(GUIObj.MFplayer.ent.get_main_inventory().get_contents()) do
-			GUIObj.MFplayer.ent.request_translation(Util.getLocItemName(name))
+		for name, count in pairs(GUIObj.MFPlayer.ent.get_main_inventory().get_contents()) do
+			GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(name))
 		end
 		for k, deepStorage in pairs(global.deepStorageTable) do
 			if deepStorage.inventoryItem ~= nil or deepStorage.filter ~= nil then
-				GUIObj.MFplayer.ent.request_translation(Util.getLocItemName(deepStorage.inventoryItem or deepStorage.filter))
+				GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(deepStorage.inventoryItem or deepStorage.filter))
 			end
 		end
 		for k, deepTank in pairs(global.deepTankTable) do
 			if deepTank.inventoryFluid ~= nil or deepTank.filter ~= nil then
-				GUIObj.MFplayer.ent.request_translation(Util.getLocFluidName(deepTank.inventoryFluid or deepTank.filter))
+				GUIObj.MFPlayer.ent.request_translation(Util.getLocFluidName(deepTank.inventoryFluid or deepTank.filter))
 			end
 		end
 
