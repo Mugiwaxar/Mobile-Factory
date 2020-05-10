@@ -429,10 +429,10 @@ function createDNInventoryFrame(GUIObj, gui, MFplayer, buttonFirstName, inventor
             -- Check if the Deep Tank Belong to the Player --
             if deepTank.player ~= MFplayer.name then goto continue end
             -- Get Variables --
-            local name = deepTank.inventoryFluid
-            local count = deepTank.inventoryCount
+            local name = deepTank.inventoryFluid or deepTank.filter
+            local count = deepTank.inventoryCount or 0
             -- Check the Item --
-		    if name == nil or count == nil or count == 0 or game.fluid_prototypes[name] == nil then goto continue end
+		    if name == nil or game.fluid_prototypes[name] == nil then goto continue end
             -- Check the Filter --
             if MFplayer.varTable.tmpLocal ~= nil and Util.getLocFluidName(name)[1] ~= nil then
                 local locName = MFplayer.varTable.tmpLocal[Util.getLocFluidName(name)[1]]
@@ -454,10 +454,10 @@ function createDNInventoryFrame(GUIObj, gui, MFplayer, buttonFirstName, inventor
             -- Check if the Deep Storage Belong to the Player --
             if deepStorage.player ~= MFplayer.name then goto continue end
             -- Get Variables --
-            local name = deepStorage.inventoryItem
-            local count = deepStorage.inventoryCount
+            local name = deepStorage.inventoryItem or deepStorage.filter
+            local count = deepStorage.inventoryCount or 0
             -- Check the Item --
-            if name == nil or count == nil or count == 0 or game.item_prototypes[name] == nil then goto continue end
+            if name == nil or game.item_prototypes[name] == nil then goto continue end
             -- Check the Filter --
             if MFplayer.varTable.tmpLocal ~= nil and Util.getLocItemName(name)[1] ~= nil then
                 local locName = MFplayer.varTable.tmpLocal[Util.getLocItemName(name)[1]]
