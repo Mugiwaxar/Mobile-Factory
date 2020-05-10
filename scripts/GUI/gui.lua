@@ -70,26 +70,30 @@ function GUI.createCamera(MFPlayer, name, ent, size, zoom)
 end
 
 -- Update all GUIs --
-function GUI.updateAllGUIs()
+function GUI.updateAllGUIs(force)
+	
+		for k, MFPlayer in pairs(global.playersTable or {}) do
 
-	-- Update the Data Assembler all Progress Bars --
-	if game.tick%_eventTick7 == 0 then
+			-- Update all Progress Bars of the Data Assembler  --
+			if game.tick%_eventTick7 == 0 or force then
+				if MFPlayer.GUI.MFTooltipGUI ~= nil and MFPlayer.GUI.MFTooltipGUI.DA ~= nil then
+					MFPlayer.GUI.MFTooltipGUI.DA:updatePBars(MFPlayer.GUI.MFTooltipGUI)
+				end
+			end
 
-	end
-
-	-- Update all GUI --
-	if game.tick%_eventTick55 == 0 then
-		for k, player in pairs(global.playersTable or {}) do
-			for k2, go in pairs(player.GUI or {}) do
+			-- Update all GUIs --
+			if game.tick%_eventTick55 == 0 or force then
+			for k2, go in pairs(MFPlayer.GUI or {}) do
 				if valid(go) then go:update() end
 			end
+
 		end
 	end
 end
 
 -- A GUI was oppened --
 function GUI.guiOpened(event)
-	-- this function executes from shortcut key (v0.0.120), not real on_gui_opened event --
+	
 	-- Check the Entity --
 	if event.entity == nil or event.entity.valid == false then return end
 
@@ -473,7 +477,7 @@ function GUI.buttonClicked(event)
 			NE.transferItemsFromPInv(getMFPlayer(playerIndex).ent.get_main_inventory(), getMFPlayer(playerIndex).name, obj, split(event.element.name, ",")[4], count)
 		end
 		-- Update all GUIs --
-		GUI.updateAllGUIs()
+		GUI.updateAllGUIs(true)
 		return
 	end
 
@@ -499,12 +503,9 @@ function GUI.buttonClicked(event)
 			obj:removeRecipe(recipeID)
 		end
 		-- Update all GUIs --
-		GUI.updateAllGUIs()
+		GUI.updateAllGUIs(true)
 		return
 	end
-
-	-- Update the GUI (Never used ?)--
-	-- GUI.updateAllGUIs()
 	
 end
 
@@ -542,7 +543,7 @@ function GUI.onGuiElemChanged(event)
 				global.deepStorageTable[id].filter = nil
 			end
 			if MFPlayer.GUI["MFInfoGUI"] ~= nil then GUI.updateDeepStorageInfo(MFPlayer.GUI["MFInfoGUI"], id) end
-			GUI.updateAllGUIs()
+			GUI.updateAllGUIs(true)
 			return
 		end
 
@@ -557,7 +558,7 @@ function GUI.onGuiElemChanged(event)
 				global.deepTankTable[id].filter = nil
 			end
 			if MFPlayer.GUI["MFInfoGUI"] ~= nil then GUI.updateDeepTankInfo(MFPlayer.GUI["MFInfoGUI"], id) end
-			GUI.updateAllGUIs()
+			GUI.updateAllGUIs(true)
 			return
 		end
 
@@ -570,7 +571,7 @@ function GUI.onGuiElemChanged(event)
 			else
 				global.matterInteractorTable[id].selectedFilter = nil
 			end
-			GUI.updateAllGUIs()
+			GUI.updateAllGUIs(true)
 			return
 		end
 	end

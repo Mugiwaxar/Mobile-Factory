@@ -156,6 +156,9 @@ function DA:getTooltipInfos(GUIObj, gui, justCreated)
 	-- Add the Information --
 	if justCreated == true then
 
+		-- Add the Data Assembler to the GUI --
+		GUIObj.DA = self
+
 		-- Show the Settings Flow --
 		GUIObj.SettingsFrame.visible = true
 
@@ -261,7 +264,9 @@ function DA:createFrame(GUIObj, gui, recipe, id)
 
 	-- Create the Progress Bar --
 	local barColor = self.quatronCharge > 0 and _mfGreen or _mfRed
-	GUIObj:addProgressBar("", processFlow, "", "", false, barColor, recipe.progress / recipe.recipePrototype.energy, 150)
+	local PBar = GUIObj:addProgressBar("", processFlow, "", "", false, barColor, recipe.progress / recipe.recipePrototype.energy, 150)
+	if GUIObj.PBarsTable == nil then GUIObj.PBarsTable = {} end
+	GUIObj.PBarsTable[PBar] = recipe
 
 	-- Check the Product --
 	if game.item_prototypes[recipe.mainProduct.name] == nil and game.fluid_prototypes[recipe.mainProduct.name] == nil then
@@ -277,6 +282,17 @@ function DA:createFrame(GUIObj, gui, recipe, id)
 	productButton.style.padding = 0
 	productButton.style.margin = 0
 
+end
+
+-- Update all Progress Bars --
+function DA:updatePBars(GUIObj)
+	local barColor = self.quatronCharge > 0 and _mfGreen or _mfRed
+	for PBar, recipe in pairs(GUIObj.PBarsTable or {}) do
+		if valid(PBar) == true and recipe ~= nil then
+			PBar.value = recipe.progress / recipe.recipePrototype.energy
+			PBar.style.color = barColor
+		end
+	end
 end
 
 -- Get the next Recipe ID --

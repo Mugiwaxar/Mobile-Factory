@@ -6,6 +6,7 @@ function GUI.createMFMainGUI(player)
 	local visible = true
 	local playerIndex = player.index
 	local MFPlayer = getMFPlayer(playerIndex)
+	if MFPlayer.GUI == nil then MFPlayer.GUI = {} end
 
 	local existingGUI = MFPlayer.GUI["MFMainGUI"]
 	if valid(player) == true then
