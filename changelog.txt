@@ -1,8 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.155
+Date: 10/05/2020
+  Scripting:
+    - All GUI Objects are now placed inside it's corresponding MFPlayer Object
+    - Improved the Data Assembler GUI
+---------------------------------------------------------------------------------------------------
 Version: 0.0.154
 Date: 10/05/2020
   Scripting:
-    - Some Data Assembler improvements done
+    - Improved the Data Assembler
     - The Information GUI and the Network Explorer show 0 Item/Fluid if a Deep Tank or a Deep Storage still have a Filter set
   Bugfixes:
     - Fixed a Localisation crash
