@@ -76,7 +76,7 @@ function GUI.updateAllGUIs(force)
 
 			-- Update all Progress Bars of the Data Assembler  --
 			if game.tick%_eventTick7 == 0 or force then
-				if MFPlayer.GUI.MFTooltipGUI ~= nil and MFPlayer.GUI.MFTooltipGUI.DA ~= nil then
+				if MFPlayer.GUI ~= nil and MFPlayer.GUI.MFTooltipGUI ~= nil and MFPlayer.GUI.MFTooltipGUI.DA ~= nil then
 					MFPlayer.GUI.MFTooltipGUI.DA:updatePBars(MFPlayer.GUI.MFTooltipGUI)
 				end
 			end
@@ -115,27 +115,14 @@ function GUI.guiOpened(event)
 		return
 	end
 
-	-- Check Permissions --
-	if Util.canUse(player.name, event.entity) == false then return end
-
 	-- Check if a GUI exist --
-	local obj = nil
-	if _mfTooltipGUI[event.entity.name] ~= nil then
-		obj = global[_mfTooltipGUI[event.entity.name]][event.entity.unit_number]
-	elseif string.match(event.entity.name, "MobileFactory") then
-		-- testing this for now
-		for _, MFObj in pairs(global.MFTable) do
-			if MFObj.ent == event.entity then
-				obj = MFObj
-				break
-			end
-		end
-	else
-		return
-	end
-
+	local obj = global.entsTable[event.entity.unit_number]
+	
 	-- Check the Object --
 	if valid(obj) == false or obj.getTooltipInfos == nil then return end
+
+	-- Check Permissions --
+	if Util.canUse(getMFPlayer(event.player_index), obj) == false then return end
 
 	-- Create and save the Tooltip gui --
 	player.opened = GUI.createTooltipGUI(player, obj).gui
@@ -197,6 +184,10 @@ function GUI.buttonClicked(event)
 
 	-- Get the Main GUI Object --
 	local mainGUI = MFPlayer.GUI["MFMainGUI"]
+
+	------- Read if the Element came from the Option GUI -------
+	GUI.readOptions(event.element, player)
+	if event.element == nil or event.element.valid == false then return end
 
 	-- Open Options GUI Button --
 	if event.element.name == "MainGUIOptionButton" then

@@ -179,7 +179,7 @@ function WDR:getTooltipInfos(GUIObj, gui, justCreated)
 	local selectedIndex = 1
 	local i = 1
 	for k, transmitter in pairs(global.wirelessDataTransmitterTable) do
-		if transmitter ~= nil and transmitter.ent ~= nil and Util.canUse(self.player, transmitter.ent) then
+		if transmitter ~= nil and transmitter.ent ~= nil and Util.canUse(getMFPlayer(self.player), transmitter) then
 			i = i + 1
 			transmitters[transmitter.ent.unit_number] = tostring(transmitter.ent.unit_number)
 			if self.linkedTransmitter == transmitter then

@@ -540,7 +540,7 @@ function Util.getConnectedDN(obj)
 	if objGCN ~= nil then link = global.dataNetworkIDGreenTable[objGCN] end
 	if objRCN ~= nil then link = global.dataNetworkIDRedTable[objRCN] end
 	if link ~= nil and link.ent ~= nil then
-		if Util.canUse(obj.player, link.ent) then return link end
+		if Util.canUse(getMFPlayer(obj.player), link) then return link end
 	end
 	return nil
 end
@@ -563,16 +563,10 @@ function Util.isOutside(player)
 end
 
 -- Check if the Player can interact with the Structure --
-function Util.canUse(playerName, structure)
-	if playerName == nil or structure == nil or structure.valid == false or structure.last_user == nil then return false end
-	if playerName == structure.last_user.name then return true end
-	local MF1 = getMF(playerName)
-	local MF2 = getMF(structure.last_user.name)
-	if MF1 ~= nil and MF2 ~= nil then
-		if MF1.varTable.useSharedStructures == true and MF2.varTable.shareStructures == true then
-			return true
-		end
-	end
+function Util.canUse(MFPlayer, obj)
+	if valid(obj) == false then return false end
+	if getMFPlayer(obj.player) == MFPlayer then return true end
+	if obj.MF.varTable.allowedPlayers[MFPlayer.index] == true then return true end
 	return false
 end
 

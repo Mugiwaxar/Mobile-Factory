@@ -117,7 +117,7 @@ function DCMF:update()
 	for k, ds in pairs(global.deepStorageTable) do
 		-- this would get laggy with lots of DS, store by MFPlayer->accessibleMFs? --
 		-- Create and send the Signal --
-		if Util.canUse(self.player, ds.ent) then
+		if Util.canUse(getMFPlayer(self.player), ds) then
 			if ds.inventoryItem ~= nil and game.item_prototypes[ds.inventoryItem] ~= nil then
 				local signal = {signal={type="item", name=ds.inventoryItem} ,count=ds.inventoryCount}
 				self.ent.get_control_behavior().set_signal(i, signal)
@@ -132,7 +132,7 @@ function DCMF:update()
 	-- Create the Deep Tanks Signals --
 	for k, dtk in pairs(global.deepTankTable) do
 		-- Create and send the Signal --
-		if Util.canUse(self.player, dtk.ent) then
+		if Util.canUse(getMFPlayer(self.player), dtk) then
 			if dtk.inventoryFluid ~= nil and game.fluid_prototypes[dtk.inventoryFluid] ~= nil then
 				local signal = {signal={type="fluid", name=dtk.inventoryFluid} ,count=dtk.inventoryCount}
 				self.ent.get_control_behavior().set_signal(i, signal)

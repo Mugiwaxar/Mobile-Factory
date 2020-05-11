@@ -116,7 +116,7 @@ function GO:addFlow(name, gui, direction, save)
 end
 
 -- Add a Tabbed Pane --
-function GO:addTabbedPane(name, gui, text, tooltip, save)
+function GO:addTabbedPane(name, gui, text, tooltip, save, selectedIndex)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
     -- Create the Tabbed Pane --
@@ -124,6 +124,8 @@ function GO:addTabbedPane(name, gui, text, tooltip, save)
     -- Set the Style --
     tabbedPane.style.margin = 0
     tabbedPane.style.padding = 0
+    -- Set the Selected Tab --
+    tabbedPane.selected_tab_index = selectedIndex or 1
     -- Save the Tabbed Pane inside the elements Table --
     if save == true then
         self.elements[name] = tabbedPane
@@ -132,7 +134,7 @@ function GO:addTabbedPane(name, gui, text, tooltip, save)
 end
 
 -- Add a Tab --
-function GO:addTab(name, gui, text, tooltip, save, selected)
+function GO:addTab(name, gui, text, tooltip, save)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
     -- Create the Tabbed Pane --
@@ -148,8 +150,6 @@ function GO:addTab(name, gui, text, tooltip, save, selected)
     frame.style.vertically_stretchable  = true
     -- Save the Tab inside the Tabed Pane --
     gui.add_tab(tab, frame)
-    -- Select the Tab --
-    if selected == true then gui.selected_tab_index = tab.index end
     -- Save the Tabbed Pane inside the elements Table --
     if save == true then
         self.elements[name] = frame

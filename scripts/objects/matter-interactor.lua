@@ -175,7 +175,7 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	local i = 1
 
 	for k, deepStorage in pairs(global.deepStorageTable) do
-		if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(self.player, deepStorage.ent) then
+		if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepStorage) then
 			if not playerInvs[deepStorage.player] then playerInvs[deepStorage.player] = true end
 			if self.selectedPlayer == deepStorage.player then
 				i = i + 1

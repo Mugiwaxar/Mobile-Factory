@@ -8,10 +8,10 @@ function GUI.createOptionGUI(player)
 	GUI.createTopBar(GUIObj, 100)
 
 	-- Create the Main Tabbed Pane --
-	local mainTabbedPane = GUIObj:addTabbedPane("MainTabbedPane", GUIObj.gui, true)
+	local mainTabbedPane = GUIObj:addTabbedPane("MainTabbedPane", GUIObj.gui, true, 1)
 
 	-- Create all Tabs --
-	GUIObj:addTab("MFTab", mainTabbedPane, {"gui-description.MFTab"}, {"gui-description.MFTabTT"}, true, true)
+	GUIObj:addTab("MFTab", mainTabbedPane, {"gui-description.MFTab"}, {"gui-description.MFTabTT"}, true)
 	GUIObj:addTab("GUITab", mainTabbedPane, {"gui-description.GUITab"}, {"gui-description.GUITab"}, true)
 	GUIObj:addTab("GameTab", mainTabbedPane, {"gui-description.GameTab"}, {"gui-description.GameTab"}, true)
 	GUIObj:addTab("SystemTab", mainTabbedPane, {"gui-description.SystemTab"}, {"gui-description.SystemTab"}, true)
@@ -42,11 +42,6 @@ function GUI.addOption(name, gui, type, save, table, playerIndex) -- table{text,
 		GUIObj:addLine(name, gui, "horizontal")
 		flow.style.horizontal_align = "center"
 		return flow
-	end
-	
-	-- If this is a CheckBox --
-	if type == "checkbox" then
-		return GUIObj:addCheckBox(name, gui, table.text, table.tooltip, table.state, save)
 	end
 
 	-- If this is a Switch --
@@ -90,17 +85,34 @@ end
 function GUI.updateOptionGUIMFTab(GUIObj)
 
 	-- Need player_index so we know for whom we update GUI options --
-	local playerIndex = GUIObj.MFTab.player_index
+	local playerIndex = GUIObj.MFPlayer.index
+	
 	-- Create the Scroll Pane --
 	local scrollPane = GUIObj:addScrollPane("MFTabScrollPane", GUIObj.MFTab, 500)
 	scrollPane.style.minimal_height  = 500
 
+	-- Create the Players List --
+	local playersList = {}
+	for k, player in pairs(game.players) do
+		if k ~= playerIndex then
+			playersList[k] = player.name
+		end
+	end
+
 	-- Add all Options --
 	GUI.addOption("", scrollPane, "title", false, {text={"gui-description.MFOpt"}}, playerIndex)
-	GUI.addOption("MFShareOpt", scrollPane, "checkbox", false, {text={"gui-description.MFShareOpt"}, tooltip={"gui-description.MFShareOptTT"}, state=GUIObj.MF.varTable.shareStructures or false}, playerIndex)
-	GUI.addOption("MFUseShareOpt", scrollPane, "checkbox", false, {text={"gui-description.MFUseShareOpt"}, tooltip={"gui-description.MFUseShareOptTT"}, state=GUIObj.MF.varTable.useSharedStructures or false}, playerIndex)
-	GUI.addOption("MFShareSettingOpt", scrollPane, "checkbox", false, {text={"gui-description.MFShareSettingOpt"}, tooltip={"gui-description.MFShareSettingOptTT"}, state=GUIObj.MF.varTable.allowToModify or false}, playerIndex)
+	GUIObj:addLabel("", scrollPane, {"gui-description.MFPAllowedPlayersLabel"}, nil, {"gui-description.MFPAllowedPlayersLabelTT"}, false, "LabelFont2")
+	local playersPermissionsFlow = GUIObj:addFlow("", scrollPane, "horizontal")
+	GUIObj:addDropDown("POptPlayersList", playersPermissionsFlow, playersList, nil, true)
+	GUIObj:addSimpleButton("PermOtpAdd", playersPermissionsFlow, {"gui-description.MFOptAddButton"})
+	GUIObj:addSimpleButton("PermOtpRemove", playersPermissionsFlow, {"gui-description.MFOptRemoveButton"})
 
+	-- Add the Allowed Player list --
+	for index, allowed in pairs(GUIObj.MF.varTable.allowedPlayers) do
+		if allowed == true then
+			GUIObj:addLabel("", scrollPane, getMFPlayer(index).name, _mfGreen)
+		end
+	end
 end
 
 -- Update the MFTab --
@@ -122,6 +134,7 @@ function GUI.updateOptionGUIGUITab(GUIObj)
 		local state = true
 		if GUIObj.MFPlayer.varTable["Show" .. button.name] == false then state = false end
 		GUI.addOption("MGS," .. button.name, scrollPane, "checkbox", false, {text={"", {"gui-description.MainGUIButtons"}, " ", button.name}, state=state}, playerIndex)
+		GUIObj:addCheckBox("MGS," .. button.name, scrollPane, {"", {"gui-description.MainGUIButtons"}, " ", button.name}, "", state)
 	end
 
 end
@@ -144,12 +157,11 @@ function GUI.updateOptionGUIGameTab(GUIObj)
 	GUI.addOption("ConstructionJetDistanceOpt", scrollPane, "numberfield", false, {text=jets.cjMaxDistance or _MFConstructionJetDefaultMaxDistance, text2={"gui-description.ConstructionJetDistanceOpt"}, tooltip={"gui-description.ConstructionJetDistanceOptTT"}}, playerIndex)
 	GUI.addOption("RepairJetDistanceOpt", scrollPane, "numberfield", false, {text=jets.rjMaxDistance or _MFRepairJetDefaultMaxDistance, text2={"gui-description.RepairJetDistanceOpt"}, tooltip={"gui-description.RepairJetDistanceOptTT"}}, playerIndex)
 	GUI.addOption("CombatJetDistanceOpt", scrollPane, "numberfield", false, {text=jets.cbjMaxDistance or _MFCombatJetDefaultMaxDistance, text2={"gui-description.CombatJetDistanceOpt"}, tooltip={"gui-description.CombatJetDistanceOptTT"}}, playerIndex)
-
 	GUI.addOption("ConstructionJetTableSizeOpt", scrollPane, "numberfield", false, {text=jets.cjTableSize or _MFConstructionJetDefaultTableSize, text2={"gui-description.ConstructionJetTableSizeOpt"}, tooltip={"gui-description.ConstructionJetTableSizeOptTT"}}, playerIndex)
 
 	-- Add Floor Is Lava Option --
 	GUI.addOption("", scrollPane, "title", false, {text={"gui-description.FloorIsLavaTitle"}}, playerIndex)
-	local FILOption = GUI.addOption("FloorIsLavaOpt", scrollPane, "checkbox", false, {text={"gui-description.FloorIsLavaOpt"}, tooltip={"gui-description.FloorIsLavaOptTT"}, state=global.floorIsLavaActivated or false}, playerIndex)
+	local FILOption = GUIObj:addCheckBox("FloorIsLavaOpt", scrollPane, {"gui-description.FloorIsLavaOpt"}, {"gui-description.FloorIsLavaOptTT"}, global.floorIsLavaActivated or false)
 	FILOption.enabled = GUIObj.MFPlayer.ent.admin
 end
 

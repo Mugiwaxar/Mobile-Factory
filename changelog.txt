@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.156
+  Features:
+    - Added Liquid Quatron (1-20)
+    - Added missing Quatron Cell (Between 1-20)
+  Changes:
+    - Quatron name has changed to Quatron Cell
+    - Changed Quatron Cell recipe, now it's made of Liquid Quatron
+  Gui:
+    - Rewrite of the Share Options GUI, now you have to choose who is allowed to use your Structures
+  Bugfixes:
+    - Fixed a crash related to the Network Explorer
+  Scripting:
+    - Rewrite of the Multiplayer Code (Permissions)
+    - Now, the global.entsTable keys are the "unit numbers" of the Structure associated when there are one (global.entsTable[obj.unit_number] = obj)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.155
 Date: 10/05/2020
   Scripting:

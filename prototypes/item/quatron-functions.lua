@@ -1,7 +1,7 @@
 ----------------------------------------- QUATRON FUNCTION ---------------------------
 
 -- Create a Quatron --
-function createQuatron(level, ingredients, previousLevel)
+function createQuatron(level, ingredients)
 
 -- Item --
 qI = {}
@@ -11,40 +11,76 @@ qI.stack_size = 50
 qI.icon = "__Mobile_Factory_Graphics__/graphics/icones/Quatron.png"
 qI.icon_size = 32
 qI.subgroup = "Quatrons"
-if level < 10 then qI.order = "0" .. tonumber(level) else qI.order = tonumber(level) end
-
+if level < 10 then qI.order = "a0" .. tonumber(level) else qI.order = "a" .. tonumber(level) end
 data:extend{qI}
 
--- Recipe --
-qR = {}
-qR.name = "Quatron" .. tonumber(level)
-qR.type = "recipe"
-qR.icon = "__Mobile_Factory_Graphics__/graphics/icones/Quatron.png"
-qR.icon_size = 32
-qR.category = "Elements"
-qR.subgroup = "Quatrons"
-qR.energy_required = 3 * level
-qR.enabled = false
-qR.ingredients = {}
+-- Fluid --
+local qF = {}
+qF.name = "LiquidQuatron" .. tonumber(level)
+qF.type = "fluid"
+qF.icon = "__Mobile_Factory__/graphics/FluidQuatron.png"
+qF.icon_size = 32
+qF.default_temperature = 20
+qF.max_temperature = 100
+qF.base_color={84,14,151}
+qF.flow_color={84,14,151}
+qF.subgroup = "Resources"
+if level < 10 then qF.order = "b0" .. tonumber(level) else qF.order = "b" .. tonumber(level) end
+data:extend{qF}
+
+-- Cell Recipe --
+qcR = {}
+qcR.name = "Quatron" .. tonumber(level)
+qcR.type = "recipe"
+qcR.icon = "__Mobile_Factory_Graphics__/graphics/icones/Quatron.png"
+qcR.icon_size = 32
+qcR.category = "Elements"
+qcR.subgroup = "Quatrons"
+qcR.energy_required = 2
+qcR.enabled = false
+qcR.ingredients = {{type="fluid", name="LiquidQuatron" .. tonumber(level), amount=100}}
+qcR.result = "Quatron" .. tonumber(level)
+data:extend{qcR}
+
+-- Fluid Recipe --
+lqR = {}
+lqR.name = "LiquidQuatron" .. tonumber(level)
+lqR.type = "recipe"
+lqR.icon = "__Mobile_Factory__/graphics/FluidQuatron.png"
+lqR.icon_size = 32
+lqR.category = "Elements"
+lqR.subgroup = "Quatrons"
+lqR.energy_required = level
+lqR.enabled = false
+lqR.ingredients = {}
 for k, i in pairs(ingredients) do
-	table.insert(qR.ingredients, {type=i[1], name=i[2], amount=i[3]})
+	table.insert(lqR.ingredients, {type=i[1], name=i[2], amount=i[3]})
 end
-qR.result = "Quatron" .. tonumber(level)
-data:extend{qR}
+lqR.results = {{type="fluid", name="LiquidQuatron" .. tonumber(level), amount=100}}
+data:extend{lqR}
 
--- Technology --
-qT = {}
-qT.name = "Quatron" .. tonumber(level)
-qT.type = "technology"
-qT.icon = "__Mobile_Factory_Graphics__/graphics/icones/Quatron.png"
-qT.icon_size = 32
-if level == 1 then qT.prerequisites = {"DimensionalPlant", "DimensionalCrystal"} else qT.prerequisites = {"Quatron" .. previousLevel} end
-qT.unit = {
-	count=level,
-	time=2,
-	ingredients={{"DimensionalCrystal", 1},{"DimensionalSample",100}}
-	}
-qT.effects = {{type="unlock-recipe", recipe="Quatron" .. tonumber(level)}}
-data:extend{qT}
+end
 
+-- Create the Quatron Technology --
+function createQuatronTechnology()
+	-- Create the Quatron table --
+	local quatronTable = {}
+	for i=1, 20 do
+		table.insert(quatronTable, {type="unlock-recipe", recipe="Quatron" .. tonumber(i)})
+		table.insert(quatronTable, {type="unlock-recipe", recipe="LiquidQuatron" .. tonumber(i)})
+	end
+	-- Technology --
+	qT = {}
+	qT.name = "Quatron"
+	qT.type = "technology"
+	qT.icon = "__Mobile_Factory_Graphics__/graphics/icones/Quatron.png"
+	qT.icon_size = 32
+	qT.prerequisites = {"DimensionalPlant", "DimensionalCrystal"}
+	qT.unit = {
+		count=5,
+		time=60,
+		ingredients={{"DimensionalCrystal", 1},{"DimensionalSample",200}}
+		}
+	qT.effects = quatronTable
+	data:extend{qT}
 end

@@ -130,7 +130,7 @@ function OC:getTooltipInfos(GUIObj, gui, justCreated)
 	local selectedIndex = 1
 	local i = 1
 	for k, deepStorage in pairs(global.deepStorageTable) do
-		if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(self.player, deepStorage.ent) then
+		if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepStorage) then
 			i = i + 1
 			local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepStorage.player, ")"}
 			if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then

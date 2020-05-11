@@ -124,7 +124,7 @@ function FE:getTooltipInfos(GUIObj, gui, justCreated)
 	local selectedIndex = 1
 	local i = 1
 	for k, deepTank in pairs(global.deepTankTable) do
-		if deepTank ~= nil and deepTank.ent ~= nil and Util.canUse(self.player, deepTank.ent) then
+		if deepTank ~= nil and deepTank.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepTank) then
 			i = i + 1
 			local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
 			if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
