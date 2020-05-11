@@ -9,14 +9,15 @@ function GUI.readOptions(option, player)
 	local GUIObj = MFPlayer.GUI["MFOptionGUI"]
 
 	------------------- MF -------------------
-	if name == "MFShareOpt" then
-		MF.varTable.shareStructures = option.state
+	if name == "PermOtpAdd" then
+		local selectedPlayer = GUIObj.POptPlayersList.items[GUIObj.POptPlayersList.selected_index]
+		if selectedPlayer == nil or game.players[selectedPlayer] == nil then return end
+		MF.varTable.allowedPlayers[game.players[selectedPlayer].index] = true
 	end
-	if name == "MFUseShareOpt" then
-		MF.varTable.useSharedStructures = option.state
-	end
-	if name == "MFShareSettingOpt" then
-		MF.varTable.allowToModify = option.state
+	if name == "PermOtpRemove" then
+		local selectedPlayer = GUIObj.POptPlayersList.items[GUIObj.POptPlayersList.selected_index]
+		if selectedPlayer == nil or game.players[selectedPlayer] == nil then return end
+		MF.varTable.allowedPlayers[game.players[selectedPlayer].index] = false
 	end
 
 	------------------- GUI -------------------
@@ -86,7 +87,7 @@ function GUI.readOptions(option, player)
 	end
 
 	------------------- Update the Option GUI -------------------
-	if GUIObj ~= nil and GUIObj.gui ~= nil and GUIObj.gui.valid == true and option.type ~= "textfield" then
+	if GUIObj ~= nil and GUIObj.gui ~= nil and GUIObj.gui.valid == true and option.type ~= "textfield" and option.type ~= "drop-down" then
 		GUI.updateOptionGUI(GUIObj)
 	end
 end
