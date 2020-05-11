@@ -70,7 +70,11 @@ function UpSys.addObject(obj)
       obj:remove()
     else
       -- Add the Object to the Entity Table --
-      table.insert(global.entsTable, obj)
+      if obj.ent ~= nil and obj.ent.valid == true then
+        global.entsTable[obj.ent.unit_number] = obj
+      else
+        table.insert(global.entsTable, obj)
+      end
       -- Check if the Object have to be updated --
 	  if obj.updateTick > 0 then
         -- Set Update --
