@@ -206,9 +206,10 @@ function NE.transferItemsFromDS(DS, inv, count)
 
 	-- Try to transfer Items --
 	local amount = math.min(DS.inventoryCount, count)
-	if half == true then amount = math.floor(amount/2) end
+	if half == true and amount >= 2 then amount = math.floor(amount/2) end
 
 	-- Send the Items to the Player Inventory --
+	if amount <= 0 then return end
 	local inserted = inv.insert({name=item, count=amount})
 
 	-- Remove the Items from the Deep Storage --
@@ -228,9 +229,10 @@ function NE.transferItemsFromDNInv(NE, inv, item, count)
 
 	-- Try to transfer Items --
 	local amount = math.min(DNInv:hasItem(item), count)
-	if half == true then amount = math.floor(amount/2) end
+	if half == true and amount >= 2 then amount = math.floor(amount/2) end
 
 	-- Send the Items to the Player Inventory --
+	if amount <= 0 then return end
 	local inserted = inv.insert({name=item, count=amount})
 
 	-- Remove the Items from the Deep Storage --
