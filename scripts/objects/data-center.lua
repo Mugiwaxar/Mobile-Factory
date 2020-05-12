@@ -124,11 +124,27 @@ function DC:update()
 end
 
 -- Tooltip Infos --
-function DC:getTooltipInfos(GUIObj, gui)
+function DC:getTooltipInfos(GUIObj, gui, justCreated)
+
 	-- Create the Data Network Frame --
 	GUIObj:addDataNetworkFrame(gui, self)
+
+	-- Get the ScrollPane --
+	local inventoryScrollPane = GUIObj.inventoryScrollPane
+
+	if justCreated == true then
+
+		-- Create the Inventory Scroll Pane --
+		inventoryScrollPane = GUIObj:addScrollPane("inventoryScrollPane", gui, 400, true)
+		
+	end
+
+	-- Clear the ScrollPane --
+	inventoryScrollPane.clear()
+
 	-- Create the Inventory Frame --
-	self.invObj:getTooltipInfos(GUIObj, gui)
+	self.invObj:getTooltipInfos(GUIObj, inventoryScrollPane)
+
 end
 
 -- Set Active --

@@ -87,33 +87,43 @@ end
 -- Tooltip Infos --
 function DTK:getTooltipInfos(GUIObj, gui, justCreated)
 
-	-- Create the Title --
-	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
+	-- Get the Flow --
+	local inventoryFlow = GUIObj.InventoryFlow
+
+	if justCreated == true then
+
+		-- Create the Inventory Title --
+		local inventoryTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
+		inventoryFlow = GUIObj:addFlow("InventoryFlow", inventoryTitle, "vertical", true)
+
+		-- Create the Settings Title --
+		local settingTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Settings"}, _mfOrange)
+
+		-- Create the Filter Selection Label and Filter --
+		GUIObj:addLabel("", settingTitle, {"gui-description.ChangeFilter"}, _mfOrange)
+		GUIObj:addFilter("TF" .. tostring(self.ent.unit_number), settingTitle, {"gui-description.FilterSelect"}, true, "fluid", 40)
+
+	end
+
+	-- Clear the Flow --
+	inventoryFlow.clear()
 
 	-- Create the Fluid Frame --
 	if self.inventoryFluid ~= nil or self.filter ~= nil then
-		Util.fluidToFrame(self.inventoryFluid or self.filter, self.inventoryCount or 0, GUIObj, frame)
+		Util.fluidToFrame(self.inventoryFluid or self.filter, self.inventoryCount or 0, GUIObj, inventoryFlow)
 	end
 
 	-- Create the Fluid Name Label --
 	local fluidName = Util.getLocFluidName(self.inventoryFluid) or Util.getLocFluidName(self.filter) or {"gui-description.Empty"}
-	GUIObj:addDualLabel(frame, {"", {"gui-description.FluidName"}, ":"}, fluidName, _mfOrange, _mfGreen)
+	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.FluidName"}, ":"}, fluidName, _mfOrange, _mfGreen)
 
 	-- Create the Fluid Amount Label --
 	local fluidAmount = self.inventoryCount or 0
-	GUIObj:addDualLabel(frame, {"", {"gui-description.Amount"}, ":"}, Util.toRNumber(fluidAmount) .. "/" .. Util.toRNumber(_dtMaxFluid), _mfOrange, _mfGreen, nil, nil, fluidAmount .. "/" .. _dtMaxFluid)
+	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.Amount"}, ":"}, Util.toRNumber(fluidAmount) .. "/" .. Util.toRNumber(_dtMaxFluid), _mfOrange, _mfGreen, nil, nil, fluidAmount .. "/" .. _dtMaxFluid)
 
 	-- Create the Filter Label --
 	local filterName = Util.getLocFluidName(self.filter) or {"gui-description.None"}
-	GUIObj:addDualLabel(frame, {"", {"gui-description.Filter"}, ":"}, filterName, _mfOrange, _mfGreen)
-
-	-- Create the Filter Selection --
-	if justCreated == true and canModify(getPlayer(gui.player_index).name, self.player) == true then
-		GUIObj.SettingsFrame.visible = true
-		local titleFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
-		GUIObj:addLabel("", titleFrame, {"gui-description.ChangeFilter"}, _mfOrange)
-		GUIObj:addFilter("TF" .. tostring(self.ent.unit_number), titleFrame, {"gui-description.FilterSelect"}, true, "fluid", 40)
-	end
+	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.Filter"}, ":"}, filterName, _mfOrange, _mfGreen)
 
 	-- Update the Filter --
 	if game.fluid_prototypes[self.filter] ~= nil and GUIObj["TF" .. tostring(self.ent.unit_number)] ~= nil then

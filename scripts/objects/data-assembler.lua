@@ -134,42 +134,36 @@ function DA:getTooltipInfos(GUIObj, gui, justCreated)
 
 	-- Create the Data Network Frame --
 	GUIObj:addDataNetworkFrame(gui, self)
+
+	-- Get the ScrollPane and the Flows --
+	local assemblerScrollPane = GUIObj.AssemblerScrollPane
+	local informationFlow = GUIObj.InformationFlow
 	
-	-- Check if the Parameters can be modified --
-	if canModify(getPlayer(gui.player_index).name, self.player) == false or valid(self.dataNetwork) == false then return end
 
-	-- Create the Assembler Title --
-	local inventoryFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Assembler"}, _mfOrange)
-
-	-- Create the Assembler Scroll Pane
-	local assemblerScrollPane = GUIObj:addScrollPane("TanksScrollPane", inventoryFrame, 500, true)
-	assemblerScrollPane.style = "MF_DA_scroll_pan"
-	assemblerScrollPane.style.minimal_height = 450
-	assemblerScrollPane.style.minimal_width = 250
-	assemblerScrollPane.style.vertically_stretchable = true
-
-	-- Create all Recipe Frame --
-	for k, recipe in pairs(self.recipeTable) do
-		self:createFrame(GUIObj, assemblerScrollPane, recipe, k)
-	end
-
-	-- Add the Information --
 	if justCreated == true then
 
 		-- Add the Data Assembler to the GUI --
 		GUIObj.DA = self
 
-		-- Show the Settings Flow --
-		GUIObj.SettingsFrame.visible = true
+		-- Create the Assembler Title and Flow --
+		local assemblerTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Assembler"}, _mfOrange)
 
-		-- Create the Information Title --
-		local informationFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Information"}, _mfOrange)
+		-- Create the Assembler Scroll Pane
+		assemblerScrollPane = GUIObj:addScrollPane("AssemblerScrollPane", assemblerTitle, 500, true)
+		assemblerScrollPane.style = "MF_DA_scroll_pan"
+		assemblerScrollPane.style.minimal_height = 450
+		assemblerScrollPane.style.minimal_width = 250
+		assemblerScrollPane.style.vertically_stretchable = true
+
+		-- Create the Information Title and Flow --
+		local informationTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
+		informationFlow = GUIObj:addFlow("InformationFlow", informationTitle, "vertical", true)
 
 		-- Add the Add Recipe Text --
-		GUIObj:addLabel("", informationFrame, {"gui-description.AddRecipe"}, _mfGreen, "", false, "LabelFont")
+		GUIObj:addLabel("", informationFlow, {"gui-description.AddRecipe"}, _mfGreen, "", false, "LabelFont")
 
 		-- Create the Add Recipe Flow --
-		local addRFlow = GUIObj:addFlow("", informationFrame, "horizontal", false)
+		local addRFlow = GUIObj:addFlow("", informationFlow, "horizontal", false)
 		addRFlow.style.bottom_padding = 10
 
 		-- Create the Recipe selector --
@@ -183,16 +177,28 @@ function DA:getTooltipInfos(GUIObj, gui, justCreated)
 		GUIObj:addButton("DAAddR," .. self.entID, addRFlow, "PlusIcon", "PlusIcon", {"gui-description.AddRecipeTT"}, 28)
 
 		-- Create the Quatron level Dual Label --
-		GUIObj:addDualLabel(informationFrame, {"gui-description.Quatronlevel"}, self.quatronLevel, _mfOrange, _mfGreen, nil, "", "", "QuatronLevel", true)
+		GUIObj:addDualLabel(informationFlow, {"gui-description.Quatronlevel"}, self.quatronLevel, _mfOrange, _mfGreen, nil, "", "", "QuatronLevel", true)
 
 		-- Create the Quatron Charge Dual Label --
-		GUIObj:addDualLabel(informationFrame, {"gui-description.QuatronCharge"}, math.floor(self.quatronCharge), _mfOrange, _mfGreen, nil, "", "",  "QuatronCharge", true)
+		GUIObj:addDualLabel(informationFlow, {"gui-description.QuatronCharge"}, math.floor(self.quatronCharge), _mfOrange, _mfGreen, nil, "", "",  "QuatronCharge", true)
 
 		-- Add the help Label --
-		GUIObj:addLabel("", informationFrame, {"gui-description.DataAssemblerText1"}, _mfGreen)
-		GUIObj:addLabel("", informationFrame, {"gui-description.DataAssemblerText2"}, _mfGreen)
-		GUIObj:addLabel("", informationFrame, {"gui-description.DataAssemblerText3"}, _mfGreen)
+		GUIObj:addLabel("", informationFlow, {"gui-description.DataAssemblerText1"}, _mfGreen)
+		GUIObj:addLabel("", informationFlow, {"gui-description.DataAssemblerText2"}, _mfGreen)
+		GUIObj:addLabel("", informationFlow, {"gui-description.DataAssemblerText3"}, _mfGreen)
+
+	end
+
+	-- Check the Data Network --
+	if valid(self.dataNetwork) == true then
 		
+		-- Clear the ScrollPane --
+		assemblerScrollPane.clear()
+
+		-- Create all Recipe Frame --
+		for k, recipe in pairs(self.recipeTable) do
+			self:createFrame(GUIObj, assemblerScrollPane, recipe, k)
+		end
 
 	end
 
@@ -263,7 +269,7 @@ function DA:createFrame(GUIObj, gui, recipe, id)
 	end
 
 	-- Create the Progress Bar --
-	local barColor = self.quatronCharge > 0 and _mfGreen or _mfRed
+	local barColor = (self.quatronCharge > 0 and self.active == true ) and _mfGreen or _mfRed
 	local PBar = GUIObj:addProgressBar("", processFlow, "", "", false, barColor, recipe.progress / recipe.recipePrototype.energy, 150)
 	if GUIObj.PBarsTable == nil then GUIObj.PBarsTable = {} end
 	GUIObj.PBarsTable[PBar] = recipe
@@ -286,7 +292,7 @@ end
 
 -- Update all Progress Bars --
 function DA:updatePBars(GUIObj)
-	local barColor = self.quatronCharge > 0 and _mfGreen or _mfRed
+	local barColor = (self.quatronCharge > 0 and self.active == true ) and _mfGreen or _mfRed
 	for PBar, recipe in pairs(GUIObj.PBarsTable or {}) do
 		if valid(PBar) == true and recipe ~= nil then
 			PBar.value = recipe.progress / recipe.recipePrototype.energy

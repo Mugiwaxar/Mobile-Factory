@@ -99,6 +99,9 @@ end
 -- Tooltip Infos --
 function MJ:getTooltipInfos(GUIObj, gui, justCreated)
 
+	-- Clear the GUI --
+	gui.clear()
+
 	-- Create the Title --
 	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
 
@@ -117,14 +120,12 @@ function MJ:getTooltipInfos(GUIObj, gui, justCreated)
 	
 	-- Create the Inventory Title --
 	local invFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
-	invFrame.visible = false
 
 	-- Create the Items Table --
 	local table = GUIObj:addTable("", invFrame, 5)
 	
 	-- Create the Inventory List --
 	if self.inventoryItem ~= nil and self.inventoryCount > 0 then
-		invFrame.visible = true
 		-- Check the Item --
 		if self.inventoryItem == nil or self.inventoryCount == nil or self.inventoryCount == 0 or game.item_prototypes[self.inventoryItem] == nil then goto continue end
 		-- Create the Button

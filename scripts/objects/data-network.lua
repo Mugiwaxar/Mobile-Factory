@@ -87,26 +87,20 @@ end
 
 -- Get the Tooltip --
 function DN:getTooltipInfos(GUIObj, gui, obj)
-	
-	-- Create the Title --
-	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.DataNetwork"}, _mfOrange)
 
 	-- Create the Belongs to Label --
-	GUIObj:addDualLabel(frame, {"", {"gui-description.BelongsTo"}, ":"}, obj.player, _mfOrange, _mfGreen)
+	GUIObj:addDualLabel(gui, {"", {"gui-description.BelongsTo"}, ":"}, obj.player, _mfOrange, _mfGreen)
 
 	-- Create the Total Energy Label --
-	GUIObj:addDualLabel(frame, {"", {"gui-description.DNTotalEnergy"}, ":"}, Util.toRNumber(self.totalEnergy) .. "J", _mfOrange, _mfYellow)
+	GUIObj:addDualLabel(gui, {"", {"gui-description.DNTotalEnergy"}, ":"}, Util.toRNumber(self.totalEnergy) .. "J", _mfOrange, _mfYellow)
 
 	-- Create the Consumption Label --
-	GUIObj:addDualLabel(frame, {"", {"gui-description.DNTotalConsumption"}, ":"}, Util.toRNumber(self.totalConsumption) .. "W", _mfOrange, _mfYellow)
+	GUIObj:addDualLabel(gui, {"", {"gui-description.DNTotalConsumption"}, ":"}, Util.toRNumber(self.totalConsumption) .. "W", _mfOrange, _mfYellow)
 
 	-- Create the Out Of Power Label --
 	if self.outOfPower == true then
-		GUIObj:addLabel("", frame, {"gui-description.DNOutOfPower"}, _mfRed)
+		GUIObj:addLabel("", gui, {"gui-description.DNOutOfPower"}, _mfRed)
 	end
-
-	-- Return the frame --
-	return frame
 
 end
 

@@ -94,6 +94,9 @@ end
 -- Tooltip Infos --
 function CBJ:getTooltipInfos(GUIObj, gui, justCreated)
 
+	-- Clear the GUI --
+	gui.clear()
+
 	-- Create the Title --
 	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
 

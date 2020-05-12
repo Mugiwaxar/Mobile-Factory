@@ -92,59 +92,59 @@ end
 -- Tooltip Infos --
 function MF:getTooltipInfos(GUIObj, gui, justCreated)
 
-	-- Create the Inventory Title --
-	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
+	if justCreated == true then
 
-	-- Create the Inventory Button --
-	GUIObj:addSimpleButton("MFOpenI," ..GUIObj.MFPlayer.name, frame, {"gui-description.OpenInventory"})
+		-- Create the Inventory Title --
+		local inventoryTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
 
-	-- Check if the Parameters can be modified --
-	if canModify(getPlayer(gui.player_index).name, self.player) == false or justCreated ~= true then return end
+		-- Create the Inventory Button --
+		GUIObj:addSimpleButton("MFOpenI," ..GUIObj.MFPlayer.name, inventoryTitle, {"gui-description.OpenInventory"})
 
-	-- Create the Lasers Title --
-	local LasersFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Lasers"}, _mfOrange)
-	GUIObj.SettingsFrame.visible = true
-	LasersFrame.visible = false
+		-- Create the Lasers Title --
+		local LasersFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Lasers"}, _mfOrange)
 
-	-- Create the Power laser Settings --
-	if technologyUnlocked("EnergyDrain1", getForce(self.player)) then
-		LasersFrame.visible = true
-		GUIObj:addLabel("", LasersFrame, {"", {"gui-description.PowerLaser"}}, _mfOrange)
-		local state = "left"
-		if self.selectedPowerLaserMode == "output" then state = "right" end
-		GUIObj:addSwitch("MFPL" .. self.ent.unit_number, LasersFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.DrainTT"}, {"gui-description.SendTT"}, state)
-	end
+		-- Create the Power laser Settings --
+		if technologyUnlocked("EnergyDrain1", getForce(self.player)) then
+			LasersFrame.visible = true
+			GUIObj:addLabel("", LasersFrame, {"", {"gui-description.PowerLaser"}}, _mfOrange)
+			local state = "left"
+			if self.selectedPowerLaserMode == "output" then state = "right" end
+			GUIObj:addSwitch("MFPL" .. self.ent.unit_number, LasersFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.DrainTT"}, {"gui-description.SendTT"}, state)
+		end
 
-	-- Create the Fluid Lasers Settings --
-	if technologyUnlocked("FluidDrain1", getForce(self.player)) then
-		LasersFrame.visible = true
-		GUIObj:addLabel("", LasersFrame, {"", {"gui-description.FluidLaser"}}, _mfOrange)
-		local state = "left"
-		if self.selectedFluidLaserMode == "output" then state = "right" end
-		GUIObj:addSwitch("MFFMode" .. self.ent.unit_number, LasersFrame, {"gui-description.Input"}, {"gui-description.Output"}, {"gui-description.InputTT"}, {"gui-description.OutputTT"}, state)
-		GUIObj:addLabel("", LasersFrame, {"", {"gui-description.MSTarget"}}, _mfOrange)
-		-- Create the Target List --
-		local invs = {{"", {"gui-description.None"}}}
-		local selectedIndex = 1
-		local i = 1
-		for k, deepTank in pairs(global.deepTankTable) do
-			if deepTank ~= nil and deepTank.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepTank) then
-				i = i + 1
-				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
-				if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
-					itemText = {"", " (", game.fluid_prototypes[deepTank.filter].localised_name, " - ", deepTank.player, ")"}
-				elseif deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
-					itemText = {"", " (", game.fluid_prototypes[deepTank.inventoryFluid].localised_name, " - ", deepTank.player, ")"}
-				end
-				invs[k+1] = {"", {"gui-description.DT"}, " ", tostring(deepTank.ID), itemText}
-				if self.selectedInv == deepTank then
-					selectedIndex = i
+		-- Create the Fluid Lasers Settings --
+		if technologyUnlocked("FluidDrain1", getForce(self.player)) then
+			LasersFrame.visible = true
+			GUIObj:addLabel("", LasersFrame, {"", {"gui-description.FluidLaser"}}, _mfOrange)
+			local state = "left"
+			if self.selectedFluidLaserMode == "output" then state = "right" end
+			GUIObj:addSwitch("MFFMode" .. self.ent.unit_number, LasersFrame, {"gui-description.Input"}, {"gui-description.Output"}, {"gui-description.InputTT"}, {"gui-description.OutputTT"}, state)
+			GUIObj:addLabel("", LasersFrame, {"", {"gui-description.MSTarget"}}, _mfOrange)
+			-- Create the Target List --
+			local invs = {{"", {"gui-description.None"}}}
+			local selectedIndex = 1
+			local i = 1
+			for k, deepTank in pairs(global.deepTankTable) do
+				if deepTank ~= nil and deepTank.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepTank) then
+					i = i + 1
+					local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
+					if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
+						itemText = {"", " (", game.fluid_prototypes[deepTank.filter].localised_name, " - ", deepTank.player, ")"}
+					elseif deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
+						itemText = {"", " (", game.fluid_prototypes[deepTank.inventoryFluid].localised_name, " - ", deepTank.player, ")"}
+					end
+					invs[k+1] = {"", {"gui-description.DT"}, " ", tostring(deepTank.ID), itemText}
+					if self.selectedInv == deepTank then
+						selectedIndex = i
+					end
 				end
 			end
+			if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
+			GUIObj:addDropDown("MFFTarget" .. self.ent.unit_number, LasersFrame, invs, selectedIndex)
 		end
-		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-		GUIObj:addDropDown("MFFTarget" .. self.ent.unit_number, LasersFrame, invs, selectedIndex)
+
 	end
+
 end
 
 -- Change the Mode --

@@ -81,65 +81,73 @@ end
 -- Tooltip Infos --
 function FE:getTooltipInfos(GUIObj, gui, justCreated)
 
-	-- Create the Title --
-	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
+	-- Get the Flow --
+	local informationFlow = GUIObj.InformationFlow
+
+	if justCreated == true then
+
+		-- Create the Information Title --
+		local informationTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
+		informationFlow = GUIObj:addFlow("InformationFlow", informationTitle, "vertical", true)
+
+		-- Create the Settings Title --
+		local settingsTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Settings"}, _mfOrange)
+
+		-- Create the Select Tank Label --
+		GUIObj:addLabel("", settingsTitle, {"", {"gui-description.TargetedTank"}}, _mfOrange)
+
+		-- Create the Tank List --
+		local invs = {{"", {"gui-description.All"}}}
+		local selectedIndex = 1
+		local i = 1
+		for k, deepTank in pairs(global.deepTankTable) do
+			if deepTank ~= nil and deepTank.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepTank) then
+				i = i + 1
+				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
+				if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
+					itemText = {"", " (", game.fluid_prototypes[deepTank.filter].localised_name, " - ", deepTank.player, ")"}
+				elseif deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
+					itemText = {"", " (", game.fluid_prototypes[deepTank.inventoryFluid].localised_name, " - ", deepTank.player, ")"}
+				end
+				invs[k+1] = {"", {"gui-description.DT"}, " ", tostring(deepTank.ID), itemText}
+				if self.selectedInv == deepTank then
+					selectedIndex = i
+				end
+			end
+		end
+		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
+		GUIObj:addDropDown("FE" .. self.ent.unit_number, settingsTitle, invs, selectedIndex)
+
+	end
+
+	-- Clear the Flow --
+	informationFlow.clear()
 
 	-- Create the Quatron Charge --
-	GUIObj:addDualLabel(frame, {"", {"gui-description.Charge"}, ": "}, self.charge, _mfOrange, _mfGreen)
-	GUIObj:addProgressBar("", frame, "", "", false, _mfPurple, self.charge/_mfFEMaxCharge, 100)
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Charge"}, ": "}, self.charge, _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.charge/_mfFEMaxCharge, 100)
 
 	-- Create the Quatron Purity --
-	GUIObj:addDualLabel(frame, {"", {"gui-description.Purity"}, ": "}, self.purity, _mfOrange, _mfGreen)
-	GUIObj:addProgressBar("", frame, "", "", false, _mfPurple, self.purity/100, 100)
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Purity"}, ": "}, self.purity, _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.purity/100, 100)
 
 	-- Create the Speed --
-	GUIObj:addDualLabel(frame, {"", {"gui-description.Speed"}, ": "}, self:fluidPerExtraction() .. " u/s", _mfOrange, _mfGreen)
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Speed"}, ": "}, self:fluidPerExtraction() .. " u/s", _mfOrange, _mfGreen)
 
 	-- Check the Resource --
 	if self.resource ~= nil and self.resource.valid == true then
 		local fluidName = self.resource.prototype.mineable_properties.products[1].name
 		-- Create the Resource Type --
-		GUIObj:addDualLabel(frame, {"", {"gui-description.ResouceType"}, ": "}, Util.getLocFluidName(fluidName), _mfOrange, _mfGreen)
+		GUIObj:addDualLabel(informationFlow, {"", {"gui-description.ResouceType"}, ": "}, Util.getLocFluidName(fluidName), _mfOrange, _mfGreen)
 		-- Create the Resource Amount --
-		GUIObj:addDualLabel(frame, {"", {"gui-description.ResourceAmount"}, ": "}, self.resource.amount, _mfOrange, _mfGreen)
+		GUIObj:addDualLabel(informationFlow, {"", {"gui-description.ResourceAmount"}, ": "}, self.resource.amount, _mfOrange, _mfGreen)
 	end
 
 	-- Create the Mobile Factory Too Far Label --
 	if self.MFTooFar == true then
-		GUIObj:addLabel("", frame, {"", {"gui-description.MFTooFar"}}, _mfRed)
+		GUIObj:addLabel("", informationFlow, {"", {"gui-description.MFTooFar"}}, _mfRed)
 	end
 
-	-- Stop of the Settings can't be Modified --
-	if canModify(getPlayer(gui.player_index).name, self.player) == false or justCreated ~= true then return end
-
-	-- Create the Title --
-	local settingFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
-	GUIObj.SettingsFrame.visible = true
-
-	-- Create the Select Tank Label --
-	GUIObj:addLabel("", settingFrame, {"", {"gui-description.TargetedTank"}}, _mfOrange)
-
-	-- Create the Tank List --
-	local invs = {{"", {"gui-description.All"}}}
-	local selectedIndex = 1
-	local i = 1
-	for k, deepTank in pairs(global.deepTankTable) do
-		if deepTank ~= nil and deepTank.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepTank) then
-			i = i + 1
-			local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
-			if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
-				itemText = {"", " (", game.fluid_prototypes[deepTank.filter].localised_name, " - ", deepTank.player, ")"}
-			elseif deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
-				itemText = {"", " (", game.fluid_prototypes[deepTank.inventoryFluid].localised_name, " - ", deepTank.player, ")"}
-			end
-			invs[k+1] = {"", {"gui-description.DT"}, " ", tostring(deepTank.ID), itemText}
-			if self.selectedInv == deepTank then
-				selectedIndex = i
-			end
-		end
-	end
-	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-	GUIObj:addDropDown("FE" .. self.ent.unit_number, settingFrame, invs, selectedIndex)
 end
 
 -- Change the Targeted Dimensional Tank --

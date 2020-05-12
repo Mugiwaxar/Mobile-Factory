@@ -85,33 +85,43 @@ end
 -- Tooltip Infos --
 function DSR:getTooltipInfos(GUIObj, gui, justCreated)
 
-	-- Create the Title --
-	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
+	-- Get the Flow --
+	local inventoryFlow = GUIObj.InventoryFlow
+
+	if justCreated == true then
+		
+		-- Create the Inventory Title --
+		local inventoryTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
+		inventoryFlow = GUIObj:addFlow("InventoryFlow", inventoryTitle, "vertical", true)
+
+		-- Create the Settings Title --
+		local settingTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Settings"}, _mfOrange)
+
+		-- Create the Filter Selection Label and Filter --
+		GUIObj:addLabel("", settingTitle, {"gui-description.ChangeFilter"}, _mfOrange)
+		GUIObj:addFilter("DSRF" .. tostring(self.ent.unit_number), settingTitle, {"gui-description.FilterSelect"}, true, "item", 40)
+
+	end
+
+	-- Clear the Flow --
+	inventoryFlow.clear()
 
 	-- Create the Item Frame --
 	if self.inventoryItem ~= nil or self.filter ~= nil then
-		Util.itemToFrame(self.inventoryItem or self.filter, self.inventoryCount or 0, GUIObj, frame)
+		Util.itemToFrame(self.inventoryItem or self.filter, self.inventoryCount or 0, GUIObj, inventoryFlow)
 	end
 
 	-- Create the Item Name Label --
 	local itemName = Util.getLocItemName(self.inventoryItem) or Util.getLocItemName(self.filter) or {"gui-description.Empty"}
-	GUIObj:addDualLabel(frame, {"", {"gui-description.ItemName"}, ":"}, itemName, _mfOrange, _mfGreen)
+	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.ItemName"}, ":"}, itemName, _mfOrange, _mfGreen)
 
 	-- Create the Item Amount Label --
 	local itemAmount = self.inventoryCount or 0
-	GUIObj:addDualLabel(frame, {"", {"gui-description.Amount"}, ":"}, Util.toRNumber(itemAmount), _mfOrange, _mfGreen, nil, nil, itemAmount)
+	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.Amount"}, ":"}, Util.toRNumber(itemAmount), _mfOrange, _mfGreen, nil, nil, itemAmount)
 
 	-- Create the Filter Label --
 	local filterName = Util.getLocItemName(self.filter) or {"gui-description.None"}
-	GUIObj:addDualLabel(frame, {"", {"gui-description.Filter"}, ":"}, filterName, _mfOrange, _mfGreen)
-
-	-- Create the Filter Selection --
-	if justCreated == true and canModify(getPlayer(gui.player_index).name, self.player) == true then
-		GUIObj.SettingsFrame.visible = true
-		local titleFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
-		GUIObj:addLabel("", titleFrame, {"gui-description.ChangeFilter"}, _mfOrange)
-		GUIObj:addFilter("DSRF" .. tostring(self.ent.unit_number), titleFrame, {"gui-description.FilterSelect"}, true, "item", 40)
-	end
+	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.Filter"}, ":"}, filterName, _mfOrange, _mfGreen)
 
 	-- Update the Filter --
 	if game.item_prototypes[self.filter] ~= nil and GUIObj["DSRF" .. tostring(self.ent.unit_number)] ~= nil then
