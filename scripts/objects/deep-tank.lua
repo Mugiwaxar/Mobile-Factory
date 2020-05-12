@@ -108,7 +108,7 @@ function DTK:getTooltipInfos(GUIObj, gui, justCreated)
 	GUIObj:addDualLabel(frame, {"", {"gui-description.Filter"}, ":"}, filterName, _mfOrange, _mfGreen)
 
 	-- Create the Filter Selection --
-	if justCreated == true and canModify(getPlayer(gui.player_index).name, self.ent) == true then
+	if justCreated == true and canModify(getPlayer(gui.player_index).name, self.player) == true then
 		GUIObj.SettingsFrame.visible = true
 		local titleFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
 		GUIObj:addLabel("", titleFrame, {"gui-description.ChangeFilter"}, _mfOrange)

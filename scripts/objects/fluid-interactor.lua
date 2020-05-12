@@ -131,7 +131,7 @@ function FI:getTooltipInfos(GUIObj, gui, justCreated)
 	GUIObj:addDataNetworkFrame(gui, self)
 	
     -- Check if the Parameters can be modified --
-	if canModify(getPlayer(gui.player_index).name, self.ent) == false or justCreated ~= true or valid(self.dataNetwork) == false then return end
+	if canModify(getPlayer(gui.player_index).name, self.player) == false or justCreated ~= true or valid(self.dataNetwork) == false then return end
 	
 	-- Create the Parameters Title --
 	local titleFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)

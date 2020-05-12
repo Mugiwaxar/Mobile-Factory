@@ -1,6 +1,5 @@
 -- Create the Tooltip GUI --
 function GUI.createTooltipGUI(player, obj)
-
 	-- Check the Entity --
 	if valid(obj) == false then return end
 

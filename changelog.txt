@@ -1,4 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.158
+Date: 12/05/2020
+  Bugfixes:
+    - canModify better multiplayer compatibility
+    - allowedPlayers table went un-inited
+    - Network Explorer GUI bug? (wasn't appearing)
+    - Data Assembler GUI bug? (wasn't appearing)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.157
+Date: 11/05/2020
+  Bugfixes:
+    - missing AllowedPlayers table on new Mobile Factory
+---------------------------------------------------------------------------------------------------
 Version: 0.0.157
 Date: 11/05/2020
   Bugfixes:
