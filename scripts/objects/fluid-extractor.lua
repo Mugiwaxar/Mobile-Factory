@@ -110,7 +110,7 @@ function FE:getTooltipInfos(GUIObj, gui, justCreated)
 	end
 
 	-- Stop of the Settings can't be Modified --
-	if canModify(getPlayer(gui.player_index).name, self.ent) == false or justCreated ~= true then return end
+	if canModify(getPlayer(gui.player_index).name, self.player) == false or justCreated ~= true then return end
 
 	-- Create the Title --
 	local settingFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)

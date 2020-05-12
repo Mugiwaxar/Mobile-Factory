@@ -137,7 +137,7 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	end
 	
 	-- Check if the Parameters can be modified --
-	if canModify(getPlayer(gui.player_index).name, self.ent) == false or valid(self.dataNetwork) == false then return end
+	if canModify(getPlayer(gui.player_index).name, self.player) == false or valid(self.dataNetwork) == false then return end
 
 	if self.lastSelectedPlayer ~= self.selectedPlayer then
 		self.lastSelectedPlayer = self.selectedPlayer

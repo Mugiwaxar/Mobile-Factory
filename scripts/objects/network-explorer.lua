@@ -98,9 +98,9 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 
 	-- Create the Data Network Frame --
 	GUIObj:addDataNetworkFrame(gui, self)
-	
+
 	-- Check if the Parameters can be modified --
-	if canModify(getPlayer(gui.player_index).name, self.ent) == false or valid(self.dataNetwork) == false then return end
+	if canModify(getPlayer(gui.player_index).name, self.player) == false or valid(self.dataNetwork) == false then return end
 
 	-- Get the Textfield Text --
 	local searchText = nil

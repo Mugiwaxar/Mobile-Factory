@@ -136,7 +136,7 @@ function DA:getTooltipInfos(GUIObj, gui, justCreated)
 	GUIObj:addDataNetworkFrame(gui, self)
 	
 	-- Check if the Parameters can be modified --
-	if canModify(getPlayer(gui.player_index).name, self.ent) == false or valid(self.dataNetwork) == false then return end
+	if canModify(getPlayer(gui.player_index).name, self.player) == false or valid(self.dataNetwork) == false then return end
 
 	-- Create the Assembler Title --
 	local inventoryFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Assembler"}, _mfOrange)

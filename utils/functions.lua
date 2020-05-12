@@ -114,13 +114,13 @@ end
 
 -- Return a splitted table of a string --
 function split(str, char)
-   char = "[^" .. char .."]+"
-   local parts = {__index = table.insert}
-   setmetatable(parts, parts)
-   str:gsub(char, parts)
-   setmetatable(parts, nil)
-   parts.__index = nil
-   return parts
+	char = "[^" .. char .."]+"
+	local parts = {__index = table.insert}
+	setmetatable(parts, parts)
+	str:gsub(char, parts)
+	setmetatable(parts, nil)
+	parts.__index = nil
+	return parts
 end
 
 -- Return the localised Entity Name --
@@ -168,19 +168,6 @@ function mfPlaceable(player, MF)
 	end
 	-- Try to a position near the Player --
 	return player.surface.find_non_colliding_position(MF.ent.name, player.position, 10, 1, true)
---[[
-	-- Try to a position near the Player --
-	if player.surface.can_place_entity{name=MF.ent.name, position={player.position.x+5, player.position.y}} == false then
-		if player.surface.can_place_entity{name=MF.ent.name, position={player.position.x-5, player.position.y}} == false then
-			if player.surface.can_place_entity{name=MF.ent.name, position={player.position.x, player.position.y+5}} == false then
-				if player.surface.can_place_entity{MF.ent.name, position={player.position.x, player.position.y-5}} == false then
-					player.print({"", {"gui-description.MFPlacedNoEnoughtSpace"}})
-					return nil
-				else return {player.position.x, player.position.y-5} end
-			else return {player.position.x, player.position.y+5} end
-		else return {player.position.x-5, player.position.y} end
-	else return {player.position.x+5, player.position.y} end
---]]
 end
 
 -- Unlock a recipe for all Players --
@@ -417,7 +404,7 @@ end
 function Util.addMobileFactory(player)
 	-- Get the Player Inventory --
 	local inv = player.get_main_inventory()
-    -- Give player Mobile Factory at start --
+	-- Give player Mobile Factory at start --
 	if settings.startup["MF-first-MF"].value == "player creation" then
 		-- Add a Mobile Factory to the player inventaire --
 		if inv.can_insert({name="MobileFactory"}) then
@@ -489,11 +476,11 @@ end
 
 -- Calcule the Distance between two Positions --
 function Util.distance(position1, position2)
-  local x1 = position1[1] or position1.x
-  local y1 = position1[2] or position1.y
-  local x2 = position2[1] or position2.x
-  local y2 = position2[2] or position2.y
-  return ((x1 - x2) ^ 2 + (y1 - y2) ^ 2) ^ 0.5
+	local x1 = position1[1] or position1.x
+	local y1 = position1[2] or position1.y
+	local x2 = position2[1] or position2.x
+	local y2 = position2[2] or position2.y
+	return ((x1 - x2) ^ 2 + (y1 - y2) ^ 2) ^ 0.5
 end
 
 -- Transform big numbers to readable numbers --
@@ -564,19 +551,35 @@ end
 
 -- Check if the Player can interact with the Structure --
 function Util.canUse(MFPlayer, obj)
-	if valid(obj) == false then return false end
-	if getMFPlayer(obj.player) == MFPlayer then return true end
-	if obj.MF.varTable.allowedPlayers[MFPlayer.index] == true then return true end
+	if obj.player == MFPlayer.name then return true end
+	if obj.MF then
+		if obj.MF.varTable.allowedPlayers[MFPlayer.index] == true then return true end
+	elseif obj.varTable then
+		if obj.varTable.allowedPlayers[MFPlayer.index] == true then return true end		
+	end
 	return false
 end
 
--- Check if the Player can modify the Structure Settings --
-function canModify(playerName, structure)
-	if playerName == nil or structure == nil or structure.last_user == nil then return false end
-	if playerName == structure.last_user.name then return true end
-	local MF2 = getMF(structure.last_user.name)
+-- Check if the Player can modify the Settings --
+function canModify(playerName, argToCheck)
+	if playerName == nil or argToCheck == nil then return false end
+	local owner = ""
+
+	if type(argToCheck) == "string" then
+		owner = argToCheck
+	else
+		if valid(argToCheck) and argToCheck.unit_number ~= nil then
+			local obj = global.entsTable[argToCheck.unit_number]
+			if valid(obj) and obj.player ~= nil and valid(game.players[obj.player]) then
+				owner = obj.player
+			end
+		end
+	end
+
+	if playerName == owner then return true end
+	local MF2 = getMF(owner)
 	if MF2 ~= nil and MF2.varTable.allowToModify == true then
-		return
+		return true
 	end
 	return false
 end

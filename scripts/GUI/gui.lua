@@ -126,7 +126,6 @@ function GUI.guiOpened(event)
 
 	-- Create and save the Tooltip gui --
 	player.opened = GUI.createTooltipGUI(player, obj).gui
-	
 end
 
 -- A GUI was closed --
