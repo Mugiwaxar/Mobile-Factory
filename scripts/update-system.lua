@@ -48,6 +48,8 @@ function UpSys.scanObjs()
   UpSys.addTable(global.deepStorageTable)
   UpSys.addTable(global.deepTankTable)
   UpSys.addTable(global.pdpTable)
+  UpSys.addTable(global.networkExplorerTable)
+  UpSys.addTable(global.dataAssemblerTable)
 
   -- Save the last scan tick --
   global.upSysLastScan = game.tick

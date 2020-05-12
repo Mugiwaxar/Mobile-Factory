@@ -49,6 +49,7 @@ function MF:new()
 	t.varTable = {}
 	t.varTable.tech = {}
 	t.varTable.tanks = {}
+	t.varTable.allowedPlayers = {}
 	t.varTable.jets = { ["cjTableSize"] = _MFConstructionJetDefaultTableSize }
 	UpSys.addObj(t)
 	return t
@@ -98,7 +99,7 @@ function MF:getTooltipInfos(GUIObj, gui, justCreated)
 	GUIObj:addSimpleButton("MFOpenI," ..GUIObj.MFPlayer.name, frame, {"gui-description.OpenInventory"})
 
 	-- Check if the Parameters can be modified --
-	if canModify(getPlayer(gui.player_index).name, self.ent) == false or justCreated ~= true then return end
+	if canModify(getPlayer(gui.player_index).name, self.player) == false or justCreated ~= true then return end
 
 	-- Create the Lasers Title --
 	local LasersFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Lasers"}, _mfOrange)
@@ -290,7 +291,7 @@ function MF:scanEnt()
 			keep = true
 		end
 		-- Removed not keeped Entity --
-		if keep == false or self.player ~= entity.last_user.name then
+		if keep == false or valid(entity.last_user) == false or self.player ~= entity.last_user.name then
 			self.entitiesAround[k] = nil
 		end
 	end
