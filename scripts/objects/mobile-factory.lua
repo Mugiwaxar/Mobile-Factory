@@ -290,7 +290,7 @@ function MF:scanEnt()
 			keep = true
 		end
 		-- Removed not keeped Entity --
-		if keep == false or self.player ~= entity.last_user.name then
+		if keep == false or valid(entity.last_user) == false or self.player ~= entity.last_user.name then
 			self.entitiesAround[k] = nil
 		end
 	end
