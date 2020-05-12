@@ -131,11 +131,10 @@ function FI:getTooltipInfos(GUIObj, gui, justCreated)
 	GUIObj:addDataNetworkFrame(gui, self)
 	
     -- Check if the Parameters can be modified --
-	if canModify(getPlayer(gui.player_index).name, self.player) == false or justCreated ~= true or valid(self.dataNetwork) == false then return end
+	if justCreated ~= true or valid(self.dataNetwork) == false then return end
 	
 	-- Create the Parameters Title --
-	local titleFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
-	GUIObj.SettingsFrame.visible = true
+	local titleFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Settings"}, _mfOrange)
 
 	-- Create the Mode Selection --
 	GUIObj:addLabel("", titleFrame, {"gui-description.SelectMode"}, _mfOrange)
@@ -166,6 +165,7 @@ function FI:getTooltipInfos(GUIObj, gui, justCreated)
 	end
 	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
 	GUIObj:addDropDown("FITarget" .. self.ent.unit_number, titleFrame, invs, selectedIndex)
+
 end
 
 -- Change the Mode --

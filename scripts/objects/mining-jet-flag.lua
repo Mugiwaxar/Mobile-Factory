@@ -77,31 +77,51 @@ end
 -- Tooltip Infos --
 function MJF:getTooltipInfos(GUIObj, gui, justCreated)
 
-	-- Create the Title --
-	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
+	-- Get the Flows --
+	local informationFlow = GUIObj.InformationFlow
+	local inventoryFlow = GUIObj.InventoryFlow
+	local settingFlow = GUIObj.SettingsFlow
+
+	-- Create the GUI Titles --
+	if justCreated == true then
+
+		-- Create the Information Title --
+		local informationTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
+		informationFlow = GUIObj:addFlow("InformationFlow", informationTitle, "vertical", true)
+
+		-- Create the Inventory Title --
+		local inventoryTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
+		inventoryFlow = GUIObj:addFlow("InventoryFlow", inventoryTitle, "vertical", true)
+
+		-- Create the Settings Title --
+		local settingsTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Settings"}, _mfOrange)
+		settingFlow = GUIObj:addFlow("SettingsFlow", settingsTitle, "vertical", true)
+
+	end
+
+	-- Clear the Flows --
+	informationFlow.clear()
+	inventoryFlow.clear()
 
 	-- Create the Resource Label --
-	GUIObj:addDualLabel(frame, {"", {"gui-description.NumberOfOrePath"}, ": "}, table_size(self.oreTable), _mfOrange, _mfGreen)
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.NumberOfOrePath"}, ": "}, table_size(self.oreTable), _mfOrange, _mfGreen)
 
 	-- Create the Inventory Full Label --
 	if self.TargetInventoryFull == true then
-		GUIObj:addLabel("", frame, {"gui-description.InvalidTargetInventory"}, _mfRed)
+		GUIObj:addLabel("", informationFlow, {"gui-description.InvalidTargetInventory"}, _mfRed)
 	end
 
+	-- Create the Mobile Factory No Found Label --
 	if self.MFNotFound == true then
-		GUIObj:addLabel("", frame, {"gui-description.MFNotFound"}, _mfRed)
+		GUIObj:addLabel("", informationFlow, {"gui-description.MFNotFound"}, _mfRed)
 	end
-
-	-- Create the Inventory Title --
-	local invFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
-	invFrame.visible = false
 
 	-- Create the Items Table --
-	local table = GUIObj:addTable("", invFrame, 5)
+	local table = GUIObj:addTable("", inventoryFlow, 5)
 
 	-- Create the Inventory Frame --
 	for name, count in pairs(self.inventory) do
-		invFrame.visible = true
+		inventoryFlow.visible = true
 		-- Check the Item --
 		if name == nil or count == nil or count == 0 or game.item_prototypes[name] == nil then goto continue end
 		-- Create the Button
@@ -109,34 +129,28 @@ function MJF:getTooltipInfos(GUIObj, gui, justCreated)
 		::continue::
 	end
 
-	-- Stop of the Settings can't be Modified --
-	if canModify(getPlayer(gui.player_index).name, self.ent) == false or justCreated ~= true then return end
-
-	-- Create the Title --
-	local settingFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
-	GUIObj.SettingsFrame.visible = true
-
 	-- Create the Select Deep Storage Label --
-	GUIObj:addLabel("", settingFrame, {"", {"gui-description.TargetedStorage"}}, _mfOrange)
-
-	local invs = {{"gui-description.All"}}
-	local selectedIndex = 1
-	local i = 1
-	for k, deepStorage in pairs(global.deepStorageTable) do
-		if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepStorage) then
-			i = i + 1
-			local itemText = ""
-			if deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
-				itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, " - ", deepStorage.player, ")"}
-			end
-			invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
-			if self.selectedInv == deepStorage then
-				selectedIndex = i
+	if justCreated == true then
+		GUIObj:addLabel("", settingFlow, {"", {"gui-description.TargetedStorage"}}, _mfOrange)
+		local invs = {{"gui-description.All"}}
+		local selectedIndex = 1
+		local i = 1
+		for k, deepStorage in pairs(global.deepStorageTable) do
+			if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepStorage) then
+				i = i + 1
+				local itemText = ""
+				if deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
+					itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, " - ", deepStorage.player, ")"}
+				end
+				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
+				if self.selectedInv == deepStorage then
+					selectedIndex = i
+				end
 			end
 		end
+		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
+		GUIObj:addDropDown("MJF" .. self.ent.unit_number, settingFlow, invs, selectedIndex)
 	end
-	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-	GUIObj:addDropDown("MJF" .. self.ent.unit_number, settingFrame, invs, selectedIndex)
 end
 
 -- Change the Targeted Inventory --

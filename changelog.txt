@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.159
+Date: 12/05/2020
+  Scripting:
+    - Rewrite of all Tooltip GUIs
+    - Removed the canModify() function (Players can see or can't see the Structures GUI, canModify() is useless)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.158
 Date: 12/05/2020
   Bugfixes:
@@ -6,19 +12,15 @@ Date: 12/05/2020
     - allowedPlayers table went un-inited
     - Network Explorer GUI bug? (wasn't appearing)
     - Data Assembler GUI bug? (wasn't appearing)
----------------------------------------------------------------------------------------------------
-Version: 0.0.157
-Date: 11/05/2020
-  Bugfixes:
     - missing AllowedPlayers table on new Mobile Factory
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.157
 Date: 11/05/2020
   Bugfixes:
     - scanEnt(), some entities won't have last_user
-
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.156
+Date: 11/05/2020
   Features:
     - Added Liquid Quatron (1-20)
     - Added missing Quatron Cell (Between 1-20)
@@ -31,7 +33,7 @@ Version: 0.0.156
     - Fixed a crash related to the Network Explorer
   Scripting:
     - Rewrite of the Multiplayer Code (Permissions)
-    - Now, the global.entsTable keys are the "unit numbers" of the Structure associated when there are one (global.entsTable[obj.unit_number] = obj)
+    - Now, the global.entsTable keys are the "unit numbers" of the Structure associated when there is one (global.entsTable[obj.unit_number] = obj)
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.155
 Date: 10/05/2020

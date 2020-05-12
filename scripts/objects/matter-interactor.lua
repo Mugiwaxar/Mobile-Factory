@@ -121,6 +121,13 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	-- Create the Data Network Frame --
 	GUIObj:addDataNetworkFrame(gui, self)
 
+	-- Update the Filter --
+	if game.item_prototypes[self.selectedFilter] ~= nil and GUIObj["MIFilter" .. tostring(self.ent.unit_number)] ~= nil then
+		GUIObj["MIFilter" .. tostring(self.ent.unit_number)].elem_value = self.selectedFilter
+	end
+
+	if justCreated ~= true then return end
+
 	-- Create the Inventory Title --
 	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
 
@@ -130,26 +137,17 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 
 	-- Create the Inventory Button --
 	GUIObj:addSimpleButton("MIOpenI," .. tostring(self.ent.unit_number), frame, {"gui-description.OpenInventory"})
-
-	-- Update the Filter --
-	if game.item_prototypes[self.selectedFilter] ~= nil and GUIObj["MIFilter" .. tostring(self.ent.unit_number)] ~= nil then
-		GUIObj["MIFilter" .. tostring(self.ent.unit_number)].elem_value = self.selectedFilter
-	end
 	
 	-- Check if the Parameters can be modified --
-	if canModify(getPlayer(gui.player_index).name, self.player) == false or valid(self.dataNetwork) == false then return end
+	if valid(self.dataNetwork) == false then return end
 
 	if self.lastSelectedPlayer ~= self.selectedPlayer then
 		self.lastSelectedPlayer = self.selectedPlayer
 		self.selectedInv = 0
-		if valid(GUIObj.settingsFrame) and valid(GUIObj.settingsFrame["titleFrame"..self.ent.unit_number]) then GUIObj.SettingsFrame["titleFrame"..self.ent.unit_number].destroy() end
-		justCreated = true
 	end
-	if justCreated ~= true then return end
 	
 	-- Create the Parameters Title --
-	local titleFrame = GUIObj:addTitledFrame("titleFrame"..self.ent.unit_number, GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
-	GUIObj.SettingsFrame.visible = true
+	local titleFrame = GUIObj:addTitledFrame("titleFrame"..self.ent.unit_number, gui, "vertical", {"gui-description.Settings"}, _mfOrange)
 
 	-- Create the Filter Selection --
 	GUIObj:addLabel("", titleFrame, {"gui-description.ChangeFilter"}, _mfOrange)
@@ -170,10 +168,10 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	else
 		table.insert(invs, {"gui-description.None"})
 	end
+
+	-- Create the Inventory and Deep Storage List --
 	local selectedIndex = 1
-
 	local i = 1
-
 	for k, deepStorage in pairs(global.deepStorageTable) do
 		if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepStorage) then
 			if not playerInvs[deepStorage.player] then playerInvs[deepStorage.player] = true end
@@ -215,6 +213,7 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	-- Create the Inventory Selection --
 	GUIObj:addLabel("", titleFrame, {"gui-description.MSTarget"}, _mfOrange)
 	GUIObj:addDropDown("MITarget" .. self.ent.unit_number, titleFrame, invs, selectedIndex)
+
 end
 
 -- Change the Mode --

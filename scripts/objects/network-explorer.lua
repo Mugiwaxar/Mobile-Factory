@@ -99,48 +99,12 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 	-- Create the Data Network Frame --
 	GUIObj:addDataNetworkFrame(gui, self)
 
-	-- Check if the Parameters can be modified --
-	if canModify(getPlayer(gui.player_index).name, self.player) == false or valid(self.dataNetwork) == false then return end
+	-- Get the Flows --
+	local inventoryFlow = GUIObj.InventoryFlow
+	local inventoryScrollPane = GUIObj.InventoryScrollPane
+	local playerInventoryScrollPane = GUIObj.PlayerInventoryScrollPane
 
-	-- Get the Textfield Text --
-	local searchText = nil
-	if GUIObj[self.entID .. ":SearchTextField"] ~= nil then
-		searchText = GUIObj[self.entID .. ":SearchTextField"].text
-	end
 
-	-- Create the Inventory Title --
-	local inventoryFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.NetworkInventory"}, _mfOrange)
-
-	-- Create the total Items Label --
-	if self.dataNetwork ~= nil and self.dataNetwork.dataCenter ~= nil and self.dataNetwork.dataCenter.invObj ~= nil then
-		local inv = self.dataNetwork.dataCenter.invObj
-		GUIObj:addDualLabel(inventoryFrame, {"", {"gui-description.INVTotalItems"}, ":"}, Util.toRNumber(inv.usedCapacity) .. "/" .. Util.toRNumber(inv.maxCapacity), _mfOrange, _mfGreen, nil, nil, inv.usedCapacity .. "/" .. inv.maxCapacity)
-	end
-
-	-- Create the Inventory Scroll Pane --
-	local inventoryScrollPane = GUIObj:addScrollPane("InventoryScrollPane", inventoryFrame, 500, true)
-	inventoryScrollPane.style = "MF_Inventory_scroll_pan"
-	inventoryScrollPane.style.minimal_width = 308
-	inventoryScrollPane.style.minimal_height = 400
-	inventoryScrollPane.style.vertically_stretchable = true
-
-	-- Create the Inventory List --
-	createDNInventoryFrame(GUIObj, inventoryScrollPane, GUIObj.MFPlayer, "NE," .. self.entID .. ",", self.dataNetwork.dataCenter.invObj, 8, true, true, true, searchText)
-
-	-- Create the Player Inventory Title --
-	local playerInventoryFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.PlayerInventory"}, _mfOrange)
-
-	-- Create the Player Inventory Scroll Pane --
-	local playerInventoryScrollPane = GUIObj:addScrollPane("PlayerInventoryScrollPane", playerInventoryFrame, 500, true)
-	playerInventoryScrollPane.style = "MF_Inventory_scroll_pan"
-	playerInventoryScrollPane.style.minimal_width = 308
-	playerInventoryScrollPane.style.minimal_height = 400
-	playerInventoryScrollPane.style.vertically_stretchable = true
-
-	-- Create the Player Inventory List --
-	createPlayerInventoryFrame(GUIObj, playerInventoryScrollPane, GUIObj.MFPlayer, 8, "NE," .. self.entID .. ",", searchText)
-
-	-- Create the Informations Frame --
 	if justCreated == true then
 
 		-- Create the Localised name List --
@@ -162,21 +126,77 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 			end
 		end
 
-		GUIObj.SettingsFrame.visible = true
-		local titleFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Information"}, _mfOrange)
+		-- Create the Inventory Title and Flow --
+		local inventoryFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.NetworkInventory"}, _mfOrange)
+		inventoryFlow = GUIObj:addFlow("InventoryFlow", inventoryFrame, "vertical", true)
+
+		-- Create the Inventory Scroll Pane --
+		inventoryScrollPane = GUIObj:addScrollPane("InventoryScrollPane", inventoryFrame, 500, true)
+		inventoryScrollPane.style = "MF_Inventory_scroll_pan"
+		inventoryScrollPane.style.minimal_width = 308
+		inventoryScrollPane.style.minimal_height = 400
+		inventoryScrollPane.style.vertically_stretchable = true
+
+		-- Create the Player Inventory Title --
+		local playerInventoryTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.PlayerInventory"}, _mfOrange)
+
+		-- Create the Player Inventory Scroll Pane --
+		playerInventoryScrollPane = GUIObj:addScrollPane("PlayerInventoryScrollPane", playerInventoryTitle, 500, true)
+		playerInventoryScrollPane.style = "MF_Inventory_scroll_pan"
+		playerInventoryScrollPane.style.minimal_width = 308
+		playerInventoryScrollPane.style.minimal_height = 400
+		playerInventoryScrollPane.style.vertically_stretchable = true
+
+		-- Create the Information Title --
+		local titleFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
+
+		-- Create the Search Flow --
 		local flow = GUIObj:addFlow("", titleFrame, "horizontal")
-		GUIObj:addLabel("Label", flow, {"", {"gui-description.ItemSearchText"}, ":"}, _mfOrange, "", false)
-		local textField = GUIObj:addTextField(self.entID .. ":SearchTextField", flow, "", {"gui-description.ItemSearchTextTT"}, true, false, false, false, false)
-		textField.style.maximal_width = 130
 		flow.style.vertical_align = "center"
 		flow.style.bottom_padding = 10
+
+		-- Create the Search Label --
+		GUIObj:addLabel("Label", flow, {"", {"gui-description.ItemSearchText"}, ":"}, _mfOrange, "", false)
+
+		-- Create the Search TextField
+		local textField = GUIObj:addTextField(self.entID .. ":SearchTextField", flow, "", {"gui-description.ItemSearchTextTT"}, true, false, false, false, false)
+		textField.style.maximal_width = 130
+
+		-- Create the Information Labels --
 		GUIObj:addLabel("", titleFrame, {"gui-description.ItemTransferText"}, _mfGreen)
 		GUIObj:addLabel("", titleFrame, {"gui-description.ItemTransferText2"}, _mfGreen)
 		GUIObj:addLabel("", titleFrame, {"gui-description.ItemTransferText3"}, _mfGreen)
 		GUIObj:addLabel("", titleFrame, {"gui-description.ItemTransferText4"}, _mfGreen)
 		GUIObj:addLabel("", titleFrame, {"gui-description.ItemTransferText5"}, _mfGreen)
 		GUIObj:addLabel("", titleFrame, {"gui-description.ItemTransferText6"}, _mfGreen)
+
 	end
+
+	-- Clear the Flow and the Scroll Panes --
+	inventoryFlow.clear()
+	inventoryScrollPane.clear()
+	playerInventoryScrollPane.clear()
+
+	-- Check the Data Network --
+	if valid(self.dataNetwork) == false or self.active == false then return end
+
+	-- Get the Textfield Text --
+	local searchText = nil
+	if GUIObj[self.entID .. ":SearchTextField"] ~= nil then
+		searchText = GUIObj[self.entID .. ":SearchTextField"].text
+	end
+
+	-- Create the total Items Label --
+	if self.dataNetwork ~= nil and self.dataNetwork.dataCenter ~= nil and self.dataNetwork.dataCenter.invObj ~= nil then
+		local inv = self.dataNetwork.dataCenter.invObj
+		GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.INVTotalItems"}, ":"}, Util.toRNumber(inv.usedCapacity) .. "/" .. Util.toRNumber(inv.maxCapacity), _mfOrange, _mfGreen, nil, nil, inv.usedCapacity .. "/" .. inv.maxCapacity)
+	end
+
+	-- Create the Inventory List --
+	createDNInventoryFrame(GUIObj, inventoryScrollPane, GUIObj.MFPlayer, "NE," .. self.entID .. ",", self.dataNetwork.dataCenter.invObj, 8, true, true, true, searchText)
+
+	-- Create the Player Inventory List --
+	createPlayerInventoryFrame(GUIObj, playerInventoryScrollPane, GUIObj.MFPlayer, 8, "NE," .. self.entID .. ",", searchText)
 	
 end
 

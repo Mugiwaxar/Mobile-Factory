@@ -560,30 +560,6 @@ function Util.canUse(MFPlayer, obj)
 	return false
 end
 
--- Check if the Player can modify the Settings --
-function canModify(playerName, argToCheck)
-	if playerName == nil or argToCheck == nil then return false end
-	local owner = ""
-
-	if type(argToCheck) == "string" then
-		owner = argToCheck
-	else
-		if valid(argToCheck) and argToCheck.unit_number ~= nil then
-			local obj = global.entsTable[argToCheck.unit_number]
-			if valid(obj) and obj.player ~= nil and valid(game.players[obj.player]) then
-				owner = obj.player
-			end
-		end
-	end
-
-	if playerName == owner then return true end
-	local MF2 = getMF(owner)
-	if MF2 ~= nil and MF2.varTable.allowToModify == true then
-		return true
-	end
-	return false
-end
-
 -- Check if We Have Necessary Tiles --
 function checkNeededTiles()
 	local tilesToCheck = {

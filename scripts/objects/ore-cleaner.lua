@@ -93,59 +93,68 @@ end
 
 -- Tooltip Infos --
 function OC:getTooltipInfos(GUIObj, gui, justCreated)
-	
-	-- Create the Title --
-	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
 
+	-- Get the Flow --
+	local informationFlow = GUIObj.InformationFlow
+
+	if justCreated == true then
+
+		-- Create the Information Title --
+		local informationTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
+		informationFlow = GUIObj:addFlow("InformationFlow", informationTitle, "vertical", true)
+
+		-- Create the Settings Title --
+		local settingsTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Settings"}, _mfOrange)
+
+		-- Create the Select Storage Label --
+		GUIObj:addLabel("", settingsTitle, {"", {"gui-description.TargetedStorage"}}, _mfOrange)
+
+		-- Create the Storage List --
+		local invs = {{"gui-description.All"}}
+		local selectedIndex = 1
+		local i = 1
+		for k, deepStorage in pairs(global.deepStorageTable) do
+			if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepStorage) then
+				i = i + 1
+				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepStorage.player, ")"}
+				if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
+					itemText = {"", " (", game.item_prototypes[deepStorage.filter].localised_name, " - ", deepStorage.player, ")"}
+				elseif deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
+					itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, " - ", deepStorage.player, ")"}
+				end
+				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
+				if self.selectedInv == deepStorage then
+					selectedIndex = i
+				end
+			end
+		end
+		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
+		GUIObj:addDropDown("OC" .. self.ent.unit_number, settingsTitle, invs, selectedIndex)
+
+	end
+
+	-- Clear the Flow --
+	informationFlow.clear()
+	
 	-- Create the Quatron Charge --
-	GUIObj:addDualLabel(frame, {"", {"gui-description.Charge"}, ": "}, self.charge, _mfOrange, _mfGreen)
-	GUIObj:addProgressBar("", frame, "", "", false, _mfPurple, self.charge/_mfFEMaxCharge, 100)
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Charge"}, ": "}, self.charge, _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.charge/_mfFEMaxCharge, 100)
 
 	-- Create the Quatron Purity --
-	GUIObj:addDualLabel(frame, {"", {"gui-description.Purity"}, ": "}, self.purity, _mfOrange, _mfGreen)
-	GUIObj:addProgressBar("", frame, "", "", false, _mfPurple, self.purity/100, 100)
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Purity"}, ": "}, self.purity, _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.purity/100, 100)
 
 	-- Create the Speed --
-	GUIObj:addDualLabel(frame, {"", {"gui-description.Speed"}, ": "}, self:orePerExtraction() .. " ore/s", _mfOrange, _mfGreen)
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Speed"}, ": "}, self:orePerExtraction() .. " ore/s", _mfOrange, _mfGreen)
 
 	-- Create the Resource Label --
-	GUIObj:addDualLabel(frame, {"", {"gui-description.NumberOfOrePath"}, ": "}, table_size(self.oreTable), _mfOrange, _mfGreen)
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.NumberOfOrePath"}, ": "}, table_size(self.oreTable), _mfOrange, _mfGreen)
 
 	-- Create the Mobile Factory Too Far Label --
 	if self.MFTooFar == true then
-		GUIObj:addLabel("", frame, {"", {"gui-description.MFTooFar"}}, _mfRed)
+		GUIObj:addLabel("", informationFlow, {"", {"gui-description.MFTooFar"}}, _mfRed)
 	end
 
-	-- Stop of the Settings can't be Modified --
-	if canModify(getPlayer(gui.player_index).name, self.player) == false or justCreated ~= true then return end
-
-	-- Create the Title --
-	local settingFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
-	GUIObj.SettingsFrame.visible = true
-
-	-- Create the Select Storage Label --
-	GUIObj:addLabel("", settingFrame, {"", {"gui-description.TargetedStorage"}}, _mfOrange)
-
-	local invs = {{"gui-description.All"}}
-	local selectedIndex = 1
-	local i = 1
-	for k, deepStorage in pairs(global.deepStorageTable) do
-		if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepStorage) then
-			i = i + 1
-			local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepStorage.player, ")"}
-			if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
-				itemText = {"", " (", game.item_prototypes[deepStorage.filter].localised_name, " - ", deepStorage.player, ")"}
-			elseif deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
-				itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, " - ", deepStorage.player, ")"}
-			end
-			invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
-			if self.selectedInv == deepStorage then
-				selectedIndex = i
-			end
-		end
-	end
-	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-	GUIObj:addDropDown("OC" .. self.ent.unit_number, settingFrame, invs, selectedIndex)
 end
 
 -- Change the Targeted Inventory --

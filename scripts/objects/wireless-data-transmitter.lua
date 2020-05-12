@@ -151,9 +151,6 @@ function WDT:getTooltipInfos(GUIObj, gui)
 	-- Create the Data Network Frame --
 	local DNFrame = GUIObj:addDataNetworkFrame(gui, self)
 
-	-- Check the Connected state --
-	if DNFrame == false then return end
-
 	-- Create the Connected Receivers Label --
 	local connectedLabel = GUIObj:addLabel("", DNFrame, {"", {"gui-description.ConnectedReceiver"}}, _mfOrange)
 	connectedLabel.visible = false

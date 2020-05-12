@@ -18,14 +18,7 @@ function GUI.createTooltipGUI(player, obj)
 	GUIObj.MainScrollPane.style.maximal_height = 800
 
 	-- Add the Main Flow --
-	local mainFlow = GUIObj:addFlow("MainFlow", mainSrollPane, "horizontal")
-
-	-- Add the Infos Flow --
-	GUIObj:addFlow("InfosFrame", mainFlow, "horizontal", true)
-
-	-- Add the Settings Flow --
-	GUIObj:addFlow("SettingsFrame", mainFlow, "horizontal", true)
-	GUIObj.SettingsFrame.visible = false
+	GUIObj:addFlow("MainFlow", mainSrollPane, "horizontal", true)
 
 	-- Update the GUI --
 	GUI.updateMFTooltipGUI(GUIObj, true)
@@ -45,9 +38,9 @@ function GUI.updateMFTooltipGUI(GUIObj, justCreated)
 	if valid(GUIObj.currentObject) == false or GUIObj.currentObject.getTooltipInfos == nil then return end
 
 	-- Clear the Info Flow Pane --
-	GUIObj.InfosFrame.clear()
+	-- GUIObj.MainFlow.clear()
 
 	-- Add the Object GUI --
-	GUIObj.currentObject:getTooltipInfos(GUIObj, GUIObj.InfosFrame, justCreated)
+	GUIObj.currentObject:getTooltipInfos(GUIObj, GUIObj.MainFlow, justCreated)
 
 end

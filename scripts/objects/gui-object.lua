@@ -93,7 +93,7 @@ function GO:addTitledFrame(name, gui, direction, text, color, save)
     frame.style.horizontally_stretchable = true
     local titleFrame = self:addFrame("", frame, "horizontal")
     local titleFlow = self:addFlow("", titleFrame, "horizontal")
-    local label = self:addLabel("", titleFlow, text, color, "", false, "TitleFont")
+    local label = self:addLabel( name .. "Label", titleFlow, text, color, "", save, "TitleFont")
     titleFlow.style.horizontal_align = "center"
     return frame
 end
@@ -409,12 +409,33 @@ end
 
 -- Create a Data Network Frame --
 function GO:addDataNetworkFrame(gui, obj)
-    if valid(obj.dataNetwork) == true then
-		return obj.dataNetwork:getTooltipInfos(self, gui, obj)
-	else
-        self:addTitledFrame("", gui, "vertical", {"gui-description.DNNoLinked"}, _mfRed)
-        return false
-	end
+
+    -- Get the Title and the Flow --
+    local dataNetworkTitle = self.DataNetworkTitle
+    local dataNetworkFlow = self.DataNetworkFlow
+
+    if dataNetworkTitle == nil or dataNetworkTitle.valid == false or dataNetworkFlow == nil or dataNetworkFlow.valid == false then
+        -- Create the Title and the Flow --
+        dataNetworkTitle = self:addTitledFrame("DataNetworkTitle", gui, "vertical", {"gui-description.DataNetwork"}, _mfOrange, true)
+        dataNetworkFlow = self:addFlow("DataNetworkFlow", dataNetworkTitle, "vertical", true)
+    end
+
+    -- Clear the Flow --
+    dataNetworkFlow.clear()
+
+    if valid(obj.dataNetwork) == false then
+        self.DataNetworkTitleLabel.caption = {"gui-description.DNNoLinked"}
+        self.DataNetworkTitleLabel.style.font_color = _mfRed
+        return dataNetworkFlow
+    else
+        self.DataNetworkTitleLabel.caption = {"gui-description.DataNetwork"}
+        self.DataNetworkTitleLabel.style.font_color = _mfOrange
+    end
+
+    obj.dataNetwork:getTooltipInfos(self, dataNetworkFlow, obj)
+
+    return dataNetworkFlow
+    
 end
 
 -- Create a Data Network Inventory Frame --

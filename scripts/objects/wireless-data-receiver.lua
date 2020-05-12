@@ -168,11 +168,10 @@ function WDR:getTooltipInfos(GUIObj, gui, justCreated)
 	end
 	
 	-- Check if the Parameters can be modified --
-	if canModify(getPlayer(gui.player_index).name, self.player) == false or justCreated ~= true then return end
+	if justCreated ~= true then return end
 
 	-- Create the Parameters Title --
-	local titleFrame = GUIObj:addTitledFrame("", GUIObj.SettingsFrame, "vertical", {"gui-description.Settings"}, _mfOrange)
-	GUIObj.SettingsFrame.visible = true
+	local titleFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Settings"}, _mfOrange)
 
 	-- Create the Transmitter Selection --
 	local transmitters = {{"gui-description.None"}}
