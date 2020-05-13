@@ -66,6 +66,7 @@ _mfSyncAreaIgnoredTypes = {
 	["highlight-box"] = true,
 	["speech-bubble"] = true,
 	["item-request-proxy"] = true,
+	["sticker"] = true,
 }
 
 -- Mobile Factory Internal Distrubution --
