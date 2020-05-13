@@ -19,8 +19,10 @@ end
 
 -- Update System: Scan Entities --
 function UpSys.scanObjs()
+
   -- Clear the Entities Table --
   global.entsTable = {}
+
   -- Clear the Tick Table --
   for k, j in pairs(global.upsysTickTable) do
     if k < game.tick then
@@ -51,8 +53,16 @@ function UpSys.scanObjs()
   UpSys.addTable(global.networkExplorerTable)
   UpSys.addTable(global.dataAssemblerTable)
 
+  -- Add all Internal Energy Cubes --
+  for k, MF in pairs(global.MFTable) do
+    if valid(MF.internalEnergyObj) then
+      UpSys.addObject(MF.internalEnergyObj)
+    end
+  end
+
   -- Save the last scan tick --
   global.upSysLastScan = game.tick
+  
 end
 
 -- Update System: Add an Object to the MF Entities Table --

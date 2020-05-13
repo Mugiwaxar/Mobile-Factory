@@ -1,6 +1,12 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.159
 Date: 12/05/2020
+  Features:
+    - Added the Internal Energy Cube, an Energy Cube that represent the Mobile Factory Internal Energy
+    - The Internal Energy Cube was added inside the Control Center, it can be removed but can only be placed inside the Mobile Factory
+---------------------------------------------------------------------------------------------------
+Version: 0.0.159
+Date: 12/05/2020
   Scripting:
     - Rewrite of all Tooltip GUIs
     - Removed the canModify() function (Players can see or can't see the Structures GUI, canModify() is useless)

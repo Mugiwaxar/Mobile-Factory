@@ -167,8 +167,8 @@ function GUI.updateMFInfos(GUIObj)
 			mfShielValue = MF:shield() / MF:maxShield()
 			mfShieldText = {"", {"gui-description.mfShield"}, ": ", math.floor(MF:shield()), "/", MF:maxShield()}
 		end
-		mfEnergyValue = 1 - (math.floor(100 - MF.internalEnergy / MF.maxInternalEnergy * 100)) / 100
-		mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF.internalEnergy), "J/", Util.toRNumber(MF.maxInternalEnergy), "J"}
+		mfEnergyValue = 1 - (math.floor(100 - MF.internalEnergyObj:energy() / MF.internalEnergyObj:maxEnergy() * 100)) / 100
+		mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF.internalEnergyObj:energy()), "J/", Util.toRNumber(MF.internalEnergyObj:maxEnergy()), "J"}
 		mfQuatronValue = 0
 		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", 0, "\n", {"gui-description.mQuatronPurity"}, ": ", 0}
 		mfJumpDriveValue = (math.floor(100 - MF.jumpTimer / MF.baseJumpTimer * 100)) / 100
