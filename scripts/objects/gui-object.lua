@@ -439,7 +439,7 @@ function GO:addDataNetworkFrame(gui, obj)
 end
 
 -- Create a Data Network Inventory Frame --
-function createDNInventoryFrame(GUIObj, gui, MFPlayer, buttonFirstName, inventory, columnsNumber, showDeepTank, showDeepStorage, showInventory, filter)
+function createDNInventoryFrame(GUIObj, gui, MFPlayer, buttonFirstName, inventory, columnsNumber, showDeepTank, showDeepStorage, showInventory, filter,  nePlayer)
 
     -- Create the Table --
     local table = GUIObj:addTable("", gui, columnsNumber or 5)
@@ -448,7 +448,7 @@ function createDNInventoryFrame(GUIObj, gui, MFPlayer, buttonFirstName, inventor
     if showDeepTank == true then
         for k, deepTank in pairs(global.deepTankTable) do
             -- Check if the Deep Tank Belong to the Player --
-            if deepTank.player ~= MFPlayer.name then goto continue end
+            if deepTank.player ~= (nePlayer or MFPlayer.name) then goto continue end
             -- Get Variables --
             local name = deepTank.inventoryFluid or deepTank.filter
             local count = deepTank.inventoryCount or 0
@@ -473,7 +473,7 @@ function createDNInventoryFrame(GUIObj, gui, MFPlayer, buttonFirstName, inventor
     if showDeepStorage == true then
         for k, deepStorage in pairs(global.deepStorageTable) do
             -- Check if the Deep Storage Belong to the Player --
-            if deepStorage.player ~= MFPlayer.name then goto continue end
+            if deepStorage.player ~= (nePlayer or MFPlayer.name) then goto continue end
             -- Get Variables --
             local name = deepStorage.inventoryItem or deepStorage.filter
             local count = deepStorage.inventoryCount or 0

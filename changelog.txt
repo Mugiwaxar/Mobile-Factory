@@ -3,6 +3,7 @@ Version: 0.0.160
 Date: 13/05/2020
   Bugfixes:
     - sync area sticker error
+    - Network Explorer multiplayer compatibility
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.159
 Date: 12/05/2020
