@@ -26,7 +26,7 @@ function EC:new(object)
 	t.MF = getMF(t.player)
 	t.entID = object.unit_number
 	-- Draw the Sprite --
-	t.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite0", x_scale=1/325*(33*3), y_scale=1/325*(33*3), target=object, surface=object.surface, target_offset={0, -0.3}, render_layer=131}
+	t.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite0", x_scale=1/7, y_scale=1/7, target=object, surface=object.surface, target_offset={0, -0.3}, render_layer=131}
 	UpSys.addObj(t)
 	return t
 end
@@ -83,37 +83,12 @@ function EC:update()
 	-- Update the Sprite --
 	local spriteNumber = math.ceil(self.ent.energy/self.ent.prototype.electric_energy_source_prototype.buffer_capacity*10)
 	rendering.destroy(self.spriteID)
-	self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite" .. spriteNumber, x_scale=1/325*(33*3), y_scale=1/325*(33*3), target=self.ent, surface=self.ent.surface, target_offset={0, -0.3}, render_layer=131}
+	self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite" .. spriteNumber, x_scale=1/7, y_scale=1/7, target=self.ent, surface=self.ent.surface, target_offset={0, -0.3}, render_layer=131}
 end
 
 
 -- Tooltip Infos --
 -- function EC:getTooltipInfos(GUI)
-
--- 	-- Create the Belongs to Label --
--- 	local belongsToL = GUI.add{type="label", caption={"", {"gui-description.BelongsTo"}, ": ", self.player}}
--- 	belongsToL.style.font = "LabelFont"
--- 	belongsToL.style.font_color = _mfOrange
-
--- 	-- Create the Data Network label --
--- 	local DNText = {"", {"gui-description.DataNetwork"}, ": ", {"gui-description.Unknow"}}
--- 	if self.dataNetwork ~= nil then
--- 		DNText = {"", {"gui-description.DataNetwork"}, ": ", self.dataNetwork.ID}
--- 	end
--- 	local dataNetworkL = GUI.add{type="label"}
--- 	dataNetworkL.style.font = "LabelFont"
--- 	dataNetworkL.caption = DNText
--- 	dataNetworkL.style.font_color = {155, 0, 168}
-
--- 	-- Create the Out Of Power Label --
--- 	if self.dataNetwork ~= nil then
--- 		if self.dataNetwork.outOfPower == true then
--- 			local dataNetworOOPower = GUI.add{type="label"}
--- 			dataNetworOOPower.style.font = "LabelFont"
--- 			dataNetworOOPower.caption = {"", {"gui-description.OutOfPower"}}
--- 			dataNetworOOPower.style.font_color = {231, 5, 5}
--- 		end
--- 	end
 -- end
 
 

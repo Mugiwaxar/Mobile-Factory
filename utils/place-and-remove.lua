@@ -74,6 +74,21 @@ function somethingWasPlaced(event, isRobot)
 		end
 	end
 
+	-- Allow to place the Internal Energy Cube inside the Control Center --
+	if cent.name == "InternalEnergyCube" and (string.match(cent.surface.name, _mfControlSurfaceName) or string.match(cent.surface.name, _mfSurfaceName) ) then
+		if MF.internalEnergyObj.ent ~= nil and MF.internalEnergyObj.ent.valid == true then
+			cent.destroy()
+			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
+				creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlacedOnce"}})
+				creator.get_main_inventory().insert(event.stack)
+			end
+			return
+		end
+		-- Save the Internal Energy Cube --
+		MF.internalEnergyObj:setEnt(cent)
+		return
+	end
+
 	-- Prevent to place listed entities outside the Mobile Factory --
 	if string.match(cent.surface.name, _mfSurfaceName) == nil then
 		if canBePlacedOutside(cent.name) == false then
@@ -95,6 +110,13 @@ function somethingWasPlaced(event, isRobot)
 	
 	-- Deep Tank Ghost --
 	if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true and cent.name == "entity-ghost" and event.stack.name == "DeepTank" then
+		if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheCCCArea"}}) end
+		cent.destroy()
+		return
+	end
+
+	-- Internal Energy Cube Ghost --
+	if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true and cent.name == "entity-ghost" and event.stack.name == "InternalEnergyCube" then
 		if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheCCCArea"}}) end
 		cent.destroy()
 		return
@@ -266,7 +288,7 @@ function somethingWasPlaced(event, isRobot)
 	end
 	
 	-- Save the Energy Cube --
-	if string.match(cent.name, "EnergyCube") then
+	if cent.name == "EnergyCubeMK1" then
 		placedEnergyCube(event)
 		if event.stack ~= nil and event.stack.valid_for_read == true then
 			local tags = event.stack.get_tag("Infos")
@@ -437,8 +459,18 @@ function somethingWasRemoved(event)
 		return
 	end
 
+	-- Remove the Internal Energy Cube --
+	if removedEnt.name == "InternalEnergyCube" then
+		for k, MFObj in pairs(global.MFTable) do
+			if MFObj.internalEnergyObj.ent ~= nil and MFObj.internalEnergyObj.ent.valid == true and removedEnt == MFObj.internalEnergyObj.ent then
+				MFObj.internalEnergyObj:remove()
+			end
+		end
+		return
+	end
+
 	-- Remove the Energy Cube --
-	if string.match(removedEnt.name, "EnergyCube") then
+	if removedEnt.name == "EnergyCubeMK1" then
 		removedEnergyCube(event)
 		local obj = global.energyCubesTable[removedEnt.unit_number]
 		if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and obj.ent.energy > 0 and event.buffer ~= nil and event.buffer[1] ~= nil then
@@ -563,9 +595,7 @@ end
 
 -- Return false if the item can't be placed outside the Mobile Factory --
 function canBePlacedOutside(name)
-	if name == "FactoryChest" then return false end
-	if name == "FactoryTank" then return false end
-	if name == "DimensionalAccumulator" then return false end
+	if name == "InternalEnergyCube" then return false end
 	return true
 end
 

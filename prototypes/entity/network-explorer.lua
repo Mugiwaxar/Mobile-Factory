@@ -40,10 +40,10 @@ neE.picture =
         }
       }
     }
-    neE.circuit_wire_connection_point =
+neE.circuit_wire_connection_point =
 {
-	wire = {red={0,-1.2}, green={0,-1.2}},
-	shadow = {red={-0.05,-1.2}, green={-0.05,-1.2}}
+    wire = {red={0,-1.2}, green={0,-1.2}},
+    shadow = {red={-0.05,-1.2}, green={-0.05,-1.2}}
 }
 neE.circuit_connector_sprites = nil
 neE.circuit_wire_max_distance = 20

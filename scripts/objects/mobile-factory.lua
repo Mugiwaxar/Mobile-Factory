@@ -13,8 +13,7 @@ MF = {
 	II = nil,
 	dataCenter = nil,
 	entitiesAround = nil,
-	internalEnergy = _mfInternalEnergy,
-	maxInternalEnergy = _mfInternalEnergyMax,
+	internalEnergyObj = nil,
 	jumpTimer = _mfBaseJumpTimer,
 	baseJumpTimer = _mfBaseJumpTimer,
 	tpEnabled = true,
@@ -72,6 +71,7 @@ function MF:rebuild(object)
 	local mt = {}
 	mt.__index = MF
 	setmetatable(object, mt)
+	IEC:rebuild(object.internalEnergyObj)
 	INV:rebuild(object.II)
 	DCMF:rebuild(object.dataCenter)
 end
@@ -79,7 +79,7 @@ end
 -- Destructor --
 function MF:remove()
 	self.ent = nil
-	self.internalEnergy = 0
+	self.internalEnergyObj:removeEnergy(self.internalEnergyObj:energy())
 	self.jumpTimer = _mfBaseJumpTimer
 	self:removeSyncArea()
 end
@@ -188,9 +188,9 @@ function MF:update(event)
 	-- Get the current tick --
 	local tick = event.tick
 	-- Update the Jump Drives --
-	if event.tick%_eventTick60 == 0 and self.jumpTimer > 0 and self.internalEnergy > _mfJumpEnergyDrain then
+	if event.tick%_eventTick60 == 0 and self.jumpTimer > 0 and self.internalEnergyObj:energy() > _mfJumpEnergyDrain then
 		self.jumpTimer = self.jumpTimer -1
-		self.internalEnergy = self.internalEnergy - _mfJumpEnergyDrain
+		self.internalEnergyObj:removeEnergy(_mfJumpEnergyDrain)
 	end
 	-- Update the Internal Inventory --
 	if tick%_eventTick80 == 0 then self.II:rescan() end
@@ -327,13 +327,13 @@ function MF:updateEnergyLaser(entity)
 		----------------------- Drain Power -------------------------
 		if self.selectedPowerLaserMode == "input" and entity.energy > 0 then
 			-- Missing Internal Energy or Structure Energy --
-			local energyDrain = math.min(self.maxInternalEnergy - self.internalEnergy, entity.energy)
+			local energyDrain = math.min(self.internalEnergyObj:maxEnergy() - self.internalEnergyObj:energy(), entity.energy)
 			-- EnergyDrain or LaserDrain Caparity --
 			local drainedEnergy = math.min(self:getLaserEnergyDrain(), energyDrain)
 			-- Test if some Energy was drained --
 			if drainedEnergy > 0 then
 				-- Add the Energy to the Mobile Factory Batteries --
-				self.internalEnergy = self.internalEnergy + drainedEnergy
+				self.internalEnergyObj:addEnergy(drainedEnergy)
 				-- Remove the Energy from the Structure --
 				entity.energy = entity.energy - drainedEnergy
 				-- Create the Beam --
@@ -345,13 +345,13 @@ function MF:updateEnergyLaser(entity)
 			-- Structure missing Energy or Laser Power --
 			local energySend = math.min(entity.electric_buffer_size - entity.energy , self:getLaserEnergyDrain())
 			-- Energy Send or Mobile Factory Energy --
-			energySend = math.min(self.internalEnergy, energySend)
+			energySend = math.min(self.internalEnergyObj:energy(), energySend)
 			-- Check if Energy can be send --
 			if energySend > 0 then
 				-- Add the Energy to the Entity --
 				entity.energy = entity.energy + energySend
 				-- Remove the Energy from the Mobile Factory --
-				self.internalEnergy = self.internalEnergy - energySend
+				self.internalEnergyObj:removeEnergy(energySend)
 				-- Create the Beam --
 				self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
 				-- One less Beam to the Beam capacity --
@@ -392,7 +392,7 @@ function MF:updateFluidLaser(entity)
 			-- Create the Laser --
 			self.ent.surface.create_entity{name="PurpleBeam", duration=60, position=self.ent.position, target=localTank.position, source=self.ent.position}
 			-- Drain Energy --
-			self.internalEnergy = self.internalEnergy - (_mfFluidConsomption*amountAdded)
+			self.internalEnergyObj:removeEnergy(_mfFluidConsomption*amountAdded)
 			-- One less Beam to the Beam capacity --
 			return true
 		end
@@ -408,7 +408,7 @@ function MF:updateFluidLaser(entity)
 			-- Create the Laser --
 			self.ent.surface.create_entity{name="PurpleBeam", duration=60, position=self.ent.position, target=localTank.position, source=self.ent.position}
 			-- Drain Energy --
-			self.internalEnergy = self.internalEnergy - (_mfFluidConsomption*amountAdded)
+			self.internalEnergyObj:removeEnergy(_mfFluidConsomption*amountAdded)
 			-- One less Beam to the Beam capacity --
 			return true
 		end
@@ -420,7 +420,7 @@ function MF:updateLogisticLaser(entity)
 	-- Check if a laser should be created --
 	if technologyUnlocked("TechItemDrain", getForce(self.player)) == false or self.itemLaserActivated == false then return false end 
 	-- Create the Laser --
-	if self.itemLaserActivated == true and self.internalEnergy > _mfBaseItemEnergyConsumption * self:getLaserItemDrain() and (entity.type == "container" or entity.type == "logistic-container") then
+	if self.itemLaserActivated == true and self.internalEnergyObj:energy() > _mfBaseItemEnergyConsumption * self:getLaserItemDrain() and (entity.type == "container" or entity.type == "logistic-container") then
 		-- Get Chest Inventory --
 		local inv = entity.get_inventory(defines.inventory.chest)
 		-- Get the Internal Inventory --
@@ -442,7 +442,7 @@ function MF:updateLogisticLaser(entity)
 					-- Create the laser and remove energy --
 					if added > 0 then
 						self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target=entity.position, source=self.ent.position}
-						self.internalEnergy = self.internalEnergy - _mfBaseItemEnergyConsumption * removedItems
+						self.internalEnergyObj:removeEnergy(_mfBaseItemEnergyConsumption * removedItems)
 						-- One less Beam to the Beam capacity --
 						return true
 					end
@@ -462,18 +462,18 @@ function MF:updateFuel()
 	-- Check if the Mobile Factory is valid --
 	if self.ent == nil or self.ent.valid == false then return end
 	-- Recharge the tank fuel --
-	if self.internalEnergy > 0 and self.ent.get_inventory(defines.inventory.fuel).get_item_count() < 2 then
+	if self.internalEnergyObj:energy() > 0 and self.ent.get_inventory(defines.inventory.fuel).get_item_count() < 2 then
 		if self.ent.burner.remaining_burning_fuel == 0 and self.ent.get_inventory(defines.inventory.fuel).is_empty() == true then
 			-- Insert coal in case of the Tank is off --
 			self.ent.get_inventory(defines.inventory.fuel).insert({name="coal", count=1})
 		elseif self.ent.burner.remaining_burning_fuel > 0 then
 			-- Calcule the missing Fuel amount --
 			local missingFuelValue = math.floor((_mfMaxFuelValue - self.ent.burner.remaining_burning_fuel) /_mfFuelMultiplicator)
-			if math.floor(missingFuelValue/_mfFuelMultiplicator) < self.internalEnergy then
+			if math.floor(missingFuelValue/_mfFuelMultiplicator) < self.internalEnergyObj:energy() then
 				-- Add the missing Fuel to the Tank --
 				self.ent.burner.remaining_burning_fuel = _mfMaxFuelValue
 				-- Drain energy --
-				self.internalEnergy = math.floor(self.internalEnergy - missingFuelValue/_mfFuelMultiplicator)
+				self.internalEnergyObj:removeEnergy(missingFuelValue/_mfFuelMultiplicator)
 			end
 		end
 	end
@@ -496,7 +496,7 @@ function MF:updateShield(event)
 	end
 	-- Charge the Shield --
 	local chargeSpeed = 10
-	if tick%60 == 0 and self.internalEnergy > 0 then
+	if tick%60 == 0 and self.internalEnergyObj:energy() > 0 then
 		-- Get the Shield --
 		for k, equipment in pairs(self.ent.grid.equipment) do
 			-- Check if this is a Shield --
@@ -504,11 +504,11 @@ function MF:updateShield(event)
 				local missingCharge = equipment.max_shield - equipment.shield
 				local chargeAmount = math.min(missingCharge, chargeSpeed)
 				-- Check if the Shield can be charged --
-				if chargeAmount > 0 and chargeAmount*_mfShieldComsuption <= self.internalEnergy then
+				if chargeAmount > 0 and chargeAmount*_mfShieldComsuption <= self.internalEnergyObj:energy() then
 					 -- Charge the Shield --
 					 equipment.shield = equipment.shield + chargeAmount
 					 -- Remove the energy --
-					 self.internalEnergy = self.internalEnergy - chargeAmount*_mfShieldComsuption
+					 self.internalEnergyObj:removeEnergy(chargeAmount*_mfShieldComsuption)
 				end
 			end
 		end
@@ -638,12 +638,12 @@ end
 -- Recharge inroom Dimensional Accumulator --
 function MF:updateAccumulators()
 	-- Factory --
-	if self.fS ~= nil and technologyUnlocked("EnergyDistribution1", getForce(self.player)) and self.internalEnergyDistributionActivated and self.internalEnergy > 0 then
+	if self.fS ~= nil and technologyUnlocked("EnergyDistribution1", getForce(self.player)) and self.internalEnergyDistributionActivated and self.internalEnergyObj:energy() > 0 then
 		for k, entity in pairs(global.accTable) do
 			if entity == nil or entity.valid == false then global.accTable[k] = nil return end
-			if self.internalEnergy > _mfBaseEnergyAccSend and entity.energy < entity.electric_buffer_size then
+			if self.internalEnergyObj:energy() > _mfBaseEnergyAccSend and entity.energy < entity.electric_buffer_size then
 				entity.energy = entity.energy + _mfBaseEnergyAccSend
-				self.internalEnergy = self.internalEnergy - _mfBaseEnergyAccSend
+				self.internalEnergyObj:removeEnergy(_mfBaseEnergyAccSend)
 			end
 		end
 	end

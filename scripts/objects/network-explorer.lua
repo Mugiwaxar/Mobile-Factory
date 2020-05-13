@@ -195,8 +195,7 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 	end
 
 	-- Create the Inventory List --
-	createDNInventoryFrame(GUIObj, inventoryScrollPane, GUIObj.MFPlayer, "NE," .. self.entID .. ",",
-								self.dataNetwork.dataCenter.invObj, 8, true, true, true, searchText, self.player)
+	createDNInventoryFrame(GUIObj, inventoryScrollPane, GUIObj.MFPlayer, "NE," .. self.entID .. ",", self.dataNetwork.dataCenter.invObj, 8, true, true, true, searchText, self.player)
 
 	-- Create the Player Inventory List --
 	createPlayerInventoryFrame(GUIObj, playerInventoryScrollPane, GUIObj.MFPlayer, 8, "NE," .. self.entID .. ",", searchText)

@@ -14,8 +14,8 @@ function GO:new(name, MFPlayer, direction)
     local t = {}
     local mt = {}
     setmetatable(t, mt)
-    mt.__index = indexFunction
-    mt.__newindex = newIndexFunction
+    mt.__index = GOIndexFunction
+    mt.__newindex = GONewIndexFunction
     t.name = name
     t.MF = MFPlayer.MF
     t.MFPlayer = MFPlayer
@@ -26,14 +26,14 @@ function GO:new(name, MFPlayer, direction)
 end
 
 -- Index Function --
-function indexFunction(self, key)
+function GOIndexFunction(self, key)
     if GO[key] ~= nil then return GO[key] end
     if self.gui[key] ~= nil then return self.gui[key] end
     if self.elements[key] ~= nil then return self.elements[key] end
 end
 
 -- New Index Function --
-function newIndexFunction(self, key, value)
+function GONewIndexFunction(self, key, value)
     if rawget(self, "gui") ~= nil and self.gui[key] ~= nil then
         rawget(self, "gui")[key] = value
         return
@@ -46,8 +46,8 @@ function GO:rebuild(object)
     if object == nil then return end
     local mt = {}
     setmetatable(object, mt)
-    mt.__index = indexFunction
-    mt.__newindex = newIndexFunction
+    mt.__index = GOIndexFunction
+    mt.__newindex = GONewIndexFunction
 end
 
 -- Create the GUI --
@@ -439,7 +439,7 @@ function GO:addDataNetworkFrame(gui, obj)
 end
 
 -- Create a Data Network Inventory Frame --
-function createDNInventoryFrame(GUIObj, gui, MFPlayer, buttonFirstName, inventory, columnsNumber, showDeepTank, showDeepStorage, showInventory, filter,  nePlayer)
+function createDNInventoryFrame(GUIObj, gui, MFPlayer, buttonFirstName, inventory, columnsNumber, showDeepTank, showDeepStorage, showInventory, filter, nePlayer)
 
     -- Create the Table --
     local table = GUIObj:addTable("", gui, columnsNumber or 5)
