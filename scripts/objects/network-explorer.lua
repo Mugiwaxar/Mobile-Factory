@@ -107,22 +107,24 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 
 	if justCreated == true then
 
-		-- Create the Localised name List --
-		GUIObj.MFPlayer.varTable.tmpLocal = {}
-		for name, count in pairs(self.dataNetwork.dataCenter.invObj.inventory) do
-			GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(name))
-		end
-		for name, count in pairs(GUIObj.MFPlayer.ent.get_main_inventory().get_contents()) do
-			GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(name))
-		end
-		for k, deepStorage in pairs(global.deepStorageTable) do
-			if deepStorage.inventoryItem ~= nil or deepStorage.filter ~= nil then
-				GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(deepStorage.inventoryItem or deepStorage.filter))
+		if valid(self.dataNetwork) == true and self.active == true then
+			-- Create the Localised name List --
+			GUIObj.MFPlayer.varTable.tmpLocal = {}
+			for name, count in pairs(self.dataNetwork.dataCenter.invObj.inventory) do
+				GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(name))
 			end
-		end
-		for k, deepTank in pairs(global.deepTankTable) do
-			if deepTank.inventoryFluid ~= nil or deepTank.filter ~= nil then
-				GUIObj.MFPlayer.ent.request_translation(Util.getLocFluidName(deepTank.inventoryFluid or deepTank.filter))
+			for name, count in pairs(GUIObj.MFPlayer.ent.get_main_inventory().get_contents()) do
+				GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(name))
+			end
+			for k, deepStorage in pairs(global.deepStorageTable) do
+				if deepStorage.inventoryItem ~= nil or deepStorage.filter ~= nil then
+					GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(deepStorage.inventoryItem or deepStorage.filter))
+				end
+			end
+			for k, deepTank in pairs(global.deepTankTable) do
+				if deepTank.inventoryFluid ~= nil or deepTank.filter ~= nil then
+					GUIObj.MFPlayer.ent.request_translation(Util.getLocFluidName(deepTank.inventoryFluid or deepTank.filter))
+				end
 			end
 		end
 
@@ -193,7 +195,8 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 	end
 
 	-- Create the Inventory List --
-	createDNInventoryFrame(GUIObj, inventoryScrollPane, GUIObj.MFPlayer, "NE," .. self.entID .. ",", self.dataNetwork.dataCenter.invObj, 8, true, true, true, searchText)
+	createDNInventoryFrame(GUIObj, inventoryScrollPane, GUIObj.MFPlayer, "NE," .. self.entID .. ",",
+								self.dataNetwork.dataCenter.invObj, 8, true, true, true, searchText, self.player)
 
 	-- Create the Player Inventory List --
 	createPlayerInventoryFrame(GUIObj, playerInventoryScrollPane, GUIObj.MFPlayer, 8, "NE," .. self.entID .. ",", searchText)
