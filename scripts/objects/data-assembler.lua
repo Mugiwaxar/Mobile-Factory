@@ -16,7 +16,6 @@ DA = {
 	dataNetwork = nil,
 	recipeID = 0,
 	recipeTable = nil, -- [id]{recipePrototype, sprite, amount, progress, ingredients{name, type, amount, sprite, missing}, mainProduct{name, type, amount, sprite}, missingIngredient, inventoryFull, toManyInInventory}
-	activeRecipe = 0,
 	quatronLevel = 0,
 	quatronCharge = 0,
 	lastRecipeUpdatedID = 1
@@ -220,6 +219,14 @@ function DA:setActive(set)
         rendering.destroy(self.stateSprite)
         self.stateSprite = rendering.draw_sprite{sprite="DataAssemblerSprite1", target=self.ent, surface=self.ent.surface, render_layer=131}
     end
+end
+
+-- Copy Settings --
+function DA:copySettings(obj)
+	self.recipeTable = {}
+	for k, recipe in pairs(obj.recipeTable) do
+		self:addRecipe(recipe.recipePrototype.name, recipe.amount)
+	end
 end
 
 -- Create a Recipe Frame --

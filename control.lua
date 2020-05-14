@@ -15,7 +15,6 @@ require("scripts/game-update.lua")
 require("utils/warptorio.lua")
 require("scripts/objects/mobile-factory.lua")
 require("scripts/objects/gui-object.lua")
-require("scripts/objects/power-drain-pole.lua")
 require("scripts/objects/ore-cleaner.lua")
 require("scripts/objects/fluid-extractor.lua")
 require("scripts/objects/inventory.lua")
@@ -30,6 +29,7 @@ require("scripts/objects/network-explorer.lua")
 require("scripts/objects/wireless-data-transmitter.lua")
 require("scripts/objects/wireless-data-receiver.lua")
 require("scripts/objects/internal-energy.lua")
+require("scripts/objects/internal-quatron.lua")
 require("scripts/objects/energy-cube.lua")
 require("scripts/objects/mining-jet.lua")
 require("scripts/objects/mining-jet-flag.lua")
@@ -67,8 +67,6 @@ function onInit()
 	-- Tables --
 	global.playersTable = {}
 	global.MFTable = {}
-	global.accTable = {}
-	global.pdpTable = {}
 	global.dataNetworkTable = {}
 	global.dataNetworkIDGreenTable = {}
 	global.dataNetworkIDRedTable = {}
@@ -118,10 +116,6 @@ function onLoad()
 		for k2, go in pairs(player.GUI or {}) do
 			GO:rebuild(go)
 		end
-	end
-	-- Set PDP Metatables --
-	for k, pdp in  pairs(global.pdpTable or {}) do
-		PDP:rebuild(pdp)
 	end
 	-- Set DataCenter Metatables --
 	for k, dc in  pairs(global.dataCenterTable or {}) do

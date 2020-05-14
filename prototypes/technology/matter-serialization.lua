@@ -21,8 +21,7 @@ msT.effects =
 	{type="unlock-recipe", recipe="MatterInteractor"},
 	{type="unlock-recipe", recipe="DataStorage"},
 	{type="unlock-recipe", recipe="DataCenter"},
-	{type="unlock-recipe", recipe="DataCenterMF"},
-	{type="unlock-recipe", recipe="EnergyCubeMK1"}
+	{type="unlock-recipe", recipe="DataCenterMF"}
 }
 data:extend{msT}
 

@@ -15,7 +15,6 @@ if global.MobileFactory ~= nil then
 	MF.energyLaserActivated = global.mfEnergyLaserActivated
 	MF.fluidLaserActivated = global.mfFluidDrainLaserActivated
 	MF.itemLaserActivated = global.mfItemDistributionActivated
-	MF.internalEnergyDistributionActivated = global.mfEnergyDistributionActivated
 end
 if global.MF ~= nil and global.MF.II == nil then
 	global.MF.II = INV:new("Internal Inventory")

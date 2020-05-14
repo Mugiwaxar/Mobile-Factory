@@ -59,8 +59,17 @@ function createControlRoom(MF)
 	createTilesSurface(newSurface, -10, -10, 10, 10, "tutorial-grid")
 	-- Set TP tiles --
 	createTilesSurface(newSurface, -3, 5, 3, 7, "refined-hazard-concrete-right")
-	-- Remove unwanted tiles --
-	local newTiles = newSurface.find_tiles_filtered{area={{-100,-100},{100,100}}}
+	-- Create Internal Power Cubes --
+	local iec = createEntity(newSurface, 7, 6, "InternalEnergyCube", getMFPlayer(MF.playerIndex).ent.force)
+	iec.last_user = MF.player
+	MF.internalEnergyObj = IEC:new(MF)
+    MF.internalEnergyObj:setEnt(iec)
+	MF.internalEnergyObj:addEnergy(MF.internalEnergy or 0)
+	-- Create Internal Quatron Cubes --
+	local iqc = createEntity(newSurface, -7, 6, "InternalQuatronCube", getMFPlayer(MF.playerIndex).ent.force)
+	iqc.last_user = MF.player
+	MF.internalQuatronObj = IQC:new(MF)
+    MF.internalQuatronObj:setEnt(iqc)
 	-- Save variable --
 	MF.ccS = newSurface
 	-- Apply Technologies if Needed --

@@ -49,15 +49,13 @@ function UpSys.scanObjs()
   UpSys.addTable(global.combatJetTable)
   UpSys.addTable(global.deepStorageTable)
   UpSys.addTable(global.deepTankTable)
-  UpSys.addTable(global.pdpTable)
   UpSys.addTable(global.networkExplorerTable)
   UpSys.addTable(global.dataAssemblerTable)
 
-  -- Add all Internal Energy Cubes --
+  -- Add all Internal Energy Cubes and Internal Quatron Cubes --
   for k, MF in pairs(global.MFTable) do
-    if valid(MF.internalEnergyObj) then
-      UpSys.addObject(MF.internalEnergyObj)
-    end
+    UpSys.addObject(MF.internalEnergyObj)
+    UpSys.addObject(MF.internalQuatronObj)
   end
 
   -- Save the last scan tick --

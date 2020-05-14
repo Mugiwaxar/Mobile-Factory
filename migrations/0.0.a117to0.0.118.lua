@@ -12,6 +12,5 @@ for k, MFPlayer in pairs(global.playersTable) do
     MFPlayer.varTable.ShowFluidDrainButton = false
     MFPlayer.varTable.ShowItemDrainButton = false
     MFPlayer.varTable.ShowItemDrainButton = false
-    MFPlayer.varTable.ShowEnergyDistributionButton = false
     MFPlayer.varTable.ShowSendQuatronButton = false
 end

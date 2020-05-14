@@ -74,7 +74,7 @@ function somethingWasPlaced(event, isRobot)
 		end
 	end
 
-	-- Allow to place the Internal Energy Cube inside the Control Center --
+	-- Allow to place the Internal Energy Cube inside the Control Center and the Factory Surface --
 	if cent.name == "InternalEnergyCube" and (string.match(cent.surface.name, _mfControlSurfaceName) or string.match(cent.surface.name, _mfSurfaceName) ) then
 		if MF.internalEnergyObj.ent ~= nil and MF.internalEnergyObj.ent.valid == true then
 			cent.destroy()
@@ -86,6 +86,33 @@ function somethingWasPlaced(event, isRobot)
 		end
 		-- Save the Internal Energy Cube --
 		MF.internalEnergyObj:setEnt(cent)
+		if event.stack ~= nil and event.stack.valid_for_read == true then
+			local tags = event.stack.get_tag("Infos")
+			if tags ~= nil then
+				MF.internalEnergyObj:addEnergy(tags.energy)
+			end
+		end
+		return
+	end
+
+	-- Allow to place the Internal Quatron Cube inside the Control Center and the Factory Surface --
+	if cent.name == "InternalQuatronCube" and (string.match(cent.surface.name, _mfControlSurfaceName) or string.match(cent.surface.name, _mfSurfaceName) ) then
+		if MF.internalQuatronObj.ent ~= nil and MF.internalQuatronObj.ent.valid == true then
+			cent.destroy()
+			if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true then
+				creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlacedOnce"}})
+				creator.get_main_inventory().insert(event.stack)
+			end
+			return
+		end
+		-- Save the Internal Quatron Cube --
+		MF.internalQuatronObj:setEnt(cent)
+		if event.stack ~= nil and event.stack.valid_for_read == true then
+			local tags = event.stack.get_tag("Infos")
+			if tags ~= nil then
+				MF.internalQuatronObj:addEnergy(tags.energy)
+			end
+		end
 		return
 	end
 
@@ -117,6 +144,13 @@ function somethingWasPlaced(event, isRobot)
 
 	-- Internal Energy Cube Ghost --
 	if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true and cent.name == "entity-ghost" and event.stack.name == "InternalEnergyCube" then
+		if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheCCCArea"}}) end
+		cent.destroy()
+		return
+	end
+
+	-- Internal Quatron Cube Ghost --
+	if isPlayer == true and event.stack ~= nil and event.stack.valid_for_read == true and cent.name == "entity-ghost" and event.stack.name == "InternalQuatronCube" then
 		if isPlayer == true then creator.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.PlaceableInsideTheCCCArea"}}) end
 		cent.destroy()
 		return
@@ -225,18 +259,6 @@ function somethingWasPlaced(event, isRobot)
 			then
 			MF:cloneEntity(cent, "out")
 		end
-	end
-	
-	-- Save the Dimensional Accumulator --
-	if cent.name == "DimensionalAccumulator" then
-		placedDimensionalAccumulator(event)
-		return
-	end
-	
-	-- Save the Power Drain Pole --
-	if cent.name == "PowerDrainPole" then
-		placedPowerDrainPole(event)
-		return
 	end
 
 	-- Save the Matter Interactor --
@@ -385,18 +407,6 @@ function somethingWasRemoved(event)
 		return
 	end
 
-	-- Remove the Dimensional Accumulator --
-	if removedEnt.name == "DimensionalAccumulator" then
-		removedDimensionalAccumulator(event)
-		return
-	end
-
-	-- Remove the Power Drain Pole --
-	if removedEnt.name == "PowerDrainPole" then
-		removedPowerDrainPole(event)
-		return
-	end
-
 	-- Remove the Matter Interactor --
 	if removedEnt.name == "MatterInteractor" then
 		removedMatterInteractor(event)
@@ -463,7 +473,21 @@ function somethingWasRemoved(event)
 	if removedEnt.name == "InternalEnergyCube" then
 		for k, MFObj in pairs(global.MFTable) do
 			if MFObj.internalEnergyObj.ent ~= nil and MFObj.internalEnergyObj.ent.valid == true and removedEnt == MFObj.internalEnergyObj.ent then
+				event.buffer[1].set_tag("Infos", {energy=MFObj.internalEnergyObj:energy()})
+				event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.EnergyCubeC", Util.toRNumber(math.floor(MFObj.internalEnergyObj:energy()))}}
 				MFObj.internalEnergyObj:remove()
+			end
+		end
+		return
+	end
+
+	-- Remove the Internal Quatron Cube --
+	if removedEnt.name == "InternalQuatronCube" then
+		for k, MFObj in pairs(global.MFTable) do
+			if MFObj.internalQuatronObj.ent ~= nil and MFObj.internalQuatronObj.ent.valid == true and removedEnt == MFObj.internalQuatronObj.ent then
+				event.buffer[1].set_tag("Infos", {energy=MFObj.internalQuatronObj:energy()})
+				event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.EnergyCubeC", Util.toRNumber(math.floor(MFObj.internalQuatronObj:energy()))}}
+				MFObj.internalQuatronObj:remove()
 			end
 		end
 		return
@@ -471,12 +495,12 @@ function somethingWasRemoved(event)
 
 	-- Remove the Energy Cube --
 	if removedEnt.name == "EnergyCubeMK1" then
-		removedEnergyCube(event)
 		local obj = global.energyCubesTable[removedEnt.unit_number]
 		if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and obj.ent.energy > 0 and event.buffer ~= nil and event.buffer[1] ~= nil then
 			event.buffer[1].set_tag("Infos", {energy=obj.ent.energy})
 			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.EnergyCubeC", Util.toRNumber(math.floor(obj.ent.energy))}, "J"}
 		end
+		removedEnergyCube(event)
 		return
 	end
 
@@ -596,6 +620,7 @@ end
 -- Return false if the item can't be placed outside the Mobile Factory --
 function canBePlacedOutside(name)
 	if name == "InternalEnergyCube" then return false end
+	if name == "InternalQuatronCube" then return false end
 	return true
 end
 

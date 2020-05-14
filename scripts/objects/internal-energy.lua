@@ -1,6 +1,6 @@
--- INTERNAL ENERGY CUBE OBJECT --
+-- INTERNAL ENERGY OBJECT --
 
--- Create the Internal Energy Cube base Object --
+-- Create the Internal Energy base Object --
 IEC = {
 	ent = nil,
 	player = "",
@@ -68,12 +68,54 @@ function IEC:update()
 	local spriteNumber = math.ceil(self.ent.energy/self.ent.prototype.electric_energy_source_prototype.buffer_capacity*10)
 	rendering.destroy(self.spriteID)
     self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite" .. spriteNumber, x_scale=1/2.25, y_scale=1/2.25, target=self.ent, surface=self.ent.surface, render_layer=131}
-    
+	
+	-- Balance the Energy with neighboring Cubes --
+	self:balance()
+
 end
 
 -- Tooltip Infos --
 -- function IEC:getTooltipInfos(GUI)
 -- end
+
+-- Balance the Energy with neighboring Cubes --
+function IEC:balance()
+
+	-- Check the Entity --
+	if self.ent == nil or self.ent.valid == false then return end
+
+	-- Get all Accumulator arount --
+	local ents = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=5, type="accumulator"}
+
+	-- Check all Accumulator --
+	for k, ent in pairs(ents) do
+
+		-- Look for valid Energy Cube --
+		if ent ~= nil and ent.valid == true and ent ~= self.ent and (ent.name == "EnergyCubeMK1" or "InternalPowerCube") then
+			local obj = global.entsTable[ent.unit_number]
+			if valid(obj) then
+				if self:energy() > obj:energy() and obj:energy() < obj:maxEnergy() then
+					-- Calcule max flow --
+					local energyVariance = (self:energy() - obj:energy()) / 2
+					local maxEnergyTranfer = math.min(energyVariance, self:energy(), self:maxOutput()*self.updateTick, obj:maxInput()*self.updateTick)
+					-- Transfer Energy --
+					local transfered = obj:addEnergy(maxEnergyTranfer)
+					-- Remove Energy --
+					self:removeEnergy(transfered)
+				elseif self:energy() < obj:energy() and self:energy() < self:maxEnergy() then
+					-- Calcule max flow --
+					local energyVariance = (obj:energy() - self:energy()) / 2
+					local maxEnergyTranfer = math.min(energyVariance, obj:energy(), self:maxInput()*self.updateTick, obj:maxOutput()*self.updateTick)
+					-- Transfer Energy --
+					local transfered = self:addEnergy(maxEnergyTranfer)
+					-- Remove Energy --
+					obj:removeEnergy(transfered)
+				end
+			end
+		end
+	end
+
+end
 
 -- Return the amount of Energy --
 function IEC:energy()
@@ -107,6 +149,22 @@ function IEC:removeEnergy(amount)
 		local removed = math.min(amount, self:energy())
 		self.ent.energy = self.ent.energy - removed
 		return removed
+	end
+	return 0
+end
+
+-- Return the max input flow --
+function IEC:maxInput()
+	if self.ent ~= nil and self.ent.valid == true then
+		return self.ent.electric_input_flow_limit
+	end
+	return 0
+end
+
+-- Return the max output flow --
+function IEC:maxOutput()
+	if self.ent ~= nil and self.ent.valid == true then
+		return self.ent.electric_output_flow_limit
 	end
 	return 0
 end

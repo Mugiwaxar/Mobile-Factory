@@ -85,7 +85,7 @@ function GUI.updateMFMainGUI(GUIObj)
 	local mfEnergyValue = 0
 	local mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", {"gui-description.Unknow"}}
 	local mfQuatronValue = 0
-	local mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", {"gui-description.Unknow"}, "\n", {"gui-description.mQuatronPurity"}, ": ", {"gui-description.Unknow"}}
+	local mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", {"gui-description.Unknow"}}
 	local mfJumpDriveValue = 0
 	local mfJumpDriveText = {"", {"gui-description.mfJumpTimer"}, ": ", {"gui-description.Unknow"}}
 
@@ -101,8 +101,8 @@ function GUI.updateMFMainGUI(GUIObj)
 		end
 		mfEnergyValue = 1 - (math.floor(100 - MF.internalEnergyObj:energy() / MF.internalEnergyObj:maxEnergy() * 100)) / 100
 		mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF.internalEnergyObj:energy()), "J/", Util.toRNumber(MF.internalEnergyObj:maxEnergy()), "J"}
-		mfQuatronValue = 0
-		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", 0, "\n", {"gui-description.mQuatronPurity"}, ": ", 0}
+		mfQuatronValue = 1 - (math.floor(100 - MF.internalQuatronObj:energy() / MF.internalQuatronObj:maxEnergy() * 100)) / 100
+		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", Util.toRNumber(MF.internalQuatronObj:energy()), "/", Util.toRNumber(MF.internalQuatronObj:maxEnergy())}
 		mfJumpDriveValue = (math.floor(100 - MF.jumpTimer / MF.baseJumpTimer * 100)) / 100
 		mfJumpDriveText = {"", {"gui-description.mfJumpTimer"}, ": ", math.floor(100 - MF.jumpTimer / MF.baseJumpTimer * 100), "% (", MF.jumpTimer, "s)"}
 	end
@@ -137,9 +137,6 @@ function GUI.updateMFMainGUI(GUIObj)
 	local showItemDrainButton = technologyUnlocked("TechItemDrain", getForce(player.name)) and true or false
 	local itemDrainSprite = MF.itemLaserActivated == true and "ItemDrainIcon" or "ItemDrainIconDisabled"
 	local itemDrainHovSprite = MF.itemLaserActivated == true and "ItemDrainIconDisabled" or "ItemDrainIcon"
-	local showEnergyDistributionButton = technologyUnlocked("EnergyDistribution1", getForce(player.name)) and true or false
-	local energyDistributionSprite = MF.internalEnergyDistributionActivated == true and "EnergyDistributionIcon" or "EnergyDistributionIconDisabled"
-	local energyDistributionHovSprite = MF.internalEnergyDistributionActivated == true and "EnergyDistributionIconDisabled" or "EnergyDistributionIcon"
 	local showSendQuatronButton = (technologyUnlocked("OreCleaner", getForce(player.name)) or technologyUnlocked("FluidExtractor", getForce(player.name))) and true or false
 	local sendQuatronSprite = MF.sendQuatronActivated == true and "QuatronIcon" or "QuatronIconDisabled"
 	local sendQuatronHovSprite = MF.sendQuatronActivated == true and "QuatronIconDisabled" or "QuatronIcon"
@@ -156,7 +153,6 @@ function GUI.updateMFMainGUI(GUIObj)
 	GUI.addButtonToMainGui(GUIObj, {name="EnergyDrainButton", sprite=energyDrainSprite, hovSprite=energyDrainHovSprite, tooltip={"gui-description.mfEnergyDrainButton"}, size=buttonsSize, save=false, visible=showEnergyDrainButton})
 	GUI.addButtonToMainGui(GUIObj, {name="FluidDrainButton", sprite=fluidDrainSprite, hovSprite=fluidDrainHovSprite, tooltip={"gui-description.mfFluidDrainButton"}, size=buttonsSize, save=false, visible=showFluidDrainButton})
 	GUI.addButtonToMainGui(GUIObj, {name="ItemDrainButton", sprite=itemDrainSprite, hovSprite=itemDrainHovSprite, tooltip={"gui-description.mfItemDrainButton"}, size=buttonsSize, save=false, visible=showItemDrainButton})
-	GUI.addButtonToMainGui(GUIObj, {name="EnergyDistributionButton", sprite=energyDistributionSprite, hovSprite=energyDistributionHovSprite, tooltip={"gui-description.mfDistribute"}, size=buttonsSize, save=false, visible=showEnergyDistributionButton})
 	GUI.addButtonToMainGui(GUIObj, {name="SendQuatronButton", sprite=sendQuatronSprite, hovSprite=sendQuatronHovSprite, tooltip={"gui-description.mfSendQuatron"}, size=buttonsSize, save=false, visible=showSendQuatronButton})
 
 	GUI.renderMainGuiButtons(GUIObj)
