@@ -90,9 +90,11 @@ function EC:update()
 
 end
 
+
 -- Tooltip Infos --
 -- function EC:getTooltipInfos(GUI)
 -- end
+
 
 -- Balance the Energy with neighboring Cubes --
 function EC:balance()
@@ -107,12 +109,12 @@ function EC:balance()
 	for k, ent in pairs(ents) do
 
 		-- Look for valid Energy Cube --
-		if ent ~= nil and ent.valid == true and ent ~= self.ent and (ent.name == "EnergyCubeMK1" or "InternalPowerCube") then
+		if ent ~= nil and ent.valid == true and ent.name == "EnergyCubeMK1" then
 			local obj = global.entsTable[ent.unit_number]
 			if valid(obj) then
 				if self:energy() > obj:energy() and obj:energy() < obj:maxEnergy() then
 					-- Calcule max flow --
-					local energyVariance = (self:energy() - obj:energy()) / 2
+					local energyVariance = self:energy() - obj:energy()
 					local maxEnergyTranfer = math.min(energyVariance, self:energy(), self:maxOutput()*self.updateTick, obj:maxInput()*self.updateTick)
 					-- Transfer Energy --
 					local transfered = obj:addEnergy(maxEnergyTranfer)
@@ -120,12 +122,12 @@ function EC:balance()
 					self:removeEnergy(transfered)
 				elseif self:energy() < obj:energy() and self:energy() < self:maxEnergy() then
 					-- Calcule max flow --
-					local energyVariance = (obj:energy() - self:energy()) / 2
+					local energyVariance = obj:energy() - self:energy()
 					local maxEnergyTranfer = math.min(energyVariance, obj:energy(), self:maxInput()*self.updateTick, obj:maxOutput()*self.updateTick)
 					-- Transfer Energy --
 					local transfered = self:addEnergy(maxEnergyTranfer)
 					-- Remove Energy --
-					obj:removeEnergy(transfered)
+					self:removeEnergy(transfered)
 				end
 			end
 		end
