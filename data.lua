@@ -2,9 +2,7 @@ require("prototypes/entity/mobile-factory.lua")
 require("prototypes/entity/dimensional-lab.lua")
 require("prototypes/entity/dimensional-substation.lua")
 require("prototypes/entity/dimensional-furnace.lua")
-require("prototypes/entity/dimensional-accumulator.lua")
 require("prototypes/entity/equalizer.lua")
-require("prototypes/entity/power-drain-pole.lua")
 require("prototypes/entity/crystallizer.lua")
 require("prototypes/entity/dimensional-plant.lua")
 require("prototypes/entity/basic-solar-panel.lua")
@@ -145,16 +143,7 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
-		name="Jet",
-		group="MobileFactory",
-		order="e2"
-	}
-}
-
-data:extend{
-	{
-		type="item-subgroup",
-		name="Equipments",
+		name="Energy",
 		group="MobileFactory",
 		order="f"
 	}
@@ -163,7 +152,7 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
-		name="Poles",
+		name="Jet",
 		group="MobileFactory",
 		order="g"
 	}
@@ -172,7 +161,7 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
-		name="Tiles",
+		name="Equipments",
 		group="MobileFactory",
 		order="h"
 	}
@@ -181,7 +170,7 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
-		name="Modules1",
+		name="Poles",
 		group="MobileFactory",
 		order="i"
 	}
@@ -190,9 +179,27 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
-		name="Modules2",
+		name="Tiles",
 		group="MobileFactory",
 		order="j"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="Modules1",
+		group="MobileFactory",
+		order="k"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="Modules2",
+		group="MobileFactory",
+		order="l"
 	}
 }
 
@@ -578,26 +585,6 @@ data:extend{
 		type = "sprite",
 		name = "FluidDrainIconDisabled",
 		filename = "__Mobile_Factory_Graphics__/graphics/icones/FluidDrainDisabled.png",
-		size = 32,
-		flags = {"icon"}
-	}
-}
-
-data:extend{
-	{
-		type = "sprite",
-		name = "EnergyDistributionIcon",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/TecEnergyDistribution1.png",
-		size = 32,
-		flags = {"icon"}
-	}
-}
-
-data:extend{
-	{
-		type = "sprite",
-		name = "EnergyDistributionIconDisabled",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/EnergyDistributionDisabled.png",
 		size = 32,
 		flags = {"icon"}
 	}

@@ -305,13 +305,6 @@ function GUI.buttonClicked(event)
 		return
 	end
 
-	-- EnergyDistribution button --
-	if event.element.name == "EnergyDistributionButton" then
-		if MF.internalEnergyDistributionActivated == true then MF.internalEnergyDistributionActivated = false
-		elseif MF.internalEnergyDistributionActivated == false then MF.internalEnergyDistributionActivated = true end
-		return
-	end
-
 	-- Send Quatron button --
 	if event.element.name == "SendQuatronButton" then
 		if MF.sendQuatronActivated == true then MF.sendQuatronActivated = false

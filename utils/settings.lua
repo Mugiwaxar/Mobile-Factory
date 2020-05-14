@@ -177,7 +177,6 @@ _eventTick5=5 -- Teleportation --
 _eventTick7=7 -- Data Assembler GUI Progress Bars --
 _eventTick27=27 -- Mobile Factory Fuel --
 _eventTick30=30 -- Mobile Factory Sync Area
-_eventTick38=38 -- Dimensional Accumulator --
 _eventTick41=41 -- Repair Jets --
 _eventTick45=45 -- Construction Jets --
 _eventTick55=55 -- GUI --

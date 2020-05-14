@@ -49,8 +49,6 @@ function updateValues()
 	if global.floorIsLavaActivated == nil then global.floorIsLavaActivated = false end
 	if global.playersTable == nil then global.playersTable = {} end
 	if global.MFTable == nil then global.MFTable = {} end
-	if global.accTable == nil then global.accTable = {} end
-	if global.pdpTable == nil then global.pdpTable = {} end
 	if global.deepStorageTable == nil then global.deepStorageTable = {} end
 	if global.deepTankTable == nil then global.deepTankTable = {} end
 	if global.dataNetworkTable == nil then global.dataNetworkTable = {} end
@@ -151,6 +149,7 @@ function initPlayer(event)
 		local MF = MF:new()
 		global.MFTable[player.name] = MF
 		MF.internalEnergyObj = IEC:new(MF)
+		MF.internalQuatronObj = IQC:new(MF)
 		MF.II = INV:new("Internal Inventory")
 		MF.II.MF = MF
 		MF.II.isII = true

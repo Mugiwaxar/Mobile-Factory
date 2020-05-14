@@ -6,18 +6,6 @@ function objApplyTags(obj, tags)
 	end
 end
 
--- Save the Dimensional Accumulator in a table --
-function placedDimensionalAccumulator(event)
-	if global.accTable == nil then global.accTable = {} end
-	global.accTable[event.created_entity.unit_number] = event.created_entity
-end
-
--- Save the Drain Power Pole --
-function placedPowerDrainPole(event)
-	if global.pdpTable == nil then global.pdpTable = {} end
-	global.pdpTable[event.created_entity.unit_number] = PDP:new(event.created_entity)
-end
-
 -- Save the Matter Interactor in a table --
 function placedMatterInteractor(event)
 	if global.matterInteractorTable == nil then global.matterInteractorTable = {} end
@@ -121,18 +109,6 @@ end
 function placedEryaStructure(event)
 	if global.eryaTable == nil then global.eryaTable  = {} end
 	global.eryaTable[event.created_entity.unit_number] = ES:new(event.created_entity)
-end
-
--- Remove the Dimensional Accumulator from the table --
-function removedDimensionalAccumulator(event)
-	if global.accTable == nil then global.accTable = {} return end
-	global.accTable[event.entity.unit_number] = nil
-end
-
--- Remove the Power Drain Pole from the table --
-function removedPowerDrainPole(event)
-	if global.pdpTable == nil then global.pdpTable = {} return end
-	global.pdpTable[event.entity.unit_number] = nil
 end
 
 -- Remove the Matter Interactor from the table --

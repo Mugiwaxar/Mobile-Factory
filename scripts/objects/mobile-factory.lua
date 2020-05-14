@@ -14,6 +14,7 @@ MF = {
 	dataCenter = nil,
 	entitiesAround = nil,
 	internalEnergyObj = nil,
+	internalQuatronObj = nil,
 	jumpTimer = _mfBaseJumpTimer,
 	baseJumpTimer = _mfBaseJumpTimer,
 	tpEnabled = true,
@@ -25,7 +26,6 @@ MF = {
 	fluidLaserActivated = false,
 	itemLaserActivated = false,
 	selectedInventory = nil,
-	internalEnergyDistributionActivated = false,
 	sendQuatronActivated = false,
 	selectedPowerLaserMode = "input", -- input, output
 	selectedFluidLaserMode = "input", -- input, output
@@ -72,6 +72,7 @@ function MF:rebuild(object)
 	mt.__index = MF
 	setmetatable(object, mt)
 	IEC:rebuild(object.internalEnergyObj)
+	IQC:rebuild(object.internalQuatronObj)
 	INV:rebuild(object.II)
 	DCMF:rebuild(object.dataCenter)
 end
@@ -80,6 +81,7 @@ end
 function MF:remove()
 	self.ent = nil
 	self.internalEnergyObj:removeEnergy(self.internalEnergyObj:energy())
+	self.internalQuatronObj:removeEnergy(self.internalQuatronObj:energy())
 	self.jumpTimer = _mfBaseJumpTimer
 	self:removeSyncArea()
 end
@@ -208,8 +210,6 @@ function MF:update(event)
 	if event.tick%_eventTick5 == 0 then self:factoryTeleportBox() end
 	-- Read Modules inside the Equalizer --
 	if event.tick%_eventTick125 == 0 then self:scanModules() end
-	-- Update accumulators --
-	if event.tick%_eventTick38 == 0 then self:updateAccumulators() end
 	-- Send Quatron Charge --
 	if self.sendQuatronActivated == true then
 		self:SendQuatronToOC(event)
@@ -323,7 +323,7 @@ function MF:updateEnergyLaser(entity)
 	local mobileFactory = false
 	if string.match(entity.name, "MobileFactory") then mobileFactory = true end
 	-- Exclude Mobile Factory, Character, Power Drain Pole and Entities with 0 energy --
-	if mobileFactory == false and entity.type ~= "character" and entity.name ~= "PowerDrainPole" and entity.name ~= "OreCleaner" and entity.name ~= "FluidExtractor" and entity.energy ~= nil and entity.electric_buffer_size ~= nil then
+	if mobileFactory == false and entity.type ~= "character" and entity.name ~= "OreCleaner" and entity.name ~= "FluidExtractor" and entity.energy ~= nil and entity.electric_buffer_size ~= nil then
 		----------------------- Drain Power -------------------------
 		if self.selectedPowerLaserMode == "input" and entity.energy > 0 then
 			-- Missing Internal Energy or Structure Energy --
@@ -633,20 +633,6 @@ function MF:scanModules()
 	self.laserRadiusMultiplier = powerMD
 	self.laserDrainMultiplier = efficiencyMD
 	self.laserNumberMultiplier = focusMD
-end
-
--- Recharge inroom Dimensional Accumulator --
-function MF:updateAccumulators()
-	-- Factory --
-	if self.fS ~= nil and technologyUnlocked("EnergyDistribution1", getForce(self.player)) and self.internalEnergyDistributionActivated and self.internalEnergyObj:energy() > 0 then
-		for k, entity in pairs(global.accTable) do
-			if entity == nil or entity.valid == false then global.accTable[k] = nil return end
-			if self.internalEnergyObj:energy() > _mfBaseEnergyAccSend and entity.energy < entity.electric_buffer_size then
-				entity.energy = entity.energy + _mfBaseEnergyAccSend
-				self.internalEnergyObj:removeEnergy(_mfBaseEnergyAccSend)
-			end
-		end
-	end
 end
 
 function MF:removeSyncArea()

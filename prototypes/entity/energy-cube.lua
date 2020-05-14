@@ -27,7 +27,9 @@ ec1E.energy_source =
       buffer_capacity = "100MJ",
       usage_priority = "tertiary",
       input_flow_limit = "5MW",
-      output_flow_limit = "5MW"
+      output_flow_limit = "5MW",
+      render_no_power_icon = false,
+      render_no_network_icon = false
     }
 ec1E.charge_cooldown = 0
 ec1E.charge_light = nil
@@ -70,8 +72,8 @@ ec1I.name = "EnergyCubeMK1"
 ec1I.place_result = "EnergyCubeMK1"
 ec1I.icon = "__Mobile_Factory__/graphics/EnergyCubeMK1I.png"
 ec1I.icon_size = 128
-ec1I.subgroup = "DataSerialization"
-ec1I.order = "z"
+ec1I.subgroup = "Energy"
+ec1I.order = "a"
 ec1I.stack_size = 10
 data:extend{ec1I}
 
@@ -82,10 +84,10 @@ ec1R.name = "EnergyCubeMK1"
 ec1R.energy_required = 5
 ec1R.enabled = false
 ec1R.ingredients =
-    {
-      {"DimensionalCircuit", 25},
-      {"MachineFrame2", 4}
-    }
+{
+    {"DimensionalCircuit", 25},
+    {"MachineFrame2", 4}
+}
 ec1R.result = "EnergyCubeMK1"
 data:extend{ec1R}
 
@@ -106,7 +108,7 @@ end
 -- Entity --
 local iecE = table.deepcopy(ec1E)
 iecE.name = "InternalEnergyCube"
-iecE.icon = "__Mobile_Factory__/graphics/InternalEnergyCubeE.png"
+iecE.icon = "__Mobile_Factory__/graphics/InternalEnergyCubeI.png"
 iecE.minable = {mining_time = 1.5, result = "InternalEnergyCube"}
 iecE.max_health = 1500
 iecE.collision_box = {{-2.9, -2.1}, {2.9, 3.7}}
@@ -122,7 +124,9 @@ iecE.energy_source =
       buffer_capacity = "3GJ",
       usage_priority = "tertiary",
       input_flow_limit = "500MW",
-      output_flow_limit = "500MW"
+      output_flow_limit = "500MW",
+      render_no_power_icon = false,
+      render_no_network_icon = false
     }
     iecE.picture = {
     layers =
@@ -153,6 +157,96 @@ local iecI = table.deepcopy(ec1I)
 iecI.name = "InternalEnergyCube"
 iecI.place_result = "InternalEnergyCube"
 iecI.icon = "__Mobile_Factory__/graphics/InternalEnergyCubeI.png"
-iecI.order = "z2"
+iecI.order = "z1"
 iecI.stack_size = 1
 data:extend{iecI}
+
+-- Recipe --
+local iecR = {}
+iecR.type = "recipe"
+iecR.name = "InternalEnergyCube"
+iecR.energy_required = 15
+iecR.enabled = false
+iecR.ingredients =
+{
+    {"EnergyCubeMK1", 4},
+    {"DimensionalCircuit", 15},
+    {"MachineFrame2", 10}
+}
+iecR.result = "InternalEnergyCube"
+data:extend{iecR}
+
+---------------------------------- Internal Quatron Cube ----------------------------------
+-- Entity --
+local iqcE = table.deepcopy(iecE)
+iqcE.name = "InternalQuatronCube"
+iqcE.icon = "__Mobile_Factory__/graphics/InternalQuatronCubeI.png"
+iqcE.minable = {mining_time = 1.5, result = "InternalQuatronCube"}
+iqcE.energy_source =
+    {
+      type = "electric",
+      buffer_capacity = "1MJ",
+      usage_priority = "tertiary",
+      input_flow_limit = "0J",
+      output_flow_limit = "0J",
+      render_no_power_icon = false,
+      render_no_network_icon = false
+    }
+    iqcE.picture = {
+    layers =
+    {
+      {
+          filename = "__Mobile_Factory__/graphics/InternalQuatronCubeE.png",
+          priority = "high",
+          width = 600,
+          height = 600,
+          repeat_count = repeat_count,
+          scale = 1/2.25
+      },
+      {
+          filename = "__Mobile_Factory__/graphics/EnergyCubeS.png",
+          priority = "high",
+          width = 600,
+          height = 600,
+          repeat_count = repeat_count,
+          draw_as_shadow = true,
+          scale = 1/2.25
+      }
+    }
+  }
+data:extend{iqcE}
+
+-- Item --
+local iqcI = table.deepcopy(iecI)
+iqcI.name = "InternalQuatronCube"
+iqcI.place_result = "InternalQuatronCube"
+iqcI.icon = "__Mobile_Factory__/graphics/InternalQuatronCubeI.png"
+iqcI.order = "z2"
+iqcI.stack_size = 1
+data:extend{iqcI}
+
+-- Recipe --
+local iecR = {}
+iecR.type = "recipe"
+iecR.name = "InternalQuatronCube"
+iecR.energy_required = 15
+iecR.enabled = false
+iecR.ingredients =
+{
+    {"EnergyCubeMK1", 4},
+    {"DimensionalCircuit", 15},
+    {"MachineFrame2", 10}
+}
+iecR.result = "InternalQuatronCube"
+data:extend{iecR}
+
+-- Create all Sprite --
+for i = 0, 10 do
+	local iqcS = {}
+	iqcS.type = "sprite"
+	iqcS.name = "QuatronCubeSprite" .. i
+	iqcS.filename = "__Mobile_Factory__/graphics/QuatronCubeSprite.png"
+	iqcS.size = 600
+  iqcS.x = 600 * i
+	data:extend{iqcS}
+end

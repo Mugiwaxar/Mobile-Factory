@@ -1,15 +1,26 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.161
+Date: 12/05/2020
+  Features:
+    - Added the Internal Energy Cube, an Energy Cube that represent the Mobile Factory Internal Energy
+    - The Internal Energy Cube was added inside the Control Center, it can be removed but can only be placed inside the Mobile Factory
+    - Energy Cubes balance its Energy between them when placed together
+    - Added the Internal Quatron Cube, an Quatron Cube that represent the Mobile Factory Internal Quatron
+    - The Internal Quatron Cube was added inside the Control Center, it can be removed but can only be placed inside the Mobile Factory
+    - Quatron Cubes balance its Quatron between them when placed together
+  Graphics:
+    - Changed the Graphics of the Energy Cube MK1
+  Changes:
+    - The Data Assembler Settings can now be Copy/pasted
+    - Removed the Dimmensional Accumulator (Replaced by the Internal Energy Cube)
+    - Removed the Power Drain Pole (Replaced by the Internal Energy Cube)
+    - Removed the Energy Distribution Technology (Replaced by the Internal Energy Cube)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.160
 Date: 13/05/2020
   Bugfixes:
     - sync area sticker error
     - Network Explorer multiplayer compatibility
----------------------------------------------------------------------------------------------------
-Version: 0.0.159
-Date: 12/05/2020
-  Features:
-    - Added the Internal Energy Cube, an Energy Cube that represent the Mobile Factory Internal Energy
-    - The Internal Energy Cube was added inside the Control Center, it can be removed but can only be placed inside the Mobile Factory
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.159
 Date: 12/05/2020
