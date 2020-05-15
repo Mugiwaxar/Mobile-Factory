@@ -71,6 +71,12 @@ function placedEnergyCube(event)
 	global.energyCubesTable[event.created_entity.unit_number] = EC:new(event.created_entity)
 end
 
+-- Save the Energy Laser in a table --
+function placedEnergyLaser(event)
+	if global.energyLaserTable == nil then global.energyLaserTable = {} end
+	global.energyLaserTable[event.created_entity.unit_number] = EL:new(event.created_entity)
+end
+
 -- Save the Ore Cleaner --
 function placedOreCleaner(event)
 	if global.oreCleanerTable == nil then global.oreCleanerTable = {} end
@@ -179,6 +185,13 @@ function removedEnergyCube(event)
 	if global.energyCubesTable == nil then global.energyCubesTable = {} return end
 	if global.energyCubesTable[event.entity.unit_number] ~= nil then global.energyCubesTable[event.entity.unit_number]:remove() end
 	global.energyCubesTable[event.entity.unit_number] = nil
+end
+
+-- Remove the Energy Laser from the table --
+function removedEnergyLaser(event)
+	if global.energyLaserTable == nil then global.energyLaserTable = {} return end
+	if global.energyLaserTable[event.entity.unit_number] ~= nil then global.energyLaserTable[event.entity.unit_number]:remove() end
+	global.energyLaserTable[event.entity.unit_number] = nil
 end
 
 -- Remove the Ore Cleaner from the table --

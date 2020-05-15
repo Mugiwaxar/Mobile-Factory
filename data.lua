@@ -11,6 +11,7 @@ require("prototypes/entity/data-storage.lua")
 require("prototypes/entity/wireless-data-transmitter.lua")
 require("prototypes/entity/wireless-data-receiver.lua")
 require("prototypes/entity/energy-cube.lua")
+require("prototypes/entity/energy-laser.lua")
 require("prototypes/entity/deep-storage.lua")
 require("prototypes/entity/deep-tank.lua")
 require("prototypes/entity/fluid-interactor.lua")
@@ -48,6 +49,7 @@ require("prototypes/beam/GreenBeam.lua")
 require("prototypes/beam/BigGreenBeam.lua")
 require("prototypes/beam/BigPurpleBeam.lua")
 require("prototypes/beam/OCBeam.lua")
+require("prototypes/beam/EnergyLaserBeam.lua")
 require("prototypes/technology/energy-laser.lua")
 require("prototypes/technology/fluid-laser.lua")
 require("prototypes/technology/control-center.lua")
@@ -320,6 +322,15 @@ if settings.startup["MF-enable-erya"].value == true then
 		}
 	}
 end
+
+data:extend{
+	{
+		type="recipe-category",
+		name="Nothing",
+		order="z"
+	}
+}
+
 ------------------ ADD EQUIPMENT CATEGORY ----------------
 data:extend{
 	{

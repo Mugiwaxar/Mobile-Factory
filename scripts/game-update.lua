@@ -63,6 +63,7 @@ function updateValues()
 	if global.wirelessDataTransmitterTable == nil then global.wirelessDataTransmitterTable = {} end
 	if global.wirelessDataReceiverTable == nil then global.wirelessDataReceiverTable = {} end
 	if global.energyCubesTable == nil then global.energyCubesTable = {} end
+	if global.energyLaserTable == nil then global.energyLaserTable = {} end
 	if global.oreCleanerTable == nil then global.oreCleanerTable = {} end
 	if global.fluidExtractorTable == nil then global.fluidExtractorTable = {} end
 	if global.miningJetTable == nil then global.miningJetTable = {} end

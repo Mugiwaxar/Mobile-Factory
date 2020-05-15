@@ -31,6 +31,7 @@ require("scripts/objects/wireless-data-receiver.lua")
 require("scripts/objects/internal-energy.lua")
 require("scripts/objects/internal-quatron.lua")
 require("scripts/objects/energy-cube.lua")
+require("scripts/objects/energy-laser.lua")
 require("scripts/objects/mining-jet.lua")
 require("scripts/objects/mining-jet-flag.lua")
 require("scripts/objects/construction-jet.lua")
@@ -79,6 +80,7 @@ function onInit()
 	global.wirelessDataTransmitterTable = {}
 	global.wirelessDataReceiverTable = {}
 	global.energyCubesTable = {}
+	global.energyLaserTable = {}
 	global.deepStorageTable = {}
 	global.deepTankTable = {}
 	global.oreCleanerTable = {}
@@ -156,6 +158,10 @@ function onLoad()
 	-- Set EnergyCube Metatables --
 	for k, ec in pairs(global.energyCubesTable or {}) do
 		EC:rebuild(ec)
+	end
+	-- Set PowerLaser Metatables --
+	for k, el in pairs(global.energyLaserTable or {}) do
+		EL:rebuild(el)
 	end
 	-- Set Ore Cleaner Metatable --
 	for k, oc in pairs(global.oreCleanerTable or {}) do

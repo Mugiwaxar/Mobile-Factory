@@ -792,7 +792,7 @@ function MF:syncAreaScan()
 
 	-- Clone Outside Entities --
 	for k, ent in pairs(entTableOut) do
-		if _mfSyncAreaAllowedTypes[ent.type] == true and distancesOutBools[k] == true then
+		if _mfSyncAreaAllowedTypes[ent.type] == true and distancesOutBools[k] == true and ent.name ~= "InternalEnergyCube" and ent.name ~= "InternalQuatronCube" then
 			self:cloneEntity(ent, "in")
 		end
 	end
