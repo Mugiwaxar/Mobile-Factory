@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.163
+Date: 15/05/2020
+  Changes:
+    - Fluid Interactor can now be copy/pasted, blueprinted (settings may not copy), decon'd
+    - Localised names and descriptions of Wireless Transmitter / Receiver (for clarity)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.162
 Date: 15/05/2020
   Features:
