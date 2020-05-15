@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.165
+Date: 15/05/2020
+  Changes:
+    - Picked-up Deep Tank now saves temperature
+    - Placed Deep Tank or Deep Storage has filter set to stored fluid/item (if it had anything)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.164
 Date: 15/05/2020
   Changes:
