@@ -1,4 +1,23 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.165
+Date: 15/05/2020
+  Changes:
+    - Picked-up Deep Tank now saves temperature
+    - Placed Deep Tank or Deep Storage has filter set to stored fluid/item (if it had anything)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.164
+Date: 15/05/2020
+  Changes:
+    - decrease Energy Laser power consumption statistics (related to Factorio bug)
+  Bugfixes:
+    - Energy Laser can be rotated
+---------------------------------------------------------------------------------------------------
+Version: 0.0.163
+Date: 15/05/2020
+  Changes:
+    - Fluid Interactor can now be copy/pasted, blueprinted (settings may not copy), decon'd
+    - Localised names and descriptions of Wireless Transmitter / Receiver (for clarity)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.162
 Date: 15/05/2020
   Features:
