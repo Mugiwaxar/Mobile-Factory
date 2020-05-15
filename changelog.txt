@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.164
+Date: 15/05/2020
+  Changes:
+    - decrease Energy Laser power consumption statistics (related to Factorio bug)
+  Bugfixes:
+    - Energy Laser can be rotated
+---------------------------------------------------------------------------------------------------
 Version: 0.0.163
 Date: 15/05/2020
   Changes:
