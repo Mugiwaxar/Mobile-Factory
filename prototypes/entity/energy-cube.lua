@@ -73,7 +73,7 @@ ec1I.place_result = "EnergyCubeMK1"
 ec1I.icon = "__Mobile_Factory__/graphics/EnergyCubeMK1I.png"
 ec1I.icon_size = 128
 ec1I.subgroup = "Energy"
-ec1I.order = "a"
+ec1I.order = "b1"
 ec1I.stack_size = 10
 data:extend{ec1I}
 
@@ -157,7 +157,7 @@ local iecI = table.deepcopy(ec1I)
 iecI.name = "InternalEnergyCube"
 iecI.place_result = "InternalEnergyCube"
 iecI.icon = "__Mobile_Factory__/graphics/InternalEnergyCubeI.png"
-iecI.order = "z1"
+iecI.order = "b98"
 iecI.stack_size = 1
 data:extend{iecI}
 
@@ -221,7 +221,7 @@ local iqcI = table.deepcopy(iecI)
 iqcI.name = "InternalQuatronCube"
 iqcI.place_result = "InternalQuatronCube"
 iqcI.icon = "__Mobile_Factory__/graphics/InternalQuatronCubeI.png"
-iqcI.order = "z2"
+iqcI.order = "b99"
 iqcI.stack_size = 1
 data:extend{iqcI}
 

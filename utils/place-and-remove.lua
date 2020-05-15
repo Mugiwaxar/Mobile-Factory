@@ -320,6 +320,12 @@ function somethingWasPlaced(event, isRobot)
 		end
 		return
 	end
+
+	-- Save the Energy Laser --
+	if cent.name == "EnergyLaser1" then
+		placedEnergyLaser(event)
+		return
+	end
 	
 	-- Save the Data Center MF --
 	if cent.name == "DataCenterMF" then
@@ -501,6 +507,12 @@ function somethingWasRemoved(event)
 			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.EnergyCubeC", Util.toRNumber(math.floor(obj.ent.energy))}, "J"}
 		end
 		removedEnergyCube(event)
+		return
+	end
+
+	-- Remove the Energy Laser --
+	if removedEnt.name == "EnergyLaser1" then
+		removedEnergyLaser(event)
 		return
 	end
 

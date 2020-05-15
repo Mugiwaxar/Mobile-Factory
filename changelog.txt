@@ -1,6 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.162
+Date: 15/05/2020
+  Features:
+    - Added the Energy Laser MK1, now you can transfer Energy between Energy Cubes and charge the Mobile Factory from outside
+---------------------------------------------------------------------------------------------------
 Version: 0.0.161
-Date: 12/05/2020
+Date: 14/05/2020
   Features:
     - Added the Internal Energy Cube, an Energy Cube that represent the Mobile Factory Internal Energy
     - The Internal Energy Cube was added inside the Control Center, it can be removed but can only be placed inside the Mobile Factory
@@ -12,7 +17,7 @@ Date: 12/05/2020
     - Changed the Graphics of the Energy Cube MK1
   Changes:
     - The Data Assembler Settings can now be Copy/pasted
-    - Removed the Dimmensional Accumulator (Replaced by the Internal Energy Cube)
+    - Removed the Dimensional Accumulator (Replaced by the Internal Energy Cube)
     - Removed the Power Drain Pole (Replaced by the Internal Energy Cube)
     - Removed the Energy Distribution Technology (Replaced by the Internal Energy Cube)
 ---------------------------------------------------------------------------------------------------

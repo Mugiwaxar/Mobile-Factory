@@ -21,8 +21,8 @@ beam1.head =
       frame_count = 8,
       scale = 2,
       animation_speed = 0.5,
-      blend_mode = laser_beam_blend_mode;
-	  tint = beam_tint
+      blend_mode = laser_beam_blend_mode,
+	    tint = beam_tint
     }
 beam1.tail =
     {

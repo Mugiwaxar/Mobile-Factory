@@ -1,7 +1,7 @@
----------------------- Crystallizer ----------------------
-  
+---------------------- CRYSTALLISER ----------------------
+
 -- Entity --
-cE = {}
+local cE = {}
 cE.type = "assembling-machine"
 cE.name = "Crystallizer"
 cE.icon = "__Mobile_Factory_Graphics__/graphics/icones/Crystallizer.png"

@@ -103,11 +103,11 @@ function EC:balance()
 	if self.ent == nil or self.ent.valid == false then return end
 
 	-- Get all Accumulator arount --
-	local ents = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=2, type="accumulator"}
+	local area = {{self.ent.position.x-1.5, self.ent.position.y-1.5},{self.ent.position.x+1.5,self.ent.position.y+1.5}}
+	local ents = self.ent.surface.find_entities_filtered{area=area, type="accumulator"}
 
 	-- Check all Accumulator --
 	for k, ent in pairs(ents) do
-
 		-- Look for valid Energy Cube --
 		if ent ~= nil and ent.valid == true and ent.name == "EnergyCubeMK1" then
 			local obj = global.entsTable[ent.unit_number]
