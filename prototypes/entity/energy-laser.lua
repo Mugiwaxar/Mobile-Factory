@@ -62,13 +62,27 @@ elE.energy_source =
     type = "electric",
     usage_priority = "secondary-input",
     buffer_capacity = "5MJ",
-    output_flow_limit = "1J",
-    input_flow_limit = "1J",
+    output_flow_limit = "0.0001W",
+    input_flow_limit = "0.0001W",
     drain = "0J",
     render_no_power_icon = false,
     render_no_network_icon = false
 }
 elE.energy_usage = "5MJ"
+elE.fluid_boxes = {
+    {
+        base_level = 1,
+        pipe_connections = {
+            {
+                position = {
+                    0,
+                    -1
+                }
+            }
+        },
+        production_type = "output",
+    }
+}
 data:extend{elE}
 
 -- Item --

@@ -138,8 +138,6 @@ function EL:sendEnergy()
 		self.ent.surface.create_entity{name="MK1SendBeam", duration=5, position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
 		self.beam = self.ent.surface.create_entity{name="MK1ConnectedBeam", position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
 	end
-
-
 end
 
 -- Look for an Entity to recharge --
@@ -179,7 +177,8 @@ end
 -- Return the amount of Energy --
 function EL:energy()
 	if self.ent ~= nil and self.ent.valid == true then
-		if self.ent.energy < 1000 then self.ent.energy = 0 end
+		-- Only Act If EL Has More Than 100 kJ -- 
+		if self.ent.energy < 1e5 then return 0 end
 		return self.ent.energy
 	end
 	return 0
