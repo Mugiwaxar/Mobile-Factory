@@ -81,7 +81,7 @@ end
 function MF:remove()
 	self.ent = nil
 	self.internalEnergyObj:removeEnergy(self.internalEnergyObj:energy())
-	self.internalQuatronObj:removeEnergy(self.internalQuatronObj:energy())
+	self.internalQuatronObj:removeQuatron(self.internalQuatronObj:quatron())
 	self.jumpTimer = _mfBaseJumpTimer
 	self:removeSyncArea()
 end

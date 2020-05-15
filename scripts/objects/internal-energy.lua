@@ -7,6 +7,7 @@ IEC = {
 	MF = nil,
 	entID = 0,
 	spriteID = 0,
+	lightID = 0,
 	updateTick = 60,
 	lastUpdate = 0
 }
@@ -31,6 +32,7 @@ function IEC:setEnt(object)
 	self.entID = object.unit_number
 	-- Draw the Sprite --
 	self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite0", x_scale=1/2.25, y_scale=1/2.25, target=object, surface=object.surface, render_layer=131}
+	self.lightID = rendering.draw_light{sprite="EnergyCubeMK1Sprite0", scale=1/2.25, target=object, surface=object.surface, minimum_darkness=0}
 end
 
 -- Reconstructor --
@@ -45,6 +47,7 @@ end
 function IEC:remove()
 	-- Destroy the Sprite --
 	rendering.destroy(self.spriteID)
+	rendering.destroy(self.lightID)
 	self.ent = nil
 end
 
@@ -67,13 +70,15 @@ function IEC:update()
     -- Update the Sprite --
 	local spriteNumber = math.ceil(self.ent.energy/self.ent.prototype.electric_energy_source_prototype.buffer_capacity*10)
 	rendering.destroy(self.spriteID)
-    self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite" .. spriteNumber, x_scale=1/2.25, y_scale=1/2.25, target=self.ent, surface=self.ent.surface, render_layer=131}
+	rendering.destroy(self.lightID)
+	self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite" .. spriteNumber, x_scale=1/2.25, y_scale=1/2.25, target=self.ent, surface=self.ent.surface, render_layer=131}
+	self.lightID = rendering.draw_light{sprite="EnergyCubeMK1Sprite" .. spriteNumber, scale=1/2.25, target=self.ent, surface=self.ent.surface, minimum_darkness=0}
 	
 	-- Balance the Energy with neighboring Cubes --
-	self:balance()
+	-- self:balance()
 
 end
-
+ 
 -- Tooltip Infos --
 -- function IEC:getTooltipInfos(GUI)
 -- end
@@ -85,7 +90,7 @@ function IEC:balance()
 	if self.ent == nil or self.ent.valid == false then return end
 
 	-- Get all Accumulator arount --
-	local area = {{self.ent.position.x-4.5, self.ent.position.y-4.5},{self.ent.position.x+4.5,self.ent.position.y+4.5}}
+	local area = {{self.ent.position.x-3.5, self.ent.position.y-2.5},{self.ent.position.x+3.5,self.ent.position.y+4.5}}
 	local ents = self.ent.surface.find_entities_filtered{area=area, type="accumulator"}
 
 	-- Check all Accumulator --
