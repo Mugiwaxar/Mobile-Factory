@@ -188,6 +188,7 @@ function somethingWasPlaced(event, isRobot)
 				local tags = event.stack.get_tag("Infos")
 				if tags ~= nil then
 					global.deepStorageTable[cent.unit_number].inventoryItem = tags.inventoryItem
+					global.deepStorageTable[cent.unit_number].filter = tags.inventoryItem
 					global.deepStorageTable[cent.unit_number].inventoryCount = tags.inventoryCount
 				end
 			end
@@ -204,7 +205,13 @@ function somethingWasPlaced(event, isRobot)
 				local tags = event.stack.get_tag("Infos")
 				if tags ~= nil then
 					global.deepTankTable[cent.unit_number].inventoryFluid = tags.inventoryFluid
+					global.deepTankTable[cent.unit_number].filter = tags.inventoryFluid
 					global.deepTankTable[cent.unit_number].inventoryCount = tags.inventoryCount
+					if tags.InventoryTemperature and tonumber(tags.InventoryTemperature) then
+						global.deepTankTable[cent.unit_number].inventoryTemperature = tonumber(tags.InventoryTemperature)
+					else
+						global.deepTankTable[cent.unit_number].inventoryTemperature = 15
+					end
 				end
 			end
 			return
@@ -569,7 +576,7 @@ function somethingWasRemoved(event)
 		local obj = global.deepTankTable[removedEnt.unit_number]
 		if obj ~= nil and obj.inventoryFluid ~= nil and event.buffer ~= nil and event.buffer[1] ~= nil then
 			event.buffer[1].set_tag("Infos", {inventoryFluid=obj.inventoryFluid, inventoryCount=obj.inventoryCount})
-			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.DeepTankC", obj.inventoryFluid, obj.inventoryCount}}
+			event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.DeepTankC", obj.inventoryFluid, obj.inventoryCount, obj.inventoryTemperature or 15}}
 		end
 		removedDeepTank(event)
 		return
