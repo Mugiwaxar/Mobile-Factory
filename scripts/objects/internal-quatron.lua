@@ -7,6 +7,7 @@ IQC = {
 	MF = nil,
 	entID = 0,
 	spriteID = 0,
+	lightID = 0,
 	updateTick = 60,
 	lastUpdate = 0
 }
@@ -31,6 +32,7 @@ function IQC:setEnt(object)
 	self.entID = object.unit_number
 	-- Draw the Sprite --
 	self.spriteID = rendering.draw_sprite{sprite="QuatronCubeSprite0", x_scale=1/2.25, y_scale=1/2.25, target=object, surface=object.surface, render_layer=131}
+	self.lightID = rendering.draw_light{sprite="QuatronCubeSprite0", scale=1/2.25, target=object, surface=object.surface, minimum_darkness=0}
 end
 
 -- Reconstructor --
@@ -45,6 +47,7 @@ end
 function IQC:remove()
 	-- Destroy the Sprite --
 	rendering.destroy(self.spriteID)
+	rendering.destroy(self.lightID)
 	self.ent = nil
 end
 
@@ -67,7 +70,9 @@ function IQC:update()
     -- Update the Sprite --
 	local spriteNumber = math.ceil(self.ent.energy/self.ent.prototype.electric_energy_source_prototype.buffer_capacity*10)
 	rendering.destroy(self.spriteID)
-    self.spriteID = rendering.draw_sprite{sprite="QuatronCubeSprite" .. spriteNumber, x_scale=1/2.25, y_scale=1/2.25, target=self.ent, surface=self.ent.surface, render_layer=131}
+	rendering.destroy(self.lightID)
+	self.spriteID = rendering.draw_sprite{sprite="QuatronCubeSprite" .. spriteNumber, x_scale=1/2.25, y_scale=1/2.25, target=self.ent, surface=self.ent.surface, render_layer=131}
+	self.lightID = rendering.draw_light{sprite="QuatronCubeSprite" .. spriteNumber, scale=1/2.25, target=self.ent, surface=self.ent.surface, minimum_darkness=0}
     
 end
 
@@ -76,7 +81,7 @@ end
 -- end
 
 -- Return the amount of Energy --
-function IQC:energy()
+function IQC:quatron()
 	if self.ent ~= nil and self.ent.valid == true then
 		return self.ent.energy
 	end
@@ -84,7 +89,7 @@ function IQC:energy()
 end
 
 -- Return the Energy Buffer size --
-function IQC:maxEnergy()
+function IQC:maxQuatron()
 	if self.ent ~= nil and self.ent.valid == true then
 		return self.ent.electric_buffer_size
 	end
@@ -92,9 +97,9 @@ function IQC:maxEnergy()
 end
 
 -- Add Energy (Return the amount added) --
-function IQC:addEnergy(amount)
+function IQC:addQuatron(amount)
 	if self.ent ~= nil and self.ent.valid == true then
-		local added = math.min(amount, self:maxEnergy() - self:energy())
+		local added = math.min(amount, self:maxQuatron() - self:quatron())
 		self.ent.energy = self.ent.energy + added
 		return added
 	end
@@ -102,9 +107,9 @@ function IQC:addEnergy(amount)
 end
 
 -- Remove Energy (Return the amount removed) --
-function IQC:removeEnergy(amount)
+function IQC:removeQuatron(amount)
 	if self.ent ~= nil and self.ent.valid == true then
-		local removed = math.min(amount, self:energy())
+		local removed = math.min(amount, self:quatron())
 		self.ent.energy = self.ent.energy - removed
 		return removed
 	end

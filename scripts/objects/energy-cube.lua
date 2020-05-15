@@ -7,6 +7,7 @@ EC = {
 	MF = nil,
 	entID = 0,
 	spriteID = 0,
+	lightID = 0,
 	consumption = 0,
 	updateTick = 60,
 	lastUpdate = 0,
@@ -27,6 +28,7 @@ function EC:new(object)
 	t.entID = object.unit_number
 	-- Draw the Sprite --
 	t.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite0", x_scale=1/7, y_scale=1/7, target=object, surface=object.surface, target_offset={0, -0.3}, render_layer=131}
+	self.lightID = rendering.draw_light{sprite="EnergyCubeMK1Sprite0", scale=1/7, target=object, surface=object.surface, target_offset={0, -0.3}, minimum_darkness=0}
 	UpSys.addObj(t)
 	return t
 end
@@ -43,6 +45,7 @@ end
 function EC:remove()
 	-- Destroy the Sprite --
 	rendering.destroy(self.spriteID)
+	rendering.destroy(self.lightID)
 	-- Remove from the Update System --
 	UpSys.removeObj(self)
 	-- Remove from the Data Network --
@@ -83,7 +86,9 @@ function EC:update()
 	-- Update the Sprite --
 	local spriteNumber = math.ceil(self.ent.energy/self.ent.prototype.electric_energy_source_prototype.buffer_capacity*10)
 	rendering.destroy(self.spriteID)
+	rendering.destroy(self.lightID)
 	self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite" .. spriteNumber, x_scale=1/7, y_scale=1/7, target=self.ent, surface=self.ent.surface, target_offset={0, -0.3}, render_layer=131}
+	self.lightID = rendering.draw_light{sprite="EnergyCubeMK1Sprite" .. spriteNumber, scale=1/7, target=self.ent, surface=self.ent.surface, target_offset={0, -0.3}, minimum_darkness=0}
 
 	-- Balance the Energy with neighboring Cubes --
 	self:balance()
@@ -109,12 +114,12 @@ function EC:balance()
 	-- Check all Accumulator --
 	for k, ent in pairs(ents) do
 		-- Look for valid Energy Cube --
-		if ent ~= nil and ent.valid == true and ent.name == "EnergyCubeMK1" then
+		if ent ~= nil and ent.valid == true and (ent.name == "EnergyCubeMK1" or "InternalPowerCube") then
 			local obj = global.entsTable[ent.unit_number]
-			if valid(obj) then
+			if obj.ent ~= nil and obj.ent.valid == true then
 				if self:energy() > obj:energy() and obj:energy() < obj:maxEnergy() then
 					-- Calcule max flow --
-					local energyVariance = self:energy() - obj:energy()
+					local energyVariance = (self:energy() - obj:energy()) / 2
 					local maxEnergyTranfer = math.min(energyVariance, self:energy(), self:maxOutput()*self.updateTick, obj:maxInput()*self.updateTick)
 					-- Transfer Energy --
 					local transfered = obj:addEnergy(maxEnergyTranfer)
@@ -122,12 +127,12 @@ function EC:balance()
 					self:removeEnergy(transfered)
 				elseif self:energy() < obj:energy() and self:energy() < self:maxEnergy() then
 					-- Calcule max flow --
-					local energyVariance = obj:energy() - self:energy()
+					local energyVariance = (obj:energy() - self:energy()) / 2
 					local maxEnergyTranfer = math.min(energyVariance, obj:energy(), self:maxInput()*self.updateTick, obj:maxOutput()*self.updateTick)
 					-- Transfer Energy --
 					local transfered = self:addEnergy(maxEnergyTranfer)
 					-- Remove Energy --
-					self:removeEnergy(transfered)
+					obj:removeEnergy(transfered)
 				end
 			end
 		end

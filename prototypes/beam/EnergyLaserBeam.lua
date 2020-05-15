@@ -24,6 +24,21 @@ iddleBeam.head =
 }
 iddleBeam.tail = iddleBeam.head
 iddleBeam.body = iddleBeam.head
+iddleBeam.light_animations =
+{
+    head =
+    {
+        filename = "__Mobile_Factory__/graphics/IddleBeamLight.png",
+        line_length = 2,
+        width = 30,
+        height = 30,
+        scale = 1.0,
+        animation_speed = 0.025,
+        frame_count = 2
+    }
+}
+iddleBeam.light_animations.tail = iddleBeam.light_animations.head
+iddleBeam.light_animations.body = iddleBeam.light_animations.head
 data:extend{iddleBeam}
 
 
@@ -35,7 +50,7 @@ mk1ConnectedBeam.type = "beam"
 mk1ConnectedBeam.name = "MK1ConnectedBeam"
 mk1ConnectedBeam.flags = {"not-on-map"}
 mk1ConnectedBeam.width = 1
-mk1ConnectedBeam.damage_interval = 20
+mk1ConnectedBeam.damage_interval = 20   
 mk1ConnectedBeam.random_target_offset = true
 mk1ConnectedBeam.action_triggered_automatically = false
 mk1ConnectedBeam.action = nil
@@ -53,6 +68,21 @@ mk1ConnectedBeam.head =
 }
 mk1ConnectedBeam.tail = mk1ConnectedBeam.head
 mk1ConnectedBeam.body = mk1ConnectedBeam.head
+mk1ConnectedBeam.light_animations =
+{
+    head =
+    {
+        filename = "__Mobile_Factory__/graphics/MK1ConnectedBeamLight.png",
+        line_length = 2,
+        width = 90,
+        height = 90,
+        scale = 1/2.7,
+        animation_speed = 0.025,
+        frame_count = 2
+    }
+}
+mk1ConnectedBeam.light_animations.tail = mk1ConnectedBeam.light_animations.head
+mk1ConnectedBeam.light_animations.body = mk1ConnectedBeam.light_animations.head
 data:extend{mk1ConnectedBeam}
 
 -- Send Beam --
@@ -79,4 +109,19 @@ mk1SendBeam.head =
 }
 mk1SendBeam.tail = mk1SendBeam.head
 mk1SendBeam.body = mk1SendBeam.head
+mk1SendBeam.light_animations =
+{
+    head =
+    {
+        filename = "__Mobile_Factory__/graphics/MK1SendBeamLight.png",
+        line_length = 4,
+        width = 90,
+        height = 90,
+        scale = 1/2.7,
+        animation_speed = 0.4,
+        frame_count = 4
+    }
+}
+mk1SendBeam.light_animations.tail = mk1SendBeam.light_animations.head
+mk1SendBeam.light_animations.body = mk1SendBeam.light_animations.head
 data:extend{mk1SendBeam}

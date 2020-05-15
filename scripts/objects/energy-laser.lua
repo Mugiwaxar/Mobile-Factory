@@ -135,8 +135,8 @@ function EL:sendEnergy()
 		obj:addEnergy(amount)
 		-- Create the Beam --
 		self.beam.destroy()
-		self.ent.surface.create_entity{name="MK1SendBeam", duration=5, position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
 		self.beam = self.ent.surface.create_entity{name="MK1ConnectedBeam", position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
+		self.ent.surface.create_entity{name="MK1SendBeam", duration=5, position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
 	end
 end
 
@@ -168,6 +168,9 @@ function EL:findEntity()
 		self.beam.destroy()
 		self.beam = self.ent.surface.create_entity{name="IddleBeam", position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
 	elseif oldObj ~= nil and oldObj.ent ~= nil and oldObj.ent.valid == true and oldObj ~= self.focusedObj then
+		self.beam.destroy()
+		self.beam = self.ent.surface.create_entity{name="MK1ConnectedBeam", position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
+	elseif self.focusedObj ~= nil and self.focusedObj.ent ~= nil and self.focusedObj.ent.valid == true then
 		self.beam.destroy()
 		self.beam = self.ent.surface.create_entity{name="MK1ConnectedBeam", position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
 	end

@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.166
+Date: 15/05/2020
+  Graphics:
+    - Improved the visual of the Energy Cubes charge level
+    - Improved the visual of the Energy Lasers Beams
+---------------------------------------------------------------------------------------------------
 Version: 0.0.165
 Date: 15/05/2020
   Changes:

@@ -101,8 +101,8 @@ function GUI.updateMFMainGUI(GUIObj)
 		end
 		mfEnergyValue = 1 - (math.floor(100 - MF.internalEnergyObj:energy() / MF.internalEnergyObj:maxEnergy() * 100)) / 100
 		mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF.internalEnergyObj:energy()), "J/", Util.toRNumber(MF.internalEnergyObj:maxEnergy()), "J"}
-		mfQuatronValue = 1 - (math.floor(100 - MF.internalQuatronObj:energy() / MF.internalQuatronObj:maxEnergy() * 100)) / 100
-		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", Util.toRNumber(MF.internalQuatronObj:energy()), "/", Util.toRNumber(MF.internalQuatronObj:maxEnergy())}
+		mfQuatronValue = 1 - (math.floor(100 - MF.internalQuatronObj:quatron() / MF.internalQuatronObj:maxQuatron() * 100)) / 100
+		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", Util.toRNumber(MF.internalQuatronObj:quatron()), "/", Util.toRNumber(MF.internalQuatronObj:maxQuatron())}
 		mfJumpDriveValue = (math.floor(100 - MF.jumpTimer / MF.baseJumpTimer * 100)) / 100
 		mfJumpDriveText = {"", {"gui-description.mfJumpTimer"}, ": ", math.floor(100 - MF.jumpTimer / MF.baseJumpTimer * 100), "% (", MF.jumpTimer, "s)"}
 	end

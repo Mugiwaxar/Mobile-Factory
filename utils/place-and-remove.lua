@@ -110,7 +110,7 @@ function somethingWasPlaced(event, isRobot)
 		if event.stack ~= nil and event.stack.valid_for_read == true then
 			local tags = event.stack.get_tag("Infos")
 			if tags ~= nil then
-				MF.internalQuatronObj:addEnergy(tags.energy)
+				MF.internalQuatronObj:addQuatron(tags.energy)
 			end
 		end
 		return
@@ -498,8 +498,8 @@ function somethingWasRemoved(event)
 	if removedEnt.name == "InternalQuatronCube" then
 		for k, MFObj in pairs(global.MFTable) do
 			if MFObj.internalQuatronObj.ent ~= nil and MFObj.internalQuatronObj.ent.valid == true and removedEnt == MFObj.internalQuatronObj.ent then
-				event.buffer[1].set_tag("Infos", {energy=MFObj.internalQuatronObj:energy()})
-				event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.EnergyCubeC", Util.toRNumber(math.floor(MFObj.internalQuatronObj:energy()))}}
+				event.buffer[1].set_tag("Infos", {energy=MFObj.internalQuatronObj:quatron()})
+				event.buffer[1].custom_description = {"", event.buffer[1].prototype.localised_description, {"item-description.EnergyCubeC", Util.toRNumber(math.floor(MFObj.internalQuatronObj:quatron()))}}
 				MFObj.internalQuatronObj:remove()
 			end
 		end
