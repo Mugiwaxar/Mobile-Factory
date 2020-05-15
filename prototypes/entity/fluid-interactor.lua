@@ -4,7 +4,7 @@
 fiE = table.deepcopy(data.raw["storage-tank"]["storage-tank"])
 fiE.name = "FluidInteractor"
 fiE.minable = {mining_time = 0.2, result = "FluidInteractor"}
-fiE.flags = {"not-rotatable"}
+fiE.flags = {"placeable-neutral", "player-creation", "not-rotatable"}
 fiE.collision_box = {{-1.4, -1.4}, {1.4, 1.4}}
 fiE.selection_box = fiE.collision_box
 fiE.fast_replaceable_group = nil
