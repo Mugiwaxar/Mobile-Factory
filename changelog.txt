@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.167
+Date: 15/05/2020
+  Features:
+    - Liquid Quatron can now be made with Quatron Cell
+  Changes:
+    - Changed the Fluid Interactor Pipe Connections for better interaction with the other Structures (Honktown)
+  Scripting:
+    - Deep Tank and Deep Storage Objects are now placed inside its corresponding MF Object (But still exist in global for object update reasons)
+    - Added the MF Object and the PlayerIndex to all Data Network Objects
+---------------------------------------------------------------------------------------------------
 Version: 0.0.166
 Date: 15/05/2020
   Graphics:

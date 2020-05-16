@@ -100,14 +100,14 @@ function FE:getTooltipInfos(GUIObj, gui, justCreated)
 		local invs = {{"", {"gui-description.All"}}}
 		local selectedIndex = 1
 		local i = 1
-		for k, deepTank in pairs(global.deepTankTable) do
-			if deepTank ~= nil and deepTank.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepTank) then
+		for k, deepTank in pairs(self.MF.DTKTable) do
+			if deepTank ~= nil and deepTank.ent ~= nil then
 				i = i + 1
 				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
 				if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
-					itemText = {"", " (", game.fluid_prototypes[deepTank.filter].localised_name, " - ", deepTank.player, ")"}
+					itemText = {"", " (", game.fluid_prototypes[deepTank.filter].localised_name, ")"}
 				elseif deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
-					itemText = {"", " (", game.fluid_prototypes[deepTank.inventoryFluid].localised_name, " - ", deepTank.player, ")"}
+					itemText = {"", " (", game.fluid_prototypes[deepTank.inventoryFluid].localised_name, ")"}
 				end
 				invs[k+1] = {"", {"gui-description.DT"}, " ", tostring(deepTank.ID), itemText}
 				if self.selectedInv == deepTank then
@@ -159,7 +159,7 @@ function FE:changeDimTank(ID)
 	end
 	-- Select the Ore Silo --
 	self.selectedInv = nil
-	for k, dimTank in pairs(global.deepTankTable) do
+	for k, dimTank in pairs(self.MF.DTKTable) do
 		if dimTank ~= nil and dimTank.ent ~= nil and dimTank.ent.valid == true then
 			if ID == dimTank.ID then
 				self.selectedInv = dimTank
@@ -194,7 +194,7 @@ function FE:extractFluids(event)
 	if inventory == nil then
 		-- Auto Select the Ore Silo --
 		inventory = nil
-		for k, dimTank in pairs(global.deepTankTable) do
+		for k, dimTank in pairs(self.MF.DTKTable) do
 			if dimTank ~= nil and dimTank.ent ~= nil and dimTank.ent.valid == true then
 				if dimTank:canAccept({name = resourceName}) then
 					inventory = dimTank

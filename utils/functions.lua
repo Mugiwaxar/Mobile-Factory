@@ -1,3 +1,42 @@
+-- Create all Objects Table --
+function Util.createTableList()
+	Util.addObject{tableName="playersTable", tag="MFP", objName="MFPlayer", noPlaced=true, noUpsys=true}
+	Util.addObject{tableName="MFTable", tag="MF", objName="MF", noPlaced=true}
+	Util.addObject{tableName="eryaTable", tag="ES", objName="Erya"}
+	Util.addObject{tableName="dataCenterTable", tag="DC", objName="DataCenter"}
+	Util.addObject{tableName="dataCenterTable", tag="DCMF", objName="DataCenterMF", onlyOnce=true}
+	Util.addObject{tableName="matterInteractorTable", tag="MI", objName="MatterInteractor"}
+	Util.addObject{tableName="fluidInteractorTable", tag="FI", objName="FluidInteractor"}
+	Util.addObject{tableName="dataAssemblerTable", tag="DA", objName="DataAssembler"}
+	Util.addObject{tableName="networkExplorerTable", tag="NE", objName="NetworkExplorer"}
+	Util.addObject{tableName="dataStorageTable", tag="DS", objName="DataStorage"}
+	Util.addObject{tableName="wirelessDataTransmitterTable", tag="WDT", objName="WirelessDataTransmitter"}
+	Util.addObject{tableName="wirelessDataReceiverTable", tag="WDR", objName="WirelessDataReceiver"}
+	Util.addObject{tableName="energyCubesTable", tag="EC", objName="EnergyCubeMK1"}
+	Util.addObject{tableName="energyLaserTable", tag="EL", objName="EnergyLaser1"}
+	Util.addObject{tableName="deepStorageTable", tag="DSR", objName="DeepStorage", canInCC=true}
+	Util.addObject{tableName="deepTankTable", tag="DTK", objName="DeepTank", canInCC=true}
+	Util.addObject{tableName="oreCleanerTable", tag="OC", objName="OreCleaner", noInside=true}
+	Util.addObject{tableName="fluidExtractorTable", tag="FE", objName="FluidExtractor", noInside=true}
+	Util.addObject{tableName="miningJetTable", tag="MJ", objName="MiningJet", noPlaced=true}
+	Util.addObject{tableName="constructionJetTable", tag="CJ", objName="ConstructionJet", noPlaced=true}
+	Util.addObject{tableName="repairJetTable", tag="RJ", objName="RepairJet", noPlaced=true}
+	Util.addObject{tableName="combatJetTable", tag="CBJ", objName="CombatJet", noPlaced=true}
+	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK1", noInside=true}
+	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK2", noInside=true}
+	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK3", noInside=true}
+	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK4", noInside=true}
+end
+
+-- Add an Object to the System --
+-- {tableName, tag, objName, noUpsys, noOuside, noInside, canInCC, canInCCAnywhere, onlyOnce, noPlaced} --
+function Util.addObject(table)
+	-- Check the objTable --
+	if global.objTable == nil then global.objTable = {} end
+	-- Add the Object --
+	global.objTable[table.objName] = table
+end
+
 -- Transfer Chest1 to Chest2 --
 function Util.syncChest(chest1, chest2)
 	local itemsTable = {}

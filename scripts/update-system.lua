@@ -30,31 +30,19 @@ function UpSys.scanObjs()
     end
   end
 
-  -- Add Array --
-  UpSys.addTable(global.MFTable)
-  UpSys.addTable(global.dataCenterTable)
-  UpSys.addTable(global.matterInteractorTable)
-  UpSys.addTable(global.fluidInteractorTable)
-  UpSys.addTable(global.dataStorageTable)
-  UpSys.addTable(global.energyCubesTable)
-  UpSys.addTable(global.energyLaserTable)
-  UpSys.addTable(global.oreCleanerTable)
-  UpSys.addTable(global.fluidExtractorTable)
+  -- Add all Objects to --
+  for k, obj in pairs(global.objTable) do
+    if obj.noUpsys ~= true then
+      UpSys.addTable(global[obj.tableName])
+    end
+  end
+
+  -- Add Data Network --
   UpSys.addTable(global.dataNetworkTable)
-  UpSys.addTable(global.wirelessDataTransmitterTable)
-  UpSys.addTable(global.wirelessDataReceiverTable)
-  UpSys.addTable(global.miningJetTable)
-  UpSys.addTable(global.jetFlagTable)
-  UpSys.addTable(global.constructionJetTable)
-  UpSys.addTable(global.repairJetTable)
-  UpSys.addTable(global.combatJetTable)
-  UpSys.addTable(global.deepStorageTable)
-  UpSys.addTable(global.deepTankTable)
-  UpSys.addTable(global.networkExplorerTable)
-  UpSys.addTable(global.dataAssemblerTable)
 
   -- Add all Internal Energy Cubes and Internal Quatron Cubes --
   for k, MF in pairs(global.MFTable) do
+    UpSys.addObject(MF.dataCenter)
     UpSys.addObject(MF.internalEnergyObj)
     UpSys.addObject(MF.internalQuatronObj)
   end

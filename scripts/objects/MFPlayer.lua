@@ -29,6 +29,9 @@ function MFP:rebuild(object)
 	local mt = {}
 	mt.__index = MF
 	setmetatable(object, mt)
+	for k, go in pairs(object.GUI or {}) do
+		GO:rebuild(go)
+	end
 end
 
 -- Destructor --

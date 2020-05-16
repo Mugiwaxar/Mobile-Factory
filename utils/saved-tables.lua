@@ -40,13 +40,6 @@ function placedDataCenter(event)
 	global.dataCenterTable[event.created_entity.unit_number] = DC:new(event.created_entity)
 end
 
--- Save the Data Center MF --
-function placedDataCenterMF(event, MF)
-	if global.dataCenterTable == nil then global.dataCenterTable = {} end
-	global.dataCenterTable[event.created_entity.unit_number] = DCMF:new(event.created_entity)
-	if MF ~= nil then MF.dataCenter = global.dataCenterTable[event.created_entity.unit_number] end
-end
-
 -- Save the Data Storage in a table --
 function placedDataStorage(event)
 	if global.dataStorageTable == nil then global.dataStorageTable = {} end
@@ -147,13 +140,6 @@ end
 
 -- Remove the Data Center from the table --
 function removedDataCenter(event)
-	if global.dataCenterTable == nil then global.dataCenterTable = {} return end
-	if global.dataCenterTable[event.entity.unit_number] ~= nil then global.dataCenterTable[event.entity.unit_number]:remove() end
-	global.dataCenterTable[event.entity.unit_number] = nil
-end
-
--- Remove the Data Center MF from the table --
-function removedDataCenterMF(event)
 	if global.dataCenterTable == nil then global.dataCenterTable = {} return end
 	if global.dataCenterTable[event.entity.unit_number] ~= nil then global.dataCenterTable[event.entity.unit_number]:remove() end
 	global.dataCenterTable[event.entity.unit_number] = nil

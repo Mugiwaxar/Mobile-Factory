@@ -344,7 +344,7 @@ function somethingWasPlaced(event, isRobot)
 			end
 			return
 		else
-			placedDataCenterMF(event, MF)
+			MF.dataCenter = DCMF:new(event.created_entity)
 			return
 		end
 	end
@@ -464,10 +464,13 @@ function somethingWasRemoved(event)
 
 	-- Remove the Data Center MF --
 	if removedEnt.name == "DataCenterMF" then
-		MF = Util.valueToObj(global.MFTable, "dataCenter", removedEnt)
-		if MF ~= nil then MF.dataCenter = nil end
-		removedDataCenterMF(event)
-		return
+		for k, MF2 in pairs(global.MFTable) do
+			if MF2.dataCenter.ent == removedEnt then
+				MF2.dataCenter:remove()
+				MF2.dataCenter = nil
+				return
+			end
+		end
 	end
 
 	-- Remove the Wireless Data Transmitter --

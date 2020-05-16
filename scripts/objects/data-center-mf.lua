@@ -114,33 +114,28 @@ function DCMF:update()
 	end
 	
 	-- Create the Deep Storages Signals --
-	for k, ds in pairs(global.deepStorageTable) do
-		-- this would get laggy with lots of DS, store by MFPlayer->accessibleMFs? --
+	for k, ds in pairs(self.MF.DSRTable) do
 		-- Create and send the Signal --
-		if Util.canUse(getMFPlayer(self.player), ds) then
-			if ds.inventoryItem ~= nil and game.item_prototypes[ds.inventoryItem] ~= nil then
-				local signal = {signal={type="item", name=ds.inventoryItem} ,count=ds.inventoryCount}
-				self.ent.get_control_behavior().set_signal(i, signal)
-				-- Increament the Slot --
-				i = i + 1
-				-- Stop if there are to much Items --
-				if i > 999 then break end
-			end
+		if ds.inventoryItem ~= nil and game.item_prototypes[ds.inventoryItem] ~= nil then
+			local signal = {signal={type="item", name=ds.inventoryItem} ,count=ds.inventoryCount}
+			self.ent.get_control_behavior().set_signal(i, signal)
+			-- Increament the Slot --
+			i = i + 1
+			-- Stop if there are to much Items --
+			if i > 999 then break end
 		end
 	end
 
 	-- Create the Deep Tanks Signals --
-	for k, dtk in pairs(global.deepTankTable) do
+	for k, dtk in pairs(self.MF.DTKTable) do
 		-- Create and send the Signal --
-		if Util.canUse(getMFPlayer(self.player), dtk) then
-			if dtk.inventoryFluid ~= nil and game.fluid_prototypes[dtk.inventoryFluid] ~= nil then
-				local signal = {signal={type="fluid", name=dtk.inventoryFluid} ,count=dtk.inventoryCount}
-				self.ent.get_control_behavior().set_signal(i, signal)
-				-- Increament the Slot --
-				i = i + 1
-				-- Stop if there are to much Items --
-				if i > 999 then break end
-			end
+		if dtk.inventoryFluid ~= nil and game.fluid_prototypes[dtk.inventoryFluid] ~= nil then
+			local signal = {signal={type="fluid", name=dtk.inventoryFluid} ,count=dtk.inventoryCount}
+			self.ent.get_control_behavior().set_signal(i, signal)
+			-- Increament the Slot --
+			i = i + 1
+			-- Stop if there are to much Items --
+			if i > 999 then break end
 		end
 	end
 	

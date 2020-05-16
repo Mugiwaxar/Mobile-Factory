@@ -113,14 +113,14 @@ function OC:getTooltipInfos(GUIObj, gui, justCreated)
 		local invs = {{"gui-description.All"}}
 		local selectedIndex = 1
 		local i = 1
-		for k, deepStorage in pairs(global.deepStorageTable) do
-			if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepStorage) then
+		for k, deepStorage in pairs(self.MF.DSRTable) do
+			if deepStorage ~= nil and deepStorage.ent ~= nil then
 				i = i + 1
 				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepStorage.player, ")"}
 				if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
-					itemText = {"", " (", game.item_prototypes[deepStorage.filter].localised_name, " - ", deepStorage.player, ")"}
+					itemText = {"", " (", game.item_prototypes[deepStorage.filter].localised_name, ")"}
 				elseif deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
-					itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, " - ", deepStorage.player, ")"}
+					itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, ")"}
 				end
 				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
 				if self.selectedInv == deepStorage then
@@ -166,7 +166,7 @@ function OC:changeInventory(ID)
 	end
 	-- Select the Inventory --
 	self.selectedInv = nil
-	for k, deepStorage in pairs(global.deepStorageTable) do
+	for k, deepStorage in pairs(self.MF.DSRTable) do
 		if valid(deepStorage) == true then
 			if ID == deepStorage.ID then
 				self.selectedInv = deepStorage
@@ -232,8 +232,8 @@ function OC:collectOres(event)
 	-- Try to find a Deep Storage if the Selected Inventory is All --
 	local dataInv = self.selectedInv
 	if dataInv == nil then
-		for k, dp in pairs(global.deepStorageTable) do
-			if self.player == dp.player and dp:canAccept(oreName) == true then
+		for k, dp in pairs(self.MF.DSRTable) do
+			if 	dp:canAccept(oreName) == true then
 				dataInv = dp
 			end
 		end

@@ -17,10 +17,10 @@ fiE.fluid_box =
       pipe_covers = nil,
       pipe_connections =
       {
-          {position={-1.6,0}},
-          {position={1.6,0}},
-          {position={0,-1.6}},
-          {position={0,1.6}}
+          {position={-2,0}},
+          {position={2,0}},
+          {position={0,-2}},
+          {position={0,2}}
       }
     }
 fiE.pictures.picture =
