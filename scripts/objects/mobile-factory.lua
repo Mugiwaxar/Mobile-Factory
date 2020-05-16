@@ -15,6 +15,8 @@ MF = {
 	entitiesAround = nil,
 	internalEnergyObj = nil,
 	internalQuatronObj = nil,
+	DTKTable = nil,
+	DSRTable = nil,
 	jumpTimer = _mfBaseJumpTimer,
 	baseJumpTimer = _mfBaseJumpTimer,
 	tpEnabled = true,
@@ -45,6 +47,8 @@ function MF:new()
 	mt.__index = MF
 	t.entitiesAround = {}
 	t.clonedResourcesTable = {}
+	DTKTable = {}
+	DSRTable = {}
 	t.varTable = {}
 	t.varTable.tech = {}
 	t.varTable.tanks = {}
@@ -126,8 +130,8 @@ function MF:getTooltipInfos(GUIObj, gui, justCreated)
 			local invs = {{"", {"gui-description.None"}}}
 			local selectedIndex = 1
 			local i = 1
-			for k, deepTank in pairs(global.deepTankTable) do
-				if deepTank ~= nil and deepTank.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepTank) then
+			for k, deepTank in pairs(self.DTKTable) do
+				if deepTank ~= nil and deepTank.ent ~= nil then
 					i = i + 1
 					local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
 					if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
@@ -167,7 +171,7 @@ function MF:fluidLaserTarget(ID)
 	end
 	-- Select the Inventory --
 	self.selectedInv = nil
-	for k, deepTank in pairs(global.deepTankTable) do
+	for k, deepTank in pairs(self.DTKTable) do
 		if valid(deepTank) then
 			if ID == deepTank.ID then
 				self.selectedInv = deepTank

@@ -56,6 +56,18 @@ function IEC:valid()
 	return true
 end
 
+-- Tags to Settings --
+function IEC:tagToSettings(tags)
+	self.ent.energy = tags.energy or 0
+end
+
+-- Settings to Tags --
+function IEC:settingsToTags(tags)
+	if self.ent.energy <= 0 then return end
+	tags.set_tag("Infos", {energy=self.ent.energy})
+	tags.custom_description = {"", tags.prototype.localised_description, {"item-description.EnergyCubeC", Util.toRNumber(math.floor(self.ent.energy))}}
+end
+
 -- Update --
 function IEC:update()
 

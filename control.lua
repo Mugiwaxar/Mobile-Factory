@@ -44,12 +44,15 @@ require("scripts/objects/erya-structure.lua")
 
 -- When the mod init --
 function onInit()
+
 	-- Update System --
 	global.entsTable = {}
 	global.upsysTickTable = {}
 	global.entsUpPerTick = _mfBaseUpdatePerTick
 	global.upSysLastScan = 0
+	-- Inventory --
 	global.insertedMFInsideInventory = false
+	-- Erya --
 	global.updateEryaIndex = 1
 	-- Data Network --
 	global.dataNetworkID = 0
@@ -57,167 +60,90 @@ function onInit()
 	global.constructionJetIndex = 0
 	-- Repair Jet Update --
 	global.repairJetIndex = 0
+	-- Floor Is Lava --
+	global.floorIsLavaActivated = false
 	-- Research --
 	for _, force in pairs(game.forces) do
 		if settings.startup["MF-initial-research-complete"] and settings.startup["MF-initial-research-complete"].value == true then
 			force.technologies["DimensionalOre"].researched = true
 		end
 	end
-	-- Floor Is Lava --
-	global.floorIsLavaActivated = false
+
 	-- Tables --
-	global.playersTable = {}
-	global.MFTable = {}
 	global.dataNetworkTable = {}
 	global.dataNetworkIDGreenTable = {}
 	global.dataNetworkIDRedTable = {}
-	global.dataCenterTable = {}
-	global.matterInteractorTable = {}
-	global.fluidInteractorTable = {}
-	global.dataAssemblerTable = {}
-	global.networkExplorerTable = {}
-	global.dataStorageTable = {}
-	global.wirelessDataTransmitterTable = {}
-	global.wirelessDataReceiverTable = {}
-	global.energyCubesTable = {}
-	global.energyLaserTable = {}
-	global.deepStorageTable = {}
-	global.deepTankTable = {}
-	global.oreCleanerTable = {}
-	global.fluidExtractorTable = {}
-	global.miningJetTable = {}
-	global.jetFlagTable = {}
-	global.constructionJetTable = {}
 	global.constructionTable = {}
-	global.repairJetTable = {}
 	global.repairTable = {}
-	global.combatJetTable = {}
-	global.eryaTable = {}
 	global.eryaIndexedTable = {}
+
+	-- Create the Objects Table --
+	Util.createTableList()
+
+	-- Create all Table --
+	for k, obj in pairs(global.objTable) do
+		if obj.tableName ~= nil and global[obj.tableName] == nil then
+			global[obj.tableName] = {}
+		end
+	end
+	
     global.syncTile = "dirt-7"
 	-- Validate the Tile Used for the Sync Area --
 	validateSyncAreaTile()
 	-- Ensure All Needed Tiles are Present --
 	checkNeededTiles()
+
 end
 
 -- When a save is loaded --
 function onLoad()
 	-- Add Warptorio Compatibility --
 	warptorio()
-	-- Set MFPlayer Metatables --
-	for k, mfplayer in  pairs(global.playersTable or {}) do
-		MFP:rebuild(mfplayer)
-	end
-	-- Set MF Metatables --
-	for k, mf in  pairs(global.MFTable or {}) do
-		MF:rebuild(mf)
-	end
-	-- Set GUI Objects Metatables --
-	for k, player in pairs(global.playersTable or {}) do
-		for k2, go in pairs(player.GUI or {}) do
-			GO:rebuild(go)
+	-- Set all Metatables --
+	for k, obj in pairs(global.objTable or {}) do
+		if obj.tag ~= nil then
+			for k2, obj2 in pairs(global[obj.tableName] or {}) do
+				if obj2.invObj ~= nil and obj2.invObj.isII == true then
+					DCMF:rebuild(obj2)
+				elseif obj2.invObj ~= nil then
+					DC:rebuild(obj2)
+				else
+					_G[obj.tag]:rebuild(obj2)
+				end
+			end
 		end
-	end
-	-- Set DataCenter Metatables --
-	for k, dc in  pairs(global.dataCenterTable or {}) do
-		if dc.invObj.isII then
-			DCMF:rebuild(dc)
-		else
-			DC:rebuild(dc)
-		end
-	end
-	-- Set DataStorage Metatables --
-	for k, ds in  pairs(global.dataStorageTable or {}) do
-		DS:rebuild(ds)
-	end
-	-- Set MatterInteractor Metatables --
-	for k, mi in pairs(global.matterInteractorTable or {}) do
-		MI:rebuild(mi)
-	end
-	-- Set FluidInteractor Metatables --
-	for k, fi in pairs(global.fluidInteractorTable or {}) do
-		FI:rebuild(fi)
-	end
-	-- Set DataAssembler Metatables --
-	for k, da in pairs(global.dataAssemblerTable or {}) do
-		DA:rebuild(da)
-	end
-	-- Set NetworkExplorer Metatables --
-	for k, ne in pairs(global.networkExplorerTable or {}) do
-		NE:rebuild(ne)
-	end
-	-- Set Wireless Data Transmitter Metatables --
-	for k, wdt in pairs(global.wirelessDataTransmitterTable or {}) do
-		WDT:rebuild(wdt)
-	end
-	-- Set Wireless Data Receiver Metatables --
-	for k, wdr in pairs(global.wirelessDataReceiverTable or {}) do
-		WDR:rebuild(wdr)
-	end
-	-- Set EnergyCube Metatables --
-	for k, ec in pairs(global.energyCubesTable or {}) do
-		EC:rebuild(ec)
-	end
-	-- Set PowerLaser Metatables --
-	for k, el in pairs(global.energyLaserTable or {}) do
-		EL:rebuild(el)
-	end
-	-- Set Ore Cleaner Metatable --
-	for k, oc in pairs(global.oreCleanerTable or {}) do
-		OC:rebuild(oc)
-	end
-	-- Set Fluid Extractor Metatables --
-	for k, fe in pairs(global.fluidExtractorTable or {}) do
-		FE:rebuild(fe)
-	end
-	-- Set The Mining Jet Metatables --
-	for k, mj in pairs(global.miningJetTable or {}) do
-		MJ:rebuild(mj)
-	end
-	-- Set The Jet Flag Metatables --
-	for k, mjf in pairs(global.jetFlagTable or {}) do
-		MJF:rebuild(mjf)
-	end
-	-- Set The Construction Jet Metatables --
-	for k, cj in pairs(global.constructionJetTable or {}) do
-		CJ:rebuild(cj)
-	end
-	-- Set The Repair Jet Metatables --
-	for k, rj in pairs(global.repairJetTable or {}) do
-		RJ:rebuild(rj)
-	end
-	-- Set The Combat Jet Metatables --
-	for k, cbj in pairs(global.combatJetTable or {}) do
-		CBJ:rebuild(cbj)
-	end
-	-- Set The Deep Storage Metatables --
-	for k, dsr in pairs(global.deepStorageTable or {}) do
-		DSR:rebuild(dsr)
-	end
-	-- Set The Deep Tank Metatables --
-	for k, dtk in pairs(global.deepTankTable or {}) do
-		DTK:rebuild(dtk)
-	end
-	-- Set Erya Structures Metatables --
-	for k, es in pairs(global.eryaTable or {}) do
-		ES:rebuild(es)
 	end
 end
 
 -- When the configuration has changed --
 function onConfigurationChanged()
-	-- Update all Variables --
-	updateValues()
 	-- Recreate the Main GUI --
 	for k, player in pairs(game.players) do
 		GUI.createMFMainGUI(player)
 	end
-
+	-- Create the Objects Table --
+	Util.createTableList()
+	-- Create all Table --
+	for k, obj in pairs(global.objTable) do
+		if obj.tableName ~= nil and global[obj.tableName] == nil then
+			global[obj.tableName] = {}
+		end
+	end
+	-- Remove all Mobile Factory Render --
+	rendering.clear("Mobile_Factory")
 	-- Validate the Tile Used for the Sync Area --
+	global.syncTile = "dirt-7"
 	validateSyncAreaTile()
 	-- Ensure All Needed Tiles are Present --
 	checkNeededTiles()
+	-- Debug --
+	-- for k, j in pairs(global) do
+		-- if type(j) == "table" then
+			-- dprint(k .. ":" .. table_size(j))
+		-- else
+			-- dprint(k)
+		-- end
+	-- end
 end
 
 -- Filters --
@@ -297,12 +223,12 @@ script.on_event(defines.events.on_player_joined_game, initPlayer)
 script.on_event(defines.events.on_player_driving_changed_state, playerDriveStatChange)
 script.on_event(defines.events.on_tick, onTick)
 script.on_event(defines.events.on_entity_damaged, onEntityDamaged, _mfEntityFilterWithCBJ)
-script.on_event(defines.events.on_built_entity, onPlayerBuildSomething)
-script.on_event(defines.events.on_player_built_tile, onPlayerBuildSomething)
-script.on_event(defines.events.script_raised_built, onPlayerBuildSomething)
-script.on_event(defines.events.script_raised_revive, onPlayerBuildSomething)
-script.on_event(defines.events.on_robot_built_entity, onRobotBuildSomething)
-script.on_event(defines.events.on_robot_built_tile, onRobotBuildSomething)
+script.on_event(defines.events.on_built_entity, somethingWasPlaced)
+script.on_event(defines.events.on_player_built_tile, somethingWasPlaced)
+script.on_event(defines.events.script_raised_built, somethingWasPlaced)
+script.on_event(defines.events.script_raised_revive, somethingWasPlaced)
+script.on_event(defines.events.on_robot_built_entity, somethingWasPlaced)
+script.on_event(defines.events.on_robot_built_tile, somethingWasPlaced)
 script.on_event(defines.events.on_player_mined_entity, onPlayerRemoveSomethings)
 script.on_event(defines.events.on_player_mined_tile, onPlayerRemoveSomethings)
 script.on_event(defines.events.on_robot_mined_entity, onRobotRemoveSomething)

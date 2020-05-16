@@ -25,6 +25,7 @@ function DSR:new(object)
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
 	t.ID = Util.getEntID(global.deepStorageTable)
+	t.MF.DSRTable[object.unit_number] = t
 	UpSys.addObj(t)
 	return t
 end
@@ -39,6 +40,10 @@ end
 
 -- Destructor --
 function DSR:remove()
+	-- Remove from the Update System --
+	UpSys.removeObj(self)
+	-- Remove from the MF Object --
+	self.MF.DSRTable[self.ent.unit_number] = nil
 end
 
 -- Is valid --
@@ -50,6 +55,21 @@ end
 -- Copy Settings --
 function DSR:copySettings(obj)
 	self.filter = obj.filter
+end
+
+-- Tags to Settings --
+function DSR:tagToSettings(tags)
+	self.inventoryItem = tags.inventoryItem or nil
+	self.inventoryCount = tags.inventoryCount or 0
+	self.filter = tags.filter or nil
+end
+
+-- Settings to Tags --
+function DSR:settingsToTags(tags)
+	if self.inventoryItem ~= nil or self.filter ~= nil then
+		tags.set_tag("Infos", {inventoryItem=self.inventoryItem, inventoryCount=self.inventoryCount, filter=self.filter})
+		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.DeepStorageC", self.inventoryItem or self.filter, self.inventoryCount or 0}}
+	end
 end
 
 -- Update --

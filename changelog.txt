@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.167
+Date: 15/05/2020
+  Features:
+    - Liquid Quatron can now be made with Quatron Cell
+  Changes:
+    - Added Lights inside the Mobile Factory, but they will turn off if there are no more Internal Energy
+    - Changed the Fluid Interactor Pipe Connections for better interaction with the other Structures (Honktown)
+  Scripting:
+    - Deep Tank and Deep Storage Objects are now placed inside its corresponding MF Object (But still exist in global for object update reasons)
+    - Added the MF Object and the PlayerIndex to all Data Network Objects
+    - Objects are now automaticaly created, stored and updated
+    - Full rewrite of all place-and-remove Functions
+    - Saved-tables file removed
+---------------------------------------------------------------------------------------------------
 Version: 0.0.166
 Date: 15/05/2020
   Graphics:

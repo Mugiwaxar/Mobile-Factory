@@ -27,6 +27,34 @@ if global.MF ~= nil and global.MF.II == nil then
 	end
 end
 
+-- Create the Objects Table --
+Util.createTableList()
+
+-- Create all Table --
+for k, obj in pairs(global.objTable) do
+    if obj.tableName ~= nil and global[obj.tableName] == nil then
+        global[obj.tableName] = {}
+    end
+end
+
+-- Add new Values --
+if global.upSysLastScan == nil then global.upSysLastScan = 0 end
+if global.entsUpPerTick == nil then global.entsUpPerTick = _mfBaseUpdatePerTick end
+if global.entsTable == nil then global.entsTable = {} end
+if global.upsysTickTable == nil then global.upsysTickTable = {} end
+if global.insertedMFInsideInventory == nil then global.insertedMFInsideInventory = false end
+if global.updateEryaIndex == nil then global.updateEryaIndex = 1 end
+if global.eryaIndexedTable == nil then global.eryaIndexedTable = {} end
+if global.constructionJetIndex == nil then global.constructionJetIndex = 0 end
+if global.repairJetIndex == nil then global.repairJetIndex = 0 end
+if global.floorIsLavaActivated == nil then global.floorIsLavaActivated = false end
+if global.dataNetworkID == nil then global.dataNetworkID = 0 end
+if global.dataNetworkTable == nil then global.dataNetworkTable = {} end
+if global.dataNetworkIDGreenTable == nil then global.dataNetworkIDGreenTable = {} end
+if global.dataNetworkIDRedTable == nil then global.dataNetworkIDRedTable = {} end
+if global.constructionTable == nil then global.constructionTable = {} end
+if global.repairTable == nil then global.repairTable = {} end
+
 -- Unlocking Recipes --
 unlockRecipeForAll("DimensionalOre")
 unlockRecipeForAll("mfShieldEquipment", "MFShield")

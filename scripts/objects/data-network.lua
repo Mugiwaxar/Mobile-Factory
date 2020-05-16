@@ -5,6 +5,8 @@ DN = {
 	ID = 0,
 	entitiesTable = nil,
 	dataCenter = nil,
+	MF = nil,
+	playerIndex = 0,
 	wirelessDataTransmitter = nil,
 	wirelessReceiverTable = nil,
 	energyCubeTable = nil,
@@ -25,6 +27,8 @@ function DN:new(object)
 	setmetatable(t, mt)
 	mt.__index = DN
 	t.dataCenter = object
+	t.MF = object.MF
+	t.playerIndex = object.MF.playerIndex
 	t.ID = getDataNetworkID()
 	t.entitiesTable = {}
 	t.wirelessReceiverTable = {}
@@ -231,10 +235,8 @@ function DN:hasItem(item)
 	local amount = 0
 	local playerName = self.dataCenter.player
 	-- Check the Deep Storages --
-	for k, deepStorage in pairs(global.deepStorageTable) do
-		if deepStorage.player == playerName then
-			amount = amount + deepStorage:hasItem(item)
-		end
+	for k, deepStorage in pairs(self.MF.DSRTable) do
+		amount = amount + deepStorage:hasItem(item)
 	end
 	-- Check the Data Center --
 	amount = amount + self.dataCenter.invObj:hasItem(item)
@@ -249,7 +251,7 @@ function DN:hasFluid(fluid)
 	local amount = 0
 	local playerName = self.dataCenter.player
 	-- Check the Deep Tank --
-	for k, deepTank in pairs(global.deepTankTable) do
+	for k, deepTank in pairs(self.MF.DTKTable) do
 		if deepTank.player == playerName then
 			amount = amount + deepTank:hasFluid(fluid)
 		end
@@ -268,12 +270,10 @@ function DN:getItem(item, amount)
 	local amountLeft = amount
 	local playerName = self.dataCenter.player
 	-- Check the Deep Storages --
-	for k, deepStorage in pairs(global.deepStorageTable) do
-		if deepStorage.player == playerName then
-			local amountGot = deepStorage:getItem(item, amountLeft)
-			amountLeft = amountLeft - amountGot
-			if amountLeft <= 0 then return amount end
-		end
+	for k, deepStorage in pairs(self.MF.DSRTable) do
+		local amountGot = deepStorage:getItem(item, amountLeft)
+		amountLeft = amountLeft - amountGot
+		if amountLeft <= 0 then return amount end
 	end
 	-- Check the Data Center --
 	amountLeft = amountLeft - self.dataCenter.invObj:getItem(item, amountLeft)
@@ -291,12 +291,10 @@ function DN:getFluid(fluid, amount)
 	local amountLeft = amount
 	local playerName = self.dataCenter.player
 	-- Check the Deep Tanks --
-	for k, deepTank in pairs(global.deepTankTable) do
-		if deepTank.player == playerName then
-			local amountGot = deepTank:getFluid({name=fluid, amount=amountLeft})
-			amountLeft = amountLeft - amountGot
-			if amountLeft <= 0 then return amount end
-		end
+	for k, deepTank in pairs(self.MF.DTKTable) do
+		local amountGot = deepTank:getFluid({name=fluid, amount=amountLeft})
+		amountLeft = amountLeft - amountGot
+		if amountLeft <= 0 then return amount end
 	end
 	-- Return the amount removed --
 	return amount - amountLeft
@@ -308,8 +306,8 @@ function DN:canAcceptItem(item, amount)
 	if self.dataCenter == nil then return 0 end
 	local playerName = self.dataCenter.player
 	-- Check the Deep Storages --
-	for k, deepStorage in pairs(global.deepStorageTable) do
-		if deepStorage.player == playerName and deepStorage:canAccept(item) then
+	for k, deepStorage in pairs(self.MF.DSRTable) do
+		if deepStorage:canAccept(item) then
 			return true
 		end
 	end
@@ -324,8 +322,8 @@ function DN:canAcceptFluid(fluid, amount)
 	if self.dataCenter == nil then return 0 end
 	local playerName = self.dataCenter.player
 	-- Check the Deep Tanks --
-	for k, deepTank in pairs(global.deepTankTable) do
-		if deepTank.player == playerName and deepTank:canAccept({name=fluid, amount=amount}) then
+	for k, deepTank in pairs(self.MF.DTKTable) do
+		if deepTank:canAccept({name=fluid, amount=amount}) then
 			return true
 		end
 	end
@@ -342,8 +340,8 @@ function DN:addItems(item, amount)
 	local amountLeft = amount
 	local playerName = self.dataCenter.player
 	-- Check the Deep Storages --
-	for k, deepStorage in pairs(global.deepStorageTable) do
-		if deepStorage.player == playerName and deepStorage:canAccept(item) then
+	for k, deepStorage in pairs(self.MF.DSRTable) do
+		if deepStorage:canAccept(item) then
 			deepStorage:addItem(item, amount)
 			return amount
 		end
@@ -364,12 +362,10 @@ function DN:addFluid(fluid, amount, temperature)
 	local amountLeft = amount
 	local playerName = self.dataCenter.player
 	-- Check the Deep Tanks --
-	for k, deepTank in pairs(global.deepTankTable) do
-		if deepTank.player == playerName then
-			local amountSend = deepTank:addFluid({name=fluid, amount=amountLeft, temperature=temperature})
-			amountLeft = amountLeft - amountSend
-			if amountLeft <= 0 then return amount end
-		end
+	for k, deepTank in pairs(self.MF.DTKTable) do
+		local amountSend = deepTank:addFluid({name=fluid, amount=amountLeft, temperature=temperature})
+		amountLeft = amountLeft - amountSend
+		if amountLeft <= 0 then return amount end
 	end
 	-- Return the amount added --
 	return amount - amountLeft

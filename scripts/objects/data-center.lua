@@ -61,6 +61,18 @@ function DC:valid()
 	return false
 end
 
+-- Tags to Settings --
+function DC:tagToSettings(tags)
+	self.invObj.inventory = tags.inventory or {}
+end
+
+-- Settings to Tags --
+function DC:settingsToTags(tags)
+	self.invObj:rescan()
+	tags.set_tag("Infos", {inventory=self.invObj.inventory})
+	tags.custom_description = {"", {"item-description.DataCenter"}, {"item-description.DataCenterC", self.invObj.usedCapacity or 0}}
+end
+
 -- Update --
 function DC:update()
 	-- Set the lastUpdate variable --

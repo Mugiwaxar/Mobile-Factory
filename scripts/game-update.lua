@@ -1,6 +1,5 @@
 require("utils/players-teleportation.lua")
 require("utils/surface")
-require("utils/saved-tables.lua")
 require("utils/functions.lua")
 require("scripts/update-system.lua")
 require("utils/place-and-remove.lua")
@@ -19,6 +18,8 @@ function onTick(event)
 	Erya.updateEryaStructures(event)
 	-- Update all GUI --
 	GUI.updateAllGUIs()
+	-- Updates Mobile Factory Lights --
+	if event.tick%_eventTick49 == 0 then updateIndoorLights() end
 	-- Update the Floor Is Lava --
 	if event.tick%_eventTick150 == 0 and global.floorIsLavaActivated == true then updateFloorIsLava() end
 end
@@ -33,58 +34,6 @@ function updateEntities(event)
 	if event.tick%_eventTick242 == 0 then checkDataNetworkID() end
 	-- Update System --
 	UpSys.update(event)
-end
-
--- Update base Mobile Factory Values --
-function updateValues()
-	if global.insertedMFInsideInventory == nil then global.insertedMFInsideInventory = true end
-	if global.entsTable == nil then global.entsTable = {} end
-	if global.upsysTickTable == nil then global.upsysTickTable = {} end
-	if global.entsUpPerTick == nil then global.entsUpPerTick = _mfBaseUpdatePerTick end
-	if global.upSysLastScan == nil then global.upSysLastScan = 0 end
-	if global.updateEryaIndex == nil then global.updateEryaIndex = 1 end
-	if global.dataNetworkID == nil then global.dataNetworkID = 0 end
-	if global.constructionJetIndex == nil then global.constructionJetIndex = 0 end
-	if global.repairJetIndex == nil then global.repairJetIndex = 0 end
-	if global.floorIsLavaActivated == nil then global.floorIsLavaActivated = false end
-	if global.playersTable == nil then global.playersTable = {} end
-	if global.MFTable == nil then global.MFTable = {} end
-	if global.deepStorageTable == nil then global.deepStorageTable = {} end
-	if global.deepTankTable == nil then global.deepTankTable = {} end
-	if global.dataNetworkTable == nil then global.dataNetworkTable = {} end
-	if global.dataNetworkIDGreenTable == nil then global.dataNetworkIDGreenTable = {} end
-	if global.dataNetworkIDRedTable == nil then global.dataNetworkIDRedTable = {} end
-	if global.matterInteractorTable == nil then global.matterInteractorTable = {} end
-	if global.fluidInteractorTable == nil then global.fluidInteractorTable = {} end
-	if global.dataAssemblerTable == nil then global.dataAssemblerTable = {} end
-	if global.networkExplorerTable == nil then global.networkExplorerTable = {} end
-	if global.dataCenterTable == nil then global.dataCenterTable = {} end
-	if global.dataStorageTable == nil then global.dataStorageTable = {} end
-	if global.wirelessDataTransmitterTable == nil then global.wirelessDataTransmitterTable = {} end
-	if global.wirelessDataReceiverTable == nil then global.wirelessDataReceiverTable = {} end
-	if global.energyCubesTable == nil then global.energyCubesTable = {} end
-	if global.energyLaserTable == nil then global.energyLaserTable = {} end
-	if global.oreCleanerTable == nil then global.oreCleanerTable = {} end
-	if global.fluidExtractorTable == nil then global.fluidExtractorTable = {} end
-	if global.miningJetTable == nil then global.miningJetTable = {} end
-	if global.jetFlagTable == nil then global.jetFlagTable = {} end
-	if global.constructionJetTable == nil then global.constructionJetTable = {} end
-	if global.constructionTable == nil then global.constructionTable = {} end
-	if global.repairJetTable == nil then global.repairJetTable = {} end
-	if global.repairTable == nil then global.repairTable = {} end
-	if global.combatJetTable == nil then global.combatJetTable = {} end
-	if global.eryaTable == nil then global.eryaTable = {} end
-	if global.eryaIndexedTable == nil then global.eryaIndexedTable = {} end
-	-- Delete all Animations and Sprites --
-	rendering.clear("Mobile_Factory")
-
-	-- for k, j in pairs(global) do
-		-- if type(j) == "table" then
-			-- dprint(k .. ":" .. table_size(j))
-		-- else
-			-- dprint(k)
-		-- end
-	-- end
 end
 
 -- When a technology is finished --
@@ -163,16 +112,6 @@ function initPlayer(event)
 		setPlayerVariable(player.name, "GotInventory", true)
 		GUI.createMFMainGUI(player)
 	end
-end
-
--- When a player build something --
-function onPlayerBuildSomething(event)
-	somethingWasPlaced(event, false)
-end
-
--- When a robot build something --
-function onRobotBuildSomething(event)
-	somethingWasPlaced(event, true)
 end
 
 -- When a player remove something --
@@ -518,6 +457,19 @@ function checkDataNetworkID()
 	for id, obj in pairs(global.dataNetworkIDRedTable) do
 		if valid(obj) == false or Util.redCNID(obj) ~= id then
 			global.dataNetworkIDRedTable[id] = nil
+		end
+	end
+end
+
+-- Update all Mobile Factory Internal Lights --
+function updateIndoorLights()
+	for k, MF in pairs(global.MFTable) do
+		if MF.internalEnergyObj:energy() > 0 then
+			MF.fS.daytime = 0
+			MF.ccS.daytime = 0
+		else
+			MF.fS.daytime = 0.5
+			MF.ccS.daytime = 0.5
 		end
 	end
 end

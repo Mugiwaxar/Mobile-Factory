@@ -116,12 +116,12 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 			for name, count in pairs(GUIObj.MFPlayer.ent.get_main_inventory().get_contents()) do
 				GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(name))
 			end
-			for k, deepStorage in pairs(global.deepStorageTable) do
+			for k, deepStorage in pairs(self.MF.DSRTable) do
 				if deepStorage.inventoryItem ~= nil or deepStorage.filter ~= nil then
 					GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(deepStorage.inventoryItem or deepStorage.filter))
 				end
 			end
-			for k, deepTank in pairs(global.deepTankTable) do
+			for k, deepTank in pairs(self.MF.DTKTable) do
 				if deepTank.inventoryFluid ~= nil or deepTank.filter ~= nil then
 					GUIObj.MFPlayer.ent.request_translation(Util.getLocFluidName(deepTank.inventoryFluid or deepTank.filter))
 				end
@@ -195,7 +195,7 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 	end
 
 	-- Create the Inventory List --
-	createDNInventoryFrame(GUIObj, inventoryScrollPane, GUIObj.MFPlayer, "NE," .. self.entID .. ",", self.dataNetwork.dataCenter.invObj, 8, true, true, true, searchText, self.player)
+	createDNInventoryFrame(GUIObj, inventoryScrollPane, GUIObj.MFPlayer, "NE," .. self.entID .. ",", self.dataNetwork.dataCenter.invObj, 8, true, true, true, searchText, self)
 
 	-- Create the Player Inventory List --
 	createPlayerInventoryFrame(GUIObj, playerInventoryScrollPane, GUIObj.MFPlayer, 8, "NE," .. self.entID .. ",", searchText)
@@ -278,12 +278,10 @@ function NE.transferItemsFromPInv(PInv, PName, NE, item, count)
 	if half == true then amount = math.floor(amount/2) end
 
 	-- Try to send the Items to a Deep Storage --
-	for k, deepStorage in pairs(global.deepStorageTable) do
-		if PName == deepStorage.player then
-			if deepStorage:canAccept(item) then
-				inserted = deepStorage:addItem(item, amount)
-				break
-			end
+	for k, deepStorage in pairs(NE.MF.DSRTable) do
+		if deepStorage:canAccept(item) then
+			inserted = deepStorage:addItem(item, amount)
+			break
 		end
 	end
 

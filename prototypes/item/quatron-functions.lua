@@ -59,6 +59,19 @@ end
 lqR.results = {{type="fluid", name="LiquidQuatron" .. tonumber(level), amount=100}}
 data:extend{lqR}
 
+clqR = {}
+clqR.name = "CellToLiquidQuatron" .. tonumber(level)
+clqR.type = "recipe"
+clqR.icon = "__Mobile_Factory__/graphics/FluidQuatron.png"
+clqR.icon_size = 32
+clqR.category = "Elements"
+clqR.subgroup = "Quatrons"
+clqR.energy_required = 2
+clqR.enabled = false
+clqR.ingredients = {{type="item", name="Quatron" .. tonumber(level), amount=1}}
+clqR.results = {{type="fluid", name="LiquidQuatron" .. tonumber(level), amount=100}}
+data:extend{clqR}
+
 end
 
 -- Create the Quatron Technology --
@@ -68,6 +81,7 @@ function createQuatronTechnology()
 	for i=1, 20 do
 		table.insert(quatronTable, {type="unlock-recipe", recipe="Quatron" .. tonumber(i)})
 		table.insert(quatronTable, {type="unlock-recipe", recipe="LiquidQuatron" .. tonumber(i)})
+		table.insert(quatronTable, {type="unlock-recipe", recipe="CellToLiquidQuatron" .. tonumber(i)})
 	end
 	-- Technology --
 	qT = {}

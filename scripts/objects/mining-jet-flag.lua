@@ -58,6 +58,23 @@ function MJF:copySettings(obj)
 	end
 end
 
+-- Tags to Settings --
+function MJF:tagToSettings(tags)
+	self.inventory = tags.inventory or {}
+end
+
+-- Settings to Tags --
+function MJF:settingsToTags(tags)
+	local total = 0
+	for k, count in pairs(self.inventory) do
+		total = total + count
+	end
+	if total > 0 then
+		tags.set_tag("Infos", {inventory=self.inventory})
+		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.MiningJetFlagC", total}}
+	end
+end
+
 -- Update --
 function MJF:update()
 	-- Set the lastUpdate variable --
@@ -135,12 +152,13 @@ function MJF:getTooltipInfos(GUIObj, gui, justCreated)
 		local invs = {{"gui-description.All"}}
 		local selectedIndex = 1
 		local i = 1
-		for k, deepStorage in pairs(global.deepStorageTable) do
-			if deepStorage ~= nil and deepStorage.ent ~= nil and Util.canUse(getMFPlayer(self.player), deepStorage) then
+		for k, deepStorage in pairs(self.MF.DSRTable) do
+			if deepStorage ~= nil and deepStorage.ent ~= nil then
 				i = i + 1
 				local itemText = ""
-				if deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
-					itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, " - ", deepStorage.player, ")"}
+				local itemName = deepStorage.inventoryItem or deepStorage.filter
+				if itemName ~= nil and game.item_prototypes[itemName] ~= nil then
+					itemText = {"", " (", game.item_prototypes[itemName].localised_name, ")"}
 				end
 				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
 				if self.selectedInv == deepStorage then
@@ -159,7 +177,7 @@ function MJF:changeInventory(ID)
 	if ID == nil then self.selectedInv = nil end
 	-- Select the Inventory --
 	self.selectedInv = nil
-	for k, deepStorage in pairs(global.deepStorageTable) do
+	for k, deepStorage in pairs(self.MF.DSRTable) do
 		if valid(deepStorage) == true then
 			if ID == deepStorage.ID then
 				self.selectedInv = deepStorage
@@ -265,8 +283,7 @@ function MJF:sendInventory()
 	for name, count in pairs(self.inventory) do
 		if dataInv == 0 then
 			-- Send Ore to all Deep Storage --
-			for k, dp in pairs(global.deepStorageTable) do
-				if self.player == dp.player then
+			for k, dp in pairs(self.MF.DSRTable) do
 					local added = dp:addItem(name, count)
 					-- Check if Ore was added --
 					if added > 0 then
@@ -278,7 +295,6 @@ function MJF:sendInventory()
 							break
 						end
 					end
-				end
 			end
 		else
 			local added = dataInv:addItem(name, count)

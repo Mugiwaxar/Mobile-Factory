@@ -244,10 +244,7 @@ function GUI.updateTankFrame(GUIObj)
 	tankScrollPane.clear()
 
 	-- Look for all Tanks --
-	for k, deepTank in pairs(global.deepTankTable) do
-
-		-- Ckeck if the Deep Tank belongs to this Player --
-		if deepTank.player ~= player.name then goto continue end
+	for k, deepTank in pairs(GUIObj.MF.DTKTable) do
 
 		-- -- Create the Tank Variables --
 		local sprite = nil
@@ -334,10 +331,7 @@ function GUI.updateDeepStorageFrame(GUIObj)
 	storageScrollPane.clear()
 
 	-- Look for all Deep Storage --
-	for k, deepStorage in pairs(global.deepStorageTable) do
-
-		-- Ckeck if the Deep Storage belongs to this Player --
-		if deepStorage.player ~= player.name then goto continue end
+	for k, deepStorage in pairs(GUIObj.MF.DSRTable) do
 
 		-- Create the Storage Variables --
 		local sprite = nil
