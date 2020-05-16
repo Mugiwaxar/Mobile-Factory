@@ -60,6 +60,19 @@ function EC:valid()
 	return false
 end
 
+-- Tags to Settings --
+function EC:tagToSettings(tags)
+	self.ent.energy = tags.energy or 0
+end
+
+-- Settings to Tags --
+function EC:settingsToTags(tags)
+	if self.ent.energy > 0 then
+		tags.set_tag("Infos", {energy=self.ent.energy})
+		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.EnergyCubeC", Util.toRNumber(math.floor(self.ent.energy))}, "J"}
+	end
+end
+
 -- Update --
 function EC:update()
 	-- Set the lastUpdate variable --

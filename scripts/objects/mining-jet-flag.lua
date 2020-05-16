@@ -58,6 +58,23 @@ function MJF:copySettings(obj)
 	end
 end
 
+-- Tags to Settings --
+function MJF:tagToSettings(tags)
+	self.inventory = tags.inventory or {}
+end
+
+-- Settings to Tags --
+function MJF:settingsToTags(tags)
+	local total = 0
+	for k, count in pairs(self.inventory) do
+		total = total + count
+	end
+	if total > 0 then
+		tags.set_tag("Infos", {inventory=self.inventory})
+		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.MiningJetFlagC", total}}
+	end
+end
+
 -- Update --
 function MJF:update()
 	-- Set the lastUpdate variable --

@@ -62,6 +62,21 @@ function OC:copySettings(obj)
 	self.selectedInv = obj.selectedInv
 end
 
+-- Tags to Settings --
+function OC:tagToSettings(tags)
+	self.purity = tags.purity or 0
+	self.charge = tags.charge or 0
+	self.totalCharge = tags.totalCharge or 0
+end
+
+-- Settings to Tags --
+function OC:settingsToTags(tags)
+	if self.charge > 0 then
+		tags.set_tag("Infos", {purity=self.purity, charge=self.charge, totalCharge=self.totalCharge})
+		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.OreCleanerC", self.purity, self.charge, self.totalCharge}}
+	end
+end
+
 -- Update --
 function OC:update(event)
 	-- Set the lastUpdate variable --

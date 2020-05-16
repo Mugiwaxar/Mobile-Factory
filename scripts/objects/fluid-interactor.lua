@@ -248,39 +248,3 @@ function FI:updateInventory()
         distantTank:getFluid({name = distantTank.inventoryFluid, amount = amountAdded})
     end
 end
-
-function FI:settingsToTags()
-    local tags = {}
-    local filter = nil
-	local ID = nil
-
-	-- Get Deep Tank and Filter --
-	if self.selectedInv and valid(self.selectedInv) then
-		ID = self.selectedInv.ID
-		filter = self.selectedInv.filter
-	end
-
-	tags["deepTankID"] = ID
-	tags["deepTankFilter"] = filter
-    tags["selectedMode"] = self.selectedMode
-	return tags
-end
-
-function FI:tagsToSettings(tags)
-	local ID = tags["deepTankID"]
-	local filter = tags["deepTankFilter"]
-	--self.selectedInv = tags["selectedInv"]
-	for k, deepTank in pairs(self.MF.DTKTable) do
-		if valid(deepTank) then
-			if deepTank.ID == ID and filter == deepTank.filter then
-				self.selectedInv = deepTank
-				break
-			elseif filter == deepTank.filter then
-				self.selectedInv = deepTank
-			end
-		end
-	end
-
-	-- be careful of a nil selectedMode
-    if tags["selectedMode"] then self.selectedMode = tags["selectedMode"] end
-end

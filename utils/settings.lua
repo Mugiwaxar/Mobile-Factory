@@ -123,7 +123,6 @@ _mfEntitiesScanedPerUpdate = 30
 _mfHPRepairedPerUpdate = -35
 _mfConstructionJetEnergyNeeded = 2500000
 _MFConstructionJetDefaultMaxDistance = 130
-
 _MFConstructionJetDefaultTableSize = 1000
 
 -- Repair Jet --
@@ -145,6 +144,19 @@ _mfEryaFrostlayer[3] = {{-2,-2},{-2,-1},{-2,0},{-2,1},{-2,2},{-1,-2},{-1,2},{0,-
 _mfEryaFrostlayer[4] = {{-3,-3},{-3,-2},{-3,-1},{-3,0},{-3,1},{-3,2},{-3,3},{-2,-3},{-2,3},{-1,-3},{-1,3},{0,-3},{0,3},{1,-3},{1,3},{2,-3},{2,3},{3,-3},{3,-2},{3,-1},{3,0},{3,1},{3,2},{3,3}}
 _mfEryaFrostlayer[5] = {{-4,-4},{-4,-3},{-4,-2},{-4,-1},{-4,0},{-4,1},{-4,2},{-4,3},{-4,4},{-3,-4},{-3,4},{-2,-4},{-2,4},{-1,-4},{-1,4},{0,-4},{0,4},{1,-4},{1,4},{2,-4},{2,4},{3,-4},{3,4},{4,-4},{4,-3},{4,-2},{4,-1},{4,0},{4,1},{4,2},{4,3},{4,4}}
 _mfEryaFrostlayer[6] = {{-5,-5},{-5,-4},{-5,-3},{-5,-2},{-5,-1},{-5,0},{-5,1},{-5,2},{-5,3},{-5,4},{-5,5},{-4,-5},{-4,5},{-3,-5},{-3,5},{-2,-5},{-2,5},{-1,-5},{-1,5},{0,-5},{0,5},{1,-5},{1,5},{2,-5},{2,5},{3,-5},{3,5},{4,-5},{4,5},{5,-5},{5,-4},{5,-3},{5,-2},{5,-1},{5,0},{5,1},{5,2},{5,3},{5,4},{5,5}}
+
+-- Erya Structure that freeze the Environment --
+_mfEryaFreezeStructures = {}
+_mfEryaFreezeStructures["EryaLamp"] = true
+_mfEryaFreezeStructures["EryaInserter1"] = true
+_mfEryaFreezeStructures["EryaMiningDrill1"] = true
+_mfEryaFreezeStructures["EryaPumpjack1"] = true
+_mfEryaFreezeStructures["EryaAssemblingMachine1"] = true
+_mfEryaFreezeStructures["EryaPump1"] = true
+_mfEryaFreezeStructures["EryaRadar1"] = true
+_mfEryaFreezeStructures["EryaFurnace1"] = true
+_mfEryaFreezeStructures["EryaRefinery1"] = true
+_mfEryaFreezeStructures["EryaChemicalPlant1"] = true
 
 -- Entity GUI --
 _mfTooltipGUI =
@@ -179,6 +191,7 @@ _eventTick27=27 -- Mobile Factory Fuel --
 _eventTick30=30 -- Mobile Factory Sync Area
 _eventTick41=41 -- Repair Jets --
 _eventTick45=45 -- Construction Jets --
+_eventTick49=49 -- Mobile Factory Lights --
 _eventTick55=55 -- GUI --
 _eventTick60=60 -- Mobile Factory Lasers/Jump Drive --
 _eventTick73=73 -- Combat Jets --

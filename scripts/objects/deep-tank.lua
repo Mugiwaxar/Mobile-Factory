@@ -58,6 +58,22 @@ function DTK:copySettings(obj)
 	self.filter = obj.filter
 end
 
+-- Tags to Settings --
+function DTK:tagToSettings(tags)
+	self.inventoryFluid = tags.inventoryFluid or nil
+	self.inventoryCount = tags.inventoryCount or 0
+	self.filter = tags.filter or nil
+	self.inventoryTemperature = tags.inventoryTemperature or 15
+end
+
+-- Settings to Tags --
+function DTK:settingsToTags(tags)
+	if self.inventoryFluid ~= nil or self.filter ~= nil then
+		tags.set_tag("Infos", {inventoryFluid=self.inventoryFluid, inventoryCount=self.inventoryCount, filter=self.filter, inventoryTemperature=self.inventoryTemperature})
+		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.DeepTankC", self.inventoryFluid or self.filter, self.inventoryCount or 0, self.inventoryTemperature or 15}}
+	end
+end
+
 -- Update --
 function DTK:update()
 	-- Set the lastUpdate variable --

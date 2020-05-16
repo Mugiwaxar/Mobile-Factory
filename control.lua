@@ -61,7 +61,6 @@ function onInit()
 	-- Repair Jet Update --
 	global.repairJetIndex = 0
 	-- Floor Is Lava --
-	
 	global.floorIsLavaActivated = false
 	-- Research --
 	for _, force in pairs(game.forces) do
@@ -122,9 +121,18 @@ function onConfigurationChanged()
 	for k, player in pairs(game.players) do
 		GUI.createMFMainGUI(player)
 	end
+	-- Create the Objects Table --
+	Util.createTableList()
+	-- Create all Table --
+	for k, obj in pairs(global.objTable) do
+		if obj.tableName ~= nil and global[obj.tableName] == nil then
+			global[obj.tableName] = {}
+		end
+	end
 	-- Remove all Mobile Factory Render --
 	rendering.clear("Mobile_Factory")
 	-- Validate the Tile Used for the Sync Area --
+	global.syncTile = "dirt-7"
 	validateSyncAreaTile()
 	-- Ensure All Needed Tiles are Present --
 	checkNeededTiles()
@@ -215,12 +223,12 @@ script.on_event(defines.events.on_player_joined_game, initPlayer)
 script.on_event(defines.events.on_player_driving_changed_state, playerDriveStatChange)
 script.on_event(defines.events.on_tick, onTick)
 script.on_event(defines.events.on_entity_damaged, onEntityDamaged, _mfEntityFilterWithCBJ)
-script.on_event(defines.events.on_built_entity, onPlayerBuildSomething)
-script.on_event(defines.events.on_player_built_tile, onPlayerBuildSomething)
-script.on_event(defines.events.script_raised_built, onPlayerBuildSomething)
-script.on_event(defines.events.script_raised_revive, onPlayerBuildSomething)
-script.on_event(defines.events.on_robot_built_entity, onRobotBuildSomething)
-script.on_event(defines.events.on_robot_built_tile, onRobotBuildSomething)
+script.on_event(defines.events.on_built_entity, somethingWasPlaced)
+script.on_event(defines.events.on_player_built_tile, somethingWasPlaced)
+script.on_event(defines.events.script_raised_built, somethingWasPlaced)
+script.on_event(defines.events.script_raised_revive, somethingWasPlaced)
+script.on_event(defines.events.on_robot_built_entity, somethingWasPlaced)
+script.on_event(defines.events.on_robot_built_tile, somethingWasPlaced)
 script.on_event(defines.events.on_player_mined_entity, onPlayerRemoveSomethings)
 script.on_event(defines.events.on_player_mined_tile, onPlayerRemoveSomethings)
 script.on_event(defines.events.on_robot_mined_entity, onRobotRemoveSomething)

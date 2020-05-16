@@ -4,7 +4,6 @@ function Util.createTableList()
 	Util.addObject{tableName="MFTable", tag="MF", objName="MF", noPlaced=true}
 	Util.addObject{tableName="eryaTable", tag="ES", objName="Erya"}
 	Util.addObject{tableName="dataCenterTable", tag="DC", objName="DataCenter"}
-	Util.addObject{tableName="dataCenterTable", tag="DCMF", objName="DataCenterMF", onlyOnce=true}
 	Util.addObject{tableName="matterInteractorTable", tag="MI", objName="MatterInteractor"}
 	Util.addObject{tableName="fluidInteractorTable", tag="FI", objName="FluidInteractor"}
 	Util.addObject{tableName="dataAssemblerTable", tag="DA", objName="DataAssembler"}
@@ -13,7 +12,7 @@ function Util.createTableList()
 	Util.addObject{tableName="wirelessDataTransmitterTable", tag="WDT", objName="WirelessDataTransmitter"}
 	Util.addObject{tableName="wirelessDataReceiverTable", tag="WDR", objName="WirelessDataReceiver"}
 	Util.addObject{tableName="energyCubesTable", tag="EC", objName="EnergyCubeMK1"}
-	Util.addObject{tableName="energyLaserTable", tag="EL", objName="EnergyLaser1"}
+	Util.addObject{tableName="energyLaserTable", tag="EL", objName="EnergyLaser1", noOutside=true}
 	Util.addObject{tableName="deepStorageTable", tag="DSR", objName="DeepStorage", canInCC=true}
 	Util.addObject{tableName="deepTankTable", tag="DTK", objName="DeepTank", canInCC=true}
 	Util.addObject{tableName="oreCleanerTable", tag="OC", objName="OreCleaner", noInside=true}
@@ -26,10 +25,13 @@ function Util.createTableList()
 	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK2", noInside=true}
 	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK3", noInside=true}
 	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK4", noInside=true}
+	Util.addObject{objName="InternalEnergyCube", noUpsys=true, canInCCAnywhere=true}
+	Util.addObject{objName="InternalQuatronCube", noUpsys=true, canInCCAnywhere=true}
+	Util.addObject{tableName="dataCenterTable", objName="DataCenterMF"}
 end
 
 -- Add an Object to the System --
--- {tableName, tag, objName, noUpsys, noOuside, noInside, canInCC, canInCCAnywhere, onlyOnce, noPlaced} --
+-- {tableName, tag, objName, noUpsys, noOuside, noInside, canInCC, canInCCAnywhere, noPlaced} --
 function Util.addObject(table)
 	-- Check the objTable --
 	if global.objTable == nil then global.objTable = {} end
@@ -594,7 +596,7 @@ function Util.canUse(MFPlayer, obj)
 	if obj.MF then
 		if obj.MF.varTable.allowedPlayers[MFPlayer.index] == true then return true end
 	elseif obj.varTable then
-		if obj.varTable.allowedPlayers[MFPlayer.index] == true then return true end		
+		if obj.varTable.allowedPlayers[MFPlayer.index] == true then return true end
 	end
 	return false
 end

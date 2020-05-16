@@ -1,6 +1,5 @@
 require("utils/players-teleportation.lua")
 require("utils/surface")
-require("utils/saved-tables.lua")
 require("utils/functions.lua")
 require("scripts/update-system.lua")
 require("utils/place-and-remove.lua")
@@ -19,6 +18,8 @@ function onTick(event)
 	Erya.updateEryaStructures(event)
 	-- Update all GUI --
 	GUI.updateAllGUIs()
+	-- Updates Mobile Factory Lights --
+	if event.tick%_eventTick49 == 0 then updateIndoorLights() end
 	-- Update the Floor Is Lava --
 	if event.tick%_eventTick150 == 0 and global.floorIsLavaActivated == true then updateFloorIsLava() end
 end
@@ -111,16 +112,6 @@ function initPlayer(event)
 		setPlayerVariable(player.name, "GotInventory", true)
 		GUI.createMFMainGUI(player)
 	end
-end
-
--- When a player build something --
-function onPlayerBuildSomething(event)
-	somethingWasPlaced(event, false)
-end
-
--- When a robot build something --
-function onRobotBuildSomething(event)
-	somethingWasPlaced(event, true)
 end
 
 -- When a player remove something --
@@ -466,6 +457,19 @@ function checkDataNetworkID()
 	for id, obj in pairs(global.dataNetworkIDRedTable) do
 		if valid(obj) == false or Util.redCNID(obj) ~= id then
 			global.dataNetworkIDRedTable[id] = nil
+		end
+	end
+end
+
+-- Update all Mobile Factory Internal Lights --
+function updateIndoorLights()
+	for k, MF in pairs(global.MFTable) do
+		if MF.internalEnergyObj:energy() > 0 then
+			MF.fS.daytime = 0
+			MF.ccS.daytime = 0
+		else
+			MF.fS.daytime = 0.5
+			MF.ccS.daytime = 0.5
 		end
 	end
 end
