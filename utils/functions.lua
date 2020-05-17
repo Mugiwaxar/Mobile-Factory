@@ -43,6 +43,8 @@ function Util.addObject(table)
 	for k, v in pairs(table) do
 		tbl[k] = v
 	end
+
+	if table.tableName ~= nil and global[table.tableName] == nil then global[table.tableName] = {} end
 end
 
 -- Transfer Chest1 to Chest2 --

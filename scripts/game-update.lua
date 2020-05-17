@@ -96,15 +96,7 @@ function initPlayer(event)
 	if getMFPlayer(player.name) == nil then
 		global.playersTable[player.name] = MFP:new(player)
 		-- Mobile Factory Object --
-		local MF = MF:new()
-		global.MFTable[player.name] = MF
-		MF.internalEnergyObj = IEC:new(MF)
-		MF.internalQuatronObj = IQC:new(MF)
-		MF.II = INV:new("Internal Inventory")
-		MF.II.MF = MF
-		MF.II.isII = true
-		MF.playerIndex = player.index
-		MF.player = player.name
+		local MF = MF:new({player = player})
 		createMFSurface(MF)
 		createControlRoom(MF)
 		global.playersTable[player.name].MF = MF

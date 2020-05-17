@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.169
+Date: 17/05/2020
+  Bugfixes:
+    - 0.0.168 - whoops
+    - Command Center unavailable on game start
+  Changes:
+    - one's first Mobile Factory placed gets one free jump and 1.5 GJ - lose energy and jump timer on mining
+  Scripting:
+    - begin refactoring and simplifying of various object and newly-needed-values code
+	- move some player init assignment to MF new()
+    - this will take much time and many bugs (honk honk)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.168
 Date: 16/05/2020
   Bugfixes:
