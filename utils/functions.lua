@@ -36,7 +36,13 @@ function Util.addObject(table)
 	-- Check the objTable --
 	if global.objTable == nil then global.objTable = {} end
 	-- Add the Object --
-	global.objTable[table.objName] = table
+	global.objTable[table.objName] = global.objTable[table.objName] or table
+
+	-- Update to Newest Values if Table Existed --
+	local tbl = global.objTable[table.objName]
+	for k, v in pairs(table) do
+		tbl[k] = v
+	end
 end
 
 -- Transfer Chest1 to Chest2 --

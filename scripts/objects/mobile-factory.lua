@@ -40,11 +40,13 @@ MF = {
 }
 
 -- Constructor --
-function MF:new()
-	local t = {}
+function MF:new(args)
+	local t = nil
+	if args and args.refreshObj then t = args.refreshObj else t = {} end
 	local mt = {}
 	setmetatable(t, mt)
 	mt.__index = MF
+<<<<<<< Updated upstream
 	t.entitiesAround = {}
 	t.clonedResourcesTable = {}
 	t.DTKTable = {}
@@ -54,8 +56,23 @@ function MF:new()
 	t.varTable.tanks = {}
 	t.varTable.allowedPlayers = {}
 	t.varTable.jets = { ["cjTableSize"] = _MFConstructionJetDefaultTableSize }
+=======
+	t.entitiesAround = t.entitiesAround or {}
+	t.clonedResourcesTable = t.clonedResourcesTable or {}
+	t.DTKTable = t.DTKTable or {}
+	t.DSRTable = t.DSRTable or {}
+	t.varTable = t.varTable or {}
+	t.varTable.tech = t.varTable.tech or {}
+	t.varTable.tanks = t.varTable.tanks or {}
+	t.varTable.allowedPlayers = t.varTable.allowedPlayers or {}
+	t.varTable.jets = t.varTable.jets or { ["cjTableSize"] = _MFConstructionJetDefaultTableSize }
+>>>>>>> Stashed changes
 	UpSys.addObj(t)
 	return t
+end
+
+function MF:refresh(obj)
+  MF:new({refreshObj = obj})
 end
 
 -- Constructor for a placed Mobile Factory --
