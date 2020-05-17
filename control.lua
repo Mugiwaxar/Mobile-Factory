@@ -46,22 +46,22 @@ require("scripts/objects/erya-structure.lua")
 function onInit()
 
 	-- Update System --
-	global.entsTable = {}
-	global.upsysTickTable = {}
-	global.entsUpPerTick = _mfBaseUpdatePerTick
-	global.upSysLastScan = 0
+	global.entsTable = global.entsTable or {}
+	global.upsysTickTable = global.upsysTickTable or {}
+	global.entsUpPerTick = global.entsUpPerTick or _mfBaseUpdatePerTick
+	global.upSysLastScan = global.upSysLastScan or 0
 	-- Inventory --
-	global.insertedMFInsideInventory = false
+	global.insertedMFInsideInventory = global.insertedMFInsideInventory or false
 	-- Erya --
-	global.updateEryaIndex = 1
+	global.updateEryaIndex = global.updateEryaIndex or 1
 	-- Data Network --
-	global.dataNetworkID = 0
+	global.dataNetworkID = global.dataNetworkID or 0
 	-- Construction Jet Update --
-	global.constructionJetIndex = 0
+	global.constructionJetIndex = global.constructionJetIndex or 0
 	-- Repair Jet Update --
-	global.repairJetIndex = 0
+	global.repairJetIndex = global.repairJetIndex or 0
 	-- Floor Is Lava --
-	global.floorIsLavaActivated = false
+	global.floorIsLavaActivated = global.floorIsLavaActivated or false
 	-- Research --
 	for _, force in pairs(game.forces) do
 		if settings.startup["MF-initial-research-complete"] and settings.startup["MF-initial-research-complete"].value == true then
@@ -70,80 +70,70 @@ function onInit()
 	end
 
 	-- Tables --
-	global.dataNetworkTable = {}
-	global.dataNetworkIDGreenTable = {}
-	global.dataNetworkIDRedTable = {}
-	global.constructionTable = {}
-	global.repairTable = {}
-	global.eryaIndexedTable = {}
+	global.dataNetworkTable = global.dataNetworkTable or {}
+	global.dataNetworkIDGreenTable = global.dataNetworkIDGreenTable or {}
+	global.dataNetworkIDRedTable = global.dataNetworkIDRedTable or {}
+	global.constructionTable = global.constructionTable or {}
+	global.repairTable = global.repairTable or {}
+	global.eryaIndexedTable = global.eryaIndexedTable or {}
 
 	-- Create the Objects Table --
 	Util.createTableList()
 
-	-- Create all Table --
+	-- Rebuild all Objects --
 	for k, obj in pairs(global.objTable) do
-		if obj.tableName ~= nil and global[obj.tableName] == nil then
-			global[obj.tableName] = {}
+		if obj.tableName and obj.tag and _G[obj.tag].refresh then
+			for objKey, entry in pairs(global[obj.tableName]) do
+				_G[obj.tag].refresh(entry)
+			end
 		end
 	end
-	
-    global.syncTile = "dirt-7"
+
+    global.syncTile = global.syncTile or "dirt-7"
 	-- Validate the Tile Used for the Sync Area --
 	validateSyncAreaTile()
 	-- Ensure All Needed Tiles are Present --
 	checkNeededTiles()
 
-end
+	-- Remove Existing Render Objects --
+	rendering.clear("Mobile_Factory")
 
--- When a save is loaded --
-function onLoad()
+	-- Recreate GUIs --
+	for k, player in pairs(game.players) do
+		GUI.createMFMainGUI(player)
+	end
+
 	-- Add Warptorio Compatibility --
 	warptorio()
-	-- Set all Metatables --
-	for k, obj in pairs(global.objTable or {}) do
-		if obj.tag ~= nil then
-			for k2, obj2 in pairs(global[obj.tableName] or {}) do
-				if obj2.invObj ~= nil and obj2.invObj.isII == true then
-					DCMF:rebuild(obj2)
-				elseif obj2.invObj ~= nil then
-					DC:rebuild(obj2)
+end
+
+function onLoad(event)
+	-- Rebuild all Objects --
+	for k, obj in pairs(global.objTable) do
+		if obj.tableName ~= nil and obj.tag ~= nil then
+			for objKey, entry in pairs(global[obj.tableName]) do
+				if entry.invObj ~= nil and entry.invObj.isII ~= true then
+					DC:rebuild(entry)
 				else
-					_G[obj.tag]:rebuild(obj2)
+					_G[obj.tag]:rebuild(entry)
 				end
 			end
 		end
 	end
-end
 
--- When the configuration has changed --
-function onConfigurationChanged()
-	-- Recreate the Main GUI --
-	for k, player in pairs(game.players) do
-		GUI.createMFMainGUI(player)
-	end
-	-- Create the Objects Table --
-	Util.createTableList()
-	-- Create all Table --
-	for k, obj in pairs(global.objTable) do
-		if obj.tableName ~= nil and global[obj.tableName] == nil then
-			global[obj.tableName] = {}
+	-- Add Warptorio Compatibility --
+	warptorio()
+
+	-- Debug --
+	--[[
+	for k, j in pairs(global) do
+		if type(j) == "table" then
+			dprint(k .. ":" .. table_size(j))
+		else
+			dprint(k)
 		end
 	end
-	-- Remove all Mobile Factory Render --
-	rendering.clear("Mobile_Factory")
-	-- Validate the Tile Used for the Sync Area --
-	global.syncTile = "dirt-7"
-	validateSyncAreaTile()
-	-- Ensure All Needed Tiles are Present --
-	checkNeededTiles()
-	-- Debug --
-	-- for k, j in pairs(global) do
-		-- if type(j) == "table" then
-			-- dprint(k .. ":" .. table_size(j))
-		-- else
-			-- dprint(k)
-		-- end
-	-- end
+	--]]
 end
 
 -- Filters --
@@ -216,8 +206,8 @@ end
 
 -- Events --
 script.on_init(onInit)
+script.on_configuration_changed(onInit)
 script.on_load(onLoad)
-script.on_configuration_changed(onConfigurationChanged)
 script.on_event(defines.events.on_player_created, initPlayer)
 script.on_event(defines.events.on_player_joined_game, initPlayer)
 script.on_event(defines.events.on_player_driving_changed_state, playerDriveStatChange)
