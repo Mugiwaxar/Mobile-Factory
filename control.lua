@@ -82,21 +82,9 @@ function onInit()
 
 	-- Rebuild all Objects --
 	for k, obj in pairs(global.objTable) do
-		if obj.tableName ~= nil and obj.tag ~= nil then
-			--should validate that we are using the right table for the obj
-
-			--these separate functions can be merged, eventually
-			-- Rebuild and Refresh Objects so All Needed Values are Present --
+		if obj.tableName and obj.tag and _G[obj.tag].refresh then
 			for objKey, entry in pairs(global[obj.tableName]) do
-				if entry.invObj ~= nil and entry.invObj.isII ~= true then
-					DC:rebuild(entry)
-				else
-					_G[obj.tag]:rebuild(entry)
-				end
-
-				if _G[obj.tag].refresh then
-					_G[obj.tag].refresh(entry)
-				end
+				_G[obj.tag].refresh(entry)
 			end
 		end
 	end
@@ -115,6 +103,27 @@ function onInit()
 		GUI.createMFMainGUI(player)
 	end
 
+	-- Add Warptorio Compatibility --
+	warptorio()
+end
+
+function onLoad(event)
+	-- Rebuild all Objects --
+	for k, obj in pairs(global.objTable) do
+		if obj.tableName ~= nil and obj.tag ~= nil then
+			for objKey, entry in pairs(global[obj.tableName]) do
+				if entry.invObj ~= nil and entry.invObj.isII ~= true then
+					DC:rebuild(entry)
+				else
+					_G[obj.tag]:rebuild(entry)
+				end
+			end
+		end
+	end
+
+	-- Add Warptorio Compatibility --
+	warptorio()
+
 	-- Debug --
 	--[[
 	for k, j in pairs(global) do
@@ -125,9 +134,6 @@ function onInit()
 		end
 	end
 	--]]
-
-	-- Add Warptorio Compatibility --
-	warptorio()
 end
 
 -- Filters --
@@ -201,6 +207,7 @@ end
 -- Events --
 script.on_init(onInit)
 script.on_configuration_changed(onInit)
+script.on_load(onLoad)
 script.on_event(defines.events.on_player_created, initPlayer)
 script.on_event(defines.events.on_player_joined_game, initPlayer)
 script.on_event(defines.events.on_player_driving_changed_state, playerDriveStatChange)
