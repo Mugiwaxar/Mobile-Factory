@@ -32,11 +32,18 @@ end
 
 -- Create Factory to Control Center floor --
 function updateFactoryFloorForCC(MF)
-	createTilesSurface(MF.fS, -3, -34, 3, -32, "refined-hazard-concrete-left")
 	-- Create Control Center surface --
-	if MF.ccS == nil or MF.ccS.valid == false then MF.ccS = nil createControlRoom(MF) end
-	-- Valid the Technology --
-	MF.varTable.tech.ControlCenter = true
+	if valid(MF.ccS) == false then
+		MF.ccS = nil
+		createControlRoom(MF)
+	end
+
+	if technologyUnlocked("ControlCenter", getForce(MF.player)) == true then
+		--will overwrite other tiles that are placed
+		createTilesSurface(MF.fS, -3, -34, 3, -32, "refined-hazard-concrete-left")
+		-- Validate the Technology --
+		MF.varTable.tech.ControlCenter = true
+	end
 end
 
 -- Create Equalizer --

@@ -82,16 +82,16 @@ function onInit()
 
 	-- Rebuild all Objects --
 	for k, obj in pairs(global.objTable) do
-		if obj.tablename ~= nil and obj.tag ~= nil then
+		if obj.tableName ~= nil and obj.tag ~= nil then
 			--should validate that we are using the right table for the obj
 
 			--these separate functions can be merged, eventually
 			-- Rebuild and Refresh Objects so All Needed Values are Present --
 			for objKey, entry in pairs(global[obj.tableName]) do
 				if entry.invObj ~= nil and entry.invObj.isII ~= true then
-					DC:rebuild(obj2)
+					DC:rebuild(entry)
 				else
-					_G[obj.tag]:rebuild(obj2)
+					_G[obj.tag]:rebuild(entry)
 				end
 
 				if _G[obj.tag].refresh then

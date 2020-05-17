@@ -17,7 +17,7 @@ MF = {
 	internalQuatronObj = nil,
 	DTKTable = nil,
 	DSRTable = nil,
-	jumpTimer = _mfBaseJumpTimer,
+	jumpTimer = 0,
 	baseJumpTimer = _mfBaseJumpTimer,
 	tpEnabled = true,
 	locked = true,
@@ -42,21 +42,14 @@ MF = {
 -- Constructor --
 function MF:new(args)
 	local t = nil
-	if args and args.refreshObj then t = args.refreshObj else t = {} end
+	local player = nil
+	if args then
+		if args.refreshObj then t = args.refreshObj else t = {} end
+		if args.player then player = args.player end
+	end
 	local mt = {}
 	setmetatable(t, mt)
 	mt.__index = MF
-<<<<<<< Updated upstream
-	t.entitiesAround = {}
-	t.clonedResourcesTable = {}
-	t.DTKTable = {}
-	t.DSRTable = {}
-	t.varTable = {}
-	t.varTable.tech = {}
-	t.varTable.tanks = {}
-	t.varTable.allowedPlayers = {}
-	t.varTable.jets = { ["cjTableSize"] = _MFConstructionJetDefaultTableSize }
-=======
 	t.entitiesAround = t.entitiesAround or {}
 	t.clonedResourcesTable = t.clonedResourcesTable or {}
 	t.DTKTable = t.DTKTable or {}
@@ -66,7 +59,22 @@ function MF:new(args)
 	t.varTable.tanks = t.varTable.tanks or {}
 	t.varTable.allowedPlayers = t.varTable.allowedPlayers or {}
 	t.varTable.jets = t.varTable.jets or { ["cjTableSize"] = _MFConstructionJetDefaultTableSize }
->>>>>>> Stashed changes
+	t.internalEnergyObject = t.internalEnergyObject or IEC:new(MF)
+
+	if player then
+		global.MFTable[player.name] = t
+		t.playerIndex = player.index
+		t.player = player.name
+	end
+
+	t.II = t.II or INV:new("Internal Inventory")
+	t.II.MF = t.II.MF or t
+	t.II.isII = true
+
+	t.internalEnergyObj = t.internalEnergyObj or IEC:new(t)
+	t.internalQuatronObj = t.internalQuatronObj or IQC:new(t)
+
+	t.MF = t
 	UpSys.addObj(t)
 	return t
 end
@@ -81,6 +89,7 @@ function MF:construct(object)
 	if self.fS == nil or self.fS.valid == false then self.fS = nil createMFSurface(self) end
 	if self.ccS == nil or self.ccS.valid == false then self.ccS = nil createControlRoom(self) end
 	self.ent = object
+	global.entsTable[object.unit_number] = self
 	self.lastSurface = object.surface
 	self.lastPosX = object.position.x
 	self.lastPosY = object.position.y
@@ -624,14 +633,14 @@ function MF:factoryTeleportBox()
 		end
 	end
 	-- Factory to Control Center --
-	if technologyUnlocked("ControlCenter", getForce(self.player)) ~= nil and self.fS ~= nil then
+	if technologyUnlocked("ControlCenter", getForce(self.player)) ~= false and self.fS ~= nil then
 		local entities = self.fS.find_entities_filtered{area={{-3,-34},{3,-32}}, type="character"}
 		for k, entity in pairs(entities) do
 			teleportPlayerToControlCenter(entity.player, self)
 		end
 	end
 	-- Control Center to Factory --
-	if technologyUnlocked("ControlCenter", getForce(self.player)) ~= nil and self.ccS ~= nil and self.fS ~= nil then
+	if technologyUnlocked("ControlCenter", getForce(self.player)) ~= false and self.ccS ~= nil and self.fS ~= nil then
 		local entities = self.ccS.find_entities_filtered{area={{-3,5},{3,8}}, type="character"}
 		for k, entity in pairs(entities) do
 			teleportPlayerToFactory(entity.player, self)
