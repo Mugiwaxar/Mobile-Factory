@@ -47,8 +47,8 @@ function MF:new()
 	mt.__index = MF
 	t.entitiesAround = {}
 	t.clonedResourcesTable = {}
-	DTKTable = {}
-	DSRTable = {}
+	t.DTKTable = {}
+	t.DSRTable = {}
 	t.varTable = {}
 	t.varTable.tech = {}
 	t.varTable.tanks = {}
@@ -79,6 +79,8 @@ function MF:rebuild(object)
 	IQC:rebuild(object.internalQuatronObj)
 	INV:rebuild(object.II)
 	DCMF:rebuild(object.dataCenter)
+	if object.DSRTable == nil then object.DSRTable = {} end
+	if object.DTKTable == nil then object.DTKTable = {} end
 end
 
 -- Destructor --
