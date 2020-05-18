@@ -65,7 +65,7 @@ end
 function IQC:settingsToTags(tags)
 	if self.ent.energy <= 0 then return end
 	tags.set_tag("Infos", {energy=self.ent.energy})
-	tags.custom_description = {"", tags.prototype.localised_description, {"item-description.EnergyCubeC", Util.toRNumber(math.floor(self.ent.energy))}}
+	tags.custom_description = {"", tags.prototype.localised_description, {"item-description.QuatronCubeC", Util.toRNumber(math.floor(self.ent.energy))}}
 end
 
 -- Update --

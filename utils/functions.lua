@@ -12,8 +12,9 @@ function Util.createTableList()
 	Util.addObject{tableName="wirelessDataTransmitterTable", tag="WDT", objName="WirelessDataTransmitter"}
 	Util.addObject{tableName="wirelessDataReceiverTable", tag="WDR", objName="WirelessDataReceiver"}
 	Util.addObject{tableName="energyCubesTable", tag="EC", objName="EnergyCubeMK1"}
-	Util.addObject{tableName="energyLaserTable", tag="EL", objName="EnergyLaser1", noOutside=true}
+	Util.addObject{tableName="energyLaserTable", tag="EL", objName="EnergyLaser1"}
 	Util.addObject{tableName="quatronCubesTable", tag="QC", objName="QuatronCubeMK1"}
+	Util.addObject{tableName="quatronLaserTable", tag="QL", objName="QuatronLaser1"}
 	Util.addObject{tableName="quatronReactorTable", tag="QR", objName="QuatronReactor"}
 	Util.addObject{tableName="deepStorageTable", tag="DSR", objName="DeepStorage", canInCC=true}
 	Util.addObject{tableName="deepTankTable", tag="DTK", objName="DeepTank", canInCC=true}

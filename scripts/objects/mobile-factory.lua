@@ -41,10 +41,10 @@ MF = {
 
 -- Constructor --
 function MF:new(args)
-	local t = nil
+	local t = {}
 	local player = nil
 	if args then
-		if args.refreshObj then t = args.refreshObj else t = {} end
+		if args.refreshObj then t = args.refreshObj end
 		if args.player then player = args.player end
 	end
 	local mt = {}
@@ -86,9 +86,9 @@ end
 -- Constructor for a placed Mobile Factory --
 function MF:construct(object)
 	if object == nil then return end
+	self.ent = object
 	if self.fS == nil or self.fS.valid == false then self.fS = nil createMFSurface(self) end
 	if self.ccS == nil or self.ccS.valid == false then self.ccS = nil createControlRoom(self) end
-	self.ent = object
 	global.entsTable[object.unit_number] = self
 	self.lastSurface = object.surface
 	self.lastPosX = object.position.x
@@ -953,6 +953,7 @@ function MF:unCloneSyncArea()
 		elseif ents.original.type == "accumulator" then
 			uncloneAccumulator(ents.original, ents.cloned)
 		end
+		script.raise_event(defines.events.script_raised_destroy, {entity=ents.cloned})
 		ents.cloned.destroy()
 	end
 	self.clonedResourcesTable = {}
@@ -972,10 +973,12 @@ function MF:updateClonedEntity(ents)
 	-- Check the Entities --
 	if ents == nil then return end
 	if ents.original == nil or ents.original.valid == false then
+		script.raise_event(defines.events.script_raised_destroy, {entity=ents.cloned})
 		ents.cloned.destroy()
 		return
 	end
 	if ents.cloned == nil or ents.cloned.valid == false then
+		script.raise_event(defines.events.script_raised_destroy, {entity=ents.original})
 		ents.original.destroy()
 		return
 	end

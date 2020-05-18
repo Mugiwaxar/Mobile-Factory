@@ -1,7 +1,7 @@
--- ENERGY LASER OBJECT --
+-- QUATRON LASER OBJECT --
 
 -- Create the Energy Laser base Object --
-EL = {
+QL = {
 	ent = nil,
 	player = "",
 	MF = nil,
@@ -17,12 +17,12 @@ EL = {
 }
 
 -- Constructor --
-function EL:new(object)
+function QL:new(object)
 	if object == nil then return end
 	local t = {}
 	local mt = {}
 	setmetatable(t, mt)
-	mt.__index = EL
+	mt.__index = QL
 	t.ent = object
 	if object.last_user == nil then return end
 	t.player = object.last_user.name
@@ -30,20 +30,20 @@ function EL:new(object)
 	t.entID = object.unit_number
 	UpSys.addObj(t)
 	-- Create the Beam --
-	t.beam = t.ent.surface.create_entity{name="IddleBeam", position= EL.getBeamPositionA(t), target_position=EL.getBeamPositionB(t), source=EL.getBeamPositionA(t)}
+	t.beam = t.ent.surface.create_entity{name="IddleBeam", position= QL.getBeamPositionA(t), target_position=QL.getBeamPositionB(t), source=QL.getBeamPositionA(t)}
 	return t
 end
 
 -- Reconstructor --
-function EL:rebuild(object)
+function QL:rebuild(object)
 	if object == nil then return end
 	local mt = {}
-	mt.__index = EL
+	mt.__index = QL
 	setmetatable(object, mt)
 end
 
 -- Destructor --
-function EL:remove()
+function QL:remove()
 	-- Remove the Beam --
 	if self.beam ~= nil and self.beam.valid == true then
 		self.beam.destroy()
@@ -53,13 +53,13 @@ function EL:remove()
 end
 
 -- Is valid --
-function EL:valid()
+function QL:valid()
 	if self.ent ~= nil and self.ent.valid then return true end
 	return false
 end
 
 -- Update --
-function EL:update()
+function QL:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	
@@ -69,11 +69,11 @@ function EL:update()
 		return
 	end
 
-	-- Look for Energy from neighboring Cubes --
-	self:findEnergy()
+	-- Look for Quatron from neighboring Cubes --
+	self:findQuatron()
 
-	-- Send Energy to the Focused Entity --
-	self:sendEnergy()
+	-- Send Quatron to the Focused Entity --
+	self:sendQuatron()
 
 	-- Look for an Entity to recharge --
 	if self.checkTick < game.tick - self.lastCheck then
@@ -84,11 +84,11 @@ function EL:update()
 end
 
 -- Tooltip Infos --
-function EL:getTooltipInfos(GUI)
+function QL:getTooltipInfos(GUI)
 end
 
 -- Look for Energy from neighboring Cubes --
-function EL:findEnergy()
+function QL:findQuatron()
 
 	-- Check the Entity --
 	if self.ent == nil or self.ent.valid == false then return end
@@ -100,17 +100,17 @@ function EL:findEnergy()
 	-- Check all Accumulator --
 	for k, ent in pairs(ents) do
 		-- Look for valid Energy Cube --
-		if ent ~= nil and ent.valid == true and ent ~= self.ent and _mfEnergyCubes[ent.name] == true then
+		if ent ~= nil and ent.valid == true and ent ~= self.ent and _mfQuatronCubes[ent.name] == true then
 			local obj = global.entsTable[ent.unit_number]
 			if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true then
-				if self:energy() < self:maxEnergy() then
+				if self:quatron() < self:maxQuatron() then
 					-- Calcule max flow --
-					local amount = self:maxEnergy() - self:energy()
-					local maxEnergyTranfer = math.min(amount, obj:energy(), self:maxInput()*self.updateTick, obj:maxOutput()*self.updateTick)
+					local amount = self:maxQuatron() - self:quatron()
+					local maxEnergyTranfer = math.min(amount, obj:quatron(), self:maxInput()*self.updateTick, obj:maxOutput()*self.updateTick)
 					-- Transfer Energy --
-					local transfered = self:addEnergy(maxEnergyTranfer)
+					local transfered = self:addQuatron(maxEnergyTranfer)
 					-- Remove Energy --
-					obj:removeEnergy(transfered)
+					obj:removeQuatron(transfered)
 				end
 			end
 		end
@@ -118,43 +118,43 @@ function EL:findEnergy()
 
 end
 
--- Send Energy to the Focused Entity --
-function EL:sendEnergy()
+-- Send Quatron to the Focused Entity --
+function QL:sendQuatron()
 
 	-- Check the Entity --
 	local obj = self.focusedObj
-	if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and string.match(obj.ent.name, "MobileFactory") then obj = obj.internalEnergyObj end
-	if obj == nil or obj.ent == nil or obj.ent.valid == false or obj:energy() >= obj:maxEnergy() or self:energy() <= 0 then return end
+	if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and string.match(obj.ent.name, "MobileFactory") then obj = obj.internalQuatronObj end
+	if obj == nil or obj.ent == nil or obj.ent.valid == false or obj:quatron() >= obj:maxQuatron() or self:quatron() <= 0 then return end
 
 	-- Send Energy to the Entity --
-	local amount = math.min(self:energy(), self:maxOutput()*self.updateTick, (obj:maxEnergy() - obj:energy()), obj:maxInput()*self.updateTick)
+	local amount = math.min(self:quatron(), self:maxOutput()*self.updateTick, (obj:maxQuatron() - obj:quatron()), obj:maxInput()*self.updateTick)
 	if amount > 0  then
 		-- Remove the Energy --
-		self:removeEnergy(amount)
+		self:removeQuatron(amount)
 		-- Add the Energy --
-		obj:addEnergy(amount)
+		obj:addQuatron(amount)
 		-- Create the Beam --
 		-- self.beam.destroy()
-		-- self.beam = self.ent.surface.create_entity{name="MK1ConnectedBeam", position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
-		self.ent.surface.create_entity{name="MK1SendBeam", duration=5, position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
+		-- self.beam = self.ent.surface.create_entity{name="MK1QuatronConnectedBeam", position= QL.getBeamPositionA(self), target_position=QL.getBeamPositionB(self), source=QL.getBeamPositionA(self)}
+		self.ent.surface.create_entity{name="MK1QuatronSendBeam", duration=5, position= QL.getBeamPositionA(self), target_position=QL.getBeamPositionB(self), source=QL.getBeamPositionA(self)}
 	end
 end
 
 -- Look for an Entity to recharge --
-function EL:findEntity()
+function QL:findEntity()
 
 	-- Save Remove the Focused Entity --
 	local oldObj = self.focusedObj
 	self.focusedObj = nil
 
 	-- Get all Entities inside the Area to scan --
-	local area = EL.getCheckErea(self)
+	local area = QL.getCheckErea(self)
 	local ents = self.ent.surface.find_entities_filtered{area=area}
 
 	-- Get the closest --
 	for k, ent in pairs(ents) do
 		local obj = global.entsTable[ent.unit_number]
-		if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and (obj.addEnergy ~= nil or string.match(obj.ent.name, "MobileFactory")) then
+		if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and (obj.addQuatron ~= nil or string.match(obj.ent.name, "MobileFactory")) then
 			if self.focusedObj == nil or self.focusedObj.ent == nil or self.focusedObj.ent.valid == false then
 				self.focusedObj = obj
 			elseif Util.distance(self.ent.position, ent.position) < Util.distance(self.ent.position, self.focusedObj.ent.position) then
@@ -166,49 +166,49 @@ function EL:findEntity()
 	-- Create the new Beam --
 	if self.focusedObj == nil or self.focusedObj.ent == nil or self.focusedObj.ent.valid == false then
 		self.beam.destroy()
-		self.beam = self.ent.surface.create_entity{name="IddleBeam", position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
+		self.beam = self.ent.surface.create_entity{name="IddleBeam", position= QL.getBeamPositionA(self), target_position=QL.getBeamPositionB(self), source=QL.getBeamPositionA(self)}
 	elseif oldObj ~= nil and oldObj.ent ~= nil and oldObj.ent.valid == true and oldObj ~= self.focusedObj then
 		self.beam.destroy()
-		self.beam = self.ent.surface.create_entity{name="MK1ConnectedBeam", position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
+		self.beam = self.ent.surface.create_entity{name="MK1QuatronConnectedBeam", position= QL.getBeamPositionA(self), target_position=QL.getBeamPositionB(self), source=QL.getBeamPositionA(self)}
 	elseif self.focusedObj ~= nil and self.focusedObj.ent ~= nil and self.focusedObj.ent.valid == true then
 		self.beam.destroy()
-		self.beam = self.ent.surface.create_entity{name="MK1ConnectedBeam", position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
+		self.beam = self.ent.surface.create_entity{name="MK1QuatronConnectedBeam", position= QL.getBeamPositionA(self), target_position=QL.getBeamPositionB(self), source=QL.getBeamPositionA(self)}
 	end
 
 end
 
--- Return the amount of Energy --
-function EL:energy()
+-- Return the amount of Quatron --
+function QL:quatron()
 	if self.ent ~= nil and self.ent.valid == true then
-		-- Only Act If EL Has More Than 100 kJ -- 
-		if self.ent.energy < 1e5 then return 0 end
+		-- Only Act If EL Has More Than 100 J -- 
+		if self.ent.energy < 100 then return 0 end
 		return self.ent.energy
 	end
 	return 0
 end
 
--- Return the Energy Buffer size --
-function EL:maxEnergy()
+-- Return the Quatron Buffer size --
+function QL:maxQuatron()
 	if self.ent ~= nil and self.ent.valid == true then
 		return self.ent.prototype.energy_usage
 	end
 	return 1
 end
 
--- Add Energy (Return the amount added) --
-function EL:addEnergy(amount)
+-- Add Quatron (Return the amount added) --
+function QL:addQuatron(amount)
 	if self.ent ~= nil and self.ent.valid == true then
-		local added = math.min(amount, self:maxEnergy() - self:energy())
+		local added = math.min(amount, self:maxQuatron() - self:quatron())
 		self.ent.energy = self.ent.energy + added
 		return added
 	end
 	return 0
 end
 
--- Remove Energy (Return the amount removed) --
-function EL:removeEnergy(amount)
+-- Remove Quatron (Return the amount removed) --
+function QL:removeQuatron(amount)
 	if self.ent ~= nil and self.ent.valid == true then
-		local removed = math.min(amount, self:energy())
+		local removed = math.min(amount, self:quatron())
 		self.ent.energy = self.ent.energy - removed
 		return removed
 	end
@@ -216,7 +216,7 @@ function EL:removeEnergy(amount)
 end
 
 -- Return the max input flow --
-function EL:maxInput()
+function QL:maxInput()
 	if self.ent ~= nil and self.ent.valid == true then
 		return self.ent.prototype.energy_usage
 	end
@@ -224,7 +224,7 @@ function EL:maxInput()
 end
 
 -- Return the max output flow --
-function EL:maxOutput()
+function QL:maxOutput()
 	if self.ent ~= nil and self.ent.valid == true then
 		return self.ent.prototype.energy_usage
 	end
@@ -232,7 +232,7 @@ function EL:maxOutput()
 end
 
 -- Return where the Beam start must be positioned --
-function EL.getBeamPositionA(obj)
+function QL.getBeamPositionA(obj)
 	local ent = obj.ent
 	if ent.direction == defines.direction.north then
 		obj.beamPosA = {x=ent.position.x, y=ent.position.y-0.5}
@@ -251,7 +251,7 @@ function EL.getBeamPositionA(obj)
 end
 
 -- Return where the Beam end must be positioned --
-function EL.getBeamPositionB(obj)
+function QL.getBeamPositionB(obj)
 	local ent = obj.ent
 	local fPosX = nil
 	local fPosY = nil
@@ -276,7 +276,7 @@ function EL.getBeamPositionB(obj)
 end
 
 -- Return the Check Area --
-function EL.getCheckErea(obj)
+function QL.getCheckErea(obj)
 	local ent = obj.ent
 	if ent.direction == defines.direction.north then
 		return {{ent.position.x-0.5, ent.position.y-64},{ent.position.x+0.5, ent.position.y-1}}

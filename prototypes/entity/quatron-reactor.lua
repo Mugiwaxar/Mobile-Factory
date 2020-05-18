@@ -77,8 +77,8 @@ qrI.name = "QuatronReactor"
 qrI.place_result = "QuatronReactor"
 qrI.icon = "__Mobile_Factory__/graphics/QuatronReactorI.png"
 qrI.icon_size = 128
-qrI.subgroup = "Energy"
-qrI.order = "g"
+qrI.subgroup = "QuatronLogistic"
+qrI.order = "d"
 qrI.stack_size = 1
 data:extend{qrI}
 
@@ -87,7 +87,7 @@ local ec1R = {}
 ec1R.type = "recipe"
 ec1R.name = "QuatronReactor"
 ec1R.energy_required = 5
-ec1R.enabled = true
+ec1R.enabled = false
 ec1R.ingredients =
 {
     {"DimensionalCircuit", 60},

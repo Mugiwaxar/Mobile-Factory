@@ -125,8 +125,8 @@ dsI.name = "DimensionalSubstation"
 dsI.place_result = "DimensionalSubstation"
 dsI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalSubstation.png"
 dsI.icon_size = 32
-dsI.subgroup = "Poles"
-dsI.order = "a"
+dsI.subgroup = "Energy"
+dsI.order = "z"
 dsI.stack_size = 1
 data:extend{dsI}
 

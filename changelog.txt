@@ -4,9 +4,14 @@ Date: 18/05/2020
   Features:
     - Added the Quatron Reactor: Transform Liquid Quatron into Quatron Energy
     - Added the Quatron Cube MK1: Store 10K of Quatron Energy
+    - Added the Quatron Laser MK1: Can move 1K/s of Quatron Energy
   Bugfixes:
+    - Energy Cubes now sync correctly when placed inside the SyncArea
     - Fixed a Migration crash
     - Fixed a wrong GUI placement (CyberWizard)
+    - Fixed a crash with Blueprint
+    - Fixed a crash with Energy Cube
+    - Fixed a crash when some Entities are placed
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.170
 Date: 17/05/2020

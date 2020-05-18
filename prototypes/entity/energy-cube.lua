@@ -174,8 +174,8 @@ qc1I.name = "QuatronCubeMK1"
 qc1I.place_result = "QuatronCubeMK1"
 qc1I.icon = "__Mobile_Factory__/graphics/QuatronCubeMK1I.png"
 qc1I.icon_size = 128
-qc1I.subgroup = "Energy"
-qc1I.order = "e1"
+qc1I.subgroup = "QuatronLogistic"
+qc1I.order = "b1"
 qc1I.stack_size = 10
 data:extend{qc1I}
 
@@ -184,7 +184,7 @@ local qc1R = {}
 qc1R.type = "recipe"
 qc1R.name = "QuatronCubeMK1"
 qc1R.energy_required = 5
-qc1R.enabled = true
+qc1R.enabled = false
 qc1R.ingredients =
 {
     {"DimensionalCircuit", 25},
@@ -259,6 +259,7 @@ iecI.name = "InternalEnergyCube"
 iecI.place_result = "InternalEnergyCube"
 iecI.icon = "__Mobile_Factory__/graphics/InternalEnergyCubeI.png"
 iecI.order = "c"
+iecI.subgroup = "Energy"
 iecI.stack_size = 1
 data:extend{iecI}
 
@@ -322,21 +323,22 @@ local iqcI = table.deepcopy(iecI)
 iqcI.name = "InternalQuatronCube"
 iqcI.place_result = "InternalQuatronCube"
 iqcI.icon = "__Mobile_Factory__/graphics/InternalQuatronCubeI.png"
-iqcI.order = "f"
+iqcI.order = "c"
+iqcI.subgroup = "QuatronLogistic"
 iqcI.stack_size = 1
 data:extend{iqcI}
 
 -- Recipe --
-local iecR = {}
-iecR.type = "recipe"
-iecR.name = "InternalQuatronCube"
-iecR.energy_required = 15
-iecR.enabled = false
-iecR.ingredients =
+local iqcR = {}
+iqcR.type = "recipe"
+iqcR.name = "InternalQuatronCube"
+iqcR.energy_required = 15
+iqcR.enabled = false
+iqcR.ingredients =
 {
-    {"EnergyCubeMK1", 4},
+    {"QuatronCubeMK1", 4},
     {"DimensionalCircuit", 15},
     {"MachineFrame2", 10}
 }
-iecR.result = "InternalQuatronCube"
-data:extend{iecR}
+iqcR.result = "InternalQuatronCube"
+data:extend{iqcR}
