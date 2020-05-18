@@ -1,108 +1,115 @@
--- INTERNAL QUATRON OBJECT --
+-- ENERGY CUBE OBJECT --
 
--- Create the Internal Quatron base Object --
-IQC = {
+-- Create the Energy Cube base Object --
+QC = {
 	ent = nil,
 	player = "",
 	MF = nil,
 	entID = 0,
 	spriteID = 0,
 	lightID = 0,
+	consumption = 0,
 	updateTick = 60,
-	lastUpdate = 0
+	lastUpdate = 0,
+	dataNetwork = nil
 }
 
 -- Constructor --
-function IQC:new(ent)
+function QC:new(object)
+	if object == nil then return end
 	local t = {}
 	local mt = {}
 	setmetatable(t, mt)
-	mt.__index = IQC
-	t.player = MF.player
-	t.MF = MF
+	mt.__index = QC
+	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
+	t.entID = object.unit_number
+	-- Draw the Sprite --
+	t.spriteID = rendering.draw_sprite{sprite="QuatronCubeSprite0", x_scale=1/7, y_scale=1/7, target=object, surface=object.surface, target_offset={0, -0.3}, render_layer=131}
+	self.lightID = rendering.draw_light{sprite="QuatronCubeSprite0", scale=1/7, target=object, surface=object.surface, target_offset={0, -0.3}, minimum_darkness=0}
 	UpSys.addObj(t)
 	return t
 end
 
--- Set an Internal Energy Cube --
-function IQC:setEnt(object)
-	if object == nil then return end
-	if object.last_user == nil then return end
-	self.ent = object
-	self.entID = object.unit_number
-	-- Draw the Sprite --
-	self.spriteID = rendering.draw_sprite{sprite="QuatronCubeSprite0", x_scale=1/2.25, y_scale=1/2.25, target=object, surface=object.surface, render_layer=130}
-	self.lightID = rendering.draw_light{sprite="QuatronCubeSprite0", scale=1/2.25, target=object, surface=object.surface, minimum_darkness=0}
-end
-
 -- Reconstructor --
-function IQC:rebuild(object)
+function QC:rebuild(object)
 	if object == nil then return end
 	local mt = {}
-	mt.__index = IQC
+	mt.__index = QC
 	setmetatable(object, mt)
 end
 
 -- Destructor --
-function IQC:remove()
+function QC:remove()
 	-- Destroy the Sprite --
 	rendering.destroy(self.spriteID)
 	rendering.destroy(self.lightID)
-	self.ent = nil
+	-- Remove from the Update System --
+	UpSys.removeObj(self)
+	-- Remove from the Data Network --
+	if self.dataNetwork ~= nil and getmetatable(self.dataNetwork) ~= nil then
+		self.dataNetwork:removeObject(self)
+	end
 end
 
 -- Is valid --
-function IQC:valid()
-	return true
+function QC:valid()
+	if self.ent ~= nil and self.ent.valid then return true end
+	return false
 end
 
 -- Tags to Settings --
-function IQC:tagToSettings(tags)
+function QC:tagToSettings(tags)
 	self.ent.energy = tags.energy or 0
 end
 
 -- Settings to Tags --
-function IQC:settingsToTags(tags)
-	if self.ent.energy <= 0 then return end
-	tags.set_tag("Infos", {energy=self.ent.energy})
-	tags.custom_description = {"", tags.prototype.localised_description, {"item-description.EnergyCubeC", Util.toRNumber(math.floor(self.ent.energy))}}
+function QC:settingsToTags(tags)
+	if self.ent.energy > 0 then
+		tags.set_tag("Infos", {energy=self.ent.energy})
+		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.QuatronCubeC", Util.toRNumber(math.floor(self.ent.energy))}}
+	end
 end
 
 -- Update --
-function IQC:update()
-
+function QC:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	
 	-- Check the Validity --
-	if self.ent == nil or self.ent.valid == false then
+	if valid(self) == false then
+		self:remove()
 		return
-    end
-
-    -- Update the Sprite --
+	end
+	
+	-- Update the Sprite --
 	local spriteNumber = math.ceil(self.ent.energy/self.ent.prototype.electric_energy_source_prototype.buffer_capacity*10)
 	rendering.destroy(self.spriteID)
 	rendering.destroy(self.lightID)
-	self.spriteID = rendering.draw_sprite{sprite="QuatronCubeSprite" .. spriteNumber, x_scale=1/2.25, y_scale=1/2.25, target=self.ent, surface=self.ent.surface, render_layer=130}
-	self.lightID = rendering.draw_light{sprite="QuatronCubeSprite" .. spriteNumber, scale=1/2.25, target=self.ent, surface=self.ent.surface, minimum_darkness=0}
-	
+	self.spriteID = rendering.draw_sprite{sprite="QuatronCubeSprite" .. spriteNumber, x_scale=1/7, y_scale=1/7, target=self.ent, surface=self.ent.surface, target_offset={0, -0.3}, render_layer=131}
+	self.lightID = rendering.draw_light{sprite="QuatronCubeSprite" .. spriteNumber, scale=1/7, target=self.ent, surface=self.ent.surface, target_offset={0, -0.3}, minimum_darkness=0}
+
 	-- Balance the Energy with neighboring Cubes --
 	self:balance()
 
 end
 
+
 -- Tooltip Infos --
--- function IQC:getTooltipInfos(GUI)
+-- function QC:getTooltipInfos(GUI)
 -- end
 
+
 -- Balance the Energy with neighboring Cubes --
-function IQC:balance()
+function QC:balance()
 
 	-- Check the Entity --
 	if self.ent == nil or self.ent.valid == false then return end
 
 	-- Get all Accumulator arount --
-	local area = {{self.ent.position.x-3.5, self.ent.position.y-2.5},{self.ent.position.x+3.5,self.ent.position.y+4.5}}
+	local area = {{self.ent.position.x-1.5, self.ent.position.y-1.5},{self.ent.position.x+1.5,self.ent.position.y+1.5}}
 	local ents = self.ent.surface.find_entities_filtered{area=area, type="accumulator"}
 
 	-- Check all Accumulator --
@@ -119,7 +126,7 @@ function IQC:balance()
 					local transfered = obj:addQuatron(maxEnergyTranfer)
 					-- Remove Energy --
 					self:removeQuatron(transfered)
-				elseif self:quatron() < obj:quatron() and self:quatron() < self:maxQuatron() then
+                elseif self:quatron() < obj:quatron() and self:quatron() < self:maxQuatron() then
 					-- Calcule max flow --
 					local energyVariance = (obj:quatron() - self:quatron()) / 2
 					local maxEnergyTranfer = math.min(energyVariance, obj:quatron(), self:maxInput(), obj:maxOutput())
@@ -135,7 +142,7 @@ function IQC:balance()
 end
 
 -- Return the amount of Energy --
-function IQC:quatron()
+function QC:quatron()
 	if self.ent ~= nil and self.ent.valid == true then
 		return self.ent.energy
 	end
@@ -143,7 +150,7 @@ function IQC:quatron()
 end
 
 -- Return the Energy Buffer size --
-function IQC:maxQuatron()
+function QC:maxQuatron()
 	if self.ent ~= nil and self.ent.valid == true then
 		return self.ent.electric_buffer_size
 	end
@@ -151,7 +158,7 @@ function IQC:maxQuatron()
 end
 
 -- Add Energy (Return the amount added) --
-function IQC:addQuatron(amount)
+function QC:addQuatron(amount)
 	if self.ent ~= nil and self.ent.valid == true then
 		local added = math.min(amount, self:maxQuatron() - self:quatron())
 		self.ent.energy = self.ent.energy + added
@@ -161,7 +168,7 @@ function IQC:addQuatron(amount)
 end
 
 -- Remove Energy (Return the amount removed) --
-function IQC:removeQuatron(amount)
+function QC:removeQuatron(amount)
 	if self.ent ~= nil and self.ent.valid == true then
 		local removed = math.min(amount, self:quatron())
 		self.ent.energy = self.ent.energy - removed
@@ -171,7 +178,7 @@ function IQC:removeQuatron(amount)
 end
 
 -- Return the max input flow --
-function IQC:maxInput()
+function QC:maxInput()
 	if self.ent ~= nil and self.ent.valid == true then
 		return self:maxQuatron() / 10
 	end
@@ -179,7 +186,7 @@ function IQC:maxInput()
 end
 
 -- Return the max output flow --
-function IQC:maxOutput()
+function QC:maxOutput()
 	if self.ent ~= nil and self.ent.valid == true then
 		return self:maxQuatron() / 10
 	end

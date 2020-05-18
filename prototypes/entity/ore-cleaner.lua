@@ -1,7 +1,7 @@
 ------------------------------- ORE CLEANER ---------------------------
 
 -- Entity --
-ocE = table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
+local ocE = table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
 ocE.type = "mining-drill"
 ocE.name = "OreCleaner"
 ocE.icon = "__Mobile_Factory_Graphics__/graphics/icones/OreCleaner.png"
@@ -36,50 +36,50 @@ ocE.input_fluid_box =
       }
     }
 ocE.radius_visualization_picture =
-    {
-      filename = "__base__/graphics/entity/electric-mining-drill/electric-mining-drill-radius-visualization.png",
-      width = 10,
-      height = 10
-    }
+{
+	filename = "__base__/graphics/entity/electric-mining-drill/electric-mining-drill-radius-visualization.png",
+	width = 10,
+	height = 10
+}
 ocE.animations =
-	{
-		frame_count = 60,
-		filename = "__Mobile_Factory_Graphics__/graphics/animations/OreCleaner.png",
-		priority = "extra-high",
-		width = 290,
-		height = 400,
-		animation_speed = 1/3,
-		line_length = 10,
-		shift = {0,-1.25},
-		scale = 0.5
-	}
+{
+	frame_count = 60,
+	filename = "__Mobile_Factory_Graphics__/graphics/animations/OreCleaner.png",
+	priority = "extra-high",
+	width = 290,
+	height = 400,
+	animation_speed = 1/3,
+	line_length = 10,
+	shift = {0,-1.25},
+	scale = 0.5
+}
 ocE.shadow_animations =
-	{
-		frame_count = 1,
-		filename = "__Mobile_Factory_Graphics__/graphics/animations/OreCleanerShadow.png",
-		priority = "extra-high",
-		width = 200,
-		height = 150,
-		line_length = 1,
-		shift = {1.9,0},
-		scale = 1.35
-	}
+{
+	frame_count = 1,
+	filename = "__Mobile_Factory_Graphics__/graphics/animations/OreCleanerShadow.png",
+	priority = "extra-high",
+	width = 200,
+	height = 150,
+	line_length = 1,
+	shift = {1.9,0},
+	scale = 1.35
+}
 ocE.energy_source =
-    {
-		type = "electric",
-		emissions_per_minute = 0,
-		usage_priority = "secondary-input",
-		render_no_power_icon = false,
-		render_no_network_icon = false,
-		buffer_capacity = "5MJ",
-		input_flow_limit = "0J",
-		output_flow_limit = "0J"
+{
+	type = "electric",
+	emissions_per_minute = 0,
+	usage_priority = "secondary-input",
+	render_no_power_icon = false,
+	render_no_network_icon = false,
+	buffer_capacity = "5MJ",
+	input_flow_limit = "0J",
+	output_flow_limit = "0J"
 
-    }
+}
 ocE.module_specification =
-    {
-      module_slots = 1
-    }
+{
+	module_slots = 1
+}
 data:extend{ocE}
 
 -- Item --

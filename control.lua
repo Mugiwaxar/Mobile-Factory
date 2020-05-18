@@ -32,6 +32,8 @@ require("scripts/objects/internal-energy.lua")
 require("scripts/objects/internal-quatron.lua")
 require("scripts/objects/energy-cube.lua")
 require("scripts/objects/energy-laser.lua")
+require("scripts/objects/quatron-cube.lua")
+require("scripts/objects/quatron-reactor.lua")
 require("scripts/objects/mining-jet.lua")
 require("scripts/objects/mining-jet-flag.lua")
 require("scripts/objects/construction-jet.lua")
@@ -112,11 +114,7 @@ function onLoad(event)
 	for k, obj in pairs(global.objTable) do
 		if obj.tableName ~= nil and obj.tag ~= nil then
 			for objKey, entry in pairs(global[obj.tableName]) do
-				if entry.invObj ~= nil and entry.invObj.isII ~= true then
-					DC:rebuild(entry)
-				else
-					_G[obj.tag]:rebuild(entry)
-				end
+			_G[obj.tag]:rebuild(entry)
 			end
 		end
 	end

@@ -100,9 +100,9 @@ function EL:findPower()
 	-- Check all Accumulator --
 	for k, ent in pairs(ents) do
 		-- Look for valid Energy Cube --
-		if ent ~= nil and ent.valid == true and ent ~= self.ent and (ent.name == "EnergyCubeMK1" or "InternalPowerCube") then
+		if ent ~= nil and ent.valid == true and ent ~= self.ent and _mfEnergyCubes[ent.name] == true then
 			local obj = global.entsTable[ent.unit_number]
-			if obj.ent ~= nil and obj.ent.valid == true then
+			if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true then
 				if self:energy() < self:maxEnergy() then
 					-- Calcule max flow --
 					local amount = self:maxEnergy() - self:energy()

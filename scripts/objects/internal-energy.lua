@@ -31,7 +31,7 @@ function IEC:setEnt(object)
 	self.ent = object
 	self.entID = object.unit_number
 	-- Draw the Sprite --
-	self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite0", x_scale=1/2.25, y_scale=1/2.25, target=object, surface=object.surface, render_layer=131}
+	self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite0", x_scale=1/2.25, y_scale=1/2.25, target=object, surface=object.surface, render_layer=130}
 	self.lightID = rendering.draw_light{sprite="EnergyCubeMK1Sprite0", scale=1/2.25, target=object, surface=object.surface, minimum_darkness=0}
 end
 
@@ -83,11 +83,11 @@ function IEC:update()
 	local spriteNumber = math.ceil(self.ent.energy/self.ent.prototype.electric_energy_source_prototype.buffer_capacity*10)
 	rendering.destroy(self.spriteID)
 	rendering.destroy(self.lightID)
-	self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite" .. spriteNumber, x_scale=1/2.25, y_scale=1/2.25, target=self.ent, surface=self.ent.surface, render_layer=131}
+	self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite" .. spriteNumber, x_scale=1/2.25, y_scale=1/2.25, target=self.ent, surface=self.ent.surface, render_layer=130}
 	self.lightID = rendering.draw_light{sprite="EnergyCubeMK1Sprite" .. spriteNumber, scale=1/2.25, target=self.ent, surface=self.ent.surface, minimum_darkness=0}
 	
 	-- Balance the Energy with neighboring Cubes --
-	-- self:balance()
+	self:balance()
 
 end
  
@@ -108,9 +108,9 @@ function IEC:balance()
 	-- Check all Accumulator --
 	for k, ent in pairs(ents) do
 		-- Look for valid Energy Cube --
-		if ent ~= nil and ent.valid == true and ent ~= self.ent and (ent.name == "EnergyCubeMK1" or "InternalPowerCube") then
+		if ent ~= nil and ent.valid == true and ent ~= self.ent and _mfEnergyCubes[ent.name] == true then
 			local obj = global.entsTable[ent.unit_number]
-			if valid(obj) then
+			if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true then
 				if self:energy() > obj:energy() and obj:energy() < obj:maxEnergy() then
 					-- Calcule max flow --
 					local energyVariance = (self:energy() - obj:energy()) / 2

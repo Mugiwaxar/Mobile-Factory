@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.171
+Date: 18/05/2020
+  Features:
+    - Added the Quatron Reactor: Transform Liquid Quatron into Quatron Energy
+    - Added the Quatron Cube MK1: Store 10K of Quatron Energy
+  Bugfixes:
+    - Fixed a Migration crash
+    - Fixed a wrong GUI placement (CyberWizard)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.170
 Date: 17/05/2020
   Bugfixes:
@@ -13,7 +22,7 @@ Date: 17/05/2020
     - one's first Mobile Factory placed gets one free jump and 1.5 GJ - lose energy and jump timer on mining
   Scripting:
     - begin refactoring and simplifying of various object and newly-needed-values code
-	- move some player init assignment to MF new()
+    - move some player init assignment to MF new()
     - this will take much time and many bugs (honk honk)
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.168
@@ -31,7 +40,7 @@ Date: 15/05/2020
   Scripting:
     - Deep Tank and Deep Storage Objects are now placed inside its corresponding MF Object (But still exist in global for object update reasons)
     - Added the MF Object and the PlayerIndex to all Data Network Objects
-    - Objects are now automaticaly created, stored and updated
+    - Objects are now automatically created, stored and updated
     - Full rewrite of all place-and-remove Functions
     - Saved-tables file removed
 ---------------------------------------------------------------------------------------------------

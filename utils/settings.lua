@@ -158,6 +158,16 @@ _mfEryaFreezeStructures["EryaFurnace1"] = true
 _mfEryaFreezeStructures["EryaRefinery1"] = true
 _mfEryaFreezeStructures["EryaChemicalPlant1"] = true
 
+-- Energy Cubes --
+_mfEnergyCubes = {}
+_mfEnergyCubes["EnergyCubeMK1"] = true
+_mfEnergyCubes["InternalEnergyCube"] = true
+
+-- Quatron Cube --
+_mfQuatronCubes = {}
+_mfQuatronCubes["QuatronCubeMK1"] = true
+_mfQuatronCubes["InternalQuatronCube"] = true
+
 -- Entity GUI --
 _mfTooltipGUI =
 {

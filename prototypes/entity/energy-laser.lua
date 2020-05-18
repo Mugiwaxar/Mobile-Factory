@@ -93,7 +93,7 @@ elI.icon = "__Mobile_Factory__/graphics/EnergyLaser1I.png"
 elI.icon_size = 128
 elI.place_result = "EnergyLaser1"
 elI.subgroup = "Energy"
-elI.order = "a"
+elI.order = "a1"
 elI.stack_size = 20
 data:extend{elI}
 

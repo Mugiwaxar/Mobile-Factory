@@ -12,7 +12,6 @@ ec1E.max_health = 150
 ec1E.corpse = "accumulator-remnants"
 ec1E.collision_box = {{-0.9, -0.9}, {0.9, 0.9}}
 ec1E.selection_box = {{-1, -1}, {1, 1}}
--- ec1E.drawing_box = {{-1, -1.5}, {1, 1}}
 ec1E.circuit_wire_connection_point =
 {
     wire = {red={0,-1.2}, green={0,-1.2}},
@@ -22,15 +21,15 @@ ec1E.circuit_connector_sprites = nil
 ec1E.circuit_wire_max_distance = 20
 ec1E.default_output_signal = {type = "virtual", name = "signal-A"}
 ec1E.energy_source =
-    {
-      type = "electric",
-      buffer_capacity = "100MJ",
-      usage_priority = "tertiary",
-      input_flow_limit = "5MW",
-      output_flow_limit = "5MW",
-      render_no_power_icon = false,
-      render_no_network_icon = false
-    }
+{
+  type = "electric",
+  buffer_capacity = "100MJ",
+  usage_priority = "tertiary",
+  input_flow_limit = "5MW",
+  output_flow_limit = "5MW",
+  render_no_power_icon = false,
+  render_no_network_icon = false
+}
 ec1E.charge_cooldown = 0
 ec1E.charge_light = nil
 ec1E.discharge_animation = nil
@@ -102,6 +101,108 @@ for i = 0, 10 do
 	data:extend{ec1S}
 end
 
+---------------------------------- Quatron Cube MK1 ----------------------------------
+
+-- Entity --
+local qc1E = {}
+qc1E.type = "accumulator"
+qc1E.name = "QuatronCubeMK1"
+qc1E.icon = "__Mobile_Factory__/graphics/QuatronCubeMK1I.png"
+qc1E.icon_size = 128
+qc1E.flags = {"placeable-neutral", "player-creation"}
+qc1E.minable = {mining_time = 0.5, result = "QuatronCubeMK1"}
+qc1E.max_health = 150
+qc1E.corpse = "accumulator-remnants"
+qc1E.collision_box = {{-0.9, -0.9}, {0.9, 0.9}}
+qc1E.selection_box = {{-1, -1}, {1, 1}}
+qc1E.circuit_wire_connection_point =
+{
+    wire = {red={0,-1.2}, green={0,-1.2}},
+    shadow = {red={-0.05,-1.2}, green={-0.05,-1.2}}
+}
+qc1E.circuit_connector_sprites = nil
+qc1E.circuit_wire_max_distance = 20
+qc1E.default_output_signal = {type = "virtual", name = "signal-A"}
+qc1E.energy_source =
+{
+  type = "electric",
+  buffer_capacity = "10KJ",
+  usage_priority = "tertiary",
+  input_flow_limit = "0J",
+  output_flow_limit = "0J",
+  render_no_power_icon = false,
+  render_no_network_icon = false
+}
+qc1E.charge_cooldown = 0
+qc1E.charge_light = nil
+qc1E.discharge_animation = nil
+qc1E.discharge_cooldown = 0
+qc1E.discharge_light = nil
+qc1E.vehicle_impact_sound = { filename = "__base__/sound/car-metal-impact.ogg", volume = 0.65 }
+qc1E.working_sound = nil
+qc1E.charge_animation = nil
+qc1E.picture = {
+    layers =
+    {
+      {
+          filename = "__Mobile_Factory__/graphics/QuatronCubeMK1E.png",
+          priority = "high",
+          width = 600,
+          height = 600,
+          repeat_count = repeat_count,
+          shift = {0,-0.3},
+		  scale = 1/7
+      },
+      {
+          filename = "__Mobile_Factory__/graphics/EnergyCubeS.png",
+          priority = "high",
+          width = 600,
+          height = 600,
+          repeat_count = repeat_count,
+          shift = {0,-0.3},
+          draw_as_shadow = true,
+          scale = 1/7
+      }
+    }
+  }
+data:extend{qc1E}
+
+-- Item --
+local qc1I = {}
+qc1I.type = "item-with-tags"
+qc1I.name = "QuatronCubeMK1"
+qc1I.place_result = "QuatronCubeMK1"
+qc1I.icon = "__Mobile_Factory__/graphics/QuatronCubeMK1I.png"
+qc1I.icon_size = 128
+qc1I.subgroup = "Energy"
+qc1I.order = "e1"
+qc1I.stack_size = 10
+data:extend{qc1I}
+
+-- Recipe --
+local qc1R = {}
+qc1R.type = "recipe"
+qc1R.name = "QuatronCubeMK1"
+qc1R.energy_required = 5
+qc1R.enabled = true
+qc1R.ingredients =
+{
+    {"DimensionalCircuit", 25},
+    {"MachineFrame2", 4}
+}
+qc1R.result = "QuatronCubeMK1"
+data:extend{qc1R}
+
+-- Create all Sprite --
+for i = 0, 10 do
+	local iqcS = {}
+	iqcS.type = "sprite"
+	iqcS.name = "QuatronCubeSprite" .. i
+	iqcS.filename = "__Mobile_Factory__/graphics/QuatronCubeSprite.png"
+	iqcS.size = 600
+  iqcS.x = 600 * i
+	data:extend{iqcS}
+end
 
 ---------------------------------- Internal Energy Cube ----------------------------------
 
@@ -157,7 +258,7 @@ local iecI = table.deepcopy(ec1I)
 iecI.name = "InternalEnergyCube"
 iecI.place_result = "InternalEnergyCube"
 iecI.icon = "__Mobile_Factory__/graphics/InternalEnergyCubeI.png"
-iecI.order = "b98"
+iecI.order = "c"
 iecI.stack_size = 1
 data:extend{iecI}
 
@@ -221,7 +322,7 @@ local iqcI = table.deepcopy(iecI)
 iqcI.name = "InternalQuatronCube"
 iqcI.place_result = "InternalQuatronCube"
 iqcI.icon = "__Mobile_Factory__/graphics/InternalQuatronCubeI.png"
-iqcI.order = "b99"
+iqcI.order = "f"
 iqcI.stack_size = 1
 data:extend{iqcI}
 
@@ -239,14 +340,3 @@ iecR.ingredients =
 }
 iecR.result = "InternalQuatronCube"
 data:extend{iecR}
-
--- Create all Sprite --
-for i = 0, 10 do
-	local iqcS = {}
-	iqcS.type = "sprite"
-	iqcS.name = "QuatronCubeSprite" .. i
-	iqcS.filename = "__Mobile_Factory__/graphics/QuatronCubeSprite.png"
-	iqcS.size = 600
-  iqcS.x = 600 * i
-	data:extend{iqcS}
-end

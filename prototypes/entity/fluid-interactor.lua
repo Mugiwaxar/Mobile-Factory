@@ -1,7 +1,7 @@
 ----------------------------------- FLUID INTERACTOR -----------------------------------
 
 -- Entity --
-fiE = table.deepcopy(data.raw["storage-tank"]["storage-tank"])
+local fiE = table.deepcopy(data.raw["storage-tank"]["storage-tank"])
 fiE.name = "FluidInteractor"
 fiE.minable = {mining_time = 0.2, result = "FluidInteractor"}
 fiE.flags = {"placeable-neutral", "player-creation", "not-rotatable"}
@@ -10,19 +10,19 @@ fiE.selection_box = fiE.collision_box
 fiE.fast_replaceable_group = nil
 fiE.next_upgrade = nil
 fiE.fluid_box =
+{
+    base_area = 100,
+    height = 1,
+    base_level = 0,
+    pipe_covers = nil,
+    pipe_connections =
     {
-      base_area = 100,
-      height = 1,
-      base_level = 0,
-      pipe_covers = nil,
-      pipe_connections =
-      {
-          {position={-2,0}},
-          {position={2,0}},
-          {position={0,-2}},
-          {position={0,2}}
-      }
+        {position={-2,0}},
+        {position={2,0}},
+        {position={0,-2}},
+        {position={0,2}}
     }
+}
 fiE.pictures.picture =
 {
     layers =
@@ -75,7 +75,7 @@ fiR.ingredients =
 fiR.result = "FluidInteractor"
 data:extend{fiR}
 
--- Create all Sprite --
+-- Create all Sprites --
 local fiS1 = {}
 fiS1.type = "sprite"
 fiS1.name = "FluidInteractorSprite1"
