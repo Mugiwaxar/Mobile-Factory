@@ -9,8 +9,8 @@ shI.name = "mfShieldEquipment"
 shI.icon = "__Mobile_Factory_Graphics__/graphics/effects/shield.png"
 shI.placed_as_equipment_result = "mfShieldEquipment"
 shI.icon_size = 556
-shI.subgroup = "Equipments"
-shI.order = "a"
+shI.subgroup = "MobileFactory"
+shI.order = "z"
 shI.stack_size = 1
 data:extend{shI}
 

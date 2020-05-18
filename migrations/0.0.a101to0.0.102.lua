@@ -11,7 +11,8 @@ for k, player in pairs(game.players) do
     end
     if global.MFTable[player.name] == nil then
         local MF = MF:new()
-		global.MFTable[player.name] = MF
+        global.MFTable[player.name] = MF
+        MF.playerIndex = player.index
 		MF.II = INV:new("Internal Inventory")
 		MF.II.MF = MF
 		MF.II.isII = true

@@ -221,8 +221,9 @@ function GUI.buttonClicked(event)
 			rightSprite = "ArrowIconLeft"
 		end
 		local columns = ((math.floor((table_size(mainGUI.MFMainGUIFrame3.children)-1 ))))
-		local decal = 235
-		if columns > 0 then decal = decal + 62 + (38 * (columns-1)) end
+		local decal = 138
+        if columns > 0 then decal = decal + 29 + (18 * (columns-1)) end
+		decal = decal * player.display_scale
 		if mainGUI.MFMainGUIFrame2.visible == false then
 			if mainGUI.MFPlayer.varTable.MainGUIDirection == "left" then mainGUI.location = {mainGUI.location.x - decal, mainGUI.location.y} end
 			mainGUI.MFMainGUIFrame2.visible = true

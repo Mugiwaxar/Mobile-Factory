@@ -1,7 +1,8 @@
 -- To OOP --
 if global.MobileFactory ~= nil then
-	global.MF = MF:new(global.MobileFactory)
+	global.MF = MF:new()
 	local MF = global.MF
+	MF:construct(global.MobileFactory)
 	MF.fS = global.mfInsideSurface
 	MF.ccS = global.controlSurface
 	MF.fChest = global.factoryChest

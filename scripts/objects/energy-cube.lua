@@ -127,9 +127,9 @@ function EC:balance()
 	-- Check all Accumulator --
 	for k, ent in pairs(ents) do
 		-- Look for valid Energy Cube --
-		if ent ~= nil and ent.valid == true and (ent.name == "EnergyCubeMK1" or "InternalPowerCube") then
+		if ent ~= nil and ent.valid == true and _mfEnergyCubes[ent.name] == true then
 			local obj = global.entsTable[ent.unit_number]
-			if obj.ent ~= nil and obj.ent.valid == true then
+			if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true then
 				if self:energy() > obj:energy() and obj:energy() < obj:maxEnergy() then
 					-- Calcule max flow --
 					local energyVariance = (self:energy() - obj:energy()) / 2

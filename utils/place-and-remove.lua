@@ -8,14 +8,13 @@ function somethingWasPlaced(event)
 	end
 
 	-- Get Values --
-	local entity = event.created_entity or event.entity
-	if entity.last_user == nil then return end
+	local entity = event.created_entity or event.entity or event.destination
+	if entity == nil or entity.last_user == nil then return end
 	local MFPlayer = getMFPlayer(event.player_index or entity.last_user.index)
 	local MF = getMF(event.player_index or entity.last_user.index)
 
 	-- Check the Values --
 	if entity == nil or MFPlayer == nil or MF == nil then return end
-	if event.stack == nil or event.stack.valid_for_read == false then return end
 
 	-- If a Mobile Factory was placed --
 	if string.match(entity.name, "MobileFactory") then
@@ -65,14 +64,16 @@ function somethingWasPlaced(event)
 			else
 				table.insert(global.constructionTable,{ent=entity, item=entity.ghost_prototype.items_to_place_this[1].name, name=entity.ghost_name, position=entity.position, direction=entity.direction or 1, mission="Construct"})
 			end
-		return
 		end
+		return
 	end
 
 	-- Save the Data Center MF --
 	if entity.name == "DataCenterMF" then
 		if MF.dataCenter ~= nil and MF.dataCenter.ent ~= nil and MF.dataCenter.ent.valid == true then
-			MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
+			if event.stack ~= nil and event.stack.valid_for_read == true then
+				MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
+			end
 			destroyEntity = true
 		else
 			MF.dataCenter = DCMF:new(event.created_entity)
@@ -83,13 +84,17 @@ function somethingWasPlaced(event)
 	-- Save the Internal Energy Cube --
 	if entity.name == "InternalEnergyCube" then
 		if MF.internalEnergyObj.ent ~= nil and MF.internalEnergyObj.ent.valid == true then
-			MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
+			if event.stack ~= nil and event.stack.valid_for_read == true then
+				MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
+			end
 			destroyEntity = true
 		else
 			MF.internalEnergyObj:setEnt(entity)
-			local tags = event.stack.get_tag("Infos")
-			if tags ~= nil then
-				MF.internalEnergyObj:tagToSettings(tags)
+			if event.stack ~= nil and event.stack.valid_for_read == true then
+				local tags = event.stack.get_tag("Infos")
+				if tags ~= nil then
+					MF.internalEnergyObj:tagToSettings(tags)
+				end
 			end
 			return
 		end
@@ -98,13 +103,17 @@ function somethingWasPlaced(event)
 	-- Save the Internal Quatron Cube --
 	if entity.name == "InternalQuatronCube" then
 		if MF.internalQuatronObj.ent ~= nil and MF.internalQuatronObj.ent.valid == true then
-			MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
+			if event.stack ~= nil and event.stack.valid_for_read == true then
+				MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
+			end
 			destroyEntity = true
 		else
 			MF.internalQuatronObj:setEnt(entity)
-			local tags = event.stack.get_tag("Infos")
-			if tags ~= nil then
-				MF.internalQuatronObj:tagToSettings(tags)
+			if event.stack ~= nil and event.stack.valid_for_read == true then
+				local tags = event.stack.get_tag("Infos")
+				if tags ~= nil then
+					MF.internalQuatronObj:tagToSettings(tags)
+				end
 			end
 			return
 		end
@@ -113,7 +122,9 @@ function somethingWasPlaced(event)
 	-- Return the Item to the Player if the Entity was destroyed and stop --
 	if destroyEntity == true then
 		entity.destroy()
-		MFPlayer.ent.get_main_inventory().insert(event.stack)
+		if event.stack ~= nil and event.stack.valid_for_read == true then
+			MFPlayer.ent.get_main_inventory().insert(event.stack)
+		end
 		return
 	end
 
@@ -134,7 +145,7 @@ function somethingWasPlaced(event)
 			global[objInfo.tableName][entity.unit_number] = obj
 		end
 		-- Check if there are Tags --
-		if event.stack.type == "item-with-tags" then
+		if event.stack ~= nil and event.stack.valid_for_read == true and event.stack.type == "item-with-tags" then
 			local tags = event.stack.get_tag("Infos")
 			if tags ~= nil then
 				obj:tagToSettings(tags)

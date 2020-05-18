@@ -12,6 +12,7 @@ require("prototypes/entity/wireless-data-transmitter.lua")
 require("prototypes/entity/wireless-data-receiver.lua")
 require("prototypes/entity/energy-cube.lua")
 require("prototypes/entity/energy-laser.lua")
+require("prototypes/entity/quatron-reactor.lua")
 require("prototypes/entity/deep-storage.lua")
 require("prototypes/entity/deep-tank.lua")
 require("prototypes/entity/fluid-interactor.lua")
@@ -50,7 +51,7 @@ require("prototypes/beam/BigGreenBeam.lua")
 require("prototypes/beam/BigPurpleBeam.lua")
 require("prototypes/beam/OCBeam.lua")
 require("prototypes/beam/EnergyLaserBeam.lua")
-require("prototypes/technology/energy-laser.lua")
+require("prototypes/technology/energy.lua")
 require("prototypes/technology/fluid-laser.lua")
 require("prototypes/technology/control-center.lua")
 require("prototypes/technology/matter-serialization.lua")
@@ -154,7 +155,7 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
-		name="Jet",
+		name="QuatronLogistic",
 		group="MobileFactory",
 		order="g"
 	}
@@ -163,16 +164,34 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
-		name="Equipments",
+		name="Jet",
 		group="MobileFactory",
 		order="h"
 	}
 }
 
+-- data:extend{
+-- 	{
+-- 		type="item-subgroup",
+-- 		name="Equipments",
+-- 		group="MobileFactory",
+-- 		order="h"
+-- 	}
+-- }
+
+-- data:extend{
+-- 	{
+-- 		type="item-subgroup",
+-- 		name="Poles",
+-- 		group="MobileFactory",
+-- 		order="h"
+-- 	}
+-- }
+
 data:extend{
 	{
 		type="item-subgroup",
-		name="Poles",
+		name="Tiles",
 		group="MobileFactory",
 		order="i"
 	}
@@ -181,29 +200,20 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
-		name="Tiles",
+		name="Modules1",
 		group="MobileFactory",
 		order="j"
 	}
 }
 
-data:extend{
-	{
-		type="item-subgroup",
-		name="Modules1",
-		group="MobileFactory",
-		order="k"
-	}
-}
-
-data:extend{
-	{
-		type="item-subgroup",
-		name="Modules2",
-		group="MobileFactory",
-		order="l"
-	}
-}
+-- data:extend{
+-- 	{
+-- 		type="item-subgroup",
+-- 		name="Modules2",
+-- 		group="MobileFactory",
+-- 		order="k"
+-- 	}
+-- }
 
 if settings.startup["MF-enable-erya"].value == true then
 	data:extend{

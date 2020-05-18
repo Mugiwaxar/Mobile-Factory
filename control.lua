@@ -32,6 +32,9 @@ require("scripts/objects/internal-energy.lua")
 require("scripts/objects/internal-quatron.lua")
 require("scripts/objects/energy-cube.lua")
 require("scripts/objects/energy-laser.lua")
+require("scripts/objects/quatron-cube.lua")
+require("scripts/objects/quatron-laser.lua")
+require("scripts/objects/quatron-reactor.lua")
 require("scripts/objects/mining-jet.lua")
 require("scripts/objects/mining-jet-flag.lua")
 require("scripts/objects/construction-jet.lua")
@@ -112,11 +115,7 @@ function onLoad(event)
 	for k, obj in pairs(global.objTable) do
 		if obj.tableName ~= nil and obj.tag ~= nil then
 			for objKey, entry in pairs(global[obj.tableName]) do
-				if entry.invObj ~= nil and entry.invObj.isII ~= true then
-					DC:rebuild(entry)
-				else
-					_G[obj.tag]:rebuild(entry)
-				end
+			_G[obj.tag]:rebuild(entry)
 			end
 		end
 	end
@@ -219,6 +218,7 @@ script.on_event(defines.events.script_raised_built, somethingWasPlaced)
 script.on_event(defines.events.script_raised_revive, somethingWasPlaced)
 script.on_event(defines.events.on_robot_built_entity, somethingWasPlaced)
 script.on_event(defines.events.on_robot_built_tile, somethingWasPlaced)
+script.on_event(defines.events.on_entity_cloned, somethingWasPlaced)
 script.on_event(defines.events.on_player_mined_entity, onPlayerRemoveSomethings)
 script.on_event(defines.events.on_player_mined_tile, onPlayerRemoveSomethings)
 script.on_event(defines.events.on_robot_mined_entity, onRobotRemoveSomething)
