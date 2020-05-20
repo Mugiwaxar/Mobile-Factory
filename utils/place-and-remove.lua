@@ -240,7 +240,10 @@ end
 function tilesWasPlaced(event)
 	-- Get the Values --
 	local MFPlayer = getMFPlayer(event.player_index)
-	local MF = MFPlayer.MF
+	local MF = nil
+	if MFPlayer ~= nil then
+		MF = MFPlayer.MF
+	end
 	local surface = game.get_surface(event.surface_index or event.created_entity.surface.index)
 	-- Prevent to place Tiles inside the Control Center --
 	if event.tiles ~= nil and string.match(surface.name, _mfControlSurfaceName) then
@@ -265,7 +268,7 @@ function tilesWasPlaced(event)
 		return
 	end
 	-- Save the Ghost inside the Construction Table and Stop --
-	if event.created_entity ~= nil then
+	if event.created_entity ~= nil and MF ~= nil then
 		if MF.ent ~= nil and MF.ent.valid == true and MF.ent.surface == event.created_entity.surface then
 			if table_size(global.constructionTable) >= MF.varTable.jets.cjTableSize then
 				MFPlayer.ent.print({"info.cjTooManyGhosts", MF.varTable.jets.cjTableSize})

@@ -18,6 +18,7 @@ data:extend{qI}
 local qF = {}
 qF.name = "LiquidQuatron" .. tonumber(level)
 qF.type = "fluid"
+qF.auto_barrel = false
 qF.icon = "__Mobile_Factory__/graphics/FluidQuatron.png"
 qF.icon_size = 32
 qF.default_temperature = 20
