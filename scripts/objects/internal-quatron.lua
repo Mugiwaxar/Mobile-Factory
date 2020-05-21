@@ -13,7 +13,7 @@ IQC = {
 }
 
 -- Constructor --
-function IQC:new(ent)
+function IQC:new(MF)
 	local t = {}
 	local mt = {}
 	setmetatable(t, mt)
