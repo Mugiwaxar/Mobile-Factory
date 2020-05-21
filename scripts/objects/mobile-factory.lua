@@ -58,7 +58,10 @@ function MF:new(args)
 	t.varTable.tech = t.varTable.tech or {}
 	t.varTable.tanks = t.varTable.tanks or {}
 	t.varTable.allowedPlayers = t.varTable.allowedPlayers or {}
-	t.varTable.jets = t.varTable.jets or { ["cjTableSize"] = _MFConstructionJetDefaultTableSize }
+	t.varTable.jets = t.varTable.jets or {}
+	t.varTable.jets["cjTableSize"] = t.varTable.jets["cjTableSize"] or _MFConstructionJetDefaultTableSize
+	--t.varTable.jets["cjUseGhostTable"] = t.varTable.jets["cjUseGhostTable"] or true
+
 	t.internalEnergyObject = t.internalEnergyObject or IEC:new(MF)
 
 	if player then

@@ -184,7 +184,7 @@ mk1QuatronConnectedBeam.action_triggered_automatically = false
 mk1QuatronConnectedBeam.action = nil
 mk1QuatronConnectedBeam.head =
 {
-    filename = "__Mobile_Factory__/graphics/mk1QuatronConnectedBeam.png",
+    filename = "__Mobile_Factory__/graphics/MK1QuatronConnectedBeam.png",
     flags = beam_non_light_flags,
     line_length = 2,
     width = 90,
