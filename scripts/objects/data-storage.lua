@@ -7,26 +7,27 @@ DS = {
 	MF = nil,
 	entID = 0,
 	animID = 0,
-	active = false,
-	consumption = _mfDSEnergyDrainPerUpdate,
-	updateTick = 80,
+	updateTick = 300,
 	lastUpdate = 0,
 	dataNetwork = nil
 }
 
 -- Constructor --
-function DS:new(object)
-	if object == nil then return end
+function DS:new(ent)
+	if ent == nil then return end
 	local t = {}
 	local mt = {}
 	setmetatable(t, mt)
 	mt.__index = DS
-	t.ent = object
-	if object.last_user == nil then return end
-	t.player = object.last_user.name
+	t.ent = ent
+	if ent.last_user == nil then return end
+	t.player = ent.last_user.name
 	t.MF = getMF(t.player)
-	t.entID = object.unit_number
+	t.dataNetwork = t.MF.dataNetwork
+	t.dataNetwork.dataStorageTable[ent.unit_number] = t
+	t.entID = ent.unit_number
 	UpSys.addObj(t)
+	self.animID = rendering.draw_animation{animation="DataStorageA", target={ent.position.x,ent.position.y-1.2}, surface=ent.surface, render_layer=131}
 	return t
 end
 
@@ -45,9 +46,7 @@ function DS:remove()
 	-- Remove from the Update System --
 	UpSys.removeObj(self)
 	-- Remove from the Data Network --
-	if self.dataNetwork ~= nil and getmetatable(self.dataNetwork) ~= nil then
-		self.dataNetwork:removeObject(self)
-	end
+	self.dataNetwork.dataStorageTable[self.ent.unit_number] = nil
 end
 
 -- Is valid --
@@ -66,45 +65,11 @@ function DS:update()
 		self:remove()
 		return
 	end
-
-	-- Try to find a connected Data Network --
-	local obj = Util.getConnectedDN(self)
-	if obj ~= nil and valid(obj.dataNetwork) then
-		self.dataNetwork = obj.dataNetwork
-		self.dataNetwork:addObject(self)
-	else
-		if valid(self.dataNetwork) then
-			self.dataNetwork:removeObject(self)
-		end
-		self.dataNetwork = nil
-	end
-
-	-- Set Active or Not --
-	if self.dataNetwork ~= nil and self.dataNetwork:isLive() == true then
-		self:setActive(true)
-	else
-		self:setActive(false)
-	end
 	
 end
 
 -- Tooltip Infos --
 function DS:getTooltipInfos(GUIObj, gui)
-	-- Create the Data Network Frame --
-	GUIObj:addDataNetworkFrame(gui, self)
-end
-
--- Set Active --
-function DS:setActive(set)
-	self.active = set
-	if set == true then
-		-- Create the Animation if it doesn't exist --
-		if self.animID == 0 or rendering.is_valid(self.animID) == false then
-			self.animID = rendering.draw_animation{animation="DataStorageA", target={self.ent.position.x,self.ent.position.y-1.2}, surface=self.ent.surface, render_layer=131}
-		end
-	else
-		-- Destroy the Animation --
-		rendering.destroy(self.animID)
-		self.animID = 0
-	end
+	-- -- Create the Data Network Frame --
+	-- GUIObj:addDataNetworkFrame(gui, self)
 end

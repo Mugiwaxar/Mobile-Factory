@@ -55,7 +55,7 @@ dsI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DeepStorageI.png"
 dsI.icon_size = 256
 dsI.place_result = "DeepStorage"
 dsI.subgroup = "DataSerialization"
-dsI.order = "d1"
+dsI.order = "c"
 dsI.stack_size = 5
 data:extend{dsI}
 

@@ -37,12 +37,10 @@ function UpSys.scanObjs()
     end
   end
 
-  -- Add Data Network --
-  UpSys.addTable(global.dataNetworkTable)
-
   -- Add all Internal Energy Cubes and Internal Quatron Cubes --
   for k, MF in pairs(global.MFTable) do
-    UpSys.addObject(MF.dataCenter)
+    UpSys.addObject(MF.dataNetwork)
+    UpSys.addObject(MF.networkController)
     UpSys.addObject(MF.internalEnergyObj)
     UpSys.addObject(MF.internalQuatronObj)
   end
@@ -71,8 +69,6 @@ function UpSys.addObject(obj)
       -- Add the Object to the Entity Table --
       if obj.ent ~= nil and obj.ent.valid == true then
         global.entsTable[obj.ent.unit_number] = obj
-      else
-        table.insert(global.entsTable, obj)
       end
       -- Check if the Object have to be updated --
 	  if obj.updateTick > 0 then

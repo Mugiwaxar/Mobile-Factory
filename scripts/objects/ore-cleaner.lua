@@ -128,7 +128,7 @@ function OC:getTooltipInfos(GUIObj, gui, justCreated)
 		local invs = {{"gui-description.All"}}
 		local selectedIndex = 1
 		local i = 1
-		for k, deepStorage in pairs(self.MF.DSRTable) do
+		for k, deepStorage in pairs(self.MF.dataNetwork.DSRTable) do
 			if deepStorage ~= nil and deepStorage.ent ~= nil then
 				i = i + 1
 				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepStorage.player, ")"}
@@ -181,7 +181,7 @@ function OC:changeInventory(ID)
 	end
 	-- Select the Inventory --
 	self.selectedInv = nil
-	for k, deepStorage in pairs(self.MF.DSRTable) do
+	for k, deepStorage in pairs(self.MF.dataNetwork.DSRTable) do
 		if valid(deepStorage) == true then
 			if ID == deepStorage.ID then
 				self.selectedInv = deepStorage
@@ -247,7 +247,7 @@ function OC:collectOres(event)
 	-- Try to find a Deep Storage if the Selected Inventory is All --
 	local dataInv = self.selectedInv
 	if dataInv == nil then
-		for k, dp in pairs(self.MF.DSRTable) do
+		for k, dp in pairs(self.MF.dataNetwork.DSRTable) do
 			if 	dp:canAccept(oreName) == true then
 				dataInv = dp
 			end

@@ -8,10 +8,11 @@ NE = {
 	entID = 0,
     stateSprite = 0,
 	active = false,
-	consumption = _mfNEEnergyDrainPerUpdate,
+	consumption = _mfNEQuatronDrainPerUpdate,
 	updateTick = 60,
 	lastUpdate = 0,
-    dataNetwork = nil
+	dataNetwork = nil,
+	networkAccessPoint = nil
 }
 
 -- Constructor --
@@ -25,6 +26,7 @@ function NE:new(object)
 	if object.last_user == nil then return end
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
+	t.dataNetwork = t.MF.dataNetwork
 	t.entID = object.unit_number
     UpSys.addObj(t)
     -- Draw the state Sprite --
@@ -46,9 +48,9 @@ function NE:remove()
 	rendering.destroy(self.stateSprite)
 	-- Remove from the Update System --
 	UpSys.removeObj(self)
-	-- Remove from the Data Network --
-	if self.dataNetwork ~= nil and getmetatable(self.dataNetwork) ~= nil then
-		self.dataNetwork:removeObject(self)
+	-- Remove from the Network Access Point --
+	if self.networkAccessPoint ~= nil then
+		self.networkAccessPoint.objTable[self.ent.unit_number] = nil
 	end
 end
 
@@ -69,20 +71,16 @@ function NE:update()
 		return
     end
 
-    -- Try to find a connected Data Network --
-	local obj = Util.getConnectedDN(self)
-	if obj ~= nil and valid(obj.dataNetwork) then
-		self.dataNetwork = obj.dataNetwork
-		self.dataNetwork:addObject(self)
-	else
-		if valid(self.dataNetwork) then
-			self.dataNetwork:removeObject(self)
+    -- Try to find a Network Access Point if needed --
+	if valid(self.networkAccessPoint) == false then
+		self.networkAccessPoint = self.dataNetwork:getCloserNAP(self)
+		if self.networkAccessPoint ~= nil then
+			self.networkAccessPoint.objTable[self.ent.unit_number] = self
 		end
-		self.dataNetwork = nil
 	end
 
 	-- Set Active or Not --
-	if self.dataNetwork ~= nil and self.dataNetwork:isLive() == true then
+	if self.networkAccessPoint ~= nil and self.networkAccessPoint.outOfQuatron == false and self.networkAccessPoint.quatronCharge > 0 then
 		self:setActive(true)
 	else
 		self:setActive(false)
@@ -107,24 +105,22 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 
 	if justCreated == true then
 
-		if valid(self.dataNetwork) == true and self.active == true then
-			-- Create the Localised name List --
-			GUIObj.MFPlayer.varTable.tmpLocal = {}
-			for name, count in pairs(self.dataNetwork.dataCenter.invObj.inventory) do
-				GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(name))
+		-- Create the Localised name List --
+		GUIObj.MFPlayer.varTable.tmpLocal = {}
+		for name, count in pairs(self.dataNetwork.invObj.inventory) do
+			GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(name))
+		end
+		for name, count in pairs(GUIObj.MFPlayer.ent.get_main_inventory().get_contents()) do
+			GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(name))
+		end
+		for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
+			if deepStorage.inventoryItem ~= nil or deepStorage.filter ~= nil then
+				GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(deepStorage.inventoryItem or deepStorage.filter))
 			end
-			for name, count in pairs(GUIObj.MFPlayer.ent.get_main_inventory().get_contents()) do
-				GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(name))
-			end
-			for k, deepStorage in pairs(self.MF.DSRTable) do
-				if deepStorage.inventoryItem ~= nil or deepStorage.filter ~= nil then
-					GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(deepStorage.inventoryItem or deepStorage.filter))
-				end
-			end
-			for k, deepTank in pairs(self.MF.DTKTable) do
-				if deepTank.inventoryFluid ~= nil or deepTank.filter ~= nil then
-					GUIObj.MFPlayer.ent.request_translation(Util.getLocFluidName(deepTank.inventoryFluid or deepTank.filter))
-				end
+		end
+		for k, deepTank in pairs(self.dataNetwork.DTKTable) do
+			if deepTank.inventoryFluid ~= nil or deepTank.filter ~= nil then
+				GUIObj.MFPlayer.ent.request_translation(Util.getLocFluidName(deepTank.inventoryFluid or deepTank.filter))
 			end
 		end
 
@@ -180,7 +176,7 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 	playerInventoryScrollPane.clear()
 
 	-- Check the Data Network --
-	if valid(self.dataNetwork) == false or self.active == false then return end
+	if self.active == false then return end
 
 	-- Get the Textfield Text --
 	local searchText = nil
@@ -188,14 +184,11 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 		searchText = GUIObj[self.entID .. ":SearchTextField"].text
 	end
 
-	-- Create the total Items Label --
-	if self.dataNetwork ~= nil and self.dataNetwork.dataCenter ~= nil and self.dataNetwork.dataCenter.invObj ~= nil then
-		local inv = self.dataNetwork.dataCenter.invObj
-		GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.INVTotalItems"}, ":"}, Util.toRNumber(inv.usedCapacity) .. "/" .. Util.toRNumber(inv.maxCapacity), _mfOrange, _mfGreen, nil, nil, inv.usedCapacity .. "/" .. inv.maxCapacity)
-	end
+	local inv = self.dataNetwork.invObj
+	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.INVTotalItems"}, ":"}, Util.toRNumber(inv.usedCapacity) .. "/" .. Util.toRNumber(inv.maxCapacity), _mfOrange, _mfGreen, nil, nil, inv.usedCapacity .. "/" .. inv.maxCapacity)
 
 	-- Create the Inventory List --
-	createDNInventoryFrame(GUIObj, inventoryScrollPane, GUIObj.MFPlayer, "NE," .. self.entID .. ",", self.dataNetwork.dataCenter.invObj, 8, true, true, true, searchText, self)
+	createDNInventoryFrame(GUIObj, inventoryScrollPane, GUIObj.MFPlayer, "NE," .. self.entID .. ",", self.dataNetwork.invObj, 8, true, true, true, searchText, self)
 
 	-- Create the Player Inventory List --
 	createPlayerInventoryFrame(GUIObj, playerInventoryScrollPane, GUIObj.MFPlayer, 8, "NE," .. self.entID .. ",", searchText)
@@ -239,12 +232,12 @@ function NE.transferItemsFromDS(DS, inv, count)
 
 end
 
--- Transfer Items from Data Networl Inventory --
+-- Transfer Items from Data Network Inventory --
 function NE.transferItemsFromDNInv(NE, inv, item, count)
 
 	-- Check all values --
-	if NE == nil or NE.dataNetwork == nil or NE.dataNetwork.dataCenter == nil or NE.dataNetwork.dataCenter.invObj == nil or inv == nil then return end
-	local DNInv = NE.dataNetwork.dataCenter.invObj
+	if NE == nil or inv == nil then return end
+	local DNInv = NE.dataNetwork.invObj
 	if item == nil or game.item_prototypes[item] == nil then return end
 	local half = (count or 1) < 1 and true or false
 	if count == nil or count <= 0 then count = game.item_prototypes[item].stack_size end
@@ -266,8 +259,8 @@ end
 function NE.transferItemsFromPInv(PInv, PName, NE, item, count)
 
 	-- Check all values --
-	if PInv == nil or NE == nil or NE.dataNetwork == nil or NE.dataNetwork.dataCenter == nil or NE.dataNetwork.dataCenter.invObj == nil then return end
-	local DNInv = NE.dataNetwork.dataCenter.invObj
+	if PInv == nil or NE == nil then return end
+	local DNInv = NE.dataNetwork.invObj
 	if item == nil or game.item_prototypes[item] == nil then return end
 	local half = (count or 1) < 1 and true or false
 	if count == nil or count <= 0 then count = game.item_prototypes[item].stack_size end
@@ -278,7 +271,7 @@ function NE.transferItemsFromPInv(PInv, PName, NE, item, count)
 	if half == true then amount = math.floor(amount/2) end
 
 	-- Try to send the Items to a Deep Storage --
-	for k, deepStorage in pairs(NE.MF.DSRTable) do
+	for k, deepStorage in pairs(NE.dataNetwork.DSRTable) do
 		if deepStorage:canAccept(item) then
 			inserted = deepStorage:addItem(item, amount)
 			break

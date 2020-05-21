@@ -19,7 +19,7 @@ data:extend{ldT}
 local elT = {}
 elT.name = "EnergyLogistic"
 elT.type = "technology"
-elT.icon = "__Mobile_Factory__/graphics/InternalEnergyCubeI.png"
+elT.icon = "__Mobile_Factory_Graphics__/graphics/energy/InternalEnergyCubeI.png"
 elT.icon_size = 128
 elT.unit = {
 	count=1000,
@@ -40,7 +40,7 @@ data:extend{elT}
 local qlT = {}
 qlT.name = "QuatronLogistic"
 qlT.type = "technology"
-qlT.icon = "__Mobile_Factory__/graphics/InternalQuatronCubeI.png"
+qlT.icon = "__Mobile_Factory_Graphics__/graphics/energy/InternalQuatronCubeI.png"
 qlT.icon_size = 128
 qlT.unit = {
 	count=10,
@@ -50,7 +50,7 @@ qlT.unit = {
 		{"DimensionalCrystal", 1}
 	}
 }
-qlT.prerequisites = {"DimensionalElectronic", "Quatron"}
+qlT.prerequisites = {"Quatron"}
 qlT.effects =
 {
 	{type="unlock-recipe", recipe="QuatronCubeMK1"},

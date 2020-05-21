@@ -19,7 +19,7 @@ local qF = {}
 qF.name = "LiquidQuatron" .. tonumber(level)
 qF.type = "fluid"
 qF.auto_barrel = false
-qF.icon = "__Mobile_Factory__/graphics/FluidQuatron.png"
+qF.icon = "__Mobile_Factory_Graphics__/graphics/icones/FluidQuatron.png"
 qF.icon_size = 32
 qF.default_temperature = 20
 qF.max_temperature = 100
@@ -47,7 +47,7 @@ data:extend{qcR}
 lqR = {}
 lqR.name = "LiquidQuatron" .. tonumber(level)
 lqR.type = "recipe"
-lqR.icon = "__Mobile_Factory__/graphics/FluidQuatron.png"
+lqR.icon = "__Mobile_Factory_Graphics__/graphics/icones/FluidQuatron.png"
 lqR.icon_size = 32
 lqR.category = "Elements"
 lqR.subgroup = "Quatrons"
@@ -63,7 +63,7 @@ data:extend{lqR}
 clqR = {}
 clqR.name = "CellToLiquidQuatron" .. tonumber(level)
 clqR.type = "recipe"
-clqR.icon = "__Mobile_Factory__/graphics/FluidQuatron.png"
+clqR.icon = "__Mobile_Factory_Graphics__/graphics/icones/FluidQuatron.png"
 clqR.icon_size = 32
 clqR.category = "Elements"
 clqR.subgroup = "Quatrons"

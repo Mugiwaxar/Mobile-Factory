@@ -1,16 +1,15 @@
 -- Create all Objects Table --
 function Util.createTableList()
+	global.objTable = {}
 	Util.addObject{tableName="playersTable", tag="MFP", objName="MFPlayer", noPlaced=true, noUpsys=true}
 	Util.addObject{tableName="MFTable", tag="MF", objName="MF", noPlaced=true}
 	Util.addObject{tableName="eryaTable", tag="ES", objName="Erya"}
-	Util.addObject{tableName="dataCenterTable", tag="DC", objName="DataCenter"}
 	Util.addObject{tableName="matterInteractorTable", tag="MI", objName="MatterInteractor"}
 	Util.addObject{tableName="fluidInteractorTable", tag="FI", objName="FluidInteractor"}
 	Util.addObject{tableName="dataAssemblerTable", tag="DA", objName="DataAssembler"}
 	Util.addObject{tableName="networkExplorerTable", tag="NE", objName="NetworkExplorer"}
-	Util.addObject{tableName="dataStorageTable", tag="DS", objName="DataStorage"}
-	Util.addObject{tableName="wirelessDataTransmitterTable", tag="WDT", objName="WirelessDataTransmitter"}
-	Util.addObject{tableName="wirelessDataReceiverTable", tag="WDR", objName="WirelessDataReceiver"}
+	Util.addObject{tableName="dataStorageTable", tag="DS", objName="DataStorage", canInCC=true}
+	Util.addObject{tableName="networkAccessPointTable", tag="NAP", objName="NetworkAccessPoint"}
 	Util.addObject{tableName="energyCubesTable", tag="EC", objName="EnergyCubeMK1"}
 	Util.addObject{tableName="energyLaserTable", tag="EL", objName="EnergyLaser1"}
 	Util.addObject{tableName="quatronCubesTable", tag="QC", objName="QuatronCubeMK1"}
@@ -30,7 +29,6 @@ function Util.createTableList()
 	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK4", noInside=true}
 	Util.addObject{objName="InternalEnergyCube", noUpsys=true, canInCCAnywhere=true}
 	Util.addObject{objName="InternalQuatronCube", noUpsys=true, canInCCAnywhere=true}
-	Util.addObject{tableName="dataCenterTable", objName="DataCenterMF"}
 end
 
 -- Add an Object to the System --
@@ -39,14 +37,8 @@ function Util.addObject(table)
 	-- Check the objTable --
 	if global.objTable == nil then global.objTable = {} end
 	-- Add the Object --
-	global.objTable[table.objName] = global.objTable[table.objName] or table
-
-	-- Update to Newest Values if Table Existed --
-	local tbl = global.objTable[table.objName]
-	for k, v in pairs(table) do
-		tbl[k] = v
-	end
-
+	global.objTable[table.objName] = table
+	-- Create the Global Table if needed --
 	if table.tableName ~= nil and global[table.tableName] == nil then global[table.tableName] = {} end
 end
 
@@ -535,6 +527,15 @@ function Util.distance(position1, position2)
 	return ((x1 - x2) ^ 2 + (y1 - y2) ^ 2) ^ 0.5
 end
 
+-- Calcule the distance in Tiles between two Positions --
+function Util.distanceByTiles(position1, position2)
+	local x1 = position1[1] or position1.x
+	local y1 = position1[2] or position1.y
+	local x2 = position2[1] or position2.x
+	local y2 = position2[2] or position2.y
+	return math.max(math.abs(x1-x2), math.abs(y1-y2))
+end
+
 -- Transform big numbers to readable numbers --
 function Util.toRNumber(number)
 	if number == nil then return 0 end
@@ -547,41 +548,6 @@ function Util.toRNumber(number)
 		rNumber = tostring(math.floor(number/10000000)/100) .. " G"
 	end
 	return rNumber
-end
-
--- Get the Green Circuit Network ID --
-function Util.greenCNID(obj)
-	if obj == nil or obj.ent == nil or obj.ent.valid == false then return nil end
-	if obj.ent.get_circuit_network(defines.wire_type.green) ~= nil and obj.ent.get_circuit_network(defines.wire_type.green).valid == true and obj.ent.get_circuit_network(defines.wire_type.green) ~= 0 then
-		return obj.ent.get_circuit_network(defines.wire_type.green).network_id
-	end
-	return nil
-end
-
--- Get the Red Circuit Network ID --
-function Util.redCNID(obj)
-	if obj == nil or obj.ent == nil or obj.ent.valid == false then return nil end
-	if obj.ent.get_circuit_network(defines.wire_type.red) ~= nil and obj.ent.get_circuit_network(defines.wire_type.red).valid == true and obj.ent.get_circuit_network(defines.wire_type.red) ~= 0 then
-		return obj.ent.get_circuit_network(defines.wire_type.red).network_id
-	end
-	return nil
-end
-
--- Check if the Object is connected with a Data Network and return it --
-function Util.getConnectedDN(obj)
-	-- Check the Object --
-	if obj == nil or obj.ent == nil or obj.ent.valid == false then return nil end
-	-- Get Green and Red Circuit Network ID --
-	local objGCN = Util.greenCNID(obj)
-	local objRCN = Util.redCNID(obj)
-	-- Check if the Object is inside a Data Network --
-	local link = nil
-	if objGCN ~= nil then link = global.dataNetworkIDGreenTable[objGCN] end
-	if objRCN ~= nil then link = global.dataNetworkIDRedTable[objRCN] end
-	if link ~= nil and link.ent ~= nil then
-		if Util.canUse(getMFPlayer(obj.player), link) then return link end
-	end
-	return nil
 end
 
 -- Copy a Table --

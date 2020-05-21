@@ -10,8 +10,7 @@ EC = {
 	lightID = 0,
 	consumption = 0,
 	updateTick = 60,
-	lastUpdate = 0,
-	dataNetwork = nil
+	lastUpdate = 0
 }
 
 -- Constructor --
@@ -48,10 +47,6 @@ function EC:remove()
 	rendering.destroy(self.lightID)
 	-- Remove from the Update System --
 	UpSys.removeObj(self)
-	-- Remove from the Data Network --
-	if self.dataNetwork ~= nil and getmetatable(self.dataNetwork) ~= nil then
-		self.dataNetwork:removeObject(self)
-	end
 end
 
 -- Is valid --
@@ -82,18 +77,6 @@ function EC:update()
 	if valid(self) == false then
 		self:remove()
 		return
-	end
-
-	-- Try to find a connected Data Network --
-	local obj = Util.getConnectedDN(self)
-	if obj ~= nil and valid(obj.dataNetwork) then
-		self.dataNetwork = obj.dataNetwork
-		self.dataNetwork:addObject(self)
-	else
-		if valid(self.dataNetwork) then
-			self.dataNetwork:removeObject(self)
-		end
-		self.dataNetwork = nil
 	end
 	
 	-- Update the Sprite --

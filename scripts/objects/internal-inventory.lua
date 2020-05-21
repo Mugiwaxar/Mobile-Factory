@@ -4,11 +4,11 @@
 INV = {
 	name = "",
 	MF = nil,
+	dataNetwork = nil,
+	networkController = nil,
 	usedCapacity = 0,
 	maxCapacity = _mfBaseMaxItems,
-	dataStoragesCount = 0,
-	inventory = nil, -- [name]{count}
-	isII = false
+	inventory = nil -- [name]{count}
 }
 
 -- Constructor --
@@ -38,20 +38,10 @@ end
 
 -- Rescan Inventory --
 function INV:rescan()
-
-	-- Calcule the max capacity --
-	if self.isII == true then
-		self.dataStoragesCount = 0
-		if valid(self.MF.dataCenter) == true and self.MF.dataCenter.active == true then
-			if self.MF.dataCenter.dataNetwork ~= nil then
-				self.dataStoragesCount = table_size(self.MF.dataCenter.dataNetwork.dataStorageTable)
-			end
-		end
-	end
-	self.maxCapacity = _mfBaseMaxItems + (_mfDataStorageCapacity*self.dataStoragesCount)
-	
+	-- Get the max Capacity --
+	self.maxCapacity = _mfBaseMaxItems + (_mfDataStorageCapacity*self.dataNetwork:dataStoragesCount())
+	-- Get the used Capacity --
 	self.usedCapacity = 0
-	-- Itinerate the Invernal Inventory --
 	for item, count in pairs(self.inventory) do
 		-- Check if the Item still exist --
 		if game.item_prototypes[item] == nil then
@@ -64,6 +54,7 @@ end
 
 -- Return remaining capacity --
 function INV:remCap()
+	self:rescan()
 	return self.maxCapacity - self.usedCapacity
 end
 
@@ -148,6 +139,9 @@ end
 
 -- Get the Tooltip --
 function INV:getTooltipInfos(GUIObj, gui)
+
+	-- Rescan the Inventory --
+	self:rescan()
 	
 	-- Create the Title --
 	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
@@ -156,7 +150,7 @@ function INV:getTooltipInfos(GUIObj, gui)
 	GUIObj:addDualLabel(frame, {"", {"gui-description.INVTotalItems"}, ":"}, Util.toRNumber(self.usedCapacity) .. "/" .. Util.toRNumber(self.maxCapacity), _mfOrange, _mfGreen, nil, nil, self.usedCapacity .. "/" .. self.maxCapacity)
 
 	-- Create the Number of Data Storage Label --
-	GUIObj:addDualLabel(frame, {"", {"gui-description.INVTotalDataStorages"}, ":"}, self.dataStoragesCount, _mfOrange, _mfGreen)
+	GUIObj:addDualLabel(frame, {"", {"gui-description.INVTotalDataStorages"}, ":"}, self.dataNetwork:dataStoragesCount(), _mfOrange, _mfGreen)
 
 	-- Create the Item List Flow --
 	local listFlow = GUIObj:addFlow("", frame, "vertical")

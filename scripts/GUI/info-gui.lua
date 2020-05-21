@@ -244,7 +244,7 @@ function GUI.updateTankFrame(GUIObj)
 	tankScrollPane.clear()
 
 	-- Look for all Tanks --
-	for k, deepTank in pairs(GUIObj.MF.DTKTable) do
+	for k, deepTank in pairs(GUIObj.MF.dataNetwork.DTKTable) do
 
 		-- -- Create the Tank Variables --
 		local sprite = nil
@@ -331,7 +331,7 @@ function GUI.updateDeepStorageFrame(GUIObj)
 	storageScrollPane.clear()
 
 	-- Look for all Deep Storage --
-	for k, deepStorage in pairs(GUIObj.MF.DSRTable) do
+	for k, deepStorage in pairs(GUIObj.MF.dataNetwork.DSRTable) do
 
 		-- Create the Storage Variables --
 		local sprite = nil

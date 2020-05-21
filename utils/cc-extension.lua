@@ -46,18 +46,12 @@ function updateFactoryFloorForCC(MF)
 	end
 end
 
--- Create Equalizer --
-function createControlCenterEqualizer(MF)
-	if MF.ccS == nil or MF.ccS.valid == false then
-		game.print("Surface error")
-		return
-	end
-	-- Create Equalizer tiles --
-	createTilesSurface(MF.ccS, -6, -20, 6, -10, "tutorial-grid")
-	-- Place the Equalizer --
-	createEntity(MF.ccS, 1, -16, "Equalizer", getForce(MF.player).name).minable = nil
-	-- Valid the Technology --
-	MF.varTable.tech.UpgradeModules = true
+-- Create the Network Controller Area --
+function createNetworkControllerArea(MF)
+	createRightPassage(MF.ccS)
+	createTilesSurface(MF.ccS, 10, 3, 90, 10, "BuildTile")
+	local ent = createEntity(MF.ccS, 14, 6, "NetworkController", getMFPlayer(MF.playerIndex).ent.force, MF.playerIndex)
+	MF.networkController = NC:new(ent)
 end
 
 -- Create Deep Storage Building Area --
@@ -91,10 +85,3 @@ function createConstructibleArea2(MF)
 	-- Valid the Technology --
 	MF.varTable.tech.ConstructibleArea2 = true
 end
-
-_MFResearches["ControlCenter"] = updateFactoryFloorForCC
-_MFResearches["UpgradeModules"] = createControlCenterEqualizer
-_MFResearches["DeepStorage"] = createDeepStorageArea
-_MFResearches["DeepTank"] = createDeepTankArea
-_MFResearches["ConstructibleArea1"] = createConstructibleArea1
-_MFResearches["ConstructibleArea2"] = createConstructibleArea2

@@ -17,17 +17,15 @@ require("scripts/objects/mobile-factory.lua")
 require("scripts/objects/gui-object.lua")
 require("scripts/objects/ore-cleaner.lua")
 require("scripts/objects/fluid-extractor.lua")
-require("scripts/objects/inventory.lua")
+require("scripts/objects/internal-inventory.lua")
 require("scripts/objects/data-network.lua")
-require("scripts/objects/data-center.lua")
-require("scripts/objects/data-center-mf.lua")
+require("scripts/objects/network-controller.lua")
+require("scripts/objects/network-access-point.lua")
 require("scripts/objects/data-storage.lua")
 require("scripts/objects/matter-interactor.lua")
 require("scripts/objects/fluid-interactor.lua")
 require("scripts/objects/data-assembler.lua")
 require("scripts/objects/network-explorer.lua")
-require("scripts/objects/wireless-data-transmitter.lua")
-require("scripts/objects/wireless-data-receiver.lua")
 require("scripts/objects/internal-energy.lua")
 require("scripts/objects/internal-quatron.lua")
 require("scripts/objects/energy-cube.lua")
@@ -73,9 +71,6 @@ function onInit()
 	end
 
 	-- Tables --
-	global.dataNetworkTable = global.dataNetworkTable or {}
-	global.dataNetworkIDGreenTable = global.dataNetworkIDGreenTable or {}
-	global.dataNetworkIDRedTable = global.dataNetworkIDRedTable or {}
 	global.constructionTable = global.constructionTable or {}
 	global.repairTable = global.repairTable or {}
 	global.eryaIndexedTable = global.eryaIndexedTable or {}
@@ -111,10 +106,11 @@ function onInit()
 end
 
 function onLoad(event)
+	
 	-- Rebuild all Objects --
 	for k, obj in pairs(global.objTable) do
 		if obj.tableName ~= nil and obj.tag ~= nil then
-			for objKey, entry in pairs(global[obj.tableName]) do
+			for objKey, entry in pairs(global[obj.tableName] or {}) do
 			_G[obj.tag]:rebuild(entry)
 			end
 		end
@@ -179,7 +175,6 @@ local function onPlayerSetupBlueprint(event)
 	local nameToTable = {
 		["MatterInteractor"] = "matterInteractorTable",
 		["FluidInteractor"] = "fluidInteractorTable",
-		["WirelessDataReceiver"] = "wirelessDataReceiverTable",
 		["OreCleaner"] = "oreCleanerTable",
 		["DeepStorage"] = "deepStorageTable",
 		["DeepTank"] = "deepTankTable",

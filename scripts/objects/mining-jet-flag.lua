@@ -152,7 +152,7 @@ function MJF:getTooltipInfos(GUIObj, gui, justCreated)
 		local invs = {{"gui-description.All"}}
 		local selectedIndex = 1
 		local i = 1
-		for k, deepStorage in pairs(self.MF.DSRTable) do
+		for k, deepStorage in pairs(self.MF.dataNetwork.DSRTable) do
 			if deepStorage ~= nil and deepStorage.ent ~= nil then
 				i = i + 1
 				local itemText = ""
@@ -177,7 +177,7 @@ function MJF:changeInventory(ID)
 	if ID == nil then self.selectedInv = nil end
 	-- Select the Inventory --
 	self.selectedInv = nil
-	for k, deepStorage in pairs(self.MF.DSRTable) do
+	for k, deepStorage in pairs(self.MF.dataNetwork.DSRTable) do
 		if valid(deepStorage) == true then
 			if ID == deepStorage.ID then
 				self.selectedInv = deepStorage
@@ -283,7 +283,7 @@ function MJF:sendInventory()
 	for name, count in pairs(self.inventory) do
 		if dataInv == 0 then
 			-- Send Ore to all Deep Storage --
-			for k, dp in pairs(self.MF.DSRTable) do
+			for k, dp in pairs(self.MF.dataNetwork.DSRTable) do
 					local added = dp:addItem(name, count)
 					-- Check if Ore was added --
 					if added > 0 then

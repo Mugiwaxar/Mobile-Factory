@@ -2,6 +2,7 @@
 if global.MobileFactory ~= nil then
 	global.MF = MF:new()
 	local MF = global.MF
+	MF.playerIndex = global.MobileFactory.last_user.index
 	MF:construct(global.MobileFactory)
 	MF.fS = global.mfInsideSurface
 	MF.ccS = global.controlSurface
@@ -50,17 +51,12 @@ if global.constructionJetIndex == nil then global.constructionJetIndex = 0 end
 if global.repairJetIndex == nil then global.repairJetIndex = 0 end
 if global.floorIsLavaActivated == nil then global.floorIsLavaActivated = false end
 if global.dataNetworkID == nil then global.dataNetworkID = 0 end
-if global.dataNetworkTable == nil then global.dataNetworkTable = {} end
-if global.dataNetworkIDGreenTable == nil then global.dataNetworkIDGreenTable = {} end
-if global.dataNetworkIDRedTable == nil then global.dataNetworkIDRedTable = {} end
 if global.constructionTable == nil then global.constructionTable = {} end
 if global.repairTable == nil then global.repairTable = {} end
 
 -- Unlocking Recipes --
 unlockRecipeForAll("DimensionalOre")
 unlockRecipeForAll("mfShieldEquipment", "MFShield")
-unlockRecipeForAll("DataCenter", "MatterSerialization")
-unlockRecipeForAll("DataCenterMF", "MatterSerialization")
 unlockRecipeForAll("DataStorage", "MatterSerialization")
 unlockRecipeForAll("EnergyCubeMK1", "MatterSerialization")
 unlockRecipeForAll("MachineFrame2", "DimensionalOreSmelting")

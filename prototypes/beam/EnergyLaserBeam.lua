@@ -12,7 +12,7 @@ iddleBeam.action_triggered_automatically = false
 iddleBeam.action = nil
 iddleBeam.head =
 {
-    filename = "__Mobile_Factory__/graphics/IddleBeam.png",
+    filename = "__Mobile_Factory_Graphics__/graphics/beams/IddleBeam.png",
     flags = beam_non_light_flags,
     line_length = 2,
     width = 30,
@@ -28,7 +28,7 @@ iddleBeam.light_animations =
 {
     head =
     {
-        filename = "__Mobile_Factory__/graphics/IddleBeamLight.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/beams/IddleBeamLight.png",
         line_length = 2,
         width = 30,
         height = 30,
@@ -56,7 +56,7 @@ mk1ConnectedBeam.action_triggered_automatically = false
 mk1ConnectedBeam.action = nil
 mk1ConnectedBeam.head =
 {
-    filename = "__Mobile_Factory__/graphics/MK1ConnectedBeam.png",
+    filename = "__Mobile_Factory_Graphics__/graphics/beams/MK1ConnectedBeam.png",
     flags = beam_non_light_flags,
     line_length = 2,
     width = 90,
@@ -72,7 +72,7 @@ mk1ConnectedBeam.light_animations =
 {
     head =
     {
-        filename = "__Mobile_Factory__/graphics/MK1ConnectedBeamLight.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/beams/MK1ConnectedBeamLight.png",
         line_length = 2,
         width = 90,
         height = 90,
@@ -97,7 +97,7 @@ mk1SendBeam.action_triggered_automatically = false
 mk1SendBeam.action = nil
 mk1SendBeam.head =
 {
-    filename = "__Mobile_Factory__/graphics/MK1SendBeam.png",
+    filename = "__Mobile_Factory_Graphics__/graphics/beams/MK1SendBeam.png",
     flags = beam_non_light_flags,
     line_length = 4,
     width = 90,
@@ -113,7 +113,7 @@ mk1SendBeam.light_animations =
 {
     head =
     {
-        filename = "__Mobile_Factory__/graphics/MK1SendBeamLight.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/beams/MK1SendBeamLight.png",
         line_length = 4,
         width = 90,
         height = 90,
@@ -140,7 +140,7 @@ iddleBeam.action_triggered_automatically = false
 iddleBeam.action = nil
 iddleBeam.head =
 {
-    filename = "__Mobile_Factory__/graphics/IddleBeam.png",
+    filename = "__Mobile_Factory_Graphics__/graphics/beams/IddleBeam.png",
     flags = beam_non_light_flags,
     line_length = 2,
     width = 30,
@@ -156,7 +156,7 @@ iddleBeam.light_animations =
 {
     head =
     {
-        filename = "__Mobile_Factory__/graphics/IddleBeamLight.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/beams/IddleBeamLight.png",
         line_length = 2,
         width = 30,
         height = 30,
@@ -184,7 +184,7 @@ mk1QuatronConnectedBeam.action_triggered_automatically = false
 mk1QuatronConnectedBeam.action = nil
 mk1QuatronConnectedBeam.head =
 {
-    filename = "__Mobile_Factory__/graphics/MK1QuatronConnectedBeam.png",
+    filename = "__Mobile_Factory_Graphics__/graphics/beams/MK1QuatronConnectedBeam.png",
     flags = beam_non_light_flags,
     line_length = 2,
     width = 90,
@@ -200,7 +200,7 @@ mk1QuatronConnectedBeam.light_animations =
 {
     head =
     {
-        filename = "__Mobile_Factory__/graphics/MK1ConnectedBeamLight.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/beams/MK1ConnectedBeamLight.png",
         line_length = 2,
         width = 90,
         height = 90,
@@ -225,7 +225,7 @@ mk1QuatronSendBeam.action_triggered_automatically = false
 mk1QuatronSendBeam.action = nil
 mk1QuatronSendBeam.head =
 {
-    filename = "__Mobile_Factory__/graphics/MK1QuatronSendBeam.png",
+    filename = "__Mobile_Factory_Graphics__/graphics/beams/MK1QuatronSendBeam.png",
     flags = beam_non_light_flags,
     line_length = 4,
     width = 90,
@@ -241,7 +241,7 @@ mk1QuatronSendBeam.light_animations =
 {
     head =
     {
-        filename = "__Mobile_Factory__/graphics/MK1SendBeamLight.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/beams/MK1SendBeamLight.png",
         line_length = 4,
         width = 90,
         height = 90,

@@ -73,9 +73,7 @@ deT.effects =
 {
 	{type="unlock-recipe", recipe="DimensionalWire"},
 	{type="unlock-recipe", recipe="DimensionalCircuit"},
-	{type="unlock-recipe", recipe="EnergyCubeMK1"},
-	{type="unlock-recipe", recipe="InternalEnergyCube"},
-	{type="unlock-recipe", recipe="InternalQuatronCube"}
+	{type="unlock-recipe", recipe="EnergyCubeMK1"}
 }
 data:extend{deT}
 

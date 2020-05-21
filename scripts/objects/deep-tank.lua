@@ -26,7 +26,7 @@ function DTK:new(object)
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
 	t.ID = Util.getEntID(global.deepTankTable)
-	t.MF.DTKTable[object.unit_number] = t
+	t.MF.dataNetwork.DTKTable[object.unit_number] = t
 	UpSys.addObj(t)
 	return t
 end
@@ -44,7 +44,7 @@ function DTK:remove()
 	-- Remove from the Update System --
 	UpSys.removeObj(self)
 	-- Remove from the MF Object --
-	self.MF.DTKTable[self.ent.unit_number] = nil
+	self.MF.dataNetwork.DTKTable[self.ent.unit_number] = nil
 end
 
 -- Is valid --

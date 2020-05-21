@@ -4,7 +4,7 @@
 local daE = {}
 daE.type = "container"
 daE.name = "DataAssembler"
-daE.icon = "__Mobile_Factory__/graphics/DataAssemblerI.png"
+daE.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataAssemblerI.png"
 daE.icon_size = 64
 daE.flags = {"placeable-neutral", "player-creation"}
 daE.minable = {mining_time = 0.2, result = "DataAssembler"}
@@ -22,7 +22,7 @@ daE.picture =
       layers =
       {
         {
-            filename = "__Mobile_Factory__/graphics/DataAssemblerE.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataAssemblerE.png",
             priority = "extra-high",
             width = 600,
             height = 600,
@@ -30,7 +30,7 @@ daE.picture =
             scale = 1/6
         },
         {
-            filename = "__Mobile_Factory__/graphics/DataAssemblerS.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataAssemblerS.png",
             priority = "high",
             width = 600,
             height = 600,
@@ -53,11 +53,11 @@ data:extend{daE}
 local daI = {}
 daI.type = "item"
 daI.name = "DataAssembler"
-daI.icon = "__Mobile_Factory__/graphics/DataAssemblerI.png"
+daI.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataAssemblerI.png"
 daI.icon_size = 128
 daI.place_result = "DataAssembler"
 daI.subgroup = "DataSerialization"
-daI.order = "g"
+daI.order = "h"
 daI.stack_size = 5
 data:extend{daI}
 
@@ -80,7 +80,7 @@ data:extend{daR}
 local daT = {}
 daT.name = "DataAssembler"
 daT.type = "technology"
-daT.icon = "__Mobile_Factory__/graphics/DataAssemblerI.png"
+daT.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataAssemblerI.png"
 daT.icon_size = 128
 daT.unit = {
 	count=16,
@@ -98,7 +98,7 @@ data:extend{daT}
 local daS1 = {}
 daS1.type = "sprite"
 daS1.name = "DataAssemblerSprite1"
-daS1.filename = "__Mobile_Factory__/graphics/DataAssemblerSprite1.png"
+daS1.filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataAssemblerSprite1.png"
 daS1.size = 600
 daS1.shift = {0,-0.1}
 daS1.scale = 1/6
@@ -107,7 +107,7 @@ data:extend{daS1}
 local daS2 = {}
 daS2.type = "sprite"
 daS2.name = "DataAssemblerSprite2"
-daS2.filename = "__Mobile_Factory__/graphics/DataAssemblerSprite2.png"
+daS2.filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DataAssemblerSprite2.png"
 daS2.size = 600
 daS2.shift = {0,-0.1}
 daS2.scale = 1/6

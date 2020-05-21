@@ -31,7 +31,6 @@ function updateEntities(event)
 	if event.tick%_eventTick45 == 0 then updateConstructionJet() end
 	if event.tick%_eventTick41 == 0 then updateRepairJet() end
 	if event.tick%_eventTick73 == 0 then updateCombatJet() end
-	if event.tick%_eventTick242 == 0 then checkDataNetworkID() end
 	-- Update System --
 	UpSys.update(event)
 end
@@ -44,7 +43,7 @@ function technologyFinished(event)
 		if player.valid == true then -- should always be valid?
 			local mfPlayer = getMFPlayer(player.name)
 			if valid(mfPlayer) and valid(mfPlayer.MF) and event.research.force == player.force then
-				func(mfPlayer.MF)
+				_G[func](mfPlayer.MF)
 			end
 		end
 	end
@@ -54,7 +53,7 @@ end
 function checkTechnologies(MF)
 	local force = getForce(MF.player)
 	for research, func in pairs(_MFResearches) do
-		if technologyUnlocked(research, force) == true and MF.varTable.tech[research] ~= true then func(MF) end
+		if technologyUnlocked(research, force) == true and MF.varTable.tech[research] ~= true then _G[func](MF) end
 	end
 end
 
@@ -135,7 +134,7 @@ function onEntityDamaged(event)
 		return
 	end
 	-- Test if this is in the Control Center --
-	if event.entity.surface.name == _mfControlSurfaceName then
+	if string.match(event.entity.surface.name, _mfControlSurfaceName) then
 		event.entity.health = event.entity.prototype.max_health
 	end
 	-- Save the Entity inside the Repair table for Jet --
@@ -434,22 +433,6 @@ function updateCombatJet()
 			global.combatJetTable[entity.unit_number] = CBJ:new(entity, enemy.position)
 		end
 		::continue::
-	end
-end
-
--- Check Data Network ID Tables --
-function checkDataNetworkID()
-	-- Check Green IDs --
-	for id, obj in pairs(global.dataNetworkIDGreenTable) do
-		if valid(obj) == false or Util.greenCNID(obj) ~= id then
-			global.dataNetworkIDGreenTable[id] = nil
-		end
-	end
-	-- Check Red IDs --
-	for id, obj in pairs(global.dataNetworkIDRedTable) do
-		if valid(obj) == false or Util.redCNID(obj) ~= id then
-			global.dataNetworkIDRedTable[id] = nil
-		end
 	end
 end
 

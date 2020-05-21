@@ -416,19 +416,19 @@ function GO:addDataNetworkFrame(gui, obj)
 
     if dataNetworkTitle == nil or dataNetworkTitle.valid == false or dataNetworkFlow == nil or dataNetworkFlow.valid == false then
         -- Create the Title and the Flow --
-        dataNetworkTitle = self:addTitledFrame("DataNetworkTitle", gui, "vertical", {"gui-description.DataNetwork"}, _mfOrange, true)
+        dataNetworkTitle = self:addTitledFrame("DataNetworkTitle", gui, "vertical", {"gui-description.NetworkAccessPoint"}, _mfOrange, true)
         dataNetworkFlow = self:addFlow("DataNetworkFlow", dataNetworkTitle, "vertical", true)
     end
 
     -- Clear the Flow --
     dataNetworkFlow.clear()
 
-    if valid(obj.dataNetwork) == false then
+    if valid(obj.networkAccessPoint) == false then
         self.DataNetworkTitleLabel.caption = {"gui-description.DNNoLinked"}
         self.DataNetworkTitleLabel.style.font_color = _mfRed
         return dataNetworkFlow
     else
-        self.DataNetworkTitleLabel.caption = {"gui-description.DataNetwork"}
+        self.DataNetworkTitleLabel.caption = {"gui-description.NetworkAccessPoint"}
         self.DataNetworkTitleLabel.style.font_color = _mfOrange
     end
 
@@ -446,7 +446,7 @@ function createDNInventoryFrame(GUIObj, gui, MFPlayer, buttonFirstName, inventor
 
     -- Look for all Deep Tank --
     if showDeepTank == true then
-        local DTKTable = ne == nil and MFPlayer.MF.DTKTable or ne.MF.DTKTable
+        local DTKTable = ne == nil and MFPlayer.MF.dataNetwork.DTKTable or ne.dataNetwork.DTKTable
         for k, deepTank in pairs(DTKTable) do
             -- Get Variables --
             local name = deepTank.inventoryFluid or deepTank.filter
@@ -470,7 +470,7 @@ function createDNInventoryFrame(GUIObj, gui, MFPlayer, buttonFirstName, inventor
 
     -- Look for all Deep Storage --
     if showDeepStorage == true then
-        local DSRTable = ne == nil and MFPlayer.MF.DSRTable or ne.MF.DSRTable
+        local DSRTable = ne == nil and MFPlayer.MF.dataNetwork.DSRTable or ne.MF.dataNetwork.DSRTable
         for k, deepStorage in pairs(DSRTable) do
             -- Get Variables --
             local name = deepStorage.inventoryItem or deepStorage.filter

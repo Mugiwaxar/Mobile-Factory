@@ -25,7 +25,7 @@ function DSR:new(object)
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
 	t.ID = Util.getEntID(global.deepStorageTable)
-	t.MF.DSRTable[object.unit_number] = t
+	t.MF.dataNetwork.DSRTable[object.unit_number] = t
 	UpSys.addObj(t)
 	return t
 end
@@ -43,7 +43,7 @@ function DSR:remove()
 	-- Remove from the Update System --
 	UpSys.removeObj(self)
 	-- Remove from the MF Object --
-	self.MF.DSRTable[self.ent.unit_number] = nil
+	self.MF.dataNetwork.DSRTable[self.ent.unit_number] = nil
 end
 
 -- Is valid --

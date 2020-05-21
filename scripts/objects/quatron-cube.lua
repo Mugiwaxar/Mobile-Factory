@@ -110,23 +110,25 @@ function QC:balance()
 
 	-- Get all Accumulator arount --
 	local area = {{self.ent.position.x-1.5, self.ent.position.y-1.5},{self.ent.position.x+1.5,self.ent.position.y+1.5}}
-	local ents = self.ent.surface.find_entities_filtered{area=area, type="accumulator"}
+	-- local ents = self.ent.surface.find_entities_filtered{area=area, type="accumulator"}
+	local ents = self.ent.surface.find_entities_filtered{area=area}
 
 	-- Check all Accumulator --
 	for k, ent in pairs(ents) do
 		-- Look for valid Energy Cube --
-		if ent ~= nil and ent.valid == true and _mfQuatronCubes[ent.name] == true then
+		-- if ent ~= nil and ent.valid == true and _mfQuatronCubes[ent.name] == true then
+		if ent ~= nil and ent.valid == true then
 			local obj = global.entsTable[ent.unit_number]
-			if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true then
-				if self:quatron() > obj:quatron() and obj:quatron() < obj:maxQuatron() then
+			if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and obj.addQuatron ~= nil then
+				if self:quatron() > obj:quatron() and obj:quatron() < obj:maxQuatron() and obj:maxInput() > 0 then
 					-- Calcule max flow --
-					local energyVariance = (self:quatron() - obj:quatron()) / 2
+					local energyVariance = _mfQuatronCubes[obj.name] ~= nil and ((self:quatron() - obj:quatron()) / 2) or self:quatron()
 					local maxEnergyTranfer = math.min(energyVariance, self:quatron(), self:maxOutput(), obj:maxInput())
 					-- Transfer Energy --
 					local transfered = obj:addQuatron(maxEnergyTranfer)
 					-- Remove Energy --
 					self:removeQuatron(transfered)
-                elseif self:quatron() < obj:quatron() and self:quatron() < self:maxQuatron() then
+                elseif self:quatron() < obj:quatron() and self:quatron() < self:maxQuatron() and obj:maxOutput() > 0 then
 					-- Calcule max flow --
 					local energyVariance = (obj:quatron() - self:quatron()) / 2
 					local maxEnergyTranfer = math.min(energyVariance, obj:quatron(), self:maxInput(), obj:maxOutput())
@@ -141,7 +143,7 @@ function QC:balance()
 
 end
 
--- Return the amount of Energy --
+-- Return the amount of Quatron --
 function QC:quatron()
 	if self.ent ~= nil and self.ent.valid == true then
 		return self.ent.energy
@@ -149,7 +151,7 @@ function QC:quatron()
 	return 0
 end
 
--- Return the Energy Buffer size --
+-- Return the Quatron Buffer size --
 function QC:maxQuatron()
 	if self.ent ~= nil and self.ent.valid == true then
 		return self.ent.electric_buffer_size
@@ -157,7 +159,7 @@ function QC:maxQuatron()
 	return 1
 end
 
--- Add Energy (Return the amount added) --
+-- Add Quatron (Return the amount added) --
 function QC:addQuatron(amount)
 	if self.ent ~= nil and self.ent.valid == true then
 		local added = math.min(amount, self:maxQuatron() - self:quatron())
@@ -167,7 +169,7 @@ function QC:addQuatron(amount)
 	return 0
 end
 
--- Remove Energy (Return the amount removed) --
+-- Remove Quatron (Return the amount removed) --
 function QC:removeQuatron(amount)
 	if self.ent ~= nil and self.ent.valid == true then
 		local removed = math.min(amount, self:quatron())

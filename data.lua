@@ -2,29 +2,28 @@ require("prototypes/entity/mobile-factory.lua")
 require("prototypes/entity/dimensional-lab.lua")
 require("prototypes/entity/dimensional-substation.lua")
 require("prototypes/entity/dimensional-furnace.lua")
-require("prototypes/entity/equalizer.lua")
 require("prototypes/entity/crystallizer.lua")
 require("prototypes/entity/dimensional-plant.lua")
 require("prototypes/entity/basic-solar-panel.lua")
-require("prototypes/entity/data-center.lua")
-require("prototypes/entity/data-storage.lua")
-require("prototypes/entity/wireless-data-transmitter.lua")
-require("prototypes/entity/wireless-data-receiver.lua")
+-- require("prototypes/entity/wireless-data-receiver.lua")
 require("prototypes/entity/energy-cube.lua")
 require("prototypes/entity/energy-laser.lua")
 require("prototypes/entity/quatron-reactor.lua")
-require("prototypes/entity/deep-storage.lua")
-require("prototypes/entity/deep-tank.lua")
-require("prototypes/entity/fluid-interactor.lua")
-require("prototypes/entity/matter-interactor.lua")
-require("prototypes/entity/data-assembler.lua")
-require("prototypes/entity/network-explorer.lua")
 require("prototypes/entity/ore-cleaner.lua")
 require("prototypes/entity/fluid-extractor.lua")
 require("prototypes/entity/jet.lua")
 require("prototypes/entity/flag.lua")
 require("prototypes/entity/temp-chest.lua")
 require("prototypes/entity/temp-tank.lua")
+require("prototypes/matter-serialization/network-controller.lua")
+require("prototypes/matter-serialization/network-access-point.lua")
+require("prototypes/matter-serialization/data-storage.lua")
+require("prototypes/matter-serialization/deep-storage.lua")
+require("prototypes/matter-serialization/deep-tank.lua")
+require("prototypes/matter-serialization/fluid-interactor.lua")
+require("prototypes/matter-serialization/matter-interactor.lua")
+require("prototypes/matter-serialization/data-assembler.lua")
+require("prototypes/matter-serialization/network-explorer.lua")
 require("prototypes/resource/dimensional-ore.lua")
 require("prototypes/resource/dimensional-fluid.lua")
 require("prototypes/item/dimensional-sample.lua")
@@ -422,8 +421,7 @@ data:extend{
     {
         type = "sprite",
         name = "ArrowIconLeft",
-		-- filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconLeft.png",
-		filename = "__Mobile_Factory__/graphics/ArrowIconLeft.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconLeft.png",
         size = 32,
         flags = {"icon"}
     }
@@ -433,8 +431,7 @@ data:extend{
     {
         type = "sprite",
         name = "ArrowIconRight",
-		-- filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconRight.png",
-		filename = "__Mobile_Factory__/graphics/ArrowIconRight.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconRight.png",
         size = 32,
         flags = {"icon"}
     }
@@ -444,8 +441,7 @@ data:extend{
     {
         type = "sprite",
         name = "PlusIcon",
-		-- filename = "__Mobile_Factory_Graphics__/graphics/icones/PlusIcon.png",
-		filename = "__Mobile_Factory__/graphics/PlusIcon.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/PlusIcon.png",
         size = 32,
         flags = {"icon"}
     }

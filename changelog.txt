@@ -1,10 +1,48 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.174
+Date: 21/05/2020
+  Major Features:
+    - Total rewrite of the Matter Serialization and Data Network
+    - Now, when you unlock the Matter Serialization Technology, a Network Controller and a new Constructible Area is added to the Control Center
+    - Everything work Wirelessly, the Network Access Point is used
+  Features:
+    - Added the Network Controller: The main Structure of the Data Network (Added to the Control Center when the Matter Serialization is unlocked)
+    - Added the Network Access Point: Allows access to the Data Network, can be placed anywhere but works with Quatron Energy
+  Changes:
+    - The Data Network is now Wireless (No more Green or Red Wire needed!)
+    - There is now only one Data Network per Player
+    - The Matter Serialization Technology now require the Quatron Technology
+    - The Data Storage can now only be placed inside the Control Center Constructible Area
+    - All Matter Serialization Structures now automatically try to connect to the closest Network Access Point (If in range)
+    - Changed the Energy Cube MK1 characteristics
+    - Changed the Energy Laser MK1 characteristics
+    - The Internal Energy Cube is now unlocked by the ControlCenter Technology
+    - The Internal Quatron Cube is now unlocked by the ControlCenter Technology
+    - The Power Module is now an equipment and must be placed inside the Mobile Factory Equipment Grid
+    - The Efficiency Module is now an equipment and must be placed inside the Mobile Factory Equipment Grid
+    - The Focus Module is now an equipment and must be placed inside the Mobile Factory Equipment Grid
+    - Removed the Equalizer (No longer used)
+    - Removed the Data Center (Depreciated - Items inside were send to the Mobile Factory Internal Inventory)
+    - Removed the Data Center MF (Depreciated - Items inside were send to the Mobile Factory Internal Inventory)    
+    - Removed the Wireless Transmission Technology (No longer used)
+    - Removed the Wireless Data Transmitter (Wireless Router) (Depreciated)
+    - Removed the Wireless Data Receiver (Wireless Network Adapter) (Depreciated)
+  Scripting:
+    - inventory.lua changed to internal-inventory.lua
+    - Moved all Matter Serialization Prototype to the "matter-serialization" folder
+    - Rework of Data Network Object (One Data Network per Player)
+    - Added the Data Network Object to all Matter Serialization Structures
+    - Moved the DTKTable inside the Data Network
+    - Moved the DSRTable inside the Data Network
+  Bugfixes:
+    - Fixed crash with AAI
+---------------------------------------------------------------------------------------------------
 Version: 0.0.173
 Date: 20/05/2020
   Bugfixes:
     - MK1QuatronConnectedBeam.png error
 ---------------------------------------------------------------------------------------------------
-Version: 0.0.173
+Version: 0.0.172
 Date: 20/05/2020
   Changes:
     - remove the barreling of Quatron Fluid
@@ -224,7 +262,6 @@ Version: 0.0.144
 Date: 06/05/2020
   Bugfixes:
     - prevent certain entity types from error'ing the sync area scan
-
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.143
 Date: 06/05/2020
@@ -233,7 +270,6 @@ Date: 06/05/2020
     - selecting a Deep Storage with the Matter Interactor will automatically set MI filter if DS has one
   Scripting:
     - Possible improvement to performance with large numbers of mining jets and many ore paths
-
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.142
 Date: 03/05/2020
