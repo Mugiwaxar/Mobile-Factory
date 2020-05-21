@@ -50,9 +50,6 @@ if global.constructionJetIndex == nil then global.constructionJetIndex = 0 end
 if global.repairJetIndex == nil then global.repairJetIndex = 0 end
 if global.floorIsLavaActivated == nil then global.floorIsLavaActivated = false end
 if global.dataNetworkID == nil then global.dataNetworkID = 0 end
-if global.dataNetworkTable == nil then global.dataNetworkTable = {} end
-if global.dataNetworkIDGreenTable == nil then global.dataNetworkIDGreenTable = {} end
-if global.dataNetworkIDRedTable == nil then global.dataNetworkIDRedTable = {} end
 if global.constructionTable == nil then global.constructionTable = {} end
 if global.repairTable == nil then global.repairTable = {} end
 

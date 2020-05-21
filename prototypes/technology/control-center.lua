@@ -14,7 +14,11 @@ CC.unit = {
 	}
 }
 CC.prerequisites = {"DimensionalOre"}
-CC.effects = {{type="nothing", effect_description={"description.ControlCenter"}}}
+CC.effects = {
+	{type="nothing", effect_description={"description.ControlCenter"}},
+	{type="unlock-recipe", recipe="InternalEnergyCube"},
+	{type="unlock-recipe", recipe="InternalQuatronCube"}
+}
 data:extend{CC}
 
 -- Unlock Constructible Area 1 --

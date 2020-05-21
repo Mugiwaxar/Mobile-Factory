@@ -8,10 +8,11 @@ MI = {
 	entID = 0,
     stateSprite = 0,
 	active = false,
-	consumption = _mfMIEnergyDrainPerUpdate,
+	consumption = _mfMIQuatronDrainPerUpdate,
 	updateTick = 60,
 	lastUpdate = 0,
     dataNetwork = nil,
+	networkAccessPoint = nil,
     selectedFilter = nil,
     selectedMode = "input", -- input or output
 	lastSelectedPlayer = "",
@@ -31,6 +32,7 @@ function MI:new(object)
 	t.player = object.last_user.name
 	t.selectedPlayer = t.player
 	t.MF = getMF(t.player)
+	t.dataNetwork = t.MF.dataNetwork
 	t.entID = object.unit_number
     UpSys.addObj(t)
     -- Draw the state Sprite --
@@ -52,9 +54,9 @@ function MI:remove()
 	rendering.destroy(self.stateSprite)
 	-- Remove from the Update System --
 	UpSys.removeObj(self)
-	-- Remove from the Data Network --
-	if self.dataNetwork ~= nil and getmetatable(self.dataNetwork) ~= nil then
-		self.dataNetwork:removeObject(self)
+	-- Remove from the Network Access Point --
+	if self.networkAccessPoint ~= nil then
+		self.networkAccessPoint.objTable[self.ent.unit_number] = nil
 	end
 end
 
@@ -88,20 +90,16 @@ function MI:update()
 		return
     end
 
-    -- Try to find a connected Data Network --
-	local obj = Util.getConnectedDN(self)
-	if obj ~= nil and valid(obj.dataNetwork) then
-		self.dataNetwork = obj.dataNetwork
-		self.dataNetwork:addObject(self)
-	else
-		if valid(self.dataNetwork) then
-			self.dataNetwork:removeObject(self)
+    -- Try to find a Network Access Point if needed --
+	if valid(self.networkAccessPoint) == false then
+		self.networkAccessPoint = self.dataNetwork:getCloserNAP(self)
+		if self.networkAccessPoint ~= nil then
+			self.networkAccessPoint.objTable[self.ent.unit_number] = self
 		end
-		self.dataNetwork = nil
 	end
 
 	-- Set Active or Not --
-	if self.dataNetwork ~= nil and self.dataNetwork:isLive() == true then
+	if self.networkAccessPoint ~= nil and self.networkAccessPoint.outOfQuatron == false and self.networkAccessPoint.quatronCharge > 0 then
 		self:setActive(true)
 	else
 		self:setActive(false)
@@ -164,7 +162,7 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	local playerInvs = {[self.player] = true}
 	local invs = {}
 	if self.selectedPlayer == self.player then
-		table.insert(invs, self.dataNetwork.dataCenter.invObj.name or {"gui-description.None"})
+		table.insert(invs, self.dataNetwork.invObj.name or {"gui-description.None"})
 	else
 		table.insert(invs, {"gui-description.None"})
 	end
@@ -279,7 +277,7 @@ function MI:updateInventory()
     -- Get the targeted Inventory --
     local dataInv = self.selectedInv
     if dataInv == 0 then
-        dataInv = self.dataNetwork.dataCenter.invObj
+        dataInv = self.dataNetwork.invObj
     end
     -- Check the Data Inventory --
     if valid(dataInv) == false then return end

@@ -416,19 +416,19 @@ function GO:addDataNetworkFrame(gui, obj)
 
     if dataNetworkTitle == nil or dataNetworkTitle.valid == false or dataNetworkFlow == nil or dataNetworkFlow.valid == false then
         -- Create the Title and the Flow --
-        dataNetworkTitle = self:addTitledFrame("DataNetworkTitle", gui, "vertical", {"gui-description.DataNetwork"}, _mfOrange, true)
+        dataNetworkTitle = self:addTitledFrame("DataNetworkTitle", gui, "vertical", {"gui-description.NetworkAccessPoint"}, _mfOrange, true)
         dataNetworkFlow = self:addFlow("DataNetworkFlow", dataNetworkTitle, "vertical", true)
     end
 
     -- Clear the Flow --
     dataNetworkFlow.clear()
 
-    if valid(obj.dataNetwork) == false then
+    if valid(obj.networkAccessPoint) == false then
         self.DataNetworkTitleLabel.caption = {"gui-description.DNNoLinked"}
         self.DataNetworkTitleLabel.style.font_color = _mfRed
         return dataNetworkFlow
     else
-        self.DataNetworkTitleLabel.caption = {"gui-description.DataNetwork"}
+        self.DataNetworkTitleLabel.caption = {"gui-description.NetworkAccessPoint"}
         self.DataNetworkTitleLabel.style.font_color = _mfOrange
     end
 

@@ -83,14 +83,15 @@ _dtMaxFluid = 10000000
 -- Matter Serialization settings --
 _mfBaseMaxItems = 10000
 _mfDataStorageCapacity = 1000
-_mfDCEnergyDrainPerUpdate = 100000
-_mfDSEnergyDrainPerUpdate = 8000
-_mfWDTEnergyDrainPerUpdate = 70000
-_mfWDREnergyDrainPerUpdate = 30000
-_mfMIEnergyDrainPerUpdate = 2500
-_mfFIEnergyDrainPerUpdate = 4500
-_mfNEEnergyDrainPerUpdate = 3000
-_mfDAEnergyDrainPerUpdate = 1200
+_mfNAPQuatronCapacity = 1000
+_mfNAPAreaSize = 50
+-- _mfWDTEnergyDrainPerUpdate = 70000
+-- _mfWDREnergyDrainPerUpdate = 30000
+_mfNAPQuatronDrainPerUpdate = 15
+_mfMIQuatronDrainPerUpdate = 8
+_mfFIQuatronDrainPerUpdate = 8
+_mfNEQuatronDrainPerUpdate = 3
+_mfDAQuatronDrainPerUpdate = 1
 
 -- Ore Cleaner settings --
 _mfOreCleanerMaxCharge = 1000
@@ -158,6 +159,15 @@ _mfEryaFreezeStructures["EryaFurnace1"] = true
 _mfEryaFreezeStructures["EryaRefinery1"] = true
 _mfEryaFreezeStructures["EryaChemicalPlant1"] = true
 
+-- Unlocked Technology Functions --
+_MFResearches = {}
+_MFResearches["ControlCenter"] = "updateFactoryFloorForCC"
+_MFResearches["DeepStorage"] = "createDeepStorageArea"
+_MFResearches["DeepTank"] = "createDeepTankArea"
+_MFResearches["ConstructibleArea1"] = "createConstructibleArea1"
+_MFResearches["ConstructibleArea2"] = "createConstructibleArea2"
+_MFResearches["MatterSerialization"] = "createNetworkControllerArea"
+
 -- Energy Cubes --
 _mfEnergyCubes = {}
 _mfEnergyCubes["EnergyCubeMK1"] = true
@@ -171,8 +181,6 @@ _mfQuatronCubes["InternalQuatronCube"] = true
 -- Entity GUI --
 _mfTooltipGUI =
 {
-    DataCenter = "dataCenterTable",
-    DataCenterMF = "dataCenterTable",
     DataStorage = "dataStorageTable",
     DeepStorage = "deepStorageTable",
     DeepTank = "deepTankTable",
@@ -182,8 +190,6 @@ _mfTooltipGUI =
     FluidInteractor = "fluidInteractorTable",
     DataAssembler = "dataAssemblerTable",
     NetworkExplorer = "networkExplorerTable",
-    WirelessDataTransmitter = "wirelessDataTransmitterTable",
-    WirelessDataReceiver = "wirelessDataReceiverTable",
     MiningJetFlagMK1 = "jetFlagTable",
     MiningJetFlagMK2 = "jetFlagTable",
     MiningJetFlagMK3 = "jetFlagTable",
@@ -191,7 +197,8 @@ _mfTooltipGUI =
     MiningJet = "miningJetTable",
     ConstructionJet = "constructionJetTable",
     RepairJet = "repairJetTable",
-    CombatJet = "combatJetTable"
+    CombatJet = "combatJetTable",
+    NetworkController = "entsTable"
 }
 
 -- Event Tick --
@@ -210,7 +217,6 @@ _eventTick90=90 -- Mobile Factory Entities Scan --
 _eventTick110=110 -- Mining Jets --
 _eventTick125=125 -- Mobile Factory Modules Scan --
 _eventTick150=150 -- Floor Is Lava Update --
-_eventTick242=242 -- Data Network ID Tables Check --
 _eventTick1200=1200 -- Factory Pollution --
 
 _mfWhite = {255,255,255}
@@ -220,10 +226,6 @@ _mfPurple = {155, 0, 168}
 _mfRed = {231, 5, 5}
 _mfOrange = {255, 131, 0}
 _mfYellow = {244, 208, 63}
-
--- Table of Researches to Simplify Surface Generation/Check Events --
-_MFResearches = {}
-
 
 -- Table of Recipes Unlocked by Initial Research --
 _MFStartingRecipes = {"MobileFactory", "DimensionalTile", "mfStone"}

@@ -32,7 +32,7 @@ function createMFSurface(MF)
 	MF.fS = newSurface
 	-- Create CC and apply researches if needed --
 	--these functions should be rewritten so create control room->apply researches
-	_MFResearches["ControlCenter"](MF)
+	_G[_MFResearches["ControlCenter"]](MF)
 end
 
 -- Create the Mobile Factory Control room -
@@ -82,16 +82,16 @@ function createControlRoom(MF)
 	local force = getForce(MF.player)
 	for research, func in pairs(_MFResearches) do
 		if research ~= "ControlCenter" and technologyUnlocked(research, force) then
-			func(MF)
+			_G[func](MF)
 		end
 	end
 end
 
 -- Create a new Entity --
-function createEntity(surface, posX, posY, entityName, force)
+function createEntity(surface, posX, posY, entityName, force, player)
 	if surface == nil then game.print("createEntity: Surface nul") return end
 	if force == nil then force = "player" end
-	return surface.create_entity{name=entityName, position={posX,posY}, force=force}
+	return surface.create_entity{name=entityName, position={posX,posY}, force=force, player=player}
 end
 
 -- Create the Sync Area Surface --

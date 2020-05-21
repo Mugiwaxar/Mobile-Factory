@@ -23,10 +23,10 @@ ec1E.default_output_signal = {type = "virtual", name = "signal-A"}
 ec1E.energy_source =
 {
   type = "electric",
-  buffer_capacity = "100MJ",
+  buffer_capacity = "20MJ",
   usage_priority = "tertiary",
-  input_flow_limit = "5MW",
-  output_flow_limit = "5MW",
+  input_flow_limit = "2MW",
+  output_flow_limit = "2MW",
   render_no_power_icon = false,
   render_no_network_icon = false
 }

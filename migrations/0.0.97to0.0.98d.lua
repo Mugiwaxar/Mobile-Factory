@@ -26,7 +26,6 @@ end
 global.MF.varTable = {}
 global.MF.varTable.tech = {}
 if technologyUnlocked("ControlCenter") == true then global.MF.varTable.tech.ControlCenter = true end
-if technologyUnlocked("UpgradeModules") == true then global.MF.varTable.tech.UpgradeModules = true end
 if technologyUnlocked("StorageTankMK1_1") == true then global.MF.varTable.tech.StorageTankMK11 = true end
 if technologyUnlocked("StorageTankMK1_2") == true then global.MF.varTable.tech.StorageTankMK12 = true end
 if technologyUnlocked("StorageTankMK1_3") == true then global.MF.varTable.tech.StorageTankMK13 = true end

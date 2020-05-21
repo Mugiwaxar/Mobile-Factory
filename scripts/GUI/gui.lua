@@ -418,17 +418,17 @@ function GUI.buttonClicked(event)
 	end
 
 	-- If this is a Wireless Data Transmitter Button -> Show WDR --
-	if string.match(event.element.name, "WDTCam") then
-		-- Get the Object --
-		local objId = tonumber(split(event.element.name, ",")[2])
-		local ent = global.wirelessDataReceiverTable[objId].ent
-		if ent ~= nil and ent.valid == true then
-			local cameraObj = GUI.createCamera(getMFPlayer(player.name), ent.unit_number, ent, 250, 0.5)
-			cameraObj:addDualLabel(cameraObj.gui, {"", {"gui-description.Position"}, ":"}, "{".. ent.position.x .. ";" .. ent.position.y .. "}", _mfOrange, _mfGreen)
-			player.opened = cameraObj.gui
-		end
-		return
-	end
+	-- if string.match(event.element.name, "WDTCam") then
+	-- 	-- Get the Object --
+	-- 	local objId = tonumber(split(event.element.name, ",")[2])
+	-- 	local ent = global.wirelessDataReceiverTable[objId].ent
+	-- 	if ent ~= nil and ent.valid == true then
+	-- 		local cameraObj = GUI.createCamera(getMFPlayer(player.name), ent.unit_number, ent, 250, 0.5)
+	-- 		cameraObj:addDualLabel(cameraObj.gui, {"", {"gui-description.Position"}, ":"}, "{".. ent.position.x .. ";" .. ent.position.y .. "}", _mfOrange, _mfGreen)
+	-- 		player.opened = cameraObj.gui
+	-- 	end
+	-- 	return
+	-- end
 
 	-- If this is a Network Explorer --
 	if string.match(event.element.name, "NE") then
@@ -488,6 +488,20 @@ function GUI.buttonClicked(event)
 		end
 		-- Update all GUIs --
 		GUI.updateAllGUIs(true)
+		return
+	end
+
+	-- If this is a Network Access Point Area Switch --
+	if string.match(event.element.name, "NAPAreaSwitch") then
+		-- Get the Object --
+		local objID = tonumber(split(event.element.name, ",")[2])
+		local obj = global.networkAccessPointTable[objID]
+		if valid(obj) == false then return end
+		if event.element.switch_state == "left" then 
+			obj.showArea = false
+		else
+			obj.showArea = true
+		end
 		return
 	end
 	
@@ -558,26 +572,6 @@ function GUI.onGuiElemChanged(event)
 			GUI.updateAllGUIs(true)
 			return
 		end
-	end
-	
-	------- Read if the Element comes from a Wireless Data Receiver -------
-	if string.match(event.element.name, "WDR") then
-		-- Find the Receiver ID --
-		local ID = split(event.element.name, "WDR")
-		ID = tonumber(ID[1])
-		-- Check the ID --
-		if ID == nil then return end
-		-- Find the Receiver --
-		local receiver = nil
-		for k, wdr in pairs(global.wirelessDataReceiverTable) do
-			if valid(wdr) == true and wdr.ent.unit_number == ID then
-				receiver = wdr
-			end
-		end
-		-- Check if a Receiver was found --
-		if receiver == nil then return end
-		-- Change the Receiver Data Network --
-		receiver:changeTransmitter(tonumber(event.element.items[event.element.selected_index]))
 	end
 	
 	------- Read if the Element comes from an Ore Cleaner -------

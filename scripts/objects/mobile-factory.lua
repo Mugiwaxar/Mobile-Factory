@@ -11,7 +11,8 @@ MF = {
 	fS = nil,
 	ccS = nil,
 	II = nil,
-	dataCenter = nil,
+	dataNetwork = nil,
+	netwokController = nil,
 	entitiesAround = nil,
 	internalEnergyObj = nil,
 	internalQuatronObj = nil,
@@ -71,8 +72,11 @@ function MF:new(args)
 	end
 
 	t.II = t.II or INV:new("Internal Inventory")
-	t.II.MF = t.II.MF or t
-	t.II.isII = true
+	t.dataNetwork = t.dataNetwork or DN:new(t)
+	t.II.MF = t
+	t.II.dataNetwork = t.dataNetwork
+	t.dataNetwork.MF = t
+	t.dataNetwork.invObj = t.II
 
 	t.internalEnergyObj = t.internalEnergyObj or IEC:new(t)
 	t.internalQuatronObj = t.internalQuatronObj or IQC:new(t)
@@ -106,8 +110,9 @@ function MF:rebuild(object)
 	setmetatable(object, mt)
 	IEC:rebuild(object.internalEnergyObj)
 	IQC:rebuild(object.internalQuatronObj)
+	DN:rebuild(object.dataNetwork)
+	NC:rebuild(object.networkController)
 	INV:rebuild(object.II)
-	DCMF:rebuild(object.dataCenter)
 	if object.DSRTable == nil then object.DSRTable = {} end
 	if object.DTKTable == nil then object.DTKTable = {} end
 end
@@ -243,7 +248,7 @@ function MF:update(event)
 	if event.tick%_eventTick1200 == 0 then self:updatePollution() end
 	-- Update Teleportation Box --
 	if event.tick%_eventTick5 == 0 then self:factoryTeleportBox() end
-	-- Read Modules inside the Equalizer --
+	-- Read Modules inside the Equipment Grid --
 	if event.tick%_eventTick125 == 0 then self:scanModules() end
 	-- Send Quatron Charge --
 	if self.sendQuatronActivated == true then
@@ -651,25 +656,31 @@ function MF:factoryTeleportBox()
 	end
 end
 
--- Scan modules inside the Equalizer --
+-- Scan modules inside the Equipment Grid --
 function MF:scanModules()
-	if technologyUnlocked("UpgradeModules", getForce(self.player)) == nil then return end
-	if self.ccS == nil then return end
-	local equalizer = self.ccS.find_entity("Equalizer", {1, -16})
-	if equalizer == nil or equalizer.valid == false then return end
-	local powerMD = 0
-	local efficiencyMD = 0
-	local focusMD = 0
-	for name, count in pairs(equalizer.get_inventory(defines.inventory.beacon_modules).get_contents()) do
-		if name == "EnergyPowerModule" then powerMD = powerMD + count end
-		if name == "EnergyEfficiencyModule" then efficiencyMD = efficiencyMD + count end
-		if name == "EnergyFocusModule" then focusMD = focusMD + count end
+	-- Check if the Technology is unlocked --
+	if technologyUnlocked("EnergyPowerModule", getForce(self.player)) == nil then return end
+	-- Check the Mobile Factory --
+	if self.ent == nil or self.ent.valid == false then return end
+	-- Init Variables --
+	self.laserRadiusMultiplier = 0
+	self.laserDrainMultiplier = 0
+	self.laserNumberMultiplier = 0
+	-- Look for Modules --
+	for k, equipment in pairs(self.ent.grid.equipment) do
+		if equipment.name == "EnergyPowerModule" then
+			self.laserRadiusMultiplier = self.laserRadiusMultiplier + 1
+		end
+		if equipment.name == "EnergyEfficiencyModule" then
+			self.laserDrainMultiplier = self.laserDrainMultiplier + 1
+		end
+		if equipment.name == "EnergyFocusModule" then
+			self.laserNumberMultiplier = self.laserNumberMultiplier + 1
+		end
 	end
-	self.laserRadiusMultiplier = powerMD
-	self.laserDrainMultiplier = efficiencyMD
-	self.laserNumberMultiplier = focusMD
 end
 
+-- Remove the Sync Area --
 function MF:removeSyncArea()
 	if self.syncAreaScanned == false then return end
 	rendering.destroy(self.syncAreaID)
@@ -796,6 +807,7 @@ function MF:syncAreaScan()
 
 	-- Look for Entities around the Mobile Factory --
 	local entTableOut = outside.find_entities_filtered{area = bdb}
+
 	-- Check if Entities inside Can't be Placed Iutside --
 	for k, ent in pairs(entTableOut) do
 		if _mfSyncAreaAllowedTypes[ent.type] == true then
@@ -841,6 +853,7 @@ function MF:syncAreaScan()
 			ent.update_connections()
 		end
 	end
+
 end
 
 -- Clone an Entity --
@@ -882,7 +895,6 @@ end
 local function uncloneChest(chest1, chest2)
 	local inv1 = chest1.get_inventory(defines.inventory.chest)
 	local inv2 = chest2.get_inventory(defines.inventory.chest)
-
 	for item, count in pairs(inv2.get_contents()) do
 		inv1.insert({name = item, count = count})
 	end
@@ -891,8 +903,10 @@ end
 
 -- Return Fluid From Tank2 to Tank1 --
 local function uncloneStorageTank(tank1, tank2)
+
 	-- Check the Tanks --
 	if tank1.fluidbox[1] == nil and tank2.fluidbox[1] == nil then return end
+
 	-- Get Tanks Fluid --
 	local t1FluidName = nil
 	local t1FluidAmount = 0
@@ -904,7 +918,6 @@ local function uncloneStorageTank(tank1, tank2)
 		t1FluidName = tank1.fluidbox[1].name
 		t1FluidAmount = tank1.fluidbox[1].amount
 		t1FluidTemperature = tank1.fluidbox[1].temperature
-
 	end
 	if tank2.fluidbox[1] ~= nil then
 		t2FluidName = tank2.fluidbox[1].name
@@ -931,6 +944,7 @@ local function uncloneStorageTank(tank1, tank2)
 
 	-- Give Tank1 all Fluid --
 	tank1.fluidbox[1] = {name=fluidName, amount=fluidAmount, temperature=fluidTemperature}
+
 end
 
 -- Send Energy from cloned Accu2 --
@@ -941,10 +955,10 @@ local function uncloneAccumulator(accu1, accu2)
 	accu1.energy = totalEnergy
 end
 
+-- Unclone all Entities inside the Sync Area --
 function MF:unCloneSyncArea()
 	-- Set default Tiles --
 	createSyncAreaMFSurface(self.fS, true)
-
 	-- Update Before Trying to Unclone -- 
 	self:updateClonedEntities()
 	-- Remove all cloned Entities --
@@ -962,6 +976,7 @@ function MF:unCloneSyncArea()
 	self.clonedResourcesTable = {}
 end
 
+-- Update Entities inside the Sync Area --
 function MF:updateClonedEntities()
 	for i, ents in pairs(self.clonedResourcesTable) do
 		self:updateClonedEntity(ents)
@@ -972,6 +987,7 @@ function MF:updateClonedEntities()
 	end
 end
 
+-- Update an Entity inside the Sync Area --
 function MF:updateClonedEntity(ents)
 	-- Check the Entities --
 	if ents == nil then return end
@@ -985,7 +1001,6 @@ function MF:updateClonedEntity(ents)
 		ents.original.destroy()
 		return
 	end
-
 	if ents.original.type == "resource" then
 		-- If the Entity is a resource --
 		if ents.cloned.amount < ents.original.amount then

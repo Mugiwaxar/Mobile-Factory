@@ -68,19 +68,6 @@ function somethingWasPlaced(event)
 		return
 	end
 
-	-- Save the Data Center MF --
-	if entity.name == "DataCenterMF" then
-		if MF.dataCenter ~= nil and MF.dataCenter.ent ~= nil and MF.dataCenter.ent.valid == true then
-			if event.stack ~= nil and event.stack.valid_for_read == true then
-				MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
-			end
-			destroyEntity = true
-		else
-			MF.dataCenter = DCMF:new(event.created_entity)
-			return
-		end
-	end
-
 	-- Save the Internal Energy Cube --
 	if entity.name == "InternalEnergyCube" then
 		if MF.internalEnergyObj.ent ~= nil and MF.internalEnergyObj.ent.valid == true then
@@ -199,13 +186,6 @@ function somethingWasRemoved(event)
 			MF.internalQuatronObj:settingsToTags(event.buffer[1])
 		end
 		MF.internalQuatronObj:remove()
-		return
-	end
-
-	-- If the Data Center MF was removed --
-	if removedEnt.name == "DataCenterMF" then
-		MF.dataCenter:remove()
-		MF.dataCenter = nil
 		return
 	end
 

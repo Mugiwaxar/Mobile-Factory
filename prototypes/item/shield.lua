@@ -23,7 +23,14 @@ shE.max_shield_value = 1000
 shE.categories = {"mfEquipments"}
 shE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/effects/shield.png", size=556}
 shE.shape = {width=3, height=3, type="full"}
-shE.energy_source = {type="electric", usage_priority="tertiary", input_flow_limit="0J", output_flow_limit="0J", buffer_capacity="0J"}
+shE.energy_source = 
+{
+	type="electric",
+	usage_priority="tertiary",
+	input_flow_limit="0J",
+	output_flow_limit="0J",
+	buffer_capacity="0J"
+}
 data:extend{shE}
 
 -- Recipe --

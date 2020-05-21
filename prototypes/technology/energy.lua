@@ -50,7 +50,7 @@ qlT.unit = {
 		{"DimensionalCrystal", 1}
 	}
 }
-qlT.prerequisites = {"DimensionalElectronic", "Quatron"}
+qlT.prerequisites = {"Quatron"}
 qlT.effects =
 {
 	{type="unlock-recipe", recipe="QuatronCubeMK1"},

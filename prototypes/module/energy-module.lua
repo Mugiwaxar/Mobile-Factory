@@ -1,16 +1,31 @@
 -- Power Module Item --
-pMI = {}
-pMI.type = "module"
+local pMI = {}
+pMI.type = "item"
 pMI.name = "EnergyPowerModule"
+pMI.placed_as_equipment_result = "EnergyPowerModule"
 pMI.icon = "__Mobile_Factory_Graphics__/graphics/icones/EnergyPowerModule.png"
 pMI.icon_size = 32
 pMI.subgroup = "Modules1"
-pMI.category = "productivity"
-pMI.tier = 1
-pMI.order = "MA"
-pMI.stack_size = 5
-pMI.effect = {}
+pMI.order = "a"
+pMI.stack_size = 20
 data:extend{pMI}
+
+-- Power Module Equipement --
+local pmE = {}
+pmE.name = "EnergyPowerModule"
+pmE.type = "battery-equipment"
+pmE.categories = {"mfEquipments"}
+pmE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/icones/EnergyPowerModule.png", size=32}
+pmE.shape = {width=2, height=2, type="full"}
+pmE.energy_source =
+{
+	type="electric",
+	usage_priority="tertiary",
+	input_flow_limit="0J",
+	output_flow_limit="0J",
+	buffer_capacity="0J"
+}
+data:extend{pmE}
 
 -- Power Module Recipe --
 local pMR = {}
@@ -29,18 +44,33 @@ data:extend{pMR}
 
 
 -- Efficiency Module Item --
-eMI = {}
-eMI.type = "module"
+local eMI = {}
+eMI.type = "item"
 eMI.name = "EnergyEfficiencyModule"
+eMI.placed_as_equipment_result = "EnergyEfficiencyModule"
 eMI.icon = "__Mobile_Factory_Graphics__/graphics/icones/EnergyEfficiencyModule.png"
 eMI.icon_size = 32
 eMI.subgroup = "Modules1"
-eMI.category = "productivity"
-eMI.tier = 1
-eMI.order = "MB"
-eMI.stack_size = 5
-eMI.effect = {}
+eMI.order = "b"
+eMI.stack_size = 20
 data:extend{eMI}
+
+-- Efficiency Module Equipement --
+local emE = {}
+emE.name = "EnergyEfficiencyModule"
+emE.type = "battery-equipment"
+emE.categories = {"mfEquipments"}
+emE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/icones/EnergyEfficiencyModule.png", size=32}
+emE.shape = {width=2, height=2, type="full"}
+emE.energy_source =
+{
+	type="electric",
+	usage_priority="tertiary",
+	input_flow_limit="0J",
+	output_flow_limit="0J",
+	buffer_capacity="0J"
+}
+data:extend{emE}
 
 -- Efficiency Module Recipe --
 local eMR = {}
@@ -59,18 +89,33 @@ data:extend{eMR}
 
 
 -- Focus Module Item --
-fMI = {}
-fMI.type = "module"
+local fMI = {}
+fMI.type = "item"
 fMI.name = "EnergyFocusModule"
+fMI.placed_as_equipment_result = "EnergyFocusModule"
 fMI.icon = "__Mobile_Factory_Graphics__/graphics/icones/EnergyFocusModule.png"
 fMI.icon_size = 32
 fMI.subgroup = "Modules1"
-fMI.category = "productivity"
-fMI.tier = 1
-fMI.order = "MC"
-fMI.stack_size = 5
-fMI.effect = {}
+fMI.order = "c"
+fMI.stack_size = 20
 data:extend{fMI}
+
+-- Focus Module Equipement --
+local fmE = {}
+fmE.name = "EnergyFocusModule"
+fmE.type = "battery-equipment"
+fmE.categories = {"mfEquipments"}
+fmE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/icones/EnergyFocusModule.png", size=32}
+fmE.shape = {width=2, height=2, type="full"}
+fmE.energy_source =
+{
+	type="electric",
+	usage_priority="tertiary",
+	input_flow_limit="0J",
+	output_flow_limit="0J",
+	buffer_capacity="0J"
+}
+data:extend{fmE}
 
 -- Focus Module Recipe --
 local fMR = {}

@@ -8,12 +8,13 @@ DA = {
 	entID = 0,
     stateSprite = 0,
 	active = false,
-	consumption = _mfDAEnergyDrainPerUpdate,
+	consumption = _mfDAQuatronDrainPerUpdate,
 	updateTick = 5,
 	completeUpdateTick = 60,
 	lastUpdate = 0,
 	lastCompleteUpdate = 0,
 	dataNetwork = nil,
+	networkAccessPoint = nil,
 	recipeID = 0,
 	recipeTable = nil, -- [id]{recipePrototype, sprite, amount, progress, ingredients{name, type, amount, sprite, missing}, mainProduct{name, type, amount, sprite}, missingIngredient, inventoryFull, toManyInInventory}
 	quatronLevel = 0,
@@ -32,6 +33,7 @@ function DA:new(object)
 	if object.last_user == nil then return end
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
+	t.dataNetwork = t.MF.dataNetwork
 	t.entID = object.unit_number
 	t.recipeTable = {}
     UpSys.addObj(t)
@@ -54,9 +56,9 @@ function DA:remove()
 	rendering.destroy(self.stateSprite)
 	-- Remove from the Update System --
 	UpSys.removeObj(self)
-	-- Remove from the Data Network --
-	if self.dataNetwork ~= nil and getmetatable(self.dataNetwork) ~= nil then
-		self.dataNetwork:removeObject(self)
+	-- Remove from the Network Access Point --
+	if self.networkAccessPoint ~= nil then
+		self.networkAccessPoint.objTable[self.ent.unit_number] = nil
 	end
 end
 
@@ -95,20 +97,16 @@ function DA:update()
 	if game.tick - self.lastCompleteUpdate < self.completeUpdateTick then return end
 	self.lastCompleteUpdate = game.tick
 
-    -- Try to find a connected Data Network --
-	local obj = Util.getConnectedDN(self)
-	if obj ~= nil and valid(obj.dataNetwork) then
-		self.dataNetwork = obj.dataNetwork
-		self.dataNetwork:addObject(self)
-	else
-		if valid(self.dataNetwork) then
-			self.dataNetwork:removeObject(self)
+    -- Try to find a Network Access Point if needed --
+	if valid(self.networkAccessPoint) == false then
+		self.networkAccessPoint = self.dataNetwork:getCloserNAP(self)
+		if self.networkAccessPoint ~= nil then
+			self.networkAccessPoint.objTable[self.ent.unit_number] = self
 		end
-		self.dataNetwork = nil
 	end
 
 	-- Set Active or Not --
-	if self.dataNetwork ~= nil and self.dataNetwork:isLive() == true then
+	if self.networkAccessPoint ~= nil and self.networkAccessPoint.outOfQuatron == false and self.networkAccessPoint.quatronCharge > 0 then
 		self:setActive(true)
 	else
 		self:setActive(false)
@@ -119,7 +117,7 @@ function DA:update()
 
 	-- Get Quatron Charge if needed --
 	if self.quatronCharge <= 15 then
-		local quatron = self.dataNetwork.dataCenter.invObj:getBestQuatron()
+		local quatron = self.dataNetwork.invObj:getBestQuatron()
 		if quatron > 0 then
 			self.quatronLevel = quatron
 			self.quatronCharge = 100
@@ -188,17 +186,12 @@ function DA:getTooltipInfos(GUIObj, gui, justCreated)
 
 	end
 
-	-- Check the Data Network --
-	if valid(self.dataNetwork) == true then
-		
-		-- Clear the ScrollPane --
-		assemblerScrollPane.clear()
+	-- Clear the ScrollPane --
+	assemblerScrollPane.clear()
 
-		-- Create all Recipe Frame --
-		for k, recipe in pairs(self.recipeTable) do
-			self:createFrame(GUIObj, assemblerScrollPane, recipe, k)
-		end
-
+	-- Create all Recipe Frame --
+	for k, recipe in pairs(self.recipeTable) do
+		self:createFrame(GUIObj, assemblerScrollPane, recipe, k)
 	end
 
 	-- Update the Quatron Level and Charge --

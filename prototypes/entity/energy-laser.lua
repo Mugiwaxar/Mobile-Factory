@@ -61,14 +61,14 @@ el1E.energy_source =
 {
     type = "electric",
     usage_priority = "secondary-input",
-    buffer_capacity = "5MJ",
+    buffer_capacity = "1MJ",
     output_flow_limit = "0.0001W",
     input_flow_limit = "0.0001W",
     drain = "0J",
     render_no_power_icon = false,
     render_no_network_icon = false
 }
-el1E.energy_usage = "5MJ"
+el1E.energy_usage = "1MJ"
 el1E.fluid_boxes = {
     {
         base_level = 1,

@@ -9,10 +9,11 @@ FI = {
     stateSprite = 0,
     levelSprite = 0,
 	active = false,
-	consumption = _mfFIEnergyDrainPerUpdate,
+	consumption = _mfFIQuatronDrainPerUpdate,
 	updateTick = 60,
 	lastUpdate = 0,
 	dataNetwork = nil,
+	networkAccessPoint = nil,
     selectedInv = 0,
     selectedMode = "input" -- input or output
 }
@@ -28,6 +29,7 @@ function FI:new(object)
 	if object.last_user == nil then return end
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
+	t.dataNetwork = t.MF.dataNetwork
 	t.entID = object.unit_number
     UpSys.addObj(t)
     -- Draw the state Sprite --
@@ -50,9 +52,9 @@ function FI:remove()
 	rendering.destroy(self.levelSprite)
 	-- Remove from the Update System --
 	UpSys.removeObj(self)
-	-- Remove from the Data Network --
-	if self.dataNetwork ~= nil and getmetatable(self.dataNetwork) ~= nil then
-		self.dataNetwork:removeObject(self)
+	-- Remove from the Network Access Point --
+	if self.networkAccessPoint ~= nil then
+		self.networkAccessPoint.objTable[self.ent.unit_number] = nil
 	end
 end
 
@@ -74,6 +76,7 @@ end
 
 -- Update --
 function FI:update()
+
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	
@@ -99,20 +102,16 @@ function FI:update()
         end
     end
 	
-	-- Try to find a connected Data Network --
-	local obj = Util.getConnectedDN(self)
-	if obj ~= nil and valid(obj.dataNetwork) then
-		self.dataNetwork = obj.dataNetwork
-		self.dataNetwork:addObject(self)
-	else
-		if valid(self.dataNetwork) then
-			self.dataNetwork:removeObject(self)
+	-- Try to find a Network Access Point if needed --
+	if valid(self.networkAccessPoint) == false then
+		self.networkAccessPoint = self.dataNetwork:getCloserNAP(self)
+		if self.networkAccessPoint ~= nil then
+			self.networkAccessPoint.objTable[self.ent.unit_number] = self
 		end
-		self.dataNetwork = nil
 	end
 
 	-- Set Active or Not --
-	if self.dataNetwork ~= nil and self.dataNetwork:isLive() == true then
+	if self.networkAccessPoint ~= nil and self.networkAccessPoint.outOfQuatron == false and self.networkAccessPoint.quatronCharge > 0 then
 		self:setActive(true)
 	else
 		self:setActive(false)
@@ -121,7 +120,8 @@ function FI:update()
     if self.active == false then return end
 
     -- Update Inventory --
-    self:updateInventory()
+	self:updateInventory()
+	
 end
 
 -- Tooltip Infos --
