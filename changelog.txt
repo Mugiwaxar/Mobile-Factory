@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.177
+Date: 21/05/2020
+  Bugfixes:
+    - Removed the Network Controler Data Network Frame
+    - Fixed the Data Storage Animation (Now the Animation is removed correctly)
+    - Fixed a crash related to the Internal Energy Cube
+---------------------------------------------------------------------------------------------------
 Version: 0.0.176
 Date: 21/05/2020
   Bugfixes:

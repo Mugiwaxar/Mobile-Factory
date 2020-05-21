@@ -7,7 +7,7 @@ DS = {
 	MF = nil,
 	entID = 0,
 	animID = 0,
-	updateTick = 300,
+	updateTick = 150,
 	lastUpdate = 0,
 	dataNetwork = nil
 }
@@ -27,7 +27,7 @@ function DS:new(ent)
 	t.dataNetwork.dataStorageTable[ent.unit_number] = t
 	t.entID = ent.unit_number
 	UpSys.addObj(t)
-	self.animID = rendering.draw_animation{animation="DataStorageA", target={ent.position.x,ent.position.y-1.2}, surface=ent.surface, render_layer=131}
+	t.animID = rendering.draw_animation{animation="DataStorageA", target={ent.position.x,ent.position.y-1.2}, surface=ent.surface, render_layer=131}
 	return t
 end
 
@@ -57,6 +57,7 @@ end
 
 -- Update --
 function DS:update()
+
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 	
@@ -64,6 +65,11 @@ function DS:update()
 	if valid(self) == false then
 		self:remove()
 		return
+	end
+
+	-- Check the Animation --
+	if rendering.is_valid(self.animID) == false then
+		self.animID = rendering.draw_animation{animation="DataStorageA", target={self.ent.position.x,self.ent.position.y-1.2}, surface=self.ent.surface, render_layer=131}
 	end
 	
 end

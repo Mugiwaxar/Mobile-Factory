@@ -59,8 +59,6 @@ function MF:new(args)
 	t.varTable.jets["cjTableSize"] = t.varTable.jets["cjTableSize"] or _MFConstructionJetDefaultTableSize
 	--t.varTable.jets["cjUseGhostTable"] = t.varTable.jets["cjUseGhostTable"] or true
 
-	t.internalEnergyObject = t.internalEnergyObject or IEC:new(MF)
-
 	if player then
 		global.MFTable[player.name] = t
 		t.playerIndex = player.index
