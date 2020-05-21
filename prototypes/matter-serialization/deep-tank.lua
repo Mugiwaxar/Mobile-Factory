@@ -55,7 +55,7 @@ dtI.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/DeepTankI.
 dtI.icon_size = 128
 dtI.place_result = "DeepTank"
 dtI.subgroup = "DataSerialization"
-dtI.order = "d2"
+dtI.order = "d"
 dtI.stack_size = 5
 data:extend{dtI}
 

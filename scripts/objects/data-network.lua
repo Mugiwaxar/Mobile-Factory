@@ -7,6 +7,8 @@ DN = {
 	invObj = nil,
 	networkController = nil,
 	dataStorageTable = nil,
+	DTKTable = nil,
+	DSRTable = nil,
 	networkAccessPointTable = nil,
 	playerIndex = 0,
 	updateTick = 220,
@@ -20,6 +22,8 @@ function DN:new(MF)
 	setmetatable(t, mt)
 	mt.__index = DN
 	t.dataStorageTable = {}
+	t.DTKTable = {}
+	t.DSRTable = {}
 	t.networkAccessPointTable = {}
 	t.playerIndex = MF.playerIndex
 	t.ID = getDataNetworkID()
@@ -120,7 +124,7 @@ end
 function DN:hasItem(item)
 	local amount = 0
 	-- Check the Deep Storages --
-	for k, deepStorage in pairs(self.MF.DSRTable) do
+	for k, deepStorage in pairs(self.DSRTable) do
 		amount = amount + deepStorage:hasItem(item)
 	end
 	-- Check the Amount --
@@ -133,7 +137,7 @@ end
 function DN:hasFluid(fluid)
 	local amount = 0
 	-- Check the Deep Tank --
-	for k, deepTank in pairs(self.MF.DTKTable) do
+	for k, deepTank in pairs(self.DTKTable) do
 		amount = amount + deepTank:hasFluid(fluid)
 	end
 	-- Return the Amount --
@@ -147,7 +151,7 @@ function DN:getItem(item, amount)
 	-- Set the Amount of Item to retrieve left --
 	local amountLeft = amount
 	-- Check the Deep Storages --
-	for k, deepStorage in pairs(self.MF.DSRTable) do
+	for k, deepStorage in pairs(self.DSRTable) do
 		local amountGot = deepStorage:getItem(item, amountLeft)
 		amountLeft = amountLeft - amountGot
 		if amountLeft <= 0 then return amount end
@@ -165,7 +169,7 @@ function DN:getFluid(fluid, amount)
 	-- Set the Amount of Item to retrieve left --
 	local amountLeft = amount
 	-- Check the Deep Tanks --
-	for k, deepTank in pairs(self.MF.DTKTable) do
+	for k, deepTank in pairs(self.DTKTable) do
 		local amountGot = deepTank:getFluid({name=fluid, amount=amountLeft})
 		amountLeft = amountLeft - amountGot
 		if amountLeft <= 0 then return amount end
@@ -177,7 +181,7 @@ end
 -- Check if the Data Network can accept a Item --
 function DN:canAcceptItem(item, amount)
 	-- Check the Deep Storages --
-	for k, deepStorage in pairs(self.MF.DSRTable) do
+	for k, deepStorage in pairs(self.DSRTable) do
 		if deepStorage:canAccept(item) then
 			return true
 		end
@@ -190,7 +194,7 @@ end
 -- Check if the Data Network can accept a Fluid --
 function DN:canAcceptFluid(fluid, amount)
 	-- Check the Deep Tanks --
-	for k, deepTank in pairs(self.MF.DTKTable) do
+	for k, deepTank in pairs(self.DTKTable) do
 		if deepTank:canAccept({name=fluid, amount=amount}) then
 			return true
 		end
@@ -205,7 +209,7 @@ function DN:addItems(item, amount)
 	-- Set the Amount of Item to send left --
 	local amountLeft = amount
 	-- Check the Deep Storages --
-	for k, deepStorage in pairs(self.MF.DSRTable) do
+	for k, deepStorage in pairs(self.DSRTable) do
 		if deepStorage:canAccept(item) then
 			deepStorage:addItem(item, amount)
 			return amount
@@ -224,7 +228,7 @@ function DN:addFluid(fluid, amount, temperature)
 	-- Set the Amount of Item to retrieve left --
 	local amountLeft = amount
 	-- Check the Deep Tanks --
-	for k, deepTank in pairs(self.MF.DTKTable) do
+	for k, deepTank in pairs(self.DTKTable) do
 		local amountSend = deepTank:addFluid({name=fluid, amount=amountLeft, temperature=temperature})
 		amountLeft = amountLeft - amountSend
 		if amountLeft <= 0 then return amount end

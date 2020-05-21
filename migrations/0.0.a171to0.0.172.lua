@@ -27,6 +27,11 @@ for k, MF in pairs(global.MFTable or {}) do
     MF.II.dataNetwork = MF.dataNetwork
     -- Create the new Network Controller --
     if technologyUnlocked("MatterSerialization", getForce(MF.player)) then createNetworkControllerArea(MF) end
+    -- Move DTKTable and DSRTable to the Data Network --
+    MF.dataNetwork.DTKTable = MF.DTKTable
+    MF.dataNetwork.DSRTable = MF.DSRTable
+    MF.DTKTable = nil
+    MF.DSRTable = nil
 end
 
 -- Add the Data Network to all Fluid Interactors --

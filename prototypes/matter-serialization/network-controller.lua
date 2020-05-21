@@ -4,7 +4,7 @@
 local ncE = {}
 ncE.type = "assembling-machine"
 ncE.name = "NetworkController"
-ncE.icon = "__Mobile_Factory__/graphics/NetworkControllerI.png"
+ncE.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/NetworkControllerI.png"
 ncE.icon_size = 128
 ncE.order = "zzz"
 ncE.flags = {"placeable-neutral", "placeable-player", "player-creation"}
@@ -29,7 +29,7 @@ ncE.animation =
         layers =
         {
             {
-                filename = "__Mobile_Factory__/graphics/NetworkControllerE.png",
+                filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/NetworkControllerE.png",
                 priority = "high",
                 width = 600,
                 height = 600,
@@ -40,7 +40,7 @@ ncE.animation =
                 scale = 1/2
             },
             {
-                filename = "__Mobile_Factory__/graphics/NetworkControllerS.png",
+                filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/NetworkControllerS.png",
                 priority = "high",
                 width = 600,
                 height = 600,
@@ -79,7 +79,7 @@ ncAn =  {}
 ncAn.name = "NetworkControllerAn"
 ncAn.type = "animation"
 ncAn.frame_count = 120
-ncAn.filename = "__Mobile_Factory__/graphics/NetworkControllerE.png"
+ncAn.filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/NetworkControllerE.png"
 ncAn.width = 600
 ncAn.height = 600
 ncAn.line_length = 12

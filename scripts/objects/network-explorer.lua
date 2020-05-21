@@ -113,12 +113,12 @@ function NE:getTooltipInfos(GUIObj, gui, justCreated)
 		for name, count in pairs(GUIObj.MFPlayer.ent.get_main_inventory().get_contents()) do
 			GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(name))
 		end
-		for k, deepStorage in pairs(self.MF.DSRTable) do
+		for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
 			if deepStorage.inventoryItem ~= nil or deepStorage.filter ~= nil then
 				GUIObj.MFPlayer.ent.request_translation(Util.getLocItemName(deepStorage.inventoryItem or deepStorage.filter))
 			end
 		end
-		for k, deepTank in pairs(self.MF.DTKTable) do
+		for k, deepTank in pairs(self.dataNetwork.DTKTable) do
 			if deepTank.inventoryFluid ~= nil or deepTank.filter ~= nil then
 				GUIObj.MFPlayer.ent.request_translation(Util.getLocFluidName(deepTank.inventoryFluid or deepTank.filter))
 			end
@@ -271,7 +271,7 @@ function NE.transferItemsFromPInv(PInv, PName, NE, item, count)
 	if half == true then amount = math.floor(amount/2) end
 
 	-- Try to send the Items to a Deep Storage --
-	for k, deepStorage in pairs(NE.MF.DSRTable) do
+	for k, deepStorage in pairs(NE.dataNetwork.DSRTable) do
 		if deepStorage:canAccept(item) then
 			inserted = deepStorage:addItem(item, amount)
 			break

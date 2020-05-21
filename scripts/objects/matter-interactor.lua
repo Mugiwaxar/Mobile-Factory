@@ -170,7 +170,7 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	-- Create the Inventory and Deep Storage List --
 	local selectedIndex = 1
 	local i = 1
-	for k, deepStorage in pairs(self.MF.DSRTable) do
+	for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
 		if deepStorage ~= nil and deepStorage.ent ~= nil then
 			if not playerInvs[deepStorage.player] then playerInvs[deepStorage.player] = true end
 			if self.selectedPlayer == deepStorage.player then
@@ -244,7 +244,7 @@ function MI:changeInventory(ID)
     end
 	-- Select the Inventory --
 	self.selectedInv = nil
-	for k, deepStorage in pairs(self.MF.DSRTable) do
+	for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
 		if valid(deepStorage) then
 			if ID == deepStorage.ID then
 				self.selectedInv = deepStorage

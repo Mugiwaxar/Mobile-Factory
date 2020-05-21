@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.174
-Date: 20/05/2020
+Date: 21/05/2020
   Major Features:
     - Total rewrite of the Matter Serialization and Data Network
     - Now, when you unlock the Matter Serialization Technology, a Network Controller and a new Constructible Area is added to the Control Center
@@ -21,18 +21,33 @@ Date: 20/05/2020
     - The Power Module is now an equipment and must be placed inside the Mobile Factory Equipment Grid
     - The Efficiency Module is now an equipment and must be placed inside the Mobile Factory Equipment Grid
     - The Focus Module is now an equipment and must be placed inside the Mobile Factory Equipment Grid
-    - Removed the Equalizer (No longer useful)
+    - Removed the Equalizer (No longer used)
     - Removed the Data Center (Depreciated - Items inside were send to the Mobile Factory Internal Inventory)
-    - Removed the Data Center MF (Depreciated - Items inside were send to the Mobile Factory Internal Inventory)
-    - Removed the Wireless Data Transmitter (Wireless Router) (Deprecied)
-    - Removed the Wireless Data Receiver (Wireless Network Adapter) (Deprecied)
+    - Removed the Data Center MF (Depreciated - Items inside were send to the Mobile Factory Internal Inventory)    
+    - Removed the Wireless Transmission Technology (No longer used)
+    - Removed the Wireless Data Transmitter (Wireless Router) (Depreciated)
+    - Removed the Wireless Data Receiver (Wireless Network Adapter) (Depreciated)
   Scripting:
     - inventory.lua changed to internal-inventory.lua
     - Moved all Matter Serialization Prototype to the "matter-serialization" folder
     - Rework of Data Network Object (One Data Network per Player)
     - Added the Data Network Object to all Matter Serialization Structures
+    - Moved the DTKTable inside the Data Network
+    - Moved the DSRTable inside the Data Network
   Bugfixes:
     - Fixed crash with AAI
+---------------------------------------------------------------------------------------------------
+Version: 0.0.173
+Date: 20/05/2020
+  Bugfixes:
+    - MK1QuatronConnectedBeam.png error
+---------------------------------------------------------------------------------------------------
+Version: 0.0.172
+Date: 20/05/2020
+  Changes:
+    - remove the barreling of Quatron Fluid
+  Bugfixes:
+    - prevent crash(es) with robots placing tiles
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.171
 Date: 18/05/2020

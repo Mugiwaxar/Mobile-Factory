@@ -2,6 +2,7 @@
 if global.MobileFactory ~= nil then
 	global.MF = MF:new()
 	local MF = global.MF
+	MF.playerIndex = global.MobileFactory.last_user.index
 	MF:construct(global.MobileFactory)
 	MF.fS = global.mfInsideSurface
 	MF.ccS = global.controlSurface
@@ -56,8 +57,6 @@ if global.repairTable == nil then global.repairTable = {} end
 -- Unlocking Recipes --
 unlockRecipeForAll("DimensionalOre")
 unlockRecipeForAll("mfShieldEquipment", "MFShield")
-unlockRecipeForAll("DataCenter", "MatterSerialization")
-unlockRecipeForAll("DataCenterMF", "MatterSerialization")
 unlockRecipeForAll("DataStorage", "MatterSerialization")
 unlockRecipeForAll("EnergyCubeMK1", "MatterSerialization")
 unlockRecipeForAll("MachineFrame2", "DimensionalOreSmelting")

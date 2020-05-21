@@ -148,7 +148,7 @@ function FI:getTooltipInfos(GUIObj, gui, justCreated)
 	local invs = {{"", {"gui-description.None"}}}
 	local selectedIndex = 1
 	local i = 1
-	for k, deepTank in pairs(self.MF.DTKTable) do
+	for k, deepTank in pairs(self.dataNetwork.DTKTable) do
 		if deepTank ~= nil and deepTank.ent ~= nil then
 			i = i + 1
 			local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
@@ -186,7 +186,7 @@ function FI:changeInventory(ID)
     end
 	-- Select the Inventory --
 	self.selectedInv = nil
-	for k, deepTank in pairs(self.MF.DTKTable) do
+	for k, deepTank in pairs(self.dataNetwork.DTKTable) do
 		if valid(deepTank) then
 			if ID == deepTank.ID then
 				self.selectedInv = deepTank

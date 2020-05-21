@@ -45,7 +45,7 @@ miI.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/MatterInte
 miI.icon_size = 128
 miI.place_result = "MatterInteractor"
 miI.subgroup = "DataSerialization"
-miI.order = "e1"
+miI.order = "e"
 miI.stack_size = 30
 data:extend{miI}
 

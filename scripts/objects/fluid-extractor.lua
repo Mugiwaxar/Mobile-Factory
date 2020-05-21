@@ -115,7 +115,7 @@ function FE:getTooltipInfos(GUIObj, gui, justCreated)
 		local invs = {{"", {"gui-description.All"}}}
 		local selectedIndex = 1
 		local i = 1
-		for k, deepTank in pairs(self.MF.DTKTable) do
+		for k, deepTank in pairs(self.MF.dataNetwork.DTKTable) do
 			if deepTank ~= nil and deepTank.ent ~= nil then
 				i = i + 1
 				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
@@ -174,7 +174,7 @@ function FE:changeDimTank(ID)
 	end
 	-- Select the Ore Silo --
 	self.selectedInv = nil
-	for k, dimTank in pairs(self.MF.DTKTable) do
+	for k, dimTank in pairs(self.MF.dataNetwork.DTKTable) do
 		if dimTank ~= nil and dimTank.ent ~= nil and dimTank.ent.valid == true then
 			if ID == dimTank.ID then
 				self.selectedInv = dimTank
@@ -209,7 +209,7 @@ function FE:extractFluids(event)
 	if inventory == nil then
 		-- Auto Select the Ore Silo --
 		inventory = nil
-		for k, dimTank in pairs(self.MF.DTKTable) do
+		for k, dimTank in pairs(self.MF.dataNetwork.DTKTable) do
 			if dimTank ~= nil and dimTank.ent ~= nil and dimTank.ent.valid == true then
 				if dimTank:canAccept({name = resourceName}) then
 					inventory = dimTank

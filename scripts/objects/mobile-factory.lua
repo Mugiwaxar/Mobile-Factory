@@ -16,8 +16,6 @@ MF = {
 	entitiesAround = nil,
 	internalEnergyObj = nil,
 	internalQuatronObj = nil,
-	DTKTable = nil,
-	DSRTable = nil,
 	jumpTimer = 0,
 	baseJumpTimer = _mfBaseJumpTimer,
 	tpEnabled = true,
@@ -53,8 +51,6 @@ function MF:new(args)
 	mt.__index = MF
 	t.entitiesAround = t.entitiesAround or {}
 	t.clonedResourcesTable = t.clonedResourcesTable or {}
-	t.DTKTable = t.DTKTable or {}
-	t.DSRTable = t.DSRTable or {}
 	t.varTable = t.varTable or {}
 	t.varTable.tech = t.varTable.tech or {}
 	t.varTable.tanks = t.varTable.tanks or {}
@@ -113,8 +109,6 @@ function MF:rebuild(object)
 	DN:rebuild(object.dataNetwork)
 	NC:rebuild(object.networkController)
 	INV:rebuild(object.II)
-	if object.DSRTable == nil then object.DSRTable = {} end
-	if object.DTKTable == nil then object.DTKTable = {} end
 end
 
 -- Destructor --
@@ -166,7 +160,7 @@ function MF:getTooltipInfos(GUIObj, gui, justCreated)
 			local invs = {{"", {"gui-description.None"}}}
 			local selectedIndex = 1
 			local i = 1
-			for k, deepTank in pairs(self.DTKTable) do
+			for k, deepTank in pairs(self.dataNetwork.DTKTable) do
 				if deepTank ~= nil and deepTank.ent ~= nil then
 					i = i + 1
 					local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
@@ -207,7 +201,7 @@ function MF:fluidLaserTarget(ID)
 	end
 	-- Select the Inventory --
 	self.selectedInv = nil
-	for k, deepTank in pairs(self.DTKTable) do
+	for k, deepTank in pairs(self.dataNetwork.DTKTable) do
 		if valid(deepTank) then
 			if ID == deepTank.ID then
 				self.selectedInv = deepTank

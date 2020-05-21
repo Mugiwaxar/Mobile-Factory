@@ -154,7 +154,7 @@ function NAP:createDNSignals()
 	end
 	
 	-- Create the Deep Storages Signals --
-	for k, ds in pairs(self.MF.DSRTable) do
+	for k, ds in pairs(self.dataNetwork.DSRTable) do
 		-- Create and send the Signal --
 		if ds.inventoryItem ~= nil and game.item_prototypes[ds.inventoryItem] ~= nil then
 			local signal = {signal={type="item", name=ds.inventoryItem} ,count=ds.inventoryCount}
@@ -167,7 +167,7 @@ function NAP:createDNSignals()
 	end
 
 	-- Create the Deep Tanks Signals --
-	for k, dtk in pairs(self.MF.DTKTable) do
+	for k, dtk in pairs(self.dataNetwork.DTKTable) do
 		-- Create and send the Signal --
 		if dtk.inventoryFluid ~= nil and game.fluid_prototypes[dtk.inventoryFluid] ~= nil then
 			local signal = {signal={type="fluid", name=dtk.inventoryFluid} ,count=dtk.inventoryCount}

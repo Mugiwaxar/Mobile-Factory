@@ -4,7 +4,7 @@
 local el1E = {}
 el1E.type = "assembling-machine"
 el1E.name = "EnergyLaser1"
-el1E.icon = "__Mobile_Factory__/graphics/EnergyLaser1I.png"
+el1E.icon = "__Mobile_Factory_Graphics__/graphics/energy/EnergyLaser1I.png"
 el1E.icon_size = 128
 el1E.flags = {"placeable-neutral", "placeable-player", "player-creation"}
 el1E.minable = {mining_time = 0.2, result = "EnergyLaser1"}
@@ -28,7 +28,7 @@ el1E.animation =
         layers =
         {
             {
-                filename = "__Mobile_Factory__/graphics/EnergyLaser1E.png",
+                filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyLaser1E.png",
                 priority = "high",
                 width = 600,
                 height = 600,
@@ -37,7 +37,7 @@ el1E.animation =
                 scale = 1/18
             },
             {
-                filename = "__Mobile_Factory__/graphics/EnergyLaser1S.png",
+                filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyLaser1S.png",
                 priority = "high",
                 width = 600,
                 height = 600,
@@ -89,7 +89,7 @@ data:extend{el1E}
 local el1I = {}
 el1I.type = "item"
 el1I.name = "EnergyLaser1"
-el1I.icon = "__Mobile_Factory__/graphics/EnergyLaser1I.png"
+el1I.icon = "__Mobile_Factory_Graphics__/graphics/energy/EnergyLaser1I.png"
 el1I.icon_size = 128
 el1I.place_result = "EnergyLaser1"
 el1I.subgroup = "Energy"
@@ -117,7 +117,7 @@ data:extend{el1R}
 local ql1E = {}
 ql1E.type = "assembling-machine"
 ql1E.name = "QuatronLaser1"
-ql1E.icon = "__Mobile_Factory__/graphics/QuatronLaser1I.png"
+ql1E.icon = "__Mobile_Factory_Graphics__/graphics/energy/QuatronLaser1I.png"
 ql1E.icon_size = 128
 ql1E.flags = {"placeable-neutral", "placeable-player", "player-creation"}
 ql1E.minable = {mining_time = 0.2, result = "QuatronLaser1"}
@@ -141,7 +141,7 @@ ql1E.animation =
         layers =
         {
             {
-                filename = "__Mobile_Factory__/graphics/QuatronLaser1E.png",
+                filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronLaser1E.png",
                 priority = "high",
                 width = 600,
                 height = 600,
@@ -150,7 +150,7 @@ ql1E.animation =
                 scale = 1/18
             },
             {
-                filename = "__Mobile_Factory__/graphics/EnergyLaser1S.png",
+                filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyLaser1S.png",
                 priority = "high",
                 width = 600,
                 height = 600,
@@ -202,7 +202,7 @@ data:extend{ql1E}
 local ql1I = {}
 ql1I.type = "item"
 ql1I.name = "QuatronLaser1"
-ql1I.icon = "__Mobile_Factory__/graphics/QuatronLaser1I.png"
+ql1I.icon = "__Mobile_Factory_Graphics__/graphics/energy/QuatronLaser1I.png"
 ql1I.icon_size = 128
 ql1I.place_result = "QuatronLaser1"
 ql1I.subgroup = "QuatronLogistic"

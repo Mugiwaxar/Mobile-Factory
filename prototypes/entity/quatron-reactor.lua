@@ -4,7 +4,7 @@
 local qrE = {}
 qrE.name = "QuatronReactor"
 qrE.type = "generator"
-qrE.icon = "__Mobile_Factory__/graphics/QuatronReactorI.png"
+qrE.icon = "__Mobile_Factory_Graphics__/graphics/energy/QuatronReactorI.png"
 qrE.icon_size = 128
 qrE.flags = {"placeable-neutral", "player-creation"}
 qrE.minable = {mining_time = 1, result = "QuatronReactor"}
@@ -41,7 +41,7 @@ qrE.horizontal_animation =
     {
         {
         frame_count = 1,
-        filename = "__Mobile_Factory__/graphics/QuatronReactorE.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronReactorE.png",
         priority = "extra-high",
         width = 600,
         height = 600,
@@ -52,7 +52,7 @@ qrE.horizontal_animation =
         },
         {
         frame_count = 1,
-        filename = "__Mobile_Factory__/graphics/QuatronReactorS.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronReactorS.png",
         priority = "extra-high",
         width = 600,
         height = 600,
@@ -75,7 +75,7 @@ local qrI = {}
 qrI.type = "item"
 qrI.name = "QuatronReactor"
 qrI.place_result = "QuatronReactor"
-qrI.icon = "__Mobile_Factory__/graphics/QuatronReactorI.png"
+qrI.icon = "__Mobile_Factory_Graphics__/graphics/energy/QuatronReactorI.png"
 qrI.icon_size = 128
 qrI.subgroup = "QuatronLogistic"
 qrI.order = "d"
@@ -103,7 +103,7 @@ for i = 0, 13 do
 	local qrS = {}
 	qrS.type = "sprite"
 	qrS.name = "QuatronReactorSprite" .. i
-	qrS.filename = "__Mobile_Factory__/graphics/QuatronReactorSprite.png"
+	qrS.filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronReactorSprite.png"
     qrS.size = 600
     qrS.scale = 0.30
     qrS.x = x

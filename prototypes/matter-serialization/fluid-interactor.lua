@@ -57,7 +57,7 @@ fiI.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/FluidInter
 fiI.icon_size = 128
 fiI.place_result = "FluidInteractor"
 fiI.subgroup = "DataSerialization"
-fiI.order = "e2"
+fiI.order = "f"
 fiI.stack_size = 10
 data:extend{fiI}
 

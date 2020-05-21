@@ -4,7 +4,7 @@
 local ec1E = {}
 ec1E.type = "accumulator"
 ec1E.name = "EnergyCubeMK1"
-ec1E.icon = "__Mobile_Factory__/graphics/EnergyCubeMK1I.png"
+ec1E.icon = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK1I.png"
 ec1E.icon_size = 128
 ec1E.flags = {"placeable-neutral", "player-creation"}
 ec1E.minable = {mining_time = 0.5, result = "EnergyCubeMK1"}
@@ -42,7 +42,7 @@ ec1E.picture = {
     layers =
     {
       {
-          filename = "__Mobile_Factory__/graphics/EnergyCubeMK1E.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK1E.png",
           priority = "high",
           width = 600,
           height = 600,
@@ -51,7 +51,7 @@ ec1E.picture = {
 		  scale = 1/7
       },
       {
-          filename = "__Mobile_Factory__/graphics/EnergyCubeS.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeS.png",
           priority = "high",
           width = 600,
           height = 600,
@@ -69,7 +69,7 @@ local ec1I = {}
 ec1I.type = "item-with-tags"
 ec1I.name = "EnergyCubeMK1"
 ec1I.place_result = "EnergyCubeMK1"
-ec1I.icon = "__Mobile_Factory__/graphics/EnergyCubeMK1I.png"
+ec1I.icon = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK1I.png"
 ec1I.icon_size = 128
 ec1I.subgroup = "Energy"
 ec1I.order = "b1"
@@ -95,7 +95,7 @@ for i = 0, 10 do
 	local ec1S = {}
 	ec1S.type = "sprite"
 	ec1S.name = "EnergyCubeMK1Sprite" .. i
-	ec1S.filename = "__Mobile_Factory__/graphics/EnergyCubeSprite.png"
+	ec1S.filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeSprite.png"
 	ec1S.size = 600
   ec1S.x = 600 * i
 	data:extend{ec1S}
@@ -107,7 +107,7 @@ end
 local qc1E = {}
 qc1E.type = "accumulator"
 qc1E.name = "QuatronCubeMK1"
-qc1E.icon = "__Mobile_Factory__/graphics/QuatronCubeMK1I.png"
+qc1E.icon = "__Mobile_Factory_Graphics__/graphics/energy/QuatronCubeMK1I.png"
 qc1E.icon_size = 128
 qc1E.flags = {"placeable-neutral", "player-creation"}
 qc1E.minable = {mining_time = 0.5, result = "QuatronCubeMK1"}
@@ -145,7 +145,7 @@ qc1E.picture = {
     layers =
     {
       {
-          filename = "__Mobile_Factory__/graphics/QuatronCubeMK1E.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronCubeMK1E.png",
           priority = "high",
           width = 600,
           height = 600,
@@ -154,7 +154,7 @@ qc1E.picture = {
 		  scale = 1/7
       },
       {
-          filename = "__Mobile_Factory__/graphics/EnergyCubeS.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeS.png",
           priority = "high",
           width = 600,
           height = 600,
@@ -172,7 +172,7 @@ local qc1I = {}
 qc1I.type = "item-with-tags"
 qc1I.name = "QuatronCubeMK1"
 qc1I.place_result = "QuatronCubeMK1"
-qc1I.icon = "__Mobile_Factory__/graphics/QuatronCubeMK1I.png"
+qc1I.icon = "__Mobile_Factory_Graphics__/graphics/energy/QuatronCubeMK1I.png"
 qc1I.icon_size = 128
 qc1I.subgroup = "QuatronLogistic"
 qc1I.order = "b1"
@@ -198,7 +198,7 @@ for i = 0, 10 do
 	local iqcS = {}
 	iqcS.type = "sprite"
 	iqcS.name = "QuatronCubeSprite" .. i
-	iqcS.filename = "__Mobile_Factory__/graphics/QuatronCubeSprite.png"
+	iqcS.filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronCubeSprite.png"
 	iqcS.size = 600
   iqcS.x = 600 * i
 	data:extend{iqcS}
@@ -209,7 +209,7 @@ end
 -- Entity --
 local iecE = table.deepcopy(ec1E)
 iecE.name = "InternalEnergyCube"
-iecE.icon = "__Mobile_Factory__/graphics/InternalEnergyCubeI.png"
+iecE.icon = "__Mobile_Factory_Graphics__/graphics/energy/InternalEnergyCubeI.png"
 iecE.minable = {mining_time = 1.5, result = "InternalEnergyCube"}
 iecE.max_health = 1500
 iecE.collision_box = {{-2.9, -2.1}, {2.9, 3.7}}
@@ -233,7 +233,7 @@ iecE.energy_source =
     layers =
     {
       {
-          filename = "__Mobile_Factory__/graphics/InternalEnergyCubeE.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/InternalEnergyCubeE.png",
           priority = "high",
           width = 600,
           height = 600,
@@ -241,7 +241,7 @@ iecE.energy_source =
           scale = 1/2.25
       },
       {
-          filename = "__Mobile_Factory__/graphics/EnergyCubeS.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeS.png",
           priority = "high",
           width = 600,
           height = 600,
@@ -257,7 +257,7 @@ data:extend{iecE}
 local iecI = table.deepcopy(ec1I)
 iecI.name = "InternalEnergyCube"
 iecI.place_result = "InternalEnergyCube"
-iecI.icon = "__Mobile_Factory__/graphics/InternalEnergyCubeI.png"
+iecI.icon = "__Mobile_Factory_Graphics__/graphics/energy/InternalEnergyCubeI.png"
 iecI.order = "c"
 iecI.subgroup = "Energy"
 iecI.stack_size = 1
@@ -282,7 +282,7 @@ data:extend{iecR}
 -- Entity --
 local iqcE = table.deepcopy(iecE)
 iqcE.name = "InternalQuatronCube"
-iqcE.icon = "__Mobile_Factory__/graphics/InternalQuatronCubeI.png"
+iqcE.icon = "__Mobile_Factory_Graphics__/graphics/energy/InternalQuatronCubeI.png"
 iqcE.minable = {mining_time = 1.5, result = "InternalQuatronCube"}
 iqcE.energy_source =
     {
@@ -298,7 +298,7 @@ iqcE.energy_source =
     layers =
     {
       {
-          filename = "__Mobile_Factory__/graphics/InternalQuatronCubeE.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/InternalQuatronCubeE.png",
           priority = "high",
           width = 600,
           height = 600,
@@ -306,7 +306,7 @@ iqcE.energy_source =
           scale = 1/2.25
       },
       {
-          filename = "__Mobile_Factory__/graphics/EnergyCubeS.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeS.png",
           priority = "high",
           width = 600,
           height = 600,
@@ -322,7 +322,7 @@ data:extend{iqcE}
 local iqcI = table.deepcopy(iecI)
 iqcI.name = "InternalQuatronCube"
 iqcI.place_result = "InternalQuatronCube"
-iqcI.icon = "__Mobile_Factory__/graphics/InternalQuatronCubeI.png"
+iqcI.icon = "__Mobile_Factory_Graphics__/graphics/energy/InternalQuatronCubeI.png"
 iqcI.order = "c"
 iqcI.subgroup = "QuatronLogistic"
 iqcI.stack_size = 1

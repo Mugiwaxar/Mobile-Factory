@@ -4,7 +4,7 @@ local napE = {}
 napE.flags = {"placeable-neutral", "player-creation", "not-rotatable"}
 napE.type = "constant-combinator"
 napE.name = "NetworkAccessPoint"
-napE.icon = "__Mobile_Factory__/graphics/NetworkAccessPointI.png"
+napE.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/NetworkAccessPointI.png"
 napE.icon_size = 64
 napE.minable = {mining_time = 0.8, result = "NetworkAccessPoint"}
 napE.max_health = 300
@@ -21,7 +21,7 @@ napE.sprites =
     sheets =
     {
         {
-            filename = "__Mobile_Factory__/graphics/NetworkAccessPointE.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/NetworkAccessPointE.png",
             width = 400,
             height = 400,
             shift = {0,-0.2},
@@ -29,7 +29,7 @@ napE.sprites =
             frames = 1
         },
         {
-            filename = "__Mobile_Factory__/graphics/NetworkAccessPointS.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/NetworkAccessPointS.png",
             width = 400,
             height = 400,
             shift = {1.8,0.4},
@@ -64,11 +64,11 @@ data:extend{napE}
 local napI = {}
 napI.type = "item"
 napI.name = "NetworkAccessPoint"
-napI.icon = "__Mobile_Factory__/graphics/NetworkAccessPointI.png"
+napI.icon = "__Mobile_Factory_Graphics__/graphics/matter-serialization/NetworkAccessPointI.png"
 napI.icon_size = 64
 napI.place_result = "NetworkAccessPoint"
 napI.subgroup = "DataSerialization"
-napI.order = "f1"
+napI.order = "a"
 napI.stack_size = 10
 data:extend{napI}
 
@@ -91,7 +91,7 @@ local napA = {}
 napA.name = "NetworkAccessPointA"
 napA.type = "animation"
 napA.frame_count = 60
-napA.filename = "__Mobile_Factory__/graphics/NetworkAccessPointA.png"
+napA.filename = "__Mobile_Factory_Graphics__/graphics/matter-serialization/NetworkAccessPointA.png"
 napA.size = 500
 napA.line_length = 10
 napA.animation_speed = 1/6

@@ -15,7 +15,7 @@ require("prototypes/entity/jet.lua")
 require("prototypes/entity/flag.lua")
 require("prototypes/entity/temp-chest.lua")
 require("prototypes/entity/temp-tank.lua")
-require("prototypes/matter-serialization/network-Controller.lua")
+require("prototypes/matter-serialization/network-controller.lua")
 require("prototypes/matter-serialization/network-access-point.lua")
 require("prototypes/matter-serialization/data-storage.lua")
 require("prototypes/matter-serialization/deep-storage.lua")
@@ -421,8 +421,7 @@ data:extend{
     {
         type = "sprite",
         name = "ArrowIconLeft",
-		-- filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconLeft.png",
-		filename = "__Mobile_Factory__/graphics/ArrowIconLeft.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconLeft.png",
         size = 32,
         flags = {"icon"}
     }
@@ -432,8 +431,7 @@ data:extend{
     {
         type = "sprite",
         name = "ArrowIconRight",
-		-- filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconRight.png",
-		filename = "__Mobile_Factory__/graphics/ArrowIconRight.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconRight.png",
         size = 32,
         flags = {"icon"}
     }
@@ -443,8 +441,7 @@ data:extend{
     {
         type = "sprite",
         name = "PlusIcon",
-		-- filename = "__Mobile_Factory_Graphics__/graphics/icones/PlusIcon.png",
-		filename = "__Mobile_Factory__/graphics/PlusIcon.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/PlusIcon.png",
         size = 32,
         flags = {"icon"}
     }
