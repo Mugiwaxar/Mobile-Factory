@@ -178,3 +178,19 @@ function QR:removeQuatron(amount)
 	end
 	return 0
 end
+
+-- Return the max input flow --
+function QR:maxInput()
+	if self.ent ~= nil and self.ent.valid == true then
+		return 0
+	end
+	return 0
+end
+
+-- Return the max output flow --
+function QR:maxOutput()
+	if self.ent ~= nil and self.ent.valid == true then
+		return 0
+	end
+	return 0
+end

@@ -128,7 +128,7 @@ function QC:balance()
 					local transfered = obj:addQuatron(maxEnergyTranfer)
 					-- Remove Energy --
 					self:removeQuatron(transfered)
-                elseif self:quatron() < obj:quatron() and self:quatron() < self:maxQuatron() and obj:maxOutput() > 0 then
+                elseif self:quatron() < obj:quatron() and self:quatron() < self:maxQuatron() and obj:maxOutput() > 0 and obj.ent.name ~= "QuatronLaser1" then
 					-- Calcule max flow --
 					local energyVariance = (obj:quatron() - self:quatron()) / 2
 					local maxEnergyTranfer = math.min(energyVariance, obj:quatron(), self:maxInput(), obj:maxOutput())
