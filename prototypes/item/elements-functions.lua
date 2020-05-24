@@ -1,7 +1,7 @@
 -------------------------------- ELEMENTS FUNCTIONS ------------------------------
 
 -- Create an element --
-function createElement(name, atNumber, type, color)
+function createElement(name, atNumber, type, color,fuelValue)
 	eI = {}
 	eI.name = name
 	eI.type = type
@@ -21,20 +21,27 @@ function createElement(name, atNumber, type, color)
 	else
 		eI.stack_size = 100
 	end
+	if fuelValue ~= nil then
+		eI.fuel_value = fuelValue
+	end
 	data:extend{eI}
 end
 
 -- Create a Recipe --
-function createRecipe(name, ingredients, results, subgroup)
+function createRecipe(name, ingredients, results,  energy)
 	eR = {}
 	eR.name = name
 	eR.type = "recipe"
 	eR.icon = "__Mobile_Factory_Graphics__/graphics/e-technology/" .. name .. ".png"
 	eR.icon_size = 64
 	eR.category = "Elements"
-	eR.subgroup = subgroup or "Elements"
+	eR.subgroup = "Elements"
 	eR.main_product = ""
-	eR.energy_required = 1
+	if energy ~= nil then
+		eR.energy_required = energy
+	else
+		eR.energy_required = 1
+	end
 	eR.enabled = false
 	eR.ingredients = {}
 	eR.results = {}
