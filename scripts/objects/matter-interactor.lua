@@ -285,7 +285,9 @@ function MI:updateInventory()
     -- Input mode --
     if self.selectedMode == "input" then
         -- Itinerate the Inventory --
-        for item, count in pairs(inv.get_contents()) do
+		for item, count in pairs(inv.get_contents()) do
+			-- Check the Item --
+			if game.item_prototypes[item] == nil then return end
             -- Add Items to the Data Inventory --
             local amountAdded = dataInv:addItem(item, count)
             -- Remove Items from the local Inventory --

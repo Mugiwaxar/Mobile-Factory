@@ -188,6 +188,13 @@ function Util.getLocFluidName(fluidName)
 	end
 end
 
+-- Reset an Animation --
+function Util.resetAnimation(animId, totalFrame)
+	local animSpeed = rendering.get_animation_speed(animId)
+	local currentFrame = math.floor((game.tick * animSpeed) % totalFrame)
+	rendering.set_animation_offset(animId, 0 - currentFrame)
+end
+
 -- Check if an Object is valid --
 function valid(obj)
 	if obj == nil then return false end
@@ -380,38 +387,6 @@ function fixMB(event)
 			createControlRoom(MF)
 		end
 	end
-end
-	
--- Call the mobile Factory near the player
-function callMobileFactory(player)
-	-- Get the Mobile Factory --
-	local MF = getMF(player.name)
-	-- Check if the Mobile Factory exist --
-	if MF ~= nil and MF.ent == nil or MF.ent.valid == false then
-		player.print({"", {"gui-description.MFLostOrDestroyed"}})
-		return
-	end
-	-- Test if the Jump Drives are ready --
-	if MF.jumpTimer > 0 then
-		player.print({"", {"gui-description.MFJumpDriveRecharging"}})
-		return
-	end
-	-- Try to find the best coords --
-	local coords = mfPlaceable(player, MF)
-	-- Return if any coords was found --
-	if coords == nil then return end
-	-- Teleport the Mobile Factory to the cords --
-	MF.ent.teleport(coords, player.surface)
-	-- Try to find the Mobile Factory if it is lost --
-	if MF.ent == nil or MF.ent.valid == false then
-		MF.ent = player.surface.find_entity("MobileFactory", coords)
-	end
-	-- Save the position --
-	MF.lastSurface = MF.ent.surface
-	MF.lastPosX = MF.ent.position.x
-	MF.lastPosY = MF.ent.position.y
-	-- Discharge the Jump Drives --
-	MF.jumpTimer = MF.baseJumpTimer
 end
 
 -- Create Tiles at the given position and radius --

@@ -19,6 +19,9 @@ MF = {
 	jumpTimer = 0,
 	baseJumpTimer = _mfBaseJumpTimer,
 	tpEnabled = true,
+	onTP = false,
+	tpCurrentTick = 0,
+	tpCoords = nil,
 	locked = true,
 	laserRadiusMultiplier = 0,
 	laserDrainMultiplier = 0,
@@ -240,6 +243,10 @@ function MF:update(event)
 	if event.tick%_eventTick1200 == 0 then self:updatePollution() end
 	-- Update Teleportation Box --
 	if event.tick%_eventTick5 == 0 then self:factoryTeleportBox() end
+	-- Check if the Mobile Factory has to TP --
+	if self.onTP and game.tick - self.tpCurrentTick > 100 then
+		self:callMobileFactoryPart2()
+	end
 	-- Read Modules inside the Equipment Grid --
 	if event.tick%_eventTick125 == 0 then self:scanModules() end
 	-- Send Quatron Charge --
@@ -670,6 +677,59 @@ function MF:scanModules()
 			self.laserNumberMultiplier = self.laserNumberMultiplier + 1
 		end
 	end
+end
+
+-- Call the mobile Factory to the player (Before TP) --
+function MF:callMobileFactoryPart1()
+	-- Get the Player --
+	local player = getPlayer(self.playerIndex)
+	-- Check if the Mobile Factory exist --
+	if self.ent == nil or self.ent.valid == false then
+		player.print({"", {"gui-description.MFLostOrDestroyed"}})
+		return
+	end
+	-- Test if the Jump Drives are ready --
+	if self.jumpTimer > 0 then
+		player.print({"", {"gui-description.MFJumpDriveRecharging"}})
+		return
+	end
+	-- Try to find the best coords --
+	self.tpCoords = nil
+	self.tpCoords = mfPlaceable(player, self)
+	-- Return if no coords was found --
+	if self.tpCoords == nil then return end
+	-- Start the TP --
+	self.onTP = true
+	self.tpCurrentTick = game.tick
+	-- Start all Animations --
+	local animation1 = rendering.draw_animation{animation="SimpleTPAn", animation_speed=0.5, render_layer=131, x_scale=4, y_scale=3.5, target={self.ent.position.x, self.ent.position.y-0.7}, surface=self.ent.surface, time_to_live=150*2}
+	Util.resetAnimation(animation1, 150)
+	local animation2 = rendering.draw_animation{animation="SimpleTPAn", animation_speed=0.5, render_layer=131, x_scale=4, y_scale=3.5, target={self.tpCoords.x, self.tpCoords.y-0.7}, surface=player.surface, time_to_live=150*2}
+	Util.resetAnimation(animation2, 150)
+	-- Play all Sounds --
+	self.ent.surface.play_sound{path="MFSimpleTP", position=self.ent.position}
+	self.ent.surface.play_sound{path="MFSimpleTP", position=player.position}
+end
+
+-- Call the mobile Factory to the player (After TP) --
+function MF:callMobileFactoryPart2()
+	-- Get the Player --
+	local player = getPlayer(self.playerIndex)
+	-- Check if the Mobile Factory exist --
+	if self.ent == nil or self.ent.valid == false then
+		player.print({"", {"gui-description.MFLostOrDestroyed"}})
+		return
+	end
+	-- Teleport the Mobile Factory to the cords --
+	self.ent.teleport(self.tpCoords, player.surface)
+	-- Save the position --
+	self.lastSurface = self.ent.surface
+	self.lastPosX = self.ent.position.x
+	self.lastPosY = self.ent.position.y
+	-- Discharge the Jump Drives --
+	self.jumpTimer = self.baseJumpTimer
+	-- Stop the TP --
+	self.onTP = false
 end
 
 -- Remove the Sync Area --

@@ -243,7 +243,7 @@ function GUI.buttonClicked(event)
 
 	-- CallMF Button --
 	if event.element.name == "CallMFButton" then
-		callMobileFactory(player)
+		MF:callMobileFactoryPart1()
 		return
 	end
 

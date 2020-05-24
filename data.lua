@@ -57,6 +57,7 @@ require("prototypes/technology/matter-serialization.lua")
 require("prototypes/gun/tank-guns.lua")
 require("prototypes/animation/shield.lua")
 require("prototypes/animation/red-energy-orb.lua")
+require("prototypes/animation/MFTP.lua")
 if settings.startup["MF-enable-erya"].value == true then
 	require("prototypes/erya/erya-intermediates.lua")
 	require("prototypes/erya/erya-collector.lua")
@@ -690,6 +691,15 @@ data:extend{
 	name = "MFLeave",
 	category = "game-effect",
 	filename = "__Mobile_Factory_Graphics__/sounds/LeaveMF.ogg",
+	preload = true
+	}
+}
+data:extend{
+	{
+	type = "sound",
+	name = "MFSimpleTP",
+	category = "game-effect",
+	filename = "__Mobile_Factory__/graphics/SimpleTP.ogg",
 	preload = true
 	}
 }

@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.179
+Date: 24/05/2020
+  Features:
+    - Added a new Animation for the Mobile Factory Teleportation
+  Bugfixes:
+    - Fixed a crash related to the Fluid Interactor
+    - Fixed a crash related to the Matter Interactor
+    - Fixed a crash related to the Data Assembler
+---------------------------------------------------------------------------------------------------
 Version: 0.0.178
 Date: 24/05/2020
   Changes:

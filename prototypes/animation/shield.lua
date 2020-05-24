@@ -1,4 +1,6 @@
-shFX = {}
+-- MF SHIELD ANIMATION 6=--
+
+local shFX = {}
 shFX.name = "mfShield"
 shFX.type = "animation"
 shFX.filename = "__Mobile_Factory_Graphics__/graphics/effects/shield.png"
