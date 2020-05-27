@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.179
+Date: 27/05/2020
+  Changes:
+    - Deep Tank selector list: fluid icons
+    - GT and Hovering Mobile Factorys use the same equipment as a base Mobile Factory
+  Bugfixes:
+    - script_raised_revive place-and-remove.lua fix. Again.
+  Scripting:
+    - clean out deprecated player-permissions code from MI inventory selection tooltip
+---------------------------------------------------------------------------------------------------
 Version: 0.0.178
 Date: 24/05/2020
   Changes:

@@ -146,26 +146,34 @@ function FI:getTooltipInfos(GUIObj, gui, justCreated)
 	GUIObj:addLabel("", titleFrame, {"gui-description.MSTarget"}, _mfOrange)
 	
 	local invs = {{"", {"gui-description.None"}}}
+
+
+	-- Create the Deep Tank List --
 	local selectedIndex = 1
 	local i = 1
 	for k, deepTank in pairs(self.dataNetwork.DTKTable) do
 		if deepTank ~= nil and deepTank.ent ~= nil then
 			i = i + 1
-			local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
+			local fluid
 			if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
-				itemText = {"", " (", game.fluid_prototypes[deepTank.filter].localised_name, ")"}
+				fluid = deepTank.filter
 			elseif deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
-				itemText = {"", " (", game.fluid_prototypes[deepTank.inventoryFluid].localised_name, ")"}
+				fluid = deepTank.inventoryFluid
 			end
-			invs[k+1] = {"", {"gui-description.DT"}, " ", tostring(deepTank.ID), itemText}
+
+			if fluid then
+				invs[k+1] = {"", "[img=fluid/"..fluid.."] ", game.fluid_prototypes[fluid].localised_name, " - ", deepTank.ID}
+			else
+				invs[k+1] = {"", "", {"gui-description.Empty"}, "", " - ", deepTank.ID}
+			end
+
 			if self.selectedInv == deepTank then
 				selectedIndex = i
 			end
 		end
 	end
-	if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
+	if selectedIndex > table_size(invs) then selectedIndex = nil end
 	GUIObj:addDropDown("FITarget" .. self.ent.unit_number, titleFrame, invs, selectedIndex)
-
 end
 
 -- Change the Mode --
