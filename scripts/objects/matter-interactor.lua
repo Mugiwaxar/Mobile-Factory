@@ -158,60 +158,38 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	if self.selectedMode == "output" then state = "right" end
 	GUIObj:addSwitch("MIMode" .. self.ent.unit_number, titleFrame, {"gui-description.Input"}, {"gui-description.Output"}, {"gui-description.InputTT"}, {"gui-description.OutputTT"}, state)
 
-	if valid(game.players[self.selectedPlayer]) == false then self.selectedPlayer = self.player end
-	local playerInvs = {[self.player] = true}
-	local invs = {}
-	if self.selectedPlayer == self.player then
-		table.insert(invs, self.dataNetwork.invObj.name or {"gui-description.None"})
-	else
-		table.insert(invs, {"gui-description.None"})
-	end
+	-- Create the Inventory Selection --
+	GUIObj:addLabel("", titleFrame, {"gui-description.MSTarget"}, _mfOrange)
+
+	local invs = {{"", {"gui-description.None"}}}
+	table.insert(invs, self.dataNetwork.invObj.name)
 
 	-- Create the Inventory and Deep Storage List --
 	local selectedIndex = 1
 	local i = 1
 	for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
 		if deepStorage ~= nil and deepStorage.ent ~= nil then
-			if not playerInvs[deepStorage.player] then playerInvs[deepStorage.player] = true end
-			if self.selectedPlayer == deepStorage.player then
-				i = i + 1
-				local item
-				if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
-					item = deepStorage.filter
-				elseif deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
-					item = deepStorage.inventoryItem
-				end
+			i = i + 1
+			local item
+			if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
+				item = deepStorage.filter
+			elseif deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
+				item = deepStorage.inventoryItem
+			end
 
-				if item then
-					invs[k+1] = {"", "[img=item/"..item.."] ", game.item_prototypes[item].localised_name, " - ", deepStorage.ID}
-				else
-					invs[k+1] = {"", {"gui-description.Empty"}, " - ", "(", deepStorage.player, ")"}
-				end
-				if self.selectedInv == deepStorage then
-					selectedIndex = i
-				end
+			if item then
+				invs[k+1] = {"", "[img=item/"..item.."] ", game.item_prototypes[item].localised_name, " - ", deepStorage.ID}
+			else
+				invs[k+1] = {"", "", {"gui-description.Empty"}}
+			end
+
+			if self.selectedInv == deepStorage then
+				selectedIndex = i
 			end
 		end
 	end
 	if selectedIndex > table_size(invs) then selectedIndex = nil end
-
-	-- Create the Player Selection --
-	if table_size(playerInvs) > 1 then
-		local selectedPlayer = self.selectedPlayer
-		local playerArray = {}
-		for k in pairs(playerInvs) do
-			table.insert(playerArray, {"", k})
-			if k == selectedPlayer then selectedPlayer = #playerArray end
-		end
-		GUIObj:addLabel("", titleFrame, {"gui-description.MSPlayerTarget"}, _mfOrange)
-		if playerInvs[self.selectedPlayer] == nil then self.selectedPlayer = self.player end
-		GUIObj:addDropDown("MIPlayerTarget" .. self.ent.unit_number, titleFrame, playerArray, selectedPlayer)
-	end
-
-	-- Create the Inventory Selection --
-	GUIObj:addLabel("", titleFrame, {"gui-description.MSTarget"}, _mfOrange)
 	GUIObj:addDropDown("MITarget" .. self.ent.unit_number, titleFrame, invs, selectedIndex)
-
 end
 
 -- Change the Mode --
