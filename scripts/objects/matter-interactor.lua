@@ -161,12 +161,14 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	-- Create the Inventory Selection --
 	GUIObj:addLabel("", titleFrame, {"gui-description.MSTarget"}, _mfOrange)
 
-	local invs = {{"", {"gui-description.None"}}}
-	table.insert(invs, self.dataNetwork.invObj.name)
+	local invs = {}
+	invs[1] = {"", {"gui-description.None"}} --LuaGuiElement.selected_index returns 0 for no selection, and is a uint
+	invs[2] = {"", "[img=entity/MobileFactory] ", self.dataNetwork.invObj.name, " - ", 0}
 
 	-- Create the Inventory and Deep Storage List --
 	local selectedIndex = 1
-	local i = 1
+	if self.selectedInv == self.dataNetwork.invObj then selectedIndex = 2 end
+	local i = 2
 	for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
 		if deepStorage ~= nil and deepStorage.ent ~= nil then
 			i = i + 1
@@ -178,9 +180,9 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 			end
 
 			if item then
-				invs[k+1] = {"", "[img=item/"..item.."] ", game.item_prototypes[item].localised_name, " - ", deepStorage.ID}
+				invs[k+2] = {"", "[img=item/"..item.."] ", game.item_prototypes[item].localised_name, " - ", deepStorage.ID}
 			else
-				invs[k+1] = {"", "", {"gui-description.Empty"}}
+				invs[k+2] = {"", "", {"gui-description.Empty"}, " - ", deepStorage.ID}
 			end
 
 			if self.selectedInv == deepStorage then
@@ -220,6 +222,12 @@ function MI:changeInventory(ID)
         self.selectedInv = nil
         return
     end
+
+    if ID == 0 then
+        self.selectedInv = self.dataNetwork.invObj
+        return
+    end
+
 	-- Select the Inventory --
 	self.selectedInv = nil
 	for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
@@ -254,9 +262,6 @@ function MI:updateInventory()
     local inv = self.ent.get_inventory(defines.inventory.chest)
     -- Get the targeted Inventory --
     local dataInv = self.selectedInv
-    if dataInv == 0 then
-        dataInv = self.dataNetwork.invObj
-    end
     -- Check the Data Inventory --
     if valid(dataInv) == false then return end
 
@@ -286,6 +291,5 @@ function MI:updateInventory()
         -- Remove Item from the Data Inventory --
 	    dataInv:getItem(self.selectedFilter, addedItems)
     end
-
 
 end

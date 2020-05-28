@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.180
+Date: 27/05/2020
+  Changes:
+    - Matter Interactor defaults to "None" inventory
+    - Internal Inventory in MI selection has base Mobile Factory icon and is inventory "0"
+    - Pulled 0.0.179 due to bug
+---------------------------------------------------------------------------------------------------
 Version: 0.0.179
 Date: 27/05/2020
   Changes:
