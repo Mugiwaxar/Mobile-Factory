@@ -16,6 +16,9 @@ function somethingWasPlaced(event)
 	-- Check the Values --
 	if entity == nil or MFPlayer == nil or MF == nil then return end
 
+	-- Adjust Entity to Expected Place --
+	event.created_entity = event.created_entity or event.entity or event.destination
+
 	-- If a Mobile Factory was placed --
 	if string.match(entity.name, "MobileFactory") then
 		placedMobileFactory(event, entity, MFPlayer, MF)

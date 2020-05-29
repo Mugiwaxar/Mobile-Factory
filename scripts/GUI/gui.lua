@@ -746,7 +746,7 @@ function GUI.onGuiElemChanged(event)
 		-- Check if a Fluid Interactor was found --
 		if fluidI == nil then return end
 		-- Change the Fluid Interactor Target --
-		fluidI:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
+		fluidI:changeInventory(tonumber(event.element.items[event.element.selected_index][5]))
 	end
 
 	------- Read if the Element comes from The Mobile Factory Power Laser -------

@@ -378,7 +378,7 @@ data:extend{
 data:extend{
 	{
 		type="equipment-grid",
-		equipment_categories={"armor", "mfEquipments"},
+		equipment_categories=equipments,
 		name="MFEquipmentGridGT",
 		height=4,
 		width=4
@@ -388,7 +388,7 @@ data:extend{
 data:extend{
 	{
 		type="equipment-grid",
-		equipment_categories={"armor", "mfEquipments"},
+		equipment_categories=equipments,
 		name="MFEquipmentGridH",
 		height=12,
 		width=12
