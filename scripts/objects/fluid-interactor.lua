@@ -233,7 +233,10 @@ function FI:updateInventory()
 			localFluid = localTank.fluidbox[i]
 			break
 		end
-    end
+	end
+	
+	-- Check if the Fluid still exist --
+	if game.fluid_prototypes[localFluid] == nil then return end
 
     -- Input mode --
     if self.selectedMode == "input" then

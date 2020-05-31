@@ -122,7 +122,7 @@ qc1E.circuit_wire_connection_point =
 }
 qc1E.circuit_connector_sprites = nil
 qc1E.circuit_wire_max_distance = 20
-qc1E.default_output_signal = {type = "virtual", name = "signal-A"}
+qc1E.default_output_signal = {type = "virtual", name = "signal-Q"}
 qc1E.energy_source =
 {
   type = "electric",
@@ -211,6 +211,7 @@ local iecE = table.deepcopy(ec1E)
 iecE.name = "InternalEnergyCube"
 iecE.icon = "__Mobile_Factory_Graphics__/graphics/energy/InternalEnergyCubeI.png"
 iecE.minable = {mining_time = 1.5, result = "InternalEnergyCube"}
+iecE.default_output_signal = {type = "virtual", name = "signal-A"}
 iecE.max_health = 1500
 iecE.collision_box = {{-2.9, -2.1}, {2.9, 3.7}}
 iecE.selection_box = {{-3, -2.2}, {3, 3.8}}
@@ -284,6 +285,7 @@ local iqcE = table.deepcopy(iecE)
 iqcE.name = "InternalQuatronCube"
 iqcE.icon = "__Mobile_Factory_Graphics__/graphics/energy/InternalQuatronCubeI.png"
 iqcE.minable = {mining_time = 1.5, result = "InternalQuatronCube"}
+iqcE.default_output_signal = {type = "virtual", name = "signal-Q"}
 iqcE.energy_source =
     {
       type = "electric",

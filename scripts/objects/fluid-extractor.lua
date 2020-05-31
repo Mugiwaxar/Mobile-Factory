@@ -184,7 +184,7 @@ function FE:changeDimTank(ID)
 end
 
 -- Add a Quatron Charge --
-function FE:addQuatron(level)
+function FE:addQuatronCharge(level)
 	self.totalCharge = self.totalCharge + 1
 	self.charge = self.charge + 100
 	self.purity = math.ceil(((self.purity * self.totalCharge) + level) / (self.totalCharge + 1))

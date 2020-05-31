@@ -1,6 +1,6 @@
 -- RED ENERGY ORB ANIMATION --
 
-reo = {}
+local reo = {}
 reo.name = "RedEnergyOrb"
 reo.type = "animation"
 reo.frame_count = 240

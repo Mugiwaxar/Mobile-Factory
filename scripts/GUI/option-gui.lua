@@ -115,7 +115,7 @@ function GUI.updateOptionGUIMFTab(GUIObj)
 	end
 end
 
--- Update the MFTab --
+-- Update the GUITab --
 function GUI.updateOptionGUIGUITab(GUIObj)
 
 	local playerIndex = GUIObj.GUITab.player_index

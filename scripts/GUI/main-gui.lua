@@ -87,7 +87,7 @@ function GUI.updateMFMainGUI(GUIObj)
 	local mfQuatronValue = 0
 	local mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", {"gui-description.Unknow"}}
 	local mfJumpDriveValue = 0
-	local mfJumpDriveText = {"", {"gui-description.mfJumpTimer"}, ": ", {"gui-description.Unknow"}}
+	local mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": ", {"gui-description.Unknow"}}
 
 	if MF.ent ~= nil and MF.ent.valid == true then
 		mfPositionText = {"", {"gui-description.mfPosition"}, ": (", math.floor(MF.ent.position.x), " ; ", math.floor(MF.ent.position.y), ")  ", MF.ent.surface.name}
@@ -103,8 +103,8 @@ function GUI.updateMFMainGUI(GUIObj)
 		mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF.internalEnergyObj:energy()), "J/", Util.toRNumber(MF.internalEnergyObj:maxEnergy()), "J"}
 		mfQuatronValue = 1 - (math.floor(100 - MF.internalQuatronObj:quatron() / MF.internalQuatronObj:maxQuatron() * 100)) / 100
 		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", Util.toRNumber(MF.internalQuatronObj:quatron()), "/", Util.toRNumber(MF.internalQuatronObj:maxQuatron())}
-		mfJumpDriveValue = (math.floor(100 - MF.jumpTimer / MF.baseJumpTimer * 100)) / 100
-		mfJumpDriveText = {"", {"gui-description.mfJumpTimer"}, ": ", math.floor(100 - MF.jumpTimer / MF.baseJumpTimer * 100), "% (", MF.jumpTimer, "s)"}
+		mfJumpDriveValue = (math.floor(MF.jumpDriveObj.charge / MF.jumpDriveObj.maxCharge * 100)) / 100
+		mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": ", MF.jumpDriveObj.charge, "/", MF.jumpDriveObj.maxCharge, " (", MF.jumpDriveObj.chargeRate, "/s)"}
 	end
 
 	-------------------------------------------------------- Update Information --------------------------------------------------------
@@ -119,8 +119,7 @@ function GUI.updateMFMainGUI(GUIObj)
 	GUIObj.MFMainGUIFrame2.JumpDriveBar.style.bottom_padding = 1
 
 	-------------------------------------------------------- Get Buttons Variables --------------------------------------------------------
-	local showCallMFButton = Util.isOutside(player)
-	local showPortOutsideButton = not Util.isOutside(player)
+	local showCallMFButton = technologyUnlocked("JumpDrive", getForce(player.name))
 	local syncAreaSprite = MF.syncAreaEnabled == true and "SyncAreaIcon" or "SyncAreaIconDisabled"
 	local syncAreaHovSprite = MF.syncAreaEnabled == true and "SyncAreaIconDisabled" or "SyncAreaIcon"
 	local showFindMFButton = (MF.ent ~= nil and MF.ent.valid == false) and true or false
@@ -144,12 +143,12 @@ function GUI.updateMFMainGUI(GUIObj)
 
 	-------------------------------------------------------- Update all Buttons --------------------------------------------------------
 	local buttonsSize = 15
-	GUI.addButtonToMainGui(GUIObj, {name="CallMFButton", sprite="MFIcon", hovSprite="MFIcon", tooltip={"gui-description.callMFButton"}, size=buttonsSize, save=false, visible=showCallMFButton})
-	GUI.addButtonToMainGui(GUIObj, {name="PortOutsideButton", sprite="PortIcon", hovSprite="PortIcon", tooltip={"gui-description.teleportOutsideButton"}, size=buttonsSize, save=false, visible=showPortOutsideButton})
+	GUI.addButtonToMainGui(GUIObj, {name="PortOutsideButton", sprite="PortIcon", hovSprite="PortIcon", tooltip={"gui-description.teleportOutsideButton"}, size=buttonsSize, save=false})
 	GUI.addButtonToMainGui(GUIObj, {name="SyncAreaButton", sprite=syncAreaSprite, hovSprite=syncAreaHovSprite, tooltip={"gui-description.syncAreaButton"}, size=buttonsSize, save=false})
 	GUI.addButtonToMainGui(GUIObj, {name="FindMFButton", sprite="MFIconExc", hovSprite="MFIconExc", tooltip={"gui-description.fixMFButton"}, size=buttonsSize, save=false, visible=showFindMFButton})
 	GUI.addButtonToMainGui(GUIObj, {name="TPInsideButton", sprite=tpInsideSprite, hovSprite=tpInsideHovSprite, tooltip={"gui-description.MFTPInside"}, size=buttonsSize, save=false})
 	GUI.addButtonToMainGui(GUIObj, {name="LockMFButton", sprite=lockMFSprite, hovSprite=lockMFHovSprite, tooltip={"gui-description.LockMF"}, size=buttonsSize, save=false})
+	GUI.addButtonToMainGui(GUIObj, {name="JumpDriveButton", sprite="MFJDIcon", hovSprite="MFJDIcon", tooltip={"gui-description.jumpDriveButton"}, size=buttonsSize, save=false, visible=showCallMFButton})
 	GUI.addButtonToMainGui(GUIObj, {name="EnergyDrainButton", sprite=energyDrainSprite, hovSprite=energyDrainHovSprite, tooltip={"gui-description.mfEnergyDrainButton"}, size=buttonsSize, save=false, visible=showEnergyDrainButton})
 	GUI.addButtonToMainGui(GUIObj, {name="FluidDrainButton", sprite=fluidDrainSprite, hovSprite=fluidDrainHovSprite, tooltip={"gui-description.mfFluidDrainButton"}, size=buttonsSize, save=false, visible=showFluidDrainButton})
 	GUI.addButtonToMainGui(GUIObj, {name="ItemDrainButton", sprite=itemDrainSprite, hovSprite=itemDrainHovSprite, tooltip={"gui-description.mfItemDrainButton"}, size=buttonsSize, save=false, visible=showItemDrainButton})

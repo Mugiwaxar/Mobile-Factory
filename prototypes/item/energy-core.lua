@@ -21,10 +21,10 @@ ecR.energy_required = 120
 ecR.enabled = false
 ecR.category = "DimensionalCrystallizaton"
 ecR.ingredients =
-    {
-		{type="item", name="DimensionalCircuit", amount=10},
-		{type="item", name="DimensionalCrystal", amount=1}
-    }
+{
+	{type="item", name="CrystalizedCircuit", amount=10},
+	{type="item", name="DimensionalCrystal", amount=1}
+}
 ecR.results = {{type="item", name="EnergyCore", amount=1}}
 data:extend{ecR}
 

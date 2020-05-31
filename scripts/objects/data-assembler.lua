@@ -86,6 +86,11 @@ function DA:update()
 		local i = 1
 		for k, recipe in pairs(self.recipeTable) do
 			if i == self.lastRecipeUpdatedID then
+				-- Check if the Recipe still exist --
+				if recipe.recipePrototype.valid == false then
+					self.recipeTable[k] = nil
+					return
+				end
 				self:updateRecipe(recipe, k)
 			end
 			i = i + 1
