@@ -1,6 +1,5 @@
 -- Create the Jump Drive Object --
 for k, mf in pairs(global.MFTable or {}) do
-    global.playersTable.Mugiwaxar.varTable.
     mf.jumpDriveObj = JD:new(mf)
     -- Removing old unused Variables --
     mf.jumpTimer = nil
