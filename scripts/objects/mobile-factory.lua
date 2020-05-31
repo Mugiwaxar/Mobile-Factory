@@ -16,12 +16,11 @@ MF = {
 	entitiesAround = nil,
 	internalEnergyObj = nil,
 	internalQuatronObj = nil,
-	jumpTimer = 0,
-	baseJumpTimer = _mfBaseJumpTimer,
+	jumpDriveObj = nil,
 	tpEnabled = true,
 	onTP = false,
 	tpCurrentTick = 0,
-	tpCoords = nil,
+	tpLocation = nil,
 	locked = true,
 	laserRadiusMultiplier = 0,
 	laserDrainMultiplier = 0,
@@ -56,7 +55,6 @@ function MF:new(args)
 	t.clonedResourcesTable = t.clonedResourcesTable or {}
 	t.varTable = t.varTable or {}
 	t.varTable.tech = t.varTable.tech or {}
-	t.varTable.tanks = t.varTable.tanks or {}
 	t.varTable.allowedPlayers = t.varTable.allowedPlayers or {}
 	t.varTable.jets = t.varTable.jets or {}
 	t.varTable.jets["cjTableSize"] = t.varTable.jets["cjTableSize"] or _MFConstructionJetDefaultTableSize
@@ -77,6 +75,7 @@ function MF:new(args)
 
 	t.internalEnergyObj = t.internalEnergyObj or IEC:new(t)
 	t.internalQuatronObj = t.internalQuatronObj or IQC:new(t)
+	t.jumpDriveObj = t.jumpDriveObj or JD:new(t)
 
 	t.MF = t
 	UpSys.addObj(t)
@@ -107,6 +106,7 @@ function MF:rebuild(object)
 	setmetatable(object, mt)
 	IEC:rebuild(object.internalEnergyObj)
 	IQC:rebuild(object.internalQuatronObj)
+	JD:rebuild(object.jumpDriveObj)
 	DN:rebuild(object.dataNetwork)
 	NC:rebuild(object.networkController)
 	INV:rebuild(object.II)
@@ -115,9 +115,9 @@ end
 -- Destructor --
 function MF:remove()
 	self.ent = nil
-	self.internalEnergyObj:removeEnergy(self.internalEnergyObj:energy())
-	self.internalQuatronObj:removeQuatron(self.internalQuatronObj:quatron())
-	self.jumpTimer = _mfBaseJumpTimer
+	-- self.internalEnergyObj:removeEnergy(self.internalEnergyObj:energy())
+	-- self.internalQuatronObj:removeQuatron(self.internalQuatronObj:quatron())
+	-- self.jumpDriveObj.charge = 0
 	self:removeSyncArea()
 end
 
@@ -224,11 +224,6 @@ function MF:update(event)
 	self.lastUpdate = game.tick
 	-- Get the current tick --
 	local tick = event.tick
-	-- Update the Jump Drives --
-	if event.tick%_eventTick60 == 0 and self.jumpTimer > 0 and self.internalEnergyObj:energy() > _mfJumpEnergyDrain then
-		self.jumpTimer = self.jumpTimer -1
-		self.internalEnergyObj:removeEnergy(_mfJumpEnergyDrain)
-	end
 	-- Update the Internal Inventory --
 	if tick%_eventTick80 == 0 then self.II:rescan() end
 	--Update all lasers --
@@ -244,8 +239,8 @@ function MF:update(event)
 	-- Update Teleportation Box --
 	if event.tick%_eventTick5 == 0 then self:factoryTeleportBox() end
 	-- Check if the Mobile Factory has to TP --
-	if self.onTP and game.tick - self.tpCurrentTick > 100 then
-		self:callMobileFactoryPart2()
+	if self.onTP and game.tick - self.tpCurrentTick > 30 then
+		self:TPMobileFactoryPart2()
 	end
 	-- Read Modules inside the Equipment Grid --
 	if event.tick%_eventTick125 == 0 then self:scanModules() end
@@ -570,7 +565,7 @@ function MF:SendQuatronToOC(event)
 				local charge = self.II:getBestQuatron()
 				if charge > 0 then
 					-- Add the Charge --
-					oc:addQuatron(charge)
+					oc:addQuatronCharge(charge)
 					-- Create the Laser --
 					self.ent.surface.create_entity{name="GreenBeam", duration=30, position=self.ent.position, target={oc.ent.position.x, oc.ent.position.y - 2}, source=self.ent}
 				end
@@ -594,7 +589,7 @@ function MF:SendQuatronToFE(event)
 				local charge = self.II:getBestQuatron()
 				if charge > 0 then
 					-- Add the Charge --
-					fe:addQuatron(charge)
+					fe:addQuatronCharge(charge)
 					-- Create the Laser --
 					fe.ent.surface.create_entity{name="GreenBeam", duration=30, position=self.ent.position, target={fe.ent.position.x, fe.ent.position.y - 2}, source=self.ent}
 				end
@@ -680,56 +675,103 @@ function MF:scanModules()
 end
 
 -- Call the mobile Factory to the player (Before TP) --
-function MF:callMobileFactoryPart1()
+function MF:TPMobileFactoryPart1(location)
 	-- Get the Player --
 	local player = getPlayer(self.playerIndex)
+	-- Check if the Surface Exist --
+	if location.surface == nil or game.surfaces[location.surface.name] == nil then
+		player.print({"", {"gui-description.TPSurfaceNoFound"}})
+		return
+	end
 	-- Check if the Mobile Factory exist --
 	if self.ent == nil or self.ent.valid == false then
 		player.print({"", {"gui-description.MFLostOrDestroyed"}})
 		return
 	end
-	-- Test if the Jump Drives are ready --
-	if self.jumpTimer > 0 then
-		player.print({"", {"gui-description.MFJumpDriveRecharging"}})
+	-- Check if the Mobile Factory has a Driver --
+	if self.ent.get_driver() == nil then
+		player.print({"", {"gui-description.TPNoDriver"}})
 		return
 	end
 	-- Try to find the best coords --
-	self.tpCoords = nil
-	self.tpCoords = mfPlaceable(player, self)
+	local tpCoords = location.surface.find_non_colliding_position(self.MF.ent.name, {location.posX,location.posY}, 10, 0.1, false)
 	-- Return if no coords was found --
-	if self.tpCoords == nil then return end
+	if tpCoords == nil then
+		player.print({"", {"gui-description.TPObstruction"}})
+		return
+	end
+	-- Set the Non-colliding Destination --
+	location.posX = tpCoords.x
+	location.posY = tpCoords.y
 	-- Start the TP --
 	self.onTP = true
 	self.tpCurrentTick = game.tick
+	self.tpLocation = location
 	-- Start all Animations --
 	local animation1 = rendering.draw_animation{animation="SimpleTPAn", animation_speed=0.5, render_layer=131, x_scale=4, y_scale=3.5, target={self.ent.position.x, self.ent.position.y-0.7}, surface=self.ent.surface, time_to_live=150*2}
 	Util.resetAnimation(animation1, 150)
-	local animation2 = rendering.draw_animation{animation="SimpleTPAn", animation_speed=0.5, render_layer=131, x_scale=4, y_scale=3.5, target={self.tpCoords.x, self.tpCoords.y-0.7}, surface=player.surface, time_to_live=150*2}
+	local animation2 = rendering.draw_animation{animation="SimpleTPAn", animation_speed=0.5, render_layer=131, x_scale=4, y_scale=3.5, target={location.posX, location.posY-0.7}, surface=location.surface, time_to_live=150*2}
 	Util.resetAnimation(animation2, 150)
 	-- Play all Sounds --
 	self.ent.surface.play_sound{path="MFSimpleTP", position=self.ent.position}
 	self.ent.surface.play_sound{path="MFSimpleTP", position=player.position}
+	-- Close the TPGUI --
+	local MFPlayer = getMFPlayer(self.playerIndex)
+	if MFPlayer.GUI["MFTPGUI"] ~= nil then
+		MFPlayer.GUI["MFTPGUI"].destroy()
+		MFPlayer.GUI["MFTPGUI"] = nil
+	end
 end
 
 -- Call the mobile Factory to the player (After TP) --
-function MF:callMobileFactoryPart2()
+function MF:TPMobileFactoryPart2()
 	-- Get the Player --
 	local player = getPlayer(self.playerIndex)
+	-- Check if the Surface Exist --
+	if self.tpLocation.surface == nil or game.surfaces[self.tpLocation.surface.name] == nil then
+		player.print({"", {"gui-description.TPSurfaceNoFound"}})
+		-- Stop the TP --
+		self.onTP = false
+		self.tpCurrentTick = 0
+		self.tpLocation = nil
+		return
+	end
 	-- Check if the Mobile Factory exist --
 	if self.ent == nil or self.ent.valid == false then
 		player.print({"", {"gui-description.MFLostOrDestroyed"}})
+		-- Stop the TP --
+		self.onTP = false
+		self.tpCurrentTick = 0
+		self.tpLocation = nil
 		return
 	end
+	-- Check if the Mobile Factory has a Driver --
+	if self.ent.get_driver() == nil then
+		player.print({"", {"gui-description.TPNoDriver"}})
+		-- Stop the TP --
+		self.onTP = false
+		self.tpCurrentTick = 0
+		self.tpLocation = nil
+		return
+	end
+	-- Get the distance --
+	local distance = Util.distance({self.tpLocation.posX,self.tpLocation.posY}, self.ent.position)
+	-- Remove the Jump Drive Charge --
+	self.jumpDriveObj.charge = math.min(0, self.jumpDriveObj.charge - distance)
+	-- Remove the Quatron --
+	if self.tpLocation.surface ~= self.ent.surface then
+		self.internalQuatronObj:removeQuatron(1000)
+	end
 	-- Teleport the Mobile Factory to the cords --
-	self.ent.teleport(self.tpCoords, player.surface)
+	self.ent.teleport({self.tpLocation.posX, self.tpLocation.posY}, self.tpLocation.surface)
 	-- Save the position --
 	self.lastSurface = self.ent.surface
 	self.lastPosX = self.ent.position.x
 	self.lastPosY = self.ent.position.y
-	-- Discharge the Jump Drives --
-	self.jumpTimer = self.baseJumpTimer
 	-- Stop the TP --
 	self.onTP = false
+	self.tpCurrentTick = 0
+	self.tpLocation = nil
 end
 
 -- Remove the Sync Area --

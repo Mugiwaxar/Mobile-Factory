@@ -43,7 +43,7 @@ function GUI.createInfoGui(player)
 	-- Create the Storage Option Frame --
 	local storageOptionFrame = GUIObj:addFrame("StorageOptionFrame", storageFrame, "vertical", true)
 	storageOptionFrame.style.height = 150
-	storageOptionFrame.visible = false 
+	storageOptionFrame.visible = false
 
 	-- Create the Inventory Frame and Scroll Pane --
 	local inventoryFrame = GUIObj:addTitledFrame("InventoryFrame", GUIObj.MFInfoGUIMainFrame, "vertical", {"gui-description.mfInventoryTitle"}, _mfOrange)
@@ -95,8 +95,7 @@ function GUI.updateButtonsBar(GUIObj)
 	buttonsBar.clear()
 
 	-------------------------------------------------------- Get Buttons Variables --------------------------------------------------------
-	local showCallMFButton = Util.isOutside(player)
-	local showPortOutsideButton = not Util.isOutside(player)
+	local showCallMFButton = technologyUnlocked("JumpDrive", getForce(player.name))
 	local syncAreaSprite = MF.syncAreaEnabled == true and "SyncAreaIcon" or "SyncAreaIconDisabled"
 	local syncAreaHovSprite = MF.syncAreaEnabled == true and "SyncAreaIconDisabled" or "SyncAreaIcon"
 	local showFindMFButton = (MF.ent ~= nil and MF.ent.valid == false) and true or false
@@ -120,12 +119,12 @@ function GUI.updateButtonsBar(GUIObj)
 
 	-------------------------------------------------------- Update all Buttons --------------------------------------------------------
 	local buttonsSize = 20
-	GUIObj:addButton("CallMFButton", buttonsBar, "MFIcon", "MFIcon", {"gui-description.callMFButton"}, buttonsSize, true, showCallMFButton)
-	GUIObj:addButton("PortOutsideButton", buttonsBar, "PortIcon", "PortIcon", {"gui-description.teleportOutsideButton"}, buttonsSize, true, showPortOutsideButton)
+	GUIObj:addButton("PortOutsideButton", buttonsBar, "PortIcon", "PortIcon", {"gui-description.teleportOutsideButton"}, buttonsSize, true)
 	GUIObj:addButton("SyncAreaButton", buttonsBar, syncAreaSprite, syncAreaHovSprite, {"gui-description.syncAreaButton"}, buttonsSize, true)
 	GUIObj:addButton("FindMFButton", buttonsBar, "MFIconExc", "MFIconExc", {"gui-description.fixMFButton"}, buttonsSize, true, showFindMFButton)
 	GUIObj:addButton("TPInsideButton", buttonsBar, tpInsideSprite, tpInsideHovSprite, {"gui-description.MFTPInside"}, buttonsSize, true)
 	GUIObj:addButton("LockMFButton", buttonsBar, lockMFSprite, lockMFHovSprite, {"gui-description.LockMF"}, buttonsSize, true)
+	GUIObj:addButton("JumpDriveButton", buttonsBar, "MFJDIcon", "MFJDIcon", {"gui-description.jumpDriveButton"}, buttonsSize, true, showCallMFButton)
 	GUIObj:addButton("EnergyDrainButton", buttonsBar, energyDrainSprite, energyDrainHovSprite, {"gui-description.mfEnergyDrainButton"}, buttonsSize, true, showEnergyDrainButton)
 	GUIObj:addButton("FluidDrainButton", buttonsBar, fluidDrainSprite, fluidDrainHovSprite, {"gui-description.mfFluidDrainButton"}, buttonsSize, true, showFluidDrainButton)
 	GUIObj:addButton("ItemDrainButton", buttonsBar, itemDrainSprite, itemDrainHovSprite, {"gui-description.mfItemDrainButton"}, buttonsSize, true, showItemDrainButton)
@@ -151,7 +150,7 @@ function GUI.updateMFInfos(GUIObj)
 	local mfQuatronValue = 0
 	local mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", {"gui-description.Unknow"}}
 	local mfJumpDriveValue = 0
-	local mfJumpDriveText = {"", {"gui-description.mfJumpTimer"}, ": ", {"gui-description.Unknow"}}
+	local mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": ", {"gui-description.Unknow"}}
 
 	if MF.ent ~= nil and MF.ent.valid == true then
 		mfPositionText = {"", {"gui-description.mfPosition"}, ": (", math.floor(MF.ent.position.x), " ; ", math.floor(MF.ent.position.y), ")  ", MF.ent.surface.name}
@@ -167,8 +166,8 @@ function GUI.updateMFInfos(GUIObj)
 		mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF.internalEnergyObj:energy()), "J/", Util.toRNumber(MF.internalEnergyObj:maxEnergy()), "J"}
 		mfQuatronValue = 1 - (math.floor(100 - MF.internalQuatronObj:quatron() / MF.internalQuatronObj:maxQuatron() * 100)) / 100
 		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", Util.toRNumber(MF.internalQuatronObj:quatron()), "/", Util.toRNumber(MF.internalQuatronObj:maxQuatron())}
-		mfJumpDriveValue = (math.floor(100 - MF.jumpTimer / MF.baseJumpTimer * 100)) / 100
-		mfJumpDriveText = {"", {"gui-description.mfJumpTimer"}, ": ", math.floor(100 - MF.jumpTimer / MF.baseJumpTimer * 100), "% (", MF.jumpTimer, "s)"}
+		mfJumpDriveValue = (math.floor(MF.jumpDriveObj.charge / MF.jumpDriveObj.maxCharge * 100)) / 100
+		mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": ", MF.jumpDriveObj.charge, "/", MF.jumpDriveObj.maxCharge, " (", MF.jumpDriveObj.chargeRate, "/s)"}
 	end
 
 	-------------------------------------------------------- Update Mobile Factory Information --------------------------------------------------------

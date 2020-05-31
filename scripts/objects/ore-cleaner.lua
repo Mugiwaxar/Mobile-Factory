@@ -191,7 +191,7 @@ function OC:changeInventory(ID)
 end
 
 -- Add a Quatron Charge --
-function OC:addQuatron(level)
+function OC:addQuatronCharge(level)
 	self.totalCharge = self.totalCharge + 1
 	self.charge = self.charge + 100
 	self.purity = math.ceil(((self.purity * self.totalCharge) + level) / (self.totalCharge + 1))

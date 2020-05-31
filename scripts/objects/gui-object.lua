@@ -177,7 +177,7 @@ function GO:addTable(name, gui, column)
     return table
 end
 
--- Add a new Scrool Pane --
+-- Add a new Scroll Pane --
 function GO:addScrollPane(name, gui, size, save, style)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end

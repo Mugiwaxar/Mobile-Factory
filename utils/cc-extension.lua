@@ -54,6 +54,14 @@ function createNetworkControllerArea(MF)
 	MF.networkController = NC:new(ent)
 end
 
+-- Create the Jump Drive --
+function createJumpDriveArea(MF)
+	createTilesSurface(MF.ccS, -90, 3, -10, 10, "BuildTile")
+	local jd = createEntity(MF.ccS, -14, 6, "JumpDrive", getMFPlayer(MF.playerIndex).ent.force)
+	jd.last_user = MF.player
+	MF.jumpDriveObj.ent = jd
+end
+
 -- Create Deep Storage Building Area --
 function createDeepStorageArea(MF)
 	createRightPassage(MF.ccS)

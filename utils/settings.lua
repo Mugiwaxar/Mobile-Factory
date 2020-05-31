@@ -30,8 +30,8 @@ _mfItemsDrain = 100
 _mfBaseItemEnergyConsumption = 1000
 
 -- Mobile Factory Jump Drive settings --
-_mfBaseJumpTimer = 300
-_mfJumpEnergyDrain = 1000000
+_mfMaxJumpCharge = 500
+_mfJumpEnergyDrain = 300000
 
 -- Mobile Factory Fuel Burner settings --
 _mfMaxFuelValue = 4000000
@@ -165,6 +165,7 @@ _MFResearches["DeepTank"] = "createDeepTankArea"
 _MFResearches["ConstructibleArea1"] = "createConstructibleArea1"
 _MFResearches["ConstructibleArea2"] = "createConstructibleArea2"
 _MFResearches["MatterSerialization"] = "createNetworkControllerArea"
+_MFResearches["JumpDrive"] = "createJumpDriveArea"
 
 -- Energy Cubes --
 _mfEnergyCubes = {}

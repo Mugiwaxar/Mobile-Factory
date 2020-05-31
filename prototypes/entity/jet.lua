@@ -22,8 +22,8 @@ function createJet(name, order)
 	jR.enabled = false
 	jR.ingredients =
 	{
-      {"DimensionalCircuit", 15},
-      {"MachineFrame2", 2},
+      {"CrystalizedCircuit", 15},
+      {"MachineFrame3", 1},
       {"EnergyCore", 1}
     }
 	jR.result = name

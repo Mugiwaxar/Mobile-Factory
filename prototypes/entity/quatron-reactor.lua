@@ -96,7 +96,7 @@ ec1R.ingredients =
 ec1R.result = "QuatronReactor"
 data:extend{ec1R}
 
--- Create all Sprite --
+-- Create all Sprites --
 local x = 0
 local y = 0
 for i = 0, 13 do

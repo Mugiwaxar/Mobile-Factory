@@ -9,6 +9,7 @@ function Util.createTableList()
 	Util.addObject{tableName="dataAssemblerTable", tag="DA", objName="DataAssembler"}
 	Util.addObject{tableName="networkExplorerTable", tag="NE", objName="NetworkExplorer"}
 	Util.addObject{tableName="dataStorageTable", tag="DS", objName="DataStorage", canInCC=true}
+	Util.addObject{tableName="jumpChargerTable", tag="JC", objName="JumpCharger", canInCC=true}
 	Util.addObject{tableName="networkAccessPointTable", tag="NAP", objName="NetworkAccessPoint"}
 	Util.addObject{tableName="energyCubesTable", tag="EC", objName="EnergyCubeMK1"}
 	Util.addObject{tableName="energyLaserTable", tag="EL", objName="EnergyLaser1"}
@@ -27,12 +28,12 @@ function Util.createTableList()
 	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK2", noInside=true}
 	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK3", noInside=true}
 	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK4", noInside=true}
-	Util.addObject{objName="InternalEnergyCube", noUpsys=true, canInCCAnywhere=true}
-	Util.addObject{objName="InternalQuatronCube", noUpsys=true, canInCCAnywhere=true}
+	Util.addObject{objName="InternalEnergyCube", noUpsys=true, canInCCAnywhere=true, noOutside=true}
+	Util.addObject{objName="InternalQuatronCube", noUpsys=true, canInCCAnywhere=true, noOutside=true}
 end
 
 -- Add an Object to the System --
--- {tableName, tag, objName, noUpsys, noOuside, noInside, canInCC, canInCCAnywhere, noPlaced} --
+-- {tableName, tag, objName, noUpsys, noOutside, noInside, canInCC, canInCCAnywhere, noPlaced} --
 function Util.addObject(table)
 	-- Check the objTable --
 	if global.objTable == nil then global.objTable = {} end
@@ -203,22 +204,6 @@ function valid(obj)
 	if type(obj.valid) == "boolean" then return obj.valid end
 	if obj:valid() ~= true then return false end
 	return true
-end
-
--- Test if Mobile Factory can be placed near a player --
-function mfPlaceable(player, MF)
-	-- Make the Mobile Factory unable to be placed inside it --
-	if string.match(player.surface.name, _mfSurfaceName) or string.match(player.surface.name, _mfControlSurfaceName) then
-		player.print({"", {"gui-description.MFPlacedInsideFactory"}})
-		return nil
-	end
-	-- Make the Mobile Factory unable to be placed inside a Factorissimo Structure --
-	if string.match(player.surface.name, "Factory") then
-		player.print({"", {"gui-description.MFPlacedInsideFactorissimo"}})
-		return nil
-	end
-	-- Try to a position near the Player --
-	return player.surface.find_non_colliding_position(MF.ent.name, player.position, 10, 1, true)
 end
 
 -- Unlock a recipe for all Players --

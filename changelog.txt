@@ -1,12 +1,34 @@
 ---------------------------------------------------------------------------------------------------
-Version: 0.0.179
-Date: 24/05/2020
+Version: 0.0.181
+Date: 31/05/2020
+  Major Features:
+    - Jump Drive
+    - The Jump Drive is a new way to Teleport the Mobile Factory to saved locations
+    - A new GUI is added: The Jump Drive GUI, that allows to save multiple Mobile Factory Locations and teleport back later
   Features:
+    - Added the Jump Drive inside the Control Center, it shows the Jump Charge of the Mobile Factory (Base Capacity: 500 Charges, Base Charge Rate: 1 Charge/s)
+    - Added the Jump Charger, improve the Jump Drive every time one is placed (+150 Capacity, + 1 Charge/s - Must be placed on the Control Center Constructible Area)
+    - Added the Jump Drive Technology: Unlock the Jump Drive
+    - Added the Jump Charger Technology: Unlock the Jump Charger
     - Added a new Animation for the Mobile Factory Teleportation
+  Changes:
+    - The Jump Drive no longer uses all its Charges when the Mobile Factory is teleported (1 Charge per Tile)
+    - The Jump Drive drains now less Internal Energy to recharge (300KW instead of 1 MW)
+    - The Jump Drive, the Internal Energy and the Internal Quatron keep they charges when the Mobile Factory is removed
+    - The Player can no longer call the Mobile Factory to himself
+    - The Quatron Cube and the Inernal Quatron Cube now send a "signal-Q" Signal
+    - Merged the Crystallizer Technology with the Dimensional Fluid Purification Technology
+    - Adjusted Energy Core recipe
+    - Adjusted Jets recipe
+    - Correction of bad local translations
   Bugfixes:
+    - The Mobile Factory is no longer updated twice every Tick
     - Fixed a crash related to the Fluid Interactor
     - Fixed a crash related to the Matter Interactor
     - Fixed a crash related to the Data Assembler
+    - Fixed bug when sometime Internal Energy/Quatron Cubes don't keep their Energy when removed
+    - Fixed a bug that allowed the Internal Energy/Quatron Cubes to be placed outside the Mobile Factory
+    - Fixed a crash with the Quatron Laser
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.180
 Date: 27/05/2020
