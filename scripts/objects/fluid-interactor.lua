@@ -236,7 +236,7 @@ function FI:updateInventory()
 	end
 	
 	-- Check if the Fluid still exist --
-	if game.fluid_prototypes[localFluid] == nil then return end
+	if localFluid ~= nil and game.fluid_prototypes[localFluid.name] == nil then return end
 
     -- Input mode --
     if self.selectedMode == "input" then
