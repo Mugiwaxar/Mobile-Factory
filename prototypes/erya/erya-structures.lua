@@ -158,7 +158,7 @@ createEryaItem
 -- Erya Item Mover --
 local eimE = table.deepcopy(data.raw["transport-belt"]["EryaBelt1"])
 eimE.name = "EryaItemMover"
-eimE.minable = {mining_time = 0.15, result = "EryaBelt1"}
+eimE.minable = {mining_time = 0.15, result = "EryaItemMover"}
 eimE.speed = 0.4
 eimE.belt_animation_set.animation_set.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaItemMoverE.png"
 eimE.belt_animation_set.animation_set.frame_count = 1
