@@ -4,7 +4,7 @@
 local dtE = table.deepcopy(data.raw.tile["refined-concrete"])
 dtE.name = "DimensionalTile"
 dtE.minable = {
-	mining_time = .1,
+	mining_time = 0.1,
     result = "DimensionalTile"
 }
 dtE.variants.material_background =

@@ -3,6 +3,7 @@ require("scripts/GUI/info-gui.lua")
 require("scripts/GUI/option-gui.lua")
 require("scripts/GUI/tooltip-gui.lua")
 require("scripts/GUI/options.lua")
+require("scripts/GUI/tp-gui.lua")
 require("utils/functions.lua")
 
 -- Create a new GUI --
@@ -158,6 +159,13 @@ function GUI.guiClosed(event)
 		return
 	end
 
+	-- Close the TP GUI --
+	if event.element.name == "MFTPGUI" then
+		MFPlayer.GUI["MFTPGUI"].destroy()
+		MFPlayer.GUI["MFTPGUI"] = nil
+		return
+	end
+
 	-- Close Camera GUI --
 	if string.match(event.element.name, "Camera") then
 		local cameraName = event.element.name
@@ -241,9 +249,15 @@ function GUI.buttonClicked(event)
 		return
 	end
 
-	-- CallMF Button --
-	if event.element.name == "CallMFButton" then
-		callMobileFactory(player)
+	-- Jump Drive Button --
+	if event.element.name == "JumpDriveButton" then
+		if MFPlayer.GUI["MFTPGUI"] == nil then
+			local GUIObj = GUI.createTPGui(player)
+			player.opened = GUIObj.gui
+		else
+			MFPlayer.GUI["MFTPGUI"].destroy()
+			MFPlayer.GUI["MFTPGUI"] = nil
+		end
 		return
 	end
 
@@ -336,6 +350,15 @@ function GUI.buttonClicked(event)
 		if MFPlayer.GUI["MFTooltipGUI"] ~= nil then
 			MFPlayer.GUI["MFTooltipGUI"].destroy()
 			MFPlayer.GUI["MFTooltipGUI"] = nil
+		end
+		return
+	end
+
+	-- Close TP GUI Button --
+	if event.element.name == "MFTPGUICloseButton" then
+		if MFPlayer.GUI["MFTPGUI"] ~= nil then
+			MFPlayer.GUI["MFTPGUI"].destroy()
+			MFPlayer.GUI["MFTPGUI"] = nil
 		end
 		return
 	end
@@ -504,7 +527,33 @@ function GUI.buttonClicked(event)
 		end
 		return
 	end
-	
+
+	-- If this is The Jump Drive GUI --
+	if string.match(event.element.name, "TPGUI") and event.element.type == "sprite-button" then
+		-- If a location is added --
+		if string.match(event.element.name, "TPGUIAddLoc") then
+			local GUIObj = MFPlayer.GUI["MFTPGUI"]
+			local jumpDrive = GUIObj.MF.jumpDriveObj
+			jumpDrive:addLocation(GUIObj.AddLocName.text, GUIObj.AddLocFilter.elem_value)
+		end
+		if string.match(event.element.name, "TPGUILoc") then
+			local GUIObj = MFPlayer.GUI["MFTPGUI"]
+			local jumpDrive = GUIObj.MF.jumpDriveObj
+			local location = split(event.element.name, ",")[2]
+			-- Start the Jump --
+			if event.button == defines.mouse_button_type.left then
+				jumpDrive:jump(location)
+			end
+			-- Remove a Location --
+			if event.button == defines.mouse_button_type.right then
+				jumpDrive:removeLocation(location)
+			end
+		end
+		-- Update all GUIs --
+		GUI.updateAllGUIs(true)
+		return
+	end
+
 end
 
 -- Called when a GUI Element have changed it's state --
@@ -746,7 +795,7 @@ function GUI.onGuiElemChanged(event)
 		-- Check if a Fluid Interactor was found --
 		if fluidI == nil then return end
 		-- Change the Fluid Interactor Target --
-		fluidI:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
+		fluidI:changeInventory(tonumber(event.element.items[event.element.selected_index][5]))
 	end
 
 	------- Read if the Element comes from The Mobile Factory Power Laser -------

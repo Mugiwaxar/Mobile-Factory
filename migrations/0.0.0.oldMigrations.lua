@@ -9,8 +9,8 @@ if global.MobileFactory ~= nil then
 	MF.fChest = global.factoryChest
 	-- MF.internalEnergy = global.mfInternalEnergy
 	-- MF.maxInternalEnergy = global.mfInternalEnergyMax
-	MF.jumpTimer = global.mfJumpTimer
-	MF.baseJumpTimer = global.mfBaseJumpTimer
+	-- MF.jumpCharge = global.mfJumpTimer
+	-- MF.maxJumpCharge = global.mfBaseJumpTimer
 	MF.laserRadiusMultiplier = global.mfEnergyRadiusMult
 	MF.laserDrainMultiplier = global.mfEnergyDrainMult
 	MF.laserNumberMultiplier = global.mfEnergyLaserMult
@@ -44,7 +44,6 @@ if global.upSysLastScan == nil then global.upSysLastScan = 0 end
 if global.entsUpPerTick == nil then global.entsUpPerTick = _mfBaseUpdatePerTick end
 if global.entsTable == nil then global.entsTable = {} end
 if global.upsysTickTable == nil then global.upsysTickTable = {} end
-if global.insertedMFInsideInventory == nil then global.insertedMFInsideInventory = false end
 if global.updateEryaIndex == nil then global.updateEryaIndex = 1 end
 if global.eryaIndexedTable == nil then global.eryaIndexedTable = {} end
 if global.constructionJetIndex == nil then global.constructionJetIndex = 0 end

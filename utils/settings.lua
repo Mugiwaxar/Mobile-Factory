@@ -30,8 +30,8 @@ _mfItemsDrain = 100
 _mfBaseItemEnergyConsumption = 1000
 
 -- Mobile Factory Jump Drive settings --
-_mfBaseJumpTimer = 300
-_mfJumpEnergyDrain = 1000000
+_mfMaxJumpCharge = 500
+_mfJumpEnergyDrain = 300000
 
 -- Mobile Factory Fuel Burner settings --
 _mfMaxFuelValue = 4000000
@@ -85,8 +85,6 @@ _mfBaseMaxItems = 10000
 _mfDataStorageCapacity = 1000
 _mfNAPQuatronCapacity = 1000
 _mfNAPAreaSize = 50
--- _mfWDTEnergyDrainPerUpdate = 70000
--- _mfWDREnergyDrainPerUpdate = 30000
 _mfNAPQuatronDrainPerUpdate = 15
 _mfMIQuatronDrainPerUpdate = 8
 _mfFIQuatronDrainPerUpdate = 8
@@ -167,6 +165,7 @@ _MFResearches["DeepTank"] = "createDeepTankArea"
 _MFResearches["ConstructibleArea1"] = "createConstructibleArea1"
 _MFResearches["ConstructibleArea2"] = "createConstructibleArea2"
 _MFResearches["MatterSerialization"] = "createNetworkControllerArea"
+_MFResearches["JumpDrive"] = "createJumpDriveArea"
 
 -- Energy Cubes --
 _mfEnergyCubes = {}

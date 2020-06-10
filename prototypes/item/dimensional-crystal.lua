@@ -40,6 +40,12 @@ dcT.unit = {
 		{"DimensionalSample", 1}
 	}
 }
-dcT.prerequisites = {"Crystallizer"}
-dcT.effects = {{type="unlock-recipe", recipe="DimensionalCrystal"}, {type="unlock-recipe", recipe="MachineFrame3"}, {type="unlock-recipe", recipe="CrystalizedCircuit"}}
+dcT.prerequisites = {"DimensionalOreSmelting"}
+dcT.effects =
+{
+	{type="unlock-recipe", recipe="Crystallizer"},
+	{type="unlock-recipe", recipe="DimensionalCrystal"},
+	{type="unlock-recipe", recipe="MachineFrame3"},
+	{type="unlock-recipe", recipe="CrystalizedCircuit"}
+}
 data:extend{dcT}

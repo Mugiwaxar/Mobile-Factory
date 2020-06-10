@@ -17,7 +17,6 @@ require("scripts/objects/mobile-factory.lua")
 require("scripts/objects/gui-object.lua")
 require("scripts/objects/ore-cleaner.lua")
 require("scripts/objects/fluid-extractor.lua")
-require("scripts/objects/internal-inventory.lua")
 require("scripts/objects/data-network.lua")
 require("scripts/objects/network-controller.lua")
 require("scripts/objects/network-access-point.lua")
@@ -26,8 +25,11 @@ require("scripts/objects/matter-interactor.lua")
 require("scripts/objects/fluid-interactor.lua")
 require("scripts/objects/data-assembler.lua")
 require("scripts/objects/network-explorer.lua")
+require("scripts/objects/internal-inventory.lua")
 require("scripts/objects/internal-energy.lua")
 require("scripts/objects/internal-quatron.lua")
+require("scripts/objects/jump-drive.lua")
+require("scripts/objects/jump-charger.lua")
 require("scripts/objects/energy-cube.lua")
 require("scripts/objects/energy-laser.lua")
 require("scripts/objects/quatron-cube.lua")
@@ -51,8 +53,6 @@ function onInit()
 	global.upsysTickTable = global.upsysTickTable or {}
 	global.entsUpPerTick = global.entsUpPerTick or _mfBaseUpdatePerTick
 	global.upSysLastScan = global.upSysLastScan or 0
-	-- Inventory --
-	global.insertedMFInsideInventory = global.insertedMFInsideInventory or false
 	-- Erya --
 	global.updateEryaIndex = global.updateEryaIndex or 1
 	-- Data Network --
@@ -82,7 +82,7 @@ function onInit()
 	for k, obj in pairs(global.objTable) do
 		if obj.tableName and obj.tag and _G[obj.tag].refresh then
 			for objKey, entry in pairs(global[obj.tableName]) do
-				_G[obj.tag].refresh(entry)
+				_G[obj.tag]:refresh(entry)
 			end
 		end
 	end

@@ -43,6 +43,7 @@ function UpSys.scanObjs()
     UpSys.addObject(MF.networkController)
     UpSys.addObject(MF.internalEnergyObj)
     UpSys.addObject(MF.internalQuatronObj)
+    UpSys.addObject(MF.jumpDriveObj)
   end
 
   -- Save the last scan tick --

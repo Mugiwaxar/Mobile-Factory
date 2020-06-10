@@ -6,12 +6,6 @@ require("utils/place-and-remove.lua")
 
 -- One each game tick --
 function onTick(event)
-	-- Update all Mobile Factory --
-	for k, MF in pairs(global.MFTable) do
-		if MF ~= nil then
-			MF:update(event)
-		end
-	end
 	-- Update all entities --
 	updateEntities(event)
 	-- Update all Erya Structures --
@@ -102,6 +96,11 @@ function initPlayer(event)
 		Util.addMobileFactory(player)
 		setPlayerVariable(player.name, "GotInventory", true)
 		GUI.createMFMainGUI(player)
+		
+		if remote.interfaces["dangOreus"] then 
+			remote.call("dangOreus","toggle",MF.fS)
+			remote.call("dangOreus","toggle",MF.ccS)
+		end
 	end
 end
 

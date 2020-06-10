@@ -131,20 +131,3 @@ cR.ingredients =
     }
 cR.result = "Crystallizer"
 data:extend{cR}
-
--- Technologie --
-local cT = {}
-cT.name = "Crystallizer"
-cT.type = "technology"
-cT.icon = "__Mobile_Factory_Graphics__/graphics/icones/Crystallizer.png"
-cT.icon_size = 32
-cT.unit = {
-	count=1000,
-	time=2,
-	ingredients={
-		{"DimensionalSample", 1}
-	}
-}
-cT.prerequisites = {"DimensionalOreSmelting"}
-cT.effects = {{type="unlock-recipe", recipe="Crystallizer"}}
-data:extend{cT}

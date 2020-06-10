@@ -6,6 +6,8 @@ require("prototypes/entity/crystallizer.lua")
 require("prototypes/entity/dimensional-plant.lua")
 require("prototypes/entity/basic-solar-panel.lua")
 -- require("prototypes/entity/wireless-data-receiver.lua")
+require("prototypes/entity/jump-drive.lua")
+require("prototypes/entity/jump-charger.lua")
 require("prototypes/entity/energy-cube.lua")
 require("prototypes/entity/energy-laser.lua")
 require("prototypes/entity/quatron-reactor.lua")
@@ -57,6 +59,7 @@ require("prototypes/technology/matter-serialization.lua")
 require("prototypes/gun/tank-guns.lua")
 require("prototypes/animation/shield.lua")
 require("prototypes/animation/red-energy-orb.lua")
+require("prototypes/animation/MFTP.lua")
 if settings.startup["MF-enable-erya"].value == true then
 	require("prototypes/erya/erya-intermediates.lua")
 	require("prototypes/erya/erya-collector.lua")
@@ -377,7 +380,7 @@ data:extend{
 data:extend{
 	{
 		type="equipment-grid",
-		equipment_categories={"armor", "mfEquipments"},
+		equipment_categories=equipments,
 		name="MFEquipmentGridGT",
 		height=4,
 		width=4
@@ -387,7 +390,7 @@ data:extend{
 data:extend{
 	{
 		type="equipment-grid",
-		equipment_categories={"armor", "mfEquipments"},
+		equipment_categories=equipments,
 		name="MFEquipmentGridH",
 		height=12,
 		width=12
@@ -470,9 +473,9 @@ data:extend{
 data:extend{
     {
         type = "sprite",
-        name = "MFIcon",
-        filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIcon.png",
-        size = 32,
+        name = "MFJDIcon",
+        filename = "__Mobile_Factory__/graphics/JumpDriveI.png",
+        size = 128,
         flags = {"icon"}
     }
 }
@@ -693,6 +696,15 @@ data:extend{
 	preload = true
 	}
 }
+data:extend{
+	{
+	type = "sound",
+	name = "MFSimpleTP",
+	category = "game-effect",
+	filename = "__Mobile_Factory__/graphics/SimpleTP.ogg",
+	preload = true
+	}
+}
 
 
 -------------------- SET ORES STACK TO 1000 --------------------
@@ -791,6 +803,34 @@ data.raw["gui-style"].default.MF_DA_scroll_pan =
 		position = {282, 17},
 		corner_size = 8,
 		overall_tiling_vertical_size = 53,
+		overall_tiling_vertical_spacing = 0,
+		overall_tiling_vertical_padding = 0,
+		overall_tiling_horizontal_padding = 0
+	}
+}
+
+data.raw["gui-style"].default.MF_JD_scroll_pan =
+{
+	type = "scroll_pane_style",
+	graphical_set =
+	{
+		base =
+		{
+		position = {17, 0},
+		corner_size = 8,
+		center = {position = {42, 8}, size = 1},
+		top = {},
+		left_top = {},
+		right_top = {},
+		draw_type = "outer"
+		},
+		shadow = default_inner_glow(hard_shadow_color, 0.5)
+	},
+	background_graphical_set =
+	{
+		position = {282, 17},
+		corner_size = 8,
+		overall_tiling_vertical_size = 84,
 		overall_tiling_vertical_spacing = 0,
 		overall_tiling_vertical_padding = 0,
 		overall_tiling_horizontal_padding = 0

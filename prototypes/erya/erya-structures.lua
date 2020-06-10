@@ -158,7 +158,7 @@ createEryaItem
 -- Erya Item Mover --
 local eimE = table.deepcopy(data.raw["transport-belt"]["EryaBelt1"])
 eimE.name = "EryaItemMover"
-eimE.minable = {mining_time = 0.15, result = "EryaBelt1"}
+eimE.minable = {mining_time = 0.15, result = "EryaItemMover"}
 eimE.speed = 0.4
 eimE.belt_animation_set.animation_set.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaItemMoverE.png"
 eimE.belt_animation_set.animation_set.frame_count = 1
@@ -453,6 +453,26 @@ createEryaItem
 
 
 -- Erya Mining Drill --
+local ermdE = table.deepcopy(data.raw["mining-drill"]["burner-mining-drill"])
+ermdE.name = "EryaMiningDrill1"
+ermdE.minable = {mining_time = 0.2, result = "EryaMiningDrill1"}
+ermdE.mining_speed = 0.2
+ermdE.resource_searching_radius = 1.99
+
+ermdE.module_specification = {module_slots = 3}
+ermdE.allowed_effects = nil
+ermdE.radius_visualisation_picture =
+{
+    filename = "__base__/graphics/entity/electric-mining-drill/electric-mining-drill-radius-visualization.png",
+    width = 10,
+    height = 10
+}
+ermdE.energy_usage = "1W"
+ermdE.energy_source = {type="void"}
+ermdE.input_fluid_box = nil
+ermdE.next_upgrade = nil
+data:extend{ermdE}
+--[[
 local ermdE = table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
 ermdE.name = "EryaMiningDrill1"
 ermdE.minable = {mining_time = 0.2, result = "EryaMiningDrill1"}
@@ -482,7 +502,7 @@ ermdE.selection_box = {{ -1.5/2, -1.5/2}, {1.5/2, 1.5/2}}
 ermdE.input_fluid_box = nil
 ermdE.next_upgrade = nil
 data:extend{ermdE}
-
+--]]
 createEryaItem
 (
     "EryaMiningDrill1",

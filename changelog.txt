@@ -1,4 +1,70 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.184
+Date: 10/06/2020
+  Changes:
+    - Changed the graphic of erya mining drill to burner mining drill
+  Bugfixes:
+    - Fixed a issue with DangOreus creating ores inside the mobile factory
+    - fixed a crash with Factorio 0.18.31
+---------------------------------------------------------------------------------------------------
+Version: 0.0.183
+Date: 7/06/2020
+  Bugfixes:
+    - Mining an Erya Item Mover returns an Erya Item Mover
+---------------------------------------------------------------------------------------------------
+Version: 0.0.182
+Date: 1/06/2020
+  Bugfixes:
+    - Fixed the Fluid Interactor that doesn't work
+---------------------------------------------------------------------------------------------------
+Version: 0.0.181
+Date: 31/05/2020
+  Major Features:
+    - Jump Drive
+    - The Jump Drive is a new way to Teleport the Mobile Factory to saved locations
+    - A new GUI is added: The Jump Drive GUI, that allows to save multiple Mobile Factory Locations and teleport back later
+  Features:
+    - Added the Jump Drive inside the Control Center, it shows the Jump Charge of the Mobile Factory (Base Capacity: 500 Charges, Base Charge Rate: 1 Charge/s)
+    - Added the Jump Charger, improve the Jump Drive every time one is placed (+150 Capacity, + 1 Charge/s - Must be placed on the Control Center Constructible Area)
+    - Added the Jump Drive Technology: Unlock the Jump Drive
+    - Added the Jump Charger Technology: Unlock the Jump Charger
+    - Added a new Animation for the Mobile Factory Teleportation
+  Changes:
+    - The Jump Drive no longer uses all its Charges when the Mobile Factory is teleported (1 Charge per Tile)
+    - The Jump Drive drains now less Internal Energy to recharge (300KW instead of 1 MW)
+    - The Jump Drive, the Internal Energy and the Internal Quatron keep they charges when the Mobile Factory is removed
+    - The Player can no longer call the Mobile Factory to himself
+    - The Quatron Cube and the Inernal Quatron Cube now send a "signal-Q" Signal
+    - Merged the Crystallizer Technology with the Dimensional Fluid Purification Technology
+    - Adjusted Energy Core recipe
+    - Adjusted Jets recipe
+    - Correction of bad local translations
+  Bugfixes:
+    - The Mobile Factory is no longer updated twice every Tick
+    - Fixed a crash related to the Fluid Interactor
+    - Fixed a crash related to the Matter Interactor
+    - Fixed a crash related to the Data Assembler
+    - Fixed bug when sometime Internal Energy/Quatron Cubes don't keep their Energy when removed
+    - Fixed a bug that allowed the Internal Energy/Quatron Cubes to be placed outside the Mobile Factory
+    - Fixed a crash with the Quatron Laser
+---------------------------------------------------------------------------------------------------
+Version: 0.0.180
+Date: 27/05/2020
+  Changes:
+    - Matter Interactor defaults to "None" inventory
+    - Internal Inventory in MI selection has base Mobile Factory icon and is inventory "0"
+    - Pulled 0.0.179 due to bug
+---------------------------------------------------------------------------------------------------
+Version: 0.0.179
+Date: 27/05/2020
+  Changes:
+    - Deep Tank selector list: fluid icons
+    - GT and Hovering Mobile Factorys use the same equipment as a base Mobile Factory
+  Bugfixes:
+    - script_raised_revive place-and-remove.lua fix. Again.
+  Scripting:
+    - clean out deprecated player-permissions code from MI inventory selection tooltip
+---------------------------------------------------------------------------------------------------
 Version: 0.0.178
 Date: 24/05/2020
   Changes:

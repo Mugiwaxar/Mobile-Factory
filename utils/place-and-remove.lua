@@ -16,6 +16,9 @@ function somethingWasPlaced(event)
 	-- Check the Values --
 	if entity == nil or MFPlayer == nil or MF == nil then return end
 
+	-- Adjust Entity to Expected Place --
+	event.created_entity = event.created_entity or event.entity or event.destination
+
 	-- If a Mobile Factory was placed --
 	if string.match(entity.name, "MobileFactory") then
 		placedMobileFactory(event, entity, MFPlayer, MF)
@@ -32,7 +35,7 @@ function somethingWasPlaced(event)
 	-- Check if the Entity is allowed to be placed --
 	if objInfo ~= nil then
 		-- Prevent to place Outside --
-		if objInfo.noOutside == true and string.match(entity.surface.name, _mfSurfaceName) == nil then
+		if objInfo.noOutside == true and string.match(entity.surface.name, _mfSurfaceName) == nil and string.match(entity.surface.name, _mfControlSurfaceName) == nil then
 			MFPlayer.ent.print({"", locName, " ", {"gui-description.PlaceableInsideTheFactory"}})
 			destroyEntity = true
 		-- Prevent to place Inside --
@@ -75,7 +78,7 @@ function somethingWasPlaced(event)
 				MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
 			end
 			destroyEntity = true
-		else
+		elseif destroyEntity == false then
 			MF.internalEnergyObj:setEnt(entity)
 			if event.stack ~= nil and event.stack.valid_for_read == true then
 				local tags = event.stack.get_tag("Infos")
@@ -94,7 +97,7 @@ function somethingWasPlaced(event)
 				MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
 			end
 			destroyEntity = true
-		else
+		elseif destroyEntity == false then
 			MF.internalQuatronObj:setEnt(entity)
 			if event.stack ~= nil and event.stack.valid_for_read == true then
 				local tags = event.stack.get_tag("Infos")

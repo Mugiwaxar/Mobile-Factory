@@ -22,19 +22,19 @@ createElement("mfSodiumHydroxide", 0, "item", {232,232,232})
 createElement("mfGraphite", 6, "item", {232,232,232})
 -- Uranium --
 createElement("mfUranium", 92, "fluid", {42,234,0})
--- Clorodin -- 
+-- Clorodin --
 createElement("mfClorodin", 0, "item", {42,234,0})
 -- Hydroxyclorodin --
 createElement("mfHydroxyclorodin", 0, "item", {42,234,0})
 -- Nanopore Silicon --
 createElement("mfNanoporeSilicon", 0, "item", {42,234,0})
--- Sand -- 
+-- Sand --
 createElement("mfSand", 0, "item", {42,234,0})
--- Fluoroclorodin -- 
+-- Fluoroclorodin --
 createElement("mfFluorodin", 0, "fluid", {42,234,0})
--- FluoroclorodinII -- 
+-- FluoroclorodinII --
 createElement("mfFluorodinII", 0, "fluid", {42,234,0})
--- FluoroclorodinIII -- 
+-- FluoroclorodinIII --
 createElement("mfFluorodinIII", 0, "fluid", {42,234,0})
 
 
@@ -51,8 +51,7 @@ createTechnology("mfFluorodinII", {300, 2, {{"DimensionalSample",1}}}, {"mfFluor
 createRecipe("mfFluorodinIII", {{"fluid", "mfFluorodinII", 50}, {"fluid", "mfUranium", 50}, {"item", "mfNanoporeSilicon", 5}}, {{"fluid", "mfFluorodinIII", 100}},2)
 createTechnology("mfFluorodinIII", {300, 2, {{"DimensionalSample",1}}}, {"mfFluorodinII"}, {"mfFluorodinIII"})
 
-
--- nanopore silicon --
+-- Nanopore Silicon --
 createRecipe("mfNanoporeSilicon", {{"item", "mfSilicon", 8},{"fluid", "mfOxygen", 10}}, {{"item", "mfNanoporeSilicon", 2}})
 createTechnology("mfNanoporeSilicon", {300, 2, {{"DimensionalSample",1}}}, {"mfSilicon"}, {"mfNanoporeSilicon"})
 
@@ -60,10 +59,9 @@ createTechnology("mfNanoporeSilicon", {300, 2, {{"DimensionalSample",1}}}, {"mfS
 createRecipe("mfClorodin", {{"item", "DimensionalOre", 20},{"fluid", "mfChlorine", 11}}, {{"item", "mfClorodin", 25}})
 createTechnology("mfClorodin", {300, 2, {{"DimensionalSample",1}}}, {"SaltDecomposition"}, {"mfClorodin"})
 
--- hydroxyclorodin --
+-- Hydroxyclorodin --
 createRecipe("mfHydroxyclorodin", {{"item", "mfClorodin", 11},{"fluid", "water", 20}}, {{"item", "mfHydroxyclorodin", 20},{"fluid", "mfHydrogen",3}})
 createTechnology("mfHydroxyclorodin", {300, 2, {{"DimensionalSample",1}}}, {"mfClorodin"}, {"mfHydroxyclorodin"})
-
 
 -- Electrolyze --
 createRecipe("Electrolyze", {{"fluid", "water", 18}}, {{"fluid", "mfOxygen", 16},{"fluid", "mfHydrogen", 2}},2)

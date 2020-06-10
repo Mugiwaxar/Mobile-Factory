@@ -9,6 +9,7 @@ function Util.createTableList()
 	Util.addObject{tableName="dataAssemblerTable", tag="DA", objName="DataAssembler"}
 	Util.addObject{tableName="networkExplorerTable", tag="NE", objName="NetworkExplorer"}
 	Util.addObject{tableName="dataStorageTable", tag="DS", objName="DataStorage", canInCC=true}
+	Util.addObject{tableName="jumpChargerTable", tag="JC", objName="JumpCharger", canInCC=true}
 	Util.addObject{tableName="networkAccessPointTable", tag="NAP", objName="NetworkAccessPoint"}
 	Util.addObject{tableName="energyCubesTable", tag="EC", objName="EnergyCubeMK1"}
 	Util.addObject{tableName="energyLaserTable", tag="EL", objName="EnergyLaser1"}
@@ -27,12 +28,12 @@ function Util.createTableList()
 	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK2", noInside=true}
 	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK3", noInside=true}
 	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK4", noInside=true}
-	Util.addObject{objName="InternalEnergyCube", noUpsys=true, canInCCAnywhere=true}
-	Util.addObject{objName="InternalQuatronCube", noUpsys=true, canInCCAnywhere=true}
+	Util.addObject{objName="InternalEnergyCube", noUpsys=true, canInCCAnywhere=true, noOutside=true}
+	Util.addObject{objName="InternalQuatronCube", noUpsys=true, canInCCAnywhere=true, noOutside=true}
 end
 
 -- Add an Object to the System --
--- {tableName, tag, objName, noUpsys, noOuside, noInside, canInCC, canInCCAnywhere, noPlaced} --
+-- {tableName, tag, objName, noUpsys, noOutside, noInside, canInCC, canInCCAnywhere, noPlaced} --
 function Util.addObject(table)
 	-- Check the objTable --
 	if global.objTable == nil then global.objTable = {} end
@@ -188,6 +189,13 @@ function Util.getLocFluidName(fluidName)
 	end
 end
 
+-- Reset an Animation --
+function Util.resetAnimation(animId, totalFrame)
+	local animSpeed = rendering.get_animation_speed(animId)
+	local currentFrame = math.floor((game.tick * animSpeed) % totalFrame)
+	rendering.set_animation_offset(animId, 0 - currentFrame)
+end
+
 -- Check if an Object is valid --
 function valid(obj)
 	if obj == nil then return false end
@@ -196,22 +204,6 @@ function valid(obj)
 	if type(obj.valid) == "boolean" then return obj.valid end
 	if obj:valid() ~= true then return false end
 	return true
-end
-
--- Test if Mobile Factory can be placed near a player --
-function mfPlaceable(player, MF)
-	-- Make the Mobile Factory unable to be placed inside it --
-	if string.match(player.surface.name, _mfSurfaceName) or string.match(player.surface.name, _mfControlSurfaceName) then
-		player.print({"", {"gui-description.MFPlacedInsideFactory"}})
-		return nil
-	end
-	-- Make the Mobile Factory unable to be placed inside a Factorissimo Structure --
-	if string.match(player.surface.name, "Factory") then
-		player.print({"", {"gui-description.MFPlacedInsideFactorissimo"}})
-		return nil
-	end
-	-- Try to a position near the Player --
-	return player.surface.find_non_colliding_position(MF.ent.name, player.position, 10, 1, true)
 end
 
 -- Unlock a recipe for all Players --
@@ -380,38 +372,6 @@ function fixMB(event)
 			createControlRoom(MF)
 		end
 	end
-end
-	
--- Call the mobile Factory near the player
-function callMobileFactory(player)
-	-- Get the Mobile Factory --
-	local MF = getMF(player.name)
-	-- Check if the Mobile Factory exist --
-	if MF ~= nil and MF.ent == nil or MF.ent.valid == false then
-		player.print({"", {"gui-description.MFLostOrDestroyed"}})
-		return
-	end
-	-- Test if the Jump Drives are ready --
-	if MF.jumpTimer > 0 then
-		player.print({"", {"gui-description.MFJumpDriveRecharging"}})
-		return
-	end
-	-- Try to find the best coords --
-	local coords = mfPlaceable(player, MF)
-	-- Return if any coords was found --
-	if coords == nil then return end
-	-- Teleport the Mobile Factory to the cords --
-	MF.ent.teleport(coords, player.surface)
-	-- Try to find the Mobile Factory if it is lost --
-	if MF.ent == nil or MF.ent.valid == false then
-		MF.ent = player.surface.find_entity("MobileFactory", coords)
-	end
-	-- Save the position --
-	MF.lastSurface = MF.ent.surface
-	MF.lastPosX = MF.ent.position.x
-	MF.lastPosY = MF.ent.position.y
-	-- Discharge the Jump Drives --
-	MF.jumpTimer = MF.baseJumpTimer
 end
 
 -- Create Tiles at the given position and radius --
