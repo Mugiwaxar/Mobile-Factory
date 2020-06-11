@@ -6,5 +6,5 @@
 	"dependencies": ["base >= 0.18", "Mobile_Factory_Graphics >= 0.0.9"],
 	"description": "A mod with many features where you can make a Mobile Factory, build you base inside and travel around the world. The mod contain a way to transfer items via the Circuit Network, some nice way to mine Ore or extract Fluid, many new chemical elements, Jets who will work for you, Data Storage of Items, and many more ...",
 	"factorio_version": "0.18",
-	"homepage":"ttps://mobile-factory.fandom.com/wiki/Mobile_Factory_Wiki"
+	"homepage":"https://mobile-factory.fandom.com/wiki/Mobile_Factory_Wiki"
 }
