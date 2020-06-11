@@ -59,7 +59,7 @@ _mfSyncAreaExtraDetails = {
 -- Mobile Factory Sync Area, ignored for collision, entity types --
 _mfSyncAreaIgnoredTypes = {
 	beam = true,
-	["flying_text"] = true,
+	["flying-text"] = true,
 	["fire"] = true,
 	["particle"] = true,
     ["projectile"] = true,
