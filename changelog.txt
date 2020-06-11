@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.184
+Date: 10/06/2020
+  Changes:
+    - Changed the graphic of erya mining drill to burner mining drill
+  Bugfixes:
+    - Fixed a issue with DangOreus creating ores inside the mobile factory
+    - fixed a crash with Factorio 0.18.31
+---------------------------------------------------------------------------------------------------
 Version: 0.0.183
 Date: 7/06/2020
   Bugfixes:

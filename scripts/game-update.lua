@@ -96,6 +96,11 @@ function initPlayer(event)
 		Util.addMobileFactory(player)
 		setPlayerVariable(player.name, "GotInventory", true)
 		GUI.createMFMainGUI(player)
+		
+		if remote.interfaces["dangOreus"] then 
+			remote.call("dangOreus","toggle",MF.fS)
+			remote.call("dangOreus","toggle",MF.ccS)
+		end
 	end
 end
 
