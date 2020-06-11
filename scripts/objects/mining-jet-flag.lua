@@ -208,7 +208,7 @@ function MJF:scanOres()
 	-- Remove Fluid Path from the Table --
 	for k, path in pairs(self.oreTable) do
 		if path.prototype.mineable_properties.products[1].type ~= "item" then
-			self.oreTable[k] = nil
+			table.remove(self.oreTable, k)
 		end
 	end
 	
@@ -221,11 +221,9 @@ function MJF:getOrePath()
 	local i = math.random(1, table_size(self.oreTable))
 	local orePath = self.oreTable[i]
 	if orePath == nil then
-		for k, path in pairs(self.oreTable) do
-			if path ~= nil and path.valid == true then return path end
-			if path ~= nil and path.valid == false then self:removeOrePath(path) end
-		end
+		self:removeOrePath(orePath)
 	elseif orePath.valid == false then
+		self.oreTable[i] = nil
 		self:removeOrePath(orePath)
 	else
 		return orePath
@@ -233,17 +231,19 @@ function MJF:getOrePath()
 	return nil
 end
 
--- Remove an Ore Path from the Ore Table --
+-- Remove invalid Ore Paths from the Ore Table --
 function MJF:removeOrePath(orePath)
 	for k, path in pairs(self.oreTable) do
-		if path == orePath then
-			if table_size(self.oreTable) <= 1 then
-				self.oreTable = {}
-			else
-				table.remove(self.oreTable, k)
-			end
-			
+		if path.valid == false then self.oreTable[k] = nil end
+	end
+	if #self.oreTable ~= table_size(self.oreTable) then
+		local oreArray = {}
+		local i = 1
+		for _, path in pairs(self.oreTable) do
+			oreArray[i] = path
+			i = i + 1
 		end
+		self.oreTable = oreArray
 	end
 end
 

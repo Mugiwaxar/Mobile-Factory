@@ -1075,7 +1075,7 @@ function MF:updateClonedEntities()
 	for i, ents in pairs(self.clonedResourcesTable) do
 		self:updateClonedEntity(ents)
 		if ents.original == nil or ents.original.valid == false then
-			-- only checking original because both are invalid after updating
+			-- only checking original because both are nil/invalid after updating
 			table.remove(self.clonedResourcesTable, i)
 		end
 	end
@@ -1086,13 +1086,15 @@ function MF:updateClonedEntity(ents)
 	-- Check the Entities --
 	if ents == nil then return end
 	if ents.original == nil or ents.original.valid == false then
-		script.raise_event(defines.events.script_raised_destroy, {entity=ents.cloned})
-		ents.cloned.destroy()
+		if ents.cloned ~= nil and ents.cloned.valid == true then
+			ents.cloned.destroy({raise_destroy = true})
+		end
 		return
 	end
 	if ents.cloned == nil or ents.cloned.valid == false then
-		script.raise_event(defines.events.script_raised_destroy, {entity=ents.original})
-		ents.original.destroy()
+		if ents.original ~= nil and ents.original.valid == true then
+			ents.original.destroy({raise_destroy = true})
+		end
 		return
 	end
 	if ents.original.type == "resource" then
