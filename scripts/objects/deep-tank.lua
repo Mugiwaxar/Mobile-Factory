@@ -26,7 +26,9 @@ function DTK:new(object)
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
 	t.ID = Util.getEntID(global.deepTankTable)
-	t.MF.dataNetwork.DTKTable[object.unit_number] = t
+	if t.MF and t.MF.dataNetwork then
+		t.MF.dataNetwork.DTKTable[object.unit_number] = t
+	end
 	UpSys.addObj(t)
 	return t
 end

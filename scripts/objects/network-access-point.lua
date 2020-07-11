@@ -157,7 +157,7 @@ function NAP:createDNSignals()
 	for k, ds in pairs(self.dataNetwork.DSRTable) do
 		-- Create and send the Signal --
 		if ds.inventoryItem ~= nil and game.item_prototypes[ds.inventoryItem] ~= nil then
-			local signal = {signal={type="item", name=ds.inventoryItem} ,count=ds.inventoryCount}
+			local signal = {signal={type="item", name=ds.inventoryItem}, count=math.min(ds.inventoryCount, 2e9)}
 			self.ent.get_control_behavior().set_signal(i, signal)
 			-- Increament the Slot --
 			i = i + 1

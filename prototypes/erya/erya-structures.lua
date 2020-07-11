@@ -1,9 +1,117 @@
-function createEryaItem(name, iconSize, subgroup, order, stackSize, REnergy, RIngredients, TUnit, prerequisites, resultCount)
+local function extremTint(thing)
+    -- Tint an Entity for Extrem Colors --
+    -- with no argument, returns extremTint table
+
+    local eTint = { r = 1, g = 0.5, b = 0.5 }
+	-- { r = 1, g = 0.5, b = 0.5 } = darker pink
+    -- { r = 1, g = 0.25, b = 0.25 } = blood-like
+
+    if type(thing) ~= "table" then return eTint end
+
+    if type(thing.belt_animation_set) == "table" then
+        -- Belts --
+        if thing.belt_animation_set.animation_set then
+			local anim = thing.belt_animation_set.animation_set
+			--anim.tint = eTint
+			if anim.hr_version ~= nil then
+				--anim.hr_version.tint = eTint
+			end
+		end
+    end
+
+    if type(thing.structure) == "table" then
+        -- Underground Belt and Splitter --
+        local struct = thing.structure
+        if (struct.direction_in and struct.direction_in.sheet)
+            and (struct.direction_out and struct.direction_out.sheet)
+            and (struct.direction_in_side_loading and struct.direction_in_side_loading.sheet)
+            and (struct.direction_out_side_loading and struct.direction_out_side_loading.sheet)
+        then
+            struct.direction_in.sheet.tint = eTint
+            struct.direction_out.sheet.tint = eTint
+            struct.direction_in_side_loading.sheet.tint = eTint
+            struct.direction_out_side_loading.sheet.tint = eTint
+
+			if struct.direction_in.sheet.hr_version
+                and struct.direction_out.sheet.hr_version
+                and struct.direction_in_side_loading.sheet.hr_version
+                and struct.direction_out_side_loading.sheet.hr_version
+            then
+                struct.direction_in.sheet.hr_version.tint = eTint
+                struct.direction_out.sheet.hr_version.tint = eTint
+                struct.direction_in_side_loading.sheet.hr_version.tint = eTint
+                struct.direction_out_side_loading.sheet.hr_version.tint = eTint
+            end
+        end
+
+		-- Splitter --
+        if struct.north
+			and struct.east
+			and struct.south
+			and struct.west
+		then
+			struct.north.tint = eTint
+			struct.east.tint = eTint
+			struct.south.tint = eTint
+			struct.west.tint = eTint
+
+			if struct.north.hr_version
+				and struct.east.hr_version
+				and struct.south.hr_version
+				and struct.west.hr_version
+			then
+				struct.north.hr_version.tint = eTint
+				struct.east.hr_version.tint = eTint
+				struct.south.hr_version.tint = eTint
+				struct.west.hr_version.tint = eTint
+			end
+		end
+    end
+
+	--this is present in splitters?
+	local patch = thing.structure_patch
+	if patch then
+		if patch.east
+			and patch.west
+		then
+			patch.east.tint = eTint
+			patch.west.tint = eTint
+
+			if patch.east.hr_version
+				and patch.west.hr_version
+			then
+				patch.east.hr_version.tint = eTint
+				patch.west.hr_version.tint = eTint
+			end
+		end
+	end
+end
+
+
+function createEryaItem(itemData)
+    local name = itemData.name or itemData[1]
+	local iconName = itemData.iconName or name
+    local iconSize = itemData.iconSize or itemData[2] --or 32
+    local subgroup = itemData.subgroup or itemData[3]
+    local order = itemData.order or itemData[4]
+    local stackSize = itemData.stackSize or itemData[5] --or 255
+    local REnergy = itemData.REnergy or itemData[6] --or 1
+    local RIngredients = itemData.RIngredients or itemData[7] --or {}
+    local TUnit = itemData.TUnit or itemData[8] --or {}
+    local prerequisites = itemData.prerequisites or itemData[9]
+    local resultCount = itemData.resultCount or itemData[10]
+    local tint = itemData.tint or itemData[11]
+
     local erI = {}
     erI.type = "item"
     erI.name = name
-    erI.icon = "__Mobile_Factory_Graphics__/graphics/Erya/" .. name .. "I.png"
-    erI.icon_size = iconSize
+    erI.icons = {
+		{
+			icon = "__Mobile_Factory_Graphics__/graphics/Erya/" .. iconName .. "I.png",
+			icon_size = iconSize
+		}
+	}
+	if tint then erI.icons[1].tint = tint end
     erI.place_result = name
     erI.subgroup = subgroup
     erI.order = order
@@ -23,8 +131,13 @@ function createEryaItem(name, iconSize, subgroup, order, stackSize, REnergy, RIn
     local erT = {}
     erT.name = name
     erT.type = "technology"
-    erT.icon = "__Mobile_Factory_Graphics__/graphics/Erya/" .. name .. "I.png"
-    erT.icon_size = iconSize
+    erT.icons = {
+		{
+			icon = "__Mobile_Factory_Graphics__/graphics/Erya/" .. iconName .. "I.png",
+			icon_size = iconSize
+		}
+	}
+	if tint then erT.icons[1].tint = tint end
     erT.unit = TUnit
     erT.prerequisites = {prerequisites}
     erT.effects =
@@ -59,24 +172,24 @@ erlE.minable = {mining_time = 0.1, result = "EryaLamp"}
 erlE.glow_size=10
 erlE.light.intensity = 0.5
 erlE.always_on = true
+--log(serpent.block(erlE.picture_off.layers))
 erlE.picture_off.layers[1] = erlE.picture_off.layers[1].hr_version
 erlE.picture_off.layers[1].filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaLampE.png"
 erlE.picture_off.layers[2] = erlE.picture_off.layers[2].hr_version
 data:extend{erlE}
 
 createEryaItem
-(
-    "EryaLamp",
-    64,
-    "EryaLogistic",
-    "a",
-    50,
-    0.5,
-    {{"EryaMachineFrame1",1},{"EryaCircuit",1}},
-    {count=120,time=1,ingredients={{"EryaSample", 1}}},
-    "Erya"
-)
-
+{
+    name = "EryaLamp",
+    iconSize = 64,
+    subgroup = "EryaLogistic",
+    order = "a",
+    stackSize = 50,
+    REnergy = 0.5,
+    RIngredients = {{"EryaMachineFrame1",1},{"EryaCircuit",1}},
+    TUnit = {count=120,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "Erya"
+}
 
 -- Erya Chest --
 local ercE = table.deepcopy(data.raw.container["steel-chest"])
@@ -93,18 +206,17 @@ ercE.inventory_size = 35
 data:extend{ercE}
 
 createEryaItem
-(
-    "EryaChest1",
-    64,
-    "EryaLogistic",
-    "b",
-    50,
-    0.5,
-    {{"EryaMachineFrame1",1},{"EryaPlate",3}},
-    {count=100,time=1,ingredients={{"EryaSample", 1}}},
-    "Erya"
-)
-
+{
+    name = "EryaChest1",
+    iconSize = 64,
+    subgroup = "EryaLogistic",
+    order = "b",
+    stackSize = 50,
+    REnergy = 0.5,
+    RIngredients = {{"EryaMachineFrame1",1},{"EryaPlate",3}},
+    TUnit = {count=100,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "Erya"
+}
 -- Erya Tank --
 local erTE = table.deepcopy(data.raw["storage-tank"]["storage-tank"])
 erTE.name = "EryaTank1"
@@ -118,18 +230,17 @@ erTE.next_upgrade = nil
 data:extend{erTE}
 
 createEryaItem
-(
-    "EryaTank1",
-    64,
-    "EryaLogistic",
-    "c",
-    20,
-    0.5,
-    {{"EryaMachineFrame1",2},{"EryaPlate",5}},
-    {count=120,time=1,ingredients={{"EryaSample", 1}}},
-    "Erya"
-)
-
+{
+    name = "EryaTank1",
+    iconSize = 64,
+    subgroup = "EryaLogistic",
+    order = "c",
+    stackSize = 20,
+    REnergy = 0.5,
+    RIngredients = {{"EryaMachineFrame1",2},{"EryaPlate",5}},
+    TUnit = {count=120,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "Erya"
+}
 
 -- Erya Belt MK1 --
 local erbE = table.deepcopy(data.raw["transport-belt"]["transport-belt"])
@@ -142,19 +253,18 @@ erbE.belt_animation_set.animation_set.hr_version = nil
 data:extend{erbE}
 
 createEryaItem
-(
-    "EryaBelt1",
-    64,
-    "EryaLogistic",
-    "d",
-    200,
-    0.2,
-    {{"EryaPlate",2}},
-    {count=80,time=1,ingredients={{"EryaSample", 1}}},
-    "Erya",
-    5
-)
-
+{
+    name = "EryaBelt1",
+    iconSize = 64,
+    subgroup = "EryaLogistic",
+    order = "d",
+    stackSize = 200,
+    REnergy = 0.2,
+    RIngredients = {{"EryaPlate",2}},
+    TUnit = {count=80,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "Erya",
+    resultCount = 5
+}
 -- Erya Item Mover --
 local eimE = table.deepcopy(data.raw["transport-belt"]["EryaBelt1"])
 eimE.name = "EryaItemMover"
@@ -167,19 +277,18 @@ eimE.next_upgrade = nil
 data:extend{eimE}
 
 createEryaItem
-(
-    "EryaItemMover",
-    128,
-    "EryaLogistic",
-    "d2",
-    200,
-    0.2,
-    {{"EryaPlate",20},{"DimensionalCrystal", 1}},
-    {count=280,time=1,ingredients={{"EryaSample", 1}}},
-    "EryaBelt1",
-    10
-)
-
+{
+    name = "EryaItemMover",
+    iconSize = 128,
+    subgroup = "EryaLogistic",
+    order = "d2",
+    stackSize = 200,
+    REnergy = 0.2,
+    RIngredients = {{"EryaPlate",20},{"DimensionalCrystal", 1}},
+    TUnit = {count=280,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "EryaBelt1",
+    resultCount = 10
+}
 
 -- Erya Underground Belt MK1 --
 local erubE = table.deepcopy(data.raw["underground-belt"]["underground-belt"])
@@ -204,26 +313,25 @@ erubE.next_upgrade = nil
 data:extend{erubE}
 
 createEryaItem
-(
-    "EryaUndergroundBelt1",
-    64,
-    "EryaLogistic",
-    "e",
-    100,
-    0.3,
-    {{"EryaPlate",10}},
-    {count=130,time=1,ingredients={{"EryaSample", 1}}},
-    "EryaBelt1",
-    2
-)
-
+{
+    name = "EryaUndergroundBelt1",
+    iconSize = 64,
+    subgroup = "EryaLogistic",
+    order = "e",
+    stackSize = 100,
+    REnergy = 0.3,
+    RIngredients = {{"EryaPlate",10}},
+    TUnit = {count=130,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "EryaBelt1",
+    resultCount = 2
+}
 -- Erya Extrem Underground Belt --
 local erxubE = table.deepcopy(data.raw["underground-belt"].EryaUndergroundBelt1)
 erxubE.name = "EryaUndergroundBelt2"
 erxubE.minable = {mining_time = 0.15, result = "EryaUndergroundBelt2"}
 erxubE.speed = 0.4
 erxubE.max_distance = 30
-erxubE.belt_animation_set = eimE.belt_animation_set
+erxubE.belt_animation_set = table.deepcopy(eimE.belt_animation_set)
 erxubE.structure.direction_in.sheet.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaUndergroundBelt2E.png"
 erxubE.structure.direction_out.sheet.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaUndergroundBelt2E.png"
 erxubE.structure.direction_in_side_loading.sheet.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaUndergroundBelt2E.png"
@@ -232,25 +340,25 @@ erxubE.next_upgrade = nil
 data:extend{erxubE}
 
 createEryaItem
-(
-    "EryaUndergroundBelt2",
-    64,
-    "EryaLogistic",
-    "e",
-    100,
-    0.5,
-    {{"EryaPlate",30},{"DimensionalCrystal",1}},
-    {count=10,time=60,ingredients={{"EryaSample", 10},{"DimensionalCrystal",1}}},
-    "EryaUndergroundBelt1",
-    6
-)
+{
+    name = "EryaUndergroundBelt2",
+    iconSize = 64,
+    subgroup = "EryaLogistic",
+    order = "e",
+    stackSize = 100,
+    REnergy = 0.5,
+    RIngredients = {{"EryaPlate",30},{"DimensionalCrystal",1}},
+    TUnit = {count=10,time=60,ingredients={{"EryaSample", 10},{"DimensionalCrystal",1}}},
+    prerequisites = "EryaUndergroundBelt1",
+    resultCount = 6
+}
 
 -- Erya Splitter MK1 --
 local erSE = table.deepcopy(data.raw.splitter.splitter)
 erSE.name = "EryaSplitter1"
 erSE.minable = {mining_time = 0.2, result = "EryaSplitter1"}
 erSE.speed = 0.04
-erSE.belt_animation_set = erbE.belt_animation_set
+erSE.belt_animation_set = table.deepcopy(erbE.belt_animation_set)
 erSE.structure.north = erSE.structure.north.hr_version
 erSE.structure.north.filename = "__Mobile_Factory_Graphics__/graphics/Erya/EryaSplitter1NorthE.png"
 erSE.structure.north.hr_version = nil
@@ -273,17 +381,41 @@ erSE.next_upgrade = nil
 data:extend{erSE}
 
 createEryaItem
-(
-    "EryaSplitter1",
-    64,
-    "EryaLogistic",
-    "f",
-    100,
-    0.3,
-    {{"EryaPlate",12}, {"EryaCircuit",2}},
-    {count=150,time=1,ingredients={{"EryaSample", 1}}},
-    "EryaBelt1"
-)
+{
+    name = "EryaSplitter1",
+    iconSize = 64,
+    subgroup = "EryaLogistic",
+    order = "f",
+    stackSize = 100,
+    REnergy = 0.3,
+    RIngredients = {{"EryaPlate",12}, {"EryaCircuit",2}},
+    TUnit = {count=150,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "EryaBelt1",
+}
+
+-- Erya Splitter MK2 --
+local erxSE = table.deepcopy(erSE)
+erxSE.name = "EryaSplitter2"
+erxSE.minable = {mining_time = 0.3, result = "EryaSplitter2"}
+erxSE.speed = 0.4
+extremTint(erxSE)
+data:extend{erxSE}
+
+createEryaItem
+{
+    name = "EryaSplitter2",
+	iconName = "EryaSplitter1",
+    iconSize = 64,
+    subgroup = "EryaLogistic",
+    order = "f2",
+    stackSize = 100,
+    REnergy = 0.6,
+    RIngredients = {{"EryaPlate",36}, {"EryaCircuit",6}, {"DimensionalCrystal",1}},
+    TUnit = {count=10,time=60,ingredients={{"EryaSample", 15},{"DimensionalCrystal",1}}},
+    prerequisites = "EryaSplitter1",
+	resultCount = 3,
+	tint = extremTint()
+}
 
 -- Erya Loader --
 local erlE = table.deepcopy(data.raw["loader-1x1"]["loader-1x1"])
@@ -337,17 +469,17 @@ erlE.next_upgrade = nil
 data:extend{erlE}
 
 createEryaItem
-(
-    "EryaLoader1",
-    128,
-    "EryaLogistic",
-    "g",
-    100,
-    0.2,
-    {{"EryaPlate",10}, {"EryaCircuit",4}},
-    {count=130,time=1,ingredients={{"EryaSample", 1}}},
-    "EryaBelt1"
-)
+{
+    name = "EryaLoader1",
+    iconSize = 128,
+    subgroup = "EryaLogistic",
+    order = "g",
+    stackSize = 100,
+    REnergy = 0.2,
+    RIngredients = {{"EryaPlate",10}, {"EryaCircuit",4}},
+    TUnit = {count=130,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "EryaBelt1"
+}
 
 -- Erya Extrem Loader --
 local erxlE = table.deepcopy(data.raw["loader-1x1"].EryaLoader1)
@@ -401,19 +533,18 @@ erxlE.next_upgrade = nil
 data:extend{erxlE}
 
 createEryaItem
-(
-    "EryaLoader2",
-    128,
-    "EryaLogistic",
-    "g2",
-    100,
-    0.4,
-    {{"EryaPlate",50}, {"EryaCircuit",20},{"DimensionalCrystal",1}},
-    {count=15,time=60,ingredients={{"EryaSample", 12},{"DimensionalCrystal",1}}},
-    "EryaLoader1",
-    5
-)
-
+{
+    name = "EryaLoader2",
+    iconSize = 128,
+    subgroup = "EryaLogistic",
+    order = "g2",
+    stackSize = 100,
+    REnergy = 0.4,
+    RIngredients = {{"EryaPlate",50}, {"EryaCircuit",20},{"DimensionalCrystal",1}},
+    TUnit = {count=15,time=60,ingredients={{"EryaSample", 12},{"DimensionalCrystal",1}}},
+    prerequisites = "EryaLoader1",
+    resultCount = 5
+}
 -- Erya Inserter MK1 --
 local eriE = table.deepcopy(data.raw.inserter.inserter)
 eriE.name = "EryaInserter1"
@@ -439,18 +570,17 @@ eriE.next_upgrade = nil
 data:extend{eriE}
 
 createEryaItem
-(
-    "EryaInserter1",
-    64,
-    "EryaLogistic",
-    "h",
-    30,
-    0.5,
-    {{"EryaMachineFrame1",1}, {"EryaCircuit",4}},
-    {count=170,time=1,ingredients={{"EryaSample", 1}}},
-    "Erya"
-)
-
+{
+    name = "EryaInserter1",
+    iconSize = 64,
+    subgroup = "EryaLogistic",
+    order = "h",
+    stackSize = 30,
+    REnergy = 0.5,
+    RIngredients = {{"EryaMachineFrame1",1}, {"EryaCircuit",4}},
+    TUnit = {count=170,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "Erya"
+}
 
 -- Erya Mining Drill --
 local ermdE = table.deepcopy(data.raw["mining-drill"]["burner-mining-drill"])
@@ -504,18 +634,17 @@ ermdE.next_upgrade = nil
 data:extend{ermdE}
 --]]
 createEryaItem
-(
-    "EryaMiningDrill1",
-    64,
-    "EryaProduction",
-    "a",
-    30,
-    0.7,
-    {{"EryaMachineFrame1",2}, {"EryaCircuit",6}, {"EryaPlate",12}},
-    {count=230,time=1,ingredients={{"EryaSample", 1}}},
-    "Erya"
-)
-
+{
+    name = "EryaMiningDrill1",
+    iconSize = 64,
+    subgroup = "EryaProduction",
+    order = "a",
+    stackSize = 30,
+    REnergy = 0.7,
+    RIngredients = {{"EryaMachineFrame1",2}, {"EryaCircuit",6}, {"EryaPlate",12}},
+    TUnit = {count=230,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "Erya"
+}
 -- Erya Pumpjack MK1 --
 local erpE = table.deepcopy(data.raw["mining-drill"].pumpjack)
 erpE.name = "EryaPumpjack1"
@@ -531,18 +660,17 @@ erpE.next_upgrade = nil
 data:extend{erpE}
 
 createEryaItem
-(
-    "EryaPumpjack1",
-    64,
-    "EryaProduction",
-    "b",
-    10,
-    0.7,
-    {{"EryaMachineFrame1",3}, {"EryaCircuit",2}, {"EryaPlate",15}},
-    {count=260,time=1,ingredients={{"EryaSample", 1}}},
-    "Erya"
-)
-
+{
+    name = "EryaPumpjack1",
+    iconSize = 64,
+    subgroup = "EryaProduction",
+    order = "b",
+    stackSize = 10,
+    REnergy = 0.7,
+    RIngredients = {{"EryaMachineFrame1",3}, {"EryaCircuit",2}, {"EryaPlate",15}},
+    TUnit = {count=260,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "Erya"
+}
 -- Erya Assembling Machine MK1 --
 local eramE = table.deepcopy(data.raw["assembling-machine"]["assembling-machine-1"])
 eramE.name = "EryaAssemblingMachine1"
@@ -564,18 +692,17 @@ eramE.next_upgrade = nil
 data:extend{eramE}
 
 createEryaItem
-(
-    "EryaAssemblingMachine1",
-    64,
-    "EryaProduction",
-    "c",
-    20,
-    0.5,
-    {{"EryaMachineFrame1",4}, {"EryaCircuit",5}, {"EryaPlate",10}},
-    {count=220,time=1,ingredients={{"EryaSample", 1}}},
-    "Erya"
-)
-
+{
+    name = "EryaAssemblingMachine1",
+    iconSize = 64,
+    subgroup = "EryaProduction",
+    order = "c",
+    stackSize = 20,
+    REnergy = 0.5,
+    RIngredients = {{"EryaMachineFrame1",4}, {"EryaCircuit",5}, {"EryaPlate",10}},
+    TUnit = {count=220,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "Erya"
+}
 
 -- Erya Pipe --
 local eramE = table.deepcopy(data.raw.pipe.pipe)
@@ -665,18 +792,17 @@ eramE.pictures.vertical_window_background.hr_version = nil
 data:extend{eramE}
 
 createEryaItem
-(
-    "EryaPipe1",
-    64,
-    "EryaLogistic",
-    "i",
-    100,
-    0.5,
-    {{"EryaPlate",4}},
-    {count=130,time=1,ingredients={{"EryaSample", 1}}},
-    "Erya"
-)
-
+{
+    name = "EryaPipe1",
+    iconSize = 64,
+    subgroup = "EryaLogistic",
+    order = "i",
+    stackSize = 100,
+    REnergy = 0.5,
+    RIngredients = {{"EryaPlate",4}},
+    TUnit = {count=130,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "Erya"
+}
 
 -- Erya Pipe To Ground --
 local erptgE = table.deepcopy(data.raw["pipe-to-ground"]["pipe-to-ground"])
@@ -703,18 +829,17 @@ erptgE.next_upgrade = nil
 data:extend{erptgE}
 
 createEryaItem
-(
-    "EryaPipeToGround1",
-    64,
-    "EryaLogistic",
-    "j",
-    20,
-    0.5,
-    {{"EryaPlate",16}},
-    {count=150,time=1,ingredients={{"EryaSample", 1}}},
-    "EryaPipe1"
-)
-
+{
+    name = "EryaPipeToGround1",
+    iconSize = 64,
+    subgroup = "EryaLogistic",
+    order = "j",
+    stackSize = 20,
+    REnergy = 0.5,
+    RIngredients = {{"EryaPlate",16}},
+    TUnit = {count=150,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "EryaPipe1"
+}
 
 -- Erya Pump MK1 --
 local erp1E = table.deepcopy(data.raw.pump.pump)
@@ -743,18 +868,17 @@ erp1E.next_upgrade = nil
 data:extend{erp1E}
 
 createEryaItem
-(
-    "EryaPump1",
-    64,
-    "EryaLogistic",
-    "k",
-    20,
-    0.5,
-    {{"EryaMachineFrame1",1},{"EryaCircuit",4}},
-    {count=170,time=1,ingredients={{"EryaSample", 1}}},
-    "EryaPipe1"
-)
-
+{
+    name = "EryaPump1",
+    iconSize = 64,
+    subgroup = "EryaLogistic",
+    order = "k",
+    stackSize = 20,
+    REnergy = 0.5,
+    RIngredients = {{"EryaMachineFrame1",1},{"EryaCircuit",4}},
+    TUnit = {count=170,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "EryaPipe1"
+}
 
 -- Erya Wall MK1 --
 local erwE = table.deepcopy(data.raw.wall["stone-wall"])
@@ -801,18 +925,17 @@ erwE.next_upgrade = nil
 data:extend{erwE}
 
 createEryaItem
-(
-    "EryaWall1",
-    64,
-    "EryaWar",
-    "a",
-    300,
-    0.2,
-    {{"EryaPlate",6}},
-    {count=150,time=1,ingredients={{"EryaSample", 1}}},
-    "Erya"
-)
-
+{
+    name = "EryaWall1",
+    iconSize = 64,
+    subgroup = "EryaWar",
+    order = "a",
+    stackSize = 300,
+    REnergy = 0.2,
+    RIngredients = {{"EryaPlate",6}},
+    TUnit = {count=150,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "Erya"
+}
 
 -- Erya Gate MK1 --
 local ergE = table.deepcopy(data.raw.gate.gate)
@@ -855,18 +978,17 @@ ergE.next_upgrade = nil
 data:extend{ergE}
 
 createEryaItem
-(
-    "EryaGate1",
-    64,
-    "EryaWar",
-    "b",
-    50,
-    0.3,
-    {{"EryaPlate",5},{"EryaCircuit",2}},
-    {count=180,time=1,ingredients={{"EryaSample", 1}}},
-    "EryaWall1"
-)
-
+{
+    name = "EryaGate1",
+    iconSize = 64,
+    subgroup = "EryaWar",
+    order = "b",
+    stackSize = 50,
+    REnergy = 0.3,
+    RIngredients = {{"EryaPlate",5},{"EryaCircuit",2}},
+    TUnit = {count=180,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "EryaWall1"
+}
 
 -- Erya Radar MK1 --
 local errE = table.deepcopy(data.raw.radar.radar)
@@ -883,18 +1005,17 @@ errE.next_upgrade = nil
 data:extend{errE}
 
 createEryaItem
-(
-    "EryaRadar1",
-    64,
-    "EryaWar",
-    "c",
-    10,
-    0.8,
-    {{"EryaMachineFrame1",4},{"EryaCircuit",8}},
-    {count=180,time=1,ingredients={{"EryaSample", 1}}},
-    "EryaWall1"
-)
-
+{
+    name = "EryaRadar1",
+    iconSize = 64,
+    subgroup = "EryaWar",
+    order = "c",
+    stackSize = 10,
+    REnergy = 0.8,
+    RIngredients = {{"EryaMachineFrame1",4},{"EryaCircuit",8}},
+    TUnit = {count=180,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "EryaWall1"
+}
 -- Erya Furnace MK1 --
 local erfE = table.deepcopy(data.raw.furnace["electric-furnace"])
 erfE.name = "EryaFurnace1"
@@ -909,18 +1030,17 @@ erfE.next_upgrade = nil
 data:extend{erfE}
 
 createEryaItem
-(
-    "EryaFurnace1",
-    64,
-    "EryaProduction",
-    "d",
-    15,
-    0.7,
-    {{"EryaMachineFrame1",3},{"EryaCircuit",5}},
-    {count=130,time=1,ingredients={{"EryaSample", 1}}},
-    "Erya"
-)
-
+{
+    name = "EryaFurnace1",
+    iconSize = 64,
+    subgroup = "EryaProduction",
+    order = "d",
+    stackSize = 15,
+    REnergy = 0.7,
+    RIngredients = {{"EryaMachineFrame1",3},{"EryaCircuit",5}},
+    TUnit = {count=130,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "Erya"
+}
 
 -- Erya Refinery MK1 --
 local errfE = table.deepcopy(data.raw["assembling-machine"]["oil-refinery"])
@@ -949,18 +1069,17 @@ errfE.next_upgrade = nil
 data:extend{errfE}
 
 createEryaItem
-(
-    "EryaRefinery1",
-    64,
-    "EryaProduction",
-    "e",
-    10,
-    1,
-    {{"EryaMachineFrame1",5},{"EryaCircuit",7},{"EryaPlate",12}},
-    {count=170,time=1,ingredients={{"EryaSample", 1}}},
-    "Erya"
-)
-
+{
+    name = "EryaRefinery1",
+    iconSize = 64,
+    subgroup = "EryaProduction",
+    order = "e",
+    stackSize = 10,
+    REnergy = 1,
+    RIngredients = {{"EryaMachineFrame1",5},{"EryaCircuit",7},{"EryaPlate",12}},
+    TUnit = {count=170,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "Erya"
+}
 
 -- Erya Chemical Plant MK1 --
 local ercpE = table.deepcopy(data.raw["assembling-machine"]["chemical-plant"])
@@ -989,14 +1108,14 @@ ercpE.next_upgrade = nil
 data:extend{ercpE}
 
 createEryaItem
-(
-    "EryaChemicalPlant1",
-    64,
-    "EryaProduction",
-    "f",
-    10,
-    1.5,
-    {{"EryaMachineFrame1",7},{"EryaCircuit",7},{"EryaPlate",15}},
-    {count=200,time=1,ingredients={{"EryaSample", 1}}},
-    "Erya"
-)
+{
+    name = "EryaChemicalPlant1",
+    iconSize = 64,
+    subgroup = "EryaProduction",
+    order = "f",
+    stackSize = 10,
+    REnergy = 1.5,
+    RIngredients = {{"EryaMachineFrame1",7},{"EryaCircuit",7},{"EryaPlate",15}},
+    TUnit = {count=200,time=1,ingredients={{"EryaSample", 1}}},
+    prerequisites = "Erya"
+}
