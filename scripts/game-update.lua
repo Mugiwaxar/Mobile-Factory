@@ -97,6 +97,10 @@ function initPlayer(event)
 			remote.call("dangOreus","toggle",MF.fS)
 			remote.call("dangOreus","toggle",MF.ccS)
 		end
+		if remote.interfaces["RSO"] then
+			remote.call("RSO","ignoreSurface",MF.fS.name)
+			remote.call("RSO","ignoreSurface",MF.ccS.name)
+		end
 	end
 end
 
