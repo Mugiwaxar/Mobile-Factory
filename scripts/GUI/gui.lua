@@ -509,6 +509,15 @@ function GUI.buttonClicked(event)
 			if valid(obj) == false then return end
 			obj:removeRecipe(recipeID)
 		end
+		if string.match(event.element.name, "DASwap") then
+			local objID = tonumber(split(event.element.name, ",")[2])
+			local obj = global.dataAssemblerTable[objID]
+			local recipeID = tonumber(split(event.element.name, ",")[3])
+			local productID = tonumber(split(event.element.name, ",")[4])
+			if valid(obj) == false then return end
+			local products = obj.recipeTable[recipeID].products
+			products[1], products[productID] = products[productID], products[1]
+		end
 		-- Update all GUIs --
 		GUI.updateAllGUIs(true)
 		return
