@@ -13,8 +13,7 @@ require("prototypes/entity/energy-laser.lua")
 require("prototypes/entity/quatron-reactor.lua")
 require("prototypes/entity/ore-cleaner.lua")
 require("prototypes/entity/fluid-extractor.lua")
-require("prototypes/entity/jet.lua")
-require("prototypes/entity/flag.lua")
+require("prototypes/entity/resource-catcher.lua")
 require("prototypes/entity/temp-chest.lua")
 require("prototypes/entity/temp-tank.lua")
 require("prototypes/matter-serialization/network-controller.lua")
@@ -60,12 +59,12 @@ require("prototypes/gun/tank-guns.lua")
 require("prototypes/animation/shield.lua")
 require("prototypes/animation/red-energy-orb.lua")
 require("prototypes/animation/MFTP.lua")
-if settings.startup["MF-enable-erya"].value == true then
-	require("prototypes/erya/erya-intermediates.lua")
-	require("prototypes/erya/erya-collector.lua")
-	require("prototypes/erya/erya-structures.lua")
-	require("prototypes/winter/snow-tiles.lua")
-end
+-- if settings.startup["MF-enable-erya"].value == true then
+	-- require("prototypes/erya/erya-intermediates.lua")
+	-- require("prototypes/erya/erya-collector.lua")
+	-- require("prototypes/erya/erya-structures.lua")
+	-- require("prototypes/winter/snow-tiles.lua")
+-- end
 if mods["omnimatter"] then require("utils/omnimatter.lua") end
 
 
@@ -87,17 +86,17 @@ data:extend{
 	}
 }
 
-if settings.startup["MF-enable-erya"].value == true then
-	data:extend{
-		{
-			type="item-group",
-			name="Erya",
-			icon="__Mobile_Factory_Graphics__/graphics/Erya/EryaPowder.png",
-			icon_size="256",
-			order="y"
-		}
-	}
-end
+-- if settings.startup["MF-enable-erya"].value == true then
+-- 	data:extend{
+-- 		{
+-- 			type="item-group",
+-- 			name="Erya",
+-- 			icon="__Mobile_Factory_Graphics__/graphics/Erya/EryaPowder.png",
+-- 			icon_size="256",
+-- 			order="y"
+-- 		}
+-- 	}
+-- end
 
 ----------------- ADD ITEM-SUBGROUP CATEGORY --------------
 data:extend{
@@ -166,33 +165,6 @@ data:extend{
 data:extend{
 	{
 		type="item-subgroup",
-		name="Jet",
-		group="MobileFactory",
-		order="h"
-	}
-}
-
--- data:extend{
--- 	{
--- 		type="item-subgroup",
--- 		name="Equipments",
--- 		group="MobileFactory",
--- 		order="h"
--- 	}
--- }
-
--- data:extend{
--- 	{
--- 		type="item-subgroup",
--- 		name="Poles",
--- 		group="MobileFactory",
--- 		order="h"
--- 	}
--- }
-
-data:extend{
-	{
-		type="item-subgroup",
 		name="Tiles",
 		group="MobileFactory",
 		order="i"
@@ -208,61 +180,6 @@ data:extend{
 	}
 }
 
--- data:extend{
--- 	{
--- 		type="item-subgroup",
--- 		name="Modules2",
--- 		group="MobileFactory",
--- 		order="k"
--- 	}
--- }
-
-if settings.startup["MF-enable-erya"].value == true then
-	data:extend{
-		{
-			type="item-subgroup",
-			name="EryaRessources",
-			group="Erya",
-			order="a"
-		}
-	}
-
-	data:extend{
-		{
-			type="item-subgroup",
-			name="EryaIntermediates",
-			group="Erya",
-			order="b"
-		}
-	}
-
-	data:extend{
-		{
-			type="item-subgroup",
-			name="EryaLogistic",
-			group="Erya",
-			order="c"
-		}
-	}
-
-	data:extend{
-		{
-			type="item-subgroup",
-			name="EryaProduction",
-			group="Erya",
-			order="d"
-		}
-	}
-
-	data:extend{
-		{
-			type="item-subgroup",
-			name="EryaWar",
-			group="Erya",
-			order="e"
-		}
-	}
-end
 
 data:extend{
 	{
@@ -324,16 +241,6 @@ data:extend{
 		order="c"
 	}
 }
-
-if settings.startup["MF-enable-erya"].value == true then
-	data:extend{
-		{
-			type="recipe-category",
-			name="EryaPowder",
-			order="d"
-		}
-	}
-end
 
 data:extend{
 	{

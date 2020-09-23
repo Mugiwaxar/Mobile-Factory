@@ -48,7 +48,7 @@ ec1E.picture = {
           height = 600,
           repeat_count = repeat_count,
           shift = {0,-0.3},
-		  scale = 1/7
+		      scale = 1/7
       },
       {
           filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeS.png",

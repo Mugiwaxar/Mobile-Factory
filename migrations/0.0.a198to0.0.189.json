@@ -1,0 +1,30 @@
+{
+	"entity":
+	[
+		["MiningJet", "MFBasicJet"],
+		["RepairJet", "MFBasicJet"],
+		["ConstructionJet", "MFBasicJet"],
+		["CombatJet", "MFBasicJet"]
+	],
+	"item":
+	[
+		["MiningJet", "MFBasicJet"],
+		["RepairJet", "MFBasicJet"],
+		["ConstructionJet", "MFBasicJet"],
+		["CombatJet", "MFBasicJet"]
+	],
+	"recipe":
+	[
+		["MiningJet", "MFBasicJet"],
+		["RepairJet", "MFBasicJet"],
+		["ConstructionJet", "MFBasicJet"],
+		["CombatJet", "MFBasicJet"]
+	],
+	"technology":
+	[
+		["MiningJet", "MFBasicJet"],
+		["RepairJet", "MFBasicJet"],
+		["ConstructionJet", "MFBasicJet"],
+		["CombatJet", "MFBasicJet"]
+	]
+}

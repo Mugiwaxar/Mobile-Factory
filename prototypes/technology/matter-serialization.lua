@@ -18,6 +18,7 @@ msT.prerequisites = {"Quatron"}
 msT.effects =
 {
 	{type="nothing", effect_description={"description.MatterSerialization"}},
+	{type="unlock-recipe", recipe="NetworkAccessPoint"},
 	{type="unlock-recipe", recipe="MatterInteractor"},
 	{type="unlock-recipe", recipe="DataStorage"}
 }

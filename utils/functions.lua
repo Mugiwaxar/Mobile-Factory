@@ -3,7 +3,7 @@ function Util.createTableList()
 	global.objTable = {}
 	Util.addObject{tableName="playersTable", tag="MFP", objName="MFPlayer", noPlaced=true, noUpsys=true}
 	Util.addObject{tableName="MFTable", tag="MF", objName="MF", noPlaced=true}
-	Util.addObject{tableName="eryaTable", tag="ES", objName="Erya"}
+	-- Util.addObject{tableName="eryaTable", tag="ES", objName="Erya"}
 	Util.addObject{tableName="matterInteractorTable", tag="MI", objName="MatterInteractor"}
 	Util.addObject{tableName="fluidInteractorTable", tag="FI", objName="FluidInteractor"}
 	Util.addObject{tableName="dataAssemblerTable", tag="DA", objName="DataAssembler"}
@@ -20,14 +20,7 @@ function Util.createTableList()
 	Util.addObject{tableName="deepTankTable", tag="DTK", objName="DeepTank", canInCC=true}
 	Util.addObject{tableName="oreCleanerTable", tag="OC", objName="OreCleaner", noInside=true}
 	Util.addObject{tableName="fluidExtractorTable", tag="FE", objName="FluidExtractor", noInside=true}
-	Util.addObject{tableName="miningJetTable", tag="MJ", objName="MiningJet", noPlaced=true}
-	Util.addObject{tableName="constructionJetTable", tag="CJ", objName="ConstructionJet", noPlaced=true}
-	Util.addObject{tableName="repairJetTable", tag="RJ", objName="RepairJet", noPlaced=true}
-	Util.addObject{tableName="combatJetTable", tag="CBJ", objName="CombatJet", noPlaced=true}
-	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK1", noInside=true}
-	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK2", noInside=true}
-	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK3", noInside=true}
-	Util.addObject{tableName="jetFlagTable", tag="MJF", objName="MiningJetFlagMK4", noInside=true}
+	Util.addObject{tableName="resourceCatcher", tag="RC", objName="ResourceCatcher"}
 	Util.addObject{objName="InternalEnergyCube", noUpsys=true, canInCCAnywhere=true, noOutside=true}
 	Util.addObject{objName="InternalQuatronCube", noUpsys=true, canInCCAnywhere=true, noOutside=true}
 end

@@ -815,26 +815,7 @@ function GUI.onGuiElemChanged(event)
 		-- Change the Fluid Interactor Target --
 		MF:fluidLaserTarget(tonumber(event.element.items[event.element.selected_index][4]))
 	end
-	
-	------- Read if the Element comes from a Mining Jet Flag -------
-	if string.match(event.element.name, "MJF") then
-		-- Find the Mining Jet Flag ID --
-		local ID = split(event.element.name, "MJF")
-		ID = tonumber(ID[1])
-		-- Check the ID --
-		if ID == nil then return end
-		-- Find the Mining Jet Flag --
-		local mjFlag = nil
-		for k, mjf in pairs(global.jetFlagTable) do
-			if valid(mjf) == true and mjf.ent.unit_number == ID then
-				mjFlag = mjf
-			end
-		end
-		-- Check if a Mining Jet Flag was found --
-		if mjFlag == nil then return end
-		-- Change the Mining Jet Flag targeted Inventory --
-		mjFlag:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
-	end
+
 end
 
 -- Called when a Localized Name is requested --

@@ -34,7 +34,7 @@ function IQC:setEnt(object)
 	self.spriteID = rendering.draw_sprite{sprite="QuatronCubeSprite0", x_scale=1/2.25, y_scale=1/2.25, target=object, surface=object.surface, render_layer=130}
 	self.lightID = rendering.draw_light{sprite="QuatronCubeSprite0", scale=1/2.25, target=object, surface=object.surface, minimum_darkness=0}
 	-- Update the UpSys --
-	UpSys.scanObjs()
+	-- UpSys.scanObjs() -- Make old save crash --
 end
 
 -- Reconstructor --

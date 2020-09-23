@@ -94,10 +94,11 @@ dmT.unit = {
 	{"DimensionalSample", 1}
 	}
 }
-dmT.effects = {}
-for _, recipe in pairs(_MFStartingRecipes) do
-  table.insert(dmT.effects, {type = "unlock-recipe", recipe = recipe})
-end
+dmT.effects = {
+  {type="unlock-recipe", recipe="MobileFactory"},
+  {type="unlock-recipe", recipe="DimensionalTile"},
+  {type="unlock-recipe", recipe="mfStone"}
+}
 data:extend{dmT}
 
 -- Dimensional Ore to Stone Recipe --

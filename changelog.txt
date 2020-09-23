@@ -1,4 +1,45 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.193
+Date: 17/08/2020
+  Features:
+    - Added the Resource Catcher: Allows you to move Resources (Ore Path, Fluid Path, Water ...) between two places.
+---------------------------------------------------------------------------------------------------
+Version: 0.0.192
+Date: 16/08/2020
+  Features:
+    - Updated to Factorio 1.0
+  Bugfixes:
+    - Fixed a new game Crash (Because of 1.0)
+    - Fixed a crash related to Data Network
+    - Fixed a crash that can occur when a Ghost/Blueprint is placed
+    - Fixed a crash when an Energy/Quatron Laser or an Energy/Quatron Cube is destroyed
+  Changes:
+    - No more free Mobile Factory inserted inside your inventory when you start a new Game (Factorio 1.0 problem, have to wait)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.191
+Date: 13/08/2020
+  Bugfixes:
+    - Fixed Warptorio 2 Compatibility
+    - Removed the Profiler (Crash: Command strartProfiler, stopProfiler already exist)
+  Changes:
+    - The Quatron Energy produced by the Quatron Reactor has been significantly increased and balanced, higher level means more production (See the Quatron Reactor Wiki for more information)
+---------------------------------------------------------------------------------------------------
+Version: 0.0.190
+Date: 13/08/2020
+  Features:
+    - Created the "Mobile Factory - Jets" Extension and removed all Jets from the "Mobile Factory" Mod
+---------------------------------------------------------------------------------------------------
+Version: 0.0.189
+Date: 25/07/2020
+  Bugfixes:
+    - Fixed some loading crashs
+    - Fixed the Ore Cleaner wrong Graphics
+---------------------------------------------------------------------------------------------------
+Version: 0.0.188
+Date: 25/07/2020
+  Features:
+    - Created the "Mobile Factory - Erya" Extension and removed all Erya tech from the "Mobile Factory" Mod
+---------------------------------------------------------------------------------------------------
 Version: 0.0.187
 Date: 11/07/2020
   Features:

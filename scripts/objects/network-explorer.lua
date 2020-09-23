@@ -49,7 +49,7 @@ function NE:remove()
 	-- Remove from the Update System --
 	UpSys.removeObj(self)
 	-- Remove from the Network Access Point --
-	if self.networkAccessPoint ~= nil then
+	if self.networkAccessPoint ~= nil and self.ent ~= nil and self.ent.valid == true then
 		self.networkAccessPoint.objTable[self.ent.unit_number] = nil
 	end
 end

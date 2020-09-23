@@ -77,7 +77,7 @@ local napR = {}
 napR.type = "recipe"
 napR.name = "NetworkAccessPoint"
 napR.energy_required = 6
-napR.enabled = true
+napR.enabled = false
 napR.ingredients =
     {
       {"CrystalizedCircuit", 18},

@@ -66,24 +66,6 @@ for k, MF in pairs(global.MFTable or {}) do
 	end
 end
 
--- Set Jets Max Distance --
-for k, MF in pairs(global.MFTable or {}) do
-	MF.locked = true
-	if MF.varTable.jets == nil then
-		MF.varTable.jets = {}
-		MF.varTable.jets.mjMaxDistance = global.mjMaxDistance or _MFMiningJetDefaultMaxDistance
-		MF.varTable.jets.cjMaxDistance = global.cjMaxDistance or  _MFConstructionJetDefaultMaxDistance
-		MF.varTable.jets.rjMaxDistance = global.rjMaxDistance or  _MFRepairJetDefaultMaxDistance
-		MF.varTable.jets.cbjMaxDistance = global.cbjMaxDistance or  _MFCombatJetDefaultMaxDistance
-	end
-end
-
--- Remove old Jets Distances --
-global.mjMaxDistance = nil
-global.cjMaxDistance = nil
-global.rjMaxDistance = nil
-global.cbjMaxDistance = nil
-
 -- Create all Players Object --
 for k, player2 in pairs(game.players) do
 	local playerTable = global.playersTable[player2.name]

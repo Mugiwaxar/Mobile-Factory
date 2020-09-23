@@ -49,7 +49,8 @@ end
 
 -- Is valid --
 function JC:valid()
-	return true
+    if self.ent ~= nil and self.ent.valid then return true end
+	return false
 end
 
 -- Update --

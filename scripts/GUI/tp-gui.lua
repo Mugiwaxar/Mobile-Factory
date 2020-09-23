@@ -102,6 +102,7 @@ function GUI.updateLocation(GUIObj)
     locPane.clear()
 
     -- Look for all Locations --
+    if MF.jumpDriveObj.locationTable == nil then MF.jumpDriveObj.locationTable = {} end
     for name, loc in pairs(MF.jumpDriveObj.locationTable) do
 
         -- Check the Surface --

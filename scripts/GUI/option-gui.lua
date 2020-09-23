@@ -149,15 +149,15 @@ function GUI.updateOptionGUIGameTab(GUIObj)
 	scrollPane.style.minimal_height  = 500
 
 	-- Get Jets variable --
-	local jets = GUIObj.MF.varTable.jets
+	-- local jets = GUIObj.MF.varTable.jets
 
 	-- Add Jets Options --
-	GUI.addOption("", scrollPane, "title", false, {text={"gui-description.JetOptions"}}, playerIndex)
-	GUI.addOption("MiningJetDistanceOpt", scrollPane, "numberfield", false, {text=jets.mjMaxDistance or _MFMiningJetDefaultMaxDistance, text2={"gui-description.MiningJetDistanceOpt"}, tooltip={"gui-description.MiningJetDistanceOptTT"}}, playerIndex)
-	GUI.addOption("ConstructionJetDistanceOpt", scrollPane, "numberfield", false, {text=jets.cjMaxDistance or _MFConstructionJetDefaultMaxDistance, text2={"gui-description.ConstructionJetDistanceOpt"}, tooltip={"gui-description.ConstructionJetDistanceOptTT"}}, playerIndex)
-	GUI.addOption("RepairJetDistanceOpt", scrollPane, "numberfield", false, {text=jets.rjMaxDistance or _MFRepairJetDefaultMaxDistance, text2={"gui-description.RepairJetDistanceOpt"}, tooltip={"gui-description.RepairJetDistanceOptTT"}}, playerIndex)
-	GUI.addOption("CombatJetDistanceOpt", scrollPane, "numberfield", false, {text=jets.cbjMaxDistance or _MFCombatJetDefaultMaxDistance, text2={"gui-description.CombatJetDistanceOpt"}, tooltip={"gui-description.CombatJetDistanceOptTT"}}, playerIndex)
-	GUI.addOption("ConstructionJetTableSizeOpt", scrollPane, "numberfield", false, {text=jets.cjTableSize or _MFConstructionJetDefaultTableSize, text2={"gui-description.ConstructionJetTableSizeOpt"}, tooltip={"gui-description.ConstructionJetTableSizeOptTT"}}, playerIndex)
+	-- GUI.addOption("", scrollPane, "title", false, {text={"gui-description.JetOptions"}}, playerIndex)
+	-- GUI.addOption("MiningJetDistanceOpt", scrollPane, "numberfield", false, {text=jets.mjMaxDistance or _MFMiningJetDefaultMaxDistance, text2={"gui-description.MiningJetDistanceOpt"}, tooltip={"gui-description.MiningJetDistanceOptTT"}}, playerIndex)
+	-- GUI.addOption("ConstructionJetDistanceOpt", scrollPane, "numberfield", false, {text=jets.cjMaxDistance or _MFConstructionJetDefaultMaxDistance, text2={"gui-description.ConstructionJetDistanceOpt"}, tooltip={"gui-description.ConstructionJetDistanceOptTT"}}, playerIndex)
+	-- GUI.addOption("RepairJetDistanceOpt", scrollPane, "numberfield", false, {text=jets.rjMaxDistance or _MFRepairJetDefaultMaxDistance, text2={"gui-description.RepairJetDistanceOpt"}, tooltip={"gui-description.RepairJetDistanceOptTT"}}, playerIndex)
+	-- GUI.addOption("CombatJetDistanceOpt", scrollPane, "numberfield", false, {text=jets.cbjMaxDistance or _MFCombatJetDefaultMaxDistance, text2={"gui-description.CombatJetDistanceOpt"}, tooltip={"gui-description.CombatJetDistanceOptTT"}}, playerIndex)
+	-- GUI.addOption("ConstructionJetTableSizeOpt", scrollPane, "numberfield", false, {text=jets.cjTableSize or _MFConstructionJetDefaultTableSize, text2={"gui-description.ConstructionJetTableSizeOpt"}, tooltip={"gui-description.ConstructionJetTableSizeOptTT"}}, playerIndex)
 
 	-- Add Floor Is Lava Option --
 	GUI.addOption("", scrollPane, "title", false, {text={"gui-description.FloorIsLavaTitle"}}, playerIndex)

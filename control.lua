@@ -3,16 +3,16 @@ pcall(require,'__debugadapter__/debugadapter.lua')
 GUI = {}
 Util = {}
 UpSys = {}
-Erya = {}
 
 require("utils/profiler.lua")
 require("utils/settings.lua")
 require("utils/functions.lua")
 require("utils/surface.lua")
-require("scripts/GUI/gui.lua")
 require("utils/cc-extension.lua")
-require("scripts/game-update.lua")
 require("utils/warptorio.lua")
+require("utils/remote.lua")
+require("scripts/GUI/gui.lua")
+require("scripts/game-update.lua")
 require("scripts/objects/mobile-factory.lua")
 require("scripts/objects/gui-object.lua")
 require("scripts/objects/ore-cleaner.lua")
@@ -35,15 +35,10 @@ require("scripts/objects/energy-laser.lua")
 require("scripts/objects/quatron-cube.lua")
 require("scripts/objects/quatron-laser.lua")
 require("scripts/objects/quatron-reactor.lua")
-require("scripts/objects/mining-jet.lua")
-require("scripts/objects/mining-jet-flag.lua")
-require("scripts/objects/construction-jet.lua")
-require("scripts/objects/repair-jet.lua")
-require("scripts/objects/combat-jet.lua")
 require("scripts/objects/deep-storage.lua")
 require("scripts/objects/deep-tank.lua")
 require("scripts/objects/MFPlayer.lua")
-require("scripts/objects/erya-structure.lua")
+require("scripts/objects/resource-catcher.lua")
 
 -- When the mod init --
 function onInit()
@@ -53,14 +48,8 @@ function onInit()
 	global.upsysTickTable = global.upsysTickTable or {}
 	global.entsUpPerTick = global.entsUpPerTick or _mfBaseUpdatePerTick
 	global.upSysLastScan = global.upSysLastScan or 0
-	-- Erya --
-	global.updateEryaIndex = global.updateEryaIndex or 1
 	-- Data Network --
 	global.dataNetworkID = global.dataNetworkID or 0
-	-- Construction Jet Update --
-	global.constructionJetIndex = global.constructionJetIndex or 0
-	-- Repair Jet Update --
-	global.repairJetIndex = global.repairJetIndex or 0
 	-- Floor Is Lava --
 	global.floorIsLavaActivated = global.floorIsLavaActivated or false
 	-- Research --
@@ -73,7 +62,7 @@ function onInit()
 	-- Tables --
 	global.constructionTable = global.constructionTable or {}
 	global.repairTable = global.repairTable or {}
-	global.eryaIndexedTable = global.eryaIndexedTable or {}
+	-- global.eryaIndexedTable = global.eryaIndexedTable or {}
 
 	-- Create the Objects Table --
 	Util.createTableList()
@@ -97,8 +86,8 @@ function onInit()
 	rendering.clear("Mobile_Factory")
 
 	-- Recreate GUIs --
-	for k, player in pairs(game.players) do
-		GUI.createMFMainGUI(player)
+	for k, MFPlayer in pairs(global.MFPlayer or {}) do
+		GUI.createMFMainGUI(MFPlayer.ent)
 	end
 
 	-- Add Warptorio Compatibility --
@@ -111,7 +100,9 @@ function onLoad(event)
 	for k, obj in pairs(global.objTable) do
 		if obj.tableName ~= nil and obj.tag ~= nil then
 			for objKey, entry in pairs(global[obj.tableName] or {}) do
-			_G[obj.tag]:rebuild(entry)
+				if _G[obj.tag] ~= nil then
+					_G[obj.tag]:rebuild(entry)
+				end
 			end
 		end
 	end
@@ -147,8 +138,7 @@ _mfEntityFilterWithCBJ = {
 	{filter = "type", type = "simple-entity", mode = "and", invert = true},
 	{filter = "type", type = "unit-spawner", mode = "and", invert = true},
 	{filter = "type", type = "turret", mode = "and", invert = true},
-	{filter = "type", type = "fish", mode = "and", invert = true},
-	{filter = "name", name = "CombatJet", mode = "or"}
+	{filter = "type", type = "fish", mode = "and", invert = true}
 }
 
 local function onForceCreated(event)

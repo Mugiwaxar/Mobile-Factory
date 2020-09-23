@@ -76,9 +76,6 @@ dlP.off_animation =
       }
     }
 dlP.inputs = {"DimensionalSample", "DimensionalCrystal"}
-if settings.startup["MF-enable-erya"].value == true then
-table.insert(dlP.inputs, "EryaSample")
-end
 data:extend{dlP}
 
 -- Item --

@@ -101,14 +101,14 @@ function QR:burnFluid()
     if level == nil then return end
 
     -- Get the amount of Fluid to remove --
-    local fluidToRemove = math.min(fluid.amount, (self:maxQuatron() - self:quatron()) / (level), 500)
+    local fluidToRemove = math.min(fluid.amount, (self:maxQuatron() - self:quatron()) / (level*(level/3)*3), 500)
     fluidToRemove = math.ceil(fluidToRemove)
 
     -- Remove the Fluid --
     local removed = self.ent.remove_fluid{name=fluidName, amount=fluidToRemove}
 
     -- Add the Quatron --
-    self:addQuatron(math.floor(removed * (level)))
+	self:addQuatron(math.floor(removed * (level*(level/3)*3)))
     self.internalQuatron = math.floor(self.internalQuatron)
     if self:quatron() > self:maxQuatron() then self.internalQuatron = self.maxQuatron end
 end

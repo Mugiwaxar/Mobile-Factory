@@ -11,7 +11,7 @@ function somethingWasPlaced(event)
 	local entity = event.created_entity or event.entity or event.destination
 	if entity == nil or entity.last_user == nil then return end
 	local MFPlayer = getMFPlayer(event.player_index or entity.last_user.index)
-	local MF = getMF(event.player_index or entity.last_user.index)
+ 	local MF = getMF(event.player_index or entity.last_user.index)
 
 	-- Check the Values --
 	if entity == nil or MFPlayer == nil or MF == nil then return end
@@ -59,20 +59,8 @@ function somethingWasPlaced(event)
 		end
 	end
 
-	-- Save the Ghost inside the Construction Table and Stop --
-	if type == "entity-ghost" then
-		if MF.ent ~= nil and MF.ent.valid == true and MF.ent.surface == entity.surface then
-			if table_size(global.constructionTable) >= MF.varTable.jets.cjTableSize then
-				MFPlayer.ent.print({"info.cjTooManyGhosts", MF.varTable.jets.cjTableSize})
-			else
-				table.insert(global.constructionTable,{ent=entity, item=entity.ghost_prototype.items_to_place_this[1].name, name=entity.ghost_name, position=entity.position, direction=entity.direction or 1, mission="Construct"})
-			end
-		end
-		return
-	end
-
 	-- Save the Internal Energy Cube --
-	if entity.name == "InternalEnergyCube" then
+	if type ~= "entity-ghost" and entity.name == "InternalEnergyCube" then
 		if MF.internalEnergyObj.ent ~= nil and MF.internalEnergyObj.ent.valid == true then
 			if event.stack ~= nil and event.stack.valid_for_read == true then
 				MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
@@ -91,7 +79,7 @@ function somethingWasPlaced(event)
 	end
 
 	-- Save the Internal Quatron Cube --
-	if entity.name == "InternalQuatronCube" then
+	if type ~= "entity-ghost" and entity.name == "InternalQuatronCube" then
 		if MF.internalQuatronObj.ent ~= nil and MF.internalQuatronObj.ent.valid == true then
 			if event.stack ~= nil and event.stack.valid_for_read == true then
 				MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
@@ -118,15 +106,18 @@ function somethingWasPlaced(event)
 		return
 	end
 
+	-- Stop if this is a Ghost --
+	if type == "entity-ghost" then return end
+
 	-- If a SyncArea Entity was placed --
 	if _mfSyncAreaAllowedTypes[entity.type] == true then
 		placedEntityInSyncArea(MF, entity)
 	end
 
-	-- If a Erya Structure was placed --
-	if _mfEryaFreezeStructures[entity.name] == true then
-		placedEryaStructure(event)
-	end
+	-- -- If a Erya Structure was placed --
+	-- if _mfEryaFreezeStructures[entity.name] == true then
+	-- 	placedEryaStructure(event)
+	-- end
 
 	-- Create the Object --
 	if objInfo ~= nil and objInfo.noPlaced ~= true and objInfo.tag ~= nil then
@@ -157,11 +148,6 @@ function somethingWasRemoved(event)
 		returnSyncChestsItems(event)
 	end
 
-	-- Remove the Erya Structure --
-	if _mfEryaFreezeStructures[removedEnt.name] == true then
-		removedEryaStructure(event)
-	end
-
 	-- Get and Check the Values --
 	local obj = global.entsTable[removedEnt.unit_number]
 	if obj == nil then return end
@@ -189,6 +175,14 @@ function somethingWasRemoved(event)
 			MF.internalQuatronObj:settingsToTags(event.buffer[1])
 		end
 		MF.internalQuatronObj:remove()
+		return
+	end
+
+	-- If a Resoure Catcher was removed --
+	if removedEnt.name == "ResourceCatcher" and obj.filled == true then
+		event.buffer.clear()
+		event.buffer.insert("FilledResourceCatcher")
+		obj:settingsToTags(event.buffer[1])
 		return
 	end
 
@@ -249,17 +243,6 @@ function tilesWasPlaced(event)
 			MFPlayer.ent.print({"", {"item-name." .. event.stack.name }, " ", {"gui-description.CCNotPlaceable"}})
 		end
 		return
-	end
-	-- Save the Ghost inside the Construction Table and Stop --
-	if event.created_entity ~= nil and MF ~= nil then
-		if MF.ent ~= nil and MF.ent.valid == true and MF.ent.surface == event.created_entity.surface then
-			if table_size(global.constructionTable) >= MF.varTable.jets.cjTableSize then
-				MFPlayer.ent.print({"info.cjTooManyGhosts", MF.varTable.jets.cjTableSize})
-			else
-				table.insert(global.constructionTable,{ent=event.created_entity, item=event.created_entity.ghost_prototype.items_to_place_this[1].name, name=event.created_entity.ghost_name, position=event.created_entity.position, direction=event.created_entity.direction or 1, mission="Construct"})
-			end
-		return
-		end
 	end
 end
 
@@ -363,14 +346,14 @@ function returnSyncChestsItems(event)
 end
 
 -- An Erya Structure is placed --
-function placedEryaStructure(event)
-	if global.eryaTable == nil then global.eryaTable  = {} end
-	global.eryaTable[event.created_entity.unit_number] = ES:new(event.created_entity)
-end
+-- function placedEryaStructure(event)
+-- 	if global.eryaTable == nil then global.eryaTable  = {} end
+-- 	global.eryaTable[event.created_entity.unit_number] = ES:new(event.created_entity)
+-- end
 
 -- An Erya Structure is removed --
-function removedEryaStructure(event)
-	if global.eryaTable == nil then global.eryaTable = {} return end
-	if global.eryaTable[event.entity.unit_number] ~= nil then global.eryaTable[event.entity.unit_number]:remove() end
-	global.eryaTable[event.entity.unit_number] = nil
-end
+-- function removedEryaStructure(event)
+-- 	if global.eryaTable == nil then global.eryaTable = {} return end
+-- 	if global.eryaTable[event.entity.unit_number] ~= nil then global.eryaTable[event.entity.unit_number]:remove() end
+-- 	global.eryaTable[event.entity.unit_number] = nil
+-- end

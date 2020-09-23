@@ -103,59 +103,30 @@ _mfFEFluidPerExtraction = 30
 _mfFEMaxCharge = 1000
 _mfFluidExtractorMaxDistance = 100
 
--- Mining Jet --
-_mfMiningJetOrePerUpdate = 5
-_mfMiningJetInventorySize = 100
-_mfMiningJetEnergyNeeded = 2500000
-_MFMiningJetDefaultMaxDistance = 200
-
--- Mining Jet Flag --
-_mfMiningJetFlagMK1Radius = 1
-_mfMiningJetFlagMK2Radius = 16
-_mfMiningJetFlagMK3Radius = 50
-_mfMiningJetFlagMK4Radius = 100
-
--- Construction/Repair Jet --
-_mfEntitiesScanedPerUpdate = 30
-
--- Construction Jet --
-_mfHPRepairedPerUpdate = -35
-_mfConstructionJetEnergyNeeded = 2500000
-_MFConstructionJetDefaultMaxDistance = 130
-_MFConstructionJetDefaultTableSize = 1000
-
--- Repair Jet --
-_mfRepairJetEnergyNeeded = 4000000
-_MFRepairJetDefaultMaxDistance = 130
-
--- Combat Jet --
-_mfCombatJetEnergyNeeded = 3200000
-_MFCombatJetDefaultMaxDistance = 50
-
 -- GUI Settings --
 _GUIButtonsSize = 25
 
 -- Erya --
-_mfEryaFrostlayer = {}
-_mfEryaFrostlayer[1] = {{0,0}}
-_mfEryaFrostlayer[2] = {{-1,-1},{0,-1},{1,-1},{-1,0},{1,0},{-1,1},{0,1},{1,1}}
-_mfEryaFrostlayer[3] = {{-2,-2},{-2,-1},{-2,0},{-2,1},{-2,2},{-1,-2},{-1,2},{0,-2},{0,2},{1,-2},{1,2},{2,-2},{2,-1},{2,0},{2,1},{2,2}}
-_mfEryaFrostlayer[4] = {{-3,-3},{-3,-2},{-3,-1},{-3,0},{-3,1},{-3,2},{-3,3},{-2,-3},{-2,3},{-1,-3},{-1,3},{0,-3},{0,3},{1,-3},{1,3},{2,-3},{2,3},{3,-3},{3,-2},{3,-1},{3,0},{3,1},{3,2},{3,3}}
-_mfEryaFrostlayer[5] = {{-4,-4},{-4,-3},{-4,-2},{-4,-1},{-4,0},{-4,1},{-4,2},{-4,3},{-4,4},{-3,-4},{-3,4},{-2,-4},{-2,4},{-1,-4},{-1,4},{0,-4},{0,4},{1,-4},{1,4},{2,-4},{2,4},{3,-4},{3,4},{4,-4},{4,-3},{4,-2},{4,-1},{4,0},{4,1},{4,2},{4,3},{4,4}}
-_mfEryaFrostlayer[6] = {{-5,-5},{-5,-4},{-5,-3},{-5,-2},{-5,-1},{-5,0},{-5,1},{-5,2},{-5,3},{-5,4},{-5,5},{-4,-5},{-4,5},{-3,-5},{-3,5},{-2,-5},{-2,5},{-1,-5},{-1,5},{0,-5},{0,5},{1,-5},{1,5},{2,-5},{2,5},{3,-5},{3,5},{4,-5},{4,5},{5,-5},{5,-4},{5,-3},{5,-2},{5,-1},{5,0},{5,1},{5,2},{5,3},{5,4},{5,5}}
+-- _mfEryaFrostlayer = {}
+-- _mfEryaFrostlayer[1] = {{0,0}}
+-- _mfEryaFrostlayer[2] = {{-1,-1},{0,-1},{1,-1},{-1,0},{1,0},{-1,1},{0,1},{1,1}}
+-- _mfEryaFrostlayer[3] = {{-2,-2},{-2,-1},{-2,0},{-2,1},{-2,2},{-1,-2},{-1,2},{0,-2},{0,2},{1,-2},{1,2},{2,-2},{2,-1},{2,0},{2,1},{2,2}}
+-- _mfEryaFrostlayer[4] = {{-3,-3},{-3,-2},{-3,-1},{-3,0},{-3,1},{-3,2},{-3,3},{-2,-3},{-2,3},{-1,-3},{-1,3},{0,-3},{0,3},{1,-3},{1,3},{2,-3},{2,3},{3,-3},{3,-2},{3,-1},{3,0},{3,1},{3,2},{3,3}}
+-- _mfEryaFrostlayer[5] = {{-4,-4},{-4,-3},{-4,-2},{-4,-1},{-4,0},{-4,1},{-4,2},{-4,3},{-4,4},{-3,-4},{-3,4},{-2,-4},{-2,4},{-1,-4},{-1,4},{0,-4},{0,4},{1,-4},{1,4},{2,-4},{2,4},{3,-4},{3,4},{4,-4},{4,-3},{4,-2},{4,-1},{4,0},{4,1},{4,2},{4,3},{4,4}}
+-- _mfEryaFrostlayer[6] = {{-5,-5},{-5,-4},{-5,-3},{-5,-2},{-5,-1},{-5,0},{-5,1},{-5,2},{-5,3},{-5,4},{-5,5},{-4,-5},{-4,5},{-3,-5},{-3,5},{-2,-5},{-2,5},{-1,-5},{-1,5},{0,-5},{0,5},{1,-5},{1,5},{2,-5},{2,5},{3,-5},{3,5},{4,-5},{4,5},{5,-5},{5,-4},{5,-3},{5,-2},{5,-1},{5,0},{5,1},{5,2},{5,3},{5,4},{5,5}}
 
 -- Erya Structure that freeze the Environment --
-_mfEryaFreezeStructures = {}
-_mfEryaFreezeStructures["EryaLamp"] = true
-_mfEryaFreezeStructures["EryaInserter1"] = true
-_mfEryaFreezeStructures["EryaMiningDrill1"] = true
-_mfEryaFreezeStructures["EryaPumpjack1"] = true
-_mfEryaFreezeStructures["EryaAssemblingMachine1"] = true
-_mfEryaFreezeStructures["EryaPump1"] = true
-_mfEryaFreezeStructures["EryaRadar1"] = true
-_mfEryaFreezeStructures["EryaFurnace1"] = true
-_mfEryaFreezeStructures["EryaRefinery1"] = true
-_mfEryaFreezeStructures["EryaChemicalPlant1"] = true
+-- _mfEryaFreezeStructures = {}
+-- _mfEryaFreezeStructures["EryaLamp"] = true
+-- _mfEryaFreezeStructures["EryaInserter1"] = true
+-- _mfEryaFreezeStructures["EryaMiningDrill1"] = true
+-- _mfEryaFreezeStructures["EryaPumpjack1"] = true
+-- _mfEryaFreezeStructures["EryaAssemblingMachine1"] = true
+-- _mfEryaFreezeStructures["EryaPump1"] = true
+-- _mfEryaFreezeStructures["EryaRadar1"] = true
+-- _mfEryaFreezeStructures["EryaFurnace1"] = true
+-- _mfEryaFreezeStructures["EryaRefinery1"] = true
+-- _mfEryaFreezeStructures["EryaChemicalPlant1"] = true
 
 -- Unlocked Technology Functions --
 _MFResearches = {}
@@ -189,14 +160,14 @@ _mfTooltipGUI =
     FluidInteractor = "fluidInteractorTable",
     DataAssembler = "dataAssemblerTable",
     NetworkExplorer = "networkExplorerTable",
-    MiningJetFlagMK1 = "jetFlagTable",
-    MiningJetFlagMK2 = "jetFlagTable",
-    MiningJetFlagMK3 = "jetFlagTable",
-    MiningJetFlagMK4 = "jetFlagTable",
-    MiningJet = "miningJetTable",
-    ConstructionJet = "constructionJetTable",
-    RepairJet = "repairJetTable",
-    CombatJet = "combatJetTable",
+    -- MiningJetFlagMK1 = "jetFlagTable",
+    -- MiningJetFlagMK2 = "jetFlagTable",
+    -- MiningJetFlagMK3 = "jetFlagTable",
+    -- MiningJetFlagMK4 = "jetFlagTable",
+    -- MiningJet = "miningJetTable",
+    -- ConstructionJet = "constructionJetTable",
+    -- RepairJet = "repairJetTable",
+    -- CombatJet = "combatJetTable",
     NetworkController = "entsTable"
 }
 
@@ -205,15 +176,11 @@ _eventTick5=5 -- Teleportation --
 _eventTick7=7 -- Data Assembler GUI Progress Bars --
 _eventTick27=27 -- Mobile Factory Fuel --
 _eventTick30=30 -- Mobile Factory Sync Area
-_eventTick41=41 -- Repair Jets --
-_eventTick45=45 -- Construction Jets --
 _eventTick49=49 -- Mobile Factory Lights --
 _eventTick55=55 -- GUI --
 _eventTick60=60 -- Mobile Factory Lasers/Jump Drive --
-_eventTick73=73 -- Combat Jets --
 _eventTick80=80 -- Mobile Factory Internal Inventory --
 _eventTick90=90 -- Mobile Factory Entities Scan --
-_eventTick110=110 -- Mining Jets --
 _eventTick125=125 -- Mobile Factory Modules Scan --
 _eventTick150=150 -- Floor Is Lava Update --
 _eventTick1200=1200 -- Factory Pollution --

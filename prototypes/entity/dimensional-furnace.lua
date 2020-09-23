@@ -129,7 +129,7 @@ dfR.ingredients =
 dfR.result = "DimensionalFurnace"
 data:extend{dfR}
 
--- Technologie --
+-- Technology --
 local dfT = {}
 dfT.name = "DimensionalOreSmelting"
 dfT.type = "technology"

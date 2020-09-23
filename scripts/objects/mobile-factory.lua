@@ -56,9 +56,6 @@ function MF:new(args)
 	t.varTable = t.varTable or {}
 	t.varTable.tech = t.varTable.tech or {}
 	t.varTable.allowedPlayers = t.varTable.allowedPlayers or {}
-	t.varTable.jets = t.varTable.jets or {}
-	t.varTable.jets["cjTableSize"] = t.varTable.jets["cjTableSize"] or _MFConstructionJetDefaultTableSize
-	--t.varTable.jets["cjUseGhostTable"] = t.varTable.jets["cjUseGhostTable"] or true
 
 	if player then
 		global.MFTable[player.name] = t

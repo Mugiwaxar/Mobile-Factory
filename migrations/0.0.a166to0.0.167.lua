@@ -42,7 +42,7 @@ end
 
 -- Added the MF Object and the PlayerIndex to all Data Network --
 for k, DN in pairs(global.dataNetworkTable or {}) do
-    if DN.dataCenter ~= nil then
+    if DN.dataCenter ~= nil and DN.dataCenter.MF ~= nil then
         DN.MF = DN.dataCenter.MF
         DN.playerIndex = DN.MF.playerIndex
     end
@@ -72,8 +72,6 @@ if global.entsTable == nil then global.entsTable = {} end
 if global.upsysTickTable == nil then global.upsysTickTable = {} end
 if global.updateEryaIndex == nil then global.updateEryaIndex = 1 end
 if global.eryaIndexedTable == nil then global.eryaIndexedTable = {} end
-if global.constructionJetIndex == nil then global.constructionJetIndex = 0 end
-if global.repairJetIndex == nil then global.repairJetIndex = 0 end
 if global.floorIsLavaActivated == nil then global.floorIsLavaActivated = false end
 if global.dataNetworkID == nil then global.dataNetworkID = 0 end
 if global.constructionTable == nil then global.constructionTable = {} end

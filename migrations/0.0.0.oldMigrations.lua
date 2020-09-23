@@ -46,8 +46,6 @@ if global.entsTable == nil then global.entsTable = {} end
 if global.upsysTickTable == nil then global.upsysTickTable = {} end
 if global.updateEryaIndex == nil then global.updateEryaIndex = 1 end
 if global.eryaIndexedTable == nil then global.eryaIndexedTable = {} end
-if global.constructionJetIndex == nil then global.constructionJetIndex = 0 end
-if global.repairJetIndex == nil then global.repairJetIndex = 0 end
 if global.floorIsLavaActivated == nil then global.floorIsLavaActivated = false end
 if global.dataNetworkID == nil then global.dataNetworkID = 0 end
 if global.constructionTable == nil then global.constructionTable = {} end
@@ -61,10 +59,6 @@ unlockRecipeForAll("EnergyCubeMK1", "MatterSerialization")
 unlockRecipeForAll("MachineFrame2", "DimensionalOreSmelting")
 unlockRecipeForAll("MachineFrame3", "DimensionalCrystal")
 unlockRecipeForAll("CrystalizedCircuit", "DimensionalCrystal")
-unlockRecipeForAll("MiningJetFlagMK1", "MiningJet")
-unlockRecipeForAll("MiningJetFlagMK2", "MiningJet")
-unlockRecipeForAll("MiningJetFlagMK3", "MiningJet")
-unlockRecipeForAll("MiningJetFlagMK4", "MiningJet")
 
 -- Set MF surface to day and alway day --
 if global.MF ~= nil and global.MF.fS ~= nil then

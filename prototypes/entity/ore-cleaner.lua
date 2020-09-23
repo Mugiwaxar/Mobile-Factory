@@ -4,6 +4,7 @@
 local ocE = table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
 ocE.type = "mining-drill"
 ocE.name = "OreCleaner"
+ocE.graphics_set = nil
 ocE.icon = "__Mobile_Factory_Graphics__/graphics/icones/OreCleaner.png"
 ocE.icon_size = 32
 ocE.flags = {"placeable-neutral", "player-creation", "not-rotatable"}

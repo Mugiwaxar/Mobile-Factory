@@ -9,7 +9,7 @@ function onTick(event)
 	-- Update all entities --
 	updateEntities(event)
 	-- Update all Erya Structures --
-	Erya.updateEryaStructures(event)
+	-- Erya.updateEryaStructures(event)
 	-- Update all GUI --
 	GUI.updateAllGUIs()
 	-- Updates Mobile Factory Lights --
@@ -20,11 +20,6 @@ end
 
 -- Update all entities --
 function updateEntities(event)
-	-- Update --
-	if event.tick%_eventTick110 == 0 then updateMiningJet() end
-	if event.tick%_eventTick45 == 0 then updateConstructionJet() end
-	if event.tick%_eventTick41 == 0 then updateRepairJet() end
-	if event.tick%_eventTick73 == 0 then updateCombatJet() end
 	-- Update System --
 	UpSys.update(event)
 end
@@ -93,7 +88,8 @@ function initPlayer(event)
 		createMFSurface(MF)
 		createControlRoom(MF)
 		global.playersTable[player.name].MF = MF
-		Util.addMobileFactory(player)
+		------------------- Can't get the Player Inventory when the Mod Init since the Factorio 1.0 Version -------------------
+		-- Util.addMobileFactory(player)
 		setPlayerVariable(player.name, "GotInventory", true)
 		GUI.createMFMainGUI(player)
 		
@@ -124,32 +120,9 @@ function onEntityDamaged(event)
 	if event.entity.force.name == "enemy" or event.entity.force.name == "neutral" then return end
 	-- Check the Entity --
 	if event.entity == nil or event.entity.valid == false then return end
-	-- Command to the Jet to return to the Mobile Factory if its life is low --
-	if event.entity.name == "CombatJet" then
-		local obj = global.combatJetTable[event.entity.unit_number]
-		if valid(obj) == true and event.entity.health < 600 and obj.currentOrder == "Fight" then
-			obj:goMF(defines.distraction.none)
-		end
-		return
-	end
 	-- Test if this is in the Control Center --
 	if string.match(event.entity.surface.name, _mfControlSurfaceName) then
 		event.entity.health = event.entity.prototype.max_health
-	end
-	-- Save the Entity inside the Repair table for Jet --
-	if event.entity.health < event.entity.prototype.max_health then
-		-- Check if the Entity is not already inside the table --
-		for k, structure in pairs(global.repairTable) do
-			if structure.ent ~= nil and structure.ent.valid == true and event.entity.unit_number == structure.ent.unit_number then
-				return
-			end
-		end
-		if table_size(global.repairTable) < 1000 then
-			table.insert(global.repairTable, {ent=event.entity})
-		else
-			game.print("Mobile Factory: To many damaged Entities inside the Repair Table")
-			global.repairTable = {}
-		end
 	end
 end
 
@@ -214,224 +187,6 @@ function updateFloorIsLava()
 		if tile ~= nil and tile.valid == true and tile.name ~= "DimensionalTile" then
 			player.character.damage(50, "neutral", "fire")
 		end
-	end
-end
-
--- Update the Mining Jets --
-function updateMiningJet()
-	-- Check if there are something to do --
-	if table_size(global.jetFlagTable) <= 0 then return end
-	for k, flag in pairs(global.jetFlagTable) do
-		-- Check the Flag --
-		if valid(flag) == false then goto continue end
-		-- Check the Mobile Factory --
-		if flag.MF == nil or valid(flag.MF) == false then goto continue end
-		if flag.MF.ent == nil or flag.MF.ent.valid == false then goto continue end
-		if flag.MF.varTable.jets.mjMaxDistance == nil then flag.MF.varTable.jets.mjMaxDistance = _MFMiningJetDefaultMaxDistance end
-		-- Get the Mobile Factory Trunk --
-		local inv = flag.MF.ent.get_inventory(defines.inventory.car_trunk)
-		-- Check the Inventory --
-		if inv == nil or inv.valid == false then return end
-		-- Check the Distance --
-		if Util.distance(flag.ent.position, flag.MF.ent.position) > flag.MF.varTable.jets.mjMaxDistance then goto continue end
-		-- Check if there are Ores left --
-		if table_size(flag.oreTable) <= 0 then goto continue end
-		-- Check if there are enought space inside the Targeted Inventory --
-		if flag.TargetInventoryFull == true then goto continue end
-		-- Request Jet --
-		for i = 1, table_size(flag.oreTable) do
-			-- Check the Energy --
-			if flag.MF.internalEnergyObj:energy() < _mfMiningJetEnergyNeeded then return end
-			-- Get an Ore Path --
-			local orePath = flag:getOrePath()
-			-- Check the Ore Path --
-			if orePath == nil or orePath.valid == false or orePath.amount <= 0 then
-				flag:removeOrePath(orePath)
-			else
-				-- Remove a Jet from the Inventory --
-				local removed = inv.remove({name="MiningJet", count=1})
-				-- Check if the Jet exist --
-				if removed <= 0 then goto continue end
-				-- Remove the Energy --
-				flag.MF.internalEnergyObj:removeEnergy(_mfMiningJetEnergyNeeded)
-				-- Create the Entity --
-				local entity = flag.MF.ent.surface.create_entity{name="MiningJet", position=flag.MF.ent.position, force=flag.MF.ent.force, player=flag.MF.player}
-				global.miningJetTable[entity.unit_number] = MJ:new(entity, orePath, flag)
-			end
-			-- Stop if there are 5 Jets out --
-			if i >= 5 then goto continue end
-		end
-		::continue::
-	end
-end
-
--- Update the Construction Jets --
-function updateConstructionJet()
-	-- Check if there are something to do --
-	if table_size(global.constructionTable) <= 0 then return end
-	-- Check if the index must be reinitialized --
-	if global.constructionJetIndex > table_size(global.constructionTable) then
-		global.constructionJetIndex = 0
-	end
-	for i = 1, _mfEntitiesScanedPerUpdate do
-		global.constructionJetIndex = global.constructionJetIndex + 1
-		if global.constructionJetIndex > table_size(global.constructionTable) then
-			global.constructionJetIndex = 0
-			return
-		end
-		-- Get the next Structure --
-		local structure = global.constructionTable[global.constructionJetIndex]
-		if structure == nil or structure.ent == nil or structure.ent.valid == false then
-			table.remove(global.constructionTable, global.constructionJetIndex)
-			goto continue
-		end
-		-- Check the Structure Owner --
-		if structure.ent.last_user == nil then goto continue end
-		-- Get the Mobile Factory --
-		local MF = global.MFTable[structure.ent.last_user.name]
-		-- Check the Mobile Factory --
-		if MF == nil or MF.ent == nil or MF.ent.valid == false then goto continue end
-		if MF.varTable.jets.cjMaxDistance == nil then MF.varTable.jets.cjMaxDistance = _MFConstructionJetDefaultMaxDistance end
-		-- Check the Structure and Mobile Factory Owner --
-		if structure.ent.last_user.name ~= MF.player then goto continue end
-		-- Check the Energy --
-		if MF.internalEnergyObj:energy() < _mfConstructionJetEnergyNeeded then goto continue end
-		-- Get the Mobile Factory Trunk --
-		local inv = MF.ent.get_inventory(defines.inventory.car_trunk)
-		-- Check the Inventory --
-		if inv == nil or inv.valid == false then goto continue end
-		-- Check the Structure --
-		if structure.ent.surface ~= MF.ent.surface then
-			table.remove(global.constructionTable, global.constructionJetIndex)
-			goto continue
-		end
-		if structure.mission == "Deconstruct" and structure.ent.prototype.items_to_place_this == nil then
-			table.remove(global.constructionTable, global.constructionJetIndex)
-			goto continue
-		end
-		if structure.mission == "Deconstruct" and structure.ent.to_be_deconstructed(MF.ent.force) == false then
-			table.remove(global.constructionTable, global.constructionJetIndex)
-			goto continue
-		end
-		-- Check the Distance --
-		if Util.distance(structure.ent.position, MF.ent.position) > MF.varTable.jets.cjMaxDistance then goto continue end
-		-- Check if there are no Jet already attributed to this Structure --
-		if valid(structure.jet) == true then goto continue end
-		-- Remove a Jet from the Inventory --
-		local removed = inv.remove({name="ConstructionJet", count=1})
-		-- Check if the Jet exist --
-		if removed <= 0 then goto continue end
-		if structure.mission == "Construct" then
-			-- Remove the Item from the II --
-			local removed = MF.II:getItem(structure.item, 1)
-			-- Check if the Item exist --
-			if removed <= 0 then
-				inv.insert({name="ConstructionJet", count=1})
-				goto continue
-			end
-		end
-		-- Remove the Energy --
-		MF.internalEnergyObj:removeEnergy(_mfConstructionJetEnergyNeeded)
-		-- Create the Jet --
-		local entity = MF.ent.surface.create_entity{name="ConstructionJet", position=MF.ent.position, force=MF.ent.force, player=MF.player}
-		global.constructionJetTable[entity.unit_number] = CJ:new(entity, structure)
-		structure.jet = global.constructionJetTable[entity.unit_number]
-		::continue::
-	end
-end
-
--- Update the Repair Jets --
-function updateRepairJet()
-	-- Check if there are something to do --
-	if table_size(global.repairTable) <= 0 then return end
-	-- Check if the index must be reinitialized --
-	if global.repairJetIndex > table_size(global.repairTable) then
-		global.repairJetIndex = 0
-	end
-	for i = 1, _mfEntitiesScanedPerUpdate do
-		global.repairJetIndex = global.repairJetIndex + 1
-		if global.repairJetIndex > table_size(global.repairTable) then
-			global.repairJetIndex = 0
-			return
-		end
-		-- Get the next Structure --
-		local structure = global.repairTable[global.repairJetIndex]
-		if structure == nil or structure.ent == nil or structure.ent.valid == false then
-			table.remove(global.repairTable, global.repairJetIndex)
-			goto continue
-		end
-		-- Check the Structure Owner --
-		if structure.ent.last_user == nil then goto continue end
-		-- Get the Mobile Factory --
-		local MF = global.MFTable[structure.ent.last_user.name]
-		-- Check the Mobile Factory --
-		if MF == nil or MF.ent == nil or MF.ent.valid == false then return end
-		if MF.varTable.jets.rjMaxDistance == nil then MF.varTable.jets.rjMaxDistance = _MFRepairJetDefaultMaxDistance end
-		-- Check the Structure and Mobile Factory Owner --
-		if structure.ent.last_user.name ~= MF.player then goto continue end
-		-- Check the Energy --
-		if MF.internalEnergyObj:energy() < _mfRepairJetEnergyNeeded then return end
-		-- Get the Mobile Factory Trunk --
-		local inv = MF.ent.get_inventory(defines.inventory.car_trunk)
-		-- Check the Inventory --
-		if inv == nil or inv.valid == false then return end
-		-- Check the Structure Surface --
-		if structure.ent.surface ~= MF.ent.surface then
-			table.remove(global.repairTable, global.repairJetIndex)
-			goto continue
-		end
-		if structure.ent.health >= structure.ent.prototype.max_health then
-			table.remove(global.repairTable, global.repairJetIndex)
-			goto continue
-		end
-		-- Check the Distance --
-		if Util.distance(structure.ent.position, MF.ent.position) > MF.varTable.jets.rjMaxDistance then return end
-		-- Check if there are no Jet already attributed to this Structure --
-		if valid(structure.jet) then goto continue end
-		-- Remove a Jet from the Inventory --
-		local removed = inv.remove({name="RepairJet", count=1})
-		-- Check if the Jet exist --
-		if removed <= 0 then goto continue end
-		-- Remove the Energy --
-		MF.internalEnergyObj:removeEnergy(_mfRepairJetEnergyNeeded)
-		-- Create the Jet --
-		local entity = MF.ent.surface.create_entity{name="RepairJet", position=MF.ent.position, force=MF.ent.force, player=MF.player}
-		global.repairJetTable[entity.unit_number] = RJ:new(entity, structure)
-		structure.jet = global.repairJetTable[entity.unit_number]
-		::continue::
-	end
-end
-
--- Update Combat Jets --
-function updateCombatJet()
-	-- Itinerate all Mobile Factories --
-	for k, MF in pairs(global.MFTable) do
-		-- Check the Mobile Factory --
-		if MF == nil or MF.ent == nil or MF.ent.valid == false then goto continue end
-		if MF.varTable.jets.cbjMaxDistance == nil then MF.varTable.jets.cbjMaxDistance = _MFCombatJetDefaultMaxDistance end
-		-- Get the Mobile Factory Trunk --
-		local inv = MF.ent.get_inventory(defines.inventory.car_trunk)
-		-- Check the Inventory --
-		if inv == nil or inv.valid == false then goto continue end
-		-- Look for an Enemy --
-		local enemy = MF.ent.surface.find_nearest_enemy{position=MF.ent.position, max_distance =MF.varTable.jets.cbjMaxDistance, force=MF.ent.force}
-		-- Check the Entity --
-		if enemy == nil or enemy.valid == false then goto continue end
-		-- Sent 5 Jets --
-		for i = 1, 5 do
-			-- Check the Energy --
-			if MF.internalEnergyObj:energy() < _mfCombatJetEnergyNeeded then goto continue end
-			-- Remove a Jet from the Inventory --
-			local removed = inv.remove({name="CombatJet", count=1})
-			-- Check if the Jet exist --
-			if removed <= 0 then goto continue end
-			-- Remove the Energy --
-			MF.internalEnergyObj:removeEnergy(_mfCombatJetEnergyNeeded)
-			-- Create the Jet --
-			local entity = MF.ent.surface.create_entity{name="CombatJet", position=MF.ent.position, force=MF.ent.force, player=MF.player}
-			global.combatJetTable[entity.unit_number] = CBJ:new(entity, enemy.position)
-		end
-		::continue::
 	end
 end
 

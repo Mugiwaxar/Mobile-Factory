@@ -53,7 +53,7 @@ dcR.result = "DimensionalCircuit"
 data:extend{dcR}
 
 
--- TECHNOLOGY --
+-- Technology --
 local deT = {}
 deT.type = "technology"
 deT.name = "DimensionalElectronic"
