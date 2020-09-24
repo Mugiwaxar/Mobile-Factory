@@ -107,7 +107,7 @@ function GUI.guiOpened(event)
 	-- do not open custom GUI if player is connecting wires --
 	local cursorStack = player.cursor_stack
 	if cursorStack and cursorStack.valid_for_read then
-		if cursorStack.name == "green-wire" or cursorStack.name == "red-wire" then return end
+		if cursorStack.name == "green-wire" or cursorStack.name == "red-wire" or cursorStack.type == "repair-tool" then return end
 	end
 
 	-- Check the Bypass --

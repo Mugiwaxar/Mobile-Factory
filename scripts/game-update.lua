@@ -79,6 +79,7 @@ end
 -- When a player join the game --
 function initPlayer(event)
 	local player = getPlayer(event.player_index)
+	if player.controller_type == defines.controllers.cutscene then return end
 	if player == nil then return end
 	--player.force.technologies["DimensionalOre"].researched = true
 	if getMFPlayer(player.name) == nil then
@@ -89,13 +90,17 @@ function initPlayer(event)
 		createControlRoom(MF)
 		global.playersTable[player.name].MF = MF
 		------------------- Can't get the Player Inventory when the Mod Init since the Factorio 1.0 Version -------------------
-		-- Util.addMobileFactory(player)
+		Util.addMobileFactory(player)
 		setPlayerVariable(player.name, "GotInventory", true)
 		GUI.createMFMainGUI(player)
 		
 		if remote.interfaces["dangOreus"] then 
 			remote.call("dangOreus","toggle",MF.fS)
 			remote.call("dangOreus","toggle",MF.ccS)
+		end
+		if remote.interfaces["RSO"] then
+			remote.call("RSO","ignoreSurface",MF.fS.name)
+			remote.call("RSO","ignoreSurface",MF.ccS.name)
 		end
 	end
 end

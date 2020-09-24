@@ -192,6 +192,7 @@ end
 script.on_init(onInit)
 script.on_configuration_changed(onInit)
 script.on_load(onLoad)
+script.on_event(defines.events.on_cutscene_cancelled, initPlayer)
 script.on_event(defines.events.on_player_created, initPlayer)
 script.on_event(defines.events.on_player_joined_game, initPlayer)
 script.on_event(defines.events.on_player_driving_changed_state, playerDriveStatChange)
