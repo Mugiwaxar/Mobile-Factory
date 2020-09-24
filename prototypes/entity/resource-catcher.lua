@@ -9,7 +9,7 @@ rcE.icon = "__Mobile_Factory__/graphics/ResourceCatcherI.png"
 rcE.icon_size = 128
 rcE.minable = {mining_time = 0.2, result = "ResourceCatcher"}
 rcE.max_health = 30
-rcE.collision_mask = {"object-layer"}
+rcE.collision_mask = {"train-layer","object-layer"}
 rcE.corpse = "land-mine-remnants"
 rcE.collision_box = {{-0.49, -0.49}, {0.49, 0.49}}
 rcE.selection_box = {{-0.5, -0.5}, {0.5, 0.5}}
