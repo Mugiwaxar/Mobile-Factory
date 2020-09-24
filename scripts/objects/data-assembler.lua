@@ -252,7 +252,7 @@ function DA:createFrame(GUIObj, gui, recipe, id)
 	end
 	local tooltip = (recipe.amount or 0) > 0 and {"", recipe.recipePrototype.localised_name, " (max:", recipe.amount, ")"} or recipe.recipePrototype.localised_name
 	local recipeButton = GUIObj:addButton("DARem," .. self.entID .. "," .. id, recipeFlow, recipe.sprite, recipe.sprite, tooltip, 50, false, true, recipe.amount)
-	recipeButton.style = recipe.toManyInInventory == true and "MF_Fake_Button_Red" or "MF_Fake_Button_Green"
+	recipeButton.style = (recipe.toManyInInventory == true and "MF_Fake_Button_Red") or "MF_Fake_Button_Green"
 	recipeButton.style.padding = 0
 	recipeButton.style.margin = 0
 
@@ -265,25 +265,25 @@ function DA:createFrame(GUIObj, gui, recipe, id)
 
 	-- Add all Buttons --
 	for k, ingredient in pairs(recipe.ingredients) do
-		if game.item_prototypes[ingredient.name] == nil and game.fluid_prototypes[ingredient.name] == nil then
+		if (game.item_prototypes[ingredient.name] == nil) and (game.fluid_prototypes[ingredient.name] == nil) then
 			self.recipeTable[id] = nil
 			return
 		end
-		local storedAmount = ingredient.type == "item" and self.dataNetwork:hasItem(ingredient.name) or self.dataNetwork:hasFluid(ingredient.name)
+		local storedAmount = (ingredient.type == "item" and self.dataNetwork:hasItem(ingredient.name)) or self.dataNetwork:hasFluid(ingredient.name)
 		local ingredientButton = GUIObj:addButton("", ingredientsFlow, ingredient.sprite, ingredient.sprite, ingredient.tooltip, 30, false, true, storedAmount or 0)
-		ingredientButton.style = ingredient.missing == true and "MF_Fake_Button_Red" or "MF_Fake_Button_Green"
+		ingredientButton.style = (ingredient.missing == true and "MF_Fake_Button_Red") or "MF_Fake_Button_Green"
 		ingredientButton.style.padding = 0
 		ingredientButton.style.margin = 0
 	end
 
 	-- Create the Progress Bar --
-	local barColor = (self.quatronCharge > 0 and self.active == true ) and _mfGreen or _mfRed
+	local barColor = ((self.quatronCharge > 0 and self.active == true) and _mfGreen) or _mfRed
 	local PBar = GUIObj:addProgressBar("", processFlow, "", "", false, barColor, recipe.progress / recipe.recipePrototype.energy, 150)
 	if GUIObj.PBarsTable == nil then GUIObj.PBarsTable = {} end
 	GUIObj.PBarsTable[PBar] = recipe
 
 	-- Check the Product --
-	if game.item_prototypes[recipe.products[1].name] == nil and game.fluid_prototypes[recipe.products[1].name] == nil then
+	if (game.item_prototypes[recipe.products[1].name] == nil) and (game.fluid_prototypes[recipe.products[1].name] == nil) then
 		self.recipeTable[id] = nil
 		return
 	end
@@ -295,7 +295,7 @@ function DA:createFrame(GUIObj, gui, recipe, id)
 	for key, product in ipairs(recipe.products) do
 		local storedAmount = product.type == "item" and self.dataNetwork:hasItem(product.name) or self.dataNetwork:hasFluid(product.name)
 		local productButton = GUIObj:addButton("DASwap," .. self.entID .. "," .. id .. "," .. key, resultFlow, product.sprite, product.sprite, product.tooltip, 50, false, true, storedAmount or 0)
-		productButton.style = recipe.inventoryFull == true and "MF_Fake_Button_Red" or "MF_Fake_Button_Green"
+		productButton.style = (recipe.inventoryFull == true and "MF_Fake_Button_Red") or "MF_Fake_Button_Green"
 		productButton.style.padding = 0
 		productButton.style.margin = 0
 	end
@@ -303,7 +303,7 @@ end
 
 -- Update all Progress Bars --
 function DA:updatePBars(GUIObj)
-	local barColor = (self.quatronCharge > 0 and self.active == true ) and _mfGreen or _mfRed
+	local barColor = ((self.quatronCharge > 0 and self.active == true) and _mfGreen) or _mfRed
 	for PBar, recipe in pairs(GUIObj.PBarsTable or {}) do
 		if valid(PBar) == true and recipe ~= nil then
 			PBar.value = recipe.progress / recipe.recipePrototype.energy
