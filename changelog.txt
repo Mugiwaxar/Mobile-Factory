@@ -1,4 +1,21 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.194
+Date: 23/09/2020
+  Features:
+    - thank volch for nearly all of this patch
+    - DA outputs multiple products (with probabilities)
+    - MF, Factory Surface entities, and Control Center entities change force if the player does
+  Bugfixes:
+    - Internal Energy Cube and Internal Quatron Cube can be placed/mined quickly without losing energy/quatron
+    - Resource Catcher doesn't draw above character and character now collides with it
+    - player changing force doesn't leave behind the Mobile Factory, Factory Surface entities, and Control Center entities
+            (be aware if multiple people are sharing one's Mobile Factory)
+    - Mobile Factory surfaces should not have things added with RSO enabled
+    - repair-kits shall not open an entity GUI
+  Changes:
+    - player starting with a Mobile Factory (and tiles) is back! *if the option is on of course
+    - small localisation update
+---------------------------------------------------------------------------------------------------
 Version: 0.0.193
 Date: 17/08/2020
   Features:

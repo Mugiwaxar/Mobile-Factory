@@ -149,6 +149,34 @@ local function onForceCreated(event)
   end
 end
 
+local function onPlayerChangedForce(event)
+	local player = getPlayer(event.player_index)
+    if not (player and player.valid) then return end
+
+    local MFPlayer = getMFPlayer(player.name)
+    if not (MFPlayer and MFPlayer:valid()) then return end
+
+    local MF = getMF(player.name)
+    if not (MF and MF:valid()) then return end
+
+    if MF.ent and MF.ent.valid then MF.ent.force = player.force end
+    if MF.fS and MF.fS.valid then
+      local oldForceEntities = MF.fS.find_entities_filtered{force = event.force}
+      local newForce = player.force
+      for _, ent in pairs(oldForceEntities) do
+        ent.force = newForce
+      end
+    end
+
+    if MF.ccS and MF.ccS.valid then
+      local oldForceEntities = MF.ccS.find_entities_filtered{force = event.force}
+      local newForce = player.force
+      for _, ent in pairs(oldForceEntities) do
+        ent.force = newForce 
+      end
+    end
+end
+
 local function onPlayerSetupBlueprint(event)
 	local player = game.players[event.player_index]
 	local mapping = event.mapping.get()
@@ -226,9 +254,44 @@ script.on_event(defines.events.on_selected_entity_changed, selectedEntityChanged
 script.on_event(defines.events.on_marked_for_deconstruction, markedForDeconstruction)
 script.on_event(defines.events.on_entity_settings_pasted, settingsPasted)
 script.on_event(defines.events.on_force_created, onForceCreated)
+script.on_event(defines.events.on_player_changed_force, onPlayerChangedForce)
 script.on_event(defines.events.on_player_setup_blueprint, onPlayerSetupBlueprint)
 script.on_event(defines.events.on_string_translated, onStringTranslated)
 script.on_event("OpenTTGUI", onShortcut)
 
 -- Add command to insert Mobile Factory to the player inventory --
 -- commands.add_command("GetMobileFactory", "Add the Mobile Factory to the player inventory", addMobileFactory)
+
+-- Debug Commands --
+local addDebugCommands = false
+if addDebugCommands == true then
+local function MFResetGUIs(event)
+	for playerIndex, player in pairs(game.players) do
+		local logString = "\n"
+		logString = logString.."Checking player: "..player.name
+		if player.connected == true then
+			logString = logString.."\nPlayer is connected."
+		else
+			logString = logString.."\nPlayer is not connected."
+		end
+
+		local MFPlayer = getMFPlayer(playerIndex)
+		if MFPlayer ~= nil then
+			logString = logString.."\nPlayer has an MFPlayer"
+			local MFGui = MFPlayer.GUI["MFMainGUI"]
+			if MFGui ~= nil then
+				logString = logString.."\nMFMainGUI exists, attempting to destroy and recreate."
+				MFGui.destroy()
+			else
+				logString = logString.."\nMFMainGUI does not exist, attempting to recreate."
+			end
+			GUI.createMFMainGUI(player)
+		else
+			logString = logString.."\nPlayer does not have an MFPlayer."			
+		end
+	end
+	log(logString)
+end
+commands.add_command("MF_reset_guis", "reset the GUIS for Mobile Factory players", MFResetGUIs)
+
+end -- end addDebugCommands check

@@ -82,7 +82,7 @@ function RC:update()
         return
     end
 
-    -- Check if the Resource Catched already have a Resource inside --
+    -- Check if the Resource Catcher already has a Resource inside --
     if self.haveResource == true then
         -- Check if there is a Dimensionnal Tile below --
         local tile = self.ent.surface.get_tile(self.ent.position.x, self.ent.position.y)
@@ -141,11 +141,11 @@ function RC:update()
             local text = ""
             if isTile == true or resource.amount == nil or resource.amount <= 0 then
                 self.resourceName = resource.name
-                text = {"", game.tile_prototypes[resource.name].localised_name, " ", {"info.Catched"}}
+                text = {"", game.tile_prototypes[resource.name].localised_name, " ", {"info.Caught"}}
             else
                 self.resourceName = resource.name
                 self.resourceAmount = resource.amount
-                text = {"", resource.amount, " ", game.entity_prototypes[resource.name].localised_name, " ", {"info.Catched"}}
+                text = {"", resource.amount, " ", game.entity_prototypes[resource.name].localised_name, " ", {"info.Caught"}}
                 resource.destroy()
             end
             game.players[self.player].create_local_flying_text{text=text, position=self.ent.position}

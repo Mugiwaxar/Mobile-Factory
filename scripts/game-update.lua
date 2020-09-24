@@ -79,8 +79,8 @@ end
 -- When a player join the game --
 function initPlayer(event)
 	local player = getPlayer(event.player_index)
-	if player.controller_type == defines.controllers.cutscene then return end
 	if player == nil then return end
+	if player.controller_type == defines.controllers.cutscene then return end
 	--player.force.technologies["DimensionalOre"].researched = true
 	if getMFPlayer(player.name) == nil then
 		global.playersTable[player.name] = MFP:new(player)
