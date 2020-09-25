@@ -86,6 +86,10 @@ function GUI.readOptions(option, player)
 		game.print({"", {"gui-description.EntitiesUpdatePerTickNumber"}, " ", number})
 	end
 
+	if name == "useVanillaChooseElem" then
+		global.useVanillaChooseElem = option.state
+	end
+
 	------------------- Update the Option GUI -------------------
 	if GUIObj ~= nil and GUIObj.gui ~= nil and GUIObj.gui.valid == true and option.type ~= "textfield" and option.type ~= "drop-down" then
 		GUI.updateOptionGUI(GUIObj)
