@@ -524,12 +524,12 @@ function GUI.buttonClicked(event)
 
 	-- If this is a Data Assembler --
 	-- Select Recipe --
-	if event.element.name == "DARecipe" and not global.useVanillaChooseElem then
+	if event.element.name == "DARecipe" and global.useVanillaChooseElem == false then
 		if MFPlayer.GUI["RecipeGUI"] ~= nil then
 			MFPlayer.GUI["RecipeGUI"].destroy()
 			MFPlayer.GUI["RecipeGUI"] = nil
 		end
-		local GUIObj = GUI.createRecipeGUI(player)
+		GUI.createRecipeGUI(player)
 		return
 	end
 	if string.match(event.element.name, "DA") and event.element.type == "sprite-button" then
@@ -872,7 +872,11 @@ end
 
 -- Called when a Localized Name is requested --
 function onStringTranslated(event)
-	if getMFPlayer(event.player_index).varTable.tmpLocal == nil then getMFPlayer(event.player_index).varTable.tmpLocal = {} end
+	local MFPlayer = getMFPlayer(event.player_index)
+	if MFPlayer == nil then return end
+	if MFPlayer.varTable and MFPlayer.varTable.tmpLocal == nil then
+		MFPlayer.varTable.tmpLocal = {}
+	end
 	if event.localised_string[1] == nil then return end
-	getMFPlayer(event.player_index).varTable.tmpLocal[event.localised_string[1]] = event.result
+	MFPlayer.varTable.tmpLocal[event.localised_string[1]] = event.result
 end
