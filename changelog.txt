@@ -6,6 +6,7 @@ Date: 23/09/2020
   Bugfixes:
     - internal Data Assembler table issue - Volch
     - improve on_string_translated safety
+    - a cloned entity should be checked for valid as another mod can immediately destroy it v_v
 ---------------------------------------------------------------------------------------------------
 Version: 0.0.194
 Date: 23/09/2020

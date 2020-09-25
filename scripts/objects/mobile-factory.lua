@@ -967,7 +967,7 @@ function MF:cloneEntity(ent, side) -- side: in (Clone inside), out (Clone outsid
 	end
 	-- Clone the Entity --
 	clone = ent.clone{position={posX, posY}, surface=surface}
-	if clone ~= nil then
+	if clone ~= nil and clone.valid == true then
 		table.insert(self.clonedResourcesTable,  {original=ent, cloned=clone})
 		if ent.type == "container" then
 			clone.get_inventory(defines.inventory.chest).clear()
@@ -978,7 +978,9 @@ function MF:cloneEntity(ent, side) -- side: in (Clone inside), out (Clone outsid
 		if ent.type == "accumulator" then
 			clone.energy = 0
 		end
-	end
+	else
+      clone = nil
+    end
 	return clone
 end
 
