@@ -368,7 +368,7 @@ function DA:addRecipe(name, amount)
 	end
 
 	-- Create the Recipe Table --
-	local recipeTable = {recipePrototype=recipePrototype, sprite="recipe/" .. recipePrototype.name, amount=amount, progress=0, ingredients=ingredientsTable, mainProduct=products}
+	local recipeTable = {recipePrototype=recipePrototype, sprite="recipe/" .. recipePrototype.name, amount=amount, progress=0, ingredients=ingredientsTable, products=products}
 
 	-- Get all ingredients --
 	self:getIngredients(recipeTable)
