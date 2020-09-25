@@ -3,8 +3,16 @@ function GUI.createRecipeGUI(player)
 	-- Create the GUI
 	local GUIObj = GUI.createGUI("RecipeGUI", getMFPlayer(player.name), "vertical")
 
-	GUI.createTopBar(GUIObj, nil, {"gui-assembling-machine.choose-recipe"})
+	-- Create the Menu Bar --
+	local topBarFlow = GUIObj:addFlow("", GUIObj.gui, "horizontal")
+	topBarFlow.style.vertical_align = "center"
+	GUIObj:addLabel("", topBarFlow, {"gui-assembling-machine.choose-recipe"}, _mfOrange, nil, false, "TitleFont")
+	GUIObj:addEmptyWidget("", topBarFlow, GUIObj.gui, 20, nil)
+	textField = GUIObj:addTextField("RSSearchTextField", topBarFlow, "", {"gui-description.ItemSearchTextTT"}, true, false, false, false, false)
+	textField.style.maximal_width = 100
+	GUIObj:addButton("RecipeGUICloseButton", topBarFlow, "CloseIcon", "CloseIcon", {"gui-description.closeButton"}, 15)
 
+	-- Cerate Main Frame
 	local RSMainFrame = GUIObj:addFrame("RSMainFrame", GUIObj.gui, "vertical")
 	RSMainFrame.style = "filter_scroll_pane_background_frame_no_background"
 
@@ -55,6 +63,7 @@ function GUI.createRecipeGUI(player)
 
 	GUIObj.sortedRecipes = groupsArray
 	GUIObj.selectedCategory = 1
+	GUIObj.lastSearch = GUIObj.RSSearchTextField.text
 
 	GUI.doUpdateRecipeGUI(GUIObj)
 
@@ -69,19 +78,26 @@ end
 
 function GUI.updateRecipeGUI(GUIObj)
 	--Auto-update can be slow with huge list of recipes. No need to. Nothing changes here without player input.
+	if GUIObj.RSSearchTextField.text ~= GUIObj.lastSearch then
+		GUIObj.lastSearch = GUIObj.RSSearchTextField.text
+		GUI.doUpdateRecipeGUI(GUIObj)
+	end
 end
 
 function GUI.doUpdateRecipeGUI(GUIObj)
 	-- Clear
 	GUIObj.RSRecipeFrame.clear()
 
+	local filter = string.lower(GUIObj.lastSearch) or ""
 	--Draw Recipes
 	for _, subgroups in ipairs(GUIObj.sortedRecipes[GUIObj.selectedCategory].list) do
 		local RSRecipeTable = GUIObj:addTable("", GUIObj.RSRecipeFrame, 10)
 		for _, recipe in ipairs(subgroups.list) do
-			local r = RSRecipeTable.add({type="choose-elem-button", name="RSSel,"..recipe.obj.name, elem_type="recipe", style="recipe_slot_button"})
-			r.elem_value = recipe.obj.name
-			r.locked = true
+			if not filter or string.find(recipe.obj.name, filter) then
+				local r = RSRecipeTable.add({type="choose-elem-button", name="RSSel,"..recipe.obj.name, elem_type="recipe", style="recipe_slot_button"})
+				r.elem_value = recipe.obj.name
+				r.locked = true
+			end
 		end
 	end
 end
