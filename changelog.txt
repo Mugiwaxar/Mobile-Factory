@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.195
+Date: 23/09/2020
+  Changes:
+    - Data Assembler recipe selector (with option for original behavior) - Volch
+  Bugfixes:
+    - internal Data Assembler table issue - Volch
+    - improve on_string_translated safety
+---------------------------------------------------------------------------------------------------
 Version: 0.0.194
 Date: 23/09/2020
   Features:

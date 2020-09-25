@@ -46,7 +46,7 @@ function GUI.createRecipeGUI(player)
 			table.sort(recipes, lexicSorter)
 			table.insert(subgroupArray, {obj=game.item_subgroup_prototypes[subgroupName], list=recipes})
 		end
-	  table.sort(subgroupArray, lexicSorter)
+		table.sort(subgroupArray, lexicSorter)
 		table.insert(groupsArray, {obj=game.item_group_prototypes[groupName], list=subgroupArray})
 	end
 	table.sort(groupsArray, lexicSorter)
@@ -54,11 +54,11 @@ function GUI.createRecipeGUI(player)
 	-- Draw Categories
 	for idx, group in ipairs(groupsArray) do
 		local name = "RSCat," .. idx
-		local g = RSGroupTable.add({type="sprite-button", name=name, style="filter_group_button_tab"})
-		GUIObj[name] = g
-		if idx == 1 then g.enabled = false end
-		g.tooltip = group.obj.localised_name
-		g.sprite = "item-group/" .. group.obj.name
+		local tab = RSGroupTable.add({type="sprite-button", name=name, style="filter_group_button_tab"})
+		GUIObj[name] = tab
+		if idx == 1 then tab.enabled = false end
+		tab.tooltip = group.obj.localised_name
+		tab.sprite = "item-group/" .. group.obj.name
 	end
 
 	GUIObj.sortedRecipes = groupsArray
@@ -94,31 +94,23 @@ function GUI.doUpdateRecipeGUI(GUIObj)
 		local RSRecipeTable = GUIObj:addTable("", GUIObj.RSRecipeFrame, 10)
 		for _, recipe in ipairs(subgroups.list) do
 			if not filter or string.find(recipe.obj.name, filter) then
-				local r = RSRecipeTable.add({type="choose-elem-button", name="RSSel,"..recipe.obj.name, elem_type="recipe", style="recipe_slot_button"})
-				r.elem_value = recipe.obj.name
-				r.locked = true
+				local button = RSRecipeTable.add({type="choose-elem-button", name="RSSel,"..recipe.obj.name, elem_type="recipe", style="recipe_slot_button"})
+				button.elem_value = recipe.obj.name
+				button.locked = true
 			end
 		end
 	end
 end
 
 
-function lexicSorter(a, b)
-	local first_order = a.obj.order or ""
-	local second_order = b.obj.order or ""
+local function lexicSorter(a, b)
+	local firstOrder = a.obj.order or ""
+	local secondOrder = b.obj.order or ""
 
-	if first_order < second_order then
-		return true
-	elseif first_order > second_order then
-		return false
+	if firstOrder ~= secondOrder then
+		return firstOrder < secondOrder
 	else
-		local first_name = a.obj.name or ""
-		local second_name = b.obj.name or ""
-		if first_name < second_name then
-			return true
-		else
-			return false
-		end
+		return (a.obj.name or "") < (b.obj.name or "")
 	end
-	return false
+	--can't reach here
 end
