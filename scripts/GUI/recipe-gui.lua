@@ -8,7 +8,7 @@ function GUI.createRecipeGUI(player)
 	local RSMainFrame = GUIObj:addFrame("RSMainFrame", GUIObj.gui, "vertical")
 	RSMainFrame.style = "filter_scroll_pane_background_frame_no_background"
 
-	local RSGroupTable = GUIObj:addTable("RSGroupTable", RSMainFrame, 6, true)
+	local RSGroupTable = GUIObj:addTable("RSGroupTable", RSMainFrame, 6)
 	RSGroupTable.style = "filter_group_table"
 
 	local RSScrollPane = GUIObj:addScrollPane("RSScrollPane", RSMainFrame, 445)
@@ -43,6 +43,16 @@ function GUI.createRecipeGUI(player)
 	end
 	table.sort(groupsArray, lexicSorter)
 
+	-- Draw Categories
+	for idx, group in ipairs(groupsArray) do
+		local name = "RSCat," .. idx
+		local g = RSGroupTable.add({type="sprite-button", name=name, style="filter_group_button_tab"})
+		GUIObj[name] = g
+		if idx == 1 then g.enabled = false end
+		g.tooltip = group.obj.localised_name
+		g.sprite = "item-group/" .. group.obj.name
+	end
+
 	GUIObj.sortedRecipes = groupsArray
 	GUIObj.selectedCategory = 1
 
@@ -63,18 +73,7 @@ end
 
 function GUI.doUpdateRecipeGUI(GUIObj)
 	-- Clear
-	GUIObj.RSGroupTable.clear()
 	GUIObj.RSRecipeFrame.clear()
-
-	-- Draw Categories
-	for idx, group in ipairs(GUIObj.sortedRecipes) do
-		local g = GUIObj.RSGroupTable.add({type="sprite-button", name="RSCat,"..idx, style="filter_group_button_tab"})
-		if idx == GUIObj.selectedCategory then
-			g.enabled = false
-		end
-		g.tooltip = group.obj.localised_name
-		g.sprite = "item-group/" .. group.obj.name
-	end
 
 	--Draw Recipes
 	for _, subgroups in ipairs(GUIObj.sortedRecipes[GUIObj.selectedCategory].list) do

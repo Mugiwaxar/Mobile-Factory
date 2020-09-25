@@ -502,8 +502,10 @@ function GUI.buttonClicked(event)
 	if string.match(event.element.name, "RS") then
 		if string.match(event.element.name, "RSCat") then
 			local GUIObj = MFPlayer.GUI["RecipeGUI"]
-			local Category = tonumber(split(event.element.name, ",")[2])
-			GUIObj.selectedCategory = Category or 1
+			local Category = tonumber(split(event.element.name, ",")[2]) or 1
+			GUIObj["RSCat," .. GUIObj.selectedCategory].enabled = true
+			GUIObj["RSCat," .. Category].enabled = false
+			GUIObj.selectedCategory = Category
 			GUI.doUpdateRecipeGUI(GUIObj)
 			return
 		end
