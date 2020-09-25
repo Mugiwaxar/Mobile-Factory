@@ -48,6 +48,8 @@ function onInit()
 	global.upsysTickTable = global.upsysTickTable or {}
 	global.entsUpPerTick = global.entsUpPerTick or _mfBaseUpdatePerTick
 	global.upSysLastScan = global.upSysLastScan or 0
+	-- Performance
+	global.useVanillaChooseElem = global.useVanillaChooseElem or false
 	-- Data Network --
 	global.dataNetworkID = global.dataNetworkID or 0
 	-- Floor Is Lava --

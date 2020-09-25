@@ -158,7 +158,7 @@ function GO:addTab(name, gui, text, tooltip, save)
 end
 
 -- Add a new Table --
-function GO:addTable(name, gui, column)
+function GO:addTable(name, gui, column, save)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
     -- Create the Table --
@@ -171,7 +171,7 @@ function GO:addTable(name, gui, column)
     table.style.horizontal_spacing  = 0
     table.style.vertical_spacing  = 0
     -- Save the Flow inside the elements Table --
-    if table == true then
+    if save == true then
         self.elements[name] = table
     end
     return table

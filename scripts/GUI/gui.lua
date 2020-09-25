@@ -4,6 +4,7 @@ require("scripts/GUI/option-gui.lua")
 require("scripts/GUI/tooltip-gui.lua")
 require("scripts/GUI/options.lua")
 require("scripts/GUI/tp-gui.lua")
+require("scripts/GUI/recipe-gui.lua")
 require("utils/functions.lua")
 
 -- Create a new GUI --
@@ -327,6 +328,15 @@ function GUI.buttonClicked(event)
 		return
 	end
 
+	-- Close Recipe GUI Button --
+	if event.element.name == "RecipeGUICloseButton" then
+		if MFPlayer.GUI["RecipeGUI"] ~= nil then
+			MFPlayer.GUI["RecipeGUI"].destroy()
+			MFPlayer.GUI["RecipeGUI"] = nil
+		end
+		return
+	end
+
 	-- Close Info GUI Button --
 	if event.element.name == "MFInfoGUICloseButton" then
 		if MFPlayer.GUI["MFInfoGUI"] ~= nil then
@@ -488,7 +498,40 @@ function GUI.buttonClicked(event)
 		return
 	end
 
+	-- Recipe Selector
+	if string.match(event.element.name, "RS") then
+		if string.match(event.element.name, "RSCat") then
+			local GUIObj = MFPlayer.GUI["RecipeGUI"]
+			local Category = tonumber(split(event.element.name, ",")[2]) or 1
+			GUIObj["RSCat," .. GUIObj.selectedCategory].enabled = true
+			GUIObj["RSCat," .. Category].enabled = false
+			GUIObj.selectedCategory = Category
+			GUI.doUpdateRecipeGUI(GUIObj)
+			return
+		end
+		if string.match(event.element.name, "RSSel") then
+			local GUIObj = MFPlayer.GUI["RecipeGUI"]
+			local tGUI = MFPlayer.GUI["MFTooltipGUI"]
+			if tGUI ~= nil and tGUI.DA ~= nil then
+				tGUI.DARecipe.elem_value = split(event.element.name, ",")[2]
+			end
+			MFPlayer.GUI["RecipeGUI"].destroy()
+			MFPlayer.GUI["RecipeGUI"] = nil
+			GUI.updateAllGUIs(true)
+		  return
+		end
+	end
+
 	-- If this is a Data Assembler --
+	-- Select Recipe --
+	if event.element.name == "DARecipe" and not global.useVanillaChooseElem then
+		if MFPlayer.GUI["RecipeGUI"] ~= nil then
+			MFPlayer.GUI["RecipeGUI"].destroy()
+			MFPlayer.GUI["RecipeGUI"] = nil
+		end
+		local GUIObj = GUI.createRecipeGUI(player)
+		return
+	end
 	if string.match(event.element.name, "DA") and event.element.type == "sprite-button" then
 		-- If a Recipe must be added --
 		if string.match(event.element.name, "DAAddR") then

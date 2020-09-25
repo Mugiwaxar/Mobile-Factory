@@ -169,7 +169,10 @@ function DA:getTooltipInfos(GUIObj, gui, justCreated)
 		addRFlow.style.bottom_padding = 10
 
 		-- Create the Recipe selector --
-		GUIObj:addFilter("DARecipe", addRFlow, {"gui-description.AddRecipeTT"}, true, "recipe", 28)
+		local recipeSelector = GUIObj:addFilter("DARecipe", addRFlow, {"gui-description.AddRecipeTT"}, true, "recipe", 28)
+		if not global.useVanillaChooseElem then
+			recipeSelector.locked = true
+		end
 
 		-- Create the Amount selector --
 		local amountSelector = GUIObj:addTextField("DAAmount", addRFlow, "", {"gui-description.AmountSelectorTT"}, true, true, false, false, false)
