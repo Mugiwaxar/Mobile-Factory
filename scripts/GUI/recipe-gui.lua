@@ -40,16 +40,28 @@ function GUI.createRecipeGUI(player)
 
 	-- Build indexed array, and sort it
 	local groupsArray = {}
+	local function rsorter(a, b)
+		local firstOrder = a.obj.order or ""
+		local secondOrder = b.obj.order or ""
+
+		if firstOrder ~= secondOrder then
+			return firstOrder < secondOrder
+		else
+			return (a.obj.name or "") < (b.obj.name or "")
+		end
+		--can't reach here
+	end
+
 	for groupName, subgroups in pairs(recipeTable) do
 		local subgroupArray = {}
 		for subgroupName, recipes in pairs(subgroups) do
-			table.sort(recipes, lexicSorter)
+			table.sort(recipes, rsorter)
 			table.insert(subgroupArray, {obj=game.item_subgroup_prototypes[subgroupName], list=recipes})
 		end
-		table.sort(subgroupArray, lexicSorter)
+		table.sort(subgroupArray, rsorter)
 		table.insert(groupsArray, {obj=game.item_group_prototypes[groupName], list=subgroupArray})
 	end
-	table.sort(groupsArray, lexicSorter)
+	table.sort(groupsArray, rsorter)
 
 	-- Draw Categories
 	for idx, group in ipairs(groupsArray) do
@@ -100,17 +112,4 @@ function GUI.doUpdateRecipeGUI(GUIObj)
 			end
 		end
 	end
-end
-
-
-local function lexicSorter(a, b)
-	local firstOrder = a.obj.order or ""
-	local secondOrder = b.obj.order or ""
-
-	if firstOrder ~= secondOrder then
-		return firstOrder < secondOrder
-	else
-		return (a.obj.name or "") < (b.obj.name or "")
-	end
-	--can't reach here
 end
