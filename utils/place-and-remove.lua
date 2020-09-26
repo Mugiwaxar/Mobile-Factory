@@ -71,7 +71,7 @@ function somethingWasPlaced(event)
 			if event.stack ~= nil and event.stack.valid_for_read == true then
 				local tags = event.stack.get_tag("Infos")
 				if tags ~= nil then
-					MF.internalEnergyObj:tagToSettings(tags)
+					MF.internalEnergyObj:itemTagsToContent(tags)
 				end
 			end
 			return
@@ -90,7 +90,7 @@ function somethingWasPlaced(event)
 			if event.stack ~= nil and event.stack.valid_for_read == true then
 				local tags = event.stack.get_tag("Infos")
 				if tags ~= nil then
-					MF.internalQuatronObj:tagToSettings(tags)
+					MF.internalQuatronObj:itemTagsToContent(tags)
 				end
 			end
 			return
@@ -125,11 +125,15 @@ function somethingWasPlaced(event)
 		if objInfo.tableName ~= nil then
 			global[objInfo.tableName][entity.unit_number] = obj
 		end
-		-- Check if there are Tags --
+		-- Check if there are Blueprint Tags --
+		if event.tags and obj.blueprintTagsToSettings then
+			obj:blueprintTagsToSettings(event.tags)
+		end
+		-- Check if there are Items Tags --
 		if event.stack ~= nil and event.stack.valid_for_read == true and event.stack.type == "item-with-tags" then
 			local tags = event.stack.get_tag("Infos")
 			if tags ~= nil then
-				obj:tagToSettings(tags)
+				obj:itemTagsToContent(tags)
 			end
 		end
 	end
@@ -163,7 +167,7 @@ function somethingWasRemoved(event)
 	-- If the Internal Energy Cube was removed --
 	if string.match(removedEnt.name, "InternalEnergyCube") then
 		if event.buffer ~= nil and event.buffer[1] ~= nil then
-			MF.internalEnergyObj:settingsToTags(event.buffer[1])
+			MF.internalEnergyObj:contentToItemTags(event.buffer[1])
 		end
 		MF.internalEnergyObj:remove()
 		return
@@ -172,7 +176,7 @@ function somethingWasRemoved(event)
 	-- If the Internal Quatron Cube was removed --
 	if string.match(removedEnt.name, "InternalQuatronCube") then
 		if event.buffer ~= nil and event.buffer[1] ~= nil then
-			MF.internalQuatronObj:settingsToTags(event.buffer[1])
+			MF.internalQuatronObj:contentToItemTags(event.buffer[1])
 		end
 		MF.internalQuatronObj:remove()
 		return
@@ -183,14 +187,14 @@ function somethingWasRemoved(event)
 		if event.buffer ~= nil and event.buffer[1] ~= nil then
 			event.buffer.clear()
 			event.buffer.insert("FilledResourceCatcher")
-			obj:settingsToTags(event.buffer[1])
+			obj:contentToItemTags(event.buffer[1])
 		end
 		return
 	end
 
 	-- Save the Settings --
-	if obj.settingsToTags ~= nil and event.buffer ~= nil and event.buffer[1] ~= nil then
-		obj:settingsToTags(event.buffer[1])
+	if obj.contentToItemTags ~= nil and event.buffer ~= nil and event.buffer[1] ~= nil then
+		obj:contentToItemTags(event.buffer[1])
 	end
 
 	-- Remove the Object --

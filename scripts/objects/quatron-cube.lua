@@ -60,13 +60,13 @@ function QC:valid()
 	return false
 end
 
--- Tags to Settings --
-function QC:tagToSettings(tags)
+-- Item Tags to Content --
+function QC:itemTagsToContent(tags)
 	self.ent.energy = tags.energy or 0
 end
 
--- Settings to Tags --
-function QC:settingsToTags(tags)
+-- Content to Item Tags --
+function QC:contentToItemTags(tags)
 	if self.ent.energy > 0 then
 		tags.set_tag("Infos", {energy=self.ent.energy})
 		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.QuatronCubeC", Util.toRNumber(math.floor(self.ent.energy))}}

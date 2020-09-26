@@ -60,16 +60,16 @@ function DTK:copySettings(obj)
 	self.filter = obj.filter
 end
 
--- Tags to Settings --
-function DTK:tagToSettings(tags)
+-- Item Tags to Content --
+function DTK:itemTagsToContent(tags)
 	self.inventoryFluid = tags.inventoryFluid or nil
 	self.inventoryCount = tags.inventoryCount or 0
 	self.filter = tags.filter or nil
 	self.inventoryTemperature = tags.inventoryTemperature or 15
 end
 
--- Settings to Tags --
-function DTK:settingsToTags(tags)
+-- Content to Item Tags --
+function DTK:contentToItemTags(tags)
 	if self.inventoryFluid ~= nil or self.filter ~= nil then
 		tags.set_tag("Infos", {inventoryFluid=self.inventoryFluid, inventoryCount=self.inventoryCount, filter=self.filter, inventoryTemperature=self.inventoryTemperature})
 		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.DeepTankC", self.inventoryFluid or self.filter, self.inventoryCount or 0, self.inventoryTemperature or 15}}
@@ -195,4 +195,16 @@ function DTK:getFluid(fluid)
 		if self.inventoryCount == 0 then self.inventoryFluid = nil end
 	end
 	return 0
+end
+
+-- Settings To Blueprint Tags --
+function DTK:settingsToBlueprintTags()
+	local tags = {}
+	tags["selfFilter"] = self.filter
+	return tags
+end
+
+-- Blueprint Tags To Settings --
+function DTK:blueprintTagsToSettings(tags)
+	self.filter = tags["selfFilter"]
 end

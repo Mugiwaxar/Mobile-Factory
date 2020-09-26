@@ -192,30 +192,22 @@ local function onPlayerSetupBlueprint(event)
 	end
 	if bp == nil or bp.valid_for_read == false then return end
 
-	local nameToTable = {
-		["MatterInteractor"] = "matterInteractorTable",
-		["FluidInteractor"] = "fluidInteractorTable",
-		["OreCleaner"] = "oreCleanerTable",
-		["DeepStorage"] = "deepStorageTable",
-		["DeepTank"] = "deepTankTable",
-	}
-
 	for index, ent in pairs(mapping) do
-		local saveTable = nameToTable[ent.name]
+		local saveTable = _mfTooltipGUI[ent.name]
 		if ent.valid == true and saveTable ~= nil then
 			if global[saveTable] == nil then
 				-- Create Table If Nothing Was Ever Placed --
 				global[saveTable] = {}
 			end
 			saveTable = global[saveTable]
-			local tags = entityToBluePrintTags(ent, saveTable)
+			local tags = entityToBlueprintTags(ent, saveTable)
 			if tags ~= nil then
 				for tag, value in pairs(tags) do
 					bp.set_blueprint_entity_tag(index, tag, value)
 				end
 			end
 		end
-    end
+	end
 end
 
 -- Events --

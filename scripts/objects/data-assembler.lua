@@ -504,3 +504,42 @@ function DA:toManyInInventory(recipe, id)
 		end
 	end
 end
+
+-- Settings To Blueprint Tags --
+function DA:settingsToBlueprintTags()
+	local tags = {}
+	local recipes = {}
+	-- We need to store order of products, as it can be changed
+	for _, recipe in pairs(self.recipeTable) do
+		local recipeSettings = { name = recipe.recipePrototype.name, amount = recipe.amount, productsOrder = {}}
+		for _, product in pairs(recipe.products) do
+			table.insert(recipeSettings.productsOrder, product.name)
+		end
+		table.insert(recipes, recipeSettings)
+	end
+	tags["recipes"] = recipes
+	return tags
+end
+
+-- Blueprint Tags To Settings --
+function DA:blueprintTagsToSettings(tags)
+	self.recipeTable = {}
+	for _, recipe in pairs(tags["recipes"] or {}) do
+		self:addRecipe(recipe.name, recipe.amount)
+		local products = self.recipeTable[self.recipeID].products
+		local sortedProducts = {}
+		for _, name in pairs(recipe.productsOrder) do
+			for idx, product in pairs(products) do
+				if product.name == name then
+					table.insert(sortedProducts, product)
+					products[idx] = nil
+					break
+				end
+			end
+		end
+		for _, product in pairs(products) do
+			table.insert(sortedProducts, product)
+		end
+		self.recipeTable[self.recipeID].products = sortedProducts
+	end
+end
