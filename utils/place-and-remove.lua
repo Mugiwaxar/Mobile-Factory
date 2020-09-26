@@ -180,9 +180,11 @@ function somethingWasRemoved(event)
 
 	-- If a Resoure Catcher was removed --
 	if removedEnt.name == "ResourceCatcher" and obj.filled == true then
-		event.buffer.clear()
-		event.buffer.insert("FilledResourceCatcher")
-		obj:settingsToTags(event.buffer[1])
+		if event.buffer ~= nil and event.buffer[1] ~= nil then
+			event.buffer.clear()
+			event.buffer.insert("FilledResourceCatcher")
+			obj:settingsToTags(event.buffer[1])
+		end
 		return
 	end
 
