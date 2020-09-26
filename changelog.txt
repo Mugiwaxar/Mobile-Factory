@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.197
+Date: 26/09/2020
+  Features:
+    - Blueprinting is back, baby! (thanks Volch! - honk honk)
+  Bugfixes:
+    - error when a resource catcher is destroyed
+    - workaround to prevent storing an item-with-tags, as tags are forgotten
+           only applies when user interface is open (existing matter interactors aren't changed)
+           may have bugs, please report
+---------------------------------------------------------------------------------------------------
 Version: 0.0.196
 Date: 23/09/2020
   Bugfixes:
