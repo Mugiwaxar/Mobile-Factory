@@ -62,15 +62,15 @@ function OC:copySettings(obj)
 	self.selectedInv = obj.selectedInv
 end
 
--- Tags to Settings --
-function OC:tagToSettings(tags)
+-- Item Tags to Content --
+function OC:itemTagsToContent(tags)
 	self.purity = tags.purity or 0
 	self.charge = tags.charge or 0
 	self.totalCharge = tags.totalCharge or 0
 end
 
--- Settings to Tags --
-function OC:settingsToTags(tags)
+-- Content to Item Tags --
+function OC:contentToItemTags(tags)
 	if self.charge > 0 then
 		tags.set_tag("Infos", {purity=self.purity, charge=self.charge, totalCharge=self.totalCharge})
 		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.OreCleanerC", self.purity, self.charge, self.totalCharge}}
@@ -303,14 +303,32 @@ function OC:updateAnimation(event)
 	end
 end
 
+-- Settings To Blueprint Tags --
+function OC:settingsToBlueprintTags()
+	local tags = {}
+	if self.selectedInv and valid(self.selectedInv) then
+		tags["deepStorageID"] = self.selectedInv.ID
+		tags["deepStorageFilter"] = self.selectedInv.filter
+	end
+	return tags
+end
 
-
-
-
-
-
-
-
-
-
-
+-- Blueprint Tags To Settings --
+function OC:blueprintTagsToSettings(tags)
+	local ID = tags["deepStorageID"]
+	local deepStorageFilter = tags["deepStorageFilter"]
+	if ID then
+		for _, deepStorage in pairs(self.MF.dataNetwork.DSRTable) do
+			if valid(deepStorage) then
+				if ID == deepStorage.ID and deepStorageFilter == deepStorage.filter then
+					-- We Should Have the Exact Inventory --
+					self.selectedInv = deepStorage
+					break
+				elseif deepStorageFilter ~= nil and deepStorageFilter == deepStorage.filter then
+					-- We Have A Similar Inventory And Will Keep Checking --
+					self.selectedInv = deepStorage
+				end
+			end
+		end
+	end
+end

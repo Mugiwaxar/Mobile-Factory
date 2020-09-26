@@ -57,15 +57,15 @@ function DSR:copySettings(obj)
 	self.filter = obj.filter
 end
 
--- Tags to Settings --
-function DSR:tagToSettings(tags)
+-- Item Tags to Content --
+function DSR:itemTagsToContent(tags)
 	self.inventoryItem = tags.inventoryItem or nil
 	self.inventoryCount = tags.inventoryCount or 0
 	self.filter = tags.filter or nil
 end
 
--- Settings to Tags --
-function DSR:settingsToTags(tags)
+-- Content to Item Tags --
+function DSR:contentToItemTags(tags)
 	if self.inventoryItem ~= nil or self.filter ~= nil then
 		tags.set_tag("Infos", {inventoryItem=self.inventoryItem, inventoryCount=self.inventoryCount, filter=self.filter})
 		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.DeepStorageC", self.inventoryItem or self.filter, self.inventoryCount or 0}}
@@ -184,4 +184,16 @@ function DSR:getItem(name, count)
 		if self.inventoryCount == 0 then self.inventoryItem = nil end
 	end
 	return 0
+end
+
+-- Settings To Blueprint Tags --
+function DSR:settingsToBlueprintTags()
+	local tags = {}
+	tags["selfFilter"] = self.filter
+	return tags
+end
+
+-- Blueprint Tags To Settings --
+function DSR:blueprintTagsToSettings(tags)
+	self.filter = tags["selfFilter"]
 end

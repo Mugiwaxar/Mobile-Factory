@@ -169,8 +169,8 @@ function RC:update()
 
 end
 
--- Tags to Settings --
-function RC:tagToSettings(tags)
+-- Item Tags to Content --
+function RC:itemTagsToContent(tags)
     self.resourceName = tags.resourceName
     self.resourceAmount = tags.resourceAmount
     if self.resourceName ~= nil then
@@ -179,8 +179,8 @@ function RC:tagToSettings(tags)
     end
 end
 
--- Settings to Tags --
-function RC:settingsToTags(tags)
+-- Content to Item Tags --
+function RC:contentToItemTags(tags)
     -- Get the Resource Localized Name --
     local locResourceName = ""
     if game.tile_prototypes[self.resourceName] ~= nil then

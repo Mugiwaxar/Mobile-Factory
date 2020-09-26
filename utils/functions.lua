@@ -547,12 +547,12 @@ function checkNeededTiles()
 	end
 end
 
-function entityToBluePrintTags(entity, fromTable)
+function entityToBlueprintTags(entity, fromTable)
 	local tags = nil
 	local obj = fromTable[entity.unit_number]
 
-	if obj and obj.settingsToTags then
-		tags = obj:settingsToTags()
+	if obj and obj.settingsToBlueprintTags then
+		tags = obj:settingsToBlueprintTags()
 	end
 
 	return tags

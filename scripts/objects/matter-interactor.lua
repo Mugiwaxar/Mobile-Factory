@@ -295,3 +295,38 @@ function MI:updateInventory()
     end
 
 end
+
+-- Settings To Blueprint Tags --
+function MI:settingsToBlueprintTags()
+	local tags = {}
+	tags["selfFilter"] = self.selectedFilter
+	if self.selectedInv and valid(self.selectedInv) then
+		tags["deepStorageID"] = self.selectedInv.ID
+		tags["deepStorageFilter"] = self.selectedInv.filter
+	end
+	tags["selectedMode"] = self.selectedMode
+	return tags
+end
+
+-- Blueprint Tags To Settings --
+function MI:blueprintTagsToSettings(tags)
+	self.selectedFilter = tags["selfFilter"]
+	local ID = tags["deepStorageID"]
+	local deepStorageFilter = tags["deepStorageFilter"]
+	if ID then
+		for _, deepStorage in pairs(self.MF.dataNetwork.DSRTable) do
+			if valid(deepStorage) then
+				if ID == deepStorage.ID and deepStorageFilter == deepStorage.filter then
+					-- We Should Have the Exact Inventory --
+					self.selectedInv = deepStorage
+					break
+				elseif deepStorageFilter ~= nil and deepStorageFilter == deepStorage.filter then
+					-- We Have A Similar Inventory And Will Keep Checking --
+					self.selectedInv = deepStorage
+				end
+			end
+		end
+	end
+	-- be careful of a nil selectedMode
+	if tags["selectedMode"] then self.selectedMode = tags["selectedMode"] end
+end
