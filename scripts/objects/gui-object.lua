@@ -522,6 +522,7 @@ function createPlayerInventoryFrame(GUIObj, gui, MFPlayer, columnsNumber, button
     for name, count in pairs(MFPlayer.ent.get_main_inventory().get_contents()) do
         -- Check the Item --
         if name == nil or count == nil or count == 0 or game.item_prototypes[name] == nil then goto continue  end
+        if game.item_prototypes[name].type == "item-with-tags" then goto continue end --workaround, tags could be recorded but as of 0.0.197 are forgotten
         -- Check the Filter --
         if MFPlayer.varTable.tmpLocal ~= nil and Util.getLocItemName(name)[1] ~= nil then
             local locName = MFPlayer.varTable.tmpLocal[Util.getLocItemName(name)[1]]

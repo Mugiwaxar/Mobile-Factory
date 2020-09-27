@@ -158,6 +158,17 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	if self.selectedMode == "output" then state = "right" end
 	GUIObj:addSwitch("MIMode" .. self.ent.unit_number, titleFrame, {"gui-description.Input"}, {"gui-description.Output"}, {"gui-description.InputTT"}, {"gui-description.OutputTT"}, state)
 
+	--prevent item-with-tags from being stored, allow retrieval (0.0.197+) - workaround until we record tags
+	if self.selectedMode == "input"
+			and filter.elem_value ~= nil
+			and game.item_prototypes[filter.elem_value].type == "item-with-tags"
+		then
+		game.print("Inputing an item-with-tags ([item="..filter.elem_value.."]) erases tags (dangerous!). Clearing Matter Interactor values.")
+		filter.elem_value = nil
+		self.selectedFilter = nil
+		self.selectedInv = nil --may not be necessary? assigning anyway
+	end
+
 	-- Create the Inventory Selection --
 	GUIObj:addLabel("", titleFrame, {"gui-description.MSTarget"}, _mfOrange)
 
