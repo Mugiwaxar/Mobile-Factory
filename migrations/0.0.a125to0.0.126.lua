@@ -1,3 +1,4 @@
+if not global.allowMigration then return end
 local key = nil
 local MFPlayer = nil
 local GUIObj = nil

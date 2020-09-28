@@ -1,3 +1,4 @@
+if not global.allowMigration then return end
 -- Set last user and Force for the default created Entities inside the Mobile Factory --
 for k, MF in pairs(global.MFTable) do
     if MF.fChest ~= nil and MF.fChest.valid == true then

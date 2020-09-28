@@ -43,6 +43,10 @@ require("scripts/objects/resource-catcher.lua")
 -- When the mod init --
 function onInit()
 
+	-- Check if mod being initialized for the very first time
+	-- This *need* to be at the very begginng of on_init callback
+	global.allowMigration = ( next(global) ~= nil )
+
 	-- Update System --
 	global.entsTable = global.entsTable or {}
 	global.upsysTickTable = global.upsysTickTable or {}

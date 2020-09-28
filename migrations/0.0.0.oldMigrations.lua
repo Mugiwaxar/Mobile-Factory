@@ -1,3 +1,4 @@
+if not global.allowMigration then return end
 -- To OOP --
 if global.MobileFactory ~= nil then
 	global.MF = MF:new()

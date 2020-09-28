@@ -1,3 +1,4 @@
+if not global.allowMigration then return end
 for _, da in pairs(global.dataAssemblerTable or {}) do
 	for id, recipe in pairs(da.recipeTable or {}) do
 		local recipePrototype = recipe.recipePrototype

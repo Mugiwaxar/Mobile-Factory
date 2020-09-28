@@ -1,3 +1,4 @@
+if not global.allowMigration then return end
 -- Store GUI inside MFPlayer --
 for k, GUI in pairs(global.GUITable or {}) do
     -- Fix the Type error --

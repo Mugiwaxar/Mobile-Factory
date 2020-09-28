@@ -1,3 +1,4 @@
+if not global.allowMigration then return end
 -- Create the Jump Drive Object --
 for k, mf in pairs(global.MFTable or {}) do
     mf.jumpDriveObj = JD:new(mf)

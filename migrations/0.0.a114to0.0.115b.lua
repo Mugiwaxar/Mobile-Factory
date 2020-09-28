@@ -1,3 +1,4 @@
+if not global.allowMigration then return end
 -- Convert Dimensional Tanks to Deep Tank and create the Constructible Area --
 global.deepTankTable = {}
 for k, MF in pairs(global.MFTable) do

@@ -1,3 +1,4 @@
+if not global.allowMigration then return end
 -- Add Cell to Quatron recipe --
 unlockRecipeForAll("CellToLiquidQuatron1", "Quatron")
 unlockRecipeForAll("CellToLiquidQuatron2", "Quatron")

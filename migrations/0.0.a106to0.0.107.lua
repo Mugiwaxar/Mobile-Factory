@@ -1,3 +1,4 @@
+if not global.allowMigration then return end
 -- Recreate the Control Center Teleportation Floor --
 for k, MF in pairs(global.MFTable) do
     local tilesTable = {}
