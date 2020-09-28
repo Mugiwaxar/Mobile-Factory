@@ -182,6 +182,13 @@ function Util.getLocFluidName(fluidName)
 	end
 end
 
+-- Return the localised Recipe Name --
+function Util.getLocRecipeName(recipeName)
+	if game.recipe_prototypes[recipeName] ~= nil then
+		return game.recipe_prototypes[recipeName].localised_name
+	end
+end
+
 -- Reset an Animation --
 function Util.resetAnimation(animId, totalFrame)
 	local animSpeed = rendering.get_animation_speed(animId)

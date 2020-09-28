@@ -851,3 +851,14 @@ data.raw["gui-style"].default.MF_Fake_Button_Purple =
 		shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
 	}
 }
+
+data.raw["gui-style"].default.filter_group_button_tab_selectable =
+{
+	type = "button_style",
+	parent = "filter_group_button_tab",
+	disabled_graphical_set =
+	{
+		base = {position = {363, 744}, corner_size = 8},
+		shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	}
+}

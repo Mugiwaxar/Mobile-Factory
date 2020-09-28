@@ -35,6 +35,7 @@ function GUI.createRecipeGUI(player)
 				recipeTable[r.group.name][r.subgroup.name] = {}
 			end
 			table.insert(recipeTable[r.group.name][r.subgroup.name], {obj=r})
+			GUIObj.MFPlayer.ent.request_translation(Util.getLocRecipeName(r.name))
 		end
 	end
 
@@ -66,11 +67,12 @@ function GUI.createRecipeGUI(player)
 	-- Draw Categories
 	for idx, group in ipairs(groupsArray) do
 		local name = "RSCat," .. idx
-		local tab = RSGroupTable.add({type="sprite-button", name=name, style="filter_group_button_tab"})
+		local tab = RSGroupTable.add({type="sprite-button", name=name, style="filter_group_button_tab_selectable"})
 		GUIObj[name] = tab
 		if idx == 1 then tab.enabled = false end
 		tab.tooltip = group.obj.localised_name
 		tab.sprite = "item-group/" .. group.obj.name
+
 	end
 
 	GUIObj.sortedRecipes = groupsArray
@@ -101,15 +103,21 @@ function GUI.doUpdateRecipeGUI(GUIObj)
 	GUIObj.RSRecipeFrame.clear()
 
 	local filter = string.lower(GUIObj.lastSearch) or ""
-	--Draw Recipes
+	local tmpLocal = GUIObj.MFPlayer.varTable.tmpLocal
+	-- Draw Recipes
 	for _, subgroups in ipairs(GUIObj.sortedRecipes[GUIObj.selectedCategory].list) do
 		local RSRecipeTable = GUIObj:addTable("", GUIObj.RSRecipeFrame, 10)
 		for _, recipe in ipairs(subgroups.list) do
-			if not filter or string.find(recipe.obj.name, filter) then
-				local button = RSRecipeTable.add({type="choose-elem-button", name="RSSel,"..recipe.obj.name, elem_type="recipe", style="recipe_slot_button"})
-				button.elem_value = recipe.obj.name
-				button.locked = true
+			local name = recipe.obj.name
+			-- Check the Filter --
+			if filter ~= "" and tmpLocal ~= nil and Util.getLocRecipeName(name)[1] ~= nil then
+					local locName = tmpLocal[Util.getLocRecipeName(name)[1]]
+					if locName ~= nil and string.match(string.lower(locName), filter) == nil then goto continue end
 			end
+			local button = RSRecipeTable.add({type="choose-elem-button", elem_type="recipe", name="RSSel,"..name, style="recipe_slot_button"})
+			button.elem_value = name
+			button.locked = true
+			::continue::
 		end
 	end
 end
