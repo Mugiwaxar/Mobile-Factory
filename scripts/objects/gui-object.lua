@@ -456,7 +456,7 @@ function createDNInventoryFrame(GUIObj, gui, MFPlayer, buttonFirstName, inventor
             -- Check the Filter --
             if MFPlayer.varTable.tmpLocal ~= nil and Util.getLocFluidName(name)[1] ~= nil then
                 local locName = MFPlayer.varTable.tmpLocal[Util.getLocFluidName(name)[1]]
-                if filter ~= nil and filter ~= "" and locName ~= nil and MFPlayer.varTable.tmpLocal ~= nil and string.match(string.lower(locName), string.lower(filter)) == nil then goto continue end
+                if filter ~= nil and filter ~= "" and locName ~= nil and string.match(string.lower(locName), string.lower(filter)) == nil then goto continue end
             end
             -- Create the Button --
             local buttonName = buttonFirstName .. "BDT" .. "," .. deepTank.ent.unit_number
@@ -480,7 +480,7 @@ function createDNInventoryFrame(GUIObj, gui, MFPlayer, buttonFirstName, inventor
             -- Check the Filter --
             if MFPlayer.varTable.tmpLocal ~= nil and Util.getLocItemName(name)[1] ~= nil then
                 local locName = MFPlayer.varTable.tmpLocal[Util.getLocItemName(name)[1]]
-                if filter ~= nil and filter ~= "" and locName ~= nil and MFPlayer.varTable.tmpLocal ~= nil and string.match(string.lower(locName), string.lower(filter)) == nil then goto continue end
+                if filter ~= nil and filter ~= "" and locName ~= nil and string.match(string.lower(locName), string.lower(filter)) == nil then goto continue end
             end
             -- Create the Button --
             local buttonName = buttonFirstName .. "BDSR" .. "," .. deepStorage.ent.unit_number
@@ -500,7 +500,7 @@ function createDNInventoryFrame(GUIObj, gui, MFPlayer, buttonFirstName, inventor
             -- Check the Filter --
             if MFPlayer.varTable.tmpLocal ~= nil and Util.getLocItemName(name)[1] ~= nil then
                 local locName = MFPlayer.varTable.tmpLocal[Util.getLocItemName(name)[1]]
-                if filter ~= nil and filter ~= "" and locName ~= nil and MFPlayer.varTable.tmpLocal ~= nil and string.match(string.lower(locName), string.lower(filter)) == nil then goto continue end
+                if filter ~= nil and filter ~= "" and locName ~= nil and string.match(string.lower(locName), string.lower(filter)) == nil then goto continue end
             end
             -- Create the Button --
             local buttonName = buttonFirstName .. "BINV" .. "," .. name .. "," .. count
@@ -526,7 +526,7 @@ function createPlayerInventoryFrame(GUIObj, gui, MFPlayer, columnsNumber, button
         -- Check the Filter --
         if MFPlayer.varTable.tmpLocal ~= nil and Util.getLocItemName(name)[1] ~= nil then
             local locName = MFPlayer.varTable.tmpLocal[Util.getLocItemName(name)[1]]
-            if filter ~= nil and filter ~= "" and locName ~= nil and MFPlayer.varTable.tmpLocal ~= nil and string.match(string.lower(locName), string.lower(filter)) == nil then goto continue end
+            if filter ~= nil and filter ~= "" and locName ~= nil and string.match(string.lower(locName), string.lower(filter)) == nil then goto continue end
         end
         -- Create the Button --
         local buttonName = buttonFirstName .. "BPINV" .. "," .. name .. "," .. count
