@@ -331,7 +331,7 @@ function DA:addRecipe(name, amount)
 	local recipePrototype = game.recipe_prototypes[name]
 	if recipePrototype == nil then return end
 
-	if self.ent.force.recipes[name] == nil or not self.ent.force.recipes[name].enabled then
+	if self.ent.force.recipes[name] == nil or not self.ent.force.recipes[name].enabled or global.dataAssemblerBlacklist[recipePrototype.category] then
 		local player = getPlayer(self.player)
 		player.print({"", {"gui-description.DAWrongRecipe"}})
 		return

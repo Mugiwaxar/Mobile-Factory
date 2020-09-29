@@ -52,6 +52,7 @@ function onInit()
 	global.useVanillaChooseElem = global.useVanillaChooseElem or false
 	-- Data Network --
 	global.dataNetworkID = global.dataNetworkID or 0
+	global.dataAssemblerBlacklist = global.dataAssemblerBlacklist or {}
 	-- Floor Is Lava --
 	global.floorIsLavaActivated = global.floorIsLavaActivated or false
 	-- Research --

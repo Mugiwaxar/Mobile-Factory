@@ -75,7 +75,18 @@ function GUI.readOptions(option, player)
 			game.print({"gui-description.FloorIsLavaDeactivated"})
 		end
 	end
-	
+
+	if name == "blacklistDAAdd" then
+		local selectedCategory = GUIObj.blacklistDAList.items[GUIObj.blacklistDAList.selected_index]
+		if selectedCategory == nil then return end
+		global.dataAssemblerBlacklist[selectedCategory] = true
+	end
+	if name == "blacklistDARem" then
+		local selectedCategory = GUIObj.blacklistDAList.items[GUIObj.blacklistDAList.selected_index]
+		if selectedCategory == nil then return end
+		global.dataAssemblerBlacklist[selectedCategory] = nil
+	end
+
 	------------------- Performances -------------------
 	if name == "UpdatePerTickOpt" then
 		local number = tonumber(option.text)
