@@ -2,30 +2,32 @@
 
 -- Create the Jump Charger base Object --
 JC = {
-    ent = nil,
-    entID = 0,
+	ent = nil,
 	player = "",
 	MF = nil,
-    lightID = 0,
+	entID = 0,
+	lightID = 0,
 	updateTick = 240,
 	lastUpdate = 0
 }
 
 -- Constructor --
-function JC:new(ent)
+function JC:new(object)
+	if object == nil then return end
 	local t = {}
 	local mt = {}
 	setmetatable(t, mt)
-    mt.__index = JC
-    t.ent = ent
-    t.entID = ent.unit_number
-    t.player = ent.last_user.name
-    t.MF = getMF(t.player)
-    -- Draw the Light Sprite --
-    t.lightID = rendering.draw_light{sprite="JumpChargerL", target=t.ent, surface=t.ent.surface, minimum_darkness=0}
-    -- Save the Jump Charger inside the Jump Drive Table --
-    t.MF.jumpDriveObj.jumpChargerTable[ent.unit_number] = t
-    UpSys.addObj(t)
+	mt.__index = JC
+	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
+	t.entID = object.unit_number
+	-- Draw the Light Sprite --
+	t.lightID = rendering.draw_light{sprite="JumpChargerL", target=object, surface=object.surface, minimum_darkness=0}
+	-- Save the Jump Charger inside the Jump Drive Table --
+	t.MF.jumpDriveObj.jumpChargerTable[object.unit_number] = t
+	UpSys.addObj(t)
 	return t
 end
 

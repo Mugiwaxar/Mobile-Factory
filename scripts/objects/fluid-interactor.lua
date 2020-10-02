@@ -6,16 +6,16 @@ FI = {
 	player = "",
 	MF = nil,
 	entID = 0,
-    stateSprite = 0,
-    levelSprite = 0,
+	stateSprite = 0,
+	levelSprite = 0,
 	active = false,
 	consumption = _mfFIQuatronDrainPerUpdate,
 	updateTick = 60,
 	lastUpdate = 0,
 	dataNetwork = nil,
 	networkAccessPoint = nil,
-    selectedInv = 0,
-    selectedMode = "input" -- input or output
+	selectedInv = 0,
+	selectedMode = "input" -- input or output
 }
 
 -- Constructor --
@@ -29,11 +29,11 @@ function FI:new(object)
 	if object.last_user == nil then return end
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
-	t.dataNetwork = t.MF.dataNetwork
 	t.entID = object.unit_number
-    UpSys.addObj(t)
-    -- Draw the state Sprite --
+	t.dataNetwork = t.MF.dataNetwork
+	-- Draw the state Sprite --
 	t.stateSprite = rendering.draw_sprite{sprite="FluidInteractorSprite1", target=object, surface=object.surface, render_layer=131}
+	UpSys.addObj(t)
 	return t
 end
 

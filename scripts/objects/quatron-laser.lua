@@ -28,9 +28,9 @@ function QL:new(object)
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
 	t.entID = object.unit_number
-	UpSys.addObj(t)
 	-- Create the Beam --
-	t.beam = t.ent.surface.create_entity{name="IddleBeam", position= QL.getBeamPositionA(t), target_position=QL.getBeamPositionB(t), source=QL.getBeamPositionA(t)}
+	t.beam = object.surface.create_entity{name="IddleBeam", position= QL.getBeamPositionA(t), target_position=QL.getBeamPositionB(t), source=QL.getBeamPositionA(t)}
+	UpSys.addObj(t)
 	return t
 end
 

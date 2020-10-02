@@ -5,6 +5,7 @@ DTK = {
 	ent = nil,
 	player = "",
 	MF = nil,
+	entID = 0,
 	updateTick = 80,
 	lastUpdate = 0,
 	inventoryFluid = nil,
@@ -25,6 +26,7 @@ function DTK:new(object)
 	if object.last_user == nil then return end
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
+	t.entID = object.unit_number
 	t.ID = Util.getEntID(global.deepTankTable)
 	if t.MF and t.MF.dataNetwork then
 		t.MF.dataNetwork.DTKTable[object.unit_number] = t

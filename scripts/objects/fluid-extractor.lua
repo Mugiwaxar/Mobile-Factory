@@ -4,6 +4,7 @@ FE = {
 	ent = nil,
 	player = "",
 	MF = nil,
+	entID = 0,
 	purity = 0,
 	charge = 0,
 	totalCharge = 0,
@@ -25,6 +26,7 @@ function FE:new(object)
 	if object.last_user == nil then return end
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
+	t.entID = object.unit_number
 	resource = object.surface.find_entities_filtered{position=object.position, radius=1, type="resource", limit=1}[1]
 	UpSys.addObj(t)
 	return t

@@ -6,7 +6,7 @@ NE = {
 	player = "",
 	MF = nil,
 	entID = 0,
-    stateSprite = 0,
+	stateSprite = 0,
 	active = false,
 	consumption = _mfNEQuatronDrainPerUpdate,
 	updateTick = 60,
@@ -26,11 +26,11 @@ function NE:new(object)
 	if object.last_user == nil then return end
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
-	t.dataNetwork = t.MF.dataNetwork
 	t.entID = object.unit_number
-    UpSys.addObj(t)
-    -- Draw the state Sprite --
+	t.dataNetwork = t.MF.dataNetwork
+	-- Draw the state Sprite --
 	t.stateSprite = rendering.draw_sprite{sprite="NetworkExplorerSprite1", target=object, surface=object.surface, render_layer=131}
+	UpSys.addObj(t)
 	return t
 end
 

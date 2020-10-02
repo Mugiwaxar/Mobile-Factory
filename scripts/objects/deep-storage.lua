@@ -5,6 +5,7 @@ DSR = {
 	ent = nil,
 	player = "",
 	MF = nil,
+	entID = 0,
 	updateTick = 80,
 	lastUpdate = 0,
 	inventoryItem = nil,
@@ -24,6 +25,7 @@ function DSR:new(object)
 	if object.last_user == nil then return end
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
+	t.entID = object.unit_number
 	t.ID = Util.getEntID(global.deepStorageTable)
 	t.MF.dataNetwork.DSRTable[object.unit_number] = t
 	UpSys.addObj(t)

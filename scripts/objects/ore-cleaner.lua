@@ -4,6 +4,7 @@ OC = {
 	ent = nil,
 	player = "",
 	MF = nil,
+	entID = 0,
 	purity = 0,
 	charge = 0,
 	totalCharge = 0,
@@ -28,10 +29,11 @@ function OC:new(object)
 	if object.last_user == nil then return end
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
+	t.entID = object.unit_number
 	t.oreTable = {}
 	t.inventory = {}
-	UpSys.addObj(t)
 	t:scanOres(object)
+	UpSys.addObj(t)
 	return t
 end
 

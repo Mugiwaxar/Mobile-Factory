@@ -4,40 +4,42 @@
 NAP = {
 	ent = nil,
 	player = "",
-    MF = nil,
-    dataNetwork = nil,
-    networkAccessPoint = nil,
-    consumption = _mfNAPQuatronDrainPerUpdate,
-    quatronCharge = 0,
-    maxQuatronCharge = _mfNAPQuatronCapacity,
-    totalConsumption = 0,
-    outOfQuatron = false,
-    showArea = false,
-    areaRenderID = 0,
-    animID = 0,
-    noQuatronSpriteID = 0,
-    objTable = nil,
+	MF = nil,
+	entID = 0,
+	dataNetwork = nil,
+	networkAccessPoint = nil,
+	consumption = _mfNAPQuatronDrainPerUpdate,
+	quatronCharge = 0,
+	maxQuatronCharge = _mfNAPQuatronCapacity,
+	totalConsumption = 0,
+	outOfQuatron = false,
+	showArea = false,
+	areaRenderID = 0,
+	animID = 0,
+	noQuatronSpriteID = 0,
+	objTable = nil,
 	updateTick = 60,
 	lastUpdate = 0
 }
 
 -- Constructor --
-function NAP:new(ent)
-	if ent == nil then return end
+function NAP:new(object)
+	if object == nil then return end
 	local t = {}
 	local mt = {}
 	setmetatable(t, mt)
 	mt.__index = NAP
-	t.ent = ent
-	if ent.last_user == nil then return end
-	t.player = ent.last_user.name
-    t.MF = getMF(t.player)
-    t.dataNetwork = t.MF.dataNetwork
-    t.dataNetwork.networkAccessPointTable[ent.unit_number] = t
-    t.networkAccessPoint = t
-    t.objTable = {}
-    UpSys.addObj(t)
-    t.animID = rendering.draw_animation{animation="NetworkAccessPointA", target={ent.position.x,ent.position.y-0.9}, surface=ent.surface, render_layer=131}
+	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
+	t.entID = object.unit_number
+	t.dataNetwork = t.MF.dataNetwork
+	t.dataNetwork.networkAccessPointTable[object.unit_number] = t
+	t.networkAccessPoint = t
+	t.objTable = {}
+	t.animID = rendering.draw_animation{animation="NetworkAccessPointA", target={object.position.x, object.position.y-0.9}, surface=object.surface, render_layer=131}
+	UpSys.addObj(t)
 	return t
 end
 
