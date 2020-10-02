@@ -182,6 +182,7 @@ function DSR:getItem(name, count)
 		local removed = math.min(count, self.inventoryCount)
 		self.inventoryCount = self.inventoryCount - removed
 		if self.inventoryCount == 0 then self.inventoryItem = nil end
+		return removed
 	end
 	return 0
 end

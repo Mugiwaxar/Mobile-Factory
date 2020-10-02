@@ -208,12 +208,8 @@ function OC:scanOres(entity)
 	if entity == nil or entity.valid == false then return end
 	-- Test if the Surface is valid --
 	if entity.surface == nil then return end
-	-- Get the name of the Ore under the Ore Cleaner --
-	local resource = entity.surface.find_entities_filtered{position=entity.position, radius=1, type="resource", limit=1}
-	-- Test if the Ore was found --
-	if resource[1] == nil or resource[1].valid == false then return end
 	-- Add all surrounding Ores and add them to the oreTable --
-	self.oreTable = entity.surface.find_entities_filtered{position=entity.position, radius=_mfOreCleanerRadius, name=resource[1].name}
+	self.oreTable = entity.surface.find_entities_filtered{position=entity.position, radius=_mfOreCleanerRadius, type="resource"}
 end
 
 -- Collect surrounding Ores --
@@ -236,34 +232,67 @@ function OC:collectOres(event)
 		-- If the Ore Path is valid, break --
 		if orePath ~= nil and orePath.valid == true then
 			break
+		else
+			-- Remove invalid Ore Path, and return if there is no more --
+			table.remove(self.oreTable, randomNum)
+			if table_size(self.oreTable) <= 0 then return end
 		end
 	end
 	-- Test if the Ore Path exist and is valid --
-	if orePath == nil then return end
-	if orePath.valid == false then return end
-	local oreName = orePath.prototype.mineable_properties.products[1].name
-	-- Check if a Name was found --
-	if oreName == nil then return end
-	-- Try to find a Deep Storage if the Selected Inventory is All --
-	local dataInv = self.selectedInv
-	if dataInv == nil then
-		for k, dp in pairs(self.MF.dataNetwork.DSRTable) do
-			if 	dp:canAccept(oreName) == true then
-				dataInv = dp
+	if orePath == nil or orePath.valid == false then return end
+	local listProducts = orePath.prototype.mineable_properties.products
+
+	if self.selectedInv ~= nil then
+		-- Check Selected Inventory
+		if valid(self.selectedInv) == false then return end
+		-- Multiple products can't be stored in single storage
+		if table_size(listProducts) > 1 then return end
+	end
+
+	-- Check if there is a room for all products
+	local deepStorages = {}
+	for _, product in pairs(listProducts) do
+		-- Check if a Name was found, and Item Prototype exists --
+		if product.name == nil or product.type ~= 'item' or game.item_prototypes[product.name] == nil then
+			-- Remove unmineable patch from Ore Table
+			table.remove(self.oreTable, randomNum)
+			return
+		end
+
+		if self.selectedInv then
+			-- Deep Storage is assigned, check if it fits
+			if self.selectedInv:canAccept(product.name) then
+				-- Selected inventory matches product, proceed
+				deepStorages[product.name] = self.selectedInv
+			else
+				-- Selected inventory can't hold product, return
+				return
 			end
+		else
+			-- Try to find a Deep Storage if the Selected Inventory is All --
+			for k, dp in pairs(self.MF.dataNetwork.DSRTable) do
+				if dp:canAccept(product.name) == true then
+					deepStorages[product.name] = dp
+					break
+				end
+			end
+			-- Return if storage not found
+			if deepStorages[product.name] == nil then return end
 		end
 	end
-	-- Check the Data Inventory --
-	if dataInv == nil or getmetatable(dataInv) == nil then return end
-	-- Check if the Ore type is the same as the selected Inventory --
-	if dataInv:canAccept(oreName) == false then return end
+
 	-- Extract Ore --
+	local stats = self.ent.force.item_production_statistics
 	local oreExtracted = math.min(self:orePerExtraction(), orePath.amount)
-	-- Add Ores to the Inventory --
-	dataInv:addItem(oreName, oreExtracted)
-	-- Remove Ores from the Ore Path --
-	orePath.amount = math.max(orePath.amount - oreExtracted, 1)
-	-- Make the beam --
+	for _, product in pairs(listProducts) do
+		if product.probability == 1 or product.probability > math.random() then
+			-- Add Ore to the Inventory --
+			deepStorages[product.name]:addItem(product.name, oreExtracted * product.amount)
+			-- Add Ore to Production Statistics
+			stats.on_flow(product.name, oreExtracted * product.amount)
+		end
+	end
+
 	if oreExtracted > 0 then
 		-- Make the Beam --
 		self.ent.surface.create_entity{name="OCBeam", duration=60, position=self.ent.position, target=orePath.position, source={self.ent.position.x,self.ent.position.y-3.2}}
@@ -271,11 +300,13 @@ function OC:collectOres(event)
 		self.lastExtraction = event.tick
 		-- Remove a charge --
 		self.charge = self.charge - 1
-	end
-	-- Remove the Ore Path if it is empty --
-	if orePath.amount <= 1 then
-		orePath.destroy()
-		table.remove(self.oreTable, randomNum)
+		-- Remove Ores from the Ore Path --
+		orePath.amount = math.max(orePath.amount - oreExtracted, 1)
+		-- Remove the Ore Path if it is empty --
+		if orePath.amount <= 1 then
+			orePath.destroy()
+			table.remove(self.oreTable, randomNum)
+		end
 	end
 end
 
