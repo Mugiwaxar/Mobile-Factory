@@ -140,7 +140,7 @@ function OC:getTooltipInfos(GUIObj, gui, justCreated)
 					itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, ")"}
 				end
 				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
-				if self.selectedInv == deepStorage then
+				if self.selectedInv and self.selectedInv.entID == deepStorage.entID then
 					selectedIndex = i
 				end
 			end

@@ -178,7 +178,7 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 
 	-- Create the Inventory and Deep Storage List --
 	local selectedIndex = 1
-	if self.selectedInv == self.dataNetwork.invObj then selectedIndex = 2 end
+	if self.selectedInv and type(self.selectedInv) == "table" and not self.selectedInv.ID then selectedIndex = 2 end
 	local i = 2
 	for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
 		if deepStorage ~= nil and deepStorage.ent ~= nil then
@@ -196,7 +196,7 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 				invs[k+2] = {"", "", {"gui-description.Empty"}, " - ", deepStorage.ID}
 			end
 
-			if self.selectedInv == deepStorage then
+			if self.selectedInv and type(self.selectedInv) == "table" and self.selectedInv.entID == deepStorage.entID then
 				selectedIndex = i
 			end
 		end

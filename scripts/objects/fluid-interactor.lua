@@ -167,7 +167,7 @@ function FI:getTooltipInfos(GUIObj, gui, justCreated)
 				invs[k+1] = {"", "", {"gui-description.Empty"}, "", " - ", deepTank.ID}
 			end
 
-			if self.selectedInv == deepTank then
+			if self.selectedInv and type(self.selectedInv) == "table" and self.selectedInv.entID == deepTank.entID then
 				selectedIndex = i
 			end
 		end
