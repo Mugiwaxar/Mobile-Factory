@@ -1,3 +1,4 @@
+if not global.allowMigration then return end
 -- Place the Internal Energy/Quatron Cube inside the Control Center --
 for k, MF in pairs(global.MFTable or {}) do
     if MF.ccS == nil then

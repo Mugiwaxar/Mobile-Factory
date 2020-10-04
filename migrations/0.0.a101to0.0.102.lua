@@ -1,3 +1,4 @@
+if not global.allowMigration then return end
 -- Create a MF object and MFPlayer Object for every Players and set the Beginning Technology to unlocked --
 if global.playersTable == nil then global.playersTable = {} end
 if global.MFTable == nil then global.MFTable = {} end

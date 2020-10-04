@@ -1,3 +1,4 @@
+if not global.allowMigration then return end
 for k, MF in pairs(global.MFTable) do
     -- Unlock the Control Center Area --
     if technologyUnlocked("ControlCenter") then

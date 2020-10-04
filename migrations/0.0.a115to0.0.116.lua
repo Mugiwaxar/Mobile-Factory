@@ -1,3 +1,4 @@
+if not global.allowMigration then return end
 -- Surfaces readjustment --
 for k, MF in pairs(global.MFTable or {}) do
     -- Create the Sync Area inside the Factory --
