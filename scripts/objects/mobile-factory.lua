@@ -132,7 +132,7 @@ function MF:getTooltipInfos(GUIObj, gui, justCreated)
 		local inventoryTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
 
 		-- Create the Inventory Button --
-		GUIObj:addSimpleButton("MFOpenI," ..GUIObj.MFPlayer.name, inventoryTitle, {"gui-description.OpenInventory"})
+		GUIObj:addSimpleButton("MFOpenI," ..self.player, inventoryTitle, {"gui-description.OpenInventory"})
 
 		-- Create the Lasers Title --
 		local LasersFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Lasers"}, _mfOrange)
