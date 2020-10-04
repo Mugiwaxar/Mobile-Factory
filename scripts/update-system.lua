@@ -9,12 +9,10 @@ end
 
 -- Remove an Object from the Update System --
 function UpSys.removeObj(obj)
-  -- Remove the Object --
-  for k, object in pairs(global.entsTable) do
-    if object == obj then
-      global.entsTable[k] = nil
-    end
-  end
+	-- Remove the Object --
+	if obj.entID then
+		global.entsTable[obj.entID] = nil
+	end
 end
 
 -- Update System: Scan Entities --

@@ -13,21 +13,21 @@ DS = {
 }
 
 -- Constructor --
-function DS:new(ent)
-	if ent == nil then return end
+function DS:new(object)
+	if object == nil then return end
 	local t = {}
 	local mt = {}
 	setmetatable(t, mt)
 	mt.__index = DS
-	t.ent = ent
-	if ent.last_user == nil then return end
-	t.player = ent.last_user.name
+	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
 	t.MF = getMF(t.player)
+	t.entID = object.unit_number
 	t.dataNetwork = t.MF.dataNetwork
-	t.dataNetwork.dataStorageTable[ent.unit_number] = t
-	t.entID = ent.unit_number
+	t.dataNetwork.dataStorageTable[object.unit_number] = t
+	t.animID = rendering.draw_animation{animation="DataStorageA", target={object.position.x, object.position.y-1.2}, surface=object.surface, render_layer=131}
 	UpSys.addObj(t)
-	t.animID = rendering.draw_animation{animation="DataStorageA", target={ent.position.x,ent.position.y-1.2}, surface=ent.surface, render_layer=131}
 	return t
 end
 

@@ -6,34 +6,36 @@ local waterTileList = {deepwater=true, ["deepwater-green"]=true, water=true, ["w
 
 -- Create the Resource Catcher base Object --
 RC = {
-    ent = nil,
-    entID = 0,
+	ent = nil,
 	player = "",
 	MF = nil,
-    lightID = 0,
-    spriteID = 0,
-    updateTick = 100,
-    justCreated = true,
-    filled = false,
-    haveResource = false,
-    resourceName = nil,
-    resourceAmount = nil,
+	entID = 0,
+	lightID = 0,
+	spriteID = 0,
+	updateTick = 100,
+	justCreated = true,
+	filled = false,
+	haveResource = false,
+	resourceName = nil,
+	resourceAmount = nil,
 	lastUpdate = 0
 }
 
 -- Constructor --
-function RC:new(ent)
+function RC:new(object)
+	if object == nil then return end
 	local t = {}
 	local mt = {}
 	setmetatable(t, mt)
-    mt.__index = RC
-    t.ent = ent
-    t.entID = ent.unit_number
-    t.player = ent.last_user.name
-    t.MF = getMF(t.player)
-    -- Draw the Light Sprite --
-    t.lightID = rendering.draw_light{sprite="ResourceCatcher", target=t.ent, surface=t.ent.surface, minimum_darkness=0}
-    UpSys.addObj(t)
+	mt.__index = RC
+	t.ent = object
+	if object.last_user == nil then return end
+	t.player = object.last_user.name
+	t.MF = getMF(t.player)
+	t.entID = object.unit_number
+	-- Draw the Light Sprite --
+	t.lightID = rendering.draw_light{sprite="ResourceCatcher", target=object, surface=object.surface, minimum_darkness=0}
+	UpSys.addObj(t)
 	return t
 end
 

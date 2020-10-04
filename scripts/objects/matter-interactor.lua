@@ -6,18 +6,18 @@ MI = {
 	player = "",
 	MF = nil,
 	entID = 0,
-    stateSprite = 0,
+	stateSprite = 0,
 	active = false,
 	consumption = _mfMIQuatronDrainPerUpdate,
 	updateTick = 60,
 	lastUpdate = 0,
-    dataNetwork = nil,
+	dataNetwork = nil,
 	networkAccessPoint = nil,
-    selectedFilter = nil,
-    selectedMode = "input", -- input or output
+	selectedFilter = nil,
+	selectedMode = "input", -- input or output
 	lastSelectedPlayer = "",
 	selectedPlayer = "",
-    selectedInv = 0,
+	selectedInv = 0,
 }
 
 -- Constructor --
@@ -32,11 +32,11 @@ function MI:new(object)
 	t.player = object.last_user.name
 	t.selectedPlayer = t.player
 	t.MF = getMF(t.player)
-	t.dataNetwork = t.MF.dataNetwork
 	t.entID = object.unit_number
-    UpSys.addObj(t)
-    -- Draw the state Sprite --
+	t.dataNetwork = t.MF.dataNetwork
+	-- Draw the state Sprite --
 	t.stateSprite = rendering.draw_sprite{sprite="MatterInteractorSprite1", target=object, surface=object.surface, render_layer=131}
+	UpSys.addObj(t)
 	return t
 end
 
@@ -178,7 +178,7 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 
 	-- Create the Inventory and Deep Storage List --
 	local selectedIndex = 1
-	if self.selectedInv == self.dataNetwork.invObj then selectedIndex = 2 end
+	if self.selectedInv and type(self.selectedInv) == "table" and not self.selectedInv.ID then selectedIndex = 2 end
 	local i = 2
 	for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
 		if deepStorage ~= nil and deepStorage.ent ~= nil then
@@ -196,7 +196,7 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 				invs[k+2] = {"", "", {"gui-description.Empty"}, " - ", deepStorage.ID}
 			end
 
-			if self.selectedInv == deepStorage then
+			if self.selectedInv and type(self.selectedInv) == "table" and self.selectedInv.entID == deepStorage.entID then
 				selectedIndex = i
 			end
 		end

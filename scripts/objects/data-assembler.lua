@@ -6,7 +6,7 @@ DA = {
 	player = "",
 	MF = nil,
 	entID = 0,
-    stateSprite = 0,
+	stateSprite = 0,
 	active = false,
 	consumption = _mfDAQuatronDrainPerUpdate,
 	updateTick = 5,
@@ -33,12 +33,12 @@ function DA:new(object)
 	if object.last_user == nil then return end
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
-	t.dataNetwork = t.MF.dataNetwork
 	t.entID = object.unit_number
+	t.dataNetwork = t.MF.dataNetwork
 	t.recipeTable = {}
-    UpSys.addObj(t)
-    -- Draw the state Sprite --
+	-- Draw the state Sprite --
 	t.stateSprite = rendering.draw_sprite{sprite="DataAssemblerSprite1", target=object, surface=object.surface, render_layer=131}
+	UpSys.addObj(t)
 	return t
 end
 

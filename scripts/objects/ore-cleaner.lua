@@ -4,6 +4,7 @@ OC = {
 	ent = nil,
 	player = "",
 	MF = nil,
+	entID = 0,
 	purity = 0,
 	charge = 0,
 	totalCharge = 0,
@@ -28,10 +29,11 @@ function OC:new(object)
 	if object.last_user == nil then return end
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
+	t.entID = object.unit_number
 	t.oreTable = {}
 	t.inventory = {}
-	UpSys.addObj(t)
 	t:scanOres(object)
+	UpSys.addObj(t)
 	return t
 end
 
@@ -138,7 +140,7 @@ function OC:getTooltipInfos(GUIObj, gui, justCreated)
 					itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, ")"}
 				end
 				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
-				if self.selectedInv == deepStorage then
+				if self.selectedInv and self.selectedInv.entID == deepStorage.entID then
 					selectedIndex = i
 				end
 			end
