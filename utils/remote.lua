@@ -69,6 +69,17 @@ function takeItems(name, item, amount)
     return 0
 end
 
+-- Add or remove crafting category to Data Assembler blacklist
+function blacklistDACategory(category, value)
+	if global.dataAssemblerBlacklist ~= nil then
+		if value then
+			global.dataAssemblerBlacklist[category] = true
+		else
+			global.dataAssemblerBlacklist[category] = nil
+		end
+	end
+end
+
 -- Add the MFCom Interface --
 remote.add_interface("MFCom", {
     getGlobal=getGlobal,
@@ -80,5 +91,6 @@ remote.add_interface("MFCom", {
     removeMFEnergy=removeMFEnergy,
     hasItems=hasItems,
     addItems=addItems,
-    takeItems=takeItems
+    takeItems=takeItems,
+    blacklistDACategory=blacklistDACategory
 })

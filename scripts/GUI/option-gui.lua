@@ -163,6 +163,27 @@ function GUI.updateOptionGUIGameTab(GUIObj)
 	GUI.addOption("", scrollPane, "title", false, {text={"gui-description.FloorIsLavaTitle"}}, playerIndex)
 	local FILOption = GUIObj:addCheckBox("FloorIsLavaOpt", scrollPane, {"gui-description.FloorIsLavaOpt"}, {"gui-description.FloorIsLavaOptTT"}, global.floorIsLavaActivated or false)
 	FILOption.enabled = GUIObj.MFPlayer.ent.admin
+
+		-- Create the Category List --
+	local categoryList = {}
+	for _, recipe in pairs(game.recipe_prototypes) do
+		categoryList[recipe.category] = recipe.category
+	end
+
+	-- Add all Options --
+	GUI.addOption("", scrollPane, "title", false, {text={"gui-description.DataNetwork"}}, playerIndex)
+	GUIObj:addLabel("", scrollPane, {"gui-description.DABlacklistLabel"}, nil, {"gui-description.DABlacklistLabelTT"}, false, "LabelFont2")
+	local blacklistFlow = GUIObj:addFlow("", scrollPane, "horizontal")
+	GUIObj:addDropDown("blacklistDAList", blacklistFlow, categoryList, nil, true)
+	local add = GUIObj:addSimpleButton("blacklistDAAdd", blacklistFlow, {"gui-description.MFOptAddButton"})
+	local rem = GUIObj:addSimpleButton("blacklistDARem", blacklistFlow, {"gui-description.MFOptRemoveButton"})
+	add.enabled = GUIObj.MFPlayer.ent.admin
+	rem.enabled = GUIObj.MFPlayer.ent.admin
+
+	-- Add the Blacklisted Categories list --
+	for category, _ in pairs(global.dataAssemblerBlacklist) do
+		GUIObj:addLabel("", scrollPane, category, _mfRed)
+	end
 end
 
 -- Update the SystemTab --
@@ -179,5 +200,6 @@ function GUI.updateOptionGUISystemTab(GUIObj)
 	local tickOpt = GUI.addOption("UpdatePerTickOpt", scrollPane, "numberfield", false, {text=global.entsUpPerTick or 100, text2={"gui-description.SystemPerfEntsPerTick"}, tooltip={"gui-description.SystemPerfEntsPerTickTT"}}, playerIndex)
 	tickOpt.UpdatePerTickOpt.enabled = GUIObj.MFPlayer.ent.admin
 
-	GUIObj:addCheckBox("useVanillaChooseElem", scrollPane, {"gui-description.UseVanillaChooseElem"}, {"gui-description.UseVanillaChooseElemTT"}, global.useVanillaChooseElem)
+	local checkbox = GUIObj:addCheckBox("useVanillaChooseElem", scrollPane, {"gui-description.UseVanillaChooseElem"}, {"gui-description.UseVanillaChooseElemTT"}, global.useVanillaChooseElem)
+	checkbox.enabled = GUIObj.MFPlayer.ent.admin
 end

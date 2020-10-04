@@ -27,7 +27,7 @@ function GUI.createRecipeGUI(player)
 	-- Split recipes by groups
 	local recipeTable = {}
 	for _, r in pairs(player.force.recipes) do
-		if r.enabled == true and r.hidden == false then
+		if r.enabled == true and r.hidden == false and not global.dataAssemblerBlacklist[r.category] then
 			if recipeTable[r.group.name] == nil then
 				recipeTable[r.group.name] = {}
 			end
