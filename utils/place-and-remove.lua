@@ -189,6 +189,7 @@ function somethingWasRemoved(event)
 			event.buffer.insert("FilledResourceCatcher")
 			obj:contentToItemTags(event.buffer[1])
 		end
+		obj:remove()
 		return
 	end
 
