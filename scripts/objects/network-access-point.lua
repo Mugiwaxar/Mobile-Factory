@@ -18,6 +18,7 @@ NAP = {
 	updateTick = 60,
 	lastUpdate = 0,
 	quatronCharge = 0,
+	quatronLevel = 1,
 	quatronMax = _mfNAPQuatronCapacity,
 	quatronMaxInput = 999999,
 	quatronMaxOutput = 0
@@ -185,14 +186,16 @@ end
 
 -- Calculate the Total Consumption --
 function NAP:updateTotalConsumption()
-    self.totalConsumption = self.consumption
-    for k, obj in pairs(self.objTable) do
-        if valid(obj) == false then
-            self.objTable[k] = nil
-        else
-            self.totalConsumption = self.totalConsumption + obj.consumption
-        end
-    end
+	local totalConsumption = self.consumption
+	for k, obj in pairs(self.objTable) do
+			if valid(obj) == false then
+					self.objTable[k] = nil
+			else
+					totalConsumption = totalConsumption + obj.consumption
+			end
+	end
+	-- TODO: NAP doesn't get better with levels, so just reducing consumption for now
+	self.totalConsumption = math.ceil(totalConsumption / math.pow(self.quatronLevel, _mfQuatronScalePower))
 end
 
 -- Remove the Quatron Consumed --
@@ -216,9 +219,14 @@ function NAP:maxQuatron()
 end
 
 -- Add Quatron (Return the amount added) --
-function NAP:addQuatron(amount)
+function NAP:addQuatron(amount, level)
 	local added = math.min(amount, self.quatronMax - self.quatronCharge)
-	self.quatronCharge = self.quatronCharge + added
+	if self.quatronCharge > 0 then
+		mixQuatron(self, added, level)
+	else
+		self.quatronCharge = added
+		self.quatronLevel = level
+	end
 	return added
 end
 

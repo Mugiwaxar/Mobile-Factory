@@ -100,16 +100,17 @@ _mfMIQuatronDrainPerUpdate = 8
 _mfFIQuatronDrainPerUpdate = 8
 _mfNEQuatronDrainPerUpdate = 3
 _mfDAQuatronDrainPerUpdate = 1
+_mfQuatronScalePower = 1.3
 
 -- Ore Cleaner settings --
 _mfOreCleanerMaxCharge = 1000
 _mfOreCleanerRadius = 25
-_mfOreCleanerOrePerExtraction = 10
+_mfOreCleanerOrePerExtraction = 5
 _mfOreCleanerExtractionTicks = 20
 _mfOreCleanerMaxDistance = 100
 
 -- Fluid Extractor settings --
-_mfFEFluidPerExtraction = 30
+_mfFEFluidPerExtraction = 15
 _mfFEMaxCharge = 1000
 _mfFluidExtractorMaxDistance = 100
 
@@ -162,7 +163,9 @@ _mfQuatronShare =
 	"QuatronCubeMK1",
 	"QuatronLaser1",
 	"QuatronReactor",
-	"NetworkAccessPoint"
+	"NetworkAccessPoint",
+	"OreCleaner",
+	"FluidExtractor"
 }
 
 _mfMobileFactories =

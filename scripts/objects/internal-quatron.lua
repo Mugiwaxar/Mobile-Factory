@@ -11,6 +11,7 @@ IQC = {
 	updateTick = 60,
 	lastUpdate = 0,
 	quatronCharge = 0,
+	quatronLevel = 1,
 	quatronMax = 1,
 	quatronMaxInput = 0,
 	quatronMaxOutput = 0
@@ -74,14 +75,15 @@ end
 -- Item Tags to Content --
 function IQC:itemTagsToContent(tags)
 	self.quatronCharge = tags.energy or 0
+	self.quatronLevel = tags.purity or 1
 	self.ent.energy = self.quatronCharge
 end
 
 -- Content to Item Tags --
 function IQC:contentToItemTags(tags)
 	if self.quatronCharge <= 0 then return end
-	tags.set_tag("Infos", {energy=self.quatronCharge})
-	tags.custom_description = {"", tags.prototype.localised_description, {"item-description.QuatronCubeC", Util.toRNumber(math.floor(self.quatronCharge))}}
+	tags.set_tag("Infos", {energy=self.quatronCharge, purity=selfQuatronLevel})
+	tags.custom_description = {"", tags.prototype.localised_description, {"item-description.QuatronCubeC", math.floor(self.quatronCharge), string.format("%.3f", self.quatronLevel)}}
 end
 
 -- Update --
@@ -109,8 +111,28 @@ function IQC:update()
 end
 
 -- Tooltip Infos --
--- function IQC:getTooltipInfos(GUI)
--- end
+function IQC:getTooltipInfos(GUIObj, gui, justCreated)
+
+	-- Get the Flow --
+	local informationFlow = GUIObj.InformationFlow
+
+	if justCreated == true then
+		-- Create the Information Title --
+		local informationTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
+		informationFlow = GUIObj:addFlow("InformationFlow", informationTitle, "vertical", true)
+	end
+
+	-- Clear the Flow --
+	informationFlow.clear()
+
+	-- Create the Quatron Charge --
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Charge"}, ": "}, math.floor(self.quatronCharge), _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+
+	-- Create the Quatron Purity --
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Purity"}, ": "}, string.format("%.3f", self.quatronLevel), _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronLevel/20, 100)
+end
 
 -- Balance the Quatron with neighboring Quatron Users --
 function IQC:balance()
@@ -125,28 +147,30 @@ function IQC:balance()
 	local selfMaxInFlow = self.quatronMaxInput
 	local selfQuatron = self.quatronCharge
 	local selfMaxQuatron = self.quatronMax
+	local selfQuatronLevel = self.quatronLevel
 
 	-- Check all Accumulator --
 	for k, ent in pairs(ents) do
 		-- Look for valid Quatron User --
 		local obj = global.entsTable[ent.unit_number]
 		if obj ~= nil then
+			local isAcc = ent.type == "accumulator"
 			local objQuatron = obj.quatronCharge
 			local objMaxQuatron = obj.quatronMax
 			local objMaxInFlow = obj.quatronMaxInput
 			local objMaxOutFlow = obj.quatronMaxOutput
 			if selfQuatron > objQuatron and objQuatron < objMaxQuatron and objMaxInFlow > 0 then
 				-- Calcule max flow --
-				local quatronVariance = (selfQuatron - objQuatron) / 2
+				local quatronVariance = isAcc and math.floor((selfQuatron - objQuatron) / 2) or selfQuatron
 				local missingQuatron = objMaxQuatron - objQuatron
 				local quatronTransfer = math.min(quatronVariance, missingQuatron, selfMaxOutFlow, objMaxInFlow)
 				-- Transfer Quatron --
-				obj.quatronCharge = objQuatron + quatronTransfer
+				obj:addQuatron(quatronTransfer, self.quatronLevel)
 				-- Remove Quatron --
 				selfQuatron = selfQuatron - quatronTransfer
 			elseif selfQuatron < objQuatron and selfQuatron < selfMaxQuatron and objMaxOutFlow > 0 then
 				-- Calcule max flow --
-				local quatronVariance = (objQuatron - selfQuatron) / 2
+				local quatronVariance = isAcc and math.floor((objQuatron - selfQuatron) / 2) or objQuatron
 				local missingQuatron = selfMaxQuatron - selfQuatron
 				local quatronTranfer = math.min(quatronVariance, missingQuatron, selfMaxInFlow, objMaxOutFlow)
 				-- Transfer Quatron --
@@ -164,7 +188,7 @@ end
 -- Return the amount of Quatron --
 function IQC:quatron()
 	if self.ent ~= nil and self.ent.valid == true then
-		return self.quatron
+		return self.quatronCharge
 	end
 	return 0
 end
@@ -178,10 +202,15 @@ function IQC:maxQuatron()
 end
 
 -- Add Quatron (Return the amount added) --
-function IQC:addQuatron(amount)
+function IQC:addQuatron(amount, level)
 	if self.ent ~= nil and self.ent.valid == true then
 		local added = math.min(amount, self.quatronMax - self.quatronCharge)
-		self.quatronCharge = self.quatronCharge + added
+		if self.quatronCharge > 0 then
+			mixQuatron(self, added, level)
+		else
+			self.quatronCharge = added
+			self.quatronLevel = level
+		end
 		return added
 	end
 	return 0

@@ -115,20 +115,18 @@ function DA:update()
 		self:setActive(true)
 	else
 		self:setActive(false)
-    end
+	end
 
     -- Stop if not active --
 	if self.active == false then return end
 
-	-- Get Quatron Charge if needed --
-	if self.quatronCharge <= 15 then
-		local quatron = self.dataNetwork.invObj:getBestQuatron()
-		if quatron > 0 then
-			self.quatronLevel = quatron
-			self.quatronCharge = 100
+	if self.quatronCharge <= 15 and self.networkAccessPoint ~= nil then
+		local chargeToBorrow = math.min(self.networkAccessPoint.quatronCharge, 100 - self.quatronCharge)
+		if chargeToBorrow > 0 then
+			self:addQuatron(chargeToBorrow, self.networkAccessPoint.quatronLevel)
+			self.networkAccessPoint:removeQuatron(chargeToBorrow)
 		end
 	end
-	
 end
 
 -- Tooltip Infos --
@@ -180,7 +178,7 @@ function DA:getTooltipInfos(GUIObj, gui, justCreated)
 		GUIObj:addButton("DAAddR," .. self.entID, addRFlow, "PlusIcon", "PlusIcon", {"gui-description.AddRecipeTT"}, 28)
 
 		-- Create the Quatron level Dual Label --
-		GUIObj:addDualLabel(informationFlow, {"gui-description.Quatronlevel"}, self.quatronLevel, _mfOrange, _mfGreen, nil, "", "", "QuatronLevel", true)
+		GUIObj:addDualLabel(informationFlow, {"gui-description.Quatronlevel"}, string.format("%.3f", self.quatronLevel), _mfOrange, _mfGreen, nil, "", "", "QuatronLevel", true)
 
 		-- Create the Quatron Charge Dual Label --
 		GUIObj:addDualLabel(informationFlow, {"gui-description.QuatronCharge"}, math.floor(self.quatronCharge), _mfOrange, _mfGreen, nil, "", "",  "QuatronCharge", true)
@@ -202,7 +200,7 @@ function DA:getTooltipInfos(GUIObj, gui, justCreated)
 	end
 
 	-- Update the Quatron Level and Charge --
-	if GUIObj.QuatronLevel ~= nil then GUIObj.QuatronLevel.Label2.caption = self.quatronLevel end
+	if GUIObj.QuatronLevel ~= nil then GUIObj.QuatronLevel.Label2.caption = string.format("%.3f", self.quatronLevel) end
 	if GUIObj.QuatronCharge ~= nil then GUIObj.QuatronCharge.Label2.caption = math.floor(self.quatronCharge) end
 	
 end
@@ -425,17 +423,17 @@ function DA:updateRecipe(recipe, id)
 		recipe.missingIngredient = true
 	end
 
+	-- Check if the recipe must be done --
+	self:toManyInInventory(recipe, id)
+	if recipe.toManyInInventory == true and recipe.missingIngredient == true then return end
 
 	-- Check if the Recipe need Ingredients --
 	if recipe.missingIngredient == true then
 		self:getIngredients(recipe)
 	end
 
-	-- Check if the recipe must be done --
-	self:toManyInInventory(recipe, id)
-
 	-- Check if the Recipe can be processed --
-	if recipe.missingIngredient == true or recipe.toManyInInventory == true or recipe.progress >= recipe.recipePrototype.energy or self.quatronCharge <= 0 then return end
+	if recipe.missingIngredient == true or recipe.progress >= recipe.recipePrototype.energy or self.quatronCharge <= 0 then return end
 
 	-- Process the Recipe --
 	self:processRecipe(recipe)
@@ -444,7 +442,7 @@ end
 
 -- Process a Recip --
 function DA:processRecipe(recipe)
-	recipe.progress = recipe.progress + ((1/ (self.completeUpdateTick / self.updateTick) ) * (self.quatronLevel/4))
+	recipe.progress = recipe.progress + (1/12 * math.pow(self.quatronLevel, _mfQuatronScalePower) / 4)
 	self.quatronCharge = self.quatronCharge - 1/12
 	if self.quatronCharge < 0 then self.quatronCharge = 0 end
 end
@@ -546,4 +544,15 @@ function DA:blueprintTagsToSettings(tags)
 		end
 		self.recipeTable[self.recipeID].products = sortedProducts
 	end
+end
+
+-- Add Quatron (Return the amount added) --
+function DA:addQuatron(amount, level)
+	if self.quatronCharge > 0 then
+		mixQuatron(self, amount, level)
+	else
+		self.quatronCharge = amount
+		self.quatronLevel = level
+	end
+	return amount
 end

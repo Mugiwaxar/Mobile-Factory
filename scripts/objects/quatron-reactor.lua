@@ -11,6 +11,7 @@ QR = {
 	updateTick = 60,
 	lastUpdate = 0,
 	quatronCharge = 0,
+	quatronLevel = 1,
 	quatronMax = 25000,
 	quatronMaxInput = 0,
 	quatronMaxOutput = 0
@@ -83,8 +84,29 @@ function QR:update()
 end
 
 -- Tooltip Infos --
--- function IQC:getTooltipInfos(GUI)
--- end
+-- Apparently generator-based entities doesn't fire on_gui_opened on click, so it doesn't work.
+function QR:getTooltipInfos(GUIObj, gui, justCreated)
+
+	-- Get the Flow --
+	local informationFlow = GUIObj.InformationFlow
+
+	if justCreated == true then
+		-- Create the Information Title --
+		local informationTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
+		informationFlow = GUIObj:addFlow("InformationFlow", informationTitle, "vertical", true)
+	end
+
+	-- Clear the Flow --
+	informationFlow.clear()
+
+	-- Create the Quatron Charge --
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Charge"}, ": "}, math.floor(self.quatronCharge), _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+
+	-- Create the Quatron Purity --
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Purity"}, ": "}, string.format("%.3f", self.quatronLevel), _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronLevel/20, 100)
+end
 
 -- Transform the Fluid inside into Quatron --
 function QR:burnFluid()
@@ -102,17 +124,12 @@ function QR:burnFluid()
 	local level = tonumber(level)
 	if level == nil then return end
 
-	local quatronPerFluid = level * (level / 3) * 3
-
 	-- Get the amount of Fluid to remove --
-	local fluidToRemove = math.ceil(math.min(fluid.amount, (self.quatronMax - self.quatronCharge) / quatronPerFluid, 500))
-
+	local fluidToRemove = math.min(fluid.amount, self.quatronMax - self.quatronCharge)
 	-- Remove the Fluid --
 	local removed = self.ent.remove_fluid{name=fluidName, amount=fluidToRemove}
 
-	-- Add the Quatron --
-	self.quatronCharge = self.quatronCharge + math.floor(removed * quatronPerFluid)
-	if self.quatronCharge > self.quatronMax then self.quatronCharge = self.quatronMax end
+	self:addQuatron(removed, level)
 end
 
 -- Send Quatron to nearby Quatron Users --
@@ -128,12 +145,15 @@ function QR:sendQuatron()
 	-- Return if nothing found
 	if next(ents) == nil then return end
 
+	local selfQuatronLevel = self.quatronLevel
+
 	-- Check all Entity --
 	for k, ent in pairs(ents) do
 		-- Look for valid Object --
 		local obj = global.entsTable[ent.unit_number]
 		if obj ~= nil then
 			local objQuatron = obj.quatronCharge
+			local objQuatronLevel = obj.quatronLevel
 			local objMaxQuatron = obj.quatronMax
 			local objMaxInFlow = obj.quatronMaxInput
 			if objQuatron < objMaxQuatron and objMaxInFlow > 0 then
@@ -141,7 +161,7 @@ function QR:sendQuatron()
 				local missingQuatron = objMaxQuatron - objQuatron
 				local quatronTransfer = math.min(selfQuatron, missingQuatron, objMaxInFlow)
 				-- Transfer Quatron --
-				obj.quatronCharge = objQuatron + quatronTransfer
+				obj:addQuatron(quatronTransfer, self.quatronLevel)
 				-- Remove Quatron --
 				selfQuatron = selfQuatron - quatronTransfer
 				if selfQuatron <= 0 then break end
@@ -163,9 +183,14 @@ function QR:maxQuatron()
 end
 
 -- Add Quatron (Return the amount added) --
-function QR:addQuatron(amount)
+function QR:addQuatron(amount, level)
 	local added = math.min(amount, self.quatronMax - self.quatronCharge)
-	self.quatronCharge = self.quatronCharge + added
+	if self.quatronCharge > 0 then
+		mixQuatron(self, added, level)
+	else
+		self.quatronCharge = added
+		self.quatronLevel = level
+	end
 	return added
 end
 

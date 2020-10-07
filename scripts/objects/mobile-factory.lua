@@ -242,7 +242,7 @@ function MF:update(event)
 	-- Read Modules inside the Equipment Grid --
 	if event.tick%_eventTick125 == 0 then self:scanModules() end
 	-- Send Quatron Charge --
-	if self.sendQuatronActivated == true then
+	if tick%_eventTick60 == 0 and self.sendQuatronActivated == true then
 		self:SendQuatronToOC(event)
 		self:SendQuatronToFE(event)
 	end
@@ -556,48 +556,62 @@ end
 function MF:SendQuatronToOC(event)
 	-- Check if the Mobile Factory is valid --
 	if self.ent == nil or self.ent.valid == false then return end
-	-- Send Charge only every 10 ticks --
-	if event.tick%10 ~= 0 then return end
+
+	local selfQuatron = self.internalQuatronObj:quatron()
+	if selfQuatron <= 0 then return end
+
+	local selfQuatronLevel = self.internalQuatronObj.quatronLevel
+
 	for k, oc in pairs(global.oreCleanerTable) do
 	-- Check the Distance --
 		if valid(oc) == true and oc.player == self.player and Util.distance(self.ent.position, oc.ent.position) < _mfOreCleanerMaxDistance then
 			-- Test if there are space inside the Ore Cleaner for Quatron Charge --
-			if oc.charge <= _mfFEMaxCharge - 100 then
-				-- Get the Best Quatron Change --
-				local charge = self.II:getBestQuatron()
-				if charge > 0 then
+			if oc.quatronCharge <= oc.quatronMax then
+				local transferQuatron = math.min(oc.quatronMax - oc.quatronCharge, oc.quatronMaxInput, selfQuatron)
+				if transferQuatron > 0 then
 					-- Add the Charge --
-					oc:addQuatronCharge(charge)
+					oc:addQuatron(transferQuatron, selfQuatronLevel)
+				-- Remove Quatron --
+					selfQuatron = selfQuatron - transferQuatron
 					-- Create the Laser --
 					self.ent.surface.create_entity{name="GreenBeam", duration=30, position=self.ent.position, target={oc.ent.position.x, oc.ent.position.y - 2}, source=self.ent}
 				end
 			end
 		end
 	end
+
+	self.internalQuatronObj.quatronCharge = selfQuatron
 end
 
 -- Send Quatron Charge to all Fluid Extractors --
 function MF:SendQuatronToFE(event)
 	-- Check if the Mobile Factory is valid --
 	if self.ent == nil or self.ent.valid == false then return end
-	-- Send Charge only every 10 ticks --
-	if event.tick%10 ~= 0 then return end
+
+	local selfQuatron = self.internalQuatronObj:quatron()
+	if selfQuatron <= 0 then return end
+
+	local selfQuatronLevel = self.internalQuatronObj.quatronLevel
+
 	for k, fe in pairs(global.fluidExtractorTable) do
 		-- Check if the Fluid Extractor is valid --
 		if valid(fe) == true and fe.player == self.player and Util.distance(self.ent.position, fe.ent.position) < _mfFluidExtractorMaxDistance then
 			-- Test if there are space inside the Fluid Extractor for Quatron Charge --
-			if fe.charge <= _mfFEMaxCharge - 100 then
-				-- Get the Best Quatron Change --
-				local charge = self.II:getBestQuatron()
-				if charge > 0 then
+			if fe.quatronCharge <= fe.quatronMax then
+				local transferQuatron = math.min(fe.quatronMax - fe.quatronCharge, fe.quatronMaxInput, selfQuatron)
+				if transferQuatron > 0 then
 					-- Add the Charge --
-					fe:addQuatronCharge(charge)
+					fe:addQuatron(transferQuatron, selfQuatronLevel)
+				-- Remove Quatron --
+					selfQuatron = selfQuatron - transferQuatron
 					-- Create the Laser --
 					fe.ent.surface.create_entity{name="GreenBeam", duration=30, position=self.ent.position, target={fe.ent.position.x, fe.ent.position.y - 2}, source=self.ent}
 				end
 			end
 		end
 	end
+
+	self.internalQuatronObj.quatronCharge = selfQuatron
 end
 
 -- Send all Pollution outside --

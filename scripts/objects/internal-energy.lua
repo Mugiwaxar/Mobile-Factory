@@ -115,11 +115,12 @@ function IEC:balance()
 		-- Look for valid Energy Cube --
 		local obj = global.entsTable[ent.unit_number]
 		if obj ~= nil then
+			local isAcc = ent.type == "accumulator"
 			local objEnergy = obj.ent.energy
 			local objMaxEnergy = obj.ent.electric_buffer_size
 			if selfEnergy > objEnergy and objEnergy < objMaxEnergy then
 				-- Calcule max flow --
-				local energyVariance = (selfEnergy - objEnergy) / 2
+				local energyVariance = isAcc and math.floor((selfEnergy - objEnergy) / 2) or selfEnergy
 				local missingEnergy = objMaxEnergy - objEnergy
 				local objMaxInFlow = obj:maxInput() * self.updateTick
 				local energyTransfer = math.min(energyVariance, missingEnergy, selfMaxOutFlow, objMaxInFlow)
@@ -129,7 +130,7 @@ function IEC:balance()
 				selfEnergy = selfEnergy - energyTransfer
 			elseif selfEnergy < objEnergy and selfEnergy < selfMaxEnergy then
 				-- Calcule max flow --
-				local energyVariance = (objEnergy - selfEnergy) / 2
+				local energyVariance = isAcc and math.floor((objEnergy - selfEnergy) / 2) or objEnergy
 				local missingEnergy = selfMaxEnergy - selfEnergy
 				local objMaxOutFlow = obj:maxOutput() * self.updateTick
 				local energyTransfer = math.min(energyVariance, missingEnergy, selfMaxInFlow, objMaxOutFlow)

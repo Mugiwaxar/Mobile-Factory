@@ -29,3 +29,13 @@ for id, mf in pairs(global.MFTable or {}) do
 		mf.internalQuatronObj.quatronMaxOutput = mf.internalQuatronObj.ent.electric_buffer_size / 10
 	end
 end
+for id, obj in pairs(global.oreCleanerTable or {}) do
+	obj.totalCharge = nil
+	obj.quatronCharge = obj.charge
+	obj.quatronLevel = obj.purity
+end
+for id, obj in pairs(global.fluidExtractorTable or {}) do
+	obj.totalCharge = nil
+	obj.quatronCharge = obj.charge
+	obj.quatronLevel = obj.purity
+end

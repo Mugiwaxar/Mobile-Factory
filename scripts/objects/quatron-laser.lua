@@ -15,6 +15,7 @@ QL = {
 	beamPosB = nil,
 	focusedObj = nil,
 	quatronCharge = 0,
+	quatronLevel = 1,
 	quatronMax = 0,
 	quatronMaxInput = 0,
 	quatronMaxOutput = 0
@@ -95,7 +96,27 @@ function QL:update()
 end
 
 -- Tooltip Infos --
-function QL:getTooltipInfos(GUI)
+function QL:getTooltipInfos(GUIObj, gui, justCreated)
+
+	-- Get the Flow --
+	local informationFlow = GUIObj.InformationFlow
+
+	if justCreated == true then
+		-- Create the Information Title --
+		local informationTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
+		informationFlow = GUIObj:addFlow("InformationFlow", informationTitle, "vertical", true)
+	end
+
+	-- Clear the Flow --
+	informationFlow.clear()
+
+	-- Create the Quatron Charge --
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Charge"}, ": "}, math.floor(self.quatronCharge), _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+
+	-- Create the Quatron Purity --
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Purity"}, ": "}, string.format("%.3f", self.quatronLevel), _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronLevel/20, 100)
 end
 
 -- Send Quatron to the Focused Entity --
@@ -110,9 +131,10 @@ function QL:sendQuatron()
 	-- Send Quatron to the Entity --
 	local quatronTransfer = math.min(self.quatronCharge, obj.quatronMax - obj.quatronCharge, obj.quatronMaxInput)
 	if quatronTransfer > 0 then
-		self.quatronCharge = self.quatronCharge - quatronTransfer
 		-- Add the Quatron --
-		obj.quatronCharge = obj.quatronCharge + quatronTransfer
+		obj:addQuatron(quatronTransfer, self.quatronLevel)
+		-- Remove Quatron --
+		self.quatronCharge = self.quatronCharge - quatronTransfer
 		-- Create the Beam --
 		self.ent.surface.create_entity{name="MK1QuatronSendBeam", duration=5, position=self.beamPosA, target_position=self.beamPosB, source=self.beamPosA}
 	end
@@ -168,9 +190,14 @@ function QL:maxQuatron()
 end
 
 -- Add Quatron (Return the amount added) --
-function QL:addQuatron(amount)
-	local added = math.min(amount, self.quatronMax - self.quatron)
-	self.quatronCharge = self.quatronCharge + added
+function QL:addQuatron(amount, level)
+	local added = math.min(amount, self.quatronMax - self.quatronCharge)
+	if self.quatronCharge > 0 then
+		mixQuatron(self, added, level)
+	else
+		self.quatronCharge = added
+		self.quatronLevel = level
+	end
 	return added
 end
 

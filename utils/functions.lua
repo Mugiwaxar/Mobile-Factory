@@ -564,3 +564,9 @@ function entityToBlueprintTags(entity, fromTable)
 
 	return tags
 end
+
+function mixQuatron(obj, newCharge, newLevel)
+	local effectiveCharge = obj.quatronCharge * math.pow(obj.quatronLevel, _mfQuatronScalePower) + newCharge * math.pow(newLevel, _mfQuatronScalePower)
+	obj.quatronCharge = obj.quatronCharge + newCharge
+	obj.quatronLevel = math.pow(effectiveCharge / obj.quatronCharge, 1/_mfQuatronScalePower)
+end

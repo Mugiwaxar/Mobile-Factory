@@ -5,9 +5,6 @@ OC = {
 	player = "",
 	MF = nil,
 	entID = 0,
-	purity = 0,
-	charge = 0,
-	totalCharge = 0,
 	oreTable = nil,
 	selectedInv = nil,
 	animID = 0,
@@ -15,7 +12,12 @@ OC = {
 	updateTick = 1,
 	lastUpdate = 0,
 	lastExtraction = 0,
-	mfTooFar = false
+	mfTooFar = false,
+	quatronCharge = 0,
+	quatronLevel = 1,
+	quatronMax = _mfOreCleanerMaxCharge,
+	quatronMaxInput = 100,
+	quatronMaxOutput = 0
 }
 
 -- Constructor --
@@ -66,16 +68,15 @@ end
 
 -- Item Tags to Content --
 function OC:itemTagsToContent(tags)
-	self.purity = tags.purity or 0
-	self.charge = tags.charge or 0
-	self.totalCharge = tags.totalCharge or 0
+	self.quatronLevel = tags.purity or 0
+	self.quatronCharge = tags.charge or 0
 end
 
 -- Content to Item Tags --
 function OC:contentToItemTags(tags)
-	if self.charge > 0 then
-		tags.set_tag("Infos", {purity=self.purity, charge=self.charge, totalCharge=self.totalCharge})
-		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.OreCleanerC", self.purity, self.charge, self.totalCharge}}
+	if self.quatronCharge > 0 then
+		tags.set_tag("Infos", {purity=self.quatronLevel, charge=self.quatronCharge})
+		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.OreCleanerC", math.floor(self.quatronCharge), string.format("%.3f", self.quatronLevel)}}
 	end
 end
 
@@ -154,12 +155,12 @@ function OC:getTooltipInfos(GUIObj, gui, justCreated)
 	informationFlow.clear()
 	
 	-- Create the Quatron Charge --
-	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Charge"}, ": "}, self.charge, _mfOrange, _mfGreen)
-	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.charge/_mfFEMaxCharge, 100)
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Charge"}, ": "}, math.floor(self.quatronCharge), _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronCharge/_mfOreCleanerMaxCharge, 100)
 
 	-- Create the Quatron Purity --
-	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Purity"}, ": "}, self.purity, _mfOrange, _mfGreen)
-	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.purity/100, 100)
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Purity"}, ": "}, string.format("%.3f", self.quatronLevel), _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronCharge/20, 100)
 
 	-- Create the Speed --
 	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Speed"}, ": "}, self:orePerExtraction() .. " ore/s", _mfOrange, _mfGreen)
@@ -192,16 +193,9 @@ function OC:changeInventory(ID)
 	end
 end
 
--- Add a Quatron Charge --
-function OC:addQuatronCharge(level)
-	self.totalCharge = self.totalCharge + 1
-	self.charge = self.charge + 100
-	self.purity = math.ceil(((self.purity * self.totalCharge) + level) / (self.totalCharge + 1))
-end
-
 -- Get the number of Ores per extraction --
 function OC:orePerExtraction()
-	return math.floor(self.purity * _mfOreCleanerOrePerExtraction)
+	return math.floor(_mfOreCleanerOrePerExtraction * math.pow(self.quatronLevel, _mfQuatronScalePower))
 end
 
 -- Scan surronding Ores --
@@ -221,7 +215,7 @@ function OC:collectOres(event)
 	-- Return if the Ore Table is empty --
 	if table_size(self.oreTable) <= 0 then return end
 	-- Return if there are not Quatron Charge remaining --
-	if self.charge <= 0 then return end
+	if self.quatronCharge <= 0 then return end
 	-- Create the OrePath and randomNum variable --
 	local orePath = nil
 	local randomNum  = 0
@@ -301,7 +295,7 @@ function OC:collectOres(event)
 		-- Set the lastUpdate variable --
 		self.lastExtraction = event.tick
 		-- Remove a charge --
-		self.charge = self.charge - 1
+		self.quatronCharge = self.quatronCharge - 1
 		-- Remove Ores from the Ore Path --
 		orePath.amount = math.max(orePath.amount - oreExtracted, 1)
 		-- Remove the Ore Path if it is empty --
@@ -364,4 +358,43 @@ function OC:blueprintTagsToSettings(tags)
 			end
 		end
 	end
+end
+
+-- Return the amount of Quatron --
+function OC:quatron()
+	return self.quatronCharge
+end
+
+-- Return the Quatron Buffer size --
+function OC:maxQuatron()
+	return self.quatronMax
+end
+
+-- Add Quatron (Return the amount added) --
+function OC:addQuatron(amount, level)
+	local added = math.min(amount, self.quatronMax - self.quatronCharge)
+	if self.quatronCharge > 0 then
+		mixQuatron(self, added, level)
+	else
+		self.quatronCharge = added
+		self.quatronLevel = level
+	end
+	return added
+end
+
+-- Remove Quatron (Return the amount removed) --
+function OC:removeQuatron(amount)
+	local removed = math.min(amount, self.quatronCharge)
+	self.quatronCharge = self.quatronCharge - removed
+	return removed
+end
+
+-- Return the max input flow --
+function OC:maxInput()
+	return self.quatronMaxInput
+end
+
+-- Return the max output flow --
+function OC:maxOutput()
+	return self.quatronMaxOutput
 end
