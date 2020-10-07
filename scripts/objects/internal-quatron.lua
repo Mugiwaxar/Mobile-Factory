@@ -9,7 +9,11 @@ IQC = {
 	spriteID = 0,
 	lightID = 0,
 	updateTick = 60,
-	lastUpdate = 0
+	lastUpdate = 0,
+	quatronCharge = 0,
+	quatronMax = 1,
+	quatronMaxInput = 0,
+	quatronMaxOutput = 0
 }
 
 -- Constructor --
@@ -24,12 +28,17 @@ function IQC:new(MF)
 	return t
 end
 
--- Set an Internal Energy Cube --
+-- Set an Internal Quatron Cube --
 function IQC:setEnt(object)
 	if object == nil then return end
 	if object.last_user == nil then return end
 	self.ent = object
 	self.entID = object.unit_number
+	-- Get prototype data
+	self.quatronCharge = object.energy
+	self.quatronMax = object.electric_buffer_size
+	self.quatronMaxInput = object.electric_buffer_size / 10
+	self.quatronMaxOutput = object.electric_buffer_size / 10
 	-- Draw the Sprite --
 	self.spriteID = rendering.draw_sprite{sprite="QuatronCubeSprite0", x_scale=1/2.25, y_scale=1/2.25, target=object, surface=object.surface, render_layer=130}
 	self.lightID = rendering.draw_light{sprite="QuatronCubeSprite0", scale=1/2.25, target=object, surface=object.surface, minimum_darkness=0}
@@ -48,6 +57,9 @@ end
 
 -- Destructor --
 function IQC:remove()
+	-- Purge Quatron, as IQC Object stays valid even without entity
+	self.quatronCharge = nil
+	self.quatronMax = nil
 	-- Destroy the Sprite --
 	rendering.destroy(self.spriteID)
 	rendering.destroy(self.lightID)
@@ -61,88 +73,98 @@ end
 
 -- Item Tags to Content --
 function IQC:itemTagsToContent(tags)
-	self.ent.energy = tags.energy or 0
+	self.quatronCharge = tags.energy or 0
+	self.ent.energy = self.quatronCharge
 end
 
 -- Content to Item Tags --
 function IQC:contentToItemTags(tags)
-	if self.ent.energy <= 0 then return end
-	tags.set_tag("Infos", {energy=self.ent.energy})
-	tags.custom_description = {"", tags.prototype.localised_description, {"item-description.QuatronCubeC", Util.toRNumber(math.floor(self.ent.energy))}}
+	if self.quatronCharge <= 0 then return end
+	tags.set_tag("Infos", {energy=self.quatronCharge})
+	tags.custom_description = {"", tags.prototype.localised_description, {"item-description.QuatronCubeC", Util.toRNumber(math.floor(self.quatronCharge))}}
 end
 
 -- Update --
 function IQC:update()
-
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
-	
+
 	-- Check the Validity --
 	if self.ent == nil or self.ent.valid == false then
 		return
-    end
+	end
 
-    -- Update the Sprite --
-	local spriteNumber = math.ceil(self.ent.energy/self.ent.prototype.electric_energy_source_prototype.buffer_capacity*10)
+	-- Update Quatron indication
+	self.ent.energy = self.quatronCharge
+
+	-- Update the Sprite --
+	local spriteNumber = math.ceil(self.quatronCharge/self.quatronMax*10)
 	rendering.destroy(self.spriteID)
 	rendering.destroy(self.lightID)
 	self.spriteID = rendering.draw_sprite{sprite="QuatronCubeSprite" .. spriteNumber, x_scale=1/2.25, y_scale=1/2.25, target=self.ent, surface=self.ent.surface, render_layer=130}
 	self.lightID = rendering.draw_light{sprite="QuatronCubeSprite" .. spriteNumber, scale=1/2.25, target=self.ent, surface=self.ent.surface, minimum_darkness=0}
-	
-	-- Balance the Energy with neighboring Cubes --
-	self:balance()
 
+	-- Balance the Quatron with neighboring Quatron Users --
+	self:balance()
 end
 
 -- Tooltip Infos --
 -- function IQC:getTooltipInfos(GUI)
 -- end
 
--- Balance the Energy with neighboring Cubes --
+-- Balance the Quatron with neighboring Quatron Users --
 function IQC:balance()
-
-	-- Check the Entity --
-	if self.ent == nil or self.ent.valid == false then return end
-
 	-- Get all Accumulator arount --
 	local area = {{self.ent.position.x-3.5, self.ent.position.y-2.5},{self.ent.position.x+3.5,self.ent.position.y+4.5}}
-	-- local ents = self.ent.surface.find_entities_filtered{area=area, type="accumulator"}
-	local ents = self.ent.surface.find_entities_filtered{area=area}
+	local ents = self.ent.surface.find_entities_filtered{area=area, name=_mfQuatronShare}
+
+	-- Return if nothing found
+	if next(ents) == nil then return end
+
+	local selfMaxOutFlow = self.quatronMaxOutput
+	local selfMaxInFlow = self.quatronMaxInput
+	local selfQuatron = self.quatronCharge
+	local selfMaxQuatron = self.quatronMax
 
 	-- Check all Accumulator --
 	for k, ent in pairs(ents) do
-		-- Look for valid Energy Cube --
-		-- if ent ~= nil and ent.valid == true and _mfQuatronCubes[ent.name] == true then
-		if ent ~= nil and ent.valid == true then
-			local obj = global.entsTable[ent.unit_number]
-			if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and obj.addQuatron ~= nil then
-				if self:quatron() > obj:quatron() and obj:quatron() < obj:maxQuatron() and obj:maxInput() > 0 then
-					-- Calcule max flow --
-					local energyVariance = (self:quatron() - obj:quatron()) / 2
-					local maxEnergyTranfer = math.min(energyVariance, self:quatron(), self:maxOutput(), obj:maxInput())
-					-- Transfer Energy --
-					local transfered = obj:addQuatron(maxEnergyTranfer)
-					-- Remove Energy --
-					self:removeQuatron(transfered)
-                elseif self:quatron() < obj:quatron() and self:quatron() < self:maxQuatron() and obj:maxOutput() > 0 then
-					-- Calcule max flow --
-					local energyVariance = (obj:quatron() - self:quatron()) / 2
-					local maxEnergyTranfer = math.min(energyVariance, obj:quatron(), self:maxInput(), obj:maxOutput())
-					-- Transfer Energy --
-					local transfered = self:addQuatron(maxEnergyTranfer)
-					-- Remove Energy --
-					obj:removeQuatron(transfered)
-				end
+		-- Look for valid Quatron User --
+		local obj = global.entsTable[ent.unit_number]
+		if obj ~= nil then
+			local objQuatron = obj.quatronCharge
+			local objMaxQuatron = obj.quatronMax
+			local objMaxInFlow = obj.quatronMaxInput
+			local objMaxOutFlow = obj.quatronMaxOutput
+			if selfQuatron > objQuatron and objQuatron < objMaxQuatron and objMaxInFlow > 0 then
+				-- Calcule max flow --
+				local quatronVariance = (selfQuatron - objQuatron) / 2
+				local missingQuatron = objMaxQuatron - objQuatron
+				local quatronTransfer = math.min(quatronVariance, missingQuatron, selfMaxOutFlow, objMaxInFlow)
+				-- Transfer Quatron --
+				obj.quatronCharge = objQuatron + quatronTransfer
+				-- Remove Quatron --
+				selfQuatron = selfQuatron - quatronTransfer
+			elseif selfQuatron < objQuatron and selfQuatron < selfMaxQuatron and objMaxOutFlow > 0 then
+				-- Calcule max flow --
+				local quatronVariance = (objQuatron - selfQuatron) / 2
+				local missingQuatron = selfMaxQuatron - selfQuatron
+				local quatronTranfer = math.min(quatronVariance, missingQuatron, selfMaxInFlow, objMaxOutFlow)
+				-- Transfer Quatron --
+				selfQuatron = selfQuatron + quatronTranfer
+				-- Remove Quatron --
+				obj.quatronCharge = objQuatron - quatronTranfer
 			end
 		end
 	end
 
+	self.quatronCharge = selfQuatron
+	self.ent.energy = selfQuatron
 end
 
 -- Return the amount of Quatron --
 function IQC:quatron()
 	if self.ent ~= nil and self.ent.valid == true then
-		return self.ent.energy
+		return self.quatron
 	end
 	return 0
 end
@@ -150,7 +172,7 @@ end
 -- Return the Quatron Buffer size --
 function IQC:maxQuatron()
 	if self.ent ~= nil and self.ent.valid == true then
-		return self.ent.electric_buffer_size
+		return self.quatronMax
 	end
 	return 1
 end
@@ -158,8 +180,8 @@ end
 -- Add Quatron (Return the amount added) --
 function IQC:addQuatron(amount)
 	if self.ent ~= nil and self.ent.valid == true then
-		local added = math.min(amount, self:maxQuatron() - self:quatron())
-		self.ent.energy = self.ent.energy + added
+		local added = math.min(amount, self.quatronMax - self.quatronCharge)
+		self.quatronCharge = self.quatronCharge + added
 		return added
 	end
 	return 0
@@ -168,8 +190,8 @@ end
 -- Remove Quatron (Return the amount removed) --
 function IQC:removeQuatron(amount)
 	if self.ent ~= nil and self.ent.valid == true then
-		local removed = math.min(amount, self:quatron())
-		self.ent.energy = self.ent.energy - removed
+		local removed = math.min(amount, self.quatronCharge)
+		self.quatronCharge = self.quatronCharge - removed
 		return removed
 	end
 	return 0
@@ -178,15 +200,12 @@ end
 -- Return the max input flow --
 function IQC:maxInput()
 	if self.ent ~= nil and self.ent.valid == true then
-		return self:maxQuatron() / 10
+		return self.quatronMaxInput
 	end
 	return 0
 end
 
 -- Return the max output flow --
 function IQC:maxOutput()
-	if self.ent ~= nil and self.ent.valid == true then
-		return self:maxQuatron() / 10
-	end
-	return 0
+	return self.quatronMaxOutput
 end

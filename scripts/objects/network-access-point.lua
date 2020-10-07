@@ -9,17 +9,18 @@ NAP = {
 	dataNetwork = nil,
 	networkAccessPoint = nil,
 	consumption = _mfNAPQuatronDrainPerUpdate,
-	quatronCharge = 0,
-	maxQuatronCharge = _mfNAPQuatronCapacity,
 	totalConsumption = 0,
-	outOfQuatron = false,
 	showArea = false,
 	areaRenderID = 0,
 	animID = 0,
 	noQuatronSpriteID = 0,
 	objTable = nil,
 	updateTick = 60,
-	lastUpdate = 0
+	lastUpdate = 0,
+	quatronCharge = 0,
+	quatronMax = _mfNAPQuatronCapacity,
+	quatronMaxInput = 999999,
+	quatronMaxOutput = 0
 }
 
 -- Constructor --
@@ -71,39 +72,38 @@ end
 -- Update --
 function NAP:update()
 	-- Set the lastUpdate variable --
-    self.lastUpdate = game.tick
-    
-    -- Check the Validity --
+	self.lastUpdate = game.tick
+
+	-- Check the Validity --
 	if valid(self) == false then
 		self:remove()
 		return
 	end
-    
-    -- Render the Animation --
-    if (self.outOfQuatron == true or self.quatronCharge <= 0) and rendering.is_valid(self.noQuatronSpriteID) == false then
-        self.noQuatronSpriteID = rendering.draw_sprite{sprite="QuatronIconDisabled", render_layer=131, target=self.ent, surface=self.ent.surface}
-        rendering.destroy(self.animID)
-    elseif self.outOfQuatron == false and self.quatronCharge > 0 and rendering.is_valid(self.animID) == false then
-        self.animID = rendering.draw_animation{animation="NetworkAccessPointA", target={self.ent.position.x,self.ent.position.y-0.9}, surface=self.ent.surface, render_layer=131}
-        rendering.destroy(self.noQuatronSpriteID)
-    end
 
-    -- Render the Area --
-    if self.showArea == true and rendering.is_valid(self.areaRenderID) == false then
-        self.areaRenderID = rendering.draw_rectangle{color=_mfGreen, width=5, filled=false, left_top={self.ent.position.x-_mfNAPAreaSize, self.ent.position.y-_mfNAPAreaSize}, right_bottom={self.ent.position.x+_mfNAPAreaSize, self.ent.position.y+_mfNAPAreaSize}, surface=self.ent.surface}
-    elseif self.showArea == false then
-        rendering.destroy(self.areaRenderID)
-    end
+	-- Render the Animation --
+	if self.quatronCharge <= 0 and rendering.is_valid(self.noQuatronSpriteID) == false then
+		self.noQuatronSpriteID = rendering.draw_sprite{sprite="QuatronIconDisabled", render_layer=131, target=self.ent, surface=self.ent.surface}
+		rendering.destroy(self.animID)
+	elseif self.quatronCharge > 0 and rendering.is_valid(self.animID) == false then
+		self.animID = rendering.draw_animation{animation="NetworkAccessPointA", target={self.ent.position.x,self.ent.position.y-0.9}, surface=self.ent.surface, render_layer=131}
+		rendering.destroy(self.noQuatronSpriteID)
+	end
 
-    -- Create the Signals --
-    self:createDNSignals()
+	-- Render the Area --
+	if self.showArea == true and rendering.is_valid(self.areaRenderID) == false then
+			self.areaRenderID = rendering.draw_rectangle{color=_mfGreen, width=5, filled=false, left_top={self.ent.position.x-_mfNAPAreaSize, self.ent.position.y-_mfNAPAreaSize}, right_bottom={self.ent.position.x+_mfNAPAreaSize, self.ent.position.y+_mfNAPAreaSize}, surface=self.ent.surface}
+	elseif self.showArea == false then
+			rendering.destroy(self.areaRenderID)
+	end
 
-    -- Calculate the total Consumption --
-    self:updateTotalConsumption()
+	-- Create the Signals --
+	self:createDNSignals()
 
-    -- Remove the Quatron --
-    self:removeConsumption()
-	
+	-- Calculate the total Consumption --
+	self:updateTotalConsumption()
+
+	-- Remove the Quatron --
+	self:removeConsumption()
 end
 
 -- Tooltip Infos --
@@ -133,7 +133,7 @@ function NAP:getTooltipInfos(GUIObj, gui, justCreated)
 
     -- Add the Quatron Charge --
     GUIObj:addLabel("", informationFlow, {"", {"gui-description.QuatronCharge"}, ":"}, _mfOrange)
-    GUIObj:addProgressBar("", informationFlow, "", self.quatronCharge .. "/" .. self.maxQuatronCharge, false, _mfPurple, self.quatronCharge/self.maxQuatronCharge, 100)
+    GUIObj:addProgressBar("", informationFlow, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
 
 end
 
@@ -197,14 +197,12 @@ end
 
 -- Remove the Quatron Consumed --
 function NAP:removeConsumption()
-    -- Check if there are enough Quatron --
-    if self.totalConsumption > self:quatron() then
-        self.outOfQuatron = true
-    else
-        self.outOfQuatron = false
-    end
-    -- Remove the Quatron --
-    self:removeQuatron(self.totalConsumption)
+	-- Check and Remove Quatron --
+	if self.totalConsumption >= self.quatronCharge then
+		self.quatronCharge = 0
+	else
+		self.quatronCharge = self.quatronCharge - self.totalConsumption
+	end
 end
 
 -- Return the amount of Quatron --
@@ -214,29 +212,29 @@ end
 
 -- Return the Quatron Buffer size --
 function NAP:maxQuatron()
-	return self.maxQuatronCharge
+	return self.quatronMax
 end
 
 -- Add Quatron (Return the amount added) --
 function NAP:addQuatron(amount)
-    local added = math.min(amount, self:maxQuatron() - self:quatron())
-    self.quatronCharge = self.quatronCharge + added
-    return added
+	local added = math.min(amount, self.quatronMax - self.quatronCharge)
+	self.quatronCharge = self.quatronCharge + added
+	return added
 end
 
 -- Remove Quatron (Return the amount removed) --
 function NAP:removeQuatron(amount)
-    local removed = math.min(amount, self:quatron())
-    self.quatronCharge = self.quatronCharge - removed
-    return removed
+	local removed = math.min(amount, self.quatronCharge)
+	self.quatronCharge = self.quatronCharge - removed
+	return removed
 end
 
 -- Return the max input flow --
 function NAP:maxInput()
-	return 999999
+	return self.quatronMaxInput
 end
 
 -- Return the max output flow --
 function NAP:maxOutput()
-	return 0
+	return self.quatronMaxOutput
 end

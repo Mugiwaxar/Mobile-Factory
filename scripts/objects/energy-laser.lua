@@ -29,7 +29,8 @@ function EL:new(object)
 	t.MF = getMF(t.player)
 	t.entID = object.unit_number
 	-- Create the Beam --
-	t.beam = object.surface.create_entity{name="IddleBeam", position= EL.getBeamPositionA(t), target_position=EL.getBeamPositionB(t), source=EL.getBeamPositionA(t)}
+	t:getBeamPosition()
+	t.beam = object.surface.create_entity{name="IddleBeam", position=t.beamPosA, target_position=t.beamPosB, source=t.beamPosA}
 	UpSys.addObj(t)
 	return t
 end
@@ -62,18 +63,12 @@ end
 function EL:update()
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
-	
+
 	-- Check the Validity --
 	if valid(self) == false then
 		self:remove()
 		return
 	end
-
-	-- Look for Energy from neighboring Cubes --
-	self:findEnergy()
-
-	-- Send Energy to the Focused Entity --
-	self:sendEnergy()
 
 	-- Look for an Entity to recharge --
 	if self.checkTick < game.tick - self.lastCheck then
@@ -81,203 +76,146 @@ function EL:update()
 		self:findEntity()
 	end
 
+	-- Only Act If EL Has More Than 100 kJ --
+	if self.ent.energy < 1e5 then return end
+
+	-- Send Energy to the Focused Entity --
+	self:sendEnergy()
 end
 
 -- Tooltip Infos --
 function EL:getTooltipInfos(GUI)
 end
 
--- Look for Energy from neighboring Cubes --
-function EL:findEnergy()
-
-	-- Check the Entity --
-	if self.ent == nil or self.ent.valid == false then return end
-
-	-- Get all Accumulator arount --
-	local area = {{self.ent.position.x-1.5, self.ent.position.y-1.5},{self.ent.position.x+1.5,self.ent.position.y+1.5}}
-	local ents = self.ent.surface.find_entities_filtered{area=area, type="accumulator"}
-
-	-- Check all Accumulator --
-	for k, ent in pairs(ents) do
-		-- Look for valid Energy Cube --
-		if ent ~= nil and ent.valid == true and ent ~= self.ent and _mfEnergyCubes[ent.name] == true then
-			local obj = global.entsTable[ent.unit_number]
-			if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true then
-				if self:energy() < self:maxEnergy() then
-					-- Calcule max flow --
-					local amount = self:maxEnergy() - self:energy()
-					local maxEnergyTranfer = math.min(amount, obj:energy(), self:maxInput()*self.updateTick, obj:maxOutput()*self.updateTick)
-					-- Transfer Energy --
-					local transfered = self:addEnergy(maxEnergyTranfer)
-					-- Remove Energy --
-					obj:removeEnergy(transfered)
-				end
-			end
-		end
-	end
-
-end
-
 -- Send Energy to the Focused Entity --
 function EL:sendEnergy()
-
 	-- Check the Entity --
 	local obj = self.focusedObj
-	if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and string.match(obj.ent.name, "MobileFactory") then obj = obj.internalEnergyObj end
-	if obj == nil or obj.ent == nil or obj.ent.valid == false or obj:energy() >= obj:maxEnergy() or self:energy() <= 0 then return end
+	-- Internal cubes can be valid, but still nil
+	if valid(obj) == false or obj.ent == nil then return end
+	if string.match(obj.ent.name, "MobileFactory") then obj = obj.internalEnergyObj end
+
+	local objEnergy = obj.ent.energy
+	local objMaxEnergy = obj.ent.electric_buffer_size
+	if objEnergy >= objMaxEnergy then return end
 
 	-- Send Energy to the Entity --
-	local amount = math.min(self:energy(), self:maxOutput()*self.updateTick, (obj:maxEnergy() - obj:energy()), obj:maxInput()*self.updateTick)
-	if amount > 0  then
+	local selfEnergy = self.ent.energy
+	local energyTransfer = math.min(selfEnergy, objMaxEnergy - objEnergy, obj:maxInput() * self.updateTick)
+	if energyTransfer > 0  then
 		-- Remove the Energy --
-		self:removeEnergy(amount)
+		self.ent.energy = selfEnergy - energyTransfer
 		-- Add the Energy --
-		obj:addEnergy(amount)
+		obj.ent.energy = objEnergy + energyTransfer
 		-- Create the Beam --
-		-- self.beam.destroy()
-		-- self.beam = self.ent.surface.create_entity{name="MK1ConnectedBeam", position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
-		self.ent.surface.create_entity{name="MK1SendBeam", duration=5, position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
+		self.ent.surface.create_entity{name="MK1SendBeam", duration=5, position=self.beamPosA, target_position=self.beamPosB, source=self.beamPosA}
 	end
 end
 
 -- Look for an Entity to recharge --
 function EL:findEntity()
-
-	-- Save Remove the Focused Entity --
-	local oldObj = self.focusedObj
-	self.focusedObj = nil
+	-- Save and Remove the Focused Entity --
+	local oldFocus = self.focusedObj
+	local newFocus = nil
 
 	-- Get all Entities inside the Area to scan --
-	local area = EL.getCheckErea(self)
-	local ents = self.ent.surface.find_entities_filtered{area=area}
+	local area = self:getCheckArea()
+	local ents = self.ent.surface.find_entities_filtered{area=area, name=_mfEnergyAndMF}
+
+	local selfPosition = self.ent.position
+	local focusedPosition = nil
 
 	-- Get the closest --
 	for k, ent in pairs(ents) do
 		local obj = global.entsTable[ent.unit_number]
-		if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and (obj.addEnergy ~= nil or string.match(obj.ent.name, "MobileFactory")) then
-			if self.focusedObj == nil or self.focusedObj.ent == nil or self.focusedObj.ent.valid == false then
-				self.focusedObj = obj
-			elseif Util.distance(self.ent.position, ent.position) < Util.distance(self.ent.position, self.focusedObj.ent.position) then
-				self.focusedObj = obj
+		if obj ~= nil then
+			if newFocus == nil or Util.distance(selfPosition, ent.position) < Util.distance(selfPosition, focusedPosition) then
+				newFocus = obj
+				focusedPosition = newFocus.ent.position
 			end
 		end
 	end
+	self.focusedObj = newFocus
+
+	-- Same target --
+	if oldFocus ~= nil and newFocus ~= nil and oldFocus.entID == newFocus.entID then return end
 
 	-- Create the new Beam --
-	if self.focusedObj == nil or self.focusedObj.ent == nil or self.focusedObj.ent.valid == false then
+	self:getBeamPosition()
+	if self.focusedObj == nil then
 		self.beam.destroy()
-		self.beam = self.ent.surface.create_entity{name="IddleBeam", position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
-	elseif oldObj ~= nil and oldObj.ent ~= nil and oldObj.ent.valid == true and oldObj ~= self.focusedObj then
+		self.beam = self.ent.surface.create_entity{name="IddleBeam", position=self.beamPosA, target_position=self.beamPosB, source=self.beamPosA}
+	else
 		self.beam.destroy()
-		self.beam = self.ent.surface.create_entity{name="MK1ConnectedBeam", position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
-	elseif self.focusedObj ~= nil and self.focusedObj.ent ~= nil and self.focusedObj.ent.valid == true then
-		self.beam.destroy()
-		self.beam = self.ent.surface.create_entity{name="MK1ConnectedBeam", position= EL.getBeamPositionA(self), target_position=EL.getBeamPositionB(self), source=EL.getBeamPositionA(self)}
+		self.beam = self.ent.surface.create_entity{name="MK1ConnectedBeam", position=self.beamPosA, target_position=self.beamPosB, source=self.beamPosA}
 	end
-
 end
 
 -- Return the amount of Energy --
 function EL:energy()
-	if self.ent ~= nil and self.ent.valid == true then
-		-- Only Act If EL Has More Than 100 kJ -- 
-		if self.ent.energy < 1e5 then return 0 end
-		return self.ent.energy
-	end
-	return 0
+	return self.ent.energy
 end
 
 -- Return the Energy Buffer size --
 function EL:maxEnergy()
-	if self.ent ~= nil and self.ent.valid == true then
-		return self.ent.prototype.energy_usage
-	end
-	return 1
+	return self.ent.electric_buffer_size
 end
 
 -- Add Energy (Return the amount added) --
 function EL:addEnergy(amount)
-	if self.ent ~= nil and self.ent.valid == true then
-		local added = math.min(amount, self:maxEnergy() - self:energy())
-		self.ent.energy = self.ent.energy + added
-		return added
-	end
-	return 0
+	local added = math.min(amount, self.ent.electric_buffer_size - self.ent.energy)
+	self.ent.energy = self.ent.energy + added
+	return added
 end
 
 -- Remove Energy (Return the amount removed) --
 function EL:removeEnergy(amount)
-	if self.ent ~= nil and self.ent.valid == true then
-		local removed = math.min(amount, self:energy())
-		self.ent.energy = self.ent.energy - removed
-		return removed
-	end
-	return 0
+	local removed = math.min(amount, self.ent.energy)
+	self.ent.energy = self.ent.energy - removed
+	return removed
 end
 
 -- Return the max input flow --
 function EL:maxInput()
-	if self.ent ~= nil and self.ent.valid == true then
-		return self.ent.prototype.energy_usage
-	end
-	return 0
+	return self.ent.electric_buffer_size
 end
 
 -- Return the max output flow --
 function EL:maxOutput()
-	if self.ent ~= nil and self.ent.valid == true then
-		return self.ent.prototype.energy_usage
-	end
 	return 0
 end
 
--- Return where the Beam start must be positioned --
-function EL.getBeamPositionA(obj)
-	local ent = obj.ent
-	if ent.direction == defines.direction.north then
-		obj.beamPosA = {x=ent.position.x, y=ent.position.y-0.5}
-		return obj.beamPosA
-	elseif ent.direction ==  defines.direction.east then
-		obj.beamPosA = {x=ent.position.x+0.2, y=ent.position.y-0.2}
-		return obj.beamPosA
-	elseif ent.direction ==  defines.direction.south then
-		obj.beamPosA = {x=ent.position.x, y=ent.position.y}
-		return obj.beamPosA
-	elseif ent.direction == defines.direction.west then
-		obj.beamPosA = {x=ent.position.x-0.2, y=ent.position.y-0.2}
-		return obj.beamPosA
-	end
-	return ent.position
-end
-
 -- Return where the Beam end must be positioned --
-function EL.getBeamPositionB(obj)
-	local ent = obj.ent
+function EL:getBeamPosition()
+	local pos = self.ent.position
+	local dir = self.ent.direction
 	local fPosX = nil
 	local fPosY = nil
-	if valid(obj.focusedObj) then
-		fPosX = obj.focusedObj.ent.position.x
-		fPosY = obj.focusedObj.ent.position.y
+	if valid(self.focusedObj) then
+		fPosX = self.focusedObj.ent.position.x
+		fPosY = self.focusedObj.ent.position.y
 	end
-	if ent.direction == defines.direction.north then
-		obj.beamPosB = {x=obj.beamPosA.x, y= fPosY or (obj.beamPosA.y - 64)}
-		return obj.beamPosB
-	elseif ent.direction ==  defines.direction.east then
-		obj.beamPosB = {x= fPosX or (obj.beamPosA.x + 64), y=obj.beamPosA.y}
-		return obj.beamPosB
-	elseif ent.direction ==  defines.direction.south then
-		obj.beamPosB = {x=obj.beamPosA.x, y= fPosY or (obj.beamPosA.y + 64)}
-		return obj.beamPosB
-	elseif ent.direction == defines.direction.west then
-		obj.beamPosB = {x= fPosX or (obj.beamPosA.x - 64), y=obj.beamPosA.y}
-		return obj.beamPosB
+	if dir == defines.direction.north then
+		self.beamPosA = {x = pos.x, y = pos.y - 0.5}
+		self.beamPosB = {x = pos.x, y = (fPosY or (pos.y - 64)) - 0.5}
+	elseif dir == defines.direction.east then
+		self.beamPosA = {x = pos.x + 0.2, y = pos.y - 0.2}
+		self.beamPosB = {x = (fPosX or (pos.x + 64)) + 0.2, y = pos.y - 0.2}
+	elseif dir ==  defines.direction.south then
+		self.beamPosA = {x = pos.x, y = pos.y}
+		self.beamPosB = {x = pos.x, y = fPosY or (pos.y + 64)}
+	elseif dir == defines.direction.west then
+		self.beamPosA = {x = pos.x - 0.2, y = pos.y - 0.2}
+		self.beamPosB = {x = (fPosX or (pos.x - 64)) - 0.2, y = pos.y - 0.2}
+	else
+		self.beamPosA = pos
+		self.beamPosB = pos
 	end
-	return ent.position
 end
 
 -- Return the Check Area --
-function EL.getCheckErea(obj)
-	local ent = obj.ent
+function EL:getCheckArea()
+	local ent = self.ent
 	if ent.direction == defines.direction.north then
 		return {{ent.position.x-0.5, ent.position.y-64},{ent.position.x+0.5, ent.position.y-1}}
 	elseif ent.direction ==  defines.direction.east then

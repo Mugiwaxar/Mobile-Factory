@@ -1,3 +1,13 @@
+local function merge(list)
+	local ret = {}
+	for _, array in pairs(list) do
+		for _, value in pairs(array) do
+			table.insert(ret, value)
+		end
+	end
+	return ret
+end
+
 -- Update System --
 _mfBaseUpdatePerTick = 100
 _mfScanTicks = 100
@@ -138,15 +148,32 @@ _MFResearches["ConstructibleArea2"] = "createConstructibleArea2"
 _MFResearches["MatterSerialization"] = "createNetworkControllerArea"
 _MFResearches["JumpDrive"] = "createJumpDriveArea"
 
--- Energy Cubes --
-_mfEnergyCubes = {}
-_mfEnergyCubes["EnergyCubeMK1"] = true
-_mfEnergyCubes["InternalEnergyCube"] = true
+-- Entitie Lists --
+_mfEnergyShare =
+{
+	"InternalEnergyCube",
+	"EnergyCubeMK1",
+	"EnergyLaser1"
+}
 
--- Quatron Cube --
-_mfQuatronCubes = {}
-_mfQuatronCubes["QuatronCubeMK1"] = true
-_mfQuatronCubes["InternalQuatronCube"] = true
+_mfQuatronShare =
+{
+	"InternalQuatronCube",
+	"QuatronCubeMK1",
+	"QuatronLaser1",
+	"QuatronReactor",
+	"NetworkAccessPoint"
+}
+
+_mfMobileFactories =
+{
+	"MobileFactory",
+	"GTMobileFactory",
+	"HMobileFactory"
+}
+
+_mfEnergyAndMF = merge{_mfEnergyShare, _mfMobileFactories}
+_mfQuatronAndMF = merge{_mfQuatronShare, _mfMobileFactories}
 
 -- Entity GUI --
 _mfTooltipGUI =
