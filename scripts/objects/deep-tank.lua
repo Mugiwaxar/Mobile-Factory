@@ -195,6 +195,7 @@ function DTK:getFluid(fluid)
 		local removed = math.min(fluid.amount, self.inventoryCount)
 		self.inventoryCount = self.inventoryCount - removed
 		if self.inventoryCount == 0 then self.inventoryFluid = nil end
+		return removed
 	end
 	return 0
 end

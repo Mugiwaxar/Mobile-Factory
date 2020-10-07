@@ -199,47 +199,72 @@ end
 
 -- Extract Fluids --
 function FE:extractFluids(event)
+	-- Test if the Mobile Factory and the Fluid Extractor are valid --
+	if valid(self) == false or valid(self.MF) == false then return end
+	-- Check the Quatron Charge --
+	if self.charge < 10 then return end
 	-- Check the Resource --
 	self.resource = self.resource or self.ent.surface.find_entities_filtered{position=self.ent.position, radius=1, type="resource", limit=1}[1]
 	if self.resource == nil or self.resource.valid == false then return end
-	local resourceName = self.resource.prototype.mineable_properties.products[1].name
-	if resourceName == nil then return end
-	-- Check the Quatron Charge --
-	if self.charge < 10 then return end
-	-- Find the Focused Tank --
-	local inventory = self.selectedInv
-	if inventory == nil then
-		-- Auto Select the Ore Silo --
-		inventory = nil
-		for k, dimTank in pairs(self.MF.dataNetwork.DTKTable) do
-			if dimTank ~= nil and dimTank.ent ~= nil and dimTank.ent.valid == true then
-				if dimTank:canAccept({name = resourceName}) then
-					inventory = dimTank
+	local listProducts = self.resource.prototype.mineable_properties.products
+
+	if self.selectedInv ~= nil then
+		-- Check Selected Inventory
+		if valid(self.selectedInv) == false then return end
+		-- Multiple products can't be stored in single storage
+		if table_size(listProducts) > 1 then return end
+	end
+
+	-- Check if there is a room for all products
+	local deepStorages = {}
+	local fluidExtracted = math.min(self:fluidPerExtraction(), self.resource.amount)
+	for _, product in pairs(listProducts) do
+		-- Check if a Name was found, and Fluid Prototype exists --
+		if product.name == nil or product.type ~= 'fluid' or game.fluid_prototypes[product.name] == nil then return end
+
+		if self.selectedInv then
+			-- Deep Storage is assigned, check if it fits
+			if self.selectedInv:canAccept({name = product.name, amount = fluidExtracted * product.amount}) then
+				-- Selected inventory matches product, proceed
+				deepStorages[product.name] = self.selectedInv
+			else
+				-- Selected inventory can't hold product, return
+				return
+			end
+		else
+			-- Try to find a Deep Storage if the Selected Inventory is All --
+			for k, dp in pairs(self.MF.dataNetwork.DTKTable) do
+				if dp:canAccept({name = product.name, amount = fluidExtracted * product.amount}) == true then
+					deepStorages[product.name] = dp
 					break
 				end
 			end
+			-- Return if storage not found
+			if deepStorages[product.name] == nil then return end
 		end
 	end
-	-- Check the Selected Inventory --
-	if inventory == nil then return end
-	-- Calcule the amount that can be extracted --
-	local amount = math.min(self.resource.amount, self:fluidPerExtraction())
-	-- Check if the Distant Tank can accept the fluid --
-	if inventory:canAccept({name = resourceName, amount = amount}) == false then return end
-	-- Send the Fluid --
-	--there is no temperature_min, temperature_max for products
-	--will not work for a resource that can provide two fluids (which would require two outputs on pump)
-	local temp = self.resource.prototype.mineable_properties.products[1].temperature or 15
-	local amountAdded = inventory:addFluid({name = resourceName, amount = amount, temperature = temp})
+
+	-- Extract Fluids --
+	local stats = self.ent.force.fluid_production_statistics
+	for _, product in pairs(listProducts) do
+		if product.probability == 1 or product.probability > math.random() then
+			-- Add Fluids to the Inventory --
+			local temp = product.temperature or 15
+			deepStorages[product.name]:addFluid({name = product.name, amount = fluidExtracted * product.amount, temperature = temp})
+			-- Add Fluids to Production Statistics
+			stats.on_flow(product.name, fluidExtracted * product.amount)
+		end
+	end
 	-- Test if Fluid was sended --
-	if amountAdded > 0 then
-		self.charge = self.charge - 10
+	if fluidExtracted > 0 then
 		-- Make a Beam --
 		self.ent.surface.create_entity{name="BigPurpleBeam", duration=59, position=self.ent.position, target=self.MF.ent.position, source=self.ent.position}
+		-- Remove a charge --
+		self.charge = self.charge - 10
 		-- Remove amount from the FluidPath --
-		self.resource.amount = math.max(self.resource.amount - amountAdded, 1)
+		self.resource.amount = math.max(self.resource.amount - fluidExtracted, 1)
 		-- Remove the FluidPath if amount == 0 --
-		if self.resource.amount < 2 then
+		if self.resource.amount <= 1 then
 			self.resource.destroy()
 		end
 	end

@@ -412,9 +412,11 @@ function DA:updateRecipe(recipe, id)
 			if product.probability == 1 or product.probability > math.random() then
 				if product.type == "item" then
 					self.dataNetwork:addItems(product.name, product.amount)
+					self.ent.force.item_production_statistics.on_flow(product.name, product.amount)
 				end
 				if product.type == "fluid" then
 					self.dataNetwork:addFluid(product.name, product.amount, 15)
+					self.ent.force.fluid_production_statistics.on_flow(product.name, product.amount)
 				end
 			end
 		end
@@ -471,8 +473,10 @@ function DA:getIngredients(recipe)
 		for k, ingredient in pairs(recipe.ingredients) do
 			if ingredient.type == "item" then
 				self.dataNetwork:getItem(ingredient.name, ingredient.amount)
+				self.ent.force.item_production_statistics.on_flow(ingredient.name, ingredient.amount * -1)
 			elseif ingredient.type == "fluid" then
 				self.dataNetwork:getFluid(ingredient.name, ingredient.amount)
+				self.ent.force.fluid_production_statistics.on_flow(ingredient.name, ingredient.amount * -1)
 			end
 		end
 	end
