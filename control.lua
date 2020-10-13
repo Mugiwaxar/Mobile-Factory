@@ -262,7 +262,7 @@ script.on_event("OpenTTGUI", onShortcut)
 -- commands.add_command("GetMobileFactory", "Add the Mobile Factory to the player inventory", addMobileFactory)
 
 -- Debug Commands --
-local addDebugCommands = false
+local addDebugCommands = true
 if addDebugCommands == true then
 local function MFResetGUIs(event)
 	for playerIndex, player in pairs(game.players) do
