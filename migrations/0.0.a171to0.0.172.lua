@@ -1,4 +1,4 @@
-if not global.allowMigration then return end
+if global.allowMigration == false then return end
 -- Fix all Energy Cubes Energy --
 for k, cube in pairs(global.energyCubesTable or {}) do
     if cube.ent ~= nil and cube.ent.valid == true and cube.ent.energy > cube.ent.electric_buffer_size then

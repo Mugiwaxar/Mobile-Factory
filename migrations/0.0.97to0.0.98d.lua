@@ -1,4 +1,4 @@
-if not global.allowMigration then return end
+if global.allowMigration == false then return end
 -- Set all Mobile Factory Objects to belongs to the first Player --
 local player = nil
 global.MFTable = {}

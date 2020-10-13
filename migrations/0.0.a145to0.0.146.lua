@@ -1,4 +1,4 @@
-if not global.allowMigration then return end
+if global.allowMigration == false then return end
 if global.matterInteractorTable == nil then return end
 
 for _, MI in pairs(global.matterInteractorTable) do

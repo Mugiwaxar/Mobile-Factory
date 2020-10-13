@@ -1,4 +1,4 @@
-if not global.allowMigration then return end
+if global.allowMigration == false then return end
 -- Print Erya Tech message --
 game.print("Erya Tech and Jets was removed from the Mobile Factory base Mod")
 game.print("The Erya Tech and Jets are now Extensions of Mobile Factory and must be downloaded before loading the save if you don't want to lose stuff")

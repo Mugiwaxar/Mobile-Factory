@@ -1,4 +1,4 @@
-if not global.allowMigration then return end
+if global.allowMigration == false then return end
 -- Save Internal Data Center inside MF object --
 for k, dcmf in pairs(global.dataCenterTable or {}) do
 	if dcmf.invObj.isII and dcmf.ent.last_user.name ~= nil then

@@ -1,4 +1,4 @@
-if not global.allowMigration then return end
+if global.allowMigration == false then return end
 -- Remove old MF Variables and create the Share Table --
 for k, MF in pairs(global.MFTable or {}) do
     MF.varTable.shareStructures = nil

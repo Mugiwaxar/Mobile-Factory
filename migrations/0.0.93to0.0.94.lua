@@ -1,4 +1,4 @@
-if not global.allowMigration then return end
+if global.allowMigration == false then return end
 -- Clear Wireless Data Transmitters Signals --
 for k, DT in pairs(global.wirelessDataTransmitterTable or {}) do
 	DT.lastSignal = {}

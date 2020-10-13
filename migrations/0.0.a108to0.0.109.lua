@@ -1,4 +1,4 @@
-if not global.allowMigration then return end
+if global.allowMigration == false then return end
 -- Set all Factory surfaces to day/night cycle --
 for k, MF in pairs(global.MFTable) do
     if MF.fS ~= nil then

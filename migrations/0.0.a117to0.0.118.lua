@@ -1,4 +1,4 @@
-if not global.allowMigration then return end
+if global.allowMigration == false then return end
 -- Remove old GUIs --
 for k, player in pairs(game.players) do
     if player.gui.screen.mfGUI ~= nil then player.gui.screen.mfGUI.destroy() end
