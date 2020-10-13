@@ -1,4 +1,21 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.198
+Date: 13/10/2020
+  Features:
+    - Ore Cleaner + Fluid Extractor support multiple-output resources
+    - Data Assembler production/consumption shows in Statistics
+    - remote call to blacklist recipes in the Data Assembler (see utils/remote.lua, blacklistDACategory(category, value) )
+  Changes:
+    - Mobile Factory re-fueling code changed a bit (directly adds coal fuel, instead of a coal item)
+    - Ore Cleaner and Fluid Extractor will deplete last of a resource (raising on_resource_depleted)
+            (should improve mod compatibility)
+  Bugfixes:
+    - only make the Data Controller and Jump Drive once
+    - possible desyncs, also optimizes obj remove operations
+    - Opening Mobile Factory inventory in multiplayer shows wrong MF
+    - only apply migrations from old save (not for scenario's with maps - workaround for bugged migrations)
+    - 0.0.171 to 0.0.172 migration bug
+---------------------------------------------------------------------------------------------------
 Version: 0.0.197
 Date: 26/09/2020
   Features:

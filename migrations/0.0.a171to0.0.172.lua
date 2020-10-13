@@ -57,14 +57,16 @@ end
 
 -- Send all Data Centers Items to the Internal Inventory --
 for k, dc in pairs(global.dataCenterTable or {}) do
-    local inv = dc.MF.II.inventory
-    for name, count in pairs(dc.invObj.inventory or {}) do
-        if inv[name] ~= nil then
-            inv[name] = inv[name] + count
-        else
-            inv[name] = count
-        end
-    end
+    if valid(dc.MF) and valid(dc.MF.II) then
+		local inv = dc.MF.II.inventory
+		for name, count in pairs(dc.invObj.inventory or {}) do
+			if inv[name] ~= nil then
+				inv[name] = inv[name] + count
+			else
+				inv[name] = count
+			end
+		end
+	end
 end
 
 -- Remove the old Tables --

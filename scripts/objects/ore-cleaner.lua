@@ -306,7 +306,7 @@ function OC:collectOres(event)
 		orePath.amount = math.max(orePath.amount - oreExtracted, 1)
 		-- Remove the Ore Path if it is empty --
 		if orePath.amount <= 1 then
-			orePath.destroy()
+			orePath.deplete()
 			table.remove(self.oreTable, randomNum)
 		end
 	end

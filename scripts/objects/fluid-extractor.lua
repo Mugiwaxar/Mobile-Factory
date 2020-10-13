@@ -265,7 +265,7 @@ function FE:extractFluids(event)
 		self.resource.amount = math.max(self.resource.amount - fluidExtracted, 1)
 		-- Remove the FluidPath if amount == 0 --
 		if self.resource.amount <= 1 then
-			self.resource.destroy()
+			self.resource.deplete() -- raises on_resource_depleted and destroys the fluid
 		end
 	end
 end

@@ -493,23 +493,28 @@ function MF:updateFuel()
 	-- Check if the Mobile Factory is valid --
 	if self.ent == nil or self.ent.valid == false then return end
 	-- Recharge the tank fuel --
-	if self.ent.get_inventory(defines.inventory.fuel).is_empty() then
-		local fuel = game.item_prototypes['coal']
-		if self.ent.burner.currently_burning == nil then
-			-- Insert coal in case of the Tank is off --
-			if self.internalEnergyObj:energy() >= fuel.fuel_value/_mfFuelMultiplicator then
-				self.ent.burner.currently_burning = fuel
-				self.internalEnergyObj:removeEnergy(fuel.fuel_value/_mfFuelMultiplicator)
-			end
-		elseif self.ent.burner.currently_burning == fuel then
-			-- Calcule the missing Fuel amount --
-			local remainingFuelValue = self.ent.burner.remaining_burning_fuel
-			local missingFuelValue = math.floor(fuel.fuel_value - remainingFuelValue)
-			if missingFuelValue > 0 and self.internalEnergyObj:energy() >= missingFuelValue/_mfFuelMultiplicator then
-				-- Add the missing Fuel to the Tank --
-				self.ent.burner.remaining_burning_fuel = remainingFuelValue + missingFuelValue
-				-- Drain energy --
-				self.internalEnergyObj:removeEnergy(missingFuelValue/_mfFuelMultiplicator)
+	local burner = self.ent.burner
+	if burner ~= nil then
+		local fuelInventory = burner.inventory
+		if fuelInventory.is_empty() == true then
+			local fuel = game.item_prototypes['coal']
+			if fuel == nil then return end
+			if burner.currently_burning == nil then
+				-- Insert coal in case of the Tank is off --
+				if (fuel ~= nil) and (self.internalEnergyObj:energy() >= fuel.fuel_value/_mfFuelMultiplicator) then
+					burner.currently_burning = fuel
+					self.internalEnergyObj:removeEnergy(fuel.fuel_value/_mfFuelMultiplicator)
+				end
+			elseif burner.currently_burning == fuel then
+				-- Calcule the missing Fuel amount --
+				local remainingFuelValue = burner.remaining_burning_fuel
+				local missingFuelValue = math.floor(fuel.fuel_value - remainingFuelValue)
+				if missingFuelValue > 0 and self.internalEnergyObj:energy() >= missingFuelValue/_mfFuelMultiplicator then
+					-- Add the missing Fuel to the Tank --
+					burner.remaining_burning_fuel = remainingFuelValue + missingFuelValue
+					-- Drain energy --
+					self.internalEnergyObj:removeEnergy(missingFuelValue/_mfFuelMultiplicator)
+				end
 			end
 		end
 	end
