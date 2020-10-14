@@ -38,40 +38,67 @@ end
 
 -- Transfer Chest1 to Chest2 --
 function Util.syncChest(chest1, chest2)
-	local itemsTable = {}
+	local itemsDiff = {}
 	-- Get the Inventories --
 	local inv1 = chest1.get_inventory(defines.inventory.chest)
 	local inv2 = chest2.get_inventory(defines.inventory.chest)
-	-- Itinerate the Inventory 1 --
-	for item, count in pairs(inv1.get_contents()) do
-		if itemsTable[item] ~= nil then
-			itemsTable[item] = itemsTable[item] + count
-		else
-			itemsTable[item] = count
-		end
-	end
-	-- Itinerate the Inventory 2 --
-	for item, count in pairs(inv2.get_contents()) do
-		if itemsTable[item] ~= nil then
-			itemsTable[item] = itemsTable[item] + count
-		else
-			itemsTable[item] = count
-		end
-	end
-	-- Clears Inventories --
-	inv1.clear()
-	inv2.clear()
-	-- Fill the Inventories --
-	for item, count in pairs(itemsTable) do
-	local count1 = math.floor(count/2)
-	local count2 = math.ceil(count/2)
 
-		if count1 > 0 then
-			inv1.insert({name=item, count=count1})
+	-- Itinerate the Inventory 1 --
+	for i = 1, #inv1 do
+		local stack = inv1[i]
+		-- Count only items with no uniq data(excluding items with tags, inventory, blueprints, etc)
+		if stack.valid_for_read == true and stack.item_number == nil then
+			local name = stack.name
+			if itemsDiff[name] ~= nil then
+				itemsDiff[name] = itemsDiff[name] + stack.count / 2
+			else
+				itemsDiff[name] = stack.count / 2
+			end
 		end
-		if count2 > 0 then
-			inv2.insert({name=item, count=count2})
+	end
+
+	-- Itinerate the Inventory 2 --
+	for i = 1, #inv2 do
+		local stack = inv2[i]
+		-- Count only items with no uniq data(excluding items with tags, inventory, blueprints, etc)
+		if stack.valid_for_read == true and stack.item_number == nil then
+			local name = stack.name
+			if itemsDiff[name] ~= nil then
+				itemsDiff[name] = itemsDiff[name] - stack.count / 2
+			else
+				itemsDiff[name] = stack.count / 2 * -1
+			end
 		end
+	end
+
+	-- Balance the Inventories --
+	local somethingMoved = 0
+	for item, count in pairs(itemsDiff) do
+		count = math.floor(count)
+		if count < -1 then
+			local inserted = inv1.insert{name=item, count=math.abs(count)}
+			if inserted > 0 then
+				somethingMoved = inv2.remove{name=item, count=inserted}
+			end
+		elseif count > 1 then
+			local inserted = inv2.insert{name=item, count=count}
+			if inserted > 0 then
+				somethingMoved = inv1.remove{name=item, count=inserted}
+			end
+		end
+	end
+
+	-- Sort inventories if something was moved
+	if somethingMoved > 0 then
+		-- Temporaly unset bars, as items in red slots doesn't sort
+		local bar1 = inv1.get_bar()
+		local bar2 = inv2.get_bar()
+		inv1.set_bar()
+		inv2.set_bar()
+		inv1.sort_and_merge()
+		inv2.sort_and_merge()
+		inv1.set_bar(bar1)
+		inv2.set_bar(bar2)
 	end
 end
 

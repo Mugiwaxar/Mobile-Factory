@@ -142,14 +142,13 @@ end
 
 -- When something is removed or destroyed --
 function somethingWasRemoved(event)
-
 	-- Get and Check the Entity --
 	local removedEnt = event.entity
 	if removedEnt == nil or removedEnt.valid == false then return end
 
-	-- Return Sync Area Items from Chests --
-	if removedEnt.type == "container" or removedEnt.type == "logistic-container" then
-		returnSyncChestsItems(event)
+	-- Unclone SyncArea --
+	if _mfSyncAreaAllowedTypes[removedEnt.type] then
+		removedSyncEntity(event)
 	end
 
 	-- Get and Check the Values --
@@ -288,7 +287,7 @@ function checkCCTile(entity)
 end
 
 -- Return all Items of all Chest to its original one if the SyncArea is stoped --
-function returnSyncChestsItems(event)
+function removedSyncEntity(event)
 	local removedEnt = event.entity
 	local MF = nil
 	for _, MFObj in pairs(global.MFTable) do
@@ -302,37 +301,26 @@ function returnSyncChestsItems(event)
 	end
 	if MF == nil then return end
 
-	local taker = nil
-	local inserted = 0
-
-	if event.robot then taker = event.robot end
-	if event.player_index then taker = getPlayer(event.player_index) end
-	if not taker then return end -- happens when ate by biter
-
-	local invOriginal = nil
-	local invCloned = nil
-
 	for i, ents in pairs(MF.clonedResourcesTable) do
-		if removedEnt == ents.original or removedEnt == ents.cloned then
-			local items = {}
-			invOriginal = ents.original.get_inventory(defines.inventory.chest)
-			for itemName, itemCount in pairs(invOriginal.get_contents()) do
-				if not items[itemName] then items[itemName] = 0 end
-				items[itemName] = items[itemName] + itemCount
+		-- Removed entity always treated as original, adjust if needed
+		if removedEnt == ents.cloned then
+			ents.original, ents.cloned = ents.cloned, ents.original
+		end
+		if removedEnt == ents.original then
+			-- Move chest content to buffer
+			if event.buffer ~= nil and removedEnt.type == "container" or removedEnt.type == "logistic-container" then
+				local inv = ents.cloned.get_inventory(defines.inventory.chest)
+				for i = 1, #inv do
+					local stack = inv[i]
+					if stack.valid_for_read == true then
+						event.buffer.insert(stack)
+					end
+				end
+				inv.clear()
 			end
-			invOriginal.clear()
-
-			invCloned = ents.cloned.get_inventory(defines.inventory.chest)
-			for itemName, itemCount in pairs(invCloned.get_contents()) do
-				if not items[itemName] then items[itemName] = 0 end
-				items[itemName] = items[itemName] + itemCount
-			end
-			invCloned.clear()
-
-			for itemName, itemCount in pairs(items) do
-				inserted = taker.insert({name = itemName, count = itemCount})
-				if inserted ~= itemCount then taker.surface.spill_item_stack(taker.position, {name = itemName, count = itemCount - inserted}, true, nil, false) end
-			end
+			-- Remove from table before unclone, to avoid recursion caused by script_raised_destroy
+			MF.clonedResourcesTable[i] = nil
+			MF:uncloneEntity(ents.original, ents.cloned)
 		end
 	end
 end

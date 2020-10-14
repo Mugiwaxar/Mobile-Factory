@@ -515,33 +515,34 @@ function MF:updateLogisticLaser(entity)
 		local dataInv = self.II
 		if inv ~= nil and inv.valid == true then
 			-- Create the Laser Capacity variable --
-			local capItems = self:getLaserItemDrain()
-			-- Get all Items --
-			local invItems = inv.get_contents()
+			local capItems = math.min(self:getLaserItemDrain(), self.internalEnergyObj:energy() * _mfBaseItemEnergyConsumption)
+			local canMove = capItems
 			-- Retrieve Items from the Inventory --
-			for iName, iCount in pairs(invItems) do
-				if game.item_prototypes[iName].type == "item-with-tags" then goto continue end
-				local added = dataInv:addItem(iName, math.min(iCount, capItems))
-				-- Check if Items was added --
-				if added > 0 then
-					-- Remove Items from the Chest --
-					local removedItems = inv.remove({name=iName, count=added})
-					-- Recalcule the capItems --
-					capItems = capItems - added
-					-- Create the laser and remove energy --
-					if added > 0 then
-						self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target=entity.position, source=self.ent.position}
-						self.internalEnergyObj:removeEnergy(_mfBaseItemEnergyConsumption * removedItems)
-						-- One less Beam to the Beam capacity --
-						return true
-					end
-					-- Test if capItems is empty --
-					if capItems <= 0 then
-						-- Stop --
-						break
+			for i=1, #inv do
+				local stack = inv[i]
+				-- Move only items with no uniq data(excluding items with tags, inventory, blueprints, etc)
+				if stack.valid_for_read == true and stack.item_number == nil then
+					local moved = dataInv:addItem(stack.name, math.min(stack.count, canMove))
+					if moved > 0 then
+						-- Remove Items from the Chest --
+						inv.remove{name=stack.name, count=moved}
+						-- Recalcule the capItems --
+						canMove = canMove - moved
+						-- Test if capItems is empty --
+						if canMove <= 0 then
+							-- Stop --
+							break
+						end
 					end
 				end
-				::continue::
+			end
+			-- Something was moved
+			if canMove < capItems then
+				-- Create the laser and remove energy --
+				self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target=entity.position, source=self.ent.position}
+				self.internalEnergyObj:removeEnergy((capItems - canMove) * _mfBaseItemEnergyConsumption)
+				-- One less Beam to the Beam capacity --
+				return true
 			end
 		end
 	end
@@ -791,7 +792,7 @@ end
 -- Update the Sync Area --
 function MF:updateSyncArea()
 	local radius = 2 * _mfSyncAreaRadius
-	local nearbyMFs = self.ent.surface.count_entities_filtered{position = self.ent.position, radius = radius, name = {"MobileFactory","GTMobileFactory","HMobileFactory"}, limit = 2}
+	local nearbyMFs = self.ent.surface.count_entities_filtered{position = self.ent.position, radius = radius, name = _mfMobileFactories, limit = 2}
 
 	-- Check if the Mobile Factory is moving or the Sync Area is disabled --
 	if self.syncAreaEnabled == false or self.ent.speed ~= 0 then
@@ -978,8 +979,8 @@ function MF:cloneEntity(ent, side) -- side: in (Clone inside), out (Clone outsid
 			cloneInv.clear()
 			if cloneInv.supports_bar() then
 				local origInv = ent.get_inventory(defines.inventory.chest)
-				origInv.set_bar(math.ceil(#origInv / 2) + 1)
-				cloneInv.set_bar(math.ceil(#cloneInv / 2) + 1)
+				origInv.set_bar(math.ceil(origInv.get_bar() / 2 + 0.5))
+				cloneInv.set_bar(math.ceil(cloneInv.get_bar() / 2 + 0.5))
 			end
 		end
 		if ent.type == "storage-tank" then
@@ -998,9 +999,20 @@ end
 local function uncloneChest(chest1, chest2)
 	local inv1 = chest1.get_inventory(defines.inventory.chest)
 	local inv2 = chest2.get_inventory(defines.inventory.chest)
-	if inv1.supports_bar() then inv1.set_bar() end
-	for item, count in pairs(inv2.get_contents()) do
-		inv1.insert({name = item, count = count})
+
+	if inv1.supports_bar() then
+		inv1.set_bar(inv1.get_bar() * 2 - 1)
+	end
+	for i = 1, #inv2 do
+		local stack = inv2[i]
+		if stack.valid_for_read == true then
+			local itemsInStack = stack.count
+			local itemsInserted = inv1.insert(stack)
+			if itemsInserted < itemsInStack then
+				stack.count = itemsInStack - itemsInserted
+				chest1.surface.spill_item_stack(chest1.position, stack, true, nil, false)
+			end
+		end
 	end
 	inv2.clear()
 end
@@ -1072,6 +1084,19 @@ local function uncloneQuatron(accu1, accu2)
 	obj1.quatronLevel = effectiveLevel
 end
 
+function MF:uncloneEntity(original, clone)
+	if original.type == "container" or original.type == "logistic-container" then
+		uncloneChest(original, clone)
+	elseif original.type == "storage-tank" then
+		uncloneStorageTank(original, clone)
+	elseif original.name == "QuatronCubeMK1" then
+		uncloneQuatron(original, clone)
+	elseif original.type == "accumulator" then
+		uncloneEnergy(original, clone)
+	end
+	clone.destroy{raise_destroy=true}
+end
+
 -- Unclone all Entities inside the Sync Area --
 function MF:unCloneSyncArea()
 	-- Set default Tiles --
@@ -1080,17 +1105,7 @@ function MF:unCloneSyncArea()
 	self:updateClonedEntities()
 	-- Remove all cloned Entities --
 	for i, ents in pairs(self.clonedResourcesTable) do
-		if ents.original.type == "container" or ents.original.type == "logistic-container" then
-			uncloneChest(ents.original, ents.cloned)
-		elseif ents.original.type == "storage-tank" then
-			uncloneStorageTank(ents.original, ents.cloned)
-		elseif ents.original.name == "QuatronCubeMK1" then
-			uncloneQuatron(ents.original, ents.cloned)
-		elseif ents.original.type == "accumulator" then
-			uncloneEnergy(ents.original, ents.cloned)
-		end
-		script.raise_event(defines.events.script_raised_destroy, {entity=ents.cloned})
-		ents.cloned.destroy()
+		self:uncloneEntity(ents.original, ents.cloned)
 	end
 	self.clonedResourcesTable = {}
 end
@@ -1134,7 +1149,7 @@ function MF:updateClonedEntity(ents)
 			ents.original.destroy()
 			ents.cloned.destroy()
 		end
-	elseif ents.original.type == "container" then
+	elseif ents.original.type == "container" or ents.original.type == "logistic-container" then
 		-- If the Entity is a Chest --
 		Util.syncChest(ents.original, ents.cloned)
 	elseif ents.original.type == "storage-tank" then
