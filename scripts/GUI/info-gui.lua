@@ -112,9 +112,9 @@ function GUI.updateButtonsBar(GUIObj)
 	local showItemDrainButton = technologyUnlocked("TechItemDrain", getForce(player.name)) and true or false
 	local itemDrainSprite = MF.itemLaserActivated == true and "ItemDrainIcon" or "ItemDrainIconDisabled"
 	local itemDrainHovSprite = MF.itemLaserActivated == true and "ItemDrainIconDisabled" or "ItemDrainIcon"
-	local showSendQuatronButton = (technologyUnlocked("OreCleaner", getForce(player.name)) or technologyUnlocked("FluidExtractor", getForce(player.name))) and true or false
-	local sendQuatronSprite = MF.sendQuatronActivated == true and "QuatronIcon" or "QuatronIconDisabled"
-	local sendQuatronHovSprite = MF.sendQuatronActivated == true and "QuatronIconDisabled" or "QuatronIcon"
+	local showQuatronDrainButton = technologyUnlocked("EnergyDrain1", getForce(player.name)) and technologyUnlocked("QuatronLogistic", getForce(player.name)) and true or false
+	local quatronDrainSprite = MF.quatronLaserActivated == true and "QuatronIcon" or "QuatronIconDisabled"
+	local quatronDrainHovSprite = MF.quatronLaserActivated == true and "QuatronIconDisabled" or "QuatronIcon"
 
 
 	-------------------------------------------------------- Update all Buttons --------------------------------------------------------
@@ -128,7 +128,7 @@ function GUI.updateButtonsBar(GUIObj)
 	GUIObj:addButton("EnergyDrainButton", buttonsBar, energyDrainSprite, energyDrainHovSprite, {"gui-description.mfEnergyDrainButton"}, buttonsSize, true, showEnergyDrainButton)
 	GUIObj:addButton("FluidDrainButton", buttonsBar, fluidDrainSprite, fluidDrainHovSprite, {"gui-description.mfFluidDrainButton"}, buttonsSize, true, showFluidDrainButton)
 	GUIObj:addButton("ItemDrainButton", buttonsBar, itemDrainSprite, itemDrainHovSprite, {"gui-description.mfItemDrainButton"}, buttonsSize, true, showItemDrainButton)
-	GUIObj:addButton("SendQuatronButton", buttonsBar, sendQuatronSprite, sendQuatronHovSprite, {"gui-description.mfSendQuatron"}, buttonsSize, true, showSendQuatronButton)
+	GUIObj:addButton("QuatronDrainButton", buttonsBar, quatronDrainSprite, quatronDrainHovSprite, {"gui-description.mfQuatronDrainButton"}, buttonsSize, true, showQuatronDrainButton)
 end
 
 -- Update Information --

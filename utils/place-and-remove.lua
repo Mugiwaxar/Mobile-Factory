@@ -110,7 +110,7 @@ function somethingWasPlaced(event)
 	if type == "entity-ghost" then return end
 
 	-- If a SyncArea Entity was placed --
-	if _mfSyncAreaAllowedTypes[entity.type] == true then
+	if _mfSyncAreaAllowedTypes[entity.type] == true and event.destination == nil then
 		placedEntityInSyncArea(MF, entity)
 	end
 
@@ -148,7 +148,7 @@ function somethingWasRemoved(event)
 	if removedEnt == nil or removedEnt.valid == false then return end
 
 	-- Return Sync Area Items from Chests --
-	if removedEnt == "container" then
+	if removedEnt.type == "container" or removedEnt.type == "logistic-container" then
 		returnSyncChestsItems(event)
 	end
 
@@ -209,25 +209,10 @@ function somethingWasRemoved(event)
 
 end
 
--- Called when a Structure is marked for deconstruction --
-function markedForDeconstruction(event)
-	if event.entity == nil or event.entity.valid == false or event.player_index == nil then return end
-	local player = getPlayer(event.player_index)
-	if player == nil then return end
-	local MF = getMF(player.name)
-	if MF == nil then return end
-	if MF.ent == nil or MF.ent.valid == false or event.entity.surface.name ~= MF.ent.surface.name then return end
-	table.insert(global.constructionTable,{ent=event.entity, name=event.entity.name, position=event.entity.position, direction=event.entity.direction or 1, mission="Deconstruct"})
-end
-
 -- Called when Tiles are placed --
 function tilesWasPlaced(event)
 	-- Get the Values --
 	local MFPlayer = getMFPlayer(event.player_index)
-	local MF = nil
-	if MFPlayer ~= nil then
-		MF = MFPlayer.MF
-	end
 	local surface = game.get_surface(event.surface_index or event.created_entity.surface.index)
 	-- Prevent to place Tiles inside the Control Center --
 	if event.tiles ~= nil and string.match(surface.name, _mfControlSurfaceName) then
@@ -322,7 +307,7 @@ function returnSyncChestsItems(event)
 
 	if event.robot then taker = event.robot end
 	if event.player_index then taker = getPlayer(event.player_index) end
-	if not taker then return end -- should not be possible
+	if not taker then return end -- happens when ate by biter
 
 	local invOriginal = nil
 	local invCloned = nil

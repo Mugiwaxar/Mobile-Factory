@@ -128,6 +128,7 @@ function QR:burnFluid()
 	local fluidToRemove = math.min(fluid.amount, self.quatronMax - self.quatronCharge)
 	-- Remove the Fluid --
 	local removed = self.ent.remove_fluid{name=fluidName, amount=fluidToRemove}
+	self.ent.force.fluid_production_statistics.on_flow(fluidName, fluidToRemove * -1)
 
 	self:addQuatron(removed, level)
 end

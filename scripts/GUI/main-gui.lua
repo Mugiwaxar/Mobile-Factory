@@ -136,9 +136,9 @@ function GUI.updateMFMainGUI(GUIObj)
 	local showItemDrainButton = technologyUnlocked("TechItemDrain", getForce(player.name)) and true or false
 	local itemDrainSprite = MF.itemLaserActivated == true and "ItemDrainIcon" or "ItemDrainIconDisabled"
 	local itemDrainHovSprite = MF.itemLaserActivated == true and "ItemDrainIconDisabled" or "ItemDrainIcon"
-	local showSendQuatronButton = (technologyUnlocked("OreCleaner", getForce(player.name)) or technologyUnlocked("FluidExtractor", getForce(player.name))) and true or false
-	local sendQuatronSprite = MF.sendQuatronActivated == true and "QuatronIcon" or "QuatronIconDisabled"
-	local sendQuatronHovSprite = MF.sendQuatronActivated == true and "QuatronIconDisabled" or "QuatronIcon"
+	local showQuatronDrainButton = technologyUnlocked("EnergyDrain1", getForce(player.name)) and technologyUnlocked("QuatronLogistic", getForce(player.name)) and true or false
+	local quatronDrainSprite = MF.quatronLaserActivated == true and "QuatronIcon" or "QuatronIconDisabled"
+	local quatronDrainHovSprite = MF.quatronLaserActivated == true and "QuatronIconDisabled" or "QuatronIcon"
 	
 
 	-------------------------------------------------------- Update all Buttons --------------------------------------------------------
@@ -152,7 +152,7 @@ function GUI.updateMFMainGUI(GUIObj)
 	GUI.addButtonToMainGui(GUIObj, {name="EnergyDrainButton", sprite=energyDrainSprite, hovSprite=energyDrainHovSprite, tooltip={"gui-description.mfEnergyDrainButton"}, size=buttonsSize, save=false, visible=showEnergyDrainButton})
 	GUI.addButtonToMainGui(GUIObj, {name="FluidDrainButton", sprite=fluidDrainSprite, hovSprite=fluidDrainHovSprite, tooltip={"gui-description.mfFluidDrainButton"}, size=buttonsSize, save=false, visible=showFluidDrainButton})
 	GUI.addButtonToMainGui(GUIObj, {name="ItemDrainButton", sprite=itemDrainSprite, hovSprite=itemDrainHovSprite, tooltip={"gui-description.mfItemDrainButton"}, size=buttonsSize, save=false, visible=showItemDrainButton})
-	GUI.addButtonToMainGui(GUIObj, {name="SendQuatronButton", sprite=sendQuatronSprite, hovSprite=sendQuatronHovSprite, tooltip={"gui-description.mfSendQuatron"}, size=buttonsSize, save=false, visible=showSendQuatronButton})
+	GUI.addButtonToMainGui(GUIObj, {name="QuatronDrainButton", sprite=quatronDrainSprite, hovSprite=quatronDrainHovSprite, tooltip={"gui-description.mfQuatronDrainButton"}, size=buttonsSize, save=false, visible=showQuatronDrainButton})
 
 	GUI.renderMainGuiButtons(GUIObj)
 end

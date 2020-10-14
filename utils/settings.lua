@@ -28,6 +28,9 @@ _mfShieldComsuption = 25000
 _mfBaseLaserRadius = 10
 _mfBaseLaserNumber = 1
 
+-- Mobile Factory Quatron Drain settings --
+_mfQuatronDrain = 1000
+
 -- Mobile Factory Energy Drain settings --
 _mfEnergyDrain = 10000000
 
@@ -52,11 +55,11 @@ _mfSyncAreaPosition = {x=0, y=0}
 _mfSyncAreaRadius = 10
 _mfSyncAreaAllowedTypes =
 {
-    resource=true,
-    container=true,
-    ["storage-tank"]=true,
-    accumulator=true
-
+	resource=true,
+	container=true,
+	["logistic-container"]=true,
+	["storage-tank"]=true,
+	accumulator=true
 }
 
 -- Mobile Factory Sync Area extra entity information needed --

@@ -66,9 +66,6 @@ function onInit()
 		end
 	end
 
-	-- Tables --
-	global.constructionTable = global.constructionTable or {}
-	global.repairTable = global.repairTable or {}
 	-- global.eryaIndexedTable = global.eryaIndexedTable or {}
 
 	-- Create the Objects Table --
@@ -250,7 +247,6 @@ script.on_event(defines.events.on_gui_switch_state_changed, GUI.onGuiElemChanged
 script.on_event(defines.events.on_gui_selected_tab_changed, GUI.onGuiElemChanged)
 script.on_event(defines.events.on_research_finished, technologyFinished)
 script.on_event(defines.events.on_selected_entity_changed, selectedEntityChanged)
-script.on_event(defines.events.on_marked_for_deconstruction, markedForDeconstruction)
 script.on_event(defines.events.on_entity_settings_pasted, settingsPasted)
 script.on_event(defines.events.on_force_created, onForceCreated)
 script.on_event(defines.events.on_player_changed_force, onPlayerChangedForce)
