@@ -5,6 +5,7 @@ local ocE = table.deepcopy(data.raw["mining-drill"]["electric-mining-drill"])
 ocE.type = "mining-drill"
 ocE.name = "OreCleaner"
 ocE.graphics_set = nil
+ocE.wet_mining_graphics_set = nil
 ocE.icon = "__Mobile_Factory_Graphics__/graphics/icones/OreCleaner.png"
 ocE.icon_size = 32
 ocE.flags = {"placeable-neutral", "player-creation", "not-rotatable"}
@@ -124,6 +125,6 @@ ocT.unit = {
 		{"DimensionalCrystal", 1}
 	}
 }
-ocT.prerequisites = {"MatterSerialization"}
+ocT.prerequisites = {"MatterSerialization", "DeepStorage"}
 ocT.effects = {{type="unlock-recipe", recipe="OreCleaner"}}
 data:extend{ocT}

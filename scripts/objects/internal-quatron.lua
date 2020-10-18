@@ -96,9 +96,6 @@ function IQC:update()
 		return
 	end
 
-	-- Update Quatron indication
-	self.ent.energy = self.quatronCharge
-
 	-- Update the Sprite --
 	local spriteNumber = math.ceil(self.quatronCharge/self.quatronMax*10)
 	rendering.destroy(self.spriteID)
@@ -140,43 +137,29 @@ function IQC:balance()
 	local area = {{self.ent.position.x-3.5, self.ent.position.y-2.5},{self.ent.position.x+3.5,self.ent.position.y+4.5}}
 	local ents = self.ent.surface.find_entities_filtered{area=area, name=_mfQuatronShare}
 
-	-- Return if nothing found
-	if next(ents) == nil then return end
-
 	local selfMaxOutFlow = self.quatronMaxOutput
-	local selfMaxInFlow = self.quatronMaxInput
 	local selfQuatron = self.quatronCharge
-	local selfMaxQuatron = self.quatronMax
 	local selfQuatronLevel = self.quatronLevel
 
 	-- Check all Accumulator --
 	for k, ent in pairs(ents) do
 		-- Look for valid Quatron User --
 		local obj = global.entsTable[ent.unit_number]
-		if obj ~= nil then
+		if obj ~= nil and obj.entID ~= self.entID then
 			local isAcc = ent.type == "accumulator"
 			local objQuatron = obj.quatronCharge
 			local objMaxQuatron = obj.quatronMax
 			local objMaxInFlow = obj.quatronMaxInput
-			local objMaxOutFlow = obj.quatronMaxOutput
-			if selfQuatron > objQuatron and objQuatron < objMaxQuatron and objMaxInFlow > 0 then
+			local shareThreshold = isAcc and objQuatron or 0
+			if selfQuatron > shareThreshold and objQuatron < objMaxQuatron and objMaxInFlow > 0 then
 				-- Calcule max flow --
 				local quatronVariance = isAcc and math.floor((selfQuatron - objQuatron) / 2) or selfQuatron
 				local missingQuatron = objMaxQuatron - objQuatron
 				local quatronTransfer = math.min(quatronVariance, missingQuatron, selfMaxOutFlow, objMaxInFlow)
 				-- Transfer Quatron --
-				obj:addQuatron(quatronTransfer, self.quatronLevel)
+				quatronTransfer = obj:addQuatron(quatronTransfer, selfQuatronLevel)
 				-- Remove Quatron --
 				selfQuatron = selfQuatron - quatronTransfer
-			elseif selfQuatron < objQuatron and selfQuatron < selfMaxQuatron and objMaxOutFlow > 0 then
-				-- Calcule max flow --
-				local quatronVariance = isAcc and math.floor((objQuatron - selfQuatron) / 2) or objQuatron
-				local missingQuatron = selfMaxQuatron - selfQuatron
-				local quatronTranfer = math.min(quatronVariance, missingQuatron, selfMaxInFlow, objMaxOutFlow)
-				-- Transfer Quatron --
-				selfQuatron = selfQuatron + quatronTranfer
-				-- Remove Quatron --
-				obj.quatronCharge = objQuatron - quatronTranfer
 			end
 		end
 	end

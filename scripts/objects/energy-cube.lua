@@ -27,7 +27,7 @@ function EC:new(object)
 	t.entID = object.unit_number
 	-- Draw the Sprite --
 	t.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite0", x_scale=1/7, y_scale=1/7, target=object, surface=object.surface, target_offset={0, -0.3}, render_layer=131}
-	self.lightID = rendering.draw_light{sprite="EnergyCubeMK1Sprite0", scale=1/7, target=object, surface=object.surface, target_offset={0, -0.3}, minimum_darkness=0}
+	t.lightID = rendering.draw_light{sprite="EnergyCubeMK1Sprite0", scale=1/7, target=object, surface=object.surface, target_offset={0, -0.3}, minimum_darkness=0}
 	UpSys.addObj(t)
 	return t
 end
@@ -102,42 +102,28 @@ function EC:balance()
 	local area = {{self.ent.position.x-1.5, self.ent.position.y-1.5},{self.ent.position.x+1.5,self.ent.position.y+1.5}}
 	local ents = self.ent.surface.find_entities_filtered{area=area, name=_mfEnergyShare}
 
-	-- Return if nothing found
-	if next(ents) == nil then return end
-
 	local selfMaxOutFlow = self.ent.electric_output_flow_limit * self.updateTick
-	local selfMaxInFlow = self.ent.electric_input_flow_limit * self.updateTick
 	local selfEnergy = self.ent.energy
-	local selfMaxEnergy = self.ent.electric_buffer_size
 
 	-- Check all Accumulator --
 	for k, ent in pairs(ents) do
 		-- Look for valid Energy Cube --
 		local obj = global.entsTable[ent.unit_number]
-		if obj ~= nil then
+		if obj ~= nil and obj.entID ~= self.entID then
 			local isAcc = ent.type == "accumulator"
 			local objEnergy = obj.ent.energy
 			local objMaxEnergy = obj.ent.electric_buffer_size
-			if selfEnergy > objEnergy and objEnergy < objMaxEnergy then
+			local objMaxInFlow = obj:maxInput() * self.updateTick
+			local shareThreshold = isAcc and objEnergy or 0
+			if selfEnergy > shareThreshold and objEnergy < objMaxEnergy and objMaxInFlow > 0 then
 				-- Calcule max flow --
 				local energyVariance = isAcc and math.floor((selfEnergy - objEnergy) / 2) or selfEnergy
 				local missingEnergy = objMaxEnergy - objEnergy
-				local objMaxInFlow = obj:maxInput() * self.updateTick
 				local energyTransfer = math.min(energyVariance, missingEnergy, selfMaxOutFlow, objMaxInFlow)
 				-- Transfer Energy --
 				obj.ent.energy = objEnergy + energyTransfer
 				-- Remove Energy --
 				selfEnergy = selfEnergy - energyTransfer
-			elseif selfEnergy < objEnergy and selfEnergy < selfMaxEnergy then
-				-- Calcule max flow --
-				local energyVariance = isAcc and math.floor((objEnergy - selfEnergy) / 2) or objEnergy
-				local missingEnergy = selfMaxEnergy - selfEnergy
-				local objMaxOutFlow = obj:maxOutput() * self.updateTick
-				local energyTransfer = math.min(energyVariance, missingEnergy, selfMaxInFlow, objMaxOutFlow)
-				-- Transfer Energy --
-				selfEnergy = selfEnergy + energyTransfer
-				-- Remove Energy --
-				obj.ent.energy = objEnergy - energyTransfer
 			end
 		end
 	end

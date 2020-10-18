@@ -72,8 +72,7 @@ deT.prerequisites = {"DimensionalOreSmelting"}
 deT.effects = 
 {
 	{type="unlock-recipe", recipe="DimensionalWire"},
-	{type="unlock-recipe", recipe="DimensionalCircuit"},
-	{type="unlock-recipe", recipe="EnergyCubeMK1"}
+	{type="unlock-recipe", recipe="DimensionalCircuit"}
 }
 data:extend{deT}
 

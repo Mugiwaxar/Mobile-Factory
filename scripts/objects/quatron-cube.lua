@@ -32,13 +32,13 @@ function QC:new(object)
 	t.MF = getMF(t.player)
 	t.entID = object.unit_number
 	-- Get prototype data
-	self.quatronCharge = object.energy
-	self.quatronMax = object.electric_buffer_size
-	self.quatronMaxInput = object.electric_buffer_size / 10
-	self.quatronMaxOutput = object.electric_buffer_size / 10
+	t.quatronCharge = object.energy
+	t.quatronMax = object.electric_buffer_size
+	t.quatronMaxInput = object.electric_buffer_size / 10
+	t.quatronMaxOutput = object.electric_buffer_size / 10
 	-- Draw the Sprite --
 	t.spriteID = rendering.draw_sprite{sprite="QuatronCubeSprite0", x_scale=1/7, y_scale=1/7, target=object, surface=object.surface, target_offset={0, -0.3}, render_layer=131}
-	self.lightID = rendering.draw_light{sprite="QuatronCubeSprite0", scale=1/7, target=object, surface=object.surface, target_offset={0, -0.3}, minimum_darkness=0}
+	t.lightID = rendering.draw_light{sprite="QuatronCubeSprite0", scale=1/7, target=object, surface=object.surface, target_offset={0, -0.3}, minimum_darkness=0}
 	UpSys.addObj(t)
 	return t
 end
@@ -95,9 +95,6 @@ function QC:update()
 		return
 	end
 
-	-- Update Quatron indication
-	self.ent.energy = self.quatronCharge
-
 	-- Update the Sprite --
 	local spriteNumber = math.ceil(self.quatronCharge/self.quatronMax*10)
 	rendering.destroy(self.spriteID)
@@ -141,43 +138,29 @@ function QC:balance()
 	local area = {{self.ent.position.x-1.5, self.ent.position.y-1.5},{self.ent.position.x+1.5,self.ent.position.y+1.5}}
 	local ents = self.ent.surface.find_entities_filtered{area=area, name=_mfQuatronShare}
 
-	-- Return if nothing found
-	if next(ents) == nil then return end
-
 	local selfMaxOutFlow = self.quatronMaxOutput
-	local selfMaxInFlow = self.quatronMaxInput
 	local selfQuatron = self.quatronCharge
-	local selfMaxQuatron = self.quatronMax
 	local selfQuatronLevel = self.quatronLevel
 
 	-- Check all Accumulator --
 	for k, ent in pairs(ents) do
 		-- Look for valid Quatron User --
 		local obj = global.entsTable[ent.unit_number]
-		if obj ~= nil then
+		if obj ~= nil and obj.entID ~= self.entID then
 			local isAcc = ent.type == "accumulator"
 			local objQuatron = obj.quatronCharge
 			local objMaxQuatron = obj.quatronMax
 			local objMaxInFlow = obj.quatronMaxInput
-			local objMaxOutFlow = obj.quatronMaxOutput
-			if selfQuatron > objQuatron and objQuatron < objMaxQuatron and objMaxInFlow > 0 then
+			local shareThreshold = isAcc and objQuatron or 0
+			if selfQuatron > shareThreshold and objQuatron < objMaxQuatron and objMaxInFlow > 0 then
 				-- Calcule max flow --
 				local quatronVariance = isAcc and math.floor((selfQuatron - objQuatron) / 2) or selfQuatron
 				local missingQuatron = objMaxQuatron - objQuatron
 				local quatronTransfer = math.min(quatronVariance, missingQuatron, selfMaxOutFlow, objMaxInFlow)
 				-- Transfer Quatron --
-				obj:addQuatron(quatronTransfer, self.quatronLevel)
+				quatronTransfer = obj:addQuatron(quatronTransfer, selfQuatronLevel)
 				-- Remove Quatron --
 				selfQuatron = selfQuatron - quatronTransfer
-			elseif selfQuatron < objQuatron and selfQuatron < selfMaxQuatron and objMaxOutFlow > 0 then
-				-- Calcule max flow --
-				local quatronVariance = isAcc and math.floor((objQuatron - selfQuatron) / 2) or objQuatron
-				local missingQuatron = selfMaxQuatron - selfQuatron
-				local quatronTransfer = math.min(quatronVariance, missingQuatron, selfMaxInFlow, objMaxOutFlow)
-				-- Transfer Quatron --
-				selfQuatron = selfQuatron + quatronTransfer
-				-- Remove Quatron --
-				obj.quatronCharge = objQuatron - quatronTransfer
 			end
 		end
 	end

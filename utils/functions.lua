@@ -153,8 +153,8 @@ function Util.syncEnergy(accu1, accu2)
 	-- Calcul the total energy --
 	local totalEnergy = accu1.energy + accu2.energy
 	-- Set the Energy of the Accumulators --
-	accu1.energy = totalEnergy / 2
-	accu2.energy = totalEnergy / 2
+	accu1.energy = math.ceil(totalEnergy / 2)
+	accu2.energy = math.floor(totalEnergy / 2)
 end
 
 -- Equilize the Quatron between two Accumulators --
@@ -166,8 +166,8 @@ function Util.syncQuatron(accu1, accu2)
 	local totalCharge = obj1.quatronCharge + obj2.quatronCharge
 	local effectiveLevel = math.pow(effectiveCharge / totalCharge, 1/_mfQuatronScalePower)
 	-- Set the Quatron of the Accumulators --
-	obj1.quatronCharge = totalCharge / 2
-	obj2.quatronCharge = totalCharge / 2
+	obj1.quatronCharge = math.ceil(totalCharge / 2)
+	obj2.quatronCharge = math.floor(totalCharge / 2)
 	obj1.quatronLevel = effectiveLevel
 	obj2.quatronLevel = effectiveLevel
 end

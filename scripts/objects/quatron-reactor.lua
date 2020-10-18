@@ -14,7 +14,7 @@ QR = {
 	quatronLevel = 1,
 	quatronMax = 25000,
 	quatronMaxInput = 0,
-	quatronMaxOutput = 0
+	quatronMaxOutput = 25000
 }
 
 -- Constructor --
@@ -32,7 +32,7 @@ function QR:new(object)
     UpSys.addObj(t)
     -- Draw the state Sprite --
 	t.spriteID = rendering.draw_sprite{sprite="QuatronReactorSprite0", target=object, surface=object.surface, render_layer=129}
-	self.lightID = rendering.draw_light{sprite="QuatronReactorSprite0", target=object, surface=object.surface, minimum_darkness=0}
+	t.lightID = rendering.draw_light{sprite="QuatronReactorSprite0", target=object, surface=object.surface, minimum_darkness=0}
 	return t
 end
 
@@ -125,12 +125,13 @@ function QR:burnFluid()
 	if level == nil then return end
 
 	-- Get the amount of Fluid to remove --
-	local fluidToRemove = math.min(fluid.amount, self.quatronMax - self.quatronCharge)
+	local fluidToRemove = math.min(fluid.amount, math.floor((self.quatronMax - self.quatronCharge) / _mfQuatronEnergyRate))
+	if fluidToRemove < 1 then return end
 	-- Remove the Fluid --
 	local removed = self.ent.remove_fluid{name=fluidName, amount=fluidToRemove}
 	self.ent.force.fluid_production_statistics.on_flow(fluidName, fluidToRemove * -1)
 
-	self:addQuatron(removed, level)
+	self:addQuatron(removed * _mfQuatronEnergyRate, level)
 end
 
 -- Send Quatron to nearby Quatron Users --
@@ -143,16 +144,13 @@ function QR:sendQuatron()
 	local area = {{self.ent.position.x-2.5, self.ent.position.y-2.5},{self.ent.position.x+2.5,self.ent.position.y+2.5}}
 	local ents = self.ent.surface.find_entities_filtered{area=area, name=_mfQuatronShare}
 
-	-- Return if nothing found
-	if next(ents) == nil then return end
-
 	local selfQuatronLevel = self.quatronLevel
 
 	-- Check all Entity --
 	for k, ent in pairs(ents) do
 		-- Look for valid Object --
 		local obj = global.entsTable[ent.unit_number]
-		if obj ~= nil then
+		if obj ~= nil and obj.entID ~= self.entID then
 			local objQuatron = obj.quatronCharge
 			local objQuatronLevel = obj.quatronLevel
 			local objMaxQuatron = obj.quatronMax
@@ -162,7 +160,7 @@ function QR:sendQuatron()
 				local missingQuatron = objMaxQuatron - objQuatron
 				local quatronTransfer = math.min(selfQuatron, missingQuatron, objMaxInFlow)
 				-- Transfer Quatron --
-				obj:addQuatron(quatronTransfer, self.quatronLevel)
+				quatronTransfer = obj:addQuatron(quatronTransfer, selfQuatronLevel)
 				-- Remove Quatron --
 				selfQuatron = selfQuatron - quatronTransfer
 				if selfQuatron <= 0 then break end

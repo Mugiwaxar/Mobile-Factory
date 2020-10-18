@@ -215,7 +215,7 @@ function OC:collectOres(event)
 	-- Return if the Ore Table is empty --
 	if table_size(self.oreTable) <= 0 then return end
 	-- Return if there are not Quatron Charge remaining --
-	if self.quatronCharge <= 0 then return end
+	if self.quatronCharge < 10 then return end
 	-- Create the OrePath and randomNum variable --
 	local orePath = nil
 	local randomNum  = 0
@@ -295,7 +295,7 @@ function OC:collectOres(event)
 		-- Set the lastUpdate variable --
 		self.lastExtraction = event.tick
 		-- Remove a charge --
-		self.quatronCharge = self.quatronCharge - 1
+		self.quatronCharge = self.quatronCharge - 10
 		-- Remove Ores from the Ore Path --
 		orePath.amount = math.max(orePath.amount - oreExtracted, 1)
 		-- Remove the Ore Path if it is empty --

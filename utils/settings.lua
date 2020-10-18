@@ -104,6 +104,7 @@ _mfFIQuatronDrainPerUpdate = 8
 _mfNEQuatronDrainPerUpdate = 3
 _mfDAQuatronDrainPerUpdate = 1
 _mfQuatronScalePower = 1.3
+_mfQuatronEnergyRate = 10
 
 -- Ore Cleaner settings --
 _mfOreCleanerMaxCharge = 1000

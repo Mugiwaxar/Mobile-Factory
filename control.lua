@@ -90,7 +90,7 @@ function onInit()
 	rendering.clear("Mobile_Factory")
 
 	-- Recreate GUIs --
-	for k, MFPlayer in pairs(global.MFPlayer or {}) do
+	for k, MFPlayer in pairs(global.playersTable or {}) do
 		GUI.createMFMainGUI(MFPlayer.ent)
 	end
 

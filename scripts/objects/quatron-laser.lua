@@ -132,7 +132,7 @@ function QL:sendQuatron()
 	local quatronTransfer = math.min(self.quatronCharge, obj.quatronMax - obj.quatronCharge, obj.quatronMaxInput)
 	if quatronTransfer > 0 then
 		-- Add the Quatron --
-		obj:addQuatron(quatronTransfer, self.quatronLevel)
+		quatronTransfer = obj:addQuatron(quatronTransfer, self.quatronLevel)
 		-- Remove Quatron --
 		self.quatronCharge = self.quatronCharge - quatronTransfer
 		-- Create the Beam --

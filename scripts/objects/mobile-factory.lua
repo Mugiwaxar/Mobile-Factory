@@ -55,7 +55,6 @@ function MF:new(args)
 	local mt = {}
 	setmetatable(t, mt)
 	mt.__index = MF
-	t.entitiesAround = t.entitiesAround or {}
 	t.clonedResourcesTable = t.clonedResourcesTable or {}
 	t.varTable = t.varTable or {}
 	t.varTable.tech = t.varTable.tech or {}

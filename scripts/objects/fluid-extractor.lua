@@ -196,7 +196,7 @@ function FE:extractFluids(event)
 	-- Test if the Mobile Factory and the Fluid Extractor are valid --
 	if valid(self) == false or valid(self.MF) == false then return end
 	-- Check the Quatron Charge --
-	if self.quatronCharge < 10 then return end
+	if self.quatronCharge < 100 then return end
 	-- Check the Resource --
 	self.resource = self.resource or self.ent.surface.find_entities_filtered{position=self.ent.position, radius=1, type="resource", limit=1}[1]
 	if self.resource == nil or self.resource.valid == false then return end
@@ -254,7 +254,7 @@ function FE:extractFluids(event)
 		-- Make a Beam --
 		self.ent.surface.create_entity{name="BigPurpleBeam", duration=59, position=self.ent.position, target=self.MF.ent.position, source=self.ent.position}
 		-- Remove a charge --
-		self.quatronCharge = self.quatronCharge - 10
+		self.quatronCharge = self.quatronCharge - 100
 		-- Remove amount from the FluidPath --
 		self.resource.amount = math.max(self.resource.amount - fluidExtracted, 1)
 		-- Remove the FluidPath if amount == 0 --
