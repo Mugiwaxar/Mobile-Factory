@@ -106,6 +106,6 @@ feT.unit = {
 		{"DimensionalCrystal", 1}
 	}
 }
-feT.prerequisites = {"MatterSerialization"}
+feT.prerequisites = {"MatterSerialization", "DeepTank"}
 feT.effects = {{type="unlock-recipe", recipe="FluidExtractor"}}
 data:extend{feT}

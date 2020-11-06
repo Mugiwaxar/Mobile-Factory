@@ -85,7 +85,7 @@ function DN:getTooltipInfos(GUIObj, gui, obj)
 	GUIObj:addLabel("", gui, {"", obj.ent.localised_name, " ", {"gui-description.DNSelfConsumption", obj.consumption}}, _mfOrange)
 
 	-- Create the Out Of Power Label --
-	if obj.networkAccessPoint.outOfQuatron == true or obj.networkAccessPoint.quatronCharge <= 0 then
+	if obj.networkAccessPoint.quatronCharge <= 0 then
 		GUIObj:addLabel("", gui, {"gui-description.DNOutOfPower"}, _mfRed)
 	end
 

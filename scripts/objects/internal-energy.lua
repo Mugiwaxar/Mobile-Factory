@@ -73,25 +73,23 @@ end
 
 -- Update --
 function IEC:update()
-
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
-	
+
 	-- Check the Validity --
 	if self.ent == nil or self.ent.valid == false then
 		return
-    end
+	end
 
-    -- Update the Sprite --
+	-- Update the Sprite --
 	local spriteNumber = math.ceil(self.ent.energy/self.ent.prototype.electric_energy_source_prototype.buffer_capacity*10)
 	rendering.destroy(self.spriteID)
 	rendering.destroy(self.lightID)
 	self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite" .. spriteNumber, x_scale=1/2.25, y_scale=1/2.25, target=self.ent, surface=self.ent.surface, render_layer=130}
 	self.lightID = rendering.draw_light{sprite="EnergyCubeMK1Sprite" .. spriteNumber, scale=1/2.25, target=self.ent, surface=self.ent.surface, minimum_darkness=0}
-	
+
 	-- Balance the Energy with neighboring Cubes --
 	self:balance()
-
 end
  
 -- Tooltip Infos --
@@ -100,41 +98,37 @@ end
 
 -- Balance the Energy with neighboring Cubes --
 function IEC:balance()
-
-	-- Check the Entity --
-	if self.ent == nil or self.ent.valid == false then return end
-
 	-- Get all Accumulator arount --
 	local area = {{self.ent.position.x-3.5, self.ent.position.y-2.5},{self.ent.position.x+3.5,self.ent.position.y+4.5}}
-	local ents = self.ent.surface.find_entities_filtered{area=area, type="accumulator"}
+	local ents = self.ent.surface.find_entities_filtered{area=area, name=_mfEnergyShare}
+
+	local selfMaxOutFlow = self.ent.electric_output_flow_limit * self.updateTick
+	local selfEnergy = self.ent.energy
 
 	-- Check all Accumulator --
 	for k, ent in pairs(ents) do
 		-- Look for valid Energy Cube --
-		if ent ~= nil and ent.valid == true and ent ~= self.ent and _mfEnergyCubes[ent.name] == true then
-			local obj = global.entsTable[ent.unit_number]
-			if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true then
-				if self:energy() > obj:energy() and obj:energy() < obj:maxEnergy() then
-					-- Calcule max flow --
-					local energyVariance = (self:energy() - obj:energy()) / 2
-					local maxEnergyTranfer = math.min(energyVariance, self:energy(), self:maxOutput()*self.updateTick, obj:maxInput()*self.updateTick)
-					-- Transfer Energy --
-					local transfered = obj:addEnergy(maxEnergyTranfer)
-					-- Remove Energy --
-					self:removeEnergy(transfered)
-				elseif self:energy() < obj:energy() and self:energy() < self:maxEnergy() then
-					-- Calcule max flow --
-					local energyVariance = (obj:energy() - self:energy()) / 2
-					local maxEnergyTranfer = math.min(energyVariance, obj:energy(), self:maxInput()*self.updateTick, obj:maxOutput()*self.updateTick)
-					-- Transfer Energy --
-					local transfered = self:addEnergy(maxEnergyTranfer)
-					-- Remove Energy --
-					obj:removeEnergy(transfered)
-				end
+		local obj = global.entsTable[ent.unit_number]
+		if obj ~= nil and obj.entID ~= self.entID then
+			local isAcc = ent.type == "accumulator"
+			local objEnergy = obj.ent.energy
+			local objMaxEnergy = obj.ent.electric_buffer_size
+			local objMaxInFlow = obj:maxInput() * self.updateTick
+			local shareThreshold = isAcc and objEnergy or 0
+			if selfEnergy > shareThreshold and objEnergy < objMaxEnergy and objMaxInFlow > 0 then
+				-- Calcule max flow --
+				local energyVariance = isAcc and math.floor((selfEnergy - objEnergy) / 2) or selfEnergy
+				local missingEnergy = objMaxEnergy - objEnergy
+				local energyTransfer = math.min(energyVariance, missingEnergy, selfMaxOutFlow, objMaxInFlow)
+				-- Transfer Energy --
+				obj.ent.energy = objEnergy + energyTransfer
+				-- Remove Energy --
+				selfEnergy = selfEnergy - energyTransfer
 			end
 		end
 	end
 
+	self.ent.energy = selfEnergy
 end
 
 -- Return the amount of Energy --
@@ -156,7 +150,7 @@ end
 -- Add Energy (Return the amount added) --
 function IEC:addEnergy(amount)
 	if self.ent ~= nil and self.ent.valid == true then
-		local added = math.min(amount, self:maxEnergy() - self:energy())
+		local added = math.min(amount, self.ent.electric_buffer_size - self.ent.energy)
 		self.ent.energy = self.ent.energy + added
 		return added
 	end
@@ -166,7 +160,7 @@ end
 -- Remove Energy (Return the amount removed) --
 function IEC:removeEnergy(amount)
 	if self.ent ~= nil and self.ent.valid == true then
-		local removed = math.min(amount, self:energy())
+		local removed = math.min(amount, self.ent.energy)
 		self.ent.energy = self.ent.energy - removed
 		return removed
 	end

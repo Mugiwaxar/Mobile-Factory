@@ -1,21 +1,21 @@
 -- Create the MFPlayer Object --
 MFP = {
-    ent = nil,
+	ent = nil,
 	index = nil,
-    name = nil,
+	name = nil,
 	MF = nil,
 	GUI = nil,
-    varTable = nil
+	varTable = nil
 }
 
 -- Constructor --
 function MFP:new(player)
-    if player == nil then return end
+	if player == nil then return end
 	local t = {}
 	local mt = {}
 	setmetatable(t, mt)
-    mt.__index = MF
-    t.ent = player
+	mt.__index = MFP
+	t.ent = player
 	t.index = player.index
 	t.name = player.name
 	t.GUI = {}
@@ -27,7 +27,7 @@ end
 function MFP:rebuild(object)
 	if object == nil then return end
 	local mt = {}
-	mt.__index = MF
+	mt.__index = MFP
 	setmetatable(object, mt)
 	for k, go in pairs(object.GUI or {}) do
 		GO:rebuild(go)

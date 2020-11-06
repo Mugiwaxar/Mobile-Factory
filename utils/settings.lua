@@ -1,3 +1,13 @@
+local function merge(list)
+	local ret = {}
+	for _, array in pairs(list) do
+		for _, value in pairs(array) do
+			table.insert(ret, value)
+		end
+	end
+	return ret
+end
+
 -- Update System --
 _mfBaseUpdatePerTick = 100
 _mfScanTicks = 100
@@ -17,6 +27,9 @@ _mfShieldComsuption = 25000
 -- Mobile Factory Lasers settings --
 _mfBaseLaserRadius = 10
 _mfBaseLaserNumber = 1
+
+-- Mobile Factory Quatron Drain settings --
+_mfQuatronDrain = 1000
 
 -- Mobile Factory Energy Drain settings --
 _mfEnergyDrain = 10000000
@@ -42,11 +55,11 @@ _mfSyncAreaPosition = {x=0, y=0}
 _mfSyncAreaRadius = 10
 _mfSyncAreaAllowedTypes =
 {
-    resource=true,
-    container=true,
-    ["storage-tank"]=true,
-    accumulator=true
-
+	resource=true,
+	container=true,
+	["logistic-container"]=true,
+	["storage-tank"]=true,
+	accumulator=true
 }
 
 -- Mobile Factory Sync Area extra entity information needed --
@@ -90,16 +103,18 @@ _mfMIQuatronDrainPerUpdate = 8
 _mfFIQuatronDrainPerUpdate = 8
 _mfNEQuatronDrainPerUpdate = 3
 _mfDAQuatronDrainPerUpdate = 1
+_mfQuatronScalePower = 1.3
+_mfQuatronEnergyRate = 10
 
 -- Ore Cleaner settings --
 _mfOreCleanerMaxCharge = 1000
 _mfOreCleanerRadius = 25
-_mfOreCleanerOrePerExtraction = 10
+_mfOreCleanerOrePerExtraction = 5
 _mfOreCleanerExtractionTicks = 20
 _mfOreCleanerMaxDistance = 100
 
 -- Fluid Extractor settings --
-_mfFEFluidPerExtraction = 30
+_mfFEFluidPerExtraction = 15
 _mfFEMaxCharge = 1000
 _mfFluidExtractorMaxDistance = 100
 
@@ -138,15 +153,34 @@ _MFResearches["ConstructibleArea2"] = "createConstructibleArea2"
 _MFResearches["MatterSerialization"] = "createNetworkControllerArea"
 _MFResearches["JumpDrive"] = "createJumpDriveArea"
 
--- Energy Cubes --
-_mfEnergyCubes = {}
-_mfEnergyCubes["EnergyCubeMK1"] = true
-_mfEnergyCubes["InternalEnergyCube"] = true
+-- Entitie Lists --
+_mfEnergyShare =
+{
+	"InternalEnergyCube",
+	"EnergyCubeMK1",
+	"EnergyLaser1"
+}
 
--- Quatron Cube --
-_mfQuatronCubes = {}
-_mfQuatronCubes["QuatronCubeMK1"] = true
-_mfQuatronCubes["InternalQuatronCube"] = true
+_mfQuatronShare =
+{
+	"InternalQuatronCube",
+	"QuatronCubeMK1",
+	"QuatronLaser1",
+	"QuatronReactor",
+	"NetworkAccessPoint",
+	"OreCleaner",
+	"FluidExtractor"
+}
+
+_mfMobileFactories =
+{
+	"MobileFactory",
+	"GTMobileFactory",
+	"HMobileFactory"
+}
+
+_mfEnergyAndMF = merge{_mfEnergyShare, _mfMobileFactories}
+_mfQuatronAndMF = merge{_mfQuatronShare, _mfMobileFactories}
 
 -- Entity GUI --
 _mfTooltipGUI =

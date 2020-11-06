@@ -1,3 +1,4 @@
+if global.allowMigration == false then return end
 for id, obj in pairs(global.deepStorageTable or {}) do
 	obj.entID = id
 end

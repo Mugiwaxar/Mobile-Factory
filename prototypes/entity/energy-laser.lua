@@ -62,9 +62,9 @@ el1E.energy_source =
     type = "electric",
     usage_priority = "secondary-input",
     buffer_capacity = "1MJ",
-    output_flow_limit = "0.0001W",
-    input_flow_limit = "0.0001W",
-    drain = "0J",
+    output_flow_limit = "0W",
+    input_flow_limit = "0W",
+    drain = "0W",
     render_no_power_icon = false,
     render_no_network_icon = false
 }
@@ -175,9 +175,9 @@ ql1E.energy_source =
     type = "electric",
     usage_priority = "secondary-input",
     buffer_capacity = "1KJ",
-    output_flow_limit = "0.0001W",
-    input_flow_limit = "0.0001W",
-    drain = "0J",
+    output_flow_limit = "0W",
+    input_flow_limit = "0W",
+    drain = "0W",
     render_no_power_icon = false,
     render_no_network_icon = false
 }

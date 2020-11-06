@@ -322,9 +322,9 @@ function GUI.buttonClicked(event)
 	end
 
 	-- Send Quatron button --
-	if event.element.name == "SendQuatronButton" then
-		if MF.sendQuatronActivated == true then MF.sendQuatronActivated = false
-		elseif MF.sendQuatronActivated == false then MF.sendQuatronActivated = true end
+	if event.element.name == "QuatronDrainButton" then
+		if MF.quatronLaserActivated == true then MF.quatronLaserActivated = false
+		elseif MF.quatronLaserActivated == false then MF.quatronLaserActivated = true end
 		return
 	end
 
@@ -850,16 +850,34 @@ function GUI.onGuiElemChanged(event)
 		fluidI:changeInventory(tonumber(event.element.items[event.element.selected_index][5]))
 	end
 
-	------- Read if the Element comes from The Mobile Factory Power Laser -------
-	if string.match(event.element.name, "MFPL") then
+	------- Read if the Element comes from The Mobile Factory Energy Laser -------
+	if string.match(event.element.name, "MFEL") then
 		-- Change the Matter Serializer targeted Inventory --
-		MF:changePowerLaserMode(event.element.switch_state)
+		if event.element.switch_state == "left" then
+			MF.selectedEnergyLaserMode = "input"
+		else
+			MF.selectedEnergyLaserMode = "output"
+		end
+	end
+
+	------- Read if the Element comes from The Mobile Factory Quatron Laser -------
+	if string.match(event.element.name, "MFQL") then
+		-- Change the Matter Serializer targeted Inventory --
+		if event.element.switch_state == "left" then
+			MF.selectedQuatronLaserMode = "input"
+		else
+			MF.selectedQuatronLaserMode = "output"
+		end
 	end
 
 	------- Read if the Element comes from the Mobile Factory Fluid Laser mode -------
 	if string.match(event.element.name, "MFFMode") then
 		-- Change the Mode --
-		MF:fluidLaserMode(event.element.switch_state)
+		if event.element.switch_state == "left" then
+			MF.selectedFluidLaserMode = "input"
+		else
+			MF.selectedFluidLaserMode = "output"
+		end
 	end
 
 	------- Read if the Element comes from the Mobile Factory Fluid Laser Target -------

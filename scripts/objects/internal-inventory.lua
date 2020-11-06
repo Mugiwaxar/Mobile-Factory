@@ -126,17 +126,6 @@ function INV:getItem(item, amount)
 	
 end
 
--- Return the Best Quatron Charge --
-function INV:getBestQuatron()
-	for i=100, 1, -1 do
-		if self.inventory["Quatron"..i] ~= nil then
-			self:getItem("Quatron"..i, 1)
-			return i
-		end
-	end
-	return 0
-end
-
 -- Get the Tooltip --
 function INV:getTooltipInfos(GUIObj, gui)
 

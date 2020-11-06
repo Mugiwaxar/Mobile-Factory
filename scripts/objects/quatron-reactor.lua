@@ -9,9 +9,12 @@ QR = {
 	spriteID = 0,
 	lightID = 0,
 	updateTick = 60,
-    lastUpdate = 0,
-    internalQuatron = 0,
-    maxInternalQuatron = 25000
+	lastUpdate = 0,
+	quatronCharge = 0,
+	quatronLevel = 1,
+	quatronMax = 25000,
+	quatronMaxInput = 0,
+	quatronMaxOutput = 25000
 }
 
 -- Constructor --
@@ -29,7 +32,7 @@ function QR:new(object)
     UpSys.addObj(t)
     -- Draw the state Sprite --
 	t.spriteID = rendering.draw_sprite{sprite="QuatronReactorSprite0", target=object, surface=object.surface, render_layer=129}
-	self.lightID = rendering.draw_light{sprite="QuatronReactorSprite0", target=object, surface=object.surface, minimum_darkness=0}
+	t.lightID = rendering.draw_light{sprite="QuatronReactorSprite0", target=object, surface=object.surface, minimum_darkness=0}
 	return t
 end
 
@@ -51,146 +54,158 @@ end
 
 -- Is valid --
 function QR:valid()
-	return true
+	if self.ent ~= nil and self.ent.valid then return true end
+	return false
 end
 
 -- Update --
 function QR:update()
-
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
-	
+
 	-- Check the Validity --
-	if self.ent == nil or self.ent.valid == false then
+	if valid(self) == false then
+		self:remove()
 		return
-    end
+	end
 
-    -- Burn Fluid --
-    self:burnFluid()
+	-- Burn Fluid --
+	self:burnFluid()
 
-    -- Send Energy --
-    self:sendEnergy()
+	-- Send Quatron --
+	self:sendQuatron()
 
-    -- Update the Sprite --
-	local spriteNumber = math.ceil(self:quatron()/self:maxQuatron()*12)
+	-- Update the Sprite --
+	local spriteNumber = math.ceil(self.quatronCharge/self.quatronMax*12)
 	rendering.destroy(self.spriteID)
 	rendering.destroy(self.lightID)
 	self.spriteID = rendering.draw_sprite{sprite="QuatronReactorSprite" .. spriteNumber, target=self.ent, surface=self.ent.surface, render_layer=129}
 	self.lightID = rendering.draw_light{sprite="QuatronReactorSprite" .. spriteNumber, target=self.ent, surface=self.ent.surface, minimum_darkness=0}
-    
 end
 
 -- Tooltip Infos --
--- function IQC:getTooltipInfos(GUI)
--- end
+-- Apparently generator-based entities doesn't fire on_gui_opened on click, so it doesn't work.
+function QR:getTooltipInfos(GUIObj, gui, justCreated)
 
--- Transform the Fluid inside into Energy --
+	-- Get the Flow --
+	local informationFlow = GUIObj.InformationFlow
+
+	if justCreated == true then
+		-- Create the Information Title --
+		local informationTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
+		informationFlow = GUIObj:addFlow("InformationFlow", informationTitle, "vertical", true)
+	end
+
+	-- Clear the Flow --
+	informationFlow.clear()
+
+	-- Create the Quatron Charge --
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Charge"}, ": "}, math.floor(self.quatronCharge), _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+
+	-- Create the Quatron Purity --
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Purity"}, ": "}, string.format("%.3f", self.quatronLevel), _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronLevel/20, 100)
+end
+
+-- Transform the Fluid inside into Quatron --
 function QR:burnFluid()
-    -- Return if the Reactor is full --
-    if self:quatron() >= self:maxQuatron() then return end
+	-- Return if the Reactor is full --
+	if self.quatronCharge >= self.quatronMax then return end
 
-    -- Get the Fluid inside --
-    local fluid = self.ent.fluidbox[1]
-    if fluid == nil then return end
+	-- Get the Fluid inside --
+	local fluid = self.ent.fluidbox[1]
+	if fluid == nil then return end
 
-    -- Get the Quatron Level --
-    local fluidName = fluid.name
-    if string.match(fluidName, "LiquidQuatron") == nil then return end
-    level = string.gsub(fluidName, "LiquidQuatron", "")
-    local level = tonumber(level)
-    if level == nil then return end
+	-- Get the Quatron Level --
+	local fluidName = fluid.name
+	if string.match(fluidName, "LiquidQuatron") == nil then return end
+	level = string.gsub(fluidName, "LiquidQuatron", "")
+	local level = tonumber(level)
+	if level == nil then return end
 
-    -- Get the amount of Fluid to remove --
-    local fluidToRemove = math.min(fluid.amount, (self:maxQuatron() - self:quatron()) / (level*(level/3)*3), 500)
-    fluidToRemove = math.ceil(fluidToRemove)
+	-- Get the amount of Fluid to remove --
+	local fluidToRemove = math.min(fluid.amount, math.floor((self.quatronMax - self.quatronCharge) / _mfQuatronEnergyRate))
+	if fluidToRemove < 1 then return end
+	-- Remove the Fluid --
+	local removed = self.ent.remove_fluid{name=fluidName, amount=fluidToRemove}
+	self.ent.force.fluid_production_statistics.on_flow(fluidName, fluidToRemove * -1)
 
-    -- Remove the Fluid --
-    local removed = self.ent.remove_fluid{name=fluidName, amount=fluidToRemove}
-
-    -- Add the Quatron --
-	self:addQuatron(math.floor(removed * (level*(level/3)*3)))
-    self.internalQuatron = math.floor(self.internalQuatron)
-    if self:quatron() > self:maxQuatron() then self.internalQuatron = self.maxQuatron end
+	self:addQuatron(removed * _mfQuatronEnergyRate, level)
 end
 
--- Send Energy to nearby Cubes --
-function QR:sendEnergy()
-    -- Check the Entity --
-    if self.ent == nil or self.ent.valid == false then return end
+-- Send Quatron to nearby Quatron Users --
+function QR:sendQuatron()
+	-- Check Quatron Charge
+	local selfQuatron = self.quatronCharge
+	if selfQuatron <= 0 then return end
 
-    -- Get all Entities arount --
-    local area = {{self.ent.position.x-2.5, self.ent.position.y-2.5},{self.ent.position.x+2.5,self.ent.position.y+2.5}}
-    local ents = self.ent.surface.find_entities_filtered{area=area}
+	-- Get all Entities arount --
+	local area = {{self.ent.position.x-2.5, self.ent.position.y-2.5},{self.ent.position.x+2.5,self.ent.position.y+2.5}}
+	local ents = self.ent.surface.find_entities_filtered{area=area, name=_mfQuatronShare}
 
-    -- Check all Entity --
-    for k, ent in pairs(ents) do
-        -- Look for valid Energy Cube --
-        if ent ~= nil and ent.valid == true then
-            local obj = global.entsTable[ent.unit_number]
-            if ent.name == "InternalQuatronCube" then obj = self.MF.internalQuatronObj end
-            if obj ~= nil and obj.ent ~= nil and obj.ent.valid == true and obj.ent.name ~= "QuatronReactor" and obj.addQuatron ~= nil then
-                if obj:quatron() < obj:maxQuatron() then
-                    -- Calcule max flow --
-                    local maxEnergyTranfer = math.min(self:quatron(), obj:maxInput())
-                    -- Transfer Energy --
-                    local transfered = obj:addQuatron(maxEnergyTranfer)
-                    -- Remove Energy --
-                    self:removeQuatron(transfered)
-                end
-            end
-        end
-    end
+	local selfQuatronLevel = self.quatronLevel
 
+	-- Check all Entity --
+	for k, ent in pairs(ents) do
+		-- Look for valid Object --
+		local obj = global.entsTable[ent.unit_number]
+		if obj ~= nil and obj.entID ~= self.entID then
+			local objQuatron = obj.quatronCharge
+			local objQuatronLevel = obj.quatronLevel
+			local objMaxQuatron = obj.quatronMax
+			local objMaxInFlow = obj.quatronMaxInput
+			if objQuatron < objMaxQuatron and objMaxInFlow > 0 then
+				-- Calcule max flow --
+				local missingQuatron = objMaxQuatron - objQuatron
+				local quatronTransfer = math.min(selfQuatron, missingQuatron, objMaxInFlow)
+				-- Transfer Quatron --
+				quatronTransfer = obj:addQuatron(quatronTransfer, selfQuatronLevel)
+				-- Remove Quatron --
+				selfQuatron = selfQuatron - quatronTransfer
+				if selfQuatron <= 0 then break end
+			end
+		end
+	end
+
+	self.quatronCharge = selfQuatron
 end
 
--- Return the amount of Energy --
+-- Return the amount of Quatron --
 function QR:quatron()
-	if self.ent ~= nil and self.ent.valid == true then
-		return self.internalQuatron
-	end
-	return 0
+	return self.quatronCharge
 end
 
--- Return the Energy Buffer size --
+-- Return the Quatron Buffer size --
 function QR:maxQuatron()
-	if self.ent ~= nil and self.ent.valid == true then
-		return self.maxInternalQuatron
-	end
-	return 1
+	return self.quatronMax
 end
 
--- Add Energy (Return the amount added) --
-function QR:addQuatron(amount)
-	if self.ent ~= nil and self.ent.valid == true then
-		local added = math.min(amount, self:maxQuatron() - self:quatron())
-		self.internalQuatron = self.internalQuatron + added
-		return added
+-- Add Quatron (Return the amount added) --
+function QR:addQuatron(amount, level)
+	local added = math.min(amount, self.quatronMax - self.quatronCharge)
+	if self.quatronCharge > 0 then
+		mixQuatron(self, added, level)
+	else
+		self.quatronCharge = added
+		self.quatronLevel = level
 	end
-	return 0
+	return added
 end
 
--- Remove Energy (Return the amount removed) --
+-- Remove Quatron (Return the amount removed) --
 function QR:removeQuatron(amount)
-	if self.ent ~= nil and self.ent.valid == true then
-		local removed = math.min(amount, self:quatron())
-		self.internalQuatron = self.internalQuatron - removed
-		return removed
-	end
-	return 0
+	local removed = math.min(amount, self.quatronCharge)
+	self.quatronCharge = self.quatronCharge - removed
+	return removed
 end
 
 -- Return the max input flow --
 function QR:maxInput()
-	if self.ent ~= nil and self.ent.valid == true then
-		return 0
-	end
-	return 0
+	return self.quatronMaxInput
 end
 
 -- Return the max output flow --
 function QR:maxOutput()
-	if self.ent ~= nil and self.ent.valid == true then
-		return 0
-	end
-	return 0
+	return self.quatronMaxOutput
 end

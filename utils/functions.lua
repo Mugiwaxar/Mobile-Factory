@@ -38,40 +38,67 @@ end
 
 -- Transfer Chest1 to Chest2 --
 function Util.syncChest(chest1, chest2)
-	local itemsTable = {}
+	local itemsDiff = {}
 	-- Get the Inventories --
 	local inv1 = chest1.get_inventory(defines.inventory.chest)
 	local inv2 = chest2.get_inventory(defines.inventory.chest)
-	-- Itinerate the Inventory 1 --
-	for item, count in pairs(inv1.get_contents()) do
-		if itemsTable[item] ~= nil then
-			itemsTable[item] = itemsTable[item] + count
-		else
-			itemsTable[item] = count
-		end
-	end
-	-- Itinerate the Inventory 2 --
-	for item, count in pairs(inv2.get_contents()) do
-		if itemsTable[item] ~= nil then
-			itemsTable[item] = itemsTable[item] + count
-		else
-			itemsTable[item] = count
-		end
-	end
-	-- Clears Inventories --
-	inv1.clear()
-	inv2.clear()
-	-- Fill the Inventories --
-	for item, count in pairs(itemsTable) do
-	local count1 = math.floor(count/2)
-	local count2 = math.ceil(count/2)
 
-		if count1 > 0 then
-			inv1.insert({name=item, count=count1})
+	-- Itinerate the Inventory 1 --
+	for i = 1, #inv1 do
+		local stack = inv1[i]
+		-- Count only items with no uniq data(excluding items with tags, inventory, blueprints, etc)
+		if stack.valid_for_read == true and stack.item_number == nil then
+			local name = stack.name
+			if itemsDiff[name] ~= nil then
+				itemsDiff[name] = itemsDiff[name] + stack.count / 2
+			else
+				itemsDiff[name] = stack.count / 2
+			end
 		end
-		if count2 > 0 then
-			inv2.insert({name=item, count=count2})
+	end
+
+	-- Itinerate the Inventory 2 --
+	for i = 1, #inv2 do
+		local stack = inv2[i]
+		-- Count only items with no uniq data(excluding items with tags, inventory, blueprints, etc)
+		if stack.valid_for_read == true and stack.item_number == nil then
+			local name = stack.name
+			if itemsDiff[name] ~= nil then
+				itemsDiff[name] = itemsDiff[name] - stack.count / 2
+			else
+				itemsDiff[name] = stack.count / 2 * -1
+			end
 		end
+	end
+
+	-- Balance the Inventories --
+	local somethingMoved = 0
+	for item, count in pairs(itemsDiff) do
+		count = math.floor(count)
+		if count < -1 then
+			local inserted = inv1.insert{name=item, count=math.abs(count)}
+			if inserted > 0 then
+				somethingMoved = inv2.remove{name=item, count=inserted}
+			end
+		elseif count > 1 then
+			local inserted = inv2.insert{name=item, count=count}
+			if inserted > 0 then
+				somethingMoved = inv1.remove{name=item, count=inserted}
+			end
+		end
+	end
+
+	-- Sort inventories if something was moved
+	if somethingMoved > 0 then
+		-- Temporaly unset bars, as items in red slots doesn't sort
+		local bar1 = inv1.get_bar()
+		local bar2 = inv2.get_bar()
+		inv1.set_bar()
+		inv2.set_bar()
+		inv1.sort_and_merge()
+		inv2.sort_and_merge()
+		inv1.set_bar(bar1)
+		inv2.set_bar(bar2)
 	end
 end
 
@@ -122,12 +149,27 @@ function Util.syncTank(tank1, tank2)
 end
 
 -- Equilize the Energy between two Accumulators --
-function Util.syncAccumulator(accu1, accu2)
-	-- Calcul the total energy --	
+function Util.syncEnergy(accu1, accu2)
+	-- Calcul the total energy --
 	local totalEnergy = accu1.energy + accu2.energy
 	-- Set the Energy of the Accumulators --
-	accu1.energy = totalEnergy / 2
-	accu2.energy = totalEnergy / 2
+	accu1.energy = math.ceil(totalEnergy / 2)
+	accu2.energy = math.floor(totalEnergy / 2)
+end
+
+-- Equilize the Quatron between two Accumulators --
+function Util.syncQuatron(accu1, accu2)
+	local obj1 = global.entsTable[accu1.unit_number]
+	local obj2 = global.entsTable[accu2.unit_number]
+	-- Calcul the total quatron --
+	local effectiveCharge = obj1.quatronCharge * math.pow(obj1.quatronLevel, _mfQuatronScalePower) + obj2.quatronCharge * math.pow(obj2.quatronLevel, _mfQuatronScalePower)
+	local totalCharge = obj1.quatronCharge + obj2.quatronCharge
+	local effectiveLevel = math.pow(effectiveCharge / totalCharge, 1/_mfQuatronScalePower)
+	-- Set the Quatron of the Accumulators --
+	obj1.quatronCharge = math.ceil(totalCharge / 2)
+	obj2.quatronCharge = math.floor(totalCharge / 2)
+	obj1.quatronLevel = effectiveLevel
+	obj2.quatronLevel = effectiveLevel
 end
 
 -- Advenced print --
@@ -563,4 +605,10 @@ function entityToBlueprintTags(entity, fromTable)
 	end
 
 	return tags
+end
+
+function mixQuatron(obj, newCharge, newLevel)
+	local effectiveCharge = obj.quatronCharge * math.pow(obj.quatronLevel, _mfQuatronScalePower) + newCharge * math.pow(newLevel, _mfQuatronScalePower)
+	obj.quatronCharge = obj.quatronCharge + newCharge
+	obj.quatronLevel = math.pow(effectiveCharge / obj.quatronCharge, 1/_mfQuatronScalePower)
 end

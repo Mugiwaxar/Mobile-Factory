@@ -13,7 +13,6 @@ MF = {
 	II = nil,
 	dataNetwork = nil,
 	netwokController = nil,
-	entitiesAround = nil,
 	internalEnergyObj = nil,
 	internalQuatronObj = nil,
 	jumpDriveObj = nil,
@@ -26,12 +25,17 @@ MF = {
 	laserDrainMultiplier = 0,
 	laserNumberMultiplier = 0,
 	energyLaserActivated = false,
+	quatronLaserActivated = false,
 	fluidLaserActivated = false,
 	itemLaserActivated = false,
 	selectedInventory = nil,
-	sendQuatronActivated = false,
-	selectedPowerLaserMode = "input", -- input, output
+	selectedEnergyLaserMode = "input", -- input, output
+	selectedQuatronLaserMode = "input", -- input, output
 	selectedFluidLaserMode = "input", -- input, output
+	ELEntities = nil,
+	QLEntities = nil,
+	FLEntities = nil,
+	ILEntities = nil,
 	syncAreaID = 0,
 	syncAreaInsideID = 0,
 	syncAreaEnabled = true,
@@ -51,7 +55,6 @@ function MF:new(args)
 	local mt = {}
 	setmetatable(t, mt)
 	mt.__index = MF
-	t.entitiesAround = t.entitiesAround or {}
 	t.clonedResourcesTable = t.clonedResourcesTable or {}
 	t.varTable = t.varTable or {}
 	t.varTable.tech = t.varTable.tech or {}
@@ -137,13 +140,22 @@ function MF:getTooltipInfos(GUIObj, gui, justCreated)
 		-- Create the Lasers Title --
 		local LasersFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Lasers"}, _mfOrange)
 
-		-- Create the Power laser Settings --
+		-- Create the Energy Lasers Settings --
 		if technologyUnlocked("EnergyDrain1", getForce(self.player)) then
 			LasersFrame.visible = true
-			GUIObj:addLabel("", LasersFrame, {"", {"gui-description.PowerLaser"}}, _mfOrange)
+			GUIObj:addLabel("", LasersFrame, {"", {"gui-description.EnergyLaser"}}, _mfOrange)
 			local state = "left"
-			if self.selectedPowerLaserMode == "output" then state = "right" end
-			GUIObj:addSwitch("MFPL" .. self.ent.unit_number, LasersFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.DrainTT"}, {"gui-description.SendTT"}, state)
+			if self.selectedEnergyLaserMode == "output" then state = "right" end
+			GUIObj:addSwitch("MFEL" .. self.ent.unit_number, LasersFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.DrainTT"}, {"gui-description.SendTT"}, state)
+		end
+
+		-- Create the Quatron Lasers Settings --
+		if technologyUnlocked("EnergyDrain1", getForce(self.player)) then
+			LasersFrame.visible = true
+			GUIObj:addLabel("", LasersFrame, {"", {"gui-description.QuatronLaser"}}, _mfOrange)
+			local state = "left"
+			if self.selectedQuatronLaserMode == "output" then state = "right" end
+			GUIObj:addSwitch("MFQL" .. self.ent.unit_number, LasersFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.DrainTT"}, {"gui-description.SendTT"}, state)
 		end
 
 		-- Create the Fluid Lasers Settings --
@@ -176,17 +188,6 @@ function MF:getTooltipInfos(GUIObj, gui, justCreated)
 			if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
 			GUIObj:addDropDown("MFFTarget" .. self.ent.unit_number, LasersFrame, invs, selectedIndex)
 		end
-
-	end
-
-end
-
--- Change the Mode --
-function MF:fluidLaserMode(mode)
-	if mode == "left" then
-		self.selectedFluidLaserMode = "input"
-	elseif mode == "right" then
-		self.selectedFluidLaserMode = "output"
 	end
 end
 
@@ -221,8 +222,14 @@ function MF:update(event)
 	self.lastUpdate = game.tick
 	-- Get the current tick --
 	local tick = event.tick
+
 	-- Update the Internal Inventory --
 	if tick%_eventTick80 == 0 then self.II:rescan() end
+	-- Check if the Mobile Factory has to TP --
+	if self.onTP and game.tick - self.tpCurrentTick > 30 then self:TPMobileFactoryPart2() end
+	-- Check the Mobile Factory --
+	if self.ent == nil or self.ent.valid == false then return end
+
 	--Update all lasers --
 	if tick%_eventTick60 == 0 then self:updateLasers() end
 	-- Update the Fuel --
@@ -235,17 +242,8 @@ function MF:update(event)
 	if event.tick%_eventTick1200 == 0 then self:updatePollution() end
 	-- Update Teleportation Box --
 	if event.tick%_eventTick5 == 0 then self:factoryTeleportBox() end
-	-- Check if the Mobile Factory has to TP --
-	if self.onTP and game.tick - self.tpCurrentTick > 30 then
-		self:TPMobileFactoryPart2()
-	end
 	-- Read Modules inside the Equipment Grid --
 	if event.tick%_eventTick125 == 0 then self:scanModules() end
-	-- Send Quatron Charge --
-	if self.sendQuatronActivated == true then
-		self:SendQuatronToOC(event)
-		self:SendQuatronToFE(event)
-	end
 	-- Update the Sync Area --
 	if tick%_eventTick30 == 0 then self:updateSyncArea() end
 end
@@ -267,6 +265,11 @@ end
 -- Return the Energy Lasers Drain --
 function MF:getLaserEnergyDrain()
 	return _mfEnergyDrain * (self.laserDrainMultiplier + 1)
+end
+
+-- Return the Quatron Lasers Drain --
+function MF:getLaserQuatronDrain()
+	return _mfQuatronDrain * (self.laserDrainMultiplier + 1)
 end
 
 -- Return the Fluid Lasers Drain --
@@ -291,103 +294,159 @@ function MF:maxShield()
 	return self.ent.grid.max_shield
 end
 
--- Change the Power Laser to Drain or Send mode --
-function MF:changePowerLaserMode(mode)
-	if mode == "left" then
-		self.selectedPowerLaserMode = "input"
-	elseif mode == "right" then
-		self.selectedPowerLaserMode = "output"
-	end
-end
-
 -- Scan all Entities around the Mobile Factory --
 function MF:scanEnt()
-	-- Check the Mobile Factory --
-	if self.ent == nil or self.ent.valid == false then return end
-	-- Look for Entities --
-	self.entitiesAround = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=self:getLaserRadius()}
-	-- Filter the Entities --
-	for k, entity in pairs(self.entitiesAround) do
-		local keep = false
-		-- Keep Electric Entity --
-		if entity.energy ~= nil and entity.electric_buffer_size ~= nil then
-			keep = true
-		end
-		-- Keep Tank --
-		if entity.type == "storage-tank" then
-			keep = true
-		end
-		-- Keep Container --
-		if entity.type == "container" or entity.type == "logistic-container" then
-			keep = true
-		end
-		-- Removed not keeped Entity --
-		if keep == false or valid(entity.last_user) == false or self.player ~= entity.last_user.name then
-			self.entitiesAround[k] = nil
-		end
+	local selfForce = getForce(self.player)
+	local selfSurface = self.ent.surface
+	local selfRadius = self:getLaserRadius()
+	local selfPosition = self.ent.position
+
+	-- Look for Energy Laser targets
+	if self.energyLaserActivated and technologyUnlocked("EnergyDrain1", selfForce) then
+		self.ELEntities = selfSurface.find_entities_filtered{position=selfPosition, force=selfForce, radius=selfRadius, name=_mfEnergyShare}
+	else
+		self.ELEntities = nil
+	end
+
+	-- Look for Quatron Laser targets
+	if self.quatronLaserActivated and technologyUnlocked("EnergyDrain1", selfForce) and technologyUnlocked("QuatronLogistic", selfForce) then
+		self.QLEntities = selfSurface.find_entities_filtered{position=selfPosition, force=selfForce, radius=selfRadius, name=_mfQuatronShare}
+	else
+		self.QLEntities = nil
+	end
+
+	-- Look for Quatron Laser targets
+	if self.fluidLaserActivated and technologyUnlocked("FluidDrain1", selfForce) then
+		self.FLEntities = selfSurface.find_entities_filtered{position=selfPosition, force=selfForce, radius=selfRadius, type="storage-tank"}
+	else
+		self.FLEntities = nil
+	end
+
+	-- Look for Logistic Laser targets
+	if self.itemLaserActivated and technologyUnlocked("TechItemDrain", selfForce) then
+		self.ILEntities = selfSurface.find_entities_filtered{position=selfPosition, force=selfForce, radius=selfRadius, type={"container", "logistic-container"}}
+	else
+		self.ILEntities = nil
 	end
 end
 
 -- Update lasers of the Mobile Factory --
 function MF:updateLasers()
-	-- Check the Mobile Factory --
-	if self.ent == nil or self.ent.valid == false then return end
 	-- Create all Lasers --
-	i = 1
-	for k, entity in pairs(self.entitiesAround or {}) do
-		if entity ~= nil and entity.valid == true then
-			local laserUsed = false
-			if self:updateEnergyLaser(entity) == true then laserUsed = true end
-			if self:updateFluidLaser(entity) == true then laserUsed = true end
-			if self:updateLogisticLaser(entity) == true then laserUsed = true end
-			if laserUsed == true then i = i + 1 end
-			if i > self:getLaserNumber() then return end
+	local laserUsed = 0
+	local laserNumber = self:getLaserNumber()
+
+	if self.energyLaserActivated then
+		for k, entity in pairs(self.ELEntities or {}) do
+			if entity ~= nil and entity.valid == true then
+				if self:updateEnergyLaser(entity) == true then
+					laserUsed = laserUsed + 1
+					if laserUsed >= laserNumber then return end
+				end
+			end
+		end
+	end
+
+	if self.quatronLaserActivated then
+		for k, entity in pairs(self.QLEntities or {}) do
+			if entity ~= nil and entity.valid == true then
+				if self:updateQuatronLaser(entity) == true then
+					laserUsed = laserUsed + 1
+					if laserUsed >= laserNumber then return end
+				end
+			end
+		end
+	end
+
+	if self.fluidLaserActivated then
+		for k, entity in pairs(self.FLEntities or {}) do
+			if entity ~= nil and entity.valid == true then
+				if self:updateFluidLaser(entity) == true then
+					laserUsed = laserUsed + 1
+					if laserUsed >= laserNumber then return end
+				end
+			end
+		end
+	end
+
+	if self.itemLaserActivated then
+		for k, entity in pairs(self.ILEntities or {}) do
+			if entity ~= nil and entity.valid == true then
+				if self:updateLogisticLaser(entity) == true then
+					laserUsed = laserUsed + 1
+					if laserUsed >= laserNumber then return end
+				end
+			end
+		end
+	end
+end
+
+function MF:updateQuatronLaser(entity)
+	local obj = global.entsTable[entity.unit_number]
+	----------------------- Drain Quatron -------------------------
+	if self.selectedQuatronLaserMode == "input" and obj.quatronCharge > 0 then
+		-- Missing Internal Quatron or Structure Quatron or LaserDrain Caparity --
+		local drainedQuatron = math.min(self.internalQuatronObj.quatronMax - self.internalQuatronObj.quatronCharge, obj.quatronCharge, self:getLaserQuatronDrain())
+		-- Test if some Quatron was drained --
+		if drainedQuatron > 0 then
+			-- Add the Quatron to the Mobile Factory Batteries --
+			self.internalQuatronObj:addQuatron(drainedQuatron, obj.quatronLevel)
+			-- Remove the Quatron from the Structure --
+			obj.quatronCharge = obj.quatronCharge - drainedQuatron
+			-- Create the Beam --
+			self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
+			-- One less Beam to the Beam capacity --
+			return true
+		end
+	----------------------- Send Quatron -------------------------
+	elseif self.selectedQuatronLaserMode == "output" and obj.quatronCharge < obj.quatronMax then
+			-- Structure missing Quatron or Laser Power or Mobile Factory Quatron --
+		local quatronSend = math.min(obj.quatronMax - obj.quatronCharge, self:getLaserQuatronDrain(), self.internalQuatronObj.quatronCharge)
+		-- Check if Quatron can be send --
+		if quatronSend > 0 then
+			-- Add the Quatron to the Entity --
+			obj:addQuatron(quatronSend, self.internalQuatronObj.quatronLevel)
+			-- Remove the Quatron from the Mobile Factory --
+			self.internalQuatronObj.quatronCharge = self.internalQuatronObj.quatronCharge - quatronSend
+			-- Create the Beam --
+			self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
+			-- One less Beam to the Beam capacity --
+			return true
 		end
 	end
 end
 
 -------------------------------------------- Energy Laser --------------------------------------------
 function MF:updateEnergyLaser(entity)
-	-- Check if a laser should be created --
-	if technologyUnlocked("EnergyDrain1", getForce(self.player)) == false or self.energyLaserActivated == false then return false end
-	-- Create the Laser --
-	local mobileFactory = false
-	if string.match(entity.name, "MobileFactory") then mobileFactory = true end
-	-- Exclude Mobile Factory, Character, Power Drain Pole and Entities with 0 energy --
-	if mobileFactory == false and entity.type ~= "character" and entity.name ~= "OreCleaner" and entity.name ~= "FluidExtractor" and entity.energy ~= nil and entity.electric_buffer_size ~= nil then
-		----------------------- Drain Power -------------------------
-		if self.selectedPowerLaserMode == "input" and entity.energy > 0 then
-			-- Missing Internal Energy or Structure Energy --
-			local energyDrain = math.min(self.internalEnergyObj:maxEnergy() - self.internalEnergyObj:energy(), entity.energy)
-			-- EnergyDrain or LaserDrain Caparity --
-			local drainedEnergy = math.min(self:getLaserEnergyDrain(), energyDrain)
-			-- Test if some Energy was drained --
-			if drainedEnergy > 0 then
-				-- Add the Energy to the Mobile Factory Batteries --
-				self.internalEnergyObj:addEnergy(drainedEnergy)
-				-- Remove the Energy from the Structure --
-				entity.energy = entity.energy - drainedEnergy
-				-- Create the Beam --
-				self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
-				-- One less Beam to the Beam capacity --
-				return true
-			end
-		elseif self.selectedPowerLaserMode == "output" and entity.energy < entity.electric_buffer_size then
-			-- Structure missing Energy or Laser Power --
-			local energySend = math.min(entity.electric_buffer_size - entity.energy , self:getLaserEnergyDrain())
-			-- Energy Send or Mobile Factory Energy --
-			energySend = math.min(self.internalEnergyObj:energy(), energySend)
-			-- Check if Energy can be send --
-			if energySend > 0 then
-				-- Add the Energy to the Entity --
-				entity.energy = entity.energy + energySend
-				-- Remove the Energy from the Mobile Factory --
-				self.internalEnergyObj:removeEnergy(energySend)
-				-- Create the Beam --
-				self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
-				-- One less Beam to the Beam capacity --
-				return true
-			end
+	----------------------- Drain Energy -------------------------
+	if self.selectedEnergyLaserMode == "input" and entity.energy > 0 then
+		-- Missing Internal Energy or Structure Energy or LaserDrain Caparity --
+		local drainedEnergy = math.min(self.internalEnergyObj:maxEnergy() - self.internalEnergyObj:energy(), entity.energy, self:getLaserEnergyDrain())
+		-- Test if some Energy was drained --
+		if drainedEnergy > 0 then
+			-- Add the Energy to the Mobile Factory Batteries --
+			self.internalEnergyObj:addEnergy(drainedEnergy)
+			-- Remove the Energy from the Structure --
+			entity.energy = entity.energy - drainedEnergy
+			-- Create the Beam --
+			self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
+			-- One less Beam to the Beam capacity --
+			return true
+		end
+	----------------------- Send Energy -------------------------
+	elseif self.selectedEnergyLaserMode == "output" and entity.energy < entity.electric_buffer_size then
+		-- Structure missing Energy or Laser Power or Mobile Factory Energy --
+		local energySend = math.min(entity.electric_buffer_size - entity.energy, self:getLaserEnergyDrain(), self.internalEnergyObj:energy())
+		-- Check if Energy can be send --
+		if energySend > 0 then
+			-- Add the Energy to the Entity --
+			entity.energy = entity.energy + energySend
+			-- Remove the Energy from the Mobile Factory --
+			self.internalEnergyObj:removeEnergy(energySend)
+			-- Create the Beam --
+			self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
+			-- One less Beam to the Beam capacity --
+			return true
 		end
 	end
 end
@@ -395,8 +454,7 @@ end
 -------------------------------------------- Fluid Laser --------------------------------------------
 function MF:updateFluidLaser(entity)
 	-- Check if a laser should be created --
-	if technologyUnlocked("FluidDrain1", getForce(self.player)) == false or self.fluidLaserActivated == false then return false end
-	if entity.type ~= "storage-tank" or self.selectedInv == nil then return false end
+	if self.selectedInv == nil then return false end
 
 	-- Get both Tanks and their characteristics --
 	local localTank = entity
@@ -448,41 +506,42 @@ end
 
 -------------------------------------------- Logistic Laser --------------------------------------------
 function MF:updateLogisticLaser(entity)
-	-- Check if a laser should be created --
-	if technologyUnlocked("TechItemDrain", getForce(self.player)) == false or self.itemLaserActivated == false then return false end 
 	-- Create the Laser --
-	if self.itemLaserActivated == true and self.internalEnergyObj:energy() > _mfBaseItemEnergyConsumption * self:getLaserItemDrain() and (entity.type == "container" or entity.type == "logistic-container") then
+	if self.internalEnergyObj:energy() > _mfBaseItemEnergyConsumption * self:getLaserItemDrain() then
 		-- Get Chest Inventory --
 		local inv = entity.get_inventory(defines.inventory.chest)
 		-- Get the Internal Inventory --
 		local dataInv = self.II
 		if inv ~= nil and inv.valid == true then
 			-- Create the Laser Capacity variable --
-			local capItems = self:getLaserItemDrain()
-			-- Get all Items --
-			local invItems = inv.get_contents()
+			local capItems = math.min(self:getLaserItemDrain(), self.internalEnergyObj:energy() * _mfBaseItemEnergyConsumption)
+			local canMove = capItems
 			-- Retrieve Items from the Inventory --
-			for iName, iCount in pairs(invItems) do
-				local added = dataInv:addItem(iName, math.min(iCount, capItems))
-				-- Check if Items was added --
-				if added > 0 then
-					-- Remove Items from the Chest --
-					local removedItems = inv.remove({name=iName, count=added})
-					-- Recalcule the capItems --
-					capItems = capItems - added
-					-- Create the laser and remove energy --
-					if added > 0 then
-						self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target=entity.position, source=self.ent.position}
-						self.internalEnergyObj:removeEnergy(_mfBaseItemEnergyConsumption * removedItems)
-						-- One less Beam to the Beam capacity --
-						return true
-					end
-					-- Test if capItems is empty --
-					if capItems <= 0 then
-						-- Stop --
-						break
+			for i=1, #inv do
+				local stack = inv[i]
+				-- Move only items with no uniq data(excluding items with tags, inventory, blueprints, etc)
+				if stack.valid_for_read == true and stack.item_number == nil then
+					local moved = dataInv:addItem(stack.name, math.min(stack.count, canMove))
+					if moved > 0 then
+						-- Remove Items from the Chest --
+						inv.remove{name=stack.name, count=moved}
+						-- Recalcule the capItems --
+						canMove = canMove - moved
+						-- Test if capItems is empty --
+						if canMove <= 0 then
+							-- Stop --
+							break
+						end
 					end
 				end
+			end
+			-- Something was moved
+			if canMove < capItems then
+				-- Create the laser and remove energy --
+				self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target=entity.position, source=self.ent.position}
+				self.internalEnergyObj:removeEnergy((capItems - canMove) * _mfBaseItemEnergyConsumption)
+				-- One less Beam to the Beam capacity --
+				return true
 			end
 		end
 	end
@@ -490,8 +549,6 @@ end
 
 -- Update the Fuel --
 function MF:updateFuel()
-	-- Check if the Mobile Factory is valid --
-	if self.ent == nil or self.ent.valid == false then return end
 	-- Recharge the tank fuel --
 	local burner = self.ent.burner
 	if burner ~= nil then
@@ -524,8 +581,6 @@ end
 function MF:updateShield(event)
 	-- Get the current tick --
 	local tick = event.tick
-	-- Check if the Mobile Factory is valid --
-	if self.ent == nil or self.ent.valid == false then return end
 	-- Create the visual --
 	if self:shield() > 0 then
 		-- Calcule the shield tint --
@@ -556,55 +611,6 @@ function MF:updateShield(event)
 	end
 end
 
-
--- Send Quatron Charge to the Ore Cleaner --
-function MF:SendQuatronToOC(event)
-	-- Check if the Mobile Factory is valid --
-	if self.ent == nil or self.ent.valid == false then return end
-	-- Send Charge only every 10 ticks --
-	if event.tick%10 ~= 0 then return end
-	for k, oc in pairs(global.oreCleanerTable) do
-	-- Check the Distance --
-		if valid(oc) == true and oc.player == self.player and Util.distance(self.ent.position, oc.ent.position) < _mfOreCleanerMaxDistance then
-			-- Test if there are space inside the Ore Cleaner for Quatron Charge --
-			if oc.charge <= _mfFEMaxCharge - 100 then
-				-- Get the Best Quatron Change --
-				local charge = self.II:getBestQuatron()
-				if charge > 0 then
-					-- Add the Charge --
-					oc:addQuatronCharge(charge)
-					-- Create the Laser --
-					self.ent.surface.create_entity{name="GreenBeam", duration=30, position=self.ent.position, target={oc.ent.position.x, oc.ent.position.y - 2}, source=self.ent}
-				end
-			end
-		end
-	end
-end
-
--- Send Quatron Charge to all Fluid Extractors --
-function MF:SendQuatronToFE(event)
-	-- Check if the Mobile Factory is valid --
-	if self.ent == nil or self.ent.valid == false then return end
-	-- Send Charge only every 10 ticks --
-	if event.tick%10 ~= 0 then return end
-	for k, fe in pairs(global.fluidExtractorTable) do
-		-- Check if the Fluid Extractor is valid --
-		if valid(fe) == true and fe.player == self.player and Util.distance(self.ent.position, fe.ent.position) < _mfFluidExtractorMaxDistance then
-			-- Test if there are space inside the Fluid Extractor for Quatron Charge --
-			if fe.charge <= _mfFEMaxCharge - 100 then
-				-- Get the Best Quatron Change --
-				local charge = self.II:getBestQuatron()
-				if charge > 0 then
-					-- Add the Charge --
-					fe:addQuatronCharge(charge)
-					-- Create the Laser --
-					fe.ent.surface.create_entity{name="GreenBeam", duration=30, position=self.ent.position, target={fe.ent.position.x, fe.ent.position.y - 2}, source=self.ent}
-				end
-			end
-		end
-	end
-end
-
 -- Send all Pollution outside --
 function MF:updatePollution()
 	-- Test if the Mobile Factory is valid --
@@ -623,9 +629,6 @@ end
 
 -- Update teleportation box --
 function MF:factoryTeleportBox()
-	-- Check the Mobile Factory --
-	if self.ent == nil then return end
-	if self.ent.valid == false then return end
 	-- Mobile Factory Vehicule --
 	if self.tpEnabled == true then
 		local mfB = self.ent.bounding_box
@@ -661,8 +664,6 @@ end
 function MF:scanModules()
 	-- Check if the Technology is unlocked --
 	if technologyUnlocked("EnergyPowerModule", getForce(self.player)) == nil then return end
-	-- Check the Mobile Factory --
-	if self.ent == nil or self.ent.valid == false then return end
 	-- Init Variables --
 	self.laserRadiusMultiplier = 0
 	self.laserDrainMultiplier = 0
@@ -794,10 +795,8 @@ end
 
 -- Update the Sync Area --
 function MF:updateSyncArea()
-	if self.ent == nil or self.ent.valid == false then return end
-
 	local radius = 2 * _mfSyncAreaRadius
-	local nearbyMFs = self.ent.surface.count_entities_filtered{position = self.ent.position, radius = radius, name = {"MobileFactory","GTMobileFactory","HMobileFactory"}, limit = 2}
+	local nearbyMFs = self.ent.surface.count_entities_filtered{position = self.ent.position, radius = radius, name = _mfMobileFactories, limit = 2}
 
 	-- Check if the Mobile Factory is moving or the Sync Area is disabled --
 	if self.syncAreaEnabled == false or self.ent.speed ~= 0 then
@@ -979,8 +978,14 @@ function MF:cloneEntity(ent, side) -- side: in (Clone inside), out (Clone outsid
 	clone = ent.clone{position={posX, posY}, surface=surface}
 	if clone ~= nil and clone.valid == true then
 		table.insert(self.clonedResourcesTable,  {original=ent, cloned=clone})
-		if ent.type == "container" then
-			clone.get_inventory(defines.inventory.chest).clear()
+		if ent.type == "container" or ent.type == "logistic-container" then
+			local cloneInv = clone.get_inventory(defines.inventory.chest)
+			cloneInv.clear()
+			if cloneInv.supports_bar() then
+				local origInv = ent.get_inventory(defines.inventory.chest)
+				origInv.set_bar(math.ceil(origInv.get_bar() / 2 + 0.5))
+				cloneInv.set_bar(math.ceil(cloneInv.get_bar() / 2 + 0.5))
+			end
 		end
 		if ent.type == "storage-tank" then
 			clone.clear_fluid_inside()
@@ -989,8 +994,8 @@ function MF:cloneEntity(ent, side) -- side: in (Clone inside), out (Clone outsid
 			clone.energy = 0
 		end
 	else
-      clone = nil
-    end
+		clone = nil
+	end
 	return clone
 end
 
@@ -998,8 +1003,20 @@ end
 local function uncloneChest(chest1, chest2)
 	local inv1 = chest1.get_inventory(defines.inventory.chest)
 	local inv2 = chest2.get_inventory(defines.inventory.chest)
-	for item, count in pairs(inv2.get_contents()) do
-		inv1.insert({name = item, count = count})
+
+	if inv1.supports_bar() then
+		inv1.set_bar(inv1.get_bar() * 2 - 1)
+	end
+	for i = 1, #inv2 do
+		local stack = inv2[i]
+		if stack.valid_for_read == true then
+			local itemsInStack = stack.count
+			local itemsInserted = inv1.insert(stack)
+			if itemsInserted < itemsInStack then
+				stack.count = itemsInStack - itemsInserted
+				chest1.surface.spill_item_stack(chest1.position, stack, true, nil, false)
+			end
+		end
 	end
 	inv2.clear()
 end
@@ -1051,11 +1068,37 @@ local function uncloneStorageTank(tank1, tank2)
 end
 
 -- Send Energy from cloned Accu2 --
-local function uncloneAccumulator(accu1, accu2)
+local function uncloneEnergy(accu1, accu2)
 	-- Calcul the total energy --	
 	local totalEnergy = accu1.energy + accu2.energy
 	-- Set the Energy of the Accu1 --
 	accu1.energy = totalEnergy
+end
+
+-- Send Quatron from cloned Accu2 --
+local function uncloneQuatron(accu1, accu2)
+	local obj1 = global.entsTable[accu1.unit_number]
+	local obj2 = global.entsTable[accu2.unit_number]
+	-- Calcul the total quatron --
+	local effectiveCharge = obj1.quatronCharge * math.pow(obj1.quatronLevel, _mfQuatronScalePower) + obj2.quatronCharge * math.pow(obj2.quatronLevel, _mfQuatronScalePower)
+	local totalCharge = obj1.quatronCharge + obj2.quatronCharge
+	local effectiveLevel = math.pow(effectiveCharge / totalCharge, 1/_mfQuatronScalePower)
+	-- Set the Quatron of the Accu1 --
+	obj1.quatronCharge = math.min(totalCharge, obj1.quatronMax)
+	obj1.quatronLevel = effectiveLevel
+end
+
+function MF:uncloneEntity(original, clone)
+	if original.type == "container" or original.type == "logistic-container" then
+		uncloneChest(original, clone)
+	elseif original.type == "storage-tank" then
+		uncloneStorageTank(original, clone)
+	elseif original.name == "QuatronCubeMK1" then
+		uncloneQuatron(original, clone)
+	elseif original.type == "accumulator" then
+		uncloneEnergy(original, clone)
+	end
+	clone.destroy{raise_destroy=true}
 end
 
 -- Unclone all Entities inside the Sync Area --
@@ -1066,15 +1109,7 @@ function MF:unCloneSyncArea()
 	self:updateClonedEntities()
 	-- Remove all cloned Entities --
 	for i, ents in pairs(self.clonedResourcesTable) do
-		if ents.original.type == "container" then
-			uncloneChest(ents.original, ents.cloned)
-		elseif ents.original.type == "storage-tank" then
-			uncloneStorageTank(ents.original, ents.cloned)
-		elseif ents.original.type == "accumulator" then
-			uncloneAccumulator(ents.original, ents.cloned)
-		end
-		script.raise_event(defines.events.script_raised_destroy, {entity=ents.cloned})
-		ents.cloned.destroy()
+		self:uncloneEntity(ents.original, ents.cloned)
 	end
 	self.clonedResourcesTable = {}
 end
@@ -1118,14 +1153,17 @@ function MF:updateClonedEntity(ents)
 			ents.original.destroy()
 			ents.cloned.destroy()
 		end
-	elseif ents.original.type == "container" then
+	elseif ents.original.type == "container" or ents.original.type == "logistic-container" then
 		-- If the Entity is a Chest --
 		Util.syncChest(ents.original, ents.cloned)
 	elseif ents.original.type == "storage-tank" then
 		-- If the Entity is a Storage Tank --
 		Util.syncTank(ents.original, ents.cloned)
+	elseif ents.original.name == "QuatronCubeMK1" then
+		-- If the Entity is a Quatron Cube --
+		Util.syncQuatron(ents.original, ents.cloned)
 	elseif ents.original.type == "accumulator" then
 		-- If the Entity is an Accumulator --
-		Util.syncAccumulator(ents.original, ents.cloned)
+		Util.syncEnergy(ents.original, ents.cloned)
 	end
 end
