@@ -42,19 +42,13 @@ function INV:rescan()
 	self.maxCapacity = _mfBaseMaxItems + (_mfDataStorageCapacity*self.dataNetwork:dataStoragesCount())
 	-- Get the used Capacity --
 	self.usedCapacity = 0
-	for item, count in pairs(self.inventory) do
-		-- Check if the Item still exist --
-		if game.item_prototypes[item] == nil then
-			self.inventory[item] = nil
-		else
-			self.usedCapacity = self.usedCapacity + count
-		end
+	for _, count in pairs(self.inventory) do
+		self.usedCapacity = self.usedCapacity + count
 	end
 end
 
 -- Return remaining capacity --
 function INV:remCap()
-	self:rescan()
 	return self.maxCapacity - self.usedCapacity
 end
 
@@ -128,10 +122,6 @@ end
 
 -- Get the Tooltip --
 function INV:getTooltipInfos(GUIObj, gui)
-
-	-- Rescan the Inventory --
-	self:rescan()
-	
 	-- Create the Title --
 	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
 
@@ -149,11 +139,8 @@ function INV:getTooltipInfos(GUIObj, gui)
 
 	-- Look for all Items --
 	for name, count in pairs(self.inventory) do
-		-- Check the Item --
-		if name == nil or count == nil or count == 0 or game.item_prototypes[name] == nil then goto continue end
 		-- Create the Button --
 		Util.itemToFrame(name, count, GUIObj, table)
-		::continue::
 	end
 
 end

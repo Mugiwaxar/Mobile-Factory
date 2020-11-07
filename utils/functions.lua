@@ -205,30 +205,22 @@ end
 
 -- Return the localised Entity Name --
 function Util.getLocEntityName(entName)
-	if game.entity_prototypes[entName] ~= nil then
-		return game.entity_prototypes[entName].localised_name
-	end
+	return game.entity_prototypes[entName].localised_name
 end
 
 -- Return the localised Item Name --
 function Util.getLocItemName(itemName)
-	if game.item_prototypes[itemName] ~= nil then
-		return game.item_prototypes[itemName].localised_name
-	end
+	return game.item_prototypes[itemName].localised_name
 end
 
 -- Return the localised Fluid Name --
 function Util.getLocFluidName(fluidName)
-	if game.fluid_prototypes[fluidName] ~= nil then
-		return game.fluid_prototypes[fluidName].localised_name
-	end
+	return game.fluid_prototypes[fluidName].localised_name
 end
 
 -- Return the localised Recipe Name --
 function Util.getLocRecipeName(recipeName)
-	if game.recipe_prototypes[recipeName] ~= nil then
-		return game.recipe_prototypes[recipeName].localised_name
-	end
+	return game.recipe_prototypes[recipeName].localised_name
 end
 
 -- Reset an Animation --
@@ -468,8 +460,6 @@ end
 
 -- Util: Create a frame from an Item --
 function Util.itemToFrame(name, count, GUIObj, gui)
-	-- Check value --
-	if name == nil or count == nil or game.item_prototypes[name] == nil then return end
 	-- Create the Button --
 	local button = GUIObj:addButton("", gui, "item/" .. name, "item/" .. name, {"", Util.getLocItemName(name), ": ", Util.toRNumber(count)}, 37, true, true, count)
 	button.style = "MF_Fake_Button_Blue"
@@ -479,8 +469,6 @@ end
 
 -- Util: Create a frame from a Fluid --
 function Util.fluidToFrame(name, count, GUIObj, gui)
-	-- Check value --
-	if name == nil or count == nil or game.fluid_prototypes[name] == nil then return end
 	-- Create the Button --
 	local button = GUIObj:addButton("", gui, "fluid/" .. name, "fluid/" .. name, {"", Util.getLocFluidName(name), ": ", Util.toRNumber(count)}, 37, true, true, count)
 	button.style = "MF_Fake_Button_Purple"

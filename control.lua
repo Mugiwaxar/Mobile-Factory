@@ -70,17 +70,23 @@ function onInit()
 
 	-- Create the Objects Table --
 	Util.createTableList()
-
-	-- Rebuild all Objects --
-	for k, obj in pairs(global.objTable) do
-		if obj.tableName and obj.tag and _G[obj.tag].refresh then
-			for objKey, entry in pairs(global[obj.tableName]) do
-				_G[obj.tag]:refresh(entry)
+	-- Migrate all Objects --
+	for _, obj in pairs(global.objTable) do
+		if obj.tableName and obj.tag then
+			if _G[obj.tag].refresh then
+				for _, entry in pairs(global[obj.tableName]) do
+					entry:refresh()
+				end
+			end
+			if _G[obj.tag].validate then
+				for _, entry in pairs(global[obj.tableName]) do
+					entry:validate()
+				end
 			end
 		end
 	end
 
-    global.syncTile = global.syncTile or "dirt-7"
+	global.syncTile = global.syncTile or "dirt-7"
 	-- Validate the Tile Used for the Sync Area --
 	validateSyncAreaTile()
 	-- Ensure All Needed Tiles are Present --
@@ -102,11 +108,9 @@ function onLoad(event)
 	
 	-- Rebuild all Objects --
 	for k, obj in pairs(global.objTable) do
-		if obj.tableName ~= nil and obj.tag ~= nil then
+		if obj.tableName ~= nil and obj.tag ~= nil and _G[obj.tag] ~= nil then
 			for objKey, entry in pairs(global[obj.tableName] or {}) do
-				if _G[obj.tag] ~= nil then
-					_G[obj.tag]:rebuild(entry)
-				end
+				_G[obj.tag]:rebuild(entry)
 			end
 		end
 	end

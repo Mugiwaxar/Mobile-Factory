@@ -140,26 +140,23 @@ end
 
 -- Create all Signals --
 function NAP:createDNSignals()
-
-    -- Create the Inventory Signal --
+	-- Create the Inventory Signal --
 	self.ent.get_control_behavior().parameters = nil
 	local i = 1
 	for name, count in pairs(self.dataNetwork.invObj.inventory) do
 		-- Create and send the Signal --
-		if game.item_prototypes[name] ~= nil then
-			local signal = {signal={type="item", name=name},count=count}
-			self.ent.get_control_behavior().set_signal(i, signal)
-			-- Increament the Slot --
-			i = i + 1
-			-- Stop if there are to much Items --
-			if i > 999 then break end
-		end
+		local signal = {signal={type="item", name=name},count=count}
+		self.ent.get_control_behavior().set_signal(i, signal)
+		-- Increament the Slot --
+		i = i + 1
+		-- Stop if there are to much Items --
+		if i > 999 then break end
 	end
-	
+
 	-- Create the Deep Storages Signals --
 	for k, ds in pairs(self.dataNetwork.DSRTable) do
 		-- Create and send the Signal --
-		if ds.inventoryItem ~= nil and game.item_prototypes[ds.inventoryItem] ~= nil then
+		if ds.inventoryItem ~= nil then
 			local signal = {signal={type="item", name=ds.inventoryItem}, count=math.min(ds.inventoryCount, 2e9)}
 			self.ent.get_control_behavior().set_signal(i, signal)
 			-- Increament the Slot --
@@ -172,7 +169,7 @@ function NAP:createDNSignals()
 	-- Create the Deep Tanks Signals --
 	for k, dtk in pairs(self.dataNetwork.DTKTable) do
 		-- Create and send the Signal --
-		if dtk.inventoryFluid ~= nil and game.fluid_prototypes[dtk.inventoryFluid] ~= nil then
+		if dtk.inventoryFluid ~= nil then
 			local signal = {signal={type="fluid", name=dtk.inventoryFluid} ,count=dtk.inventoryCount}
 			self.ent.get_control_behavior().set_signal(i, signal)
 			-- Increament the Slot --
@@ -180,8 +177,7 @@ function NAP:createDNSignals()
 			-- Stop if there are to much Items --
 			if i > 999 then break end
 		end
-    end
-    
+	end
 end
 
 -- Calculate the Total Consumption --

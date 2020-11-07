@@ -396,8 +396,6 @@ end
 
 -- Create Item Frame --
 function GO:addItemFrame(item, amount, gui)
-    -- Check the Item --
-    if game.item_prototypes[item] == nil then return end
     -- Create the Frame --
     local frame = self:addFrame("", gui, "horizontal")
     -- Create the Sprite --
@@ -452,7 +450,7 @@ function createDNInventoryFrame(GUIObj, gui, MFPlayer, buttonFirstName, inventor
             local name = deepTank.inventoryFluid or deepTank.filter
             local count = deepTank.inventoryCount or 0
             -- Check the Item --
-		    if name == nil or game.fluid_prototypes[name] == nil then goto continue end
+            if name == nil then goto continue end
             -- Check the Filter --
             if MFPlayer.varTable.tmpLocal ~= nil and Util.getLocFluidName(name)[1] ~= nil then
                 local locName = MFPlayer.varTable.tmpLocal[Util.getLocFluidName(name)[1]]
@@ -476,7 +474,7 @@ function createDNInventoryFrame(GUIObj, gui, MFPlayer, buttonFirstName, inventor
             local name = deepStorage.inventoryItem or deepStorage.filter
             local count = deepStorage.inventoryCount or 0
             -- Check the Item --
-            if name == nil or game.item_prototypes[name] == nil then goto continue end
+            if name == nil then goto continue end
             -- Check the Filter --
             if MFPlayer.varTable.tmpLocal ~= nil and Util.getLocItemName(name)[1] ~= nil then
                 local locName = MFPlayer.varTable.tmpLocal[Util.getLocItemName(name)[1]]
@@ -495,8 +493,6 @@ function createDNInventoryFrame(GUIObj, gui, MFPlayer, buttonFirstName, inventor
     -- Look for all Items --
     if showInventory == true then
         for name, count in pairs(inventory.inventory) do
-            -- Check the Item --
-            if name == nil or count == nil or count == 0 or game.item_prototypes[name] == nil then goto continue  end
             -- Check the Filter --
             if MFPlayer.varTable.tmpLocal ~= nil and Util.getLocItemName(name)[1] ~= nil then
                 local locName = MFPlayer.varTable.tmpLocal[Util.getLocItemName(name)[1]]
@@ -521,7 +517,6 @@ function createPlayerInventoryFrame(GUIObj, gui, MFPlayer, columnsNumber, button
     -- Look for all Items --
     for name, count in pairs(MFPlayer.ent.get_main_inventory().get_contents()) do
         -- Check the Item --
-        if name == nil or count == nil or count == 0 or game.item_prototypes[name] == nil then goto continue  end
         if game.item_prototypes[name].type == "item-with-tags" then goto continue end --workaround, tags could be recorded but as of 0.0.197 are forgotten
         -- Check the Filter --
         if MFPlayer.varTable.tmpLocal ~= nil and Util.getLocItemName(name)[1] ~= nil then

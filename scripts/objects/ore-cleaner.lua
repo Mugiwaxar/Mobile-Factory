@@ -135,9 +135,9 @@ function OC:getTooltipInfos(GUIObj, gui, justCreated)
 			if deepStorage ~= nil and deepStorage.ent ~= nil then
 				i = i + 1
 				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepStorage.player, ")"}
-				if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
+				if deepStorage.filter ~= nil then
 					itemText = {"", " (", game.item_prototypes[deepStorage.filter].localised_name, ")"}
-				elseif deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
+				elseif deepStorage.inventoryItem ~= nil then
 					itemText = {"", " (", game.item_prototypes[deepStorage.inventoryItem].localised_name, ")"}
 				end
 				invs[k+1] = {"", {"gui-description.DS"}, " ", tostring(deepStorage.ID), itemText}
@@ -248,8 +248,8 @@ function OC:collectOres(event)
 	-- Check if there is a room for all products
 	local deepStorages = {}
 	for _, product in pairs(listProducts) do
-		-- Check if a Name was found, and Item Prototype exists --
-		if product.name == nil or product.type ~= 'item' or game.item_prototypes[product.name] == nil then
+		-- Check if product is fluid --
+		if product.type ~= 'item' then
 			-- Remove unmineable patch from Ore Table
 			table.remove(self.oreTable, randomNum)
 			return

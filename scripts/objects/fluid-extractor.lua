@@ -121,11 +121,13 @@ function FE:getTooltipInfos(GUIObj, gui, justCreated)
 		for k, deepTank in pairs(self.MF.dataNetwork.DTKTable) do
 			if deepTank ~= nil and deepTank.ent ~= nil then
 				i = i + 1
-				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
-				if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
+				local itemText = nil
+				if deepTank.filter ~= nil then
 					itemText = {"", " (", game.fluid_prototypes[deepTank.filter].localised_name, ")"}
-				elseif deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
+				elseif deepTank.inventoryFluid ~= nil then
 					itemText = {"", " (", game.fluid_prototypes[deepTank.inventoryFluid].localised_name, ")"}
+				else
+					itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
 				end
 				invs[k+1] = {"", {"gui-description.DT"}, " ", tostring(deepTank.ID), itemText}
 				if self.selectedInv and self.selectedInv.entID == deepTank.entID then
@@ -154,11 +156,14 @@ function FE:getTooltipInfos(GUIObj, gui, justCreated)
 
 	-- Check the Resource --
 	if self.resource ~= nil and self.resource.valid == true then
-		local fluidName = self.resource.prototype.mineable_properties.products[1].name
-		-- Create the Resource Type --
-		GUIObj:addDualLabel(informationFlow, {"", {"gui-description.ResouceType"}, ": "}, Util.getLocFluidName(fluidName), _mfOrange, _mfGreen)
-		-- Create the Resource Amount --
-		GUIObj:addDualLabel(informationFlow, {"", {"gui-description.ResourceAmount"}, ": "}, self.resource.amount, _mfOrange, _mfGreen)
+		for _, product in pairs(self.resource.prototype.mineable_properties.products) do
+			if product.type == "fluid" then
+				-- Create the Resource Type --
+				GUIObj:addDualLabel(informationFlow, {"", {"gui-description.ResouceType"}, ": "}, Util.getLocFluidName(product.name), _mfOrange, _mfGreen)
+				-- Create the Resource Amount --
+				GUIObj:addDualLabel(informationFlow, {"", {"gui-description.ResourceAmount"}, ": "}, self.resource.amount, _mfOrange, _mfGreen)
+			end
+		end
 	end
 
 	-- Create the Mobile Factory Too Far Label --
@@ -193,8 +198,8 @@ end
 
 -- Extract Fluids --
 function FE:extractFluids(event)
-	-- Test if the Mobile Factory and the Fluid Extractor are valid --
-	if valid(self) == false or valid(self.MF) == false then return end
+	-- Test if the Mobile Factory is valid --
+	if valid(self.MF) == false then return end
 	-- Check the Quatron Charge --
 	if self.quatronCharge < 100 then return end
 	-- Check the Resource --
@@ -213,8 +218,8 @@ function FE:extractFluids(event)
 	local deepStorages = {}
 	local fluidExtracted = math.min(self:fluidPerExtraction(), self.resource.amount)
 	for _, product in pairs(listProducts) do
-		-- Check if a Name was found, and Fluid Prototype exists --
-		if product.name == nil or product.type ~= 'fluid' or game.fluid_prototypes[product.name] == nil then return end
+		-- Check if product is fluid --
+		if product.type ~= 'fluid' then return end
 
 		if self.selectedInv then
 			-- Deep Storage is assigned, check if it fits
