@@ -591,7 +591,7 @@ function GUI.buttonClicked(event)
 		if string.match(event.element.name, "TPGUILoc") then
 			local GUIObj = MFPlayer.GUI["MFTPGUI"]
 			local jumpDrive = GUIObj.MF.jumpDriveObj
-			local location = split(event.element.name, ",")[2]
+			local location = string.sub(event.element.name, string.len("TPGUILoc,")+1 )
 			-- Start the Jump --
 			if event.button == defines.mouse_button_type.left then
 				jumpDrive:jump(location)
