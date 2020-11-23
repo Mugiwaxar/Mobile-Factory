@@ -29,24 +29,11 @@ qF.subgroup = "Resources"
 if level < 10 then qF.order = "b0" .. tonumber(level) else qF.order = "b" .. tonumber(level) end
 data:extend{qF}
 
--- Cell Recipe --
-qcR = {}
-qcR.name = "Quatron" .. tonumber(level)
-qcR.type = "recipe"
-qcR.icon = "__Mobile_Factory_Graphics__/graphics/icones/Quatron.png"
-qcR.icon_size = 32
-qcR.category = "Elements"
-qcR.subgroup = "Quatrons"
-qcR.energy_required = 2
-qcR.enabled = false
-qcR.ingredients = {{type="fluid", name="LiquidQuatron" .. tonumber(level), amount=100}}
-qcR.result = "Quatron" .. tonumber(level)
-data:extend{qcR}
-
 -- Fluid Recipe --
 lqR = {}
 lqR.name = "LiquidQuatron" .. tonumber(level)
 lqR.type = "recipe"
+-- lqR.order = "b"
 lqR.icon = "__Mobile_Factory_Graphics__/graphics/icones/FluidQuatron.png"
 lqR.icon_size = 32
 lqR.category = "Elements"
@@ -60,13 +47,28 @@ end
 lqR.results = {{type="fluid", name="LiquidQuatron" .. tonumber(level), amount=100}}
 data:extend{lqR}
 
+-- Quatron to Cell Recipe --
+qcR = {}
+qcR.name = "Quatron" .. tonumber(level)
+qcR.type = "recipe"
+qcR.icon = "__Mobile_Factory_Graphics__/graphics/icones/Quatron.png"
+qcR.icon_size = 32
+qcR.category = "Elements"
+qcR.subgroup = "QuatronsToCell"
+qcR.energy_required = 2
+qcR.enabled = false
+qcR.ingredients = {{type="fluid", name="LiquidQuatron" .. tonumber(level), amount=100}}
+qcR.result = "Quatron" .. tonumber(level)
+data:extend{qcR}
+
+-- Cell to Quatron Recipe --
 clqR = {}
 clqR.name = "CellToLiquidQuatron" .. tonumber(level)
 clqR.type = "recipe"
-clqR.icon = "__Mobile_Factory_Graphics__/graphics/icones/FluidQuatron.png"
+clqR.icon = "__Mobile_Factory__/graphics/CellToFluidQuatron.png"
 clqR.icon_size = 32
 clqR.category = "Elements"
-clqR.subgroup = "Quatrons"
+clqR.subgroup = "CellToQuatrons"
 clqR.energy_required = 2
 clqR.enabled = false
 clqR.ingredients = {{type="item", name="Quatron" .. tonumber(level), amount=1}}

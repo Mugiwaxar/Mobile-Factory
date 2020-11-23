@@ -51,6 +51,7 @@ require("prototypes/beam/BigGreenBeam.lua")
 require("prototypes/beam/BigPurpleBeam.lua")
 require("prototypes/beam/OCBeam.lua")
 require("prototypes/beam/EnergyLaserBeam.lua")
+require("prototypes/beam/PurpleQuatronBeam.lua")
 require("prototypes/technology/energy.lua")
 require("prototypes/technology/fluid-laser.lua")
 require("prototypes/technology/control-center.lua")
@@ -212,6 +213,24 @@ data:extend{
 	{
 		type="item-subgroup",
 		name="Quatrons",
+		group="Elements",
+		order="x"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="QuatronsToCell",
+		group="Elements",
+		order="y"
+	}
+}
+
+data:extend{
+	{
+		type="item-subgroup",
+		name="CellToQuatrons",
 		group="Elements",
 		order="z"
 	}
