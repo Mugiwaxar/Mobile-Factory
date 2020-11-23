@@ -1,9 +1,9 @@
-------------------------- GREEN BEAM ---------------------------
-beam_tint = {r=0, g=255, b=0}
-light_tint = {r=0, g=255, b=0}
+------------------------- PURPLE QUATRON BEAM ---------------------------
+beam_tint = {r=255, g=25, b=100}
+light_tint = {r=255, g=25, b=100}
 
 ylE = {}
-ylE.name = "GreenBeam"
+ylE.name = "PurpleQuatronBeam"
 ylE.type = "beam"
 ylE.flags = {"not-on-map"}
 ylE.damage_interval = 20
