@@ -1,5 +1,48 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.1
+Date: 23/11/2020
+  Features:
+    - Added a GUI to the Quatron Reactor
+  Translation:
+    - Fixed the Energy Cube Tooltip
+    - Added "Can be removed" to the Internal Energy/Quatron Cube
+  Changes:
+    - Reworked Quatron Recipes for a better readability
+  Graphics:
+    - Changed the color of the Mobile Factory Quatron Laser to match the Quatron Color
+  Bugfixes:
+    - Fixed a crash that can happen if the Player have an empty name
+    - Fixed a crash caused by the Profiler
+    - The Mobile Factory Energy Laser should now properly works
+---------------------------------------------------------------------------------------------------
+Version: 0.1.0
+Date: 23/11/2020
+  Features:
+    - Major rewrite and optimisations by Volch
+    - Quatron energy have levels, which shown in Cubes and Lasers GUI (Volch)
+    - The Ore Cleaner and the Fluid Extractor now use Quatron Energy instead of Quatron Cell (Must be powered by Quatron Lasers/Cubes) (Volch)
+    - The Data Assembler is now powered by the Network Access Point. It's speed is inherited from the Network Access Point Quatron Level (Volch)
+    - The Mobile Factory now send Quatron Energy instead of Quatron Cells (It can also drain) (Volch)
+    - Added command: MF_reset_guis in case the GUI is not displayed correctly (Honktown)
+  Changes:
+    - Fluid Extractor and Ore Cleaner techs are now unlocked after Deep Tank and Deep Storage respectively. Energy Cube are unlocked just once (Volch)
+    - Mobile Factory Energy Laser will not charge vanilla entities anymore, only Cubes and Lasers. Neither it will not charge Quatron Cubes anymore (Volch)
+    - Rebalanced Quatron usage and production. Ore Cleaners and Fluid Extractors are weaker at low level, and more powerfull at hight levels (Volch)
+  Bugfixes:
+    - Fixed a wrong Jump Charge calculation (Tessmero)
+    - Teleportation can't be done or removed if the name contain a comma (Tessmero)
+    - Crash when Mods was removed with Items still inside the Data Network (Volch)
+    - Fixed saves with old Jets tables (Volch)
+    - Ore Cleaner doesn't change it's sprite to vanilla Drill when placed on uranium (Volch)
+    - Fixed a wrong calculation with Quatron Purity Level (Volch)
+    - Logistic Lasers and synced Chests does not wipe data(tags, blueprint) from transfered Items anymore (Volch)
+    - Fixed few bugs where synced Chests in Sync Area could destroy Items (Volch)
+    - Fixed Energy return for unsynced Energy/Quatron Cubes and Accumulators (Volch)
+  Scripting:
+    - Altered Data Assember processing order, preventing it from taking resources when it's already finished crafting (Volch)
+---------------------------------------------------------------------------------------------------
 Version: 0.0.199
+Date: 14/10/2020
   Bugfixes:
     - bad migrations bug
 ---------------------------------------------------------------------------------------------------
