@@ -69,7 +69,7 @@ function NE:update()
 	if valid(self) == false then
 		self:remove()
 		return
-    end
+	end
 
     -- Try to find a Network Access Point if needed --
 	if valid(self.networkAccessPoint) == false then
@@ -215,7 +215,7 @@ function NE.transferItemsFromDS(DS, inv, count)
 	-- Check all values --
 	if DS == nil or inv == nil then return end
 	local item = DS.inventoryItem
-	if item == nil or game.item_prototypes[item] == nil then return end
+	if item == nil then return end
 	local half = (count or 1) < 1 and true or false
 	if count == nil or count <= 0 then count = game.item_prototypes[item].stack_size end
 
@@ -238,7 +238,7 @@ function NE.transferItemsFromDNInv(NE, inv, item, count)
 	-- Check all values --
 	if NE == nil or inv == nil then return end
 	local DNInv = NE.dataNetwork.invObj
-	if item == nil or game.item_prototypes[item] == nil then return end
+	if item == nil then return end
 	local half = (count or 1) < 1 and true or false
 	if count == nil or count <= 0 then count = game.item_prototypes[item].stack_size end
 
@@ -261,7 +261,7 @@ function NE.transferItemsFromPInv(PInv, PName, NE, item, count)
 	-- Check all values --
 	if PInv == nil or NE == nil then return end
 	local DNInv = NE.dataNetwork.invObj
-	if item == nil or game.item_prototypes[item] == nil then return end
+	if item == nil then return end
 	local half = (count or 1) < 1 and true or false
 	if count == nil or count <= 0 then count = game.item_prototypes[item].stack_size end
 	local inserted = 0

@@ -120,7 +120,7 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	GUIObj:addDataNetworkFrame(gui, self)
 
 	-- Update the Filter --
-	if game.item_prototypes[self.selectedFilter] ~= nil and GUIObj["MIFilter" .. tostring(self.ent.unit_number)] ~= nil then
+	if self.selectedFilter ~= nil and GUIObj["MIFilter" .. tostring(self.ent.unit_number)] ~= nil then
 		GUIObj["MIFilter" .. tostring(self.ent.unit_number)].elem_value = self.selectedFilter
 	end
 
@@ -130,7 +130,7 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
 
 	-- Create the Filter Label --
-	local filterName = Util.getLocItemName(self.selectedFilter) or {"gui-description.None"}
+	local filterName = self.selectedFilter ~= nil and Util.getLocItemName(self.selectedFilter) or {"gui-description.None"}
 	GUIObj:addDualLabel(frame, {"", {"gui-description.Filter"}, ":"}, filterName, _mfOrange, _mfGreen)
 
 	-- Create the Inventory Button --
@@ -150,7 +150,7 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 	-- Create the Filter Selection --
 	GUIObj:addLabel("", titleFrame, {"gui-description.ChangeFilter"}, _mfOrange)
 	local filter = GUIObj:addFilter("MIFilter" .. tostring(self.ent.unit_number), titleFrame, {"gui-description.FilterSelect"}, true, "item", 40)
-	if game.item_prototypes[self.selectedFilter] ~= nil then filter.elem_value = self.selectedFilter end
+	if self.selectedFilter ~= nil then filter.elem_value = self.selectedFilter end
 
 	-- Create the Mode Selection --
 	GUIObj:addLabel("", titleFrame, {"gui-description.SelectMode"}, _mfOrange)
@@ -184,9 +184,9 @@ function MI:getTooltipInfos(GUIObj, gui, justCreated)
 		if deepStorage ~= nil and deepStorage.ent ~= nil then
 			i = i + 1
 			local item
-			if deepStorage.filter ~= nil and game.item_prototypes[deepStorage.filter] ~= nil then
+			if deepStorage.filter ~= nil then
 				item = deepStorage.filter
-			elseif deepStorage.inventoryItem ~= nil and game.item_prototypes[deepStorage.inventoryItem] ~= nil then
+			elseif deepStorage.inventoryItem ~= nil then
 				item = deepStorage.inventoryItem
 			end
 
@@ -280,8 +280,6 @@ function MI:updateInventory()
     if self.selectedMode == "input" then
         -- Itinerate the Inventory --
 		for item, count in pairs(inv.get_contents()) do
-			-- Check the Item --
-			if game.item_prototypes[item] == nil then return end
             -- Add Items to the Data Inventory --
             local amountAdded = dataInv:addItem(item, count)
             -- Remove Items from the local Inventory --
@@ -293,8 +291,6 @@ function MI:updateInventory()
     elseif self.selectedMode == "output" then
         -- Return if the Filter is nil --
         if self.selectedFilter == nil then return end
-        -- Check if the Item still exist --
-        if game.item_prototypes[self.selectedFilter] == nil then return end
         -- Get Items count from the Data Inventory --
         local returnedItems = dataInv:hasItem(self.selectedFilter)
         -- Return if there are no Items --
@@ -340,4 +336,11 @@ function MI:blueprintTagsToSettings(tags)
 	end
 	-- be careful of a nil selectedMode
 	if tags["selectedMode"] then self.selectedMode = tags["selectedMode"] end
+end
+
+-- Check stored data, and remove invalid record
+function MI:validate()
+	if game.item_prototypes[self.selectedFilter] == nil then
+		self.selectedFilter = nil
+	end
 end

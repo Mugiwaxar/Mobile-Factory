@@ -78,7 +78,7 @@ end
 function GUI.updateMFInfoGUI(GUIObj)
 	GUI.updateButtonsBar(GUIObj)
 	GUI.updateMFInfos(GUIObj)
-	GUI.updateTankFrame(GUIObj)
+	GUI.updateDeepTankFrame(GUIObj)
 	GUI.updateDeepStorageFrame(GUIObj)
 	GUI.updateInventoryFrame(GUIObj)
 end
@@ -231,7 +231,7 @@ function GUI.updateMFInfos(GUIObj)
 end
 
 -- Update Tank Frame --
-function GUI.updateTankFrame(GUIObj)
+function GUI.updateDeepTankFrame(GUIObj)
 
 	-- Get the GUI, MF and Player--
 	local player = GUIObj.MFPlayer.ent
@@ -247,14 +247,11 @@ function GUI.updateTankFrame(GUIObj)
 
 		-- -- Create the Tank Variables --
 		local sprite = nil
-		local fName = Util.getLocFluidName(deepTank.inventoryFluid) or Util.getLocFluidName(deepTank.filter) or nil
-		local fAmount = deepTank.inventoryCount or 0
+		local fName = nil
+		local fAmount = 0
 		local tCapacity = _dtMaxFluid
-		local tankText = fName == nil and {"", {"gui-description.DeepTank"}, " ", deepTank.ID} or {"", {"gui-description.DeepTank"}, " ", deepTank.ID, ": ", fName, " ", Util.toRNumber(fAmount), "/", Util.toRNumber(tCapacity)}
+		local tankText = nil
 		local color = _mfPurple
-		if game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
-			color = game.fluid_prototypes[deepTank.inventoryFluid].base_color
-		end
 
 		-- Create the Frame --
 		local frame = GUIObj:addFrame("", tankScrollPane, "horizontal")
@@ -262,11 +259,17 @@ function GUI.updateTankFrame(GUIObj)
 		-- Create the Button --
 		if deepTank.inventoryFluid ~= nil then
 			sprite = "fluid/" .. deepTank.inventoryFluid
+			fName = Util.getLocFluidName(deepTank.inventoryFluid)
+			fAmount = deepTank.inventoryCount
+			tankText = {"", {"gui-description.DeepTank"}, " ", deepTank.ID, ": ", fName, " ", Util.toRNumber(fAmount), "/", Util.toRNumber(tCapacity)}
+			color = game.fluid_prototypes[deepTank.inventoryFluid].base_color
 		elseif deepTank.filter ~= nil then
 			sprite = "fluid/" .. deepTank.filter
+			fName = Util.getLocFluidName(deepTank.filter)
+			tankText = {"", {"gui-description.DeepTank"}, " ", deepTank.ID, ": ", fName, " ", Util.toRNumber(fAmount), "/", Util.toRNumber(tCapacity)}
 		else
 			sprite = "item/DeepTank"
-			fAmount = nil
+			tankText = {"", {"gui-description.DeepTank"}, " ", deepTank.ID}
 		end
 		local button = GUIObj:addButton("DTB" .. tostring(k), frame, sprite, sprite, tankText, 35, false, true, fAmount)
 		button.style = "MF_Purple_Button_Purple"
@@ -280,7 +283,7 @@ function GUI.updateTankFrame(GUIObj)
 		label.Label2.style.width = 70
 
 		-- Create the Progress Bar --
-		local bar = GUIObj:addProgressBar("", flow, "", "", false, color, (fAmount or 0)/tCapacity, 140)
+		local bar = GUIObj:addProgressBar("", flow, "", "", false, color, fAmount/tCapacity, 140)
 		bar.style.horizontally_stretchable = true
 		bar.style.top_padding = 7
 
@@ -303,15 +306,15 @@ function GUI.updateDeepTankInfo(GUIObj, id)
 	-- Create all Labels --
 	GUIObj:addDualLabel(gui, {"", {"gui-description.DeepTankID"}, ":"}, deepTank.ID, _mfOrange, _mfGreen)
 	GUIObj:addDualLabel(gui, {"", {"gui-description.BelongsTo"}, ":"}, deepTank.player, _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(gui, {"", {"gui-description.DeepTankFluid"}, ":"}, Util.getLocFluidName(deepTank.inventoryFluid) or {"gui-description.None"}, _mfOrange, _mfGreen)
+	GUIObj:addDualLabel(gui, {"", {"gui-description.DeepTankFluid"}, ":"}, deepTank.inventoryFluid ~= nil and Util.getLocFluidName(deepTank.inventoryFluid) or {"gui-description.None"}, _mfOrange, _mfGreen)
 	GUIObj:addDualLabel(gui, {"", {"gui-description.Count"}, ":"}, (deepTank.inventoryCount or "0") .. "/" .. _dtMaxFluid, _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(gui, {"", {"gui-description.Filter"}, ":"}, Util.getLocFluidName(deepTank.filter) or {"gui-description.None"}, _mfOrange, _mfGreen)
+	GUIObj:addDualLabel(gui, {"", {"gui-description.Filter"}, ":"}, deepTank.filter ~= nil and Util.getLocFluidName(deepTank.filter) or {"gui-description.None"}, _mfOrange, _mfGreen)
 
 	-- Create the Filter --
 	local TankFilter = GUIObj:addFilter("TF" .. tostring(id), gui, {"gui-description.FilterSelect"}, true, "fluid", 25)
 
 	-- Set the Filter --
-	if game.fluid_prototypes[deepTank.filter] ~= nil  then
+	if deepTank.filter ~= nil  then
 		TankFilter.elem_value = deepTank.filter
 	end
 
@@ -334,22 +337,30 @@ function GUI.updateDeepStorageFrame(GUIObj)
 
 		-- Create the Storage Variables --
 		local sprite = nil
-		local fName = Util.getLocItemName(deepStorage.inventoryItem) or Util.getLocItemName(deepStorage.filter) or nil
-		local fAmount = deepStorage.inventoryCount or 0
-		local storageText = fName == nil and {"", {"gui-description.DeepStorage"}, " ", deepStorage.ID} or {"", {"gui-description.DeepStorage"}, " ", deepStorage.ID, ": ", fName, " ", Util.toRNumber(fAmount)}
-				
+		local fName = nil
+		local fAmount = nil
+		local storageText = nil
+
 		-- Create the Frame --
 		local frame = GUIObj:addFrame("", storageScrollPane, "horizontal")
 
 		-- Create the Button --
 		if deepStorage.inventoryItem ~= nil then
 			sprite = "item/" .. deepStorage.inventoryItem
+			fName = Util.getLocItemName(deepStorage.inventoryItem)
+			fAmount = deepStorage.inventoryCount
+			storageText = {"", {"gui-description.DeepStorage"}, " ", deepStorage.ID, ": ", fName, " ", Util.toRNumber(fAmount)}
 		elseif deepStorage.filter ~= nil then
 			sprite = "item/" .. deepStorage.filter
+			fName = Util.getLocItemName(deepStorage.filter)
+			fAmount = 0
+			storageText = {"", {"gui-description.DeepStorage"}, " ", deepStorage.ID, ": ", fName, " ", Util.toRNumber(fAmount)}
 		else
 			sprite = "item/DeepStorage"
-			fAmount = nil
+			storageText = {"", {"gui-description.DeepStorage"}, " ", deepStorage.ID}
+			fAmount = ""
 		end
+
 		local button = GUIObj:addButton("DSRB" .. tostring(k), frame, sprite, sprite, storageText, 35, false, true, fAmount)
 		button.style = "shortcut_bar_button_green"
 
@@ -358,7 +369,7 @@ function GUI.updateDeepStorageFrame(GUIObj)
 
 		-- Create the Label --
 		local label1 = GUIObj:addLabel("", flow, fName or storageText, _mfOrange)
-		local label2 = GUIObj:addLabel("", flow, fAmount == nil and "" or fAmount, _mfGreen)
+		local label2 = GUIObj:addLabel("", flow, fAmount, _mfGreen)
 		label1.style.width = 70
 		label1.style.height = 15
 		label2.style.width = 70
@@ -383,15 +394,15 @@ function GUI.updateDeepStorageInfo(GUIObj, id)
 	-- Create all Labels --
 	GUIObj:addDualLabel(gui, {"", {"gui-description.DeepStorageID"}, ":"}, deepStorage.ID, _mfOrange, _mfGreen)
 	GUIObj:addDualLabel(gui, {"", {"gui-description.BelongsTo"}, ":"}, deepStorage.player, _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(gui, {"", {"gui-description.DeepTankFluid"}, ":"}, Util.getLocFluidName(deepStorage.inventoryItem) or {"gui-description.None"}, _mfOrange, _mfGreen)
+	GUIObj:addDualLabel(gui, {"", {"gui-description.DeepStorageItem"}, ":"}, deepStorage.inventoryItem ~= nil and Util.getLocItemName(deepStorage.inventoryItem) or {"gui-description.None"}, _mfOrange, _mfGreen)
 	GUIObj:addDualLabel(gui, {"", {"gui-description.Count"}, ":"}, (deepStorage.inventoryCount or "0"), _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(gui, {"", {"gui-description.Filter"}, ":"}, Util.getLocItemName(deepStorage.filter) or {"gui-description.None"}, _mfOrange, _mfGreen)
+	GUIObj:addDualLabel(gui, {"", {"gui-description.Filter"}, ":"}, deepStorage.filter ~= nil and Util.getLocItemName(deepStorage.filter) or {"gui-description.None"}, _mfOrange, _mfGreen)
 
 	-- Create the Filter --
 	local StorageFilter = GUIObj:addFilter("DSRF" .. tostring(id), gui, {"gui-description.FilterSelect"}, true, "item", 25)
 
 	-- Save the Filter --
-	if game.item_prototypes[deepStorage.filter] ~= nil  then
+	if deepStorage.filter ~= nil  then
 		StorageFilter.elem_value = deepStorage.filter
 	end
 
@@ -444,20 +455,20 @@ function GUI.updateInventoryInfo(GUIObj, id, type, name, amount)
 
 	if type == "DT" then
 		local deepTank = global.deepTankTable[id]
-		if game.fluid_prototypes[deepTank.inventoryFluid] == nil then return end
+		if deepTank.inventoryFluid == nil then return end
 		text = {"", {"gui-description.Fluid"}, ": "}
 		text2 = Util.getLocFluidName(deepTank.inventoryFluid)
 		count = deepTank.inventoryCount
 		location = {"", {"gui-description.DeepTank"}, " ", deepTank.ID}
 	elseif type == "DSR" then
 		local deepStorage = global.deepStorageTable[id]
-		if game.item_prototypes[deepStorage.inventoryItem] == nil then return end
+		if deepStorage.inventoryItem == nil then return end
 		text = {"", {"gui-description.Item"}, ": "}
 		text2 = Util.getLocItemName(deepStorage.inventoryItem)
 		count = deepStorage.inventoryCount
 		location = {"", {"gui-description.DeepStorage"}, " ", deepStorage.ID}
 	elseif type == "INV" then
-		if game.item_prototypes[name] == nil then return end
+		if name == nil then return end
 		text = {"", {"gui-description.Item"}, ": "}
 		text2 = Util.getLocItemName(name)
 		count = amount

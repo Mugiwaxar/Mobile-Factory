@@ -131,7 +131,7 @@ function GUI.updateLocation(GUIObj)
         local infoFlow = GUIObj:addFlow("", frame, "horizontal")
 
         -- Add the TP Button --
-        local icon = (loc.filter ~= nil and game.recipe_prototypes[loc.filter] ~= nil) and ("recipe/" .. loc.filter) or "MFJDIcon"
+        local icon = loc.filter ~= nil and ("recipe/" .. loc.filter) or "MFJDIcon"
         local button = GUIObj:addButton("TPGUILoc," .. name, infoFlow, icon, icon, {"gui-description.StartJump"}, 40)
         button.style = canTP == true and "shortcut_bar_button_green" or "MF_Fake_Button_Red"
         button.style.padding = 0

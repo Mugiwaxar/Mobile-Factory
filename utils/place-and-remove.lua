@@ -129,12 +129,16 @@ function somethingWasPlaced(event)
 		if event.tags and obj.blueprintTagsToSettings then
 			obj:blueprintTagsToSettings(event.tags)
 		end
-		-- Check if there are Items Tags --
+		-- Check if there are Item Tags --
 		if event.stack ~= nil and event.stack.valid_for_read == true and event.stack.type == "item-with-tags" then
 			local tags = event.stack.get_tag("Infos")
 			if tags ~= nil then
 				obj:itemTagsToContent(tags)
 			end
+		end
+		-- Validate properties taken from Blueprint or Item Tags
+		if obj.validate then
+			obj:validate()
 		end
 	end
 
