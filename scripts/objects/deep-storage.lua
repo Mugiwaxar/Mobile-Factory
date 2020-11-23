@@ -84,20 +84,7 @@ function DSR:update()
 		self:remove()
 		return
 	end
-	
-	-- Remove the Item if it doesn't exist anymore --
-	if self.inventoryItem ~= nil and game.item_prototypes[self.inventoryItem] == nil then
-		self.inventoryItem = nil
-		self.inventoryCount = 0
-		return
-	end
 
-	-- Remove the Item Filter if it doesn't exist anymore --
-	if self.filter ~= nil and game.item_prototypes[self.filter] == nil then
-		self.filter = nil
-		return
-	end
-	
 	-- Display the Item Icon --
 	if self.inventoryItem == nil and self.filter == nil then return true end
 	local sprite = "item/" .. (self.inventoryItem or self.filter)
@@ -134,7 +121,15 @@ function DSR:getTooltipInfos(GUIObj, gui, justCreated)
 	end
 
 	-- Create the Item Name Label --
-	local itemName = Util.getLocItemName(self.inventoryItem) or Util.getLocItemName(self.filter) or {"gui-description.Empty"}
+	local itemName = nil
+	if self.inventoryItem ~= nil then
+		itemName = Util.getLocItemName(self.inventoryItem)
+	elseif self.filter ~= nil then
+		itemName = Util.getLocItemName(self.filter)
+	else
+		itemName = {"gui-description.Empty"}
+	end
+
 	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.ItemName"}, ":"}, itemName, _mfOrange, _mfGreen)
 
 	-- Create the Item Amount Label --
@@ -142,11 +137,11 @@ function DSR:getTooltipInfos(GUIObj, gui, justCreated)
 	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.Amount"}, ":"}, Util.toRNumber(itemAmount), _mfOrange, _mfGreen, nil, nil, itemAmount)
 
 	-- Create the Filter Label --
-	local filterName = Util.getLocItemName(self.filter) or {"gui-description.None"}
+	local filterName = self.filter ~= nil and Util.getLocItemName(self.filter) or {"gui-description.None"}
 	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.Filter"}, ":"}, filterName, _mfOrange, _mfGreen)
 
 	-- Update the Filter --
-	if game.item_prototypes[self.filter] ~= nil and GUIObj["DSRF" .. tostring(self.ent.unit_number)] ~= nil then
+	if self.filter ~= nil and GUIObj["DSRF" .. tostring(self.ent.unit_number)] ~= nil then
 		GUIObj["DSRF" .. tostring(self.ent.unit_number)].elem_value = self.filter
 	end
 
@@ -199,4 +194,18 @@ end
 -- Blueprint Tags To Settings --
 function DSR:blueprintTagsToSettings(tags)
 	self.filter = tags["selfFilter"]
+end
+
+-- Check stored data, and remove invalid record
+function DSR:validate()
+	-- Remove the Item if it doesn't exist anymore --
+	if self.inventoryItem ~= nil and game.item_prototypes[self.inventoryItem] == nil then
+		self.inventoryItem = nil
+		self.inventoryCount = 0
+	end
+
+	-- Remove the Item Filter if it doesn't exist anymore --
+	if self.filter ~= nil and game.item_prototypes[self.filter] == nil then
+		self.filter = nil
+	end
 end

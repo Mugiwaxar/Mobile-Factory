@@ -68,8 +68,8 @@ end
 function FI:copySettings(obj)
 	if obj.selectedInv ~= nil then
 		self.selectedInv = obj.selectedInv
-    end
-    if obj.selectedMode ~= nil then
+	end
+	if obj.selectedMode ~= nil then
 		self.selectedMode = obj.selectedMode
 	end
 end
@@ -155,9 +155,9 @@ function FI:getTooltipInfos(GUIObj, gui, justCreated)
 		if deepTank ~= nil and deepTank.ent ~= nil then
 			i = i + 1
 			local fluid
-			if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
+			if deepTank.filter ~= nil then
 				fluid = deepTank.filter
-			elseif deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
+			elseif deepTank.inventoryFluid ~= nil then
 				fluid = deepTank.inventoryFluid
 			end
 
@@ -234,9 +234,6 @@ function FI:updateInventory()
 			break
 		end
 	end
-	
-	-- Check if the Fluid still exist --
-	if localFluid ~= nil and game.fluid_prototypes[localFluid.name] == nil then return end
 
     -- Input mode --
     if self.selectedMode == "input" then

@@ -89,20 +89,6 @@ function DTK:update()
 		return
 	end
 	
-	-- Remove the Fluid if it doesn't exist anymore --
-	if self.inventoryFluid ~= nil and game.fluid_prototypes[self.inventoryFluid] == nil then
-		self.inventoryFluid = nil
-		self.inventoryCount = 0
-		self.inventoryTemperature = 0
-		return
-	end
-
-	-- Remove the Fluid Filter if it doesn't exist anymore --
-	if self.filter ~= nil and game.fluid_prototypes[self.filter] == nil then
-		self.filter = nil
-		return
-	end
-	
 	-- Display the Item Icon --
 	if self.inventoryFluid == nil and self.filter == nil then return end
 	local sprite = "fluid/" .. (self.inventoryFluid or self.filter)
@@ -139,7 +125,15 @@ function DTK:getTooltipInfos(GUIObj, gui, justCreated)
 	end
 
 	-- Create the Fluid Name Label --
-	local fluidName = Util.getLocFluidName(self.inventoryFluid) or Util.getLocFluidName(self.filter) or {"gui-description.Empty"}
+	local fluidName = nil
+	if self.inventoryFluid ~= nil then
+		fluidName = Util.getLocFluidName(self.inventoryFluid)
+	elseif self.filter ~= nil then
+		fluidName = Util.getLocFluidName(self.filter)
+	else
+		fluidName = {"gui-description.Empty"}
+	end
+
 	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.FluidName"}, ":"}, fluidName, _mfOrange, _mfGreen)
 
 	-- Create the Fluid Amount Label --
@@ -147,11 +141,11 @@ function DTK:getTooltipInfos(GUIObj, gui, justCreated)
 	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.Amount"}, ":"}, Util.toRNumber(fluidAmount) .. "/" .. Util.toRNumber(_dtMaxFluid), _mfOrange, _mfGreen, nil, nil, fluidAmount .. "/" .. _dtMaxFluid)
 
 	-- Create the Filter Label --
-	local filterName = Util.getLocFluidName(self.filter) or {"gui-description.None"}
+	local filterName = self.filter ~= nil and Util.getLocFluidName(self.filter) or {"gui-description.None"}
 	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.Filter"}, ":"}, filterName, _mfOrange, _mfGreen)
 
 	-- Update the Filter --
-	if game.fluid_prototypes[self.filter] ~= nil and GUIObj["TF" .. tostring(self.ent.unit_number)] ~= nil then
+	if self.filter ~= nil and GUIObj["TF" .. tostring(self.ent.unit_number)] ~= nil then
 		GUIObj["TF" .. tostring(self.ent.unit_number)].elem_value = self.filter
 	end
 
@@ -210,4 +204,21 @@ end
 -- Blueprint Tags To Settings --
 function DTK:blueprintTagsToSettings(tags)
 	self.filter = tags["selfFilter"]
+end
+
+-- Check stored data, and remove invalid record
+function DTK:validate()
+	-- Remove the Fluid if it doesn't exist anymore --
+	if self.inventoryFluid ~= nil and game.fluid_prototypes[self.inventoryFluid] == nil then
+		self.inventoryFluid = nil
+		self.inventoryCount = 0
+		self.inventoryTemperature = 0
+		return
+	end
+
+	-- Remove the Fluid Filter if it doesn't exist anymore --
+	if self.filter ~= nil and game.fluid_prototypes[self.filter] == nil then
+		self.filter = nil
+		return
+	end
 end

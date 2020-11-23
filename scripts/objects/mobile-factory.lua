@@ -78,12 +78,14 @@ function MF:new(args)
 	t.jumpDriveObj = t.jumpDriveObj or JD:new(t)
 
 	t.MF = t
-	UpSys.addObj(t)
+	if not args or not args.refreshObj then
+		UpSys.addObj(t)
+	end
 	return t
 end
 
-function MF:refresh(obj)
-  MF:new({refreshObj = obj})
+function MF:refresh()
+  MF:new({refreshObj = self})
 end
 
 -- Constructor for a placed Mobile Factory --
@@ -174,9 +176,9 @@ function MF:getTooltipInfos(GUIObj, gui, justCreated)
 				if deepTank ~= nil and deepTank.ent ~= nil then
 					i = i + 1
 					local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepTank.player, ")"}
-					if deepTank.filter ~= nil and game.fluid_prototypes[deepTank.filter] ~= nil then
+					if deepTank.filter ~= nil then
 						itemText = {"", " (", game.fluid_prototypes[deepTank.filter].localised_name, " - ", deepTank.player, ")"}
-					elseif deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
+					elseif deepTank.inventoryFluid ~= nil then
 						itemText = {"", " (", game.fluid_prototypes[deepTank.inventoryFluid].localised_name, " - ", deepTank.player, ")"}
 					end
 					invs[k+1] = {"", {"gui-description.DT"}, " ", tostring(deepTank.ID), itemText}
@@ -223,7 +225,7 @@ function MF:update(event)
 	-- Get the current tick --
 	local tick = event.tick
 
-	-- Update the Internal Inventory --
+	-- Update the Internal Inventory capacity --
 	if tick%_eventTick80 == 0 then self.II:rescan() end
 	-- Check if the Mobile Factory has to TP --
 	if self.onTP and game.tick - self.tpCurrentTick > 30 then self:TPMobileFactoryPart2() end
@@ -1165,5 +1167,21 @@ function MF:updateClonedEntity(ents)
 	elseif ents.original.type == "accumulator" then
 		-- If the Entity is an Accumulator --
 		Util.syncEnergy(ents.original, ents.cloned)
+	end
+end
+
+-- Check stored data, and remove invalid record
+function MF:validate()
+	-- Jump Drive location icons
+	for _, loc in pairs(self.jumpDriveObj.locationTable) do
+		if loc.filter ~= nil and game.recipe_prototypes[loc.filter] == nil then
+			loc.filter = nil
+		end
+	end
+	-- Internal Inventory items
+	for item, _ in pairs(self.II.inventory) do
+		if game.item_prototypes[item] == nil then
+			self.II.inventory[item] = nil
+		end
 	end
 end

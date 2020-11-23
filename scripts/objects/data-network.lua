@@ -146,8 +146,6 @@ end
 
 -- Get Items from the Data Network --
 function DN:getItem(item, amount)
-	-- Check if the Item still exist --
-	if game.item_prototypes[item] == nil then return 0 end
 	-- Set the Amount of Item to retrieve left --
 	local amountLeft = amount
 	-- Check the Deep Storages --
@@ -164,8 +162,6 @@ end
 
 -- Get Fluid form the Data Network --
 function DN:getFluid(fluid, amount)
-	-- Check if the Fluid still exist --
-	if game.fluid_prototypes[fluid] == nil then return 0 end
 	-- Set the Amount of Item to retrieve left --
 	local amountLeft = amount
 	-- Check the Deep Tanks --
@@ -204,8 +200,6 @@ end
 
 -- Send Items to the Data Network --
 function DN:addItems(item, amount)
-	-- Check if the Item still exist --
-	if game.item_prototypes[item] == nil then return 0 end
 	-- Set the Amount of Item to send left --
 	local amountLeft = amount
 	-- Check the Deep Storages --
@@ -223,8 +217,6 @@ end
 
 -- Send Fluid to the Data Network --
 function DN:addFluid(fluid, amount, temperature)
-	-- Check if the Fluid still exist --
-	if game.fluid_prototypes[fluid] == nil then return 0 end
 	-- Set the Amount of Item to retrieve left --
 	local amountLeft = amount
 	-- Check the Deep Tanks --

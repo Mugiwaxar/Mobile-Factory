@@ -229,13 +229,6 @@ end
 
 -- Create a Recipe Frame --
 function DA:createFrame(GUIObj, gui, recipe, id)
-
-	-- Check the Recipe --
-	if recipe == nil or recipe.recipePrototype == nil or game.recipe_prototypes[recipe.recipePrototype.name] == nil then
-		self.recipeTable[id] = nil
-		return
-	end
-	
 	-- Create the Frame --
 	local frame = GUIObj:addFrame("", gui, "horizontal")
 	frame.style.horizontal_align = "left"
@@ -244,12 +237,8 @@ function DA:createFrame(GUIObj, gui, recipe, id)
 	local recipeFlow = GUIObj:addFlow("", frame, "vertical")
 	recipeFlow.style.horizontally_stretchable = false
 
-	-- Create the Recipe Icone --
-	if game.item_prototypes[recipe.products[1].name] == nil and game.fluid_prototypes[recipe.products[1].name] == nil then
-		self.recipeTable[id] = nil
-		return
-	end
-	local tooltip = (recipe.amount or 0) > 0 and {"", recipe.recipePrototype.localised_name, " (max:", recipe.amount, ")"} or recipe.recipePrototype.localised_name
+	-- Create the Recipe Icon --
+	local tooltip = {"", recipe.recipePrototype.localised_name, " (max:", recipe.amount, ")"}
 	local recipeButton = GUIObj:addButton("DARem," .. self.entID .. "," .. id, recipeFlow, recipe.sprite, recipe.sprite, tooltip, 50, false, true, recipe.amount)
 	recipeButton.style = (recipe.toManyInInventory == true and "MF_Fake_Button_Red") or "MF_Fake_Button_Green"
 	recipeButton.style.padding = 0
@@ -264,10 +253,6 @@ function DA:createFrame(GUIObj, gui, recipe, id)
 
 	-- Add all Buttons --
 	for k, ingredient in pairs(recipe.ingredients) do
-		if (game.item_prototypes[ingredient.name] == nil) and (game.fluid_prototypes[ingredient.name] == nil) then
-			self.recipeTable[id] = nil
-			return
-		end
 		local storedAmount = (ingredient.type == "item" and self.dataNetwork:hasItem(ingredient.name)) or self.dataNetwork:hasFluid(ingredient.name)
 		local ingredientButton = GUIObj:addButton("", ingredientsFlow, ingredient.sprite, ingredient.sprite, ingredient.tooltip, 30, false, true, storedAmount or 0)
 		ingredientButton.style = (ingredient.missing == true and "MF_Fake_Button_Red") or "MF_Fake_Button_Green"
@@ -280,12 +265,6 @@ function DA:createFrame(GUIObj, gui, recipe, id)
 	local PBar = GUIObj:addProgressBar("", processFlow, "", "", false, barColor, recipe.progress / recipe.recipePrototype.energy, 150)
 	if GUIObj.PBarsTable == nil then GUIObj.PBarsTable = {} end
 	GUIObj.PBarsTable[PBar] = recipe
-
-	-- Check the Product --
-	if (game.item_prototypes[recipe.products[1].name] == nil) and (game.fluid_prototypes[recipe.products[1].name] == nil) then
-		self.recipeTable[id] = nil
-		return
-	end
 
 	-- Create the Result Flow --
 	local resultFlow = GUIObj:addFlow("", frame, "horizontal")
@@ -321,18 +300,18 @@ end
 function DA:addRecipe(name, amount)
 
 	-- Check the Values --
-	if name == nil then return end
+	if name == nil then return false end
 	amount = tonumber(amount)
-	if amount == nil or amount == 0 then return end
+	if amount == nil or amount < 1 then return false end
 	
 	-- Check the Recipe --
 	local recipePrototype = game.recipe_prototypes[name]
-	if recipePrototype == nil then return end
+	if recipePrototype == nil then return false end
 
 	if self.ent.force.recipes[name] == nil or not self.ent.force.recipes[name].enabled or global.dataAssemblerBlacklist[recipePrototype.category] then
 		local player = getPlayer(self.player)
 		player.print({"", {"gui-description.DAWrongRecipe"}})
-		return
+		return false
 	end
 	-- Create the Ingredients Table --
 	local ingredientsTable = {}
@@ -342,7 +321,7 @@ function DA:addRecipe(name, amount)
 		elseif game.fluid_prototypes[ingredient.name] ~= nil then
 			table.insert(ingredientsTable, {name=ingredient.name, type=ingredient.type, amount=ingredient.amount, sprite="fluid/" .. ingredient.name, tooltip=game.fluid_prototypes[ingredient.name].localised_name})
 		else
-			return
+			return false
 		end
 	end
 
@@ -353,6 +332,8 @@ function DA:addRecipe(name, amount)
 			table.insert(products, {name=product.name, type=product.type, amount=product.amount, probability = product.probability or 1,sprite="item/" .. product.name, tooltip=game.item_prototypes[product.name].localised_name})
 		elseif game.fluid_prototypes[product.name] ~= nil then
 			table.insert(products, {name=product.name, type=product.type, amount=product.amount, probability = product.probability or 1, sprite="fluid/" .. product.name, tooltip=game.fluid_prototypes[product.name].localised_name})
+		else
+			return false
 		end
 	end
 	if #products == 0 then return end
@@ -377,7 +358,7 @@ function DA:addRecipe(name, amount)
 
 	-- Check if the recipe must be done --
 	self:toManyInInventory(recipeTable, 0)
-
+	return true
 end
 
 -- Remove a Recipe --
@@ -388,13 +369,6 @@ end
 
 -- Update a Recipe --
 function DA:updateRecipe(recipe, id)
-
-	-- Check the Recipe --
-	if recipe == nil or recipe.recipePrototype == nil or game.recipe_prototypes[recipe.recipePrototype.name] == nil then
-		self.recipeTable[id] = nil
-		return
-	end
-
 	-- Check if the Recipe has terminated --
 	if recipe.progress >= recipe.recipePrototype.energy then
 		-- Send products to the Data Network --
@@ -485,10 +459,6 @@ end
 function DA:toManyInInventory(recipe, id)
 	-- Get and check the main Product --
 	local products = recipe.products
-	if game.item_prototypes[products[1].name] == nil and game.fluid_prototypes[products[1].name] == nil then
-		self.recipeTable[id] = nil
-		return
-	end
 	-- Check if this is a Item --
 	if products[1].type == "item" then
 		if recipe.amount ~= nil and self.dataNetwork:hasItem(products[1].name) >= recipe.amount then
@@ -527,22 +497,23 @@ end
 function DA:blueprintTagsToSettings(tags)
 	self.recipeTable = {}
 	for _, recipe in pairs(tags["recipes"] or {}) do
-		self:addRecipe(recipe.name, recipe.amount)
-		local products = self.recipeTable[self.recipeID].products
-		local sortedProducts = {}
-		for _, name in pairs(recipe.productsOrder) do
-			for idx, product in pairs(products) do
-				if product.name == name then
-					table.insert(sortedProducts, product)
-					products[idx] = nil
-					break
+		if self:addRecipe(recipe.name, recipe.amount) then
+			local products = self.recipeTable[self.recipeID].products
+			local sortedProducts = {}
+			for _, name in pairs(recipe.productsOrder) do
+				for idx, product in pairs(products) do
+					if product.name == name then
+						table.insert(sortedProducts, product)
+						products[idx] = nil
+						break
+					end
 				end
 			end
+			for _, product in pairs(products) do
+				table.insert(sortedProducts, product)
+			end
+			self.recipeTable[self.recipeID].products = sortedProducts
 		end
-		for _, product in pairs(products) do
-			table.insert(sortedProducts, product)
-		end
-		self.recipeTable[self.recipeID].products = sortedProducts
 	end
 end
 
@@ -555,4 +526,16 @@ function DA:addQuatron(amount, level)
 		self.quatronLevel = level
 	end
 	return amount
+end
+
+-- Check stored data, and remove invalid record
+function DA:validate()
+	-- Check recipes --
+	for k, recipe in pairs(self.recipeTable) do
+		-- If recipe was changed or removed --
+		if recipe.recipePrototype.valid == false then
+			self.recipeTable[k] = nil
+		end
+		-- No need to check ingredients and products, game won't load with broken recipe. When recipe itself valid - all associated items also valid
+	end
 end
