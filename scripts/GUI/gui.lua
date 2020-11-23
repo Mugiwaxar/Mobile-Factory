@@ -429,7 +429,7 @@ function GUI.buttonClicked(event)
 	-- If this is a Mobile Factory Button -> Open Inventory --
 	if string.match(event.element.name, "MFOpenI") then
 		-- Get the Object --
-		local objId = split(event.element.name, ",")[2]
+		local objId = split(event.element.name, ",")[2] or ""
 		local ent = global.MFTable[objId].ent
 		if ent ~= nil and ent.valid == true then
 			getMFPlayer(player.name).varTable.bypassGUI = true
@@ -851,8 +851,8 @@ function GUI.onGuiElemChanged(event)
 	end
 
 	------- Read if the Element comes from The Mobile Factory Energy Laser -------
-	if string.match(event.element.name, "MFEL") then
-		-- Change the Matter Serializer targeted Inventory --
+	if string.match(event.element.name, "MFPL") then
+		-- Change the Energy Laser to Drain/Send --
 		if event.element.switch_state == "left" then
 			MF.selectedEnergyLaserMode = "input"
 		else

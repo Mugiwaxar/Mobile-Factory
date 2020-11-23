@@ -202,7 +202,8 @@ _mfTooltipGUI =
     -- ConstructionJet = "constructionJetTable",
     -- RepairJet = "repairJetTable",
     -- CombatJet = "combatJetTable",
-    NetworkController = "entsTable"
+	NetworkController = "entsTable",
+	QuatronReactor = "entsTable"
 }
 
 -- Event Tick --

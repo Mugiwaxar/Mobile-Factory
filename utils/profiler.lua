@@ -42,8 +42,8 @@ ignoredFunctions[startCommand] = true
 ignoredFunctions[stopCommand] = true
 
 
-commands.add_command("startProfiler", "Starts profiling", startCommand)
-commands.add_command("stopProfiler", "Stops profiling", stopCommand)
+commands.add_command("MFstartProfiler", "Starts profiling", startCommand)
+commands.add_command("MFstopProfiler", "Stops profiling", stopCommand)
 
 
 local assert_raw = assert

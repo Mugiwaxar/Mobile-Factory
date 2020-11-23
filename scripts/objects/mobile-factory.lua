@@ -146,7 +146,7 @@ function MF:getTooltipInfos(GUIObj, gui, justCreated)
 			GUIObj:addLabel("", LasersFrame, {"", {"gui-description.EnergyLaser"}}, _mfOrange)
 			local state = "left"
 			if self.selectedEnergyLaserMode == "output" then state = "right" end
-			GUIObj:addSwitch("MFEL" .. self.ent.unit_number, LasersFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.DrainTT"}, {"gui-description.SendTT"}, state)
+			GUIObj:addSwitch("MFPL" .. self.ent.unit_number, LasersFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.DrainTT"}, {"gui-description.SendTT"}, state)
 		end
 
 		-- Create the Quatron Lasers Settings --
@@ -394,7 +394,7 @@ function MF:updateQuatronLaser(entity)
 			-- Remove the Quatron from the Structure --
 			obj.quatronCharge = obj.quatronCharge - drainedQuatron
 			-- Create the Beam --
-			self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
+			self.ent.surface.create_entity{name="PurpleQuatronBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
 			-- One less Beam to the Beam capacity --
 			return true
 		end
@@ -409,7 +409,7 @@ function MF:updateQuatronLaser(entity)
 			-- Remove the Quatron from the Mobile Factory --
 			self.internalQuatronObj.quatronCharge = self.internalQuatronObj.quatronCharge - quatronSend
 			-- Create the Beam --
-			self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
+			self.ent.surface.create_entity{name="PurpleQuatronBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
 			-- One less Beam to the Beam capacity --
 			return true
 		end
