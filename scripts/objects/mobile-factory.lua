@@ -767,7 +767,7 @@ function MF:TPMobileFactoryPart2()
 	-- Get the distance --
 	local distance = Util.distance({self.tpLocation.posX,self.tpLocation.posY}, self.ent.position)
 	-- Remove the Jump Drive Charge --
-	self.jumpDriveObj.charge = math.min(0, self.jumpDriveObj.charge - distance)
+	self.jumpDriveObj.charge = math.max(0, self.jumpDriveObj.charge - distance)
 	-- Remove the Quatron --
 	if self.tpLocation.surface ~= self.ent.surface then
 		self.internalQuatronObj:removeQuatron(1000)
