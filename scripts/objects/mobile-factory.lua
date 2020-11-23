@@ -1173,7 +1173,7 @@ end
 -- Check stored data, and remove invalid record
 function MF:validate()
 	-- Jump Drive location icons
-	for _, loc in pairs(self.jumpDriveObj.locationTable) do
+	for _, loc in pairs(self.jumpDriveObj.locationTable or {}) do
 		if loc.filter ~= nil and game.recipe_prototypes[loc.filter] == nil then
 			loc.filter = nil
 		end
