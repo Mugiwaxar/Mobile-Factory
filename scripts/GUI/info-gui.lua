@@ -118,7 +118,7 @@ function GUI.updateButtonsBar(GUIObj)
 
 
 	-------------------------------------------------------- Update all Buttons --------------------------------------------------------
-	local buttonsSize = 20
+	local buttonsSize = 35
 	GUIObj:addButton("PortOutsideButton", buttonsBar, "PortIcon", "PortIcon", {"gui-description.teleportOutsideButton"}, buttonsSize, true)
 	GUIObj:addButton("SyncAreaButton", buttonsBar, syncAreaSprite, syncAreaHovSprite, {"gui-description.syncAreaButton"}, buttonsSize, true)
 	GUIObj:addButton("FindMFButton", buttonsBar, "MFIconExc", "MFIconExc", {"gui-description.fixMFButton"}, buttonsSize, true, showFindMFButton)
@@ -165,7 +165,7 @@ function GUI.updateMFInfos(GUIObj)
 		mfEnergyValue = 1 - (math.floor(100 - MF.internalEnergyObj:energy() / MF.internalEnergyObj:maxEnergy() * 100)) / 100
 		mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF.internalEnergyObj:energy()), "J/", Util.toRNumber(MF.internalEnergyObj:maxEnergy()), "J"}
 		mfQuatronValue = 1 - (math.floor(100 - MF.internalQuatronObj.quatronCharge / MF.internalQuatronObj.quatronMax * 100)) / 100
-		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", Util.toRNumber(MF.internalQuatronObj.quatronCharge), "/", Util.toRNumber(MF.internalQuatronObj.quatronMax)}
+		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", Util.toRNumber(MF.internalQuatronObj.quatronCharge), "/", Util.toRNumber(MF.internalQuatronObj.quatronMax), " (", {"gui-description.mQuatronPurity"}, ": ",  string.format("%.3f", MF.internalQuatronObj.quatronLevel), ")"}
 		mfJumpDriveValue = (math.floor(MF.jumpDriveObj.charge / MF.jumpDriveObj.maxCharge * 100)) / 100
 		mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": ", MF.jumpDriveObj.charge, "/", MF.jumpDriveObj.maxCharge, " (", MF.jumpDriveObj.chargeRate, "/s)"}
 	end
@@ -174,7 +174,7 @@ function GUI.updateMFInfos(GUIObj)
 	-- Create the Frame --
 	local MFInfoFrame = GUIObj:addTitledFrame("MFInfoFrame", infosFlow, "vertical", "Mobile Factory", _mfOrange)
 	MFInfoFrame.style.minimal_height = 80
-	local barSize = 150
+	local barSize = 165
 
 	-- Add Labels and Progress Bars --
 	GUIObj:addLabel("PositionLabel", MFInfoFrame, mfPositionText, _mfGreen)

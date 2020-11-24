@@ -203,6 +203,21 @@ function split(str, char)
 	return parts
 end
 
+-- Return a comprehensible time --
+function Util.getRealTime(time)
+	local second = time * 86400
+	local minute = math.floor(second / 60) % 60
+	local hour = math.floor(second/3600)
+	local AMPM = hour > 12 and "AM" or "PM"
+	if hour == 12 then hour = 0 elseif hour == 0 then hour = 12 end
+	if hour > 12 then hour = hour - 12 end
+	if hour == 0 then AMPM = "AM" end
+	if minute < 10 then minute = 0 .. tostring(minute) else minute = tostring(minute) end
+	if hour < 10 then hour = 0 .. tostring(hour) else hour = tostring(hour) end
+	local realTime = {"", {"gui-description.Time"}, " ", hour, "H", minute, " ", AMPM}
+	return realTime
+end
+
 -- Return the localised Entity Name --
 function Util.getLocEntityName(entName)
 	return game.entity_prototypes[entName].localised_name

@@ -49,13 +49,18 @@ function GUI.createMFMainGUI(player)
 		if visible == false then ExtendButtonSprite = "ArrowIconRight" end
 	end
 
+	MFMainGUIFrame1.style.vertically_stretchable = true
+	MFMainGUIFrame2.style.vertically_stretchable = true
+	MFMainGUIFrame3.style.vertically_stretchable = true
+
 	-- Add the Draggable Area  --
 	GUIObj:addEmptyWidget("MainGUIDragArea", MFMainGUIFrame1, mfGUI, 15, 15)
 
 	-- Add All Buttons --
-	GUIObj:addButton("MainGUIOptionButton", MFMainGUIFrame1, "OptionIcon", "OptionIcon", {"gui-description.optionButton"}, 15)
-	GUIObj:addButton("MainGUIInfosButton", MFMainGUIFrame1, "MFIconI", "MFIconI", {"gui-description.MFInfosButton"}, 15)
-	GUIObj:addButton("MainGUIReduceButton", MFMainGUIFrame1, ExtendButtonSprite, ExtendButtonSprite, {"gui-description.reduceButton"}, 15, true)
+	local buttonsSize = 14 + (MFPlayer.varTable.mainGUIMainButtonsSize or 1)
+	GUIObj:addButton("MainGUIOptionButton", MFMainGUIFrame1, "OptionIcon", "OptionIcon", {"gui-description.optionButton"}, buttonsSize)
+	GUIObj:addButton("MainGUIInfosButton", MFMainGUIFrame1, "MFIconI", "MFIconI", {"gui-description.MFInfosButton"}, buttonsSize)
+	GUIObj:addButton("MainGUIReduceButton", MFMainGUIFrame1, ExtendButtonSprite, ExtendButtonSprite, {"gui-description.reduceButton"}, buttonsSize, true)
 
 	-- Make the GUI visible or not --
 	MFMainGUIFrame2.visible = visible
@@ -78,6 +83,8 @@ function GUI.updateMFMainGUI(GUIObj)
 
 	-------------------------------------------------------- Get Information Variables --------------------------------------------------------
 	local mfPositionText = {"", {"gui-description.mfPosition"}, ": ", {"gui-description.Unknow"}}
+	local time = Util.getRealTime(player.surface.daytime)
+	local temperature = "Unknow"
 	local mfHealthValue = 0
 	local mfHealthText = {"", {"gui-description.mfHealth"}, ": ", {"gui-description.Unknow"}}
 	local mfShielValue = 0
@@ -102,21 +109,50 @@ function GUI.updateMFMainGUI(GUIObj)
 		mfEnergyValue = 1 - (math.floor(100 - MF.internalEnergyObj:energy() / MF.internalEnergyObj:maxEnergy() * 100)) / 100
 		mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF.internalEnergyObj:energy()), "J/", Util.toRNumber(MF.internalEnergyObj:maxEnergy()), "J"}
 		mfQuatronValue = 1 - (math.floor(100 - MF.internalQuatronObj.quatronCharge / MF.internalQuatronObj.quatronMax * 100)) / 100
-		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", Util.toRNumber(MF.internalQuatronObj.quatronCharge), "/", Util.toRNumber(MF.internalQuatronObj.quatronMax)}
+		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", Util.toRNumber(MF.internalQuatronObj.quatronCharge), "/", Util.toRNumber(MF.internalQuatronObj.quatronMax), " (", {"gui-description.mQuatronPurity"}, ": ",  string.format("%.3f", MF.internalQuatronObj.quatronLevel), ")"}
 		mfJumpDriveValue = (math.floor(MF.jumpDriveObj.charge / MF.jumpDriveObj.maxCharge * 100)) / 100
 		mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": ", MF.jumpDriveObj.charge, "/", MF.jumpDriveObj.maxCharge, " (", MF.jumpDriveObj.chargeRate, "/s)"}
 	end
 
-	-------------------------------------------------------- Update Information --------------------------------------------------------
-	GUIObj:addLabel("PositionLabel", GUIObj.MFMainGUIFrame2, mfPositionText, _mfGreen, "Mobile Factory")
-	GUIObj:addProgressBar("HealBar", GUIObj.MFMainGUIFrame2, "", mfHealthText, false, _mfRed, mfHealthValue)
-	GUIObj:addProgressBar("ShieldBar", GUIObj.MFMainGUIFrame2, "", mfShieldText, false, _mfBlue, mfShielValue)
-	GUIObj:addProgressBar("EnergyBar", GUIObj.MFMainGUIFrame2, "", mfEnergyText, false, _mfYellow, mfEnergyValue)
-	GUIObj:addProgressBar("QuatronBar", GUIObj.MFMainGUIFrame2, "", mfQuatronText, false, _mfPurple, mfQuatronValue)
-	GUIObj:addProgressBar("JumpDriveBar", GUIObj.MFMainGUIFrame2, "", mfJumpDriveText, false, _mfOrange, mfJumpDriveValue)
+	-- Update Chunk Temperature --
+	if GUIObj.MFPlayer.varTable.MainGUIShowTemperature == true and remote.interfaces["EryaCom"]["getChunkTemp"] ~= nil then
+		temperature = remote.call("EryaCom", "getChunkTemp", player.surface.index, math.floor(player.position.x / 32), math.floor(player.position.y / 32))
+	end
 
-	-- Set Style --
-	GUIObj.MFMainGUIFrame2.JumpDriveBar.style.bottom_padding = 1
+	-------------------------------------------------------- Update Information --------------------------------------------------------
+	local barsSize = 30 + ((GUIObj.MFPlayer.varTable.mainGUIBarsSize or 7)*10)
+
+	if GUIObj.MFPlayer.varTable.MainGUIShowPositions ~= false then
+		GUIObj:addLabel("PositionLabel", GUIObj.MFMainGUIFrame2, mfPositionText, _mfGreen, "Mobile Factory")
+	end
+
+	if GUIObj.MFPlayer.varTable.MainGUIShowTime == true then
+		GUIObj:addLabel("TimeLabel", GUIObj.MFMainGUIFrame2, time, _mfGreen, "Mobile Factory")
+	end
+
+	if GUIObj.MFPlayer.varTable.MainGUIShowTemperature == true then
+		GUIObj:addLabel("TempLabel", GUIObj.MFMainGUIFrame2, {"", {"gui-description.temp"}, " ", string.format("%.1f", temperature), " °C"}, _mfGreen, "Mobile Factory")
+	end
+
+	if GUIObj.MFPlayer.varTable.MainGUIShowHealthBar ~= false then
+		GUIObj:addProgressBar("HealBar", GUIObj.MFMainGUIFrame2, "", mfHealthText, false, _mfRed, mfHealthValue, barsSize)
+	end
+
+	if GUIObj.MFPlayer.varTable.MainGUIShowShieldBar ~= false then
+		GUIObj:addProgressBar("ShieldBar", GUIObj.MFMainGUIFrame2, "", mfShieldText, false, _mfBlue, mfShielValue, barsSize)
+	end
+
+	if GUIObj.MFPlayer.varTable.MainGUIShowEnergyBar ~= false then
+		GUIObj:addProgressBar("EnergyBar", GUIObj.MFMainGUIFrame2, "", mfEnergyText, false, _mfYellow, mfEnergyValue, barsSize)
+	end
+
+	if GUIObj.MFPlayer.varTable.MainGUIShowQuatronBar ~= false then
+		GUIObj:addProgressBar("QuatronBar", GUIObj.MFMainGUIFrame2, "", mfQuatronText, false, _mfPurple, mfQuatronValue, barsSize)
+	end
+
+	if GUIObj.MFPlayer.varTable.MainGUIShowJumpCharge ~= false then
+		GUIObj:addProgressBar("JumpDriveBar", GUIObj.MFMainGUIFrame2, "", mfJumpDriveText, false, _mfOrange, mfJumpDriveValue, barsSize)
+	end
 
 	-------------------------------------------------------- Get Buttons Variables --------------------------------------------------------
 	local showCallMFButton = technologyUnlocked("JumpDrive", getForce(player.name))
@@ -142,7 +178,7 @@ function GUI.updateMFMainGUI(GUIObj)
 	
 
 	-------------------------------------------------------- Update all Buttons --------------------------------------------------------
-	local buttonsSize = 15
+	local buttonsSize = 14 + (GUIObj.MFPlayer.varTable.mainGUIButtonsSize or 1)
 	GUI.addButtonToMainGui(GUIObj, {name="PortOutsideButton", sprite="PortIcon", hovSprite="PortIcon", tooltip={"gui-description.teleportOutsideButton"}, size=buttonsSize, save=false})
 	GUI.addButtonToMainGui(GUIObj, {name="SyncAreaButton", sprite=syncAreaSprite, hovSprite=syncAreaHovSprite, tooltip={"gui-description.syncAreaButton"}, size=buttonsSize, save=false})
 	GUI.addButtonToMainGui(GUIObj, {name="FindMFButton", sprite="MFIconExc", hovSprite="MFIconExc", tooltip={"gui-description.fixMFButton"}, size=buttonsSize, save=false, visible=showFindMFButton})
@@ -179,7 +215,7 @@ function GUI.renderMainGuiButtons(GUIObj)
 		if button.visible == false then goto continue end
 		if GUIObj.MFPlayer.varTable["Show" .. button.name] == false then goto continue end
 		-- Create a new Flow --
-		if i % 4 == 0 then
+		if i % (GUIObj.MFPlayer.varTable.mainGUIButtonsPerColumm or 4) == 0 then
 			y = y + 1
 			flow = GUIObj:addFlow("buttonFlow" .. y, GUIObj.MFMainGUIFrame3, "vertical")
 		end

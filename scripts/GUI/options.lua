@@ -32,6 +32,71 @@ function GUI.readOptions(option, player)
 		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])
 	end
 
+	if string.match(name, "MainGUIMainButtonsSize") then
+		local size = option.selected_index
+		GUIObj.MFPlayer.varTable.mainGUIMainButtonsSize = size
+		GUI.createMFMainGUI(MFPlayer.ent)
+	end
+
+	if string.match(name, "MainGUIButtonsSize") then
+		local size = option.selected_index
+		GUIObj.MFPlayer.varTable.mainGUIButtonsSize = size
+		GUI.createMFMainGUI(MFPlayer.ent)
+	end
+	
+	if string.match(name, "MainGUIButtonsPerColumm") then
+		local size = option.selected_index
+		GUIObj.MFPlayer.varTable.mainGUIButtonsPerColumm = size
+		GUI.createMFMainGUI(MFPlayer.ent)
+	end
+
+	if string.match(name, "MainGUIShowPositions") then
+		GUIObj.MFPlayer.varTable.MainGUIShowPositions = option.state
+		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])
+	end
+
+	if string.match(name, "MainGUIShowTime") then
+		GUIObj.MFPlayer.varTable.MainGUIShowTime = option.state
+		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])
+	end
+	
+	if string.match(name, "MainGUIShowTemperature") then
+		GUIObj.MFPlayer.varTable.MainGUIShowTemperature = option.state
+		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])
+	end
+
+	if string.match(name, "MainGUIShowHealthBar") then
+		GUIObj.MFPlayer.varTable.MainGUIShowHealthBar = option.state
+		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])
+	end
+
+	if string.match(name, "MainGUIShowShieldBar") then
+		GUIObj.MFPlayer.varTable.MainGUIShowShieldBar = option.state
+		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])
+	end
+
+	if string.match(name, "MainGUIShowEnergyBar") then
+		GUIObj.MFPlayer.varTable.MainGUIShowEnergyBar = option.state
+		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])
+	end
+
+	if string.match(name, "MainGUIShowQuatronBar") then
+		GUIObj.MFPlayer.varTable.MainGUIShowQuatronBar = option.state
+		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])
+	end
+
+	if string.match(name, "MainGUIShowJumpCharge") then
+		GUIObj.MFPlayer.varTable.MainGUIShowJumpCharge = option.state
+		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])
+	end
+
+	if string.match(name, "MainGUIBarsSize") then
+		local size = option.selected_index
+		GUIObj.MFPlayer.varTable.mainGUIBarsSize = size
+		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])
+	end
+	
+
 	------------------- Game -------------------
 	-- if name == "MiningJetDistanceOpt" then
 	-- 	MF.varTable.jets.mjMaxDistance = tonumber(option.text)

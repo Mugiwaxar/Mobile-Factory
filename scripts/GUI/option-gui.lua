@@ -127,15 +127,55 @@ function GUI.updateOptionGUIGUITab(GUIObj)
 
 	-- Add all Options --
 	GUI.addOption("", scrollPane, "title", false, {text={"gui-description.MainGUIOpt"}}, playerIndex)
+	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIGeneralTitle"}, nil, nil, false, "LabelFont2")
 	GUI.addOption("MainGuiDirectionSwitch", scrollPane, "switch", false, {text={"gui-description.Left"}, text2={"gui-description.Right"}, text3={"gui-description.MainGUIDirection"}, tooltip3={"gui-description.MainGUIDirectionTT"}, state=GUIObj.MFPlayer.varTable.MainGUIDirection or "right"}, playerIndex)
 
-	-- Add a CheckBox for each Buttons --
+	-- Add a CheckBox every each Buttons --
+	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIButtonsTitle"}, nil, nil, false, "LabelFont2")
 	for k, button in pairs(MFPlayer.GUI["MFMainGUI"].buttonsTable) do
 		local state = true
 		if GUIObj.MFPlayer.varTable["Show" .. button.name] == false then state = false end
-		GUI.addOption("MGS," .. button.name, scrollPane, "checkbox", false, {text={"", {"gui-description.MainGUIButtons"}, " ", button.name}, state=state}, playerIndex)
-		GUIObj:addCheckBox("MGS," .. button.name, scrollPane, {"", {"gui-description.MainGUIButtons"}, " ", button.name}, "", state)
+		GUIObj:addCheckBox("MGS," .. button.name, scrollPane, {"", {"gui-description.MainGUIButtons"}, "", button.name}, "", state)
 	end
+
+	-- Add the Main Buttons size Selector --
+	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIMainButtonSizeTitle"}, nil, nil, false, "LabelFont2")
+	GUIObj:addDropDown("MainGUIMainButtonsSize", scrollPane, {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20}, GUIObj.MFPlayer.varTable.mainGUIMainButtonsSize or 1, true, {"gui-description.MainGUIMainButtonSizeSelectorTT"})
+
+	-- Add the Buttons size Selector --
+	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIButtonSizeTitle"}, nil, nil, false, "LabelFont2")
+	GUIObj:addDropDown("MainGUIButtonsSize", scrollPane, {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20}, GUIObj.MFPlayer.varTable.mainGUIButtonsSize or 1, true, {"gui-description.MainGUIButtonSizeSelectorTT"})
+
+	-- Add the Buttons per Columm Selector --
+	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIButtonsColummTitle"}, nil, nil, false, "LabelFont2")
+	GUIObj:addDropDown("MainGUIButtonsPerColumm", scrollPane, {1,2,3,4,5,6,7,8,9,10}, GUIObj.MFPlayer.varTable.mainGUIButtonsPerColumm or 4, true, {"gui-description.MainGUIButtonsPerColummTT"})
+
+	-- Add a CheckBox for every Information --
+	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIInformationTitle"}, nil, nil, false, "LabelFont2")
+	GUIObj:addCheckBox("MainGUIShowPositions", scrollPane, {"gui-description.MainGUIShowPositions"}, "", GUIObj.MFPlayer.varTable.MainGUIShowPositions == nil and true or GUIObj.MFPlayer.varTable.MainGUIShowPositions)
+	GUIObj:addCheckBox("MainGUIShowTime", scrollPane, {"gui-description.MainGUIShowTime"}, "", GUIObj.MFPlayer.varTable.MainGUIShowTime == nil and false or GUIObj.MFPlayer.varTable.MainGUIShowTime)
+	local eryaTemp = GUIObj:addCheckBox("MainGUIShowTemperature", scrollPane, {"gui-description.MainGUIShowTemperature"}, {"gui-description.MainGUIShowTemperatureTT"}, GUIObj.MFPlayer.varTable.MainGUIShowTemperature == nil and false or GUIObj.MFPlayer.varTable.MainGUIShowTemperature)
+
+	-- Enable or Disable the Erya Temperature Checkbox --
+	if script.active_mods["Mobile_Factory-Erya"] ~= nil and script.active_mods["Mobile_Factory-Erya"] > "0.1.7" then
+		eryaTemp.enabled = true
+	else
+		eryaTemp.enabled = false
+		GUIObj.MFPlayer.varTable.MainGUIShowTemperature = false
+		eryaTemp.state = false
+	end
+
+	-- Add a CheckBox for every Progress Bars --
+	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIBarsTitle"}, nil, nil, false, "LabelFont2")
+	GUIObj:addCheckBox("MainGUIShowHealthBar", scrollPane, {"gui-description.MainGUIShowHealthBar"}, "", GUIObj.MFPlayer.varTable.MainGUIShowHealthBar == nil and true or GUIObj.MFPlayer.varTable.MainGUIShowHealthBar)
+	GUIObj:addCheckBox("MainGUIShowShieldBar", scrollPane, {"gui-description.MainGUIShowShieldBar"}, "", GUIObj.MFPlayer.varTable.MainGUIShowShieldBar == nil and true or GUIObj.MFPlayer.varTable.MainGUIShowShieldBar)
+	GUIObj:addCheckBox("MainGUIShowEnergyBar", scrollPane, {"gui-description.MainGUIShowEnergyBar"}, "", GUIObj.MFPlayer.varTable.MainGUIShowEnergyBar == nil and true or GUIObj.MFPlayer.varTable.MainGUIShowEnergyBar)
+	GUIObj:addCheckBox("MainGUIShowQuatronBar", scrollPane, {"gui-description.MainGUIShowQuatronBar"}, "", GUIObj.MFPlayer.varTable.MainGUIShowQuatronBar == nil and true or GUIObj.MFPlayer.varTable.MainGUIShowQuatronBar)
+	GUIObj:addCheckBox("MainGUIShowJumpCharge", scrollPane, {"gui-description.MainGUIShowJumpCharge"}, "", GUIObj.MFPlayer.varTable.MainGUIShowJumpCharge == nil and true or GUIObj.MFPlayer.varTable.MainGUIShowJumpCharge)
+	
+	-- Add the Progress Bar size Selector --
+	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIBarsSizeTitle"}, nil, nil, false, "LabelFont2")
+	GUIObj:addDropDown("MainGUIBarsSize", scrollPane, {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20}, GUIObj.MFPlayer.varTable.mainGUIBarsSize or 7, true, {"gui-description.MainGUIProgressBarSizeSelectorTT"})
 
 end
 
@@ -164,7 +204,7 @@ function GUI.updateOptionGUIGameTab(GUIObj)
 	local FILOption = GUIObj:addCheckBox("FloorIsLavaOpt", scrollPane, {"gui-description.FloorIsLavaOpt"}, {"gui-description.FloorIsLavaOptTT"}, global.floorIsLavaActivated or false)
 	FILOption.enabled = GUIObj.MFPlayer.ent.admin
 
-		-- Create the Category List --
+	-- Create the Category List --
 	local categoryList = {}
 	for _, recipe in pairs(game.recipe_prototypes) do
 		categoryList[recipe.category] = recipe.category
