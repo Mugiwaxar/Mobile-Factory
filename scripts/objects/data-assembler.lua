@@ -238,7 +238,12 @@ function DA:createFrame(GUIObj, gui, recipe, id)
 	recipeFlow.style.horizontally_stretchable = false
 
 	-- Create the Recipe Icon --
-	local tooltip = {"", recipe.recipePrototype.localised_name, " (max:", recipe.amount, ")"}
+	local tooltip = ""
+	if recipe.amount ~= nil then
+		tooltip = {"", recipe.recipePrototype.localised_name, " (max:", recipe.amount, ")"}
+	else
+		tooltip = {"", recipe.recipePrototype.localised_name}
+	end
 	local recipeButton = GUIObj:addButton("DARem," .. self.entID .. "," .. id, recipeFlow, recipe.sprite, recipe.sprite, tooltip, 50, false, true, recipe.amount)
 	recipeButton.style = (recipe.toManyInInventory == true and "MF_Fake_Button_Red") or "MF_Fake_Button_Green"
 	recipeButton.style.padding = 0
@@ -302,7 +307,6 @@ function DA:addRecipe(name, amount)
 	-- Check the Values --
 	if name == nil then return false end
 	amount = tonumber(amount)
-	if amount == nil or amount < 1 then return false end
 	
 	-- Check the Recipe --
 	local recipePrototype = game.recipe_prototypes[name]
@@ -399,7 +403,7 @@ function DA:updateRecipe(recipe, id)
 
 	-- Check if the recipe must be done --
 	self:toManyInInventory(recipe, id)
-	if recipe.toManyInInventory == true and recipe.missingIngredient == true then return end
+	if recipe.toManyInInventory == true then return end
 
 	-- Check if the Recipe need Ingredients --
 	if recipe.missingIngredient == true then
@@ -457,6 +461,11 @@ end
 
 -- Check if the Recipe must be done --
 function DA:toManyInInventory(recipe, id)
+	-- Return if the Recipe is unlimited Amount --
+	if recipe.amount == nil then
+		recipe.toManyInInventory = false
+		return
+	end
 	-- Get and check the main Product --
 	local products = recipe.products
 	-- Check if this is a Item --
