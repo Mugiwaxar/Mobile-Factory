@@ -8,7 +8,7 @@ function GUI.createRecipeGUI(player)
 	topBarFlow.style.vertical_align = "center"
 	GUIObj:addLabel("", topBarFlow, {"gui-assembling-machine.choose-recipe"}, _mfOrange, nil, false, "TitleFont")
 	GUIObj:addEmptyWidget("", topBarFlow, GUIObj.gui, 20, nil)
-	textField = GUIObj:addTextField("RSSearchTextField", topBarFlow, "", {"gui-description.ItemSearchTextTT"}, true, false, false, false, false)
+	local textField = GUIObj:addTextField("RSSearchTextField", topBarFlow, "", {"gui-description.ItemSearchTextTT"}, true, false, false, false, false)
 	textField.style.maximal_width = 100
 	GUIObj:addButton("RecipeGUICloseButton", topBarFlow, "CloseIcon", "CloseIcon", {"gui-description.closeButton"}, 15)
 

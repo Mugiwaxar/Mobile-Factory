@@ -120,8 +120,7 @@ function QR:burnFluid()
 	-- Get the Quatron Level --
 	local fluidName = fluid.name
 	if string.match(fluidName, "LiquidQuatron") == nil then return end
-	level = string.gsub(fluidName, "LiquidQuatron", "")
-	local level = tonumber(level)
+	local level = tonumber((string.gsub(fluidName, "LiquidQuatron", "")))
 	if level == nil then return end
 
 	-- Get the amount of Fluid to remove --
