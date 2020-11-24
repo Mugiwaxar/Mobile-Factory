@@ -82,7 +82,7 @@ end
 -- Content to Item Tags --
 function IQC:contentToItemTags(tags)
 	if self.quatronCharge <= 0 then return end
-	tags.set_tag("Infos", {energy=self.quatronCharge, purity=selfQuatronLevel})
+	tags.set_tag("Infos", {energy=self.quatronCharge, purity=self.quatronLevel})
 	tags.custom_description = {"", tags.prototype.localised_description, {"item-description.QuatronCubeC", math.floor(self.quatronCharge), string.format("%.3f", self.quatronLevel)}}
 end
 

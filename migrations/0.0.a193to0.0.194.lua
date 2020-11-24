@@ -16,7 +16,7 @@ for _, da in pairs(global.dataAssemblerTable or {}) do
 		if recipePrototype.main_product ~= nil and recipePrototype.main_product.name ~= recipe.products[1].name then
 			for idx, product in ipairs(recipe.products) do
 				if product.name == recipePrototype.main_product.name then
-					products[1], products[idx] = products[idx], products[1]
+					recipe.products[1], recipe.products[idx] = recipe.products[idx], recipe.products[1]
 					break
 				end
 			end

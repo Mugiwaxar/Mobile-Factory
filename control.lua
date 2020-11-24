@@ -288,8 +288,8 @@ local function MFResetGUIs(event)
 		else
 			logString = logString.."\nPlayer does not have an MFPlayer."			
 		end
+		log(logString)
 	end
-	log(logString)
 end
 commands.add_command("MF_reset_guis", "reset the GUIS for Mobile Factory players", MFResetGUIs)
 
