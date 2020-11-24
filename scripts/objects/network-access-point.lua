@@ -134,7 +134,11 @@ function NAP:getTooltipInfos(GUIObj, gui, justCreated)
 
     -- Add the Quatron Charge --
     GUIObj:addLabel("", informationFlow, {"", {"gui-description.QuatronCharge"}, ":"}, _mfOrange)
-    GUIObj:addProgressBar("", informationFlow, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+	GUIObj:addProgressBar("", informationFlow, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+	
+	-- Create the Quatron Purity --
+	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Purity"}, ": "}, string.format("%.3f", self.quatronLevel), _mfOrange, _mfGreen)
+	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronLevel/20, 100)
 
 end
 
