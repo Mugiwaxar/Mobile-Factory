@@ -847,7 +847,7 @@ function MF:syncAreaScan()
 	local distancesOutBools = {}
 
 	-- Look for Entities inside the Sync Area --
-	local entTableIn = inside.find_entities_filtered{area = clonedBdb, build_type}
+	local entTableIn = inside.find_entities_filtered{area = clonedBdb}
 
 --[[
 	-- 06-05-2020: suggestion from Klonan, with idea/contributions from Optera
@@ -874,19 +874,19 @@ function MF:syncAreaScan()
 			}
 			-- Will create_entity Fail Without More Details? --
 			if _mfSyncAreaExtraDetails[ent.type] then
-				for _, key in pairs(_mfSyncAreaExtraDetails[ent.type]) do
+				for argKey, entKey in pairs(_mfSyncAreaExtraDetails[ent.type]) do
 					-- LuaItemStack vs SimpleItemStack (dictionary) --
-					if key == "stack" then
+					if entKey == "stack" then
 						--unsure if stack could ever be invalid, but reading would cause an error
 						if ent.stack.valid_for_read then
-							arg.stack = {name = ent.stack.name, count = ent.stack.count}
+							arg[argKey] = {name = ent.stack.name, count = ent.stack.count}
 						else
 							--this is such a hackjob
 							arg = nil
 							break
 						end
 					else
-						arg[key] = ent[key]
+						arg[argKey] = ent[entKey]
 					end
 				end
 			end

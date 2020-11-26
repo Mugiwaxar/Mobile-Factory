@@ -64,11 +64,11 @@ _mfSyncAreaAllowedTypes =
 
 -- Mobile Factory Sync Area extra entity information needed --
 _mfSyncAreaExtraDetails = {
-	["item-entity"] = {"stack"},
-	["entity-ghost"] = {"inner_name"},
-	["tile-ghost"] = {"inner_name"},
-
+	["item-entity"] = {["stack"] = "stack"},
+	["entity-ghost"] = {["inner_name"] = "ghost_name"},
+	["tile-ghost"] = {["inner_name"] = "ghost_name"},
 }
+
 -- Mobile Factory Sync Area, ignored for collision, entity types --
 _mfSyncAreaIgnoredTypes = {
 	beam = true,
