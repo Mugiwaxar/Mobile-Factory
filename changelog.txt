@@ -3,6 +3,7 @@ Version: 0.2.2
 Date: 27/11/2020
   Bugfixes:
     - Fixed the Fluid Extractor unable to found ressources
+    - The Data Network List should now be correctly shown
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.1
 Date: 27/11/2020
