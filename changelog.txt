@@ -1,9 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.2.0
+Date: 27/11/2020
+  Bugfixes:
+    - Fixed crash on Sync area ghost placing (Honktown)
+---------------------------------------------------------------------------------------------------
 Version: 0.1.2
 Date: 24/11/2020
   Gui:
     - Data Assembler: Setting the number of Items to nothing will create an unlimited amount of this Item
-    - The Network Access Point now show its Quatron Purity inside its GUI
+    - The Network Access Point now shows its Quatron Purity inside its GUI
     - Added the Quatron Purity amount inside the Main GUI and the Information GUI
     - Added an Option to select the Main GUI Buttons size
     - Added Options to show/Hide Main GUI Progress Bars
@@ -11,11 +16,11 @@ Date: 24/11/2020
     - Added an Option to show/hide the Mobile Factory positions inside the Main GUI
     - Added an Option to show/hide the Day time (HH:MM) inside the Main GUI
     - Added an Option to show/hide the Chunk current Temperature (Erya Tech extension >= 0.1.8 must be installed)
-    - Increased the size of the Information GUI Buttons
+    - Increased the size of all Information GUI Buttons
   Translation:
     - Some small fixes to translations  
   Bugfixes:
-    - Some Typos fix
+    - Some Typos fixes
     - The Data Assembler should not start the recipe if there is too many of the first product in the Data Network
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.1
