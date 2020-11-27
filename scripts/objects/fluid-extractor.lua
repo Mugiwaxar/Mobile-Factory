@@ -7,10 +7,11 @@ FE = {
 	entID = 0,
 	dataNetwork = nil,
 	updateTick = 60,
-	lastUpdate = 0;
+	lastUpdate = 0,
 	selectedInv = nil,
 	mfTooFar = false,
 	resource = nil,
+	product = nil,
 	quatronCharge = 0,
 	quatronLevel = 1,
 	quatronMax = _mfFEMaxCharge,
@@ -31,7 +32,6 @@ function FE:new(object)
 	t.MF = getMF(t.player)
 	t.entID = object.unit_number
 	t.dataNetwork = t.MF.dataNetwork
-	resource = object.surface.find_entities_filtered{position=object.position, radius=1, type="resource", limit=1}[1]
 	UpSys.addObj(t)
 	return t
 end
@@ -225,21 +225,38 @@ function FE:extractFluids(event)
 	-- Check the Quatron Charge --
 	if self.quatronCharge < 100 then return end
 	-- Check the Resource --
-	self.resource = self.resource or self.ent.surface.find_entities_filtered{position=self.ent.position, radius=1, type="resource", limit=1}[1]
-	if self.resource == nil or self.resource.valid == false then return end
-	local listProducts = self.resource.prototype.mineable_properties.products
+	if self.resource == nil or self.listProducts == nil then
+		-- Get the Resources under the Fluid Extractor
+		local resources = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=1, type="resource"}
+		for _, resource in pairs(resources or {}) do
+			-- Check the Resources
+			if resource ~= nil and resource.valid == true then
+				-- Get the Products --
+				local products = resource.prototype.mineable_properties.products
+				-- Check the Products --
+				for _, product in pairs(products or {}) do
+					if product.type == "fluid" then
+						self.resource = resource
+						self.listProducts = products
+					end
+				end
+			end
+		end
+	end
 
+	-- Check if a Ressource was found --
+	if self.resource == nil or self.listProducts == nil then return end
+
+	-- Check the selected Inventory --
 	if self.selectedInv ~= nil then
 		-- Check Selected Inventory
 		if valid(self.selectedInv) == false then return end
-		-- Multiple products can't be stored in single storage
-		if table_size(listProducts) > 1 then return end
 	end
 
 	-- Check if there is a room for all products
 	local deepStorages = {}
 	local fluidExtracted = math.min(self:fluidPerExtraction(), self.resource.amount)
-	for _, product in pairs(listProducts) do
+	for _, product in pairs(self.listProducts) do
 		-- Check if product is fluid --
 		if product.type ~= 'fluid' then return end
 
@@ -267,7 +284,7 @@ function FE:extractFluids(event)
 
 	-- Extract Fluids --
 	local stats = self.ent.force.fluid_production_statistics
-	for _, product in pairs(listProducts) do
+	for _, product in pairs(self.listProducts) do
 		if product.probability == 1 or product.probability > math.random() then
 			-- Add Fluids to the Inventory --
 			local temp = product.temperature or 15
