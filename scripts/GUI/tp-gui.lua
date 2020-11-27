@@ -11,7 +11,6 @@ function GUI.createTPGui(player)
     -- Create the Main Frame --
     local mainFrame = GUIObj:addFrame("MainFrame", TPGUI, "horizontal")
 
-    
     -- Create the Information Title and Flow --
     local infoTitle = GUIObj:addTitledFrame("InformationTitle", mainFrame, "vertical", {"gui-description.Information"}, _mfOrange)
     GUIObj:addFlow("InformationFlow", infoTitle, "vertical", true)
@@ -34,7 +33,7 @@ function GUI.createTPGui(player)
     -- Update the GUI --
     GUI.updateMFTPGUI(GUIObj)
 
-	-- Update the GUI and return the GUI Object --
+	-- Return the GUI Object --
 	return GUIObj
 
 end
