@@ -326,6 +326,15 @@ function getForce(player)
 	end
 end
 
+-- Return the Mobile Factory from a Surface Name --
+function getMFBySurface(surface)
+	for _, MF in pairs(global.MFTable) do
+		if MF.fS == surface or MF.ccS == surface then
+			return MF
+		end
+	end
+end
+
 -- Get player specific variable --
 function getPlayerVariable(playerName, variable)
 	if global.playersTable == nil then global.playersTable = {} end
