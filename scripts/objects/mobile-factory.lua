@@ -150,7 +150,7 @@ function MF:getTooltipInfos(GUIObj, gui, justCreated)
 			GUIObj:addLabel("", LasersFrame, {"", {"gui-description.EnergyLaser"}}, _mfOrange)
 			local state = "left"
 			if self.selectedEnergyLaserMode == "output" then state = "right" end
-			GUIObj:addSwitch("MFPL" .. self.ent.unit_number, LasersFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.DrainTT"}, {"gui-description.SendTT"}, state)
+			GUIObj:addSwitch("MFPL" .. self.playerIndex, LasersFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.DrainTT"}, {"gui-description.SendTT"}, state)
 		end
 
 		-- Create the Quatron Lasers Settings --
@@ -159,7 +159,7 @@ function MF:getTooltipInfos(GUIObj, gui, justCreated)
 			GUIObj:addLabel("", LasersFrame, {"", {"gui-description.QuatronLaser"}}, _mfOrange)
 			local state = "left"
 			if self.selectedQuatronLaserMode == "output" then state = "right" end
-			GUIObj:addSwitch("MFQL" .. self.ent.unit_number, LasersFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.DrainTT"}, {"gui-description.SendTT"}, state)
+			GUIObj:addSwitch("MFQL" .. self.playerIndex, LasersFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.DrainTT"}, {"gui-description.SendTT"}, state)
 		end
 
 		-- Create the Fluid Lasers Settings --
@@ -168,7 +168,7 @@ function MF:getTooltipInfos(GUIObj, gui, justCreated)
 			GUIObj:addLabel("", LasersFrame, {"", {"gui-description.FluidLaser"}}, _mfOrange)
 			local state = "left"
 			if self.selectedFluidLaserMode == "output" then state = "right" end
-			GUIObj:addSwitch("MFFMode" .. self.ent.unit_number, LasersFrame, {"gui-description.Input"}, {"gui-description.Output"}, {"gui-description.InputTT"}, {"gui-description.OutputTT"}, state)
+			GUIObj:addSwitch("MFFMode" .. self.playerIndex, LasersFrame, {"gui-description.Input"}, {"gui-description.Output"}, {"gui-description.InputTT"}, {"gui-description.OutputTT"}, state)
 			GUIObj:addLabel("", LasersFrame, {"", {"gui-description.MSTarget"}}, _mfOrange)
 			-- Create the Target List --
 			local invs = {{"", {"gui-description.None"}}}
@@ -190,7 +190,7 @@ function MF:getTooltipInfos(GUIObj, gui, justCreated)
 				end
 			end
 			if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-			GUIObj:addDropDown("MFFTarget" .. self.ent.unit_number, LasersFrame, invs, selectedIndex)
+			GUIObj:addDropDown("MFFTarget" .. self.playerIndex, LasersFrame, invs, selectedIndex)
 		end
 	end
 end

@@ -205,6 +205,9 @@ function GUI.buttonClicked(event)
 	local MF = getMF(player.name)
 	if MF == nil then return end
 
+	-- Get the Current Mobile Factory --
+	local currentMF = getCurrentMF(player.name) or MF
+
 	-- Get the Main GUI Object --
 	local mainGUI = MFPlayer.GUI["MFMainGUI"]
 
@@ -297,31 +300,31 @@ function GUI.buttonClicked(event)
 
 	-- SyncArea button --
 	if event.element.name == "SyncAreaButton" then
-		if MF.syncAreaEnabled == true then MF.syncAreaEnabled = false
-		elseif MF.syncAreaEnabled == false then MF.syncAreaEnabled = true end
+		if currentMF.syncAreaEnabled == true then currentMF.syncAreaEnabled = false
+		elseif currentMF.syncAreaEnabled == false then currentMF.syncAreaEnabled = true end
 		return
 	end
 
 	-- Fix Mobile Factory Button --
 	if event.element.name == "FindMFButton" then
-		fixMB(event)
+		fixMB(event, currentMF)
 		return
 	end
 
 	-- MFTPInside button --
 	if event.element.name == "TPInsideButton" then
-		if MF.tpEnabled == true then MF.tpEnabled = false
-		elseif MF.tpEnabled == false then MF.tpEnabled = true end
+		if currentMF.tpEnabled == true then currentMF.tpEnabled = false
+		elseif currentMF.tpEnabled == false then currentMF.tpEnabled = true end
 		return
 	end
 
 	-- MFLock button --
 	if event.element.name == "LockMFButton" then
-		if MF.locked == true then
-			MF.locked = false
+		if currentMF.locked == true then
+			currentMF.locked = false
 			player.print({"gui-description.MFUnlocked"})
 		else
-			MF.locked = true
+			currentMF.locked = true
 			player.print({"gui-description.MFLocked"})
 		end
 		return
@@ -329,29 +332,29 @@ function GUI.buttonClicked(event)
 
 	-- EnergyDrain button --
 	if event.element.name == "EnergyDrainButton" then
-		if MF.energyLaserActivated == true then MF.energyLaserActivated = false
-		elseif MF.energyLaserActivated == false then MF.energyLaserActivated = true end
+		if currentMF.energyLaserActivated == true then currentMF.energyLaserActivated = false
+		elseif currentMF.energyLaserActivated == false then currentMF.energyLaserActivated = true end
 		return
 	end
 
 	-- FluidDrain button --
 	if event.element.name == "FluidDrainButton" then
-		if MF.fluidLaserActivated == true then MF.fluidLaserActivated = false
-		elseif MF.fluidLaserActivated == false then MF.fluidLaserActivated = true end
+		if currentMF.fluidLaserActivated == true then currentMF.fluidLaserActivated = false
+		elseif currentMF.fluidLaserActivated == false then currentMF.fluidLaserActivated = true end
 		return
 	end
 
 	-- ItemDrain button --
 	if event.element.name == "ItemDrainButton" then
-		if MF.itemLaserActivated == true then MF.itemLaserActivated = false
-		elseif MF.itemLaserActivated == false then MF.itemLaserActivated = true end
+		if currentMF.itemLaserActivated == true then currentMF.itemLaserActivated = false
+		elseif currentMF.itemLaserActivated == false then currentMF.itemLaserActivated = true end
 		return
 	end
 
 	-- Send Quatron button --
 	if event.element.name == "QuatronDrainButton" then
-		if MF.quatronLaserActivated == true then MF.quatronLaserActivated = false
-		elseif MF.quatronLaserActivated == false then MF.quatronLaserActivated = true end
+		if currentMF.quatronLaserActivated == true then currentMF.quatronLaserActivated = false
+		elseif currentMF.quatronLaserActivated == false then currentMF.quatronLaserActivated = true end
 		return
 	end
 
@@ -488,6 +491,20 @@ function GUI.buttonClicked(event)
 			MF.name = text
 			player.print({"", {"gui-description.ChangeNameChanged"}, " ", text})
 		end
+	end
+
+	-- SwitchMF GUI Change Mobile Factory --
+	if string.match(event.element.name, "SwitchMFSwitchButton") then
+		-- Get the Mobile Factory ID --
+		local ID = split(event.element.name, ",")
+		-- Check the ID --
+		if ID[2] == nil then return end
+		-- Check if the Player is allowed to use this Mobile Factory --
+		if Util.canUse(MFPlayer, global.MFTable[ID[2]]) == false then return end
+		-- Change the Current Mobile Factory --
+		MFPlayer.currentMF = global.MFTable[ID[2]]
+		-- Display the Message --
+		player.print({"", {"gui-description.CurrentMFChanged"}, " ", MFPlayer.currentMF.name})
 	end
 
 	-- If this is a Mobile Factory Button -> Open Inventory --
@@ -649,12 +666,12 @@ function GUI.buttonClicked(event)
 		-- If a location is added --
 		if string.match(event.element.name, "TPGUIAddLoc") then
 			local GUIObj = MFPlayer.GUI["MFTPGUI"]
-			local jumpDrive = GUIObj.MF.jumpDriveObj
+			local jumpDrive = currentMF.jumpDriveObj
 			jumpDrive:addLocation(GUIObj.AddLocName.text, GUIObj.AddLocFilter.elem_value)
 		end
 		if string.match(event.element.name, "TPGUILoc") then
 			local GUIObj = MFPlayer.GUI["MFTPGUI"]
-			local jumpDrive = GUIObj.MF.jumpDriveObj
+			local jumpDrive = currentMF.jumpDriveObj
 			local location = string.sub(event.element.name, string.len("TPGUILoc,")+1 )
 			-- Start the Jump --
 			if event.button == defines.mouse_button_type.left then
@@ -687,6 +704,8 @@ function GUI.onGuiElemChanged(event)
 	-- Get the Mobile Factory --
 	local MF = getMF(player.name)
 	if MF == nil then return end
+	-- Get the Current Mobile Factory --
+	local currentMF = getCurrentMF(player.name) or MF
 	
 	------- Read if the Element came from the Option GUI -------
 	GUI.readOptions(event.element, player)
@@ -916,38 +935,58 @@ function GUI.onGuiElemChanged(event)
 
 	------- Read if the Element comes from The Mobile Factory Energy Laser -------
 	if string.match(event.element.name, "MFPL") then
+		-- Look for the Mobile Factory ID --
+		local ID = split(event.element.name, "MFPL")
+		ID = tonumber(ID[1])
+		if ID == nil then return end
+		local MF2 = getMF(ID)
 		-- Change the Energy Laser to Drain/Send --
 		if event.element.switch_state == "left" then
-			MF.selectedEnergyLaserMode = "input"
+			MF2.selectedEnergyLaserMode = "input"
 		else
-			MF.selectedEnergyLaserMode = "output"
+			MF2.selectedEnergyLaserMode = "output"
 		end
 	end
 
 	------- Read if the Element comes from The Mobile Factory Quatron Laser -------
 	if string.match(event.element.name, "MFQL") then
+		-- Look for the Mobile Factory ID --
+		local ID = split(event.element.name, "MFQL")
+		ID = tonumber(ID[1])
+		if ID == nil then return end
+		local MF2 = getMF(ID)
 		-- Change the Matter Serializer targeted Inventory --
 		if event.element.switch_state == "left" then
-			MF.selectedQuatronLaserMode = "input"
+			MF2.selectedQuatronLaserMode = "input"
 		else
-			MF.selectedQuatronLaserMode = "output"
+			MF2.selectedQuatronLaserMode = "output"
 		end
 	end
 
 	------- Read if the Element comes from the Mobile Factory Fluid Laser mode -------
 	if string.match(event.element.name, "MFFMode") then
+		-- Look for the Mobile Factory ID --
+		local ID = split(event.element.name, "MFFMode")
+		ID = tonumber(ID[1])
+		if ID == nil then return end
+		local MF2 = getMF(ID)
 		-- Change the Mode --
 		if event.element.switch_state == "left" then
-			MF.selectedFluidLaserMode = "input"
+			MF2.selectedFluidLaserMode = "input"
 		else
-			MF.selectedFluidLaserMode = "output"
+			MF2.selectedFluidLaserMode = "output"
 		end
 	end
 
 	------- Read if the Element comes from the Mobile Factory Fluid Laser Target -------
 	if string.match(event.element.name, "MFFTarget") then
+		-- Look for the Mobile Factory ID --
+		local ID = split(event.element.name, "MFFTarget")
+		ID = tonumber(ID[1])
+		if ID == nil then return end
+		local MF2 = getMF(ID)
 		-- Change the Fluid Interactor Target --
-		MF:fluidLaserTarget(tonumber(event.element.items[event.element.selected_index][4]))
+		MF2:fluidLaserTarget(tonumber(event.element.items[event.element.selected_index][4]))
 	end
 
 end

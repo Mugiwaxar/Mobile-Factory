@@ -75,7 +75,7 @@ end
 function GUI.updateMFMainGUI(GUIObj)
 
 	-- Get MF and Player --
-	local MF = GUIObj.MF
+	local MF = getCurrentMF(GUIObj.MFPlayer)
 	local player = GUIObj.MFPlayer.ent
 
 	-- Clear the Frame --

@@ -280,18 +280,27 @@ function getPlayer(id)
 end
 
 -- Return the Player Mobile Factory --
-function getMF(playerName)
-	if playerName == nil then return nil
-	elseif type(playerName) == "number" then return global.MFTable[game.players[playerName].name]
-	elseif type(playerName) == "string" then return global.MFTable[playerName]
+function getMF(player)
+	if player == nil then return nil
+	elseif type(player) == "number" then return global.MFTable[game.players[player].name]
+	elseif type(player) == "string" then return global.MFTable[player]
 	else error("bad argument to getMF()") end
 end
 
+-- Return the Current Selected Mobile Factory --
+function getCurrentMF(player)
+	if player == nil then return nil
+	elseif type(player) == "number" then return global.playersTable[game.players[player].name].currentMF or global.playersTable[game.players[player].name].MF
+	elseif type(player) == "string" then return global.playersTable[player].currentMF or global.playersTable[player].MF
+	elseif type(player) == "table" then return player.currentMF or player.MF end
+	dprint(type(player))
+end
+
 -- Return the MFPlayer Object --
-function getMFPlayer(playerName)
-	if playerName == nil then return nil
-	elseif type(playerName) == "number" then return global.playersTable[game.players[playerName].name]
-	elseif type(playerName) == "string" then return global.playersTable[playerName]
+function getMFPlayer(player)
+	if player == nil then return nil
+	elseif type(player) == "number" then return global.playersTable[game.players[player].name]
+	elseif type(player) == "string" then return global.playersTable[player]
 	else error("bad argument to getMFPlayer()") end
 end
 
@@ -306,9 +315,14 @@ function Util.valueToObj(inTable, key, value)
 end
 
 -- Return the Player Force --
-function getForce(playerName)
-	if game.players[playerName] ~= nil then
-		return game.players[playerName].force
+function getForce(player)
+	-- In case player is a Mobile Factory Object --
+	if type(player) == "table" then
+		local MF = player
+		player = MF.playerIndex
+	end
+	if game.players[player] ~= nil then
+		return game.players[player].force
 	end
 end
 
@@ -374,11 +388,10 @@ function newMobileFactory(MF)
 end
 
 -- If Mobile Factory or his surfaces are broken, try to fix them --
-function fixMB(event)
+function fixMB(event, MF)
 	-- Get the Mobile Factory --
 	local player = getPlayer(event.player_index)
 	if player == nil then return end
-	local MF = getMF(player.name)
 	if MF == nil then return end
 	-- If Mobile Factory is lost --
 	if MF.ent == nil or MF.ent.valid == false then

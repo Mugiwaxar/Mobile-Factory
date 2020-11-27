@@ -31,6 +31,7 @@ function GUI.updateMFSwitchMFGUI(GUIObj, justCreated)
     local MF = GUIObj.MF
 
     if justCreated == true then
+
         -- Create the Name Frame --
         local nameFrame = GUIObj:addFrame("", mainPane, "vertical")
 
@@ -46,6 +47,27 @@ function GUI.updateMFSwitchMFGUI(GUIObj, justCreated)
         -- Create the Change Name Button --
         GUIObj:addSimpleButton("SwitchMFChangeNameButton", changeNameFlow, {"gui-description.Change"})
 
+    end
+
+    -- Create the Mobile Factory list Frame --
+    local listFrame = GUIObj.MFListFrame or GUIObj:addFrame("MFListFrame", mainPane, "vertical", true)
+
+    -- Clear the Frame --
+    listFrame.clear()
+
+    -- Create the List --
+    for k, MF2 in pairs(global.MFTable) do
+        -- Create the Flow --
+        local MFFlow = GUIObj:addFlow("", listFrame, "horizontal")
+        -- Add the Select Button --
+        local button = GUIObj:addSimpleButton("SwitchMFSwitchButton," .. k, MFFlow, {"gui-description.Select"}, {"gui-description.SelectMFTT1"})
+        -- Disable the Button if the Player is not allowed to use this Mobile Factory --
+        if Util.canUse(GUIObj.MFPlayer, MF2) == false then
+            button.enabled = false
+            button.tooltip = {"gui-description.SelectMFTT2"}
+        end
+        --Add the Name --
+        GUIObj:addLabel("", MFFlow, MF2.name, _mfGreen, MF2.player, false, "LabelFont2")
     end
 
     

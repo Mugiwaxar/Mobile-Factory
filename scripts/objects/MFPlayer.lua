@@ -4,6 +4,7 @@ MFP = {
 	index = nil,
 	name = nil,
 	MF = nil,
+	currentMF = nil,
 	GUI = nil,
 	varTable = nil
 }

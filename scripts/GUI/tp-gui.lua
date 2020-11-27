@@ -6,7 +6,7 @@ function GUI.createTPGui(player)
     local TPGUI = GUIObj.gui
     
     -- Create the top Bar --
-    GUI.createTopBar(GUIObj, 200)
+    GUI.createTopBar(GUIObj, 200, {"", {"gui-description.MFTPGUITitle"}, " ", getCurrentMF(player.name).name})
 
     -- Create the Main Frame --
     local mainFrame = GUIObj:addFrame("MainFrame", TPGUI, "horizontal")
@@ -50,7 +50,7 @@ function GUI.updateInfo(GUIObj)
 
     -- Get all Variables --
     local infoFlow = GUIObj.InformationFlow
-    local MF = GUIObj.MF
+    local MF = getCurrentMF(GUIObj.MFPlayer)
 
     -- Clear the Flow --
     infoFlow.clear()
@@ -95,7 +95,7 @@ function GUI.updateLocation(GUIObj)
 
     -- Get all Variables --
     local locPane = GUIObj.LocationPane
-    local MF = GUIObj.MF
+    local MF = getCurrentMF(GUIObj.MFPlayer)
 
     -- Clear the Pane --
     locPane.clear()
@@ -160,7 +160,7 @@ function GUI.updateAddLocation(GUIObj)
 
     -- Get all Variables --
     local locFlow = GUIObj.AddLocationFlow
-    local MF = GUIObj.MF
+    local MF = getCurrentMF(GUIObj.MFPlayer)
 
     -- Check the Mobile Factory --
     if MF.ent == nil or MF.ent.valid == false then

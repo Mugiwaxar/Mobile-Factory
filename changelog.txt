@@ -1,8 +1,17 @@
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.0
 Date: 27/11/2020
+  Major Features:
+    - The Mobile Factory can now be shared between Players
+    - A new GUI was added that allows to rename your Mobile Factory or switch to another one (If the owner has allowed you)
+    - This allows to show and control all allowed Mobile Factory by selecting them
+  Features:
+    - Added a New GUI: The Switch GUI, allows you to rename your Mobile Factory or select another one as a "Main" Mobile Factory
+    - The Main GUI shows now the Information about the Selected Mobile Factory
+    - The Information GUI shows now the Information about the Selected Mobile Factory
   Bugfixes:
     - Fixed crash on Sync area ghost placing (Honktown)
+    - The GUI of other Players Mobile Factory now works correctly
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.2
 Date: 24/11/2020

@@ -9,7 +9,7 @@ function GUI.createInfoGui(player)
 	local infoGUI = GUIObj.gui
 
 	-- Create the top Bar --
-	local MFInfoGUITitleBar = GUI.createTopBar(GUIObj, 200, MFPlayer.MF.name, true)
+	local MFInfoGUITitleBar = GUI.createTopBar(GUIObj, 200, getCurrentMF(MFPlayer).name, true)
 
 	-- Add the Line --
 	GUIObj:addLine("InfoGUITitleBarLine", MFInfoGUITitleBar, "horizontal")
@@ -91,14 +91,14 @@ function GUI.updateButtonsBar(GUIObj)
 
 	-- Get GUI, MF and player --
 	local buttonsBar = GUIObj.MFInfoGUIButtonBar
-	local MF = GUIObj.MF
+	local MF = getCurrentMF(GUIObj.MFPlayer)
 	local player = GUIObj.MFPlayer.ent
 
 	-- Clear the Bar --
 	buttonsBar.clear()
 
 	-------------------------------------------------------- Get Buttons Variables --------------------------------------------------------
-	local showCallMFButton = technologyUnlocked("JumpDrive", getForce(player.name))
+	local showCallMFButton = technologyUnlocked("JumpDrive", getForce(MF))
 	local syncAreaSprite = MF.syncAreaEnabled == true and "SyncAreaIcon" or "SyncAreaIconDisabled"
 	local syncAreaHovSprite = MF.syncAreaEnabled == true and "SyncAreaIconDisabled" or "SyncAreaIcon"
 	local showFindMFButton = (MF.ent ~= nil and MF.ent.valid == false) and true or false
@@ -106,16 +106,16 @@ function GUI.updateButtonsBar(GUIObj)
 	local tpInsideHovSprite = MF.tpEnabled == true and "MFTPIconDisabled" or "MFTPIcon"
 	local lockMFSprite = MF.locked == true and "LockMFCIcon" or "LockMFOIcon"
 	local lockMFHovSprite = MF.locked == true and "LockMFOIcon" or "LockMFCIcon"
-	local showEnergyDrainButton = technologyUnlocked("EnergyDrain1", getForce(player.name)) and true or false
+	local showEnergyDrainButton = technologyUnlocked("EnergyDrain1", getForce(MF)) and true or false
 	local energyDrainSprite = MF.energyLaserActivated == true and "EnergyDrainIcon" or "EnergyDrainIconDisabled"
 	local energyDrainHovSprite = MF.energyLaserActivated == true and "EnergyDrainIconDisabled" or "EnergyDrainIcon"
-	local showFluidDrainButton = technologyUnlocked("FluidDrain1", getForce(player.name)) and true or false
+	local showFluidDrainButton = technologyUnlocked("FluidDrain1", getForce(MF)) and true or false
 	local fluidDrainSprite = MF.fluidLaserActivated == true and "FluidDrainIcon" or "FluidDrainIconDisabled"
 	local fluidDrainHovSprite = MF.fluidLaserActivated == true and "FluidDrainIconDisabled" or "FluidDrainIcon"
-	local showItemDrainButton = technologyUnlocked("TechItemDrain", getForce(player.name)) and true or false
+	local showItemDrainButton = technologyUnlocked("TechItemDrain", getForce(MF)) and true or false
 	local itemDrainSprite = MF.itemLaserActivated == true and "ItemDrainIcon" or "ItemDrainIconDisabled"
 	local itemDrainHovSprite = MF.itemLaserActivated == true and "ItemDrainIconDisabled" or "ItemDrainIcon"
-	local showQuatronDrainButton = technologyUnlocked("EnergyDrain1", getForce(player.name)) and technologyUnlocked("QuatronLogistic", getForce(player.name)) and true or false
+	local showQuatronDrainButton = technologyUnlocked("EnergyDrain1", getForce(MF)) and technologyUnlocked("QuatronLogistic", getForce(MF)) and true or false
 	local quatronDrainSprite = MF.quatronLaserActivated == true and "QuatronIcon" or "QuatronIconDisabled"
 	local quatronDrainHovSprite = MF.quatronLaserActivated == true and "QuatronIconDisabled" or "QuatronIcon"
 
@@ -139,7 +139,7 @@ function GUI.updateMFInfos(GUIObj)
 
 	-- Get GUI, MF and player --
 	local infosFlow = GUIObj.InfosFlow
-	local MF = GUIObj.MF
+	local MF = getCurrentMF(GUIObj.MFPlayer)
 	local player = GUIObj.MFPlayer.ent
 
 	-------------------------------------------------------- Get Mobile Factory Information Variables --------------------------------------------------------
@@ -198,25 +198,25 @@ function GUI.updateMFInfos(GUIObj)
 	lasersFrame.style.minimal_height = 80
 
 	-- Number of Lasers --
-	if technologyUnlocked("EnergyDrain1", getForce(player.name)) or technologyUnlocked("FluidDrain1", getForce(player.name)) or technologyUnlocked("TechItemDrain", getForce(player.name)) then
+	if technologyUnlocked("EnergyDrain1", getForce(MF)) or technologyUnlocked("FluidDrain1", getForce(MF)) or technologyUnlocked("TechItemDrain", getForce(MF)) then
 		GUIObj:addLabel("LasersNumberLabel", lasersFrame,{"", {"gui-description.LaserNumber"}, ": ", MF:getLaserNumber()})
 		GUIObj:addLabel("LasersRadiusLabel", lasersFrame, {"", {"gui-description.LaserRadius"}, ": ", MF:getLaserRadius(), " tiles"})
 		GUIObj:addLabel("LasersMultiplierLabel", lasersFrame, {"", {"gui-description.LaserEfficiency"}, ": ", MF:getLaserPower()})
 	end
 
 	-- Energy Lasers --
-	if technologyUnlocked("EnergyDrain1", getForce(player.name)) then
+	if technologyUnlocked("EnergyDrain1", getForce(MF)) then
 		GUIObj:addLabel("EnergyLasersSpeed", lasersFrame, {"", {"gui-description.EnergyLasersSpeed"}, ": ", Util.toRNumber(MF:getLaserEnergyDrain()), "W"}, _mfYellow)
 	end
 
 	-- Fluid Lasers --
-	if technologyUnlocked("FluidDrain1", getForce(player.name)) then
+	if technologyUnlocked("FluidDrain1", getForce(MF)) then
 		GUIObj:addLabel("FluidLasersSpeed", lasersFrame, {"", {"gui-description.FluidLasersSpeed"}, ": ", Util.toRNumber(MF:getLaserFluidDrain()), "u/s"}, _mfPurple)
 		GUIObj:addLabel("FluidLasersConsumption", lasersFrame, {"", {"gui-description.FluidLasersConsumption"}, ": ", Util.toRNumber(MF:getLaserFluidDrain()*_mfFluidConsomption), "W"},_mfPurple)
 	end
 
 	-- Logistic Lasers --
-	if technologyUnlocked("TechItemDrain", getForce(player.name)) then
+	if technologyUnlocked("TechItemDrain", getForce(MF)) then
 		GUIObj:addLabel("LogisticLasersSpeed", lasersFrame, {"", {"gui-description.LogisticLasersSpeed"}, ": ", Util.toRNumber(MF:getLaserItemDrain()), "i/s"}, _mfGreen)
 		GUIObj:addLabel("LogisticLasersConsumption", lasersFrame, {"", {"gui-description.LogisticLasersConsumption"}, ": ", Util.toRNumber(MF:getLaserItemDrain()*_mfBaseItemEnergyConsumption), "W"}, _mfGreen)
 	end
@@ -238,6 +238,7 @@ function GUI.updateDeepTankFrame(GUIObj)
 
 	-- Get the GUI, MF and Player--
 	local player = GUIObj.MFPlayer.ent
+	local MF = getCurrentMF(GUIObj.MFPlayer)
 
 	-- Get the Tank Scroll Pane --
 	local tankScrollPane = GUIObj.TanksScrollPane
@@ -246,7 +247,7 @@ function GUI.updateDeepTankFrame(GUIObj)
 	tankScrollPane.clear()
 
 	-- Look for all Tanks --
-	for k, deepTank in pairs(GUIObj.MF.dataNetwork.DTKTable) do
+	for k, deepTank in pairs(MF.dataNetwork.DTKTable) do
 
 		-- -- Create the Tank Variables --
 		local sprite = nil
@@ -328,6 +329,7 @@ function GUI.updateDeepStorageFrame(GUIObj)
 
 	-- Get the GUI, MF and Player--
 	local player = GUIObj.MFPlayer.ent
+	local MF = getCurrentMF(GUIObj.MFPlayer)
 
 	-- Get the Deep Storage Scroll Pane --
 	local storageScrollPane = GUIObj.StorageScrollPane
@@ -336,7 +338,7 @@ function GUI.updateDeepStorageFrame(GUIObj)
 	storageScrollPane.clear()
 
 	-- Look for all Deep Storage --
-	for k, deepStorage in pairs(GUIObj.MF.dataNetwork.DSRTable) do
+	for k, deepStorage in pairs(MF.dataNetwork.DSRTable) do
 
 		-- Create the Storage Variables --
 		local sprite = nil
@@ -416,7 +418,7 @@ end
 function GUI.updateInventoryFrame(GUIObj)
 
 	-- Get the MF --
-	local MF = GUIObj.MF
+	local MF = getCurrentMF(GUIObj.MFPlayer)
 
 	-- Get the Inventory Scroll Pane --
 	local InventoryScrollPanel = GUIObj.InventoryScrollPane
@@ -425,7 +427,7 @@ function GUI.updateInventoryFrame(GUIObj)
 	InventoryScrollPanel.clear()
 
 	-- Create the Inventory List --
-	createDNInventoryFrame(GUIObj, InventoryScrollPanel, GUIObj.MFPlayer, "INV", MF.II, 5, true, true, true)
+	createDNInventoryFrame(GUIObj, InventoryScrollPanel, getMFPlayer(MF.playerIndex), "INV", MF.II, 5, true, true, true)
 
 	-- Clean the Inventory Information Flow --
 	GUIObj.InventoryInfoFlow.clear()
@@ -441,7 +443,7 @@ end
 function GUI.updateInventoryInfo(GUIObj, id, type, name, amount)
 
 	-- Get the GUI, MF and Player--
-	local MF = GUIObj.MF
+	local MF = getCurrentMF(GUIObj.MFPlayer)
 
 	-- Get the Inventory Item Flow --
 	local inventoryItemFlow = GUIObj.InventoryItemFlow
