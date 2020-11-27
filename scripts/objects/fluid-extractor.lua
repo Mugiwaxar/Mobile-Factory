@@ -30,7 +30,7 @@ function FE:new(object)
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
 	t.entID = object.unit_number
-	t.dataNetwork = MF.dataNetwork
+	t.dataNetwork = t.MF.dataNetwork
 	resource = object.surface.find_entities_filtered{position=object.position, radius=1, type="resource", limit=1}[1]
 	UpSys.addObj(t)
 	return t

@@ -33,7 +33,7 @@ function OC:new(object)
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
 	t.entID = object.unit_number
-	t.dataNetwork = MF.dataNetwork
+	t.dataNetwork = t.MF.dataNetwork
 	t.oreTable = {}
 	t.inventory = {}
 	t:scanOres(object)
