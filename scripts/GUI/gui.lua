@@ -757,6 +757,23 @@ function GUI.onGuiElemChanged(event)
 			return
 		end
 	end
+
+	----- Read if the Element comes from a Data Network Drop Down -------
+	if string.match(event.element.name, "DNSelect") then
+		-- Get the Object --
+		local ID = tonumber(split(event.element.name, ",")[2])
+		if ID == nil then return end
+		local obj = global.entsTable[ID]
+		if obj == nil then return end
+		-- Get the Mobile Factory --
+		local selectedMF = getMF(event.element.items[event.element.selected_index])
+		if selectedMF == nil then return end
+		-- Set the New Data Network --
+		obj.dataNetwork = selectedMF.dataNetwork
+		-- Update the Tooltip GUI --
+		GUI.updateMFTooltipGUI(MFPlayer.GUI["MFTooltipGUI"], true)
+		return
+	end
 	
 	------- Read if the Element comes from an Ore Cleaner -------
 	if string.match(event.element.name, "OC") then

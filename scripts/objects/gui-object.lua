@@ -406,15 +406,17 @@ function GO:addItemFrame(item, amount, gui)
 end
 
 -- Create a Data Network Frame --
-function GO:addDataNetworkFrame(gui, obj)
+function GO:addDataNetworkFrame(gui, obj, justCreated)
 
     -- Get the Title and the Flow --
     local dataNetworkTitle = self.DataNetworkTitle
+    local selectNetworkFlow = self.SelectNetworkFlow
     local dataNetworkFlow = self.DataNetworkFlow
 
     if dataNetworkTitle == nil or dataNetworkTitle.valid == false or dataNetworkFlow == nil or dataNetworkFlow.valid == false then
         -- Create the Title and the Flow --
         dataNetworkTitle = self:addTitledFrame("DataNetworkTitle", gui, "vertical", {"gui-description.NetworkAccessPoint"}, _mfOrange, true)
+        selectNetworkFlow = self:addFlow("SelectNetworkFlow", dataNetworkTitle, "vertical", true)
         dataNetworkFlow = self:addFlow("DataNetworkFlow", dataNetworkTitle, "vertical", true)
     end
 
@@ -430,7 +432,7 @@ function GO:addDataNetworkFrame(gui, obj)
         self.DataNetworkTitleLabel.style.font_color = _mfOrange
     end
 
-    obj.dataNetwork:getTooltipInfos(self, dataNetworkFlow, obj)
+    obj.dataNetwork:getTooltipInfos(self, selectNetworkFlow, dataNetworkFlow, obj, justCreated)
 
     return dataNetworkFlow
     
@@ -468,7 +470,7 @@ function createDNInventoryFrame(GUIObj, gui, MFPlayer, buttonFirstName, inventor
 
     -- Look for all Deep Storage --
     if showDeepStorage == true then
-        local DSRTable = ne == nil and MFPlayer.MF.dataNetwork.DSRTable or ne.MF.dataNetwork.DSRTable
+        local DSRTable = ne == nil and MFPlayer.MF.dataNetwork.DSRTable or ne.dataNetwork.DSRTable
         for k, deepStorage in pairs(DSRTable) do
             -- Get Variables --
             local name = deepStorage.inventoryItem or deepStorage.filter

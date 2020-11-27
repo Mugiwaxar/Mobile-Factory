@@ -77,5 +77,5 @@ end
 -- Tooltip Infos --
 function DS:getTooltipInfos(GUIObj, gui)
 	-- -- Create the Data Network Frame --
-	-- GUIObj:addDataNetworkFrame(gui, self)
+	-- GUIObj:addDataNetworkFrame(gui, self, justCreated)
 end

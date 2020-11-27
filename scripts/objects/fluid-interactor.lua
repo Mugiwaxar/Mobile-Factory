@@ -100,11 +100,12 @@ function FI:update()
         else
             self.levelSprite = rendering.draw_sprite{sprite="FluidInteractorSprite3" .. spriteNumber, target=self.ent, surface=self.ent.surface, render_layer=131}
         end
-    end
+	end
 	
 	-- Try to find a Network Access Point if needed --
-	if valid(self.networkAccessPoint) == false then
+	if valid(self.networkAccessPoint) == false or self.dataNetwork ~= self.networkAccessPoint.dataNetwork then
 		self.networkAccessPoint = self.dataNetwork:getCloserNAP(self)
+		self.selectedInv = nil
 		if self.networkAccessPoint ~= nil then
 			self.networkAccessPoint.objTable[self.ent.unit_number] = self
 		end
@@ -128,7 +129,7 @@ end
 function FI:getTooltipInfos(GUIObj, gui, justCreated)
 
 	-- Create the Data Network Frame --
-	GUIObj:addDataNetworkFrame(gui, self)
+	GUIObj:addDataNetworkFrame(gui, self, justCreated)
 	
     -- Check if the Parameters can be modified --
 	if justCreated ~= true or valid(self.dataNetwork) == false then return end

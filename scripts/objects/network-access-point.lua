@@ -111,7 +111,7 @@ end
 function NAP:getTooltipInfos(GUIObj, gui, justCreated)
 
 	-- Create the Data Network Frame --
-    GUIObj:addDataNetworkFrame(gui, self)
+    GUIObj:addDataNetworkFrame(gui, self, justCreated)
 
     -- Get the Flow --
     local informationFlow = GUIObj.InformationFlow

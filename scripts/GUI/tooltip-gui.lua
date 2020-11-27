@@ -38,7 +38,9 @@ function GUI.updateMFTooltipGUI(GUIObj, justCreated)
 	if valid(GUIObj.currentObject) == false or GUIObj.currentObject.getTooltipInfos == nil then return end
 
 	-- Clear the Info Flow Pane --
-	-- GUIObj.MainFlow.clear()
+	if justCreated == true then
+		GUIObj.MainFlow.clear()
+	end
 
 	-- Add the Object GUI --
 	GUIObj.currentObject:getTooltipInfos(GUIObj, GUIObj.MainFlow, justCreated)

@@ -91,8 +91,9 @@ function MI:update()
     end
 
     -- Try to find a Network Access Point if needed --
-	if valid(self.networkAccessPoint) == false then
+	if valid(self.networkAccessPoint) == false or self.dataNetwork ~= self.networkAccessPoint.dataNetwork then
 		self.networkAccessPoint = self.dataNetwork:getCloserNAP(self)
+		self.selectedInv = nil
 		if self.networkAccessPoint ~= nil then
 			self.networkAccessPoint.objTable[self.ent.unit_number] = self
 		end
@@ -117,10 +118,10 @@ end
 function MI:getTooltipInfos(GUIObj, gui, justCreated)
 
 	-- Create the Data Network Frame --
-	GUIObj:addDataNetworkFrame(gui, self)
+	GUIObj:addDataNetworkFrame(gui, self, justCreated)
 
 	-- Update the Filter --
-	if self.selectedFilter ~= nil and GUIObj["MIFilter" .. tostring(self.ent.unit_number)] ~= nil then
+	if self.selectedFilter ~= nil and GUIObj["MIFilter" .. tostring(self.ent.unit_number)] ~= nil and GUIObj["MIFilter" .. tostring(self.ent.unit_number)].valid == true then
 		GUIObj["MIFilter" .. tostring(self.ent.unit_number)].elem_value = self.selectedFilter
 	end
 
