@@ -70,26 +70,7 @@ function DN:update()
 end
 
 -- Get the Tooltip --
-function DN:getTooltipInfos(GUIObj, selectNetworkFlow, gui, obj, justCreated)
-
-	-- Create the Select Network Table --
-	if justCreated == true then
-		local networks = {}
-		local selected = 1
-		local total = 0
-		for _, MF in pairs(global.MFTable) do
-			if Util.canUse(GUIObj.MFPlayer, MF) then
-				table.insert(networks, MF.player)
-				total = total + 1
-				if self.ID == MF.dataNetwork.ID then selected = total end
-			end
-		end
-
-		-- Create the Select Network Drop Down --
-		if table_size(networks) > 0 then
-			GUIObj:addDropDown("DNSelect," .. obj.ent.unit_number, selectNetworkFlow, networks, selected, true, {"gui-description.SelectDataNetwork"})
-		end
-	end
+function DN:getTooltipInfos(GUIObj, gui, obj, justCreated)
 
 	-- Create the Connected to Label --
 	GUIObj:addLabel("", gui, {"", {"gui-description.ConnectedToDN", obj.dataNetwork.MF.name}}, _mfOrange)
@@ -122,7 +103,7 @@ function DN:getCloserNAP(obj)
 	-- Find the closer Network Access Point --
 	local closerNAP = nil
 	local closerNAPDistance = nil
-	for _, nap in pairs(self.networkAccessPointTable) do
+	for _, nap in pairs(global.networkAccessPointTable) do
 		-- Check the Network Access Point --
 		if nap.ent ~= nil and nap.ent.valid == true and obj.ent.surface == nap.ent.surface then
 			-- Check the distance --

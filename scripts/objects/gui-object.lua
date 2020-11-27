@@ -426,13 +426,33 @@ function GO:addDataNetworkFrame(gui, obj, justCreated)
     if valid(obj.networkAccessPoint) == false then
         self.DataNetworkTitleLabel.caption = {"gui-description.DNNoLinked"}
         self.DataNetworkTitleLabel.style.font_color = _mfRed
-        return dataNetworkFlow
     else
         self.DataNetworkTitleLabel.caption = {"gui-description.NetworkAccessPoint"}
         self.DataNetworkTitleLabel.style.font_color = _mfOrange
     end
 
-    obj.dataNetwork:getTooltipInfos(self, selectNetworkFlow, dataNetworkFlow, obj, justCreated)
+    -- Create the Select Network Table --
+	if justCreated == true then
+		local networks = {}
+		local selected = 1
+		local total = 0
+		for _, MF in pairs(global.MFTable) do
+			if Util.canUse(self.MFPlayer, MF) then
+				table.insert(networks, MF.player)
+				total = total + 1
+				if obj.dataNetwork.ID == MF.dataNetwork.ID then selected = total end
+			end
+		end
+
+		-- Create the Select Network Drop Down --
+		if table_size(networks) > 0 then
+			self:addDropDown("DNSelect," .. obj.ent.unit_number, selectNetworkFlow, networks, selected, true, {"gui-description.SelectDataNetwork"})
+		end
+	end
+
+    if valid(obj.networkAccessPoint) == true then
+        obj.dataNetwork:getTooltipInfos(self, dataNetworkFlow, obj, justCreated)
+    end
 
     return dataNetworkFlow
     
