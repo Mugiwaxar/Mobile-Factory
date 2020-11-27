@@ -399,6 +399,16 @@ data:extend{
 data:extend{
     {
         type = "sprite",
+        name = "SwitchIcon",
+        filename = "__Mobile_Factory__/graphics/SwtichArrows.png",
+        size = 32,
+        flags = {"icon"}
+    }
+}
+
+data:extend{
+    {
+        type = "sprite",
         name = "MFJDIcon",
         filename = "__Mobile_Factory__/graphics/JumpDriveI.png",
         size = 128,

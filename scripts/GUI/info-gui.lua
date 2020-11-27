@@ -9,7 +9,7 @@ function GUI.createInfoGui(player)
 	local infoGUI = GUIObj.gui
 
 	-- Create the top Bar --
-	local MFInfoGUITitleBar = GUI.createTopBar(GUIObj, 200, MFPlayer.MF.name)
+	local MFInfoGUITitleBar = GUI.createTopBar(GUIObj, 200, MFPlayer.MF.name, true)
 
 	-- Add the Line --
 	GUIObj:addLine("InfoGUITitleBarLine", MFInfoGUITitleBar, "horizontal")

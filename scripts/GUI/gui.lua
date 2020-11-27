@@ -20,7 +20,7 @@ function GUI.createGUI(name, MFPlayer, direction, visible, posX, posY)
 end
 
 -- Create a top Bar --
-function GUI.createTopBar(GUIObj, minimalWidth, title)
+function GUI.createTopBar(GUIObj, minimalWidth, title, switchIcon)
 
 	-- Create the Menu Bar --
 	local topBar = GUIObj:addFrame("", GUIObj.gui, "vertical")
@@ -39,8 +39,13 @@ function GUI.createTopBar(GUIObj, minimalWidth, title)
 	local dragArea2 = GUIObj:addEmptyWidget("", topBarFlow, GUIObj.gui, 20, nil)
 	dragArea2.style.minimal_width = minimalWidth
 
+	-- Add the Switch Icon if needed --
+	if switchIcon == true then
+		GUIObj:addButton(GUIObj.gui.name.. "SwitchButton", topBarFlow, "SwitchIcon", "SwitchIcon", {"gui-description.SwitchButton"}, 20)
+	end
+
 	-- Add the Close Button --
-	GUIObj:addButton(GUIObj.gui.name.. "CloseButton", topBarFlow, "CloseIcon", "CloseIcon", {"gui-description.closeButton"}, 15)
+	GUIObj:addButton(GUIObj.gui.name.. "CloseButton", topBarFlow, "CloseIcon", "CloseIcon", {"gui-description.closeButton"}, 20)
 
 	-- Return the TopBar --
 	return topBar
