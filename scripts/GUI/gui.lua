@@ -4,7 +4,6 @@ require("scripts/GUI/option-gui.lua")
 require("scripts/GUI/tooltip-gui.lua")
 require("scripts/GUI/options.lua")
 require("scripts/GUI/tp-gui.lua")
-require("scripts/GUI/switchMF-gui.lua")
 require("scripts/GUI/recipe-gui.lua")
 require("utils/functions.lua")
 
@@ -42,7 +41,7 @@ function GUI.createTopBar(GUIObj, minimalWidth, title, switchIcon)
 
 	-- Add the Switch Icon if needed --
 	if switchIcon == true then
-		GUIObj:addButton("SwitchMFButton", topBarFlow, "SwitchIcon", "SwitchIcon", {"gui-description.SwitchMFButton"}, 20)
+		GUIObj:addButton(GUIObj.gui.name.. "SwitchButton", topBarFlow, "SwitchIcon", "SwitchIcon", {"gui-description.SwitchButton"}, 20)
 	end
 
 	-- Add the Close Button --
@@ -80,7 +79,7 @@ end
 -- Update all GUIs --
 function GUI.updateAllGUIs(force)
 	
-		for _, MFPlayer in pairs(global.playersTable or {}) do
+		for k, MFPlayer in pairs(global.playersTable or {}) do
 
 			-- Update all Progress Bars of the Data Assembler  --
 			if game.tick%_eventTick7 == 0 or force then
@@ -91,7 +90,7 @@ function GUI.updateAllGUIs(force)
 
 			-- Update all GUIs --
 			if game.tick%_eventTick55 == 0 or force then
-			for _, go in pairs(MFPlayer.GUI or {}) do
+			for k2, go in pairs(MFPlayer.GUI or {}) do
 				if valid(go) then go:update() end
 			end
 
@@ -111,7 +110,7 @@ function GUI.guiOpened(event)
 	-- Check the Player --
 	if player == nil or player.valid == false then return end
 
-	-- Do not open custom GUI if player is connecting wires --
+	-- do not open custom GUI if player is connecting wires --
 	local cursorStack = player.cursor_stack
 	if cursorStack and cursorStack.valid_for_read then
 		if cursorStack.name == "green-wire" or cursorStack.name == "red-wire" or cursorStack.type == "repair-tool" then return end
@@ -134,12 +133,10 @@ function GUI.guiOpened(event)
 
 	-- Create and save the Tooltip gui --
 	player.opened = GUI.createTooltipGUI(player, obj).gui
-
 end
 
 -- A GUI was closed --
 function GUI.guiClosed(event)
-
 	-- Check the Element --
 	if event.element == nil or event.element.valid ~= true then return end
 
@@ -172,13 +169,6 @@ function GUI.guiClosed(event)
 	if event.element.name == "MFTPGUI" then
 		MFPlayer.GUI["MFTPGUI"].destroy()
 		MFPlayer.GUI["MFTPGUI"] = nil
-		return
-	end
-
-	-- Close the SwitchMF GUI --
-	if event.element.name == "MFSwitchMFGUI" then
-		MFPlayer.GUI["MFSwitchMFGUI"].destroy()
-		MFPlayer.GUI["MFSwitchMFGUI"] = nil
 		return
 	end
 
@@ -232,18 +222,6 @@ function GUI.buttonClicked(event)
 		else
 			MFPlayer.GUI["MFInfoGUI"].destroy()
 			MFPlayer.GUI["MFInfoGUI"] = nil
-		end
-		return
-	end
-
-	-- Open the SwitchMF Button --
-	if event.element.name == "SwitchMFButton" then
-		if MFPlayer.GUI["MFSwitchMFGUI"] == nil then
-			local GUIObj = GUI.createSwitchMFGUI(player)
-			player.opened = GUIObj.gui
-		else
-			MFPlayer.GUI["MFSwitchMFGUI"].destroy()
-			MFPlayer.GUI["MFSwitchMFGUI"] = nil
 		end
 		return
 	end
@@ -400,15 +378,6 @@ function GUI.buttonClicked(event)
 		return
 	end
 
-	-- Close the SwitchMF GUI --
-	if event.element.name == "MFSwitchMFGUICloseButton" then
-		if MFPlayer.GUI["MFSwitchMFGUI"] ~= nil then
-			MFPlayer.GUI["MFSwitchMFGUI"].destroy()
-			MFPlayer.GUI["MFSwitchMFGUI"] = nil
-		end
-		return
-	end
-
 	-- Close Camera Button --
 	if string.match(event.element.name, "Camera") then
 		local text = string.gsub(event.element.name, "CloseButton", "")
@@ -460,34 +429,6 @@ function GUI.buttonClicked(event)
 		local amount = split(event.element.name, ",")[3]
 		GUI.updateInventoryInfo(MFPlayer.GUI["MFInfoGUI"], nil, "INV", item, amount)
 		return
-	end
-
-	-- SwitchMF GUI Change Name Buton --
-	if string.match(event.element.name, "SwitchMFChangeNameButton") then
-		if MFPlayer.GUI["MFSwitchMFGUI"].SwitchMFChangeNameTextField ~= nil then
-			-- Get the Name --
-			local text = MFPlayer.GUI["MFSwitchMFGUI"].SwitchMFChangeNameTextField.text
-			-- Check if the Name is not the same Name --
-			if text == MF.name then
-				player.print({"gui-description.ChangeNameSameName"})
-				return
-			end
-			-- Check if the Name is more than three Characters and less than 30 Characters --
-			if string.len(text) < 3 or string.len(text) > 30 then
-				player.print({"gui-description.ChangeNameCharNumberError"})
-				return
-			end
-			-- Check if the Name is not already used --
-			for _, MF2 in pairs(global.MFTable) do
-				if MF2.name == text then
-					player.print({"gui-description.ChangeNameAlreadyUsed"})
-					return
-				end
-			end
-			-- Change the Name --
-			MF.name = text
-			player.print({"", {"gui-description.ChangeNameChanged"}, " ", text})
-		end
 	end
 
 	-- If this is a Mobile Factory Button -> Open Inventory --
