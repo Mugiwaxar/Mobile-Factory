@@ -1,12 +1,15 @@
 -- Create the Info GUI --
 function GUI.createInfoGui(player)
 
+	-- Get the MFPlayer --
+	local MFPlayer = getMFPlayer(player.name)
+
 	-- Create the GUI --
-	local GUIObj = GUI.createGUI("MFInfoGUI", getMFPlayer(player.name), "vertical", true, 0, 0)
+	local GUIObj = GUI.createGUI("MFInfoGUI", MFPlayer, "vertical", true, 0, 0)
 	local infoGUI = GUIObj.gui
 
 	-- Create the top Bar --
-	local MFInfoGUITitleBar = GUI.createTopBar(GUIObj, 200)
+	local MFInfoGUITitleBar = GUI.createTopBar(GUIObj, 200, MFPlayer.MF.name)
 
 	-- Add the Line --
 	GUIObj:addLine("InfoGUITitleBarLine", MFInfoGUITitleBar, "horizontal")

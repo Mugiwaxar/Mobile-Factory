@@ -3,6 +3,7 @@ MF = {
 	ent = nil,
 	playerIndex = nil,
 	player = "",
+	name = "";
 	updateTick = 1,
 	lastUpdate = 0,
 	lastSurface = nil,
@@ -64,6 +65,7 @@ function MF:new(args)
 		global.MFTable[player.name] = t
 		t.playerIndex = player.index
 		t.player = player.name
+		t.name = player.name .. "'s Mobile Factory"
 	end
 
 	t.II = t.II or INV:new("Internal Inventory")
