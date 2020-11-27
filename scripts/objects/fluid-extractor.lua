@@ -5,6 +5,7 @@ FE = {
 	player = "",
 	MF = nil,
 	entID = 0,
+	dataNetwork = nil,
 	updateTick = 60,
 	lastUpdate = 0;
 	selectedInv = nil,
@@ -29,6 +30,7 @@ function FE:new(object)
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
 	t.entID = object.unit_number
+	t.dataNetwork = MF.dataNetwork
 	resource = object.surface.find_entities_filtered{position=object.position, radius=1, type="resource", limit=1}[1]
 	UpSys.addObj(t)
 	return t
@@ -83,11 +85,11 @@ function FE:update(event)
 		return
 	end
 	-- The Fluid Extractor can work only if the Mobile Factory Entity is valid --
-	if self.MF.ent == nil or self.MF.ent.valid == false then return end
+	if self.dataNetwork.MF.ent == nil or self.dataNetwork.MF.ent.valid == false then return end
 	-- Check the Surface --
-	if self.ent.surface ~= self.MF.ent.surface then return end
+	if self.ent.surface ~= self.dataNetwork.MF.ent.surface then return end
 	-- Check the Distance --
-	if Util.distance(self.ent.position, self.MF.ent.position) > _mfOreCleanerMaxDistance then
+	if Util.distance(self.ent.position, self.dataNetwork.MF.ent.position) > _mfOreCleanerMaxDistance then
 		self.MFTooFar = true
 	else
 		self.MFTooFar = false
@@ -111,14 +113,34 @@ function FE:getTooltipInfos(GUIObj, gui, justCreated)
 		-- Create the Settings Title --
 		local settingsTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Settings"}, _mfOrange)
 
+		-- Create the Select Data Network Label --
+		GUIObj:addLabel("", settingsTitle, {"", {"gui-description.OCFESelectDataNetwork"}}, _mfBlue, nil, false, "LabelFont2")
+
+		-- Create the Select Network Table --
+		local networks = {}
+		local selected = 1
+		local total = 0
+		for _, MF in pairs(global.MFTable) do
+			if Util.canUse(GUIObj.MFPlayer, MF) then
+				table.insert(networks, MF.player)
+				total = total + 1
+				if self.dataNetwork.ID == MF.dataNetwork.ID then selected = total end
+			end
+		end
+
+		-- Create the Select Network Drop Down --
+		if table_size(networks) > 0 then
+			GUIObj:addDropDown("DNFESelect" .. self.ent.unit_number, settingsTitle, networks, selected, true, {"gui-description.SelectDataNetwork"})
+		end
+
 		-- Create the Select Tank Label --
-		GUIObj:addLabel("", settingsTitle, {"", {"gui-description.TargetedTank"}}, _mfOrange)
+		GUIObj:addLabel("", settingsTitle, {"", {"gui-description.TargetedTank"}}, _mfBlue, nil, false, "LabelFont2")
 
 		-- Create the Tank List --
 		local invs = {{"", {"gui-description.All"}}}
 		local selectedIndex = 1
 		local i = 1
-		for k, deepTank in pairs(self.MF.dataNetwork.DTKTable) do
+		for k, deepTank in pairs(self.dataNetwork.DTKTable) do
 			if deepTank ~= nil and deepTank.ent ~= nil then
 				i = i + 1
 				local itemText = nil
@@ -182,7 +204,7 @@ function FE:changeDimTank(ID)
 	end
 	-- Select the Ore Silo --
 	self.selectedInv = nil
-	for k, dimTank in pairs(self.MF.dataNetwork.DTKTable) do
+	for k, dimTank in pairs(self.dataNetwork.DTKTable) do
 		if dimTank ~= nil and dimTank.ent ~= nil and dimTank.ent.valid == true then
 			if ID == dimTank.ID then
 				self.selectedInv = dimTank
@@ -232,7 +254,7 @@ function FE:extractFluids(event)
 			end
 		else
 			-- Try to find a Deep Storage if the Selected Inventory is All --
-			for k, dp in pairs(self.MF.dataNetwork.DTKTable) do
+			for k, dp in pairs(self.dataNetwork.DTKTable) do
 				if dp:canAccept({name = product.name, amount = fluidExtracted * product.amount}) == true then
 					deepStorages[product.name] = dp
 					break
@@ -257,7 +279,7 @@ function FE:extractFluids(event)
 	-- Test if Fluid was sended --
 	if fluidExtracted > 0 then
 		-- Make a Beam --
-		self.ent.surface.create_entity{name="BigPurpleBeam", duration=59, position=self.ent.position, target=self.MF.ent.position, source=self.ent.position}
+		self.ent.surface.create_entity{name="BigPurpleBeam", duration=59, position=self.ent.position, target=self.dataNetwork.MF.ent.position, source=self.ent.position}
 		-- Remove a charge --
 		self.quatronCharge = self.quatronCharge - 100
 		-- Remove amount from the FluidPath --

@@ -776,6 +776,29 @@ function GUI.onGuiElemChanged(event)
 	end
 	
 	------- Read if the Element comes from an Ore Cleaner -------
+	-- Select Data Network --
+	if string.match(event.element.name, "DNOCSelect") then
+		-- Find the Ore Cleaner ID --
+		local ID = split(event.element.name, "DNOCSelect")
+		ID = tonumber(ID[1])
+		-- Check the ID --
+		if ID == nil then return end
+		-- Find the Ore Cleaner --
+		local obj = global.entsTable[ID]
+		-- Check if a Ore Cleaner was found --
+		if obj == nil then return end
+		-- Get the Mobile Factory --
+		local selectedMF = getMF(event.element.items[event.element.selected_index])
+		if selectedMF == nil then return end
+		-- Set the New Data Network --
+		obj.dataNetwork = selectedMF.dataNetwork
+		-- Remove the Selected Inventory --
+		obj.selectedInv = nil
+		-- Update the Tooltip GUI --
+		GUI.updateMFTooltipGUI(MFPlayer.GUI["MFTooltipGUI"], true)
+		return
+	end
+	-- Select Targed --
 	if string.match(event.element.name, "OC") then
 		-- Find the Ore Cleaner ID --
 		local ID = split(event.element.name, "OC")
@@ -796,6 +819,29 @@ function GUI.onGuiElemChanged(event)
 	end
 	
 	------- Read if the Element comes from a Fluid Extractor -------
+	-- Select Data Network --
+	if string.match(event.element.name, "DNFESelect") then
+		-- Find the Fluid Extractor ID --
+		local ID = split(event.element.name, "DNFESelect")
+		ID = tonumber(ID[1])
+		-- Check the ID --
+		if ID == nil then return end
+		-- Find the Fluid Extractor --
+		local obj = global.entsTable[ID]
+		-- Check if a Fluid Extractor was found --
+		if obj == nil then return end
+		-- Get the Mobile Factory --
+		local selectedMF = getMF(event.element.items[event.element.selected_index])
+		if selectedMF == nil then return end
+		-- Set the New Data Network --
+		obj.dataNetwork = selectedMF.dataNetwork
+		-- Remove the Selected Inventory --
+		obj.selectedInv = nil
+		-- Update the Tooltip GUI --
+		GUI.updateMFTooltipGUI(MFPlayer.GUI["MFTooltipGUI"], true)
+		return
+	end
+	-- Select the Target --
 	if string.match(event.element.name, "FE") then
 		-- Find the Fluid Extractor ID --
 		local ID = split(event.element.name, "FE")

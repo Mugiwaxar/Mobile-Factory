@@ -5,6 +5,7 @@ OC = {
 	player = "",
 	MF = nil,
 	entID = 0,
+	dataNetwork = nil,
 	oreTable = nil,
 	selectedInv = nil,
 	animID = 0,
@@ -32,6 +33,7 @@ function OC:new(object)
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
 	t.entID = object.unit_number
+	t.dataNetwork = MF.dataNetwork
 	t.oreTable = {}
 	t.inventory = {}
 	t:scanOres(object)
@@ -90,11 +92,11 @@ function OC:update(event)
 		return
 	end
 	-- The Ore Cleaner can work only if the Mobile Factory Entity is valid --
-	if self.MF.ent == nil or self.MF.ent.valid == false then return end
+	if self.dataNetwork.MF.ent == nil or self.dataNetwork.MF.ent.valid == false then return end
 	-- Check the Surface --
-	if self.ent.surface ~= self.MF.ent.surface then return end
+	if self.ent.surface ~= self.dataNetwork.MF.ent.surface then return end
 	-- Check the Distance --
-	if Util.distance(self.ent.position, self.MF.ent.position) > _mfOreCleanerMaxDistance then
+	if Util.distance(self.ent.position, self.dataNetwork.MF.ent.position) > _mfOreCleanerMaxDistance then
 		self.MFTooFar = true
 	else
 		self.MFTooFar = false
@@ -124,14 +126,34 @@ function OC:getTooltipInfos(GUIObj, gui, justCreated)
 		-- Create the Settings Title --
 		local settingsTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Settings"}, _mfOrange)
 
+		-- Create the Select Data Network Label --
+		GUIObj:addLabel("", settingsTitle, {"", {"gui-description.OCFESelectDataNetwork"}}, _mfBlue, nil, false, "LabelFont2")
+
+		-- Create the Select Network Table --
+		local networks = {}
+		local selected = 1
+		local total = 0
+		for _, MF in pairs(global.MFTable) do
+			if Util.canUse(GUIObj.MFPlayer, MF) then
+				table.insert(networks, MF.player)
+				total = total + 1
+				if self.dataNetwork.ID == MF.dataNetwork.ID then selected = total end
+			end
+		end
+
+		-- Create the Select Network Drop Down --
+		if table_size(networks) > 0 then
+			GUIObj:addDropDown("DNOCSelect" .. self.ent.unit_number, settingsTitle, networks, selected, true, {"gui-description.SelectDataNetwork"})
+		end
+
 		-- Create the Select Storage Label --
-		GUIObj:addLabel("", settingsTitle, {"", {"gui-description.TargetedStorage"}}, _mfOrange)
+		GUIObj:addLabel("", settingsTitle, {"", {"gui-description.OCFETargetedStorage"}}, _mfBlue, nil, false, "LabelFont2")
 
 		-- Create the Storage List --
 		local invs = {{"gui-description.All"}}
 		local selectedIndex = 1
 		local i = 1
-		for k, deepStorage in pairs(self.MF.dataNetwork.DSRTable) do
+		for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
 			if deepStorage ~= nil and deepStorage.ent ~= nil then
 				i = i + 1
 				local itemText = {"", " (", {"gui-description.Empty"}, " - ", deepStorage.player, ")"}
@@ -184,7 +206,7 @@ function OC:changeInventory(ID)
 	end
 	-- Select the Inventory --
 	self.selectedInv = nil
-	for k, deepStorage in pairs(self.MF.dataNetwork.DSRTable) do
+	for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
 		if valid(deepStorage) == true then
 			if ID == deepStorage.ID then
 				self.selectedInv = deepStorage
@@ -266,7 +288,7 @@ function OC:collectOres(event)
 			end
 		else
 			-- Try to find a Deep Storage if the Selected Inventory is All --
-			for k, dp in pairs(self.MF.dataNetwork.DSRTable) do
+			for k, dp in pairs(self.dataNetwork.DSRTable) do
 				if dp:canAccept(product.name) == true then
 					deepStorages[product.name] = dp
 					break
@@ -314,7 +336,7 @@ function OC:updateAnimation(event)
 		rendering.destroy(self.animID)
 		self.animID = 0
 		-- Make the transfer Beam --
-		self.ent.surface.create_entity{name="OCBigBeam", duration=16, position=self.ent.position, target=self.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
+		self.ent.surface.create_entity{name="OCBigBeam", duration=16, position=self.ent.position, target=self.dataNetwork.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
 		return
 	-- If they was extraction but the animation doesn't exist --
 	elseif event.tick - self.lastExtraction <= _mfOreCleanerExtractionTicks + 10 and self.animID == 0 then
@@ -326,7 +348,7 @@ function OC:updateAnimation(event)
 	-- Make the Beam if the animation ended --
 	elseif (event.tick - self.animTick)%240 == 0 and self.animID ~= 0 then
 		-- Make the transfer Beam --
-		self.ent.surface.create_entity{name="OCBigBeam", duration=16, position=self.ent.position, target=self.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
+		self.ent.surface.create_entity{name="OCBigBeam", duration=16, position=self.ent.position, target=self.dataNetwork.MF.ent.position, source={self.ent.position.x-0.3,self.ent.position.y-4}}
 	end
 end
 

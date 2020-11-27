@@ -9,10 +9,9 @@ Date: 27/11/2020
     - Added a New GUI: The Switch GUI, allows you to rename your Mobile Factory or select another one as a "Main" Mobile Factory
     - The Main GUI shows now the Information about the Selected Mobile Factory
     - The Information GUI shows now the Information about the Selected Mobile Factory
-    - Deep Storages are added to the Mobile Factory where it is placed
-    - Deep Tanks are added to the Mobile Factory where it is placed
-    - Data Storages are added to the Mobile Factory where it is placed
-    - Jump Chargers are added to the Mobile Factory where it is placed
+    - Deep Storages, Deep Tanks, Data Storages and Jump Chargers are added to the Mobile Factory where it is placed
+    - You can now select the Data Network for the Matter Interactor, the Fluid Interactor, the Network Explorer and the Data Assembler
+    - You can now select the Data Network for the Ore Cleaner and the Fluid Extractor
   Bugfixes:
     - Fixed crash on Sync area ghost placing (Honktown)
     - The GUI of other Players Mobile Factory now works correctly
