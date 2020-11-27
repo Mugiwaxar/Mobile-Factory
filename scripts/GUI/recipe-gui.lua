@@ -1,6 +1,6 @@
 -- Create the Recipe GUI --
 function GUI.createRecipeGUI(player)
-	-- Create the GUI
+	-- Create the GUI --
 	local GUIObj = GUI.createGUI("RecipeGUI", getMFPlayer(player.name), "vertical")
 
 	-- Create the Menu Bar --
@@ -12,7 +12,7 @@ function GUI.createRecipeGUI(player)
 	textField.style.maximal_width = 100
 	GUIObj:addButton("RecipeGUICloseButton", topBarFlow, "CloseIcon", "CloseIcon", {"gui-description.closeButton"}, 15)
 
-	-- Cerate Main Frame
+	-- Create the Main Frame --
 	local RSMainFrame = GUIObj:addFrame("RSMainFrame", GUIObj.gui, "vertical")
 	RSMainFrame.style = "filter_scroll_pane_background_frame_no_background"
 
@@ -24,7 +24,7 @@ function GUI.createRecipeGUI(player)
 	local RSRecipeFrame = GUIObj:addFrame("RSRecipeFrame", RSScrollPane, "vertical", true)
 	RSRecipeFrame.style = "filter_scroll_pane_background_frame"
 
-	-- Split recipes by groups
+	-- Split Recipes by groups --
 	local recipeTable = {}
 	for _, r in pairs(player.force.recipes) do
 		if r.enabled == true and r.hidden == false and not global.dataAssemblerBlacklist[r.category] then
@@ -39,7 +39,7 @@ function GUI.createRecipeGUI(player)
 		end
 	end
 
-	-- Build indexed array, and sort it
+	-- Build indexed array, and sort it --
 	local groupsArray = {}
 	local function rsorter(a, b)
 		local firstOrder = a.obj.order or ""
@@ -50,7 +50,7 @@ function GUI.createRecipeGUI(player)
 		else
 			return (a.obj.name or "") < (b.obj.name or "")
 		end
-		--can't reach here
+		--can't reach here --
 	end
 
 	for groupName, subgroups in pairs(recipeTable) do
@@ -64,7 +64,7 @@ function GUI.createRecipeGUI(player)
 	end
 	table.sort(groupsArray, rsorter)
 
-	-- Draw Categories
+	-- Draw Categories --
 	for idx, group in ipairs(groupsArray) do
 		local name = "RSCat," .. idx
 		local tab = RSGroupTable.add({type="sprite-button", name=name, style="filter_group_button_tab_selectable"})
@@ -91,7 +91,7 @@ end
 
 
 function GUI.updateRecipeGUI(GUIObj)
-	--Auto-update can be slow with huge list of recipes. No need to. Nothing changes here without player input.
+	--Auto-update can be slow with huge list of recipes. No need to. Nothing changes here without player input --
 	if GUIObj.RSSearchTextField.text ~= GUIObj.lastSearch then
 		GUIObj.lastSearch = GUIObj.RSSearchTextField.text
 		GUI.doUpdateRecipeGUI(GUIObj)
@@ -99,12 +99,12 @@ function GUI.updateRecipeGUI(GUIObj)
 end
 
 function GUI.doUpdateRecipeGUI(GUIObj)
-	-- Clear
+	-- Clear --
 	GUIObj.RSRecipeFrame.clear()
 
 	local filter = string.lower(GUIObj.lastSearch) or ""
 	local tmpLocal = GUIObj.MFPlayer.varTable.tmpLocal
-	-- Draw Recipes
+	-- Draw Recipes --
 	for _, subgroups in ipairs(GUIObj.sortedRecipes[GUIObj.selectedCategory].list) do
 		local RSRecipeTable = GUIObj:addTable("", GUIObj.RSRecipeFrame, 10)
 		for _, recipe in ipairs(subgroups.list) do
