@@ -523,7 +523,8 @@ function GUI.buttonClicked(event)
 	if string.match(event.element.name, "MIOpenI") then
 		-- Get the Object --
 		local objId = tonumber(split(event.element.name, ",")[2])
-		local ent = global.matterInteractorTable[objId].ent
+		local obj = global.matterInteractorTable[objId]
+		local ent = (obj and obj.ent) or nil
 		if ent ~= nil and ent.valid == true then
 			getMFPlayer(player.name).varTable.bypassGUI = true
 			player.opened = ent
