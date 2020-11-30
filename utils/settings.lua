@@ -118,9 +118,6 @@ _mfFEFluidPerExtraction = 15
 _mfFEMaxCharge = 1000
 _mfFluidExtractorMaxDistance = 100
 
--- GUI Settings --
-_GUIButtonsSize = 25
-
 -- Erya --
 -- _mfEryaFrostlayer = {}
 -- _mfEryaFrostlayer[1] = {{0,0}}
@@ -153,7 +150,7 @@ _MFResearches["ConstructibleArea2"] = "createConstructibleArea2"
 _MFResearches["MatterSerialization"] = "createNetworkControllerArea"
 _MFResearches["JumpDrive"] = "createJumpDriveArea"
 
--- Entitie Lists --
+-- Entity Lists --
 _mfEnergyShare =
 {
 	"InternalEnergyCube",
@@ -181,6 +178,19 @@ _mfMobileFactories =
 
 _mfEnergyAndMF = merge{_mfEnergyShare, _mfMobileFactories}
 _mfQuatronAndMF = merge{_mfQuatronShare, _mfMobileFactories}
+
+-- GUI Settings --
+_GUIButtonsSize = 25
+_mfGUIDragAreaSize = 25
+_mfGUICloseButtonSize = 20
+_mfDefaultGuiHeight = 500
+_mfDefaultGuiWidth = 300
+
+-- GUI Name List --
+_mfGUIName = 
+{
+	SwitchMF = "MFSwitchMFGUI"
+}
 
 -- Entity GUI --
 _mfTooltipGUI =

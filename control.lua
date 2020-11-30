@@ -1,6 +1,7 @@
 pcall(require,'__debugadapter__/debugadapter.lua')
 
 GUI = {}
+GAPI = {}
 Util = {}
 UpSys = {}
 
@@ -11,6 +12,7 @@ require("utils/surface.lua")
 require("utils/cc-extension.lua")
 require("utils/warptorio.lua")
 require("utils/remote.lua")
+require("utils/GUI-API.lua")
 require("scripts/GUI/gui.lua")
 require("scripts/game-update.lua")
 require("scripts/objects/mobile-factory.lua")

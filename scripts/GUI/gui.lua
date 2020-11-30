@@ -91,8 +91,9 @@ function GUI.updateAllGUIs(force)
 
 			-- Update all GUIs --
 			if game.tick%_eventTick55 == 0 or force then
-			for _, go in pairs(MFPlayer.GUI or {}) do
-				if valid(go) then go:update() end
+			for _, table in pairs(MFPlayer.GUI or {}) do
+				if valid(table) then table:update() end
+				if table.gui ~= nil and table.gui.valid == true and GUI["update" .. table.gui.name] ~= nil then GUI["update" .. table.gui.name](table) end
 			end
 
 		end
@@ -176,9 +177,9 @@ function GUI.guiClosed(event)
 	end
 
 	-- Close the SwitchMF GUI --
-	if event.element.name == "MFSwitchMFGUI" then
-		MFPlayer.GUI["MFSwitchMFGUI"].destroy()
-		MFPlayer.GUI["MFSwitchMFGUI"] = nil
+	if event.element.name == _mfGUIName.SwitchMF then
+		MFPlayer.GUI[_mfGUIName.SwitchMF].gui.destroy()
+		MFPlayer.GUI[_mfGUIName.SwitchMF] = nil
 		return
 	end
 
@@ -241,12 +242,13 @@ function GUI.buttonClicked(event)
 
 	-- Open the SwitchMF Button --
 	if event.element.name == "SwitchMFButton" then
-		if MFPlayer.GUI["MFSwitchMFGUI"] == nil then
-			local GUIObj = GUI.createSwitchMFGUI(player)
-			player.opened = GUIObj.gui
+		if MFPlayer.GUI[_mfGUIName.SwitchMF] == nil then
+			local table = GUI.createSwitchMFGUI(player)
+			MFPlayer.GUI[_mfGUIName.SwitchMF] = table
+			player.opened = table.gui
 		else
-			MFPlayer.GUI["MFSwitchMFGUI"].destroy()
-			MFPlayer.GUI["MFSwitchMFGUI"] = nil
+			MFPlayer.GUI[_mfGUIName.SwitchMF].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.SwitchMF] = nil
 		end
 		return
 	end
@@ -404,10 +406,10 @@ function GUI.buttonClicked(event)
 	end
 
 	-- Close the SwitchMF GUI --
-	if event.element.name == "MFSwitchMFGUICloseButton" then
-		if MFPlayer.GUI["MFSwitchMFGUI"] ~= nil then
-			MFPlayer.GUI["MFSwitchMFGUI"].destroy()
-			MFPlayer.GUI["MFSwitchMFGUI"] = nil
+	if event.element.name == _mfGUIName.SwitchMF .. "CloseButton" then
+		if MFPlayer.GUI[_mfGUIName.SwitchMF] ~= nil then
+			MFPlayer.GUI[_mfGUIName.SwitchMF].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.SwitchMF] = nil
 		end
 		return
 	end
@@ -467,9 +469,9 @@ function GUI.buttonClicked(event)
 
 	-- SwitchMF GUI Change Name Buton --
 	if string.match(event.element.name, "SwitchMFChangeNameButton") then
-		if MFPlayer.GUI["MFSwitchMFGUI"].SwitchMFChangeNameTextField ~= nil then
+		if MFPlayer.GUI[_mfGUIName.SwitchMF].vars.SwitchMFChangeNameTextField ~= nil then
 			-- Get the Name --
-			local text = MFPlayer.GUI["MFSwitchMFGUI"].SwitchMFChangeNameTextField.text
+			local text = MFPlayer.GUI[_mfGUIName.SwitchMF].vars.SwitchMFChangeNameTextField.text
 			-- Check if the Name is not the same Name --
 			if text == MF.name then
 				player.print({"gui-description.ChangeNameSameName"})

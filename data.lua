@@ -585,33 +585,6 @@ data:extend{
 		flags = {"icon"}
 	}
 }
-------------------------- ADD FONTS -------------------
-data:extend{
-	{
-    type = "font",
-    name = "TitleFont",
-	size = 16,
-    from = "default-bold"
-	}
-}
-
-data:extend{
-	{
-    type = "font",
-    name = "LabelFont",
-	size = 10,
-    from = "default"
-	}
-}
-
-data:extend{
-	{
-    type = "font",
-    name = "LabelFont2",
-	size = 14,
-    from = "default"
-	}
-}
 
 ------------------------- ADD SOUNDS ---------------------
 data:extend{
@@ -665,7 +638,35 @@ data:extend{
 	}
 }
 
--------------------- Styles --------------------
+------------------------- ADD FONTS -------------------
+data:extend{
+	{
+    type = "font",
+    name = "TitleFont",
+	size = 20,
+    from = "default-bold"
+	}
+}
+
+data:extend{
+	{
+    type = "font",
+    name = "LabelFont",
+	size = 12,
+    from = "default"
+	}
+}
+
+data:extend{
+	{
+    type = "font",
+    name = "LabelFont2",
+	size = 16,
+    from = "default"
+	}
+}
+
+-------------------- STYLES --------------------
 local outer_frame_light = outer_frame_light()
 outer_frame_light.base.center = {position = {42,8}, size=1}
 data.raw["gui-style"].default.MF_Inventory_scroll_pan =
