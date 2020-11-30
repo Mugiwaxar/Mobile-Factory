@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.2.3
+Date: 30/11/2020
+  Changes:
+    - sync-able entities will check the MF of the surface they are placed on or nearest Mobile Factory
+  Bugfixes:
+    - place-and-remove functions should be more compatible with multiple MFs
+        placing internal cubes for example
+    - small validity check when opening a Matter Interactor
+---------------------------------------------------------------------------------------------------
 Version: 0.2.2
 Date: 27/11/2020
   Bugfixes:

@@ -121,7 +121,7 @@ function somethingWasPlaced(event)
 
 	-- If a SyncArea Entity was placed --
 	if _mfSyncAreaAllowedTypes[entity.type] == true and event.destination == nil then
-		local nearestMF = findNearestMF(entity.surface, entity.position)
+		local nearestMF = getMF(surfacePlayer) or findNearestMF(entity.surface, entity.position)
 		if nearestMF ~= nil then
 			placedEntityInSyncArea(MF, entity)
 		end
