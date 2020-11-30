@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.2.4
+Date: 30/11/2020
+  Changes:
+    - placed objects prioritize to selected MF
+  Bugfixes:
+    - bad string match for new place-and-remove behavior
+---------------------------------------------------------------------------------------------------
 Version: 0.2.3
 Date: 30/11/2020
   Changes:
