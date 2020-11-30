@@ -48,7 +48,7 @@ function somethingWasPlaced(event)
 			MFPlayer.ent.print({"", locName, " ", {"gui-description.PlaceableOutsideTheFactory"}})
 			destroyEntity = true
 		-- Prevent to place inside the Control Center --
-		elseif objInfo.canInCC ~= true and objInfo.canInCCAnywhere ~= true and MFFloor == _mfControlSurfaceName) then
+		elseif objInfo.canInCC ~= true and objInfo.canInCCAnywhere ~= true and MFFloor == _mfControlSurfaceName then
 			MFPlayer.ent.print({"", locName, " ", {"gui-description.CCNotPlaceable"}})
 			destroyEntity = true
 		-- Allow to place inside the Constructible Area --
@@ -123,7 +123,7 @@ function somethingWasPlaced(event)
 	if _mfSyncAreaAllowedTypes[entity.type] == true and event.destination == nil then
 		local nearestMF = getMF(surfacePlayer) or findNearestMF(entity.surface, entity.position)
 		if nearestMF ~= nil then
-			placedEntityInSyncArea(MF, entity)
+			placedEntityInSyncArea(nearestMF, entity)
 		end
 	end
 
