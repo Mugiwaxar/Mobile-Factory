@@ -11,7 +11,7 @@ function somethingWasPlaced(event)
 	local entity = event.created_entity or event.entity or event.destination
 	if entity == nil or entity.last_user == nil then return end
 	local MFPlayer = getMFPlayer(event.player_index or entity.last_user.index)
-	local playerMF = getMF(event.player_index or entity.last_user.index)
+	local playerMF = getCurrentMF(event.player_index or entity.last_user.index)
 
 	-- Find Mobile Factory Floor and MFPlayerName from Surface --
 	local entitySurface = entity.surface

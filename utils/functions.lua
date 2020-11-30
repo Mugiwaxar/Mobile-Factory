@@ -313,7 +313,7 @@ function getMFFloor(surfaceName)
 	}
 
 	for _, v in pairs(MFSurfaces) do
-		local MFFloor, playerName = string.match(surfaceName, "^"..v.."(.*)$")
+		local MFFloor, playerName = string.match(surfaceName, "^("..v..")(.*)$")
 		if MFFloor then return MFFloor, playerName end
 	end
 	return nil, nil
