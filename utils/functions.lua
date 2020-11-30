@@ -304,6 +304,48 @@ function getMFPlayer(player)
 	else error("bad argument to getMFPlayer()") end
 end
 
+-- Return an MF Floor Name, and the MFPlayer Name as a Second Return, If on an MF Surface --
+function getMFFloor(surfaceName)
+	if surfaceName == nil then return nil, nil end
+	local MFSurfaces = {
+		_mfSurfaceName = "mfSurface",
+		_mfControlSurfaceName = "ControlRoom",
+	}
+
+	for _, v in pairs(MFSurfaces) do
+		local MFFloor, playerName = string.match(surfaceName, "^"..v.."(.*)$")
+		if MFFloor then return MFFloor, playerName end
+	end
+	return nil, nil
+end
+
+function findNearestMF(surface, position)
+	if type(surface) == "string" or type(surface) == "number" then surfaceName = game.surfaces[surface] end
+	if type(surface) ~= "table" or surface.object_name ~= "LuaSurface" then error("invalid argument - surface") end
+	if type(position) ~= "table" then error("invalid argument - position") end
+	local pX = position.x or position[1]
+	local pY = position.y or position[2]
+	if pX == nil or pY == nil then
+		error("nearestMF() - invalid position table")
+	end
+	local nearestMFObj = nil
+	local d2 = math.huge
+	for _, MF in pairs(global.MFTable) do
+		local MFEnt = MF.ent
+		if MFEnt and MFEnt.valid and MFEnt.surface == surface then
+			local MFPos = MFEnt.position
+			local MFX = MFPos.x
+			local MFY = MFPos.y
+			local dist2 = (pX - MFX)^2 + (pY - MFY)^2
+			if dist2 < d2 then
+				d2 = dist2
+				nearestMFObj = MF
+			end
+		end
+	end
+	return nearestMFObj
+end
+
 function Util.valueToObj(inTable, key, value)
 	if type(inTable) ~= "table" or key == nil or value == nil then return end
 	for _, obj in pairs(inTable) do
@@ -326,7 +368,7 @@ function getForce(player)
 	end
 end
 
--- Return the Mobile Factory from a Surface Name --
+-- Return the Mobile Factory from a LuaSurface --
 function getMFBySurface(surface)
 	for _, MF in pairs(global.MFTable) do
 		if MF.fS == surface or MF.ccS == surface then

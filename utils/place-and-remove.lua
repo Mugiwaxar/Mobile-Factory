@@ -11,17 +11,22 @@ function somethingWasPlaced(event)
 	local entity = event.created_entity or event.entity or event.destination
 	if entity == nil or entity.last_user == nil then return end
 	local MFPlayer = getMFPlayer(event.player_index or entity.last_user.index)
- 	local MF = getMF(event.player_index or entity.last_user.index)
+	local playerMF = getMF(event.player_index or entity.last_user.index)
+
+	-- Find Mobile Factory Floor and MFPlayerName from Surface --
+	local entitySurface = entity.surface
+	local entitySurfaceName = entitySurface.name
+	local MFFloor, surfacePlayer = getMFFloor(entitySurfaceName)
 
 	-- Check the Values --
-	if entity == nil or MFPlayer == nil or MF == nil then return end
+	if entity == nil or MFPlayer == nil or playerMF == nil then return end
 
 	-- Adjust Entity to Expected Place --
 	event.created_entity = event.created_entity or event.entity or event.destination
 
 	-- If a Mobile Factory was placed --
 	if string.match(entity.name, "MobileFactory") then
-		placedMobileFactory(event, entity, MFPlayer, MF)
+		placedMobileFactory(event, entity, MFPlayer, playerMF)
 		return
 	end
 
@@ -35,15 +40,15 @@ function somethingWasPlaced(event)
 	-- Check if the Entity is allowed to be placed --
 	if objInfo ~= nil then
 		-- Prevent to place Outside --
-		if objInfo.noOutside == true and string.match(entity.surface.name, _mfSurfaceName) == nil and string.match(entity.surface.name, _mfControlSurfaceName) == nil then
+		if objInfo.noOutside == true and MFFloor == nil then
 			MFPlayer.ent.print({"", locName, " ", {"gui-description.PlaceableInsideTheFactory"}})
 			destroyEntity = true
 		-- Prevent to place Inside --
-		elseif objInfo.noInside == true and string.match(entity.surface.name, _mfSurfaceName) then
+		elseif objInfo.noInside == true and MFFloor == _mfSurfaceName then
 			MFPlayer.ent.print({"", locName, " ", {"gui-description.PlaceableOutsideTheFactory"}})
 			destroyEntity = true
 		-- Prevent to place inside the Control Center --
-		elseif objInfo.canInCC ~= true and objInfo.canInCCAnywhere ~= true and string.match(entity.surface.name, _mfControlSurfaceName) then
+		elseif objInfo.canInCC ~= true and objInfo.canInCCAnywhere ~= true and MFFloor == _mfControlSurfaceName) then
 			MFPlayer.ent.print({"", locName, " ", {"gui-description.CCNotPlaceable"}})
 			destroyEntity = true
 		-- Allow to place inside the Constructible Area --
@@ -53,7 +58,7 @@ function somethingWasPlaced(event)
 		end
 	else
 		-- Prevent to place inside the Control Center --
-		if string.match(entity.surface.name, _mfControlSurfaceName) then
+		if MFFloor == _mfControlSurfaceName then
 			MFPlayer.ent.print({"", locName, " ", {"gui-description.CCNotPlaceable"}})
 			destroyEntity = true
 		end
@@ -61,6 +66,8 @@ function somethingWasPlaced(event)
 
 	-- Save the Internal Energy Cube --
 	if type ~= "entity-ghost" and entity.name == "InternalEnergyCube" then
+		local surfaceMF = getMF(surfacePlayer)
+		local MF = surfaceMF or playerMF
 		if MF.internalEnergyObj.ent ~= nil and MF.internalEnergyObj.ent.valid == true then
 			if event.stack ~= nil and event.stack.valid_for_read == true then
 				MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
@@ -80,6 +87,9 @@ function somethingWasPlaced(event)
 
 	-- Save the Internal Quatron Cube --
 	if type ~= "entity-ghost" and entity.name == "InternalQuatronCube" then
+		local surfaceMF = getMF(surfacePlayer)
+		local MF = surfaceMF or playerMF
+
 		if MF.internalQuatronObj.ent ~= nil and MF.internalQuatronObj.ent.valid == true then
 			if event.stack ~= nil and event.stack.valid_for_read == true then
 				MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
@@ -111,7 +121,10 @@ function somethingWasPlaced(event)
 
 	-- If a SyncArea Entity was placed --
 	if _mfSyncAreaAllowedTypes[entity.type] == true and event.destination == nil then
-		placedEntityInSyncArea(MF, entity)
+		local nearestMF = findNearestMF(entity.surface, entity.position)
+		if nearestMF ~= nil then
+			placedEntityInSyncArea(MF, entity)
+		end
 	end
 
 	-- -- If a Erya Structure was placed --
@@ -141,7 +154,6 @@ function somethingWasPlaced(event)
 			obj:validate()
 		end
 	end
-
 end
 
 -- When something is removed or destroyed --
@@ -217,8 +229,10 @@ function tilesWasPlaced(event)
 	-- Get the Values --
 	local MFPlayer = getMFPlayer(event.player_index)
 	local surface = game.get_surface(event.surface_index or event.created_entity.surface.index)
+	local MFFloor = getMFFloor(surface.name)
+
 	-- Prevent to place Tiles inside the Control Center --
-	if event.tiles ~= nil and string.match(surface.name, _mfControlSurfaceName) then
+	if event.tiles ~= nil and MFFloor == _mfControlSurfaceName then
 		-- Remove the Tiles --
 		for k, tile in pairs(event.tiles) do
 			createTilesAtPosition(tile.position, 1, surface, tile.old_tile.name, true)
@@ -230,7 +244,7 @@ function tilesWasPlaced(event)
 		return
 	end
 	-- Prevent to place a Ghost --
-	if event.created_entity ~= nil and string.match(surface.name, _mfControlSurfaceName) then
+	if event.created_entity ~= nil and MFFloor == _mfControlSurfaceName then
 		-- Destroy the Ghost --
 		event.created_entity.destroy()
 		-- Try to send a message to the Player --
@@ -243,12 +257,13 @@ end
 
 -- Called when a Mobile Factory is placed --
 function placedMobileFactory(event, entity, MFPlayer, MF)
+	local MFFloor = getMFFloor(entity.surface.name)
 	-- If the Mobile Factory already exist for this Player --
 	if MF ~= nil and MF.ent ~= nil and MF.ent.valid == true then
 		MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
 		entity.destroy()
 	-- If the Mobile Factory is placed inside the Mobile Factory --
-	elseif string.match(entity.surface.name, _mfSurfaceName) or string.match(entity.surface.name, _mfControlSurfaceName) then
+	elseif MFFloor then
 		MFPlayer.ent.print({"", {"gui-description.MFPlacedInsideFactory"}})
 		entity.destroy()
 	-- If the Mobile Factory is placed inside a Factorissimo Building --
@@ -268,7 +283,7 @@ end
 -- Called when an Entity is placed inside the SyncArea --
 function placedEntityInSyncArea(MF, entity)
 	-- Check the Mobile Factory --
-	if MF.ent == nil or MF.ent.valid == false or MF.syncAreaEnabled ~= true or  MF.ent.speed ~= 0 then return end
+	if MF.ent == nil or MF.ent.valid == false or MF.syncAreaEnabled ~= true or MF.ent.speed ~= 0 then return end
 	-- Outside to Inside --
 	if entity.surface == MF.ent.surface and Util.distance(entity.position, MF.ent.position) < _mfSyncAreaRadius
 			and not MF.fS.entity_prototype_collides(entity.name, {_mfSyncAreaPosition.x + (entity.position.x - math.floor(MF.ent.position.x)), _mfSyncAreaPosition.y + (entity.position.y - math.floor(MF.ent.position.y))}, false)
@@ -295,7 +310,7 @@ function removedSyncEntity(event)
 	local removedEnt = event.entity
 	local MF = nil
 	for _, MFObj in pairs(global.MFTable) do
-		if MFObj.ent ~= nil and MFObj.ent.valid and MFObj.syncAreaEnabled == true and MFObj.ent.speed == 0 
+		if MFObj.ent ~= nil and MFObj.ent.valid and MFObj.syncAreaEnabled == true and MFObj.ent.speed == 0
 		and ((removedEnt.surface == MFObj.ent.surface and Util.distance(removedEnt.position, MFObj.ent.position) < _mfSyncAreaRadius)
 				or (removedEnt.surface == MFObj.fS and Util.distance(removedEnt.position, _mfSyncAreaPosition) < _mfSyncAreaRadius))
 			then
