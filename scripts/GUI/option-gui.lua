@@ -141,6 +141,10 @@ function GUI.updateOptionGUIGUITab(GUIObj)
 	GUIObj:addLabel("", scrollPane, {"gui-description.MainButtonSizeTitle"}, nil, nil, false, "LabelFont2")
 	GUIObj:addDropDown("MainButtonsSize", scrollPane, {1,2,3,4,5,6,7,8,9,10}, GUIObj.MFPlayer.varTable.MainButtonsSize or 5, true, {"gui-description.MainButtonSizeSelectorTT"})
 
+	-- Add the Buttons per Line Selector --
+	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIButtonsLineTitle"}, nil, nil, false, "LabelFont2")
+	GUIObj:addDropDown("MainGUIButtonsPerLine", scrollPane, {1,2,3,4,5,6,7,8,9,10}, GUIObj.MFPlayer.varTable.mainGUIButtonsPerLine or 5, true, {"gui-description.MainGUIButtonsPerLineTT"})
+
 	-- Add a CheckBox for every Information --
 	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIInformationTitle"}, nil, nil, false, "LabelFont2")
 	GUIObj:addCheckBox("MainGUIShowPositions", scrollPane, {"gui-description.MainGUIShowPositions"}, "", GUIObj.MFPlayer.varTable.MainGUIShowPositions == nil and true or GUIObj.MFPlayer.varTable.MainGUIShowPositions)

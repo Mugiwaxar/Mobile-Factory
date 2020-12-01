@@ -32,19 +32,33 @@ function GUI.createMFMainGUI(player)
 	gui.auto_center = false
 
 	-- Create the Frames and Flows --
-	local topBar = GAPI.addFlow(table, "TopBar", gui, "horizontal", true)
-	local InfoFrame = GAPI.addFrame(table, "InfoFrame", gui, "vertical", true)
+	local MainFrame = GAPI.addFlow(table, "MainFrame", gui, "vertical", true)
+	local TopBar = GAPI.addFlow(table, "TopBar", MainFrame, "horizontal", true)
+	local ButtonsFrame = GAPI.addFlow(table, "ButtonsFrame", TopBar, "horizontal", true)
+	GAPI.addTable(table, "ButtonsTable" ,ButtonsFrame, table.MFPlayer.varTable.mainGUIButtonsPerLine or 5, true)
+	local InfoFrame = GAPI.addFrame(table, "InfoFrame", MainFrame, "vertical", true)
 
-	topBar.style.right_margin = 3
-	topBar.style.left_margin = 6
-	topBar.style.top_margin = 2
-	topBar.style.bottom_margin = 2
+	MainFrame.style.horizontal_align  = "right"
+
+	TopBar.style.right_margin = 3
+	TopBar.style.left_margin = 5
+	TopBar.style.top_margin = 2
+	TopBar.style.bottom_margin = 2
+
+	ButtonsFrame.style.horizontally_stretchable = true
+	ButtonsFrame.style.horizontal_align  = "right"
 
 	InfoFrame.style = "MFFrame1"
 	InfoFrame.style.margin = 4
 	InfoFrame.style.padding = 6
 	InfoFrame.style.top_padding = 0
 	InfoFrame.style.horizontally_stretchable = true
+
+	-- Create the Drag Area --
+	local buttonsSize = 14 + ( table.MFPlayer.varTable.MainButtonsSize or 5)
+	local dragArea = GAPI.addEmptyWidget(table, "MainGUIDragArea", TopBar, gui, buttonsSize, buttonsSize)
+	dragArea.style.left_margin = 0
+	dragArea.style.right_margin = 0
 
 	-- Make the GUI visible or not --
 	InfoFrame.visible = visible
@@ -129,7 +143,7 @@ function GUI.updateMFMainGUI(table)
 	local mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": ", {"gui-description.Unknow"}}
 
 	if MF.ent ~= nil and MF.ent.valid == true then
-		mfPositionText = {"", {"gui-description.mfPosition"}, ": (", math.floor(MF.ent.position.x), " ; ", math.floor(MF.ent.position.y), ")  ", MF.ent.surface.name}
+		mfPositionText = {"", {"gui-description.mfPosition"}, ": ", math.floor(MF.ent.position.x), " , ", math.floor(MF.ent.position.y), " - ", MF.ent.surface.name}
 		mfHealthValue = MF.ent.health / MF.ent.prototype.max_health
 		mfHealthText = {"", {"gui-description.mfHealth"}, ": ", math.floor(MF.ent.health), "/", MF.ent.prototype.max_health}
 		mfShielValue = 0
@@ -190,11 +204,11 @@ end
 -- Render all Buttons of the Main GUI --
 function GUI.renderMainGuiButtons(table)
 	-- Get the Flow --
-	local flow = table.vars.TopBar
+	local flow = table.vars.ButtonsTable
 	-- Clear the Flow --
 	flow.clear()
 	-- Get the Buttons Size --
-	local buttonsSize = 12 + ( table.MFPlayer.varTable.MainButtonsSize or 5)
+	local buttonsSize = 14 + ( table.MFPlayer.varTable.MainButtonsSize or 5)
 	-- Itinerate the Buttons Table --
 	for _, button in pairs(table.vars.buttonsTable or {}) do
 		if button.visible == false then goto continue end
@@ -210,12 +224,12 @@ function GUI.renderMainGuiButtons(table)
 		arrowButtonSprite = "ArrowIconDown"
 		arrowButtonName = "MainGUIOpen"
 	end
-	GAPI.addButton(table, "MainGUIOptionButton", flow, "OptionIcon", "OptionIcon", {"gui-description.optionButton"}, buttonsSize, false, true, nil, "frame_action_button")
-	GAPI.addButton(table, "MainGUIInfosButton", flow, "MFIconI", "MFIconI", {"gui-description.MFInfosButton"}, buttonsSize, false, true, nil, "frame_action_button")
-	GAPI.addButton(table, arrowButtonName, flow, arrowButtonSprite, arrowButtonSprite, {"gui-description.reduceButton"}, buttonsSize, true, true, nil, "frame_action_button")
-	-- Create the Drag Area --
-	local dragArea = GAPI.addEmptyWidget(table, "MainGUIDragArea", flow, table.gui, buttonsSize, buttonsSize)
-	dragArea.style.left_margin = 0
-	dragArea.style.right_margin = 0
-	dragArea.style.horizontally_stretchable = true
+	
+	-- Create the Right Buttons table --
+	local buttonTable = GAPI.addTable(table, "RightButtonsTable", table.vars.ButtonsFrame, 3, true)
+
+	GAPI.addButton(table, "MainGUIInfosButton", buttonTable, "MFIconI", "MFIconI", {"gui-description.MFInfosButton"}, buttonsSize, false, true, nil, "frame_action_button")
+	GAPI.addButton(table, "MainGUIOptionButton", buttonTable, "OptionIcon", "OptionIcon", {"gui-description.optionButton"}, buttonsSize, false, true, nil, "frame_action_button")
+	GAPI.addButton(table, arrowButtonName, buttonTable, arrowButtonSprite, arrowButtonSprite, {"gui-description.reduceButton"}, buttonsSize, true, true, nil, "frame_action_button")
+
 end

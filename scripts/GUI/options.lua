@@ -34,6 +34,12 @@ function GUI.readOptions(option, player)
 		GUI.createMFMainGUI(MFPlayer.ent)
 	end
 
+	if string.match(name, "MainGUIButtonsPerLine") then
+		local size = option.selected_index
+		GUIObj.MFPlayer.varTable.mainGUIButtonsPerLine = size
+		GUI.createMFMainGUI(MFPlayer.ent)
+	end
+
 	if string.match(name, "MainGUIShowPositions") then
 		GUIObj.MFPlayer.varTable.MainGUIShowPositions = option.state
 		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])

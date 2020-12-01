@@ -215,19 +215,19 @@ function GAPI.addTable(table, name, gui, column, save)
     -- Check if this Element doesn't exist --
     if name ~= nil and name ~= "" and gui[name] ~= nil then gui[name].destroy() end
     -- Create the Table --
-    local table = gui.add{type="table", name=name, column_count=column}
+    local tableGUI = gui.add{type="table", name=name, column_count=column}
     -- Set Style --
-	table.style.padding = 0
-    table.style.margin = 0
-    table.style.cell_padding = 0
-    table.style.horizontal_spacing  = 0
-    table.style.horizontal_spacing  = 0
-    table.style.vertical_spacing  = 0
+	tableGUI.style.padding = 0
+    tableGUI.style.margin = 0
+    tableGUI.style.cell_padding = 0
+    tableGUI.style.horizontal_spacing  = 0
+    tableGUI.style.horizontal_spacing  = 0
+    tableGUI.style.vertical_spacing  = 0
     -- Save the Flow inside the elements Table --
     if table ~= nil and save == true then
-        table.vars[name] = table
+        table.vars[name] = tableGUI
     end
-    return table
+    return tableGUI
 end
 
 -- Add a new Draggable Space --
