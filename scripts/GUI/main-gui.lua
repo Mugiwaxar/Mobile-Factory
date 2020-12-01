@@ -43,7 +43,7 @@ function GUI.createMFMainGUI(player)
 	TopBar.style.right_margin = 3
 	TopBar.style.left_margin = 5
 	TopBar.style.top_margin = 2
-	TopBar.style.bottom_margin = 2
+	TopBar.style.bottom_margin = 0
 
 	ButtonsFrame.style.horizontally_stretchable = true
 	ButtonsFrame.style.horizontal_align  = "right"
@@ -226,10 +226,10 @@ function GUI.renderMainGuiButtons(table)
 	end
 	
 	-- Create the Right Buttons table --
-	local buttonTable = GAPI.addTable(table, "RightButtonsTable", table.vars.ButtonsFrame, 3, true)
+	local buttonTable = GAPI.addTable(table, "RightButtonsTable", table.vars.ButtonsFrame, 3)
 
 	GAPI.addButton(table, "MainGUIInfosButton", buttonTable, "MFIconI", "MFIconI", {"gui-description.MFInfosButton"}, buttonsSize, false, true, nil, "frame_action_button")
 	GAPI.addButton(table, "MainGUIOptionButton", buttonTable, "OptionIcon", "OptionIcon", {"gui-description.optionButton"}, buttonsSize, false, true, nil, "frame_action_button")
-	GAPI.addButton(table, arrowButtonName, buttonTable, arrowButtonSprite, arrowButtonSprite, {"gui-description.reduceButton"}, buttonsSize, true, true, nil, "frame_action_button")
+	GAPI.addButton(table, arrowButtonName, buttonTable, arrowButtonSprite, arrowButtonSprite, {"gui-description.reduceButton"}, buttonsSize, false, true, nil, "frame_action_button")
 
 end

@@ -643,7 +643,7 @@ data:extend{
 	{
     type = "font",
     name = "TitleFont",
-	size = 20,
+	size = 18,
     from = "default-bold"
 	}
 }
@@ -661,7 +661,7 @@ data:extend{
 	{
     type = "font",
     name = "LabelFont2",
-	size = 16,
+	size = 14,
     from = "default"
 	}
 }
@@ -740,6 +740,34 @@ data.raw["gui-style"].default.MF_DA_scroll_pan =
 		position = {282, 17},
 		corner_size = 8,
 		overall_tiling_vertical_size = 53,
+		overall_tiling_vertical_spacing = 0,
+		overall_tiling_vertical_padding = 0,
+		overall_tiling_horizontal_padding = 0
+	}
+}
+
+data.raw["gui-style"].default.MF_SwtichGUI_scroll_pan =
+{
+	type = "scroll_pane_style",
+	graphical_set =
+	{
+		base =
+		{
+		position = {17, 0},
+		corner_size = 8,
+		center = {position = {42, 8}, size = 1},
+		top = {},
+		left_top = {},
+		right_top = {},
+		draw_type = "outer"
+		},
+		shadow = default_inner_glow(hard_shadow_color, 0.5)
+	},
+	background_graphical_set =
+	{
+		position = {282, 17},
+		corner_size = 8,
+		overall_tiling_vertical_size = 58,
 		overall_tiling_vertical_spacing = 0,
 		overall_tiling_vertical_padding = 0,
 		overall_tiling_horizontal_padding = 0

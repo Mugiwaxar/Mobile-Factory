@@ -7,7 +7,8 @@ function GAPI.createBaseWindows(name, title, MFPlayer, showTitle, showMainFrame,
     if MFPlayer.ent.gui.screen[name] ~= nil and MFPlayer.ent.gui.screen[name].valid == false then MFPlayer.ent.gui.screen[name] = nil end
     local table = {title=title, MFPlayer=MFPlayer, vars={}}
     table.gui = MFPlayer.ent.gui.screen.add{type="frame", name=name, direction=windowsDirection or "vertical"}
-    table.gui.style.padding = 0
+    table.gui.style.padding = 5
+    table.gui.style.top_padding = 0
     table.gui.style.margin = 0
     if showTitle ~= false then GAPI.createTitle(table) end
     if showMainFrame ~= false then
@@ -81,11 +82,7 @@ end
 -- Add the Title to the Window --
 function GAPI.createTitle(table)
     -- Create the Menu Bar --
-	local topBar = GAPI.addFrame(table, "topBar", table.gui, "vertical", true)
-    local topBarFlow = GAPI.addFlow(table, "topBarFlow", topBar, "horizontal", true)
-    topBar.style.vertically_stretchable = true
-    topBar.style.padding = 0
-    topBar.style.margin = 0
+    local topBarFlow = GAPI.addFlow(table, "topBarFlow", table.gui, "horizontal", true)
     topBarFlow.style.vertical_align = "center"
     topBarFlow.style.padding = 0
     topBarFlow.style.margin = 0

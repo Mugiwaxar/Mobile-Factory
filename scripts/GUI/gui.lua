@@ -490,7 +490,10 @@ function GUI.buttonClicked(event)
 		-- Check the ID --
 		if ID[2] == nil then return end
 		-- Check if the Player is allowed to use this Mobile Factory --
-		if Util.canUse(MFPlayer, global.MFTable[ID[2]]) == false then return end
+		if Util.canUse(MFPlayer, global.MFTable[ID[2]]) == false then
+			player.print({"gui-description.NotAllowedMF"})
+			return
+		end
 		-- Change the Current Mobile Factory --
 		MFPlayer.currentMF = global.MFTable[ID[2]]
 		-- Display the Message --
