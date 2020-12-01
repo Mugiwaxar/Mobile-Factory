@@ -159,9 +159,9 @@ function GUI.guiClosed(event)
 	end
 
 	-- Close the Info GUI --
-	if event.element.name == "MFInfoGUI" then
-		MFPlayer.GUI["MFInfoGUI"].destroy()
-		MFPlayer.GUI["MFInfoGUI"] = nil
+	if event.element.name == _mfGUIName.InfoGUI then
+		MFPlayer.GUI[_mfGUIName.InfoGUI].gui.destroy()
+		MFPlayer.GUI[_mfGUIName.InfoGUI] = nil
 		return
 	end
 
@@ -233,12 +233,13 @@ function GUI.buttonClicked(event)
 
 	-- Open Info GUI Button --
 	if event.element.name == "MainGUIInfosButton" then
-		if MFPlayer.GUI["MFInfoGUI"] == nil then
-			local GUIObj = GUI.createInfoGui(player)
-			player.opened = GUIObj.gui
+		if MFPlayer.GUI[_mfGUIName.InfoGUI] == nil then
+			local table = GUI.createInfoGui(player)
+			MFPlayer.GUI[_mfGUIName.InfoGUI] = table
+			player.opened = table.gui
 		else
-			MFPlayer.GUI["MFInfoGUI"].destroy()
-			MFPlayer.GUI["MFInfoGUI"] = nil
+			MFPlayer.GUI[_mfGUIName.InfoGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.InfoGUI] = nil
 		end
 		return
 	end
@@ -292,6 +293,7 @@ function GUI.buttonClicked(event)
 	if event.element.name == "SyncAreaButton" then
 		if currentMF.syncAreaEnabled == true then currentMF.syncAreaEnabled = false
 		elseif currentMF.syncAreaEnabled == false then currentMF.syncAreaEnabled = true end
+		GUI.updateAllGUIs(true)
 		return
 	end
 
@@ -305,18 +307,15 @@ function GUI.buttonClicked(event)
 	if event.element.name == "TPInsideButton" then
 		if currentMF.tpEnabled == true then currentMF.tpEnabled = false
 		elseif currentMF.tpEnabled == false then currentMF.tpEnabled = true end
+		GUI.updateAllGUIs(true)
 		return
 	end
 
 	-- MFLock button --
 	if event.element.name == "LockMFButton" then
-		if currentMF.locked == true then
-			currentMF.locked = false
-			player.print({"gui-description.MFUnlocked"})
-		else
-			currentMF.locked = true
-			player.print({"gui-description.MFLocked"})
-		end
+		if currentMF.locked == true then currentMF.locked = false
+		else currentMF.locked = true end
+		GUI.updateAllGUIs(true)
 		return
 	end
 
@@ -324,6 +323,7 @@ function GUI.buttonClicked(event)
 	if event.element.name == "EnergyDrainButton" then
 		if currentMF.energyLaserActivated == true then currentMF.energyLaserActivated = false
 		elseif currentMF.energyLaserActivated == false then currentMF.energyLaserActivated = true end
+		GUI.updateAllGUIs(true)
 		return
 	end
 
@@ -331,6 +331,7 @@ function GUI.buttonClicked(event)
 	if event.element.name == "FluidDrainButton" then
 		if currentMF.fluidLaserActivated == true then currentMF.fluidLaserActivated = false
 		elseif currentMF.fluidLaserActivated == false then currentMF.fluidLaserActivated = true end
+		GUI.updateAllGUIs(true)
 		return
 	end
 
@@ -338,6 +339,7 @@ function GUI.buttonClicked(event)
 	if event.element.name == "ItemDrainButton" then
 		if currentMF.itemLaserActivated == true then currentMF.itemLaserActivated = false
 		elseif currentMF.itemLaserActivated == false then currentMF.itemLaserActivated = true end
+		GUI.updateAllGUIs(true)
 		return
 	end
 
@@ -345,7 +347,22 @@ function GUI.buttonClicked(event)
 	if event.element.name == "QuatronDrainButton" then
 		if currentMF.quatronLaserActivated == true then currentMF.quatronLaserActivated = false
 		elseif currentMF.quatronLaserActivated == false then currentMF.quatronLaserActivated = true end
+		GUI.updateAllGUIs(true)
 		return
+	end
+
+	-- If this is a Info GUI Deep Tank Filter --
+	if string.match(event.element.name, "DTF") then
+		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeTankGUI = true
+		end
+	end
+
+	-- If this is a Info GUI Deep Storage Filter --
+	if string.match(event.element.name, "DSRF") then
+		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeStorageGUI = true
+		end
 	end
 
 	-- Close Recipe GUI Button --
@@ -358,10 +375,10 @@ function GUI.buttonClicked(event)
 	end
 
 	-- Close Info GUI Button --
-	if event.element.name == "MFInfoGUICloseButton" then
-		if MFPlayer.GUI["MFInfoGUI"] ~= nil then
-			MFPlayer.GUI["MFInfoGUI"].destroy()
-			MFPlayer.GUI["MFInfoGUI"] = nil
+	if event.element.name == _mfGUIName.InfoGUI .. "CloseButton" then
+		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.InfoGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.InfoGUI] = nil
 		end
 		return
 	end
@@ -409,24 +426,6 @@ function GUI.buttonClicked(event)
 			MFPlayer.GUI[text].destroy()
 			MFPlayer.GUI[text] = nil
 		end
-		return
-	end
-
-	-- Info GUI Deep Tank Button --
-	if string.match(event.element.name, "DTB") then
-		-- Get the Deep Tank ID --
-		local id = tonumber(split(event.element.name, "DTB")[1])
-		if global.deepTankTable[id] == nil then return end
-		GUI.updateDeepTankInfo(MFPlayer.GUI["MFInfoGUI"], id)
-		return
-	end
-
-	-- Info GUI Deep Storage Button --
-	if string.match(event.element.name, "DSRB") then
-		-- Get the Deep Storage ID --
-		local id = tonumber(split(event.element.name, "DSRB")[1])
-		if global.deepStorageTable[id] == nil then return end
-		GUI.updateDeepStorageInfo(MFPlayer.GUI["MFInfoGUI"], id)
 		return
 	end
 
@@ -709,8 +708,28 @@ function GUI.onGuiElemChanged(event)
 	if event.element.type == "choose-elem-button" and event.element.get_mod() == "Mobile_Factory" then
 		local id = event.element.name
 
+		-- If this is a Deep Tank --
+		if string.match(id, "DTF") then
+			if MFPlayer.GUI["MFInfoGUI"] ~= nil then
+				MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeTankGUI = false
+			end
+			-- Get the Deep Tank ID --
+			id = tonumber(split(id, "DTF")[1])
+			if global.deepTankTable[id] == nil then return end
+			if event.element.elem_value ~= nil then
+				global.deepTankTable[id].filter = event.element.elem_value
+			else
+				global.deepTankTable[id].filter = nil
+			end
+			GUI.updateAllGUIs(true)
+			return
+		end
+
 		-- If this is a Deep Storage --
 		if string.match(id, "DSRF") then
+			if MFPlayer.GUI["MFInfoGUI"] ~= nil then
+				MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeStorageGUI = false
+			end
 			id = tonumber(split(id, "DSRF")[1])
 			if global.deepStorageTable[id] == nil then return end
 			if event.element.elem_value ~= nil then
@@ -718,25 +737,10 @@ function GUI.onGuiElemChanged(event)
 			else
 				global.deepStorageTable[id].filter = nil
 			end
-			if MFPlayer.GUI["MFInfoGUI"] ~= nil then GUI.updateDeepStorageInfo(MFPlayer.GUI["MFInfoGUI"], id) end
 			GUI.updateAllGUIs(true)
 			return
 		end
 
-		-- If this is a Deep Tank --
-		if string.match(id, "TF") then
-			-- Get the Deep Tank ID --
-			id = tonumber(split(id, "TF")[1])
-			if global.deepTankTable[id] == nil then return end
-			if event.element.elem_value ~= nil then
-				global.deepTankTable[id].filter = event.element.elem_value
-			else
-				global.deepTankTable[id].filter = nil
-			end
-			if MFPlayer.GUI["MFInfoGUI"] ~= nil then GUI.updateDeepTankInfo(MFPlayer.GUI["MFInfoGUI"], id) end
-			GUI.updateAllGUIs(true)
-			return
-		end
 
 		-- If this is a Matter Interactor --
 		if string.match(id, "MIFilter") then

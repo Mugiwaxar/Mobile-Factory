@@ -30,6 +30,8 @@ function GUI.createMFMainGUI(player)
 	GAPI.setSize(gui, 1, 1)
 	GAPI.setMinSize(gui, 1, 1)
 	gui.auto_center = false
+	gui.style.padding = 0
+	gui.style.margin = 0
 
 	-- Create the Frames and Flows --
 	local MainFrame = GAPI.addFlow(table, "MainFrame", gui, "vertical", true)
@@ -49,7 +51,7 @@ function GUI.createMFMainGUI(player)
 	ButtonsFrame.style.horizontal_align  = "right"
 
 	InfoFrame.style = "MFFrame1"
-	InfoFrame.style.margin = 4
+	InfoFrame.style.margin = 2
 	InfoFrame.style.padding = 6
 	InfoFrame.style.top_padding = 0
 	InfoFrame.style.horizontally_stretchable = true
@@ -83,35 +85,28 @@ function GUI.updateMFMainGUI(table)
 	-------------------------------------------------------- Get Buttons Variables --------------------------------------------------------
 	local showCallMFButton = technologyUnlocked("JumpDrive", getForce(player.name))
 	local syncAreaSprite = MF.syncAreaEnabled == true and "SyncAreaIcon" or "SyncAreaIconDisabled"
-	local syncAreaHovSprite = MF.syncAreaEnabled == true and "SyncAreaIconDisabled" or "SyncAreaIcon"
 	local showFindMFButton = (MF.ent ~= nil and MF.ent.valid == false) and true or false
 	local tpInsideSprite = MF.tpEnabled == true and "MFTPIcon" or "MFTPIconDisabled"
-	local tpInsideHovSprite = MF.tpEnabled == true and "MFTPIconDisabled" or "MFTPIcon"
 	local lockMFSprite = MF.locked == true and "LockMFCIcon" or "LockMFOIcon"
-	local lockMFHovSprite = MF.locked == true and "LockMFOIcon" or "LockMFCIcon"
 	local showEnergyDrainButton = technologyUnlocked("EnergyDrain1", getForce(player.name)) and true or false
 	local energyDrainSprite = MF.energyLaserActivated == true and "EnergyDrainIcon" or "EnergyDrainIconDisabled"
-	local energyDrainHovSprite = MF.energyLaserActivated == true and "EnergyDrainIconDisabled" or "EnergyDrainIcon"
 	local showFluidDrainButton = technologyUnlocked("FluidDrain1", getForce(player.name)) and true or false
 	local fluidDrainSprite = MF.fluidLaserActivated == true and "FluidDrainIcon" or "FluidDrainIconDisabled"
-	local fluidDrainHovSprite = MF.fluidLaserActivated == true and "FluidDrainIconDisabled" or "FluidDrainIcon"
 	local showItemDrainButton = technologyUnlocked("TechItemDrain", getForce(player.name)) and true or false
 	local itemDrainSprite = MF.itemLaserActivated == true and "ItemDrainIcon" or "ItemDrainIconDisabled"
-	local itemDrainHovSprite = MF.itemLaserActivated == true and "ItemDrainIconDisabled" or "ItemDrainIcon"
 	local showQuatronDrainButton = technologyUnlocked("EnergyDrain1", getForce(player.name)) and technologyUnlocked("QuatronLogistic", getForce(player.name)) and true or false
 	local quatronDrainSprite = MF.quatronLaserActivated == true and "QuatronIcon" or "QuatronIconDisabled"
-	local quatronDrainHovSprite = MF.quatronLaserActivated == true and "QuatronIconDisabled" or "QuatronIcon"
 
 	GUI.addButtonToMainGui(table, {name="PortOutsideButton", sprite="PortIcon", hovSprite="PortIcon", tooltip={"gui-description.teleportOutsideButton"}, save=false})
-	GUI.addButtonToMainGui(table, {name="SyncAreaButton", sprite=syncAreaSprite, hovSprite=syncAreaHovSprite, tooltip={"gui-description.syncAreaButton"}, save=false})
-	GUI.addButtonToMainGui(table, {name="FindMFButton", sprite="MFIconExc", hovSprite="MFIconExc", tooltip={"gui-description.fixMFButton"}, save=false, visible=showFindMFButton})
-	GUI.addButtonToMainGui(table, {name="TPInsideButton", sprite=tpInsideSprite, hovSprite=tpInsideHovSprite, tooltip={"gui-description.MFTPInside"}, save=false})
-	GUI.addButtonToMainGui(table, {name="LockMFButton", sprite=lockMFSprite, hovSprite=lockMFHovSprite, tooltip={"gui-description.LockMF"}, save=false})
 	GUI.addButtonToMainGui(table, {name="JumpDriveButton", sprite="MFJDIcon", hovSprite="MFJDIcon", tooltip={"gui-description.jumpDriveButton"}, save=false, visible=showCallMFButton})
-	GUI.addButtonToMainGui(table, {name="EnergyDrainButton", sprite=energyDrainSprite, hovSprite=energyDrainHovSprite, tooltip={"gui-description.mfEnergyDrainButton"}, save=false, visible=showEnergyDrainButton})
-	GUI.addButtonToMainGui(table, {name="FluidDrainButton", sprite=fluidDrainSprite, hovSprite=fluidDrainHovSprite, tooltip={"gui-description.mfFluidDrainButton"}, save=false, visible=showFluidDrainButton})
-	GUI.addButtonToMainGui(table, {name="ItemDrainButton", sprite=itemDrainSprite, hovSprite=itemDrainHovSprite, tooltip={"gui-description.mfItemDrainButton"}, save=false, visible=showItemDrainButton})
-	GUI.addButtonToMainGui(table, {name="QuatronDrainButton", sprite=quatronDrainSprite, hovSprite=quatronDrainHovSprite, tooltip={"gui-description.mfQuatronDrainButton"}, save=false, visible=showQuatronDrainButton})
+	GUI.addButtonToMainGui(table, {name="SyncAreaButton", sprite=syncAreaSprite, hovSprite=syncAreaSprite, tooltip={"gui-description.syncAreaButton"}, save=false})
+	GUI.addButtonToMainGui(table, {name="FindMFButton", sprite="MFIconExc", hovSprite="MFIconExc", tooltip={"gui-description.fixMFButton"}, save=false, visible=showFindMFButton})
+	GUI.addButtonToMainGui(table, {name="TPInsideButton", sprite=tpInsideSprite, hovSprite=tpInsideSprite, tooltip={"gui-description.MFTPInside"}, save=false})
+	GUI.addButtonToMainGui(table, {name="LockMFButton", sprite=lockMFSprite, hovSprite=lockMFSprite, tooltip={"gui-description.LockMF"}, save=false})
+	GUI.addButtonToMainGui(table, {name="EnergyDrainButton", sprite=energyDrainSprite, hovSprite=energyDrainSprite, tooltip={"gui-description.mfEnergyDrainButton"}, save=false, visible=showEnergyDrainButton})
+	GUI.addButtonToMainGui(table, {name="FluidDrainButton", sprite=fluidDrainSprite, hovSprite=fluidDrainSprite, tooltip={"gui-description.mfFluidDrainButton"}, save=false, visible=showFluidDrainButton})
+	GUI.addButtonToMainGui(table, {name="ItemDrainButton", sprite=itemDrainSprite, hovSprite=itemDrainSprite, tooltip={"gui-description.mfItemDrainButton"}, save=false, visible=showItemDrainButton})
+	GUI.addButtonToMainGui(table, {name="QuatronDrainButton", sprite=quatronDrainSprite, hovSprite=quatronDrainSprite, tooltip={"gui-description.mfQuatronDrainButton"}, save=false, visible=showQuatronDrainButton})
 
 	-- Render All Buttons --
 	GUI.renderMainGuiButtons(table)

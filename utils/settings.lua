@@ -187,11 +187,13 @@ _mfDefaultGuiHeight = 500
 _mfDefaultGuiWidth = 300
 _mfMainGUIPosX = 300
 _mfMainGUIPosY = 0
+_mfInfoGUIButtonsSize = 25
 
 -- GUI Name List --
 _mfGUIName = 
 {
 	MainGUI = "MFMainGUI",
+	InfoGUI = "MFInfoGUI",
 	SwitchMF = "MFSwitchMFGUI"
 }
 

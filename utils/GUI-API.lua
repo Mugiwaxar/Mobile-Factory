@@ -14,10 +14,10 @@ function GAPI.createBaseWindows(name, title, MFPlayer, showTitle, showMainFrame,
     if showMainFrame ~= false then
         local mainFrame = nil
         if isScroolPane ~= true then
-            mainFrame = GAPI.addFrame(table, "MainFrame", table.vars.topBar or table.gui, mainFrameDirection or "vertical", true)
+            mainFrame = GAPI.addFrame(table, "MainFrame", table.gui, mainFrameDirection or "vertical", true)
             mainFrame.style = "MFFrame1"
         else
-            mainFrame = GAPI.addScrollPane(table, "MainFrame", table.vars.topBar or table.gui, nil, true)
+            mainFrame = GAPI.addScrollPane(table, "MainFrame", table.gui, nil, true)
             -- mainFrame.style = "tab_scroll_pane_with_extra_padding"
         end
         mainFrame.style.vertically_stretchable = true
@@ -93,6 +93,7 @@ function GAPI.createTitle(table)
     local dragArea = GAPI.addEmptyWidget(table, "", topBarFlow, table.gui, _mfGUIDragAreaSize)
     dragArea.style.left_margin = 8
     dragArea.style.right_margin = 8
+    dragArea.style.minimal_width = 30
 end
 
 -- Add a close Button --
@@ -120,14 +121,24 @@ end
 
 -- Create a Title Label --
 function GAPI.addTitledFrame(table, name, gui, direction, text, color, save)
-    local frame = GAPI.addFrame(table, name, gui, direction, save)
-    frame.style.vertically_stretchable = true
-    frame.style.horizontally_stretchable = true
-    local titleFrame = GAPI.addFrame(table, nil, frame, "horizontal")
+    local titleFrame = GAPI.addFrame(table, nil, gui, "horizontal")
+    titleFrame.style.horizontally_stretchable = true
     local titleFlow = GAPI.addFlow(table, nil, titleFrame, "horizontal")
     GAPI.addLabel(table, name .. "Label", titleFlow, text, color, "", save, "TitleFont")
     titleFlow.style.horizontal_align = "center"
-    return frame
+    return titleFrame
+end
+
+-- Create a Subtitle --
+function GAPI.addSubtitle(table, name, gui, text, save)
+    local flow = GAPI.addFlow(table, name .. "Flow", gui, "vertical", save)
+    flow.style.horizontal_align = "center"
+    flow.style.vertically_stretchable = false
+    GAPI.addLine(table, "", flow, "horizontal")
+    local label = GAPI.addLabel(table, name .. "Label", flow, text, nil, nil, false, nil, "yellow_label")
+    label.style.left_margin = 10
+    label.style.right_margin = 10
+    GAPI.addLine(table, "", flow, "horizontal")
 end
 
 -- Add a new Flow --
@@ -271,9 +282,9 @@ end
 -- Add a dual Label --
 function GAPI.addDualLabel(table, gui, text1, text2, color1, color2, font, tooltip1, tooltip2, name, save)
     -- Create the Frame --
-    local flow = GAPI.addFlow("", gui, "horizontal")
-    GAPI.addLabel("Label1", flow, text1, color1, tooltip1, false, font)
-    GAPI.addLabel("Label2", flow, text2, color2, tooltip2, false, font)
+    local flow = GAPI.addFlow(table, "", gui, "horizontal")
+    GAPI.addLabel(table, "Label1", flow, text1, color1, tooltip1, false, font)
+    GAPI.addLabel(table, "Label2", flow, text2, color2, tooltip2, false, font)
     if table ~= nil and save == true then
         table.vars[name] = flow
     end

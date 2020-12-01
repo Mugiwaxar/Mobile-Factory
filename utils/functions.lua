@@ -220,22 +220,30 @@ end
 
 -- Return the localised Entity Name --
 function Util.getLocEntityName(entName)
-	return game.entity_prototypes[entName].localised_name
+	if game.entity_prototypes[entName] ~= nil then
+		return game.entity_prototypes[entName].localised_name
+	end
 end
 
 -- Return the localised Item Name --
 function Util.getLocItemName(itemName)
-	return game.item_prototypes[itemName].localised_name
+	if game.item_prototypes[itemName] ~= nil then
+		return game.item_prototypes[itemName].localised_name
+	end
 end
 
 -- Return the localised Fluid Name --
 function Util.getLocFluidName(fluidName)
-	return game.fluid_prototypes[fluidName].localised_name
+	if game.fluid_prototypes[fluidName] ~= nil then
+		return game.fluid_prototypes[fluidName].localised_name
+	end
 end
 
 -- Return the localised Recipe Name --
 function Util.getLocRecipeName(recipeName)
-	return game.recipe_prototypes[recipeName].localised_name
+	if game.recipe_prototypes[recipeName] ~= nil then
+		return game.recipe_prototypes[recipeName].localised_name
+	end
 end
 
 -- Reset an Animation --

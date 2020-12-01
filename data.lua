@@ -690,7 +690,7 @@ data.raw["gui-style"].default.MF_Inventory_scroll_pan =
 	  }
 }
 
-data.raw["gui-style"].default.MF_DeepST_scroll_pan =
+data.raw["gui-style"].default.MF_DeepTank_scroll_pan =
 {
 	type = "scroll_pane_style",
 	graphical_set =
@@ -700,9 +700,6 @@ data.raw["gui-style"].default.MF_DeepST_scroll_pan =
 		position = {17, 0},
 		corner_size = 8,
 		center = {position = {42, 8}, size = 1},
-		top = {},
-		left_top = {},
-		right_top = {},
 		draw_type = "outer"
 		},
 		shadow = default_inner_glow(hard_shadow_color, 0.5)
@@ -711,7 +708,32 @@ data.raw["gui-style"].default.MF_DeepST_scroll_pan =
 	{
 		position = {282, 17},
 		corner_size = 8,
-		overall_tiling_vertical_size = 47,
+		overall_tiling_vertical_size = 58,
+		overall_tiling_vertical_spacing = 0,
+		overall_tiling_vertical_padding = 0,
+		overall_tiling_horizontal_padding = 0
+	}
+}
+
+data.raw["gui-style"].default.MF_DeepStorage_scroll_pan =
+{
+	type = "scroll_pane_style",
+	graphical_set =
+	{
+		base =
+		{
+		position = {17, 0},
+		corner_size = 8,
+		center = {position = {42, 8}, size = 1},
+		draw_type = "outer"
+		},
+		shadow = default_inner_glow(hard_shadow_color, 0.5)
+	},
+	background_graphical_set =
+	{
+		position = {282, 17},
+		corner_size = 8,
+		overall_tiling_vertical_size = 58,
 		overall_tiling_vertical_spacing = 0,
 		overall_tiling_vertical_padding = 0,
 		overall_tiling_horizontal_padding = 0
@@ -927,6 +949,16 @@ data.raw["gui-style"].default.MFFrame1 =
   graphical_set =
   {
 	base = {position = {17, 0}, corner_size = 8, draw_type = "outer"},
+	shadow = default_inner_shadow
+  }
+}
+
+data.raw["gui-style"].default.MFFrame2 =
+{
+  type = "frame_style",
+  graphical_set =
+  {
+	base = {position = {17, 0}, corner_size = 7, draw_type = "outer"},
 	shadow = default_inner_shadow
   }
 }

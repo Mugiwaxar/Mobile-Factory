@@ -2,22 +2,28 @@
 function GUI.createSwitchMFGUI(player)
     
     -- Create the Main Window --
-    local table = GAPI.createBaseWindows(_mfGUIName.SwitchMF, {"gui-description.MFSwitchMFGUITitle"}, getMFPlayer(player.name))
-    local mainPane = table.vars.MainFrame
+    local table = GAPI.createBaseWindows(_mfGUIName.SwitchMF, {"gui-description.MFSwitchMFGUITitle"}, getMFPlayer(player.name), true, false)
     GAPI.setMinSize(table.gui, 600)
 
     -- Add the Close Button --
     GAPI.addCloseButton(table)
 
-    -- Create the Name Frame --
-    local nameFrame = GAPI.addFrame(table, "", mainPane, "vertical")
-    nameFrame.style.bottom_padding = 2
+    -- Create the Line --
+    -- GAPI.addLine(table, "", table.gui, "horizontal")
 
-    -- Create the Name Frame Text --
-    GAPI.addLabel(table, "", nameFrame, {"gui-description.MFName"}, nil, {"gui-description.MFNameTT"}, false, nil, "bold_green_label")
+    -- Create the List Information --
+    local infoLabel = GAPI.addLabel(table, "", table.gui, {"gui-description.SwitchMFInfo"}, _mfWhite)
+    infoLabel.style.single_line = false
+    infoLabel.style.maximal_width = 270
+
+    -- Create the Line --
+    GAPI.addLine(table, "", table.gui, "horizontal")
 
     -- Create the Change Name Frame --
-    local changeNameFlow = GAPI.addFlow(table, "", nameFrame, "horizontal")
+    local changeNameFlow = GAPI.addFlow(table, "", table.gui, "horizontal")
+    changeNameFlow.style.horizontally_stretchable = true
+    changeNameFlow.style.horizontal_align = "center"
+    changeNameFlow.style.bottom_margin = 3
 
     -- Create the Change Name Textfield --
     local textField = GAPI.addTextField(table, "SwitchMFChangeNameTextField", changeNameFlow, table.MFPlayer.MF.name or "", {"gui-description.MFChangeNameTT"}, true)
@@ -25,12 +31,17 @@ function GUI.createSwitchMFGUI(player)
 
     -- Create the Change Name Button --
     local button = GAPI.addSimpleButton(table, "SwitchMFChangeNameButton", changeNameFlow, {"gui-description.Change"})
-    button.style.width = 70
+    button.style.width = 78
     button.style.top_margin = 1
 
+    -- Create the Main Frame --
+    local mainFrame = GAPI.addFrame(table, "MainFrame", table.gui, "vertical", true)
+    mainFrame.style = "MFFrame1"
+
     -- Create the Mobile Factory List Scroll Pane --
-    local listScrollPane = GAPI.addScrollPane(table, "MFListScrollPane", mainPane, nil, true, nil, "auto")
+    local listScrollPane = GAPI.addScrollPane(table, "MFListScrollPane", mainFrame, nil, true, nil, "auto")
     listScrollPane.style = "MF_SwtichGUI_scroll_pan"
+    listScrollPane.style.top_padding = 3
     listScrollPane.style.vertically_stretchable = true
 
     -- Update the GUI --
@@ -58,6 +69,8 @@ function GUI.updateMFSwitchMFGUI(table, justCreated)
         -- Create the Frame and the Flow --
         local frame = GAPI.addFrame(table, "", listTable, "horizontal")
         local flow = GAPI.addFlow(table, "", frame, "horizontal")
+        frame.style.left_margin = 3
+        frame.style.right_margin = 3
         flow.style.vertical_align = "center"
 
         -- Add the Select Button --

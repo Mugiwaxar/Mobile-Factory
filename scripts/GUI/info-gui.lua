@@ -5,94 +5,90 @@ function GUI.createInfoGui(player)
 	local MFPlayer = getMFPlayer(player.name)
 
 	-- Create the GUI --
-	local GUIObj = GUI.createGUI("MFInfoGUI", MFPlayer, "vertical", true, 0, 0)
-	local infoGUI = GUIObj.gui
+	local table = GAPI.createBaseWindows(_mfGUIName.InfoGUI, getCurrentMF(MFPlayer).name, MFPlayer, true, false, false, "vertical", "horizontal")
+	table.gui.style.maximal_height = 800
+	table.gui.style.maximal_width = 1500
 
-	-- Create the top Bar --
-	local MFInfoGUITitleBar = GUI.createTopBar(GUIObj, 200, getCurrentMF(MFPlayer).name, true)
+	-- Add the Switch Button --
+	GAPI.addButton(table, "SwitchMFButton", table.vars.topBarFlow, "SwitchIcon", "SwitchIcon", {"gui-description.SwitchMFButton"}, 20, false, true, nil, "frame_action_button")
 
-	-- Add the Line --
-	GUIObj:addLine("InfoGUITitleBarLine", MFInfoGUITitleBar, "horizontal")
+	-- Add the Close Button --
+	GAPI.addCloseButton(table)
+	
+	-- Add the Buttons Bar --
+	GAPI.addLine(table, "", table.gui, "horizontal")
+	local buttonBar = GAPI.addFlow(table, "ButtonBar", table.gui, "horizontal", true)
+	buttonBar.style.horizontal_align = "center"
 
-	-- Create the Buttons Bar --
-	local MFInfoGUIButtonBar = GUIObj:addFlow("MFInfoGUIButtonBar", MFInfoGUITitleBar, "horizontal", true)
-	MFInfoGUIButtonBar.style.horizontal_align = "center"
+	-- Add the Main Frame --
+	local mainFrame = GAPI.addFrame(table, "MainFrame", table.gui, "horizontal", true)
+	mainFrame.style = "MFFrame1"
 
-	-- Create the Main Frame --
-	local MFInfoGUIMainFrame = GUIObj:addFrame("MFInfoGUIMainFrame", infoGUI, "horizontal", true)
+	-- Create the Frames --
+	local infoFrame = GAPI.addFrame(table, "InfoFrame", mainFrame, "vertical", true)
+	local tankFrame = GAPI.addFrame(table, "TankFrame", mainFrame, "vertical", true)
+	local storageFrame = GAPI.addFrame(table, "StorageFrame", mainFrame, "vertical", true)
+	local inventoryFrame = GAPI.addFrame(table, "InventoryFrame", mainFrame, "vertical", true)
 
-	-- Create the Information Frame --
-	GUIObj:addFlow("InfosFlow", MFInfoGUIMainFrame, "vertical", true)
+	infoFrame.style = "MFFrame1"
+	tankFrame.style = "MFFrame1"
+	storageFrame.style = "MFFrame1"
+	inventoryFrame.style = "MFFrame1"
 
-	-- Create the Tank Frame and Scroll Pane --
-	local tankFrame = GUIObj:addTitledFrame("TanksFrame", GUIObj.MFInfoGUIMainFrame, "vertical", {"gui-description.mfTanksTitle"}, _mfOrange)
-	local tankScrollPane = GUIObj:addScrollPane("TanksScrollPane", tankFrame, 500, true)
-	tankScrollPane.style = "MF_DeepST_scroll_pan"
-	tankScrollPane.style.minimal_width = 200
-	tankScrollPane.style.vertically_stretchable = true
+	infoFrame.style.left_padding = 7
+	infoFrame.style.right_padding = 7
+	tankFrame.style.left_padding = 7
+	tankFrame.style.right_padding = 7
+	storageFrame.style.left_padding = 7
+	storageFrame.style.right_padding = 7
+	inventoryFrame.style.left_padding = 7
+	inventoryFrame.style.right_padding = 7
 
-	-- Create the Tank Option Frame --
-	local tankOptionFrame = GUIObj:addFrame("TanksOptionFrame", tankFrame, "vertical", true)
-	tankOptionFrame.style.height = 150
-	tankOptionFrame.visible = false
+	infoFrame.style.vertically_stretchable = true
+	tankFrame.style.vertically_stretchable = true
+	storageFrame.style.vertically_stretchable = true
+	inventoryFrame.style.vertically_stretchable = true
 
-	-- Create the Deep Storage Frame and Scroll Pane --
-	local storageFrame = GUIObj:addTitledFrame("StorageFrame", GUIObj.MFInfoGUIMainFrame, "vertical", {"gui-description.mfDeepStorageTitle"}, _mfOrange)
-	local storageScrollPane = GUIObj:addScrollPane("StorageScrollPane", storageFrame, 500, true)
-	storageScrollPane.style = "MF_DeepST_scroll_pan"
-	storageScrollPane.style.minimal_width = 200
-	storageScrollPane.style.vertically_stretchable = true
+	-- Create Frames Titles --
+	GAPI.addSubtitle(table, "", tankFrame, {"gui-description.mfTanksTitle"})
+	GAPI.addSubtitle(table, "", storageFrame, {"gui-description.mfDeepStorageTitle"})
+	GAPI.addSubtitle(table, "", inventoryFrame, {"gui-description.mfInventoryTitle"})
 
-	-- Create the Storage Option Frame --
-	local storageOptionFrame = GUIObj:addFrame("StorageOptionFrame", storageFrame, "vertical", true)
-	storageOptionFrame.style.height = 150
-	storageOptionFrame.visible = false
+	-- Create Scroll Panes --
+	local DTScrollPane = GAPI.addScrollPane(table, "DTScrollPane", tankFrame, nil, true, "MF_DeepTank_scroll_pan")
+	local DSScrollPane = GAPI.addScrollPane(table, "DSScrollPane", storageFrame, nil, true, "MF_DeepStorage_scroll_pan")
+	local InvScrollPane = GAPI.addScrollPane(table, "InvScrollPane", inventoryFrame, nil, true, "MF_Inventory_scroll_pan")
+	GAPI.addTable(table, "InventoryTable", inventoryFrame, 1, true)
+	
+	DTScrollPane.style.vertically_stretchable = true
+	DSScrollPane.style.vertically_stretchable = true
+	InvScrollPane.style.vertically_stretchable = true
+	InvScrollPane.style.minimal_width = 198
 
-	-- Create the Inventory Frame and Scroll Pane --
-	local inventoryFrame = GUIObj:addTitledFrame("InventoryFrame", GUIObj.MFInfoGUIMainFrame, "vertical", {"gui-description.mfInventoryTitle"}, _mfOrange)
-	local inventoryScrollPane = GUIObj:addScrollPane("InventoryScrollPane", inventoryFrame, 500, true)
-	inventoryScrollPane.style = "MF_Inventory_scroll_pan"
-	inventoryScrollPane.style.minimal_width = 200
-	inventoryScrollPane.style.vertically_stretchable = true
+	-- Update the GUI --
+	GUI.updateMFInfoGUI(table)
 
-	-- Create the Inventory Option Frame --
-	local inventoryOptionFrame = GUIObj:addFrame("InventoryOptionFrame", inventoryFrame, "vertical")
-	inventoryOptionFrame.style.maximal_height = 150
-
-	-- Create the Inventory Info Flow --
-	local inventoryInfoFlow = GUIObj:addFlow("InventoryInfoFlow", inventoryOptionFrame, "vertical", true)
-	inventoryInfoFlow.style.height = 60
-
-	-- Create the Inventory Item Flow --
-	local inventoryItemFlow = GUIObj:addFlow("InventoryItemFlow", inventoryOptionFrame, "vertical", true)
-	inventoryItemFlow.style.height = 90
-	inventoryItemFlow.visible = false
-
-	-- Center the GUI --
-	infoGUI.force_auto_center()
-
-	-- Update the GUI and return the GUI Object --
-	GUI.updateMFInfoGUI(GUIObj)
-	return GUIObj
+	-- Return the Table --
+	return table
 
 end
 
 -- Update the Mobile Factory Info GUI --
-function GUI.updateMFInfoGUI(GUIObj)
-	GUI.updateButtonsBar(GUIObj)
-	GUI.updateMFInfos(GUIObj)
-	GUI.updateDeepTankFrame(GUIObj)
-	GUI.updateDeepStorageFrame(GUIObj)
-	GUI.updateInventoryFrame(GUIObj)
+function GUI.updateMFInfoGUI(table)
+	GUI.updateButtonsBar(table)
+	GUI.updateMFInfos(table)
+	GUI.updateDeepTankFrame(table)
+	GUI.updateDeepStorageFrame(table)
+	GUI.updateInventoryFrame(table)
 end
 
 -- Update the Buttons Bar --
-function GUI.updateButtonsBar(GUIObj)
+function GUI.updateButtonsBar(table)
 
 	-- Get GUI, MF and player --
-	local buttonsBar = GUIObj.MFInfoGUIButtonBar
-	local MF = getCurrentMF(GUIObj.MFPlayer)
-	local player = GUIObj.MFPlayer.ent
+	local buttonsBar = table.vars.ButtonBar
+	local MF = getCurrentMF(table.MFPlayer)
+	local player = table.MFPlayer.ent
 
 	-- Clear the Bar --
 	buttonsBar.clear()
@@ -100,47 +96,42 @@ function GUI.updateButtonsBar(GUIObj)
 	-------------------------------------------------------- Get Buttons Variables --------------------------------------------------------
 	local showCallMFButton = technologyUnlocked("JumpDrive", getForce(MF))
 	local syncAreaSprite = MF.syncAreaEnabled == true and "SyncAreaIcon" or "SyncAreaIconDisabled"
-	local syncAreaHovSprite = MF.syncAreaEnabled == true and "SyncAreaIconDisabled" or "SyncAreaIcon"
 	local showFindMFButton = (MF.ent ~= nil and MF.ent.valid == false) and true or false
 	local tpInsideSprite = MF.tpEnabled == true and "MFTPIcon" or "MFTPIconDisabled"
-	local tpInsideHovSprite = MF.tpEnabled == true and "MFTPIconDisabled" or "MFTPIcon"
 	local lockMFSprite = MF.locked == true and "LockMFCIcon" or "LockMFOIcon"
-	local lockMFHovSprite = MF.locked == true and "LockMFOIcon" or "LockMFCIcon"
 	local showEnergyDrainButton = technologyUnlocked("EnergyDrain1", getForce(MF)) and true or false
 	local energyDrainSprite = MF.energyLaserActivated == true and "EnergyDrainIcon" or "EnergyDrainIconDisabled"
-	local energyDrainHovSprite = MF.energyLaserActivated == true and "EnergyDrainIconDisabled" or "EnergyDrainIcon"
 	local showFluidDrainButton = technologyUnlocked("FluidDrain1", getForce(MF)) and true or false
 	local fluidDrainSprite = MF.fluidLaserActivated == true and "FluidDrainIcon" or "FluidDrainIconDisabled"
-	local fluidDrainHovSprite = MF.fluidLaserActivated == true and "FluidDrainIconDisabled" or "FluidDrainIcon"
 	local showItemDrainButton = technologyUnlocked("TechItemDrain", getForce(MF)) and true or false
 	local itemDrainSprite = MF.itemLaserActivated == true and "ItemDrainIcon" or "ItemDrainIconDisabled"
-	local itemDrainHovSprite = MF.itemLaserActivated == true and "ItemDrainIconDisabled" or "ItemDrainIcon"
 	local showQuatronDrainButton = technologyUnlocked("EnergyDrain1", getForce(MF)) and technologyUnlocked("QuatronLogistic", getForce(MF)) and true or false
 	local quatronDrainSprite = MF.quatronLaserActivated == true and "QuatronIcon" or "QuatronIconDisabled"
-	local quatronDrainHovSprite = MF.quatronLaserActivated == true and "QuatronIconDisabled" or "QuatronIcon"
 
 
 	-------------------------------------------------------- Update all Buttons --------------------------------------------------------
-	local buttonsSize = 35
-	GUIObj:addButton("PortOutsideButton", buttonsBar, "PortIcon", "PortIcon", {"gui-description.teleportOutsideButton"}, buttonsSize, true)
-	GUIObj:addButton("SyncAreaButton", buttonsBar, syncAreaSprite, syncAreaHovSprite, {"gui-description.syncAreaButton"}, buttonsSize, true)
-	GUIObj:addButton("FindMFButton", buttonsBar, "MFIconExc", "MFIconExc", {"gui-description.fixMFButton"}, buttonsSize, true, showFindMFButton)
-	GUIObj:addButton("TPInsideButton", buttonsBar, tpInsideSprite, tpInsideHovSprite, {"gui-description.MFTPInside"}, buttonsSize, true)
-	GUIObj:addButton("LockMFButton", buttonsBar, lockMFSprite, lockMFHovSprite, {"gui-description.LockMF"}, buttonsSize, true)
-	GUIObj:addButton("JumpDriveButton", buttonsBar, "MFJDIcon", "MFJDIcon", {"gui-description.jumpDriveButton"}, buttonsSize, true, showCallMFButton)
-	GUIObj:addButton("EnergyDrainButton", buttonsBar, energyDrainSprite, energyDrainHovSprite, {"gui-description.mfEnergyDrainButton"}, buttonsSize, true, showEnergyDrainButton)
-	GUIObj:addButton("FluidDrainButton", buttonsBar, fluidDrainSprite, fluidDrainHovSprite, {"gui-description.mfFluidDrainButton"}, buttonsSize, true, showFluidDrainButton)
-	GUIObj:addButton("ItemDrainButton", buttonsBar, itemDrainSprite, itemDrainHovSprite, {"gui-description.mfItemDrainButton"}, buttonsSize, true, showItemDrainButton)
-	GUIObj:addButton("QuatronDrainButton", buttonsBar, quatronDrainSprite, quatronDrainHovSprite, {"gui-description.mfQuatronDrainButton"}, buttonsSize, true, showQuatronDrainButton)
+	GAPI.addButton(table, "PortOutsideButton", buttonsBar, "PortIcon", "PortIcon", {"gui-description.teleportOutsideButton"}, _mfInfoGUIButtonsSize, true)
+	GAPI.addButton(table, "JumpDriveButton", buttonsBar, "MFJDIcon", "MFJDIcon", {"gui-description.jumpDriveButton"}, _mfInfoGUIButtonsSize, true, showCallMFButton)
+	GAPI.addButton(table, "SyncAreaButton", buttonsBar, syncAreaSprite, syncAreaSprite, {"gui-description.syncAreaButton"}, _mfInfoGUIButtonsSize, true)
+	GAPI.addButton(table, "FindMFButton", buttonsBar, "MFIconExc", "MFIconExc", {"gui-description.fixMFButton"}, _mfInfoGUIButtonsSize, true, showFindMFButton)
+	GAPI.addButton(table, "TPInsideButton", buttonsBar, tpInsideSprite, tpInsideSprite, {"gui-description.MFTPInside"}, _mfInfoGUIButtonsSize, true)
+	GAPI.addButton(table, "LockMFButton", buttonsBar, lockMFSprite, lockMFSprite, {"gui-description.LockMF"}, _mfInfoGUIButtonsSize, true)
+	GAPI.addButton(table, "LockMFButton", buttonsBar, lockMFSprite, lockMFSprite, {"gui-description.LockMF"}, _mfInfoGUIButtonsSize, true)
+	GAPI.addButton(table, "EnergyDrainButton", buttonsBar, energyDrainSprite, energyDrainSprite, {"gui-description.mfEnergyDrainButton"}, _mfInfoGUIButtonsSize, true, showEnergyDrainButton)
+	GAPI.addButton(table, "FluidDrainButton", buttonsBar, fluidDrainSprite, fluidDrainSprite, {"gui-description.mfFluidDrainButton"}, _mfInfoGUIButtonsSize, true, showFluidDrainButton)
+	GAPI.addButton(table, "ItemDrainButton", buttonsBar, itemDrainSprite, itemDrainSprite, {"gui-description.mfItemDrainButton"}, _mfInfoGUIButtonsSize, true, showItemDrainButton)
+	GAPI.addButton(table, "QuatronDrainButton", buttonsBar, quatronDrainSprite, quatronDrainSprite, {"gui-description.mfQuatronDrainButton"}, _mfInfoGUIButtonsSize, true, showQuatronDrainButton)
 end
 
 -- Update Information --
-function GUI.updateMFInfos(GUIObj)
+function GUI.updateMFInfos(table)
 
-	-- Get GUI, MF and player --
-	local infosFlow = GUIObj.InfosFlow
-	local MF = getCurrentMF(GUIObj.MFPlayer)
-	local player = GUIObj.MFPlayer.ent
+	-- Get Variables --
+	local infosFrame = table.vars.InfoFrame
+	local MF = getCurrentMF(table.MFPlayer)
+
+	-- Clear the Frame --
+	infosFrame.clear()
 
 	-------------------------------------------------------- Get Mobile Factory Information Variables --------------------------------------------------------
 	local mfPositionText = {"", {"gui-description.mfPosition"}, ": ", {"gui-description.Unknow"}}
@@ -174,317 +165,241 @@ function GUI.updateMFInfos(GUIObj)
 	end
 
 	-------------------------------------------------------- Update Mobile Factory Information --------------------------------------------------------
-	-- Create the Frame --
-	local MFInfoFrame = GUIObj:addTitledFrame("MFInfoFrame", infosFlow, "vertical", "Mobile Factory", _mfOrange)
-	MFInfoFrame.style.minimal_height = 80
-	local barSize = 165
-
 	-- Add Labels and Progress Bars --
-	GUIObj:addLabel("PositionLabel", MFInfoFrame, mfPositionText, _mfGreen)
-	GUIObj:addLabel("HealLabel", MFInfoFrame, mfHealthText, _mfRed)
-	GUIObj:addProgressBar("HealBar", MFInfoFrame, "", mfHealthText, false, _mfRed, mfHealthValue, barSize)
-	GUIObj:addLabel("ShieldLabel", MFInfoFrame, mfShieldText, _mfBlue)
-	GUIObj:addProgressBar("ShieldBar", MFInfoFrame, "", mfShieldText, false, _mfBlue, mfShielValue, barSize)
-	GUIObj:addLabel("EnergyLabel", MFInfoFrame, mfEnergyText, _mfYellow)
-	GUIObj:addProgressBar("EnergyBar", MFInfoFrame, "", mfEnergyText, false, _mfYellow, mfEnergyValue, barSize)
-	GUIObj:addLabel("QuatronLabel", MFInfoFrame, mfQuatronText, _mfPurple)
-	GUIObj:addProgressBar("QuatronBar", MFInfoFrame, "", mfQuatronText, false, _mfPurple, mfQuatronValue, barSize)
-	GUIObj:addLabel("JumpDriveLabel", MFInfoFrame, mfJumpDriveText, _mfOrange)
-	GUIObj:addProgressBar("JumpDriveBar", MFInfoFrame, "", mfJumpDriveText, false, _mfOrange, mfJumpDriveValue, barSize)
+	GAPI.addSubtitle(table, "MFInfoFrame", infosFrame, "Mobile Factory")
+	GAPI.addLabel(table, "PositionLabel", infosFrame, mfPositionText, _mfGreen)
+	GAPI.addLabel(table, "HealLabel", infosFrame, mfHealthText, _mfRed)
+	GAPI.addProgressBar(table, "HealBar", infosFrame, "", mfHealthText, false, _mfRed, mfHealthValue)
+	GAPI.addLabel(table, "ShieldLabel", infosFrame, mfShieldText, _mfBlue)
+	GAPI.addProgressBar(table, "ShieldBar", infosFrame, "", mfShieldText, false, _mfBlue, mfShielValue)
+	GAPI.addLabel(table, "EnergyLabel", infosFrame, mfEnergyText, _mfYellow)
+	GAPI.addProgressBar(table, "EnergyBar", infosFrame, "", mfEnergyText, false, _mfYellow, mfEnergyValue)
+	GAPI.addLabel(table, "QuatronLabel", infosFrame, mfQuatronText, _mfPurple)
+	GAPI.addProgressBar(table, "QuatronBar", infosFrame, "", mfQuatronText, false, _mfPurple, mfQuatronValue)
+	GAPI.addLabel(table, "JumpDriveLabel", infosFrame, mfJumpDriveText, _mfOrange)
+	GAPI.addProgressBar(table, "JumpDriveBar", infosFrame, "", mfJumpDriveText, false, _mfOrange, mfJumpDriveValue)
 
 	-------------------------------------------------------- Update Lasers Information --------------------------------------------------------
 	-- Create the Frame --
-	local lasersFrame = GUIObj:addTitledFrame("lasersFrame", infosFlow, "vertical", {"gui-description.Lasers"}, _mfOrange)
-	lasersFrame.style.minimal_height = 80
+	GAPI.addSubtitle(table, "lasersFrame", infosFrame, {"gui-description.Lasers"})
 
 	-- Number of Lasers --
 	if technologyUnlocked("EnergyDrain1", getForce(MF)) or technologyUnlocked("FluidDrain1", getForce(MF)) or technologyUnlocked("TechItemDrain", getForce(MF)) then
-		GUIObj:addLabel("LasersNumberLabel", lasersFrame,{"", {"gui-description.LaserNumber"}, ": ", MF:getLaserNumber()})
-		GUIObj:addLabel("LasersRadiusLabel", lasersFrame, {"", {"gui-description.LaserRadius"}, ": ", MF:getLaserRadius(), " tiles"})
-		GUIObj:addLabel("LasersMultiplierLabel", lasersFrame, {"", {"gui-description.LaserEfficiency"}, ": ", MF:getLaserPower()})
+		GAPI.addLabel(table, "LasersNumberLabel", infosFrame,{"", {"gui-description.LaserNumber"}, ": ", MF:getLaserNumber()})
+		GAPI.addLabel(table, "LasersRadiusLabel", infosFrame, {"", {"gui-description.LaserRadius"}, ": ", MF:getLaserRadius(), " tiles"})
+		GAPI.addLabel(table, "LasersMultiplierLabel", infosFrame, {"", {"gui-description.LaserEfficiency"}, ": ", MF:getLaserPower()})
 	end
 
 	-- Energy Lasers --
 	if technologyUnlocked("EnergyDrain1", getForce(MF)) then
-		GUIObj:addLabel("EnergyLasersSpeed", lasersFrame, {"", {"gui-description.EnergyLasersSpeed"}, ": ", Util.toRNumber(MF:getLaserEnergyDrain()), "W"}, _mfYellow)
+		GAPI.addLabel(table, "EnergyLasersSpeed", infosFrame, {"", {"gui-description.EnergyLasersSpeed"}, ": ", Util.toRNumber(MF:getLaserEnergyDrain()), "W"}, _mfYellow)
 	end
 
 	-- Fluid Lasers --
 	if technologyUnlocked("FluidDrain1", getForce(MF)) then
-		GUIObj:addLabel("FluidLasersSpeed", lasersFrame, {"", {"gui-description.FluidLasersSpeed"}, ": ", Util.toRNumber(MF:getLaserFluidDrain()), "u/s"}, _mfPurple)
-		GUIObj:addLabel("FluidLasersConsumption", lasersFrame, {"", {"gui-description.FluidLasersConsumption"}, ": ", Util.toRNumber(MF:getLaserFluidDrain()*_mfFluidConsomption), "W"},_mfPurple)
+		GAPI.addLabel(table, "FluidLasersSpeed", infosFrame, {"", {"gui-description.FluidLasersSpeed"}, ": ", Util.toRNumber(MF:getLaserFluidDrain()), "u/s"}, _mfPurple)
+		GAPI.addLabel(table, "FluidLasersConsumption", infosFrame, {"", {"gui-description.FluidLasersConsumption"}, ": ", Util.toRNumber(MF:getLaserFluidDrain()*_mfFluidConsomption), "W"},_mfPurple)
 	end
 
 	-- Logistic Lasers --
 	if technologyUnlocked("TechItemDrain", getForce(MF)) then
-		GUIObj:addLabel("LogisticLasersSpeed", lasersFrame, {"", {"gui-description.LogisticLasersSpeed"}, ": ", Util.toRNumber(MF:getLaserItemDrain()), "i/s"}, _mfGreen)
-		GUIObj:addLabel("LogisticLasersConsumption", lasersFrame, {"", {"gui-description.LogisticLasersConsumption"}, ": ", Util.toRNumber(MF:getLaserItemDrain()*_mfBaseItemEnergyConsumption), "W"}, _mfGreen)
+		GAPI.addLabel(table, "LogisticLasersSpeed", infosFrame, {"", {"gui-description.LogisticLasersSpeed"}, ": ", Util.toRNumber(MF:getLaserItemDrain()), "i/s"}, _mfGreen)
+		GAPI.addLabel(table, "LogisticLasersConsumption", infosFrame, {"", {"gui-description.LogisticLasersConsumption"}, ": ", Util.toRNumber(MF:getLaserItemDrain()*_mfBaseItemEnergyConsumption), "W"}, _mfGreen)
 	end
 
 	-------------------------------------------------------- Update Upgrades Information --------------------------------------------------------
 	-- Create the Frame --
-	local upgradeFrame = GUIObj:addTitledFrame("upgradeFrame", infosFlow, "vertical", {"gui-description.Upgrades"}, _mfOrange)
-	upgradeFrame.style.minimal_height = 80
+	GAPI.addSubtitle(table, "upgradeFrame", infosFrame, {"gui-description.Upgrades"})
 
 	-- Add Labels --
-	GUIObj:addLabel("PowerModuleUpgrade", upgradeFrame, {"", {"gui-description.PowerModuleUpgrade"}, ": ", MF.laserRadiusMultiplier})
-	GUIObj:addLabel("EfficiencyModuleUpgrade", upgradeFrame, {"", {"gui-description.EfficiencyModuleUpgrade"}, ": ", MF.laserDrainMultiplier})
-	GUIObj:addLabel("FocusModuleUpgrade", upgradeFrame, {"", {"gui-description.FocusModuleUpgrade"}, ": ", MF.laserNumberMultiplier})
+	GAPI.addLabel(table, "PowerModuleUpgrade", infosFrame, {"", {"gui-description.PowerModuleUpgrade"}, ": ", MF.laserRadiusMultiplier})
+	GAPI.addLabel(table, "EfficiencyModuleUpgrade", infosFrame, {"", {"gui-description.EfficiencyModuleUpgrade"}, ": ", MF.laserDrainMultiplier})
+	GAPI.addLabel(table, "FocusModuleUpgrade", infosFrame, {"", {"gui-description.FocusModuleUpgrade"}, ": ", MF.laserNumberMultiplier})
 
 end
 
--- Update Tank Frame --
-function GUI.updateDeepTankFrame(GUIObj)
+-- Update Deep Tank Frame --
+function GUI.updateDeepTankFrame(table)
+
+	-- Stop if a Filter is on selection --
+	if table.vars.freezeTankGUI == true then return end
 
 	-- Get the GUI, MF and Player--
-	local player = GUIObj.MFPlayer.ent
-	local MF = getCurrentMF(GUIObj.MFPlayer)
+	local MF = getCurrentMF(table.MFPlayer)
 
 	-- Get the Tank Scroll Pane --
-	local tankScrollPane = GUIObj.TanksScrollPane
+	local tankScrollPane = table.vars.DTScrollPane
 
-	-- Clear the Tanks List --
+	-- Clear the Deep Tanks List --
 	tankScrollPane.clear()
 
-	-- Look for all Tanks --
-	for k, deepTank in pairs(MF.dataNetwork.DTKTable) do
+	-- Create the Table --
+	local tankTable = GAPI.addTable(table, "", tankScrollPane, 1)
 
-		-- -- Create the Tank Variables --
-		local sprite = nil
-		local fName = nil
-		local fAmount = 0
+	-- Look for all Deep Tanks --
+	for _, deepTank in pairs(MF.dataNetwork.DTKTable) do
+
+		-- Check the Deep Tank --
+		if deepTank.ent == nil or deepTank.ent.valid == false then goto continue end
+
+		-- Create the Deep Tank Variables --
+		local sprite = deepTank.filter or deepTank.inventoryFluid
+		local fName = Util.getLocFluidName(deepTank.inventoryFluid) or Util.getLocFluidName(deepTank.filter) or {"", {"gui-description.DeepTank"}, " ", deepTank.ID}
+		local fAmount = deepTank.inventoryCount or 0
 		local tCapacity = _dtMaxFluid
-		local tankText = nil
 		local color = _mfPurple
 
 		-- Create the Frame --
-		local frame = GUIObj:addFrame("", tankScrollPane, "horizontal")
+		local frame = GAPI.addFrame(table, "", tankTable, "horizontal")
 
 		-- Create the Button --
-		if deepTank.inventoryFluid ~= nil then
-			sprite = "fluid/" .. deepTank.inventoryFluid
-			fName = Util.getLocFluidName(deepTank.inventoryFluid)
-			fAmount = deepTank.inventoryCount
-			tankText = {"", {"gui-description.DeepTank"}, " ", deepTank.ID, ": ", fName, " ", Util.toRNumber(fAmount), "/", Util.toRNumber(tCapacity)}
+		if deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
 			color = game.fluid_prototypes[deepTank.inventoryFluid].base_color
-		elseif deepTank.filter ~= nil then
-			sprite = "fluid/" .. deepTank.filter
-			fName = Util.getLocFluidName(deepTank.filter)
-			tankText = {"", {"gui-description.DeepTank"}, " ", deepTank.ID, ": ", fName, " ", Util.toRNumber(fAmount), "/", Util.toRNumber(tCapacity)}
-		else
-			sprite = "item/DeepTank"
-			tankText = {"", {"gui-description.DeepTank"}, " ", deepTank.ID}
 		end
-		local button = GUIObj:addButton("DTB" .. tostring(k), frame, sprite, sprite, tankText, 35, false, true, fAmount)
-		button.style = "MF_Purple_Button_Purple"
+		local buttonText = {"", {"gui-description.FilterSelect"}, "\n", {"gui-description.Filter"}, ": [color=purple]", (Util.getLocFluidName(deepTank.filter) or {"gui-description.None"}), "[/color]" }
+		local button = GAPI.addFilter(table, "DTF" .. tostring(deepTank.ent.unit_number), frame, buttonText, true, "fluid", 50)
+		button.elem_value = sprite
 
-		-- Create the flow --
-		local flow = GUIObj:addFlow("", frame, "vertical")
+		-- Create the table Flow --
+		local flow = GAPI.addTable(table, "", frame, 1)
 
-		-- Create the Label --
-		local label = GUIObj:addDualLabel(flow, fName or tankText, Util.toRNumber(fAmount) .. "/" .. Util.toRNumber(tCapacity), _mfOrange, _mfGreen)
-		label.Label1.style.width = 70
-		label.Label2.style.width = 70
+		-- Create the Labels --
+		GAPI.addLabel(table, "", flow, fName, nil, "", false, nil, "yellow_label")
+		GAPI.addLabel(table, "", flow, Util.toRNumber(fAmount) .. "/" .. Util.toRNumber(tCapacity), _mfYellow)
 
 		-- Create the Progress Bar --
-		local bar = GUIObj:addProgressBar("", flow, "", "", false, color, fAmount/tCapacity, 140)
+		local bar = GAPI.addProgressBar(table, "", flow, "", "", false, color, fAmount/tCapacity)
 		bar.style.horizontally_stretchable = true
-		bar.style.top_padding = 7
 
-	::continue::
+		::continue::
 	
 	end
-end
-
--- Update Deep Tank Info Frame --
-function GUI.updateDeepTankInfo(GUIObj, id)
-	
-	-- Get GUI and Deep Tank --
-	local gui = GUIObj.TanksOptionFrame
-	local deepTank = global.deepTankTable[id]
-	gui.visible = true
-
-	-- Clear the Frame --
-	gui.clear()
-
-	-- Create all Labels --
-	GUIObj:addDualLabel(gui, {"", {"gui-description.DeepTankID"}, ":"}, deepTank.ID, _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(gui, {"", {"gui-description.BelongsTo"}, ":"}, deepTank.player, _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(gui, {"", {"gui-description.DeepTankFluid"}, ":"}, deepTank.inventoryFluid ~= nil and Util.getLocFluidName(deepTank.inventoryFluid) or {"gui-description.None"}, _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(gui, {"", {"gui-description.Count"}, ":"}, (deepTank.inventoryCount or "0") .. "/" .. _dtMaxFluid, _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(gui, {"", {"gui-description.Filter"}, ":"}, deepTank.filter ~= nil and Util.getLocFluidName(deepTank.filter) or {"gui-description.None"}, _mfOrange, _mfGreen)
-
-	-- Create the Filter --
-	local TankFilter = GUIObj:addFilter("TF" .. tostring(id), gui, {"gui-description.FilterSelect"}, true, "fluid", 25)
-
-	-- Set the Filter --
-	if deepTank.filter ~= nil  then
-		TankFilter.elem_value = deepTank.filter
-	end
-
 end
 
 -- Update Deep Storage Frame --
-function GUI.updateDeepStorageFrame(GUIObj)
+function GUI.updateDeepStorageFrame(table)
+
+	-- Stop if a Filter is on selection --
+	if table.vars.freezeStorageGUI == true then return end
 
 	-- Get the GUI, MF and Player--
-	local player = GUIObj.MFPlayer.ent
-	local MF = getCurrentMF(GUIObj.MFPlayer)
+	local MF = getCurrentMF(table.MFPlayer)
 
 	-- Get the Deep Storage Scroll Pane --
-	local storageScrollPane = GUIObj.StorageScrollPane
+	local storageScrollPane = table.vars.DSScrollPane
 
 	-- Clear the Deep Storages list --
 	storageScrollPane.clear()
 
+	-- Create the Table --
+	local storageTable = GAPI.addTable(table, "", storageScrollPane, 1)
+
 	-- Look for all Deep Storage --
-	for k, deepStorage in pairs(MF.dataNetwork.DSRTable) do
+	for _, deepStorage in pairs(MF.dataNetwork.DSRTable) do
+
+		-- Check the Deep Storage --
+		if deepStorage.ent == nil or deepStorage.ent.valid == false then return end
 
 		-- Create the Storage Variables --
-		local sprite = nil
-		local fName = nil
-		local fAmount = nil
-		local storageText = nil
+		local sprite = deepStorage.filter or deepStorage.inventoryItem
+		local fName = Util.getLocItemName(deepStorage.inventoryItem) or Util.getLocItemName(deepStorage.filter) or {"", {"gui-description.DeepStorage"}, " ", deepStorage.ID}
+		local fAmount = deepStorage.inventoryCount or 0
 
 		-- Create the Frame --
-		local frame = GUIObj:addFrame("", storageScrollPane, "horizontal")
+		local frame = GAPI.addFrame(table, "", storageTable, "horizontal")
 
 		-- Create the Button --
-		if deepStorage.inventoryItem ~= nil then
-			sprite = "item/" .. deepStorage.inventoryItem
-			fName = Util.getLocItemName(deepStorage.inventoryItem)
-			fAmount = deepStorage.inventoryCount
-			storageText = {"", {"gui-description.DeepStorage"}, " ", deepStorage.ID, ": ", fName, " ", Util.toRNumber(fAmount)}
-		elseif deepStorage.filter ~= nil then
-			sprite = "item/" .. deepStorage.filter
-			fName = Util.getLocItemName(deepStorage.filter)
-			fAmount = 0
-			storageText = {"", {"gui-description.DeepStorage"}, " ", deepStorage.ID, ": ", fName, " ", Util.toRNumber(fAmount)}
-		else
-			sprite = "item/DeepStorage"
-			storageText = {"", {"gui-description.DeepStorage"}, " ", deepStorage.ID}
-			fAmount = ""
-		end
+		local buttonText = {"", {"gui-description.FilterSelect"}, "\n", {"gui-description.Filter"}, ": [color=green]", (Util.getLocFluidName(deepStorage.filter) or {"gui-description.None"}), "[/color]" }
+		local button = GAPI.addFilter(table, "DSRF" .. tostring(deepStorage.ent.unit_number), frame, buttonText, true, "item", 50)
+		button.elem_value = sprite
 
-		local button = GUIObj:addButton("DSRB" .. tostring(k), frame, sprite, sprite, storageText, 35, false, true, fAmount)
-		button.style = "shortcut_bar_button_green"
-
-		-- Create the flow --
-		local flow = GUIObj:addFlow("", frame, "vertical")
+		-- Create the table flow --
+		local flow = GAPI.addTable(table, "", frame, 1)
 
 		-- Create the Label --
-		local label1 = GUIObj:addLabel("", flow, fName or storageText, _mfOrange)
-		local label2 = GUIObj:addLabel("", flow, fAmount, _mfGreen)
-		label1.style.width = 70
-		label1.style.height = 15
-		label2.style.width = 70
-		label2.style.height = 15
+		GAPI.addLabel(table, "", flow, fName, nil, "", false, nil, "yellow_label")
+		GAPI.addLabel(table, "", flow, fAmount, _mfYellow)
+		-- label1.style.width = 70
+		-- label1.style.height = 15
+		-- label2.style.width = 70
+		-- label2.style.height = 15
 
 		::continue::
 
 	end
 end
-
--- Update Deep Storage Info Frame --
-function GUI.updateDeepStorageInfo(GUIObj, id)
-
-	-- Get GUI and Deep Storage --
-	local gui = GUIObj.StorageOptionFrame
-	local deepStorage = global.deepStorageTable[id]
-	gui.visible = true
-
-	-- Clear the Frame --
-	gui.clear()
-
-	-- Create all Labels --
-	GUIObj:addDualLabel(gui, {"", {"gui-description.DeepStorageID"}, ":"}, deepStorage.ID, _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(gui, {"", {"gui-description.BelongsTo"}, ":"}, deepStorage.player, _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(gui, {"", {"gui-description.DeepStorageItem"}, ":"}, deepStorage.inventoryItem ~= nil and Util.getLocItemName(deepStorage.inventoryItem) or {"gui-description.None"}, _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(gui, {"", {"gui-description.Count"}, ":"}, (deepStorage.inventoryCount or "0"), _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(gui, {"", {"gui-description.Filter"}, ":"}, deepStorage.filter ~= nil and Util.getLocItemName(deepStorage.filter) or {"gui-description.None"}, _mfOrange, _mfGreen)
-
-	-- Create the Filter --
-	local StorageFilter = GUIObj:addFilter("DSRF" .. tostring(id), gui, {"gui-description.FilterSelect"}, true, "item", 25)
-
-	-- Save the Filter --
-	if deepStorage.filter ~= nil  then
-		StorageFilter.elem_value = deepStorage.filter
-	end
-
-end
-
 	
 -- Update the Inventory GUI Frame --
-function GUI.updateInventoryFrame(GUIObj)
+function GUI.updateInventoryFrame(table)
 
 	-- Get the MF --
-	local MF = getCurrentMF(GUIObj.MFPlayer)
+	local MF = getCurrentMF(table.MFPlayer)
 
-	-- Get the Inventory Scroll Pane --
-	local InventoryScrollPanel = GUIObj.InventoryScrollPane
+	-- Get the Inventory Scroll Pane and Flow --
+	local inventoryFlow = table.vars.InventoryTable
+	local inventoryScrollPane = table.vars.InvScrollPane
 
-	-- Clear the Inventory List --
-	InventoryScrollPanel.clear()
+	-- Clear the Inventory --
+	inventoryFlow.clear()
+	inventoryScrollPane.clear()
+
+	-- Create the Dual Labels --
+	GAPI.addDualLabel(table, inventoryFlow, {"", {"gui-description.BelongsTo"}, ": "},  MF.player, _mfOrange, _mfGreen)
+	GAPI.addDualLabel(table, inventoryFlow, {"", {"gui-description.InventoryCapacity"}, ": "}, Util.toRNumber(MF.II.usedCapacity) .. "/" .. Util.toRNumber(MF.II.maxCapacity) .. "  (" .. MF.II.usedCapacity .. "/" .. MF.II.maxCapacity .. ")", _mfOrange, _mfGreen)
+
+	-- Create the Table --
+    local tableList = GAPI.addTable(table, "", inventoryScrollPane, 5)
 
 	-- Create the Inventory List --
-	createDNInventoryFrame(GUIObj, InventoryScrollPanel, getMFPlayer(MF.playerIndex), "INV", MF.II, 5, true, true, true)
+	-- createDNInventoryFrame(GUIObj, inventoryScrollPane, getMFPlayer(MF.playerIndex), "INV", MF.II, 5, true, true, true)
 
-	-- Clean the Inventory Information Flow --
-	GUIObj.InventoryInfoFlow.clear()
+	-- Look for all Deep Tanks --
+	for _, DT in pairs(MF.dataNetwork.DTKTable) do
+		
+		-- Check the Deep Tank --
+		if DT.ent == nil or DT.ent.valid == false or DT.inventoryFluid == nil or DT.inventoryCount == nil or DT.inventoryCount == 0 then goto continue end
 
-	-- Create the Dual Labels --
-	GUIObj:addDualLabel(GUIObj.InventoryInfoFlow, {"", {"gui-description.InventoryName"}, ": "},  MF.II.name, _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(GUIObj.InventoryInfoFlow, {"", {"gui-description.BelongsTo"}, ": "},  MF.player, _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(GUIObj.InventoryInfoFlow, {"", {"gui-description.InventoryCapacity"}, ": "}, Util.toRNumber(MF.II.usedCapacity) .. "/" .. Util.toRNumber(MF.II.maxCapacity) .. "  (" .. MF.II.usedCapacity .. "/" .. MF.II.maxCapacity .. ")", _mfOrange, _mfGreen)
+		-- Create the Button --
+		local buttonText = {"", "[color=purple]", Util.getLocFluidName(DT.inventoryFluid), "[/color]\n[color=yellow]", Util.toRNumber(DT.inventoryCount), "[/color]"}
+		local button = GAPI.addButton(table, "", tableList, "fluid/" .. DT.inventoryFluid, "fluid/" .. DT.inventoryFluid, buttonText, 37, false, true, DT.inventoryCount)
+		button.style = "MF_Fake_Button_Purple"
+        button.style.padding = 0
+        button.style.margin = 0
 
-end
+		::continue::
 
--- Update the Inventory Info for an Item --
-function GUI.updateInventoryInfo(GUIObj, id, type, name, amount)
-
-	-- Get the GUI, MF and Player--
-	local MF = getCurrentMF(GUIObj.MFPlayer)
-
-	-- Get the Inventory Item Flow --
-	local inventoryItemFlow = GUIObj.InventoryItemFlow
-	inventoryItemFlow.visible = true
-
-	-- Clear the Flow --
-	inventoryItemFlow.clear()
-
-	-- Get the Variables --
-	local text = nil
-	local text2 = nil
-	local count = nil
-	local location = nil
-
-	if type == "DT" then
-		local deepTank = global.deepTankTable[id]
-		if deepTank.inventoryFluid == nil then return end
-		text = {"", {"gui-description.Fluid"}, ": "}
-		text2 = Util.getLocFluidName(deepTank.inventoryFluid)
-		count = deepTank.inventoryCount
-		location = {"", {"gui-description.DeepTank"}, " ", deepTank.ID}
-	elseif type == "DSR" then
-		local deepStorage = global.deepStorageTable[id]
-		if deepStorage.inventoryItem == nil then return end
-		text = {"", {"gui-description.Item"}, ": "}
-		text2 = Util.getLocItemName(deepStorage.inventoryItem)
-		count = deepStorage.inventoryCount
-		location = {"", {"gui-description.DeepStorage"}, " ", deepStorage.ID}
-	elseif type == "INV" then
-		if name == nil then return end
-		text = {"", {"gui-description.Item"}, ": "}
-		text2 = Util.getLocItemName(name)
-		count = amount
-		location = "Internal Inventory"
-	else
-		return
 	end
 
-	-- Create the Dual Labels --
-	GUIObj:addDualLabel(inventoryItemFlow, text, text2, _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(inventoryItemFlow, {"", {"gui-description.Count"}, ": "}, count, _mfOrange, _mfGreen)
-	GUIObj:addDualLabel(inventoryItemFlow, {"", {"gui-description.InventoryLocation"}, ": "}, location, _mfOrange, _mfGreen)
+	-- Look for all Deep Storages --
+	for _, DSR in pairs(MF.dataNetwork.DSRTable) do
+		-- Check the Deep Storage --
+		if DSR.ent == nil or DSR.ent.valid == false or DSR.inventoryItem == nil or DSR.inventoryCount == nil or DSR.inventoryCount == 0 then goto continue end
+
+		-- Create the Button --
+		local buttonText = {"", "[color=green]", Util.getLocItemName(DSR.inventoryItem), "[/color]\n[color=yellow]", Util.toRNumber(DSR.inventoryCount), "[/color]"}
+		local button = GAPI.addButton(table, "", tableList, "item/" .. DSR.inventoryItem, "item/" .. DSR.inventoryItem, buttonText, 37, false, true, DSR.inventoryCount)
+		button.style = "MF_Fake_Button_Green"
+        button.style.padding = 0
+        button.style.margin = 0
+
+		::continue::
+	end
+
+	-- Look for all Data Network Inventory Items --
+	for name, count in pairs(MF.II.inventory) do
+		
+		-- Check the Item --
+		if count == nil or count == 0 then goto continue end
+
+		-- Create the Button --
+		local buttonText = {"", "[color=blue]", Util.getLocItemName(name), "[/color]\n[color=yellow]", Util.toRNumber(count), "[/color]"}
+		local button = GAPI.addButton(table, "", tableList, "item/" .. name, "item/" .. name, buttonText, 37, false, true, count)
+		button.style = "MF_Fake_Button_Blue"
+        button.style.padding = 0
+		button.style.margin = 0
+		
+		::continue::
+
+	end
 
 end
