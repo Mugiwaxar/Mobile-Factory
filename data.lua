@@ -349,8 +349,8 @@ data:extend{
 data:extend{
     {
         type = "sprite",
-        name = "ArrowIconLeft",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconLeft.png",
+        name = "ArrowIconUp",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconUp.png",
         size = 32,
         flags = {"icon"}
     }
@@ -359,8 +359,8 @@ data:extend{
 data:extend{
     {
         type = "sprite",
-        name = "ArrowIconRight",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconRight.png",
+        name = "ArrowIconDown",
+		filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconDown.png",
         size = 32,
         flags = {"icon"}
     }
@@ -891,4 +891,14 @@ data.raw["gui-style"].default.filter_group_button_tab_selectable =
 		base = {position = {363, 744}, corner_size = 8},
 		shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
 	}
+}
+
+data.raw["gui-style"].default.MFFrame1 =
+{
+  type = "frame_style",
+  graphical_set =
+  {
+	base = {position = {17, 0}, corner_size = 8, draw_type = "outer"},
+	shadow = default_inner_shadow
+  }
 }

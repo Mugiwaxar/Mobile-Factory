@@ -128,27 +128,18 @@ function GUI.updateOptionGUIGUITab(GUIObj)
 	-- Add all Options --
 	GUI.addOption("", scrollPane, "title", false, {text={"gui-description.MainGUIOpt"}}, playerIndex)
 	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIGeneralTitle"}, nil, nil, false, "LabelFont2")
-	GUI.addOption("MainGuiDirectionSwitch", scrollPane, "switch", false, {text={"gui-description.Left"}, text2={"gui-description.Right"}, text3={"gui-description.MainGUIDirection"}, tooltip3={"gui-description.MainGUIDirectionTT"}, state=GUIObj.MFPlayer.varTable.MainGUIDirection or "right"}, playerIndex)
 
-	-- Add a CheckBox every each Buttons --
+	-- Add a CheckBox every Buttons --
 	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIButtonsTitle"}, nil, nil, false, "LabelFont2")
-	for k, button in pairs(MFPlayer.GUI["MFMainGUI"].buttonsTable) do
+	for _, button in pairs(MFPlayer.GUI["MFMainGUI"].vars.buttonsTable) do
 		local state = true
 		if GUIObj.MFPlayer.varTable["Show" .. button.name] == false then state = false end
 		GUIObj:addCheckBox("MGS," .. button.name, scrollPane, {"", {"gui-description.MainGUIButtons"}, "", button.name}, "", state)
 	end
 
 	-- Add the Main Buttons size Selector --
-	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIMainButtonSizeTitle"}, nil, nil, false, "LabelFont2")
-	GUIObj:addDropDown("MainGUIMainButtonsSize", scrollPane, {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20}, GUIObj.MFPlayer.varTable.mainGUIMainButtonsSize or 1, true, {"gui-description.MainGUIMainButtonSizeSelectorTT"})
-
-	-- Add the Buttons size Selector --
-	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIButtonSizeTitle"}, nil, nil, false, "LabelFont2")
-	GUIObj:addDropDown("MainGUIButtonsSize", scrollPane, {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20}, GUIObj.MFPlayer.varTable.mainGUIButtonsSize or 1, true, {"gui-description.MainGUIButtonSizeSelectorTT"})
-
-	-- Add the Buttons per Columm Selector --
-	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIButtonsColummTitle"}, nil, nil, false, "LabelFont2")
-	GUIObj:addDropDown("MainGUIButtonsPerColumm", scrollPane, {1,2,3,4,5,6,7,8,9,10}, GUIObj.MFPlayer.varTable.mainGUIButtonsPerColumm or 4, true, {"gui-description.MainGUIButtonsPerColummTT"})
+	GUIObj:addLabel("", scrollPane, {"gui-description.MainButtonSizeTitle"}, nil, nil, false, "LabelFont2")
+	GUIObj:addDropDown("MainButtonsSize", scrollPane, {1,2,3,4,5,6,7,8,9,10}, GUIObj.MFPlayer.varTable.MainButtonsSize or 5, true, {"gui-description.MainButtonSizeSelectorTT"})
 
 	-- Add a CheckBox for every Information --
 	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIInformationTitle"}, nil, nil, false, "LabelFont2")
@@ -172,10 +163,6 @@ function GUI.updateOptionGUIGUITab(GUIObj)
 	GUIObj:addCheckBox("MainGUIShowEnergyBar", scrollPane, {"gui-description.MainGUIShowEnergyBar"}, "", GUIObj.MFPlayer.varTable.MainGUIShowEnergyBar == nil and true or GUIObj.MFPlayer.varTable.MainGUIShowEnergyBar)
 	GUIObj:addCheckBox("MainGUIShowQuatronBar", scrollPane, {"gui-description.MainGUIShowQuatronBar"}, "", GUIObj.MFPlayer.varTable.MainGUIShowQuatronBar == nil and true or GUIObj.MFPlayer.varTable.MainGUIShowQuatronBar)
 	GUIObj:addCheckBox("MainGUIShowJumpCharge", scrollPane, {"gui-description.MainGUIShowJumpCharge"}, "", GUIObj.MFPlayer.varTable.MainGUIShowJumpCharge == nil and true or GUIObj.MFPlayer.varTable.MainGUIShowJumpCharge)
-	
-	-- Add the Progress Bar size Selector --
-	GUIObj:addLabel("", scrollPane, {"gui-description.MainGUIBarsSizeTitle"}, nil, nil, false, "LabelFont2")
-	GUIObj:addDropDown("MainGUIBarsSize", scrollPane, {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20}, GUIObj.MFPlayer.varTable.mainGUIBarsSize or 7, true, {"gui-description.MainGUIProgressBarSizeSelectorTT"})
 
 end
 

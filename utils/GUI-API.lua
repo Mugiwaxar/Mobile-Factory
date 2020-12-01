@@ -1,20 +1,20 @@
 ---------------------------------- The GUI API to create GUI easily ----------------------------------
 
 -- Create a Window --
-function GAPI.createBaseWindows(name, title, MFPlayer, showTitle, showMainFrame, isScroolPane)
+function GAPI.createBaseWindows(name, title, MFPlayer, showTitle, showMainFrame, isScroolPane, windowsDirection, mainFrameDirection)
     if MFPlayer == nil then return end
     if MFPlayer.ent.gui.screen[name] ~= nil and MFPlayer.ent.gui.screen[name].valid == true then MFPlayer.ent.gui.screen[name].destroy() end
     if MFPlayer.ent.gui.screen[name] ~= nil and MFPlayer.ent.gui.screen[name].valid == false then MFPlayer.ent.gui.screen[name] = nil end
     local table = {title=title, MFPlayer=MFPlayer, vars={}}
-    table.gui = MFPlayer.ent.gui.screen.add{type="frame", name=name, direction="vertical"}
+    table.gui = MFPlayer.ent.gui.screen.add{type="frame", name=name, direction=windowsDirection or "vertical"}
     table.gui.style.padding = 0
     table.gui.style.margin = 0
     if showTitle ~= false then GAPI.createTitle(table) end
     if showMainFrame ~= false then
         local mainFrame = nil
         if isScroolPane ~= true then
-            mainFrame = GAPI.addFrame(table, "MainFrame", table.vars.topBar or table.gui, "vertical", true)
-            mainFrame.style = "a_inner_frame"
+            mainFrame = GAPI.addFrame(table, "MainFrame", table.vars.topBar or table.gui, mainFrameDirection or "vertical", true)
+            mainFrame.style = "MFFrame1"
         else
             mainFrame = GAPI.addScrollPane(table, "MainFrame", table.vars.topBar or table.gui, nil, true)
             -- mainFrame.style = "tab_scroll_pane_with_extra_padding"
@@ -26,36 +26,51 @@ function GAPI.createBaseWindows(name, title, MFPlayer, showTitle, showMainFrame,
     return table
 end
 
--- Set the Window Geometry --
-function GAPI.setGeometry(Gui, posX, posY, minHeight, minWidth, maxHeight, maxWidth)
+-- Set the Element Geometry --
+function GAPI.setGeometry(Gui, posX, posY, minHeight, minWidth, maxHeight, maxWidth, height, width)
     if Gui == nil then return end
-    if posX ~= nil then Gui.location = {posX, GUI.location.y} end
-    if posY ~= nil then Gui.location = {GUI.location.x, posY} end
+    if posX ~= nil then Gui.location = {posX, Gui.location.y} end
+    if posY ~= nil then Gui.location = {Gui.location.x, posY} end
     if minHeight ~= nil then Gui.style.minimal_height = minHeight end
     if minWidth ~= nil then Gui.style.minimal_width = minWidth end
     if maxHeight ~= nil then Gui.style.minimal_height = maxHeight end
     if maxWidth ~= nil then Gui.style.maximal_height = maxWidth end
+    if height ~= nil then Gui.style.natural_height = height end
+    if width ~= nil then Gui.style.natural_width = width end
 end
 
--- Set the Window Location --
+-- Set the Element Location --
 function GAPI.setLocation(Gui, posX, posY)
     if Gui == nil then return end
-    if posX ~= nil then Gui.location = {posX, GUI.location.y} end
-    if posY ~= nil then Gui.location = {GUI.location.x, posY} end
+    if posX ~= nil then Gui.location = {posX, Gui.location.y} end
+    if posY ~= nil then Gui.location = {Gui.location.x, posY} end
 end
 
--- Set the Window Minimum Size --
+-- Set the Element Normal Size --
+function GAPI.setSize(Gui, height, width)
+    if height ~= nil then Gui.style.natural_height = height end
+    if width ~= nil then Gui.style.natural_width = width end
+end
+
+-- Set the Element Minimum Size --
 function GAPI.setMinSize(Gui, minHeight, minWidth)
     if Gui == nil then return end
     if minHeight ~= nil then Gui.style.minimal_height = minHeight end
     if minWidth ~= nil then Gui.style.minimal_width = minWidth end
 end
 
--- Set the Window Maximum Size --
+-- Set the Element Maximum Size --
 function GAPI.setMaxSize(Gui, maxHeight, maxWidth)
     if Gui == nil then return end
     if maxHeight ~= nil then Gui.style.minimal_height = maxHeight end
     if maxWidth ~= nil then Gui.style.maximal_height = maxWidth end
+end
+
+-- Set all Sizes of the Element --
+function GAPI.setAllSize(Gui, height, width)
+    GAPI.setSize(Gui, height, width)
+    GAPI.setMinSize(Gui, height, width)
+    GAPI.setMaxSize(Gui, height, width)
 end
 
 -- Center the Window --
@@ -280,7 +295,7 @@ function GAPI.addTextField(table, name, gui, text, tooltip, save, numeric, allow
 end
 
 -- Add a new Button --
-function GAPI.addButton(table, name, gui, sprite, hovSprite, tooltip, size, save, visible, count)
+function GAPI.addButton(table, name, gui, sprite, hovSprite, tooltip, size, save, visible, count, style)
     if visible == false then return end
     -- Check if this Element doesn't exist --
     if name ~= nil and name ~= "" and gui[name] ~= nil then gui[name].destroy() end
@@ -295,10 +310,11 @@ function GAPI.addButton(table, name, gui, sprite, hovSprite, tooltip, size, save
         number=count
     }
     -- Set the Style --
-    button.style.maximal_width = size
-	button.style.maximal_height = size
-	button.style.padding = 0
-    button.style.margin = 0
+    if style ~= nil then button.style = style end
+        button.style.maximal_width = size
+        button.style.maximal_height = size
+        button.style.padding = 0
+        button.style.margin = 0
     -- Save the Button inside the elements Table --
     if table ~= nil and save == true then
         table.vars[name] = button
@@ -379,7 +395,8 @@ function GAPI.addProgressBar(table, name, gui, text, tooltip, save, color, value
     -- Set the Progress Bar Color --
     if color ~= nil then progressBar.style.color = color end
     -- Set the Progress Bar Size --
-    progressBar.style.maximal_width = size or 100
+    if size ~= nil then progressBar.style.maximal_width = size end
+    progressBar.style.horizontally_stretchable = true
     -- Set the Progress Bar value --
     if value ~= nil then progressBar.value = value end
     -- Save the Progress Bar inside the elements Table --

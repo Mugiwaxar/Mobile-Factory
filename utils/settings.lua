@@ -180,15 +180,18 @@ _mfEnergyAndMF = merge{_mfEnergyShare, _mfMobileFactories}
 _mfQuatronAndMF = merge{_mfQuatronShare, _mfMobileFactories}
 
 -- GUI Settings --
-_GUIButtonsSize = 25
+_GUIButtonsSize = 15
 _mfGUIDragAreaSize = 25
 _mfGUICloseButtonSize = 20
 _mfDefaultGuiHeight = 500
 _mfDefaultGuiWidth = 300
+_mfMainGUIPosX = 300
+_mfMainGUIPosY = 0
 
 -- GUI Name List --
 _mfGUIName = 
 {
+	MainGUI = "MFMainGUI",
 	SwitchMF = "MFSwitchMFGUI"
 }
 

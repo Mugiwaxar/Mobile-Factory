@@ -80,7 +80,10 @@ end
 -- Update all GUIs --
 function GUI.updateAllGUIs(force)
 	
-		for _, MFPlayer in pairs(global.playersTable or {}) do
+		for _, player in pairs(game.connected_players) do
+			
+			-- Get the MFPlayer --
+			local MFPlayer = getMFPlayer(player.name)
 
 			-- Update all Progress Bars of the Data Assembler  --
 			if game.tick%_eventTick7 == 0 or force then
@@ -253,31 +256,16 @@ function GUI.buttonClicked(event)
 		return
 	end
 
-	-- Extend or reduce the Main GUI --
-	if event.element.name == "MainGUIReduceButton" then
-		local leftSprite = "ArrowIconLeft"
-		local rightSprite = "ArrowIconRight"
-		if mainGUI.MFPlayer.varTable.MainGUIDirection == "left" then
-			leftSprite = "ArrowIconRight"
-			rightSprite = "ArrowIconLeft"
-		end
-		local columns = ((math.floor((table_size(mainGUI.MFMainGUIFrame3.children)-1 ))))
-		local decal = 138
-        if columns > 0 then decal = decal + 29 + (18 * (columns-1)) end
-		decal = decal * player.display_scale
-		if mainGUI.MFMainGUIFrame2.visible == false then
-			if mainGUI.MFPlayer.varTable.MainGUIDirection == "left" then mainGUI.location = {mainGUI.location.x - decal, mainGUI.location.y} end
-			mainGUI.MFMainGUIFrame2.visible = true
-			mainGUI.MFMainGUIFrame3.visible = true
-			mainGUI.MainGUIReduceButton.sprite = leftSprite
-			mainGUI.MainGUIReduceButton.hovered_sprite = leftSprite
-		else
-			if mainGUI.MFPlayer.varTable.MainGUIDirection == "left" then mainGUI.location = {mainGUI.location.x + decal, mainGUI.location.y} end
-			mainGUI.MFMainGUIFrame2.visible = false
-			mainGUI.MFMainGUIFrame3.visible = false
-			mainGUI.MainGUIReduceButton.sprite = rightSprite
-			mainGUI.MainGUIReduceButton.hovered_sprite = rightSprite
-		end
+	-- Open the Main GUI --
+	if event.element.name == "MainGUIOpen" then
+		mainGUI.MFPlayer.varTable.MainGUIOpen = true
+		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])
+		return
+	end
+
+	-- Close the Main GUI --
+	if event.element.name == "MainGUIClose" then
+		mainGUI.MFPlayer.varTable.MainGUIOpen = false
 		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])
 		return
 	end
