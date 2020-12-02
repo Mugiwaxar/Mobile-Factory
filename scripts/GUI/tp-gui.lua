@@ -19,9 +19,11 @@ function GUI.createTPGui(player)
 	addLocFrame.style = "MFFrame1"
     
     infoFrame.style.left_padding = 7
-	infoFrame.style.right_padding = 7
+    infoFrame.style.right_padding = 7
+    infoFrame.style.right_margin = 3
 	locFrame.style.left_padding = 7
-	locFrame.style.right_padding = 7
+    locFrame.style.right_padding = 7
+    locFrame.style.right_margin = 3
 	addLocFrame.style.left_padding = 7
     addLocFrame.style.right_padding = 7
     
@@ -37,6 +39,7 @@ function GUI.createTPGui(player)
     local locPane = GAPI.addScrollPane(table, "LocScrollPane", locFrame, 700, true, "MF_TPGUI_scroll_pan")
     locPane.style.minimal_height = 350
     locPane.style.minimal_width = 250
+    locPane.style.bottom_margin = 3
 
     -- Add the Close Button --
     GAPI.addCloseButton(table)
@@ -76,7 +79,7 @@ function GUI.updateInfo(table)
     end
 
     -- Add the Jump Drive Subtitle --
-    GAPI.addLabel(table, "", infoFrame, {"gui-description.JumpDriveSubTitle"}, nil, nil, false, nil, "yellow_label")
+    GAPI.addLabel(table, "", infoFrame, {"gui-description.JumpDriveSubTitle"}, nil, nil, false, nil, _mfLabelType.yellowTitle)
 
     -- Add the Jump Drive Statue --
     GAPI.addDualLabel(table, infoFrame, {"",{"gui-description.JumpDriveStatue"}, ":"}, MF.jumpDriveObj.charge .. "/" .. MF.jumpDriveObj.maxCharge .. " (+" .. MF.jumpDriveObj.chargeRate .. "/s)", _mfOrange, _mfYellow)
@@ -88,7 +91,7 @@ function GUI.updateInfo(table)
     GAPI.addDualLabel(table, infoFrame, {"",{"gui-description.JumpDriveConsumption"}, ":"}, Util.toRNumber(MF.jumpDriveObj.chargeRate * _mfJumpEnergyDrain) .. "W" , _mfOrange, _mfYellow)
 
     -- Add the Mobile Factory Subtitle --
-    GAPI.addLabel(table, "", infoFrame, {"gui-description.MobileFactorySubtitle"}, nil, nil, false, nil, "yellow_label")
+    GAPI.addLabel(table, "", infoFrame, {"gui-description.MobileFactorySubtitle"}, nil, nil, false, nil, _mfLabelType.yellowTitle)
 
     -- Add the World Position --
     GAPI.addDualLabel(table, infoFrame, {"",{"gui-description.World"}, ":"}, MF.ent.surface.name, _mfOrange, _mfYellow)
@@ -144,7 +147,7 @@ function GUI.updateLocation(table)
         local infoTable = GAPI.addTable(table, "", flow, 1)
         
         -- Add the Location Name --
-        GAPI.addLabel(table, "", infoTable, name, nil, "", false, nil, "yellow_label")
+        GAPI.addLabel(table, "", infoTable, name, nil, "", false, nil, _mfLabelType.yellowTitle)
 
         -- Add the Position --
         GAPI.addDualLabel(table, infoTable, {"", {"gui-description.Position"}, ":"}, loc.surface.name .. " (" .. math.ceil(loc.posX) .. " ; " .. math.ceil(loc.posY) .. ")", _mfOrange, _mfYellow)

@@ -15,14 +15,14 @@ function GAPI.createBaseWindows(name, title, MFPlayer, showTitle, showMainFrame,
         local mainFrame = nil
         if isScroolPane ~= true then
             mainFrame = GAPI.addFrame(table, "MainFrame", table.gui, mainFrameDirection or "vertical", true)
-            mainFrame.style = "MFFrame1"
+            mainFrame.style = "invisible_frame"
         else
             mainFrame = GAPI.addScrollPane(table, "MainFrame", table.gui, nil, true)
             -- mainFrame.style = "tab_scroll_pane_with_extra_padding"
         end
         mainFrame.style.vertically_stretchable = true
     end
-    GAPI.setGeometry(table.gui, nil, nil, _mfDefaultGuiHeight, _mfDefaultGuiWidth, _mfDefaultGuiHeight, _mfDefaultGuiWidth)
+    GAPI.setGeometry(table.gui, nil, nil, _mfDefaultGuiHeight, _mfDefaultGuiWidth)
     GAPI.centerWindow(table.gui)
     return table
 end
@@ -135,7 +135,7 @@ function GAPI.addSubtitle(table, name, gui, text, save)
     flow.style.horizontal_align = "center"
     flow.style.vertically_stretchable = false
     GAPI.addLine(table, "", flow, "horizontal")
-    local label = GAPI.addLabel(table, name .. "Label", flow, text, nil, nil, false, nil, "yellow_label")
+    local label = GAPI.addLabel(table, name .. "Label", flow, text, nil, nil, false, nil, _mfLabelType.yellowTitle)
     label.style.left_margin = 10
     label.style.right_margin = 10
     GAPI.addLine(table, "", flow, "horizontal")
@@ -201,21 +201,21 @@ function GAPI.addTab(table, name, gui, text, tooltip, save)
     -- Create the Tabbed Pane --
     local tab = gui.add{type="tab", name=name .. "tab", caption=text, tooltip=tooltip}
     -- Create the Flow --
-    local frame = gui.add{type="frame", name=name, direction="vertical"}
+    local flow = gui.add{type="flow", name=name, direction="vertical"}
     -- Set the Style --
     tab.style.margin = 0
     tab.style.padding = 0
-    frame.style.margin = 0
-    frame.style.padding = 0
-    frame.style.horizontally_stretchable = true
-    frame.style.vertically_stretchable  = true
+    flow.style.margin = 0
+    flow.style.padding = 0
+    flow.style.horizontally_stretchable = true
+    flow.style.vertically_stretchable  = true
     -- Save the Tab inside the Tabed Pane --
-    gui.add_tab(tab, frame)
+    gui.add_tab(tab, flow)
     -- Save the Tabbed Pane inside the elements Table --
     if table ~= nil and save == true then
-        table.vars[name] = frame
+        table.vars[name] = flow
     end
-    return frame
+    return flow
 end
 
 -- Add a new Table --

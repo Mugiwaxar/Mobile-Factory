@@ -8,9 +8,6 @@ function GUI.createSwitchMFGUI(player)
     -- Add the Close Button --
     GAPI.addCloseButton(table)
 
-    -- Create the Line --
-    -- GAPI.addLine(table, "", table.gui, "horizontal")
-
     -- Create the List Information --
     local infoLabel = GAPI.addLabel(table, "", table.gui, {"gui-description.SwitchMFInfo"}, _mfWhite)
     infoLabel.style.single_line = false
@@ -36,7 +33,7 @@ function GUI.createSwitchMFGUI(player)
 
     -- Create the Main Frame --
     local mainFrame = GAPI.addFrame(table, "MainFrame", table.gui, "vertical", true)
-    mainFrame.style = "MFFrame1"
+    mainFrame.style = "MFFrame2"
 
     -- Create the Mobile Factory List Scroll Pane --
     local listScrollPane = GAPI.addScrollPane(table, "MFListScrollPane", mainFrame, nil, true, nil, "auto")
@@ -89,7 +86,7 @@ function GUI.updateMFSwitchMFGUI(table, justCreated)
         local InfoTable = GAPI.addTable(table, "", flow, 1)
 
         --Add the Name --
-        local nameLabel = GAPI.addLabel(table, "", InfoTable, MF2.name, _mfBlue, MF2.player, false, nil, "yellow_label")
+        local nameLabel = GAPI.addLabel(table, "", InfoTable, MF2.name, _mfBlue, MF2.player, false, nil, _mfLabelType.yellowTitle)
         nameLabel.style.top_padding = 0
         nameLabel.style.top_margin = 0
 

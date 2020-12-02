@@ -1,29 +1,37 @@
 -- Create the Option GUI --
 function GUI.createOptionGUI(player)
 
+	-- Get the MFPlayer --
+	local MFPlayer = getMFPlayer(player.name)
+
 	-- Create the GUI --
-	local GUIObj = GUI.createGUI("MFOptionGUI", getMFPlayer(player.name), "vertical", true)
-
-	-- Create the top Bar --
-	GUI.createTopBar(GUIObj, 100)
-
+	local table = GAPI.createBaseWindows(_mfGUIName.OptionGUI, {"gui-description.MFOptionGUITitle"}, MFPlayer, true, true, false, "vertical", "horizontal")
+	local mainFrame = table.vars.MainFrame
+	
+	-- Add the Close Button --
+    GAPI.addCloseButton(table)
+	
 	-- Create the Main Tabbed Pane --
-	local mainTabbedPane = GUIObj:addTabbedPane("MainTabbedPane", GUIObj.gui, true, 1)
+	local mainTabbedPane = GAPI.addTabbedPane(table, "MainTabbedPane", mainFrame, "", "", true, 1)
+	mainTabbedPane.style = "MF_Options_Tabbed_Pane"
+	mainTabbedPane.style.top_margin = 15
 
 	-- Create all Tabs --
-	GUIObj:addTab("MFTab", mainTabbedPane, {"gui-description.MFTab"}, {"gui-description.MFTabTT"}, true)
-	GUIObj:addTab("GUITab", mainTabbedPane, {"gui-description.GUITab"}, {"gui-description.GUITab"}, true)
-	GUIObj:addTab("GameTab", mainTabbedPane, {"gui-description.GameTab"}, {"gui-description.GameTab"}, true)
-	GUIObj:addTab("SystemTab", mainTabbedPane, {"gui-description.SystemTab"}, {"gui-description.SystemTab"}, true)
+	local MFTab = GAPI.addTab(table, "MFTab", mainTabbedPane, {"gui-description.MFTab"}, {"gui-description.MFTabTT"}, true)
+	local GUITab = GAPI.addTab(table, "GUITab", mainTabbedPane, {"gui-description.GUITab"}, {"gui-description.GUITab"}, true)
+	local GameTab = GAPI.addTab(table, "GameTab", mainTabbedPane, {"gui-description.GameTab"}, {"gui-description.GameTab"}, true)
+	local SystemTab = GAPI.addTab(table, "SystemTab", mainTabbedPane, {"gui-description.SystemTab"}, {"gui-description.SystemTab"}, true)
+
+	-- MFTab.style.padding = 5
+	-- GUITab.style.padding = 5
+	-- GameTab.style.padding = 5
+	-- SystemTab.style.padding = 5
 
 	-- Update the GUI --
-	GUI.updateOptionGUI(GUIObj, 1)
-
-	-- Center the GUI --
-	GUIObj.force_auto_center()
+	GUI.updateOptionGUI(table, 1)
 
 	-- Return the GUI --
-	return GUIObj
+	return table
 
 end
 
@@ -67,22 +75,83 @@ function GUI.addOption(name, gui, type, save, table, playerIndex) -- table{text,
 end
 
 -- Update the GUI --
-function GUI.updateOptionGUI(GUIObj, tabI)
+function GUI.updateOptionGUI(table, tabI)
 
 	-- Get the current Tab --
-	local tabIndex = tabI or GUIObj.MainTabbedPane.selected_tab_index
-	local tab = GUIObj.MainTabbedPane.tabs[tabIndex]
+	local tabIndex = tabI or table.vars.MainTabbedPane.selected_tab_index
+	local tab = table.vars.MainTabbedPane.tabs[tabIndex]
 	if tab == nil then return end
 	local tabName = string.gsub(tab.tab.name, "tab", "")
 
 	-- Call the Function --
 	if GUI["updateOptionGUI" .. tabName] ~= nil then
-		GUI["updateOptionGUI" .. tabName](GUIObj)
+		GUI["updateOptionGUI" .. tabName](table)
 	end
+	
 end
 
 -- Update the MFTab --
-function GUI.updateOptionGUIMFTab(GUIObj)
+function GUI.updateOptionGUIMFTab(table)
+
+	-- Get the Player Index --
+	local playerIndex = table.MFPlayer.index
+	
+	-- Create the Scroll Pane --
+	local scrollPane = GAPI.addScrollPane(table, "MFTabScrollPane", table.vars.MFTab, 500)
+	scrollPane.style = "MF_Options_scroll_pan"
+	scrollPane.style.minimal_height  = 500
+
+	-- Create the Flow --
+	local flow = GAPI.addFrame(table, "", scrollPane, "vertical")
+	flow.style = "MF_Options_Frame"
+	flow.style.padding = 5
+	-- flow.style.top_margin = -2
+	flow.style.vertically_stretchable = true
+
+	-- Create the Players List --
+	local playersList = {}
+	for k, player in pairs(game.players) do
+		if k ~= playerIndex then
+			playersList[k] = player.name
+		end
+	end
+
+	-- Add all Options --
+	GAPI.addLine(table, "", flow, "horizontal")
+	GAPI.addLabel(table, "", flow, {"gui-description.MFOpt"}, nil, nil, false, nil, _mfLabelType.yellowTitle)
+	GAPI.addLine(table, "", flow, "horizontal")
+	GAPI.addLabel(table, "", flow, {"gui-description.MFPAllowedPlayersLabel"}, _mfWhite, {"gui-description.MFPAllowedPlayersLabelTT"})
+	local playersPermissionsFlow = GAPI.addFlow(table, "", flow, "horizontal")
+	GAPI.addDropDown(table, "POptPlayersList", playersPermissionsFlow, playersList, nil, true)
+	GAPI.addSimpleButton(table, "PermOtpAdd", playersPermissionsFlow, {"gui-description.MFOptAddButton"})
+	GAPI.addSimpleButton(table, "PermOtpRemove", playersPermissionsFlow, {"gui-description.MFOptRemoveButton"})
+
+	-- Add the Allowed Player list --
+	for index, allowed in pairs(table.MFPlayer.MF.varTable.allowedPlayers) do
+		if allowed == true then
+			GAPI.addLabel(table, "", flow, getMFPlayer(index).name, _mfGreen)
+		end
+	end
+
+end
+
+-- Update the GUITab --
+function GUI.updateOptionGUIGUITab(GUIObj)
+
+end
+
+-- Update the GameTab --
+function GUI.updateOptionGUIGameTabOld(GUIObj)
+
+end
+
+-- Update the SystemTab --
+function GUI.updateOptionGUISystemTab(GUIObj)
+
+end
+
+-- Update the MFTab --
+function GUI.updateOptionGUIMFTabOld(GUIObj)
 
 	-- Need player_index so we know for whom we update GUI options --
 	local playerIndex = GUIObj.MFPlayer.index
@@ -116,7 +185,7 @@ function GUI.updateOptionGUIMFTab(GUIObj)
 end
 
 -- Update the GUITab --
-function GUI.updateOptionGUIGUITab(GUIObj)
+function GUI.updateOptionGUIGUITabOld(GUIObj)
 
 	local playerIndex = GUIObj.GUITab.player_index
 	local MFPlayer = getMFPlayer(playerIndex)
@@ -171,7 +240,7 @@ function GUI.updateOptionGUIGUITab(GUIObj)
 end
 
 -- Update the GameTab --
-function GUI.updateOptionGUIGameTab(GUIObj)
+function GUI.updateOptionGUIGameTabOld(GUIObj)
 	
 	local playerIndex = GUIObj.GameTab.player_index
 
@@ -218,7 +287,7 @@ function GUI.updateOptionGUIGameTab(GUIObj)
 end
 
 -- Update the SystemTab --
-function GUI.updateOptionGUISystemTab(GUIObj)
+function GUI.updateOptionGUISystemTabOld(GUIObj)
 
 	local playerIndex = GUIObj.SystemTab.player_index
 

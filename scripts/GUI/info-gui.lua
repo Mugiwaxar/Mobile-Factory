@@ -22,7 +22,9 @@ function GUI.createInfoGui(player)
 
 	-- Add the Main Frame --
 	local mainFrame = GAPI.addFrame(table, "MainFrame", table.gui, "horizontal", true)
-	mainFrame.style = "MFFrame1"
+	mainFrame.style = "invisible_frame"
+	mainFrame.style.padding = 0
+	mainFrame.style.margin = 0
 
 	-- Create the Frames --
 	local infoFrame = GAPI.addFrame(table, "InfoFrame", mainFrame, "vertical", true)
@@ -35,14 +37,17 @@ function GUI.createInfoGui(player)
 	storageFrame.style = "MFFrame1"
 	inventoryFrame.style = "MFFrame1"
 
-	infoFrame.style.left_padding = 7
-	infoFrame.style.right_padding = 7
-	tankFrame.style.left_padding = 7
-	tankFrame.style.right_padding = 7
-	storageFrame.style.left_padding = 7
-	storageFrame.style.right_padding = 7
-	inventoryFrame.style.left_padding = 7
-	inventoryFrame.style.right_padding = 7
+	infoFrame.style.top_padding = 1
+	infoFrame.style.bottom_padding = 5
+	infoFrame.style.right_margin = 3
+	tankFrame.style.top_padding = 1
+	tankFrame.style.bottom_padding = 5
+	tankFrame.style.right_margin = 3
+	storageFrame.style.top_padding = 1
+	storageFrame.style.bottom_padding = 5
+	storageFrame.style.right_margin = 3
+	inventoryFrame.style.top_padding = 1
+	inventoryFrame.style.bottom_padding = 5
 
 	infoFrame.style.vertically_stretchable = true
 	tankFrame.style.vertically_stretchable = true
@@ -66,6 +71,12 @@ function GUI.createInfoGui(player)
 	DTScrollPane.style.minimal_width = 198
 	DSScrollPane.style.minimal_width = 198
 	InvScrollPane.style.minimal_width = 198
+	DTScrollPane.style.left_margin = 5
+	DTScrollPane.style.right_margin = 5
+	DSScrollPane.style.left_margin = 5
+	DSScrollPane.style.right_margin = 5
+	InvScrollPane.style.left_margin = 5
+	InvScrollPane.style.right_margin = 5
 
 	-- Update the GUI --
 	GUI.updateMFInfoGUI(table)
@@ -266,7 +277,7 @@ function GUI.updateDeepTankFrame(table)
 		local flow = GAPI.addTable(table, "", frame, 1)
 
 		-- Create the Labels --
-		GAPI.addLabel(table, "", flow, fName, nil, "", false, nil, "yellow_label")
+		GAPI.addLabel(table, "", flow, fName, nil, "", false, nil, _mfLabelType.yellowTitle)
 		GAPI.addLabel(table, "", flow, Util.toRNumber(fAmount) .. "/" .. Util.toRNumber(tCapacity), _mfYellow)
 
 		-- Create the Progress Bar --
@@ -319,7 +330,7 @@ function GUI.updateDeepStorageFrame(table)
 		local flow = GAPI.addTable(table, "", frame, 1)
 
 		-- Create the Label --
-		GAPI.addLabel(table, "", flow, fName, nil, "", false, nil, "yellow_label")
+		GAPI.addLabel(table, "", flow, fName, nil, "", false, nil, _mfLabelType.yellowTitle)
 		GAPI.addLabel(table, "", flow, fAmount, _mfYellow)
 		-- label1.style.width = 70
 		-- label1.style.height = 15

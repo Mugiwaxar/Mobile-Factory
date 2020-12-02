@@ -156,17 +156,17 @@ function GUI.guiClosed(event)
 	local playerIndex = event.player_index
 	local MFPlayer = getMFPlayer(playerIndex)
 
-	-- Close the Option GUI --
-	if event.element.name == "MFOptionGUI" then
-		MFPlayer.GUI["MFOptionGUI"].destroy()
-		MFPlayer.GUI["MFOptionGUI"] = nil
-		return
-	end
-
 	-- Close the Info GUI --
 	if event.element.name == _mfGUIName.InfoGUI then
 		MFPlayer.GUI[_mfGUIName.InfoGUI].gui.destroy()
 		MFPlayer.GUI[_mfGUIName.InfoGUI] = nil
+		return
+	end
+
+	-- Close the Option GUI --
+	if event.element.name == _mfGUIName.OptionGUI then
+		MFPlayer.GUI[_mfGUIName.OptionGUI].gui.destroy()
+		MFPlayer.GUI[_mfGUIName.OptionGUI] = nil
 		return
 	end
 
@@ -224,18 +224,6 @@ function GUI.buttonClicked(event)
 	GUI.readOptions(event.element, player)
 	if event.element == nil or event.element.valid == false then return end
 
-	-- Open Options GUI Button --
-	if event.element.name == "MainGUIOptionButton" then
-		if MFPlayer.GUI["MFOptionGUI"] == nil then
-			local GUIObj = GUI.createOptionGUI(player)
-			player.opened = GUIObj.gui
-		else
-			MFPlayer.GUI["MFOptionGUI"].destroy()
-			MFPlayer.GUI["MFOptionGUI"] = nil
-		end
-		return
-	end
-
 	-- Open Info GUI Button --
 	if event.element.name == "MainGUIInfosButton" then
 		if MFPlayer.GUI[_mfGUIName.InfoGUI] == nil then
@@ -245,6 +233,19 @@ function GUI.buttonClicked(event)
 		else
 			MFPlayer.GUI[_mfGUIName.InfoGUI].gui.destroy()
 			MFPlayer.GUI[_mfGUIName.InfoGUI] = nil
+		end
+		return
+	end
+
+	-- Open Options GUI Button --
+	if event.element.name == "MainGUIOptionButton" then
+		if MFPlayer.GUI[_mfGUIName.OptionGUI] == nil then
+			local table = GUI.createOptionGUI(player)
+			MFPlayer.GUI[_mfGUIName.OptionGUI] = table
+			player.opened = table.gui
+		else
+			MFPlayer.GUI[_mfGUIName.OptionGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.OptionGUI] = nil
 		end
 		return
 	end
@@ -389,11 +390,11 @@ function GUI.buttonClicked(event)
 		return
 	end
 
-	-- Close Options GUI Button --
-	if event.element.name == "MFOptionGUICloseButton" then
-		if MFPlayer.GUI["MFOptionGUI"] ~= nil then
-			MFPlayer.GUI["MFOptionGUI"].destroy()
-			MFPlayer.GUI["MFOptionGUI"] = nil
+	-- Close Option GUI Button --
+	if event.element.name == _mfGUIName.OptionGUI .. "CloseButton" then
+		if MFPlayer.GUI[_mfGUIName.OptionGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.OptionGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.OptionGUI] = nil
 		end
 		return
 	end
@@ -435,7 +436,7 @@ function GUI.buttonClicked(event)
 		return
 	end
 
-	-- SwitchMF GUI Change Name Buton --
+	-- SwitchMF GUI Change Name Button --
 	if string.match(event.element.name, "SwitchMFChangeNameButton") then
 		if MFPlayer.GUI[_mfGUIName.SwitchMF].vars.SwitchMFChangeNameTextField ~= nil then
 			-- Get the Name --

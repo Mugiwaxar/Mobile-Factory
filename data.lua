@@ -690,6 +690,28 @@ data.raw["gui-style"].default.MF_Inventory_scroll_pan =
 	  }
 }
 
+data.raw["gui-style"].default.MF_Options_scroll_pan =
+{
+	type = "scroll_pane_style",
+	extra_padding_when_activated = 0,
+	graphical_set = 
+	{
+		position = {136, 0},
+		corner_size = 8,
+		shadow = {}
+	},
+	background_graphical_set =
+	{
+		position = {136, 0},
+        corner_size = 8,
+	},
+	vertical_scrollbar_style =
+      {
+        type = "vertical_scrollbar_style",
+        -- background_graphical_set = {position = {136, 0}, corner_size = 8, opacity = 0.7, blend_mode = "multiplicative-with-alpha"}
+      }
+}
+
 data.raw["gui-style"].default.MF_DeepTank_scroll_pan =
 {
 	type = "scroll_pane_style",
@@ -961,12 +983,16 @@ data.raw["gui-style"].default.filter_group_button_tab_selectable =
 
 data.raw["gui-style"].default.MFFrame1 =
 {
-  type = "frame_style",
-  graphical_set =
-  {
-	base = {position = {17, 0}, corner_size = 8, draw_type = "outer"},
-	shadow = default_inner_shadow
-  }
+	type = "frame_style",
+	graphical_set = {},
+	border = border_image_set(),
+	right_padding = 4,
+	use_header_filler = false,
+	title_style =
+	{
+	  type="label_style",
+	  parent = "caption_label"
+	}
 }
 
 data.raw["gui-style"].default.MFFrame2 =
@@ -974,7 +1000,44 @@ data.raw["gui-style"].default.MFFrame2 =
   type = "frame_style",
   graphical_set =
   {
-	base = {position = {17, 0}, corner_size = 7, draw_type = "outer"},
+	base = {position = {17, 0}, corner_size = 8, draw_type = "outer", shadow = {}},
 	shadow = default_inner_shadow
   }
+}
+
+data.raw["gui-style"].default.MF_Options_Frame =
+{
+	type = "frame_style",
+	graphical_set =
+	{
+	  base = {position = {136, 0}, corner_size = 8, draw_type = "outer", shadow = {}},
+	  shadow = default_inner_shadow
+	},
+	border = border_image_set(),
+	right_padding = 4,
+	use_header_filler = false,
+	title_style =
+	{
+	  type="label_style",
+	  parent = "caption_label"
+	}
+}
+
+data.raw["gui-style"].default.MF_Options_Tabbed_Pane =
+{
+	type = "tabbed_pane_style",
+	vertical_spacing = 0,
+	padding = 0,
+	tab_content_frame =
+	{
+		type = "frame_style",
+		parent = "invisible_frame"
+	},
+	tab_container =
+	{
+		type = "horizontal_flow_style",
+		left_padding = 12,
+		right_padding = 12,
+		horizontal_spacing = 0
+	}
 }

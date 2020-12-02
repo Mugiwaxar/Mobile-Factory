@@ -183,7 +183,7 @@ _mfQuatronAndMF = merge{_mfQuatronShare, _mfMobileFactories}
 _GUIButtonsSize = 15
 _mfGUIDragAreaSize = 25
 _mfGUICloseButtonSize = 20
-_mfDefaultGuiHeight = 500
+_mfDefaultGuiHeight = 300
 _mfDefaultGuiWidth = 300
 _mfMainGUIPosX = 300
 _mfMainGUIPosY = 0
@@ -194,6 +194,7 @@ _mfGUIName =
 {
 	MainGUI = "MFMainGUI",
 	InfoGUI = "MFInfoGUI",
+	OptionGUI = "MFOptionGUI",
 	SwitchMF = "MFSwitchMFGUI",
 	TPGUI = "MFTPGUI"
 }
@@ -236,6 +237,7 @@ _eventTick125=125 -- Mobile Factory Modules Scan --
 _eventTick150=150 -- Floor Is Lava Update --
 _eventTick1200=1200 -- Factory Pollution --
 
+-- Colors --
 _mfWhite = {255,255,255}
 _mfBlue = {108, 114, 229}
 _mfGreen = {92, 232, 54}
@@ -243,6 +245,12 @@ _mfPurple = {155, 0, 168}
 _mfRed = {231, 5, 5}
 _mfOrange = {255, 131, 0}
 _mfYellow = {244, 208, 63}
+
+-- Table of Label Style --
+_mfLabelType =
+{
+	yellowTitle = "yellow_label"
+}
 
 -- Table of Recipes Unlocked by Initial Research --
 _MFStartingRecipes = {"MobileFactory", "DimensionalTile", "mfStone"}
