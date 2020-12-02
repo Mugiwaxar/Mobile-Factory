@@ -729,9 +729,9 @@ function MF:TPMobileFactoryPart1(location)
 	self.ent.surface.play_sound{path="MFSimpleTP", position=player.position}
 	-- Close the TPGUI --
 	local MFPlayer = getMFPlayer(self.playerIndex)
-	if MFPlayer.GUI["MFTPGUI"] ~= nil then
-		MFPlayer.GUI["MFTPGUI"].destroy()
-		MFPlayer.GUI["MFTPGUI"] = nil
+	if MFPlayer.GUI[_mfGUIName.TPGUI] ~= nil then
+		MFPlayer.GUI[_mfGUIName.TPGUI].gui.destroy()
+		MFPlayer.GUI[_mfGUIName.TPGUI] = nil
 	end
 end
 

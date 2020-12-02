@@ -63,6 +63,8 @@ function GUI.createInfoGui(player)
 	DTScrollPane.style.vertically_stretchable = true
 	DSScrollPane.style.vertically_stretchable = true
 	InvScrollPane.style.vertically_stretchable = true
+	DTScrollPane.style.minimal_width = 198
+	DSScrollPane.style.minimal_width = 198
 	InvScrollPane.style.minimal_width = 198
 
 	-- Update the GUI --
@@ -134,47 +136,47 @@ function GUI.updateMFInfos(table)
 	infosFrame.clear()
 
 	-------------------------------------------------------- Get Mobile Factory Information Variables --------------------------------------------------------
-	local mfPositionText = {"", {"gui-description.mfPosition"}, ": ", {"gui-description.Unknow"}}
+	local mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
 	local mfHealthValue = 0
-	local mfHealthText = {"", {"gui-description.mfHealth"}, ": ", {"gui-description.Unknow"}}
+	local mfHealthText = {"", {"gui-description.mfHealth"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
 	local mfShielValue = 0
-	local mfShieldText = {"", {"gui-description.mfShield"}, ": ", {"gui-description.Unknow"}}
+	local mfShieldText = {"", {"gui-description.mfShield"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
 	local mfEnergyValue = 0
-	local mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", {"gui-description.Unknow"}}
+	local mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
 	local mfQuatronValue = 0
-	local mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", {"gui-description.Unknow"}}
+	local mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
 	local mfJumpDriveValue = 0
-	local mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": ", {"gui-description.Unknow"}}
+	local mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
 
 	if MF.ent ~= nil and MF.ent.valid == true then
-		mfPositionText = {"", {"gui-description.mfPosition"}, ": (", math.floor(MF.ent.position.x), " ; ", math.floor(MF.ent.position.y), ")  ", MF.ent.surface.name}
+		mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow](", math.floor(MF.ent.position.x), " ; ", math.floor(MF.ent.position.y), ")  ", MF.ent.surface.name, "[/color]"}
 		mfHealthValue = MF.ent.health / MF.ent.prototype.max_health
-		mfHealthText = {"", {"gui-description.mfHealth"}, ": ", math.floor(MF.ent.health), "/", MF.ent.prototype.max_health}
+		mfHealthText = {"", {"gui-description.mfHealth"}, ": [color=yellow]", math.floor(MF.ent.health), "/", MF.ent.prototype.max_health, "[/color]"}
 		mfShielValue = 0
-		mfShieldText = {"", {"gui-description.mfShield"}, ": ", 0}
+		mfShieldText = {"", {"gui-description.mfShield"}, ": [color=yellow]", 0, "[/color]"}
 		if MF:maxShield() > 0 then
 			mfShielValue = MF:shield() / MF:maxShield()
-			mfShieldText = {"", {"gui-description.mfShield"}, ": ", math.floor(MF:shield()), "/", MF:maxShield()}
+			mfShieldText = {"", {"gui-description.mfShield"}, ": [color=yellow]", math.floor(MF:shield()), "/", MF:maxShield(), "[/color]"}
 		end
 		mfEnergyValue = 1 - (math.floor(100 - MF.internalEnergyObj:energy() / MF.internalEnergyObj:maxEnergy() * 100)) / 100
-		mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF.internalEnergyObj:energy()), "J/", Util.toRNumber(MF.internalEnergyObj:maxEnergy()), "J"}
+		mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": [color=yellow]", Util.toRNumber(MF.internalEnergyObj:energy()), "J/", Util.toRNumber(MF.internalEnergyObj:maxEnergy()), "J[/color]"}
 		mfQuatronValue = 1 - (math.floor(100 - MF.internalQuatronObj.quatronCharge / MF.internalQuatronObj.quatronMax * 100)) / 100
-		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", Util.toRNumber(MF.internalQuatronObj.quatronCharge), "/", Util.toRNumber(MF.internalQuatronObj.quatronMax), " (", {"gui-description.mQuatronPurity"}, ": ",  string.format("%.3f", MF.internalQuatronObj.quatronLevel), ")"}
+		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": [color=yellow]", Util.toRNumber(MF.internalQuatronObj.quatronCharge), "/", Util.toRNumber(MF.internalQuatronObj.quatronMax), " (", {"gui-description.mQuatronPurity"}, ": ",  string.format("%.3f", MF.internalQuatronObj.quatronLevel), ")[/color]"}
 		mfJumpDriveValue = (math.floor(MF.jumpDriveObj.charge / MF.jumpDriveObj.maxCharge * 100)) / 100
-		mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": ", MF.jumpDriveObj.charge, "/", MF.jumpDriveObj.maxCharge, " (", MF.jumpDriveObj.chargeRate, "/s)"}
+		mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": [color=yellow]", MF.jumpDriveObj.charge, "/", MF.jumpDriveObj.maxCharge, " (", MF.jumpDriveObj.chargeRate, "/s)[/color]"}
 	end
 
 	-------------------------------------------------------- Update Mobile Factory Information --------------------------------------------------------
 	-- Add Labels and Progress Bars --
 	GAPI.addSubtitle(table, "MFInfoFrame", infosFrame, "Mobile Factory")
-	GAPI.addLabel(table, "PositionLabel", infosFrame, mfPositionText, _mfGreen)
-	GAPI.addLabel(table, "HealLabel", infosFrame, mfHealthText, _mfRed)
+	GAPI.addLabel(table, "PositionLabel", infosFrame, mfPositionText, _mfOrange)
+	GAPI.addLabel(table, "HealLabel", infosFrame, mfHealthText, _mfOrange)
 	GAPI.addProgressBar(table, "HealBar", infosFrame, "", mfHealthText, false, _mfRed, mfHealthValue)
-	GAPI.addLabel(table, "ShieldLabel", infosFrame, mfShieldText, _mfBlue)
+	GAPI.addLabel(table, "ShieldLabel", infosFrame, mfShieldText, _mfOrange)
 	GAPI.addProgressBar(table, "ShieldBar", infosFrame, "", mfShieldText, false, _mfBlue, mfShielValue)
-	GAPI.addLabel(table, "EnergyLabel", infosFrame, mfEnergyText, _mfYellow)
+	GAPI.addLabel(table, "EnergyLabel", infosFrame, mfEnergyText, _mfOrange)
 	GAPI.addProgressBar(table, "EnergyBar", infosFrame, "", mfEnergyText, false, _mfYellow, mfEnergyValue)
-	GAPI.addLabel(table, "QuatronLabel", infosFrame, mfQuatronText, _mfPurple)
+	GAPI.addLabel(table, "QuatronLabel", infosFrame, mfQuatronText, _mfOrange)
 	GAPI.addProgressBar(table, "QuatronBar", infosFrame, "", mfQuatronText, false, _mfPurple, mfQuatronValue)
 	GAPI.addLabel(table, "JumpDriveLabel", infosFrame, mfJumpDriveText, _mfOrange)
 	GAPI.addProgressBar(table, "JumpDriveBar", infosFrame, "", mfJumpDriveText, false, _mfOrange, mfJumpDriveValue)
@@ -185,26 +187,26 @@ function GUI.updateMFInfos(table)
 
 	-- Number of Lasers --
 	if technologyUnlocked("EnergyDrain1", getForce(MF)) or technologyUnlocked("FluidDrain1", getForce(MF)) or technologyUnlocked("TechItemDrain", getForce(MF)) then
-		GAPI.addLabel(table, "LasersNumberLabel", infosFrame,{"", {"gui-description.LaserNumber"}, ": ", MF:getLaserNumber()})
-		GAPI.addLabel(table, "LasersRadiusLabel", infosFrame, {"", {"gui-description.LaserRadius"}, ": ", MF:getLaserRadius(), " tiles"})
-		GAPI.addLabel(table, "LasersMultiplierLabel", infosFrame, {"", {"gui-description.LaserEfficiency"}, ": ", MF:getLaserPower()})
+		GAPI.addLabel(table, "LasersNumberLabel", infosFrame,{"", {"gui-description.LaserNumber"}, ": [color=yellow]", MF:getLaserNumber(), "[/color]"}, _mfOrange)
+		GAPI.addLabel(table, "LasersRadiusLabel", infosFrame, {"", {"gui-description.LaserRadius"}, ": [color=yellow]", MF:getLaserRadius(), " tiles[/color]"}, _mfOrange)
+		GAPI.addLabel(table, "LasersMultiplierLabel", infosFrame, {"", {"gui-description.LaserEfficiency"}, ": [color=yellow]", MF:getLaserPower(), "[/color]"}, _mfOrange)
 	end
 
 	-- Energy Lasers --
 	if technologyUnlocked("EnergyDrain1", getForce(MF)) then
-		GAPI.addLabel(table, "EnergyLasersSpeed", infosFrame, {"", {"gui-description.EnergyLasersSpeed"}, ": ", Util.toRNumber(MF:getLaserEnergyDrain()), "W"}, _mfYellow)
+		GAPI.addLabel(table, "EnergyLasersSpeed", infosFrame, {"", {"gui-description.EnergyLasersSpeed"}, ": [color=yellow]", Util.toRNumber(MF:getLaserEnergyDrain()), "W[/color]"}, _mfYellow)
 	end
 
 	-- Fluid Lasers --
 	if technologyUnlocked("FluidDrain1", getForce(MF)) then
-		GAPI.addLabel(table, "FluidLasersSpeed", infosFrame, {"", {"gui-description.FluidLasersSpeed"}, ": ", Util.toRNumber(MF:getLaserFluidDrain()), "u/s"}, _mfPurple)
-		GAPI.addLabel(table, "FluidLasersConsumption", infosFrame, {"", {"gui-description.FluidLasersConsumption"}, ": ", Util.toRNumber(MF:getLaserFluidDrain()*_mfFluidConsomption), "W"},_mfPurple)
+		GAPI.addLabel(table, "FluidLasersSpeed", infosFrame, {"", {"gui-description.FluidLasersSpeed"}, ": [color=yellow]", Util.toRNumber(MF:getLaserFluidDrain()), "u/s[/color]"}, _mfPurple)
+		GAPI.addLabel(table, "FluidLasersConsumption", infosFrame, {"", {"gui-description.FluidLasersConsumption"}, ": [color=yellow]", Util.toRNumber(MF:getLaserFluidDrain()*_mfFluidConsomption), "W[/color]"},_mfPurple)
 	end
 
 	-- Logistic Lasers --
 	if technologyUnlocked("TechItemDrain", getForce(MF)) then
-		GAPI.addLabel(table, "LogisticLasersSpeed", infosFrame, {"", {"gui-description.LogisticLasersSpeed"}, ": ", Util.toRNumber(MF:getLaserItemDrain()), "i/s"}, _mfGreen)
-		GAPI.addLabel(table, "LogisticLasersConsumption", infosFrame, {"", {"gui-description.LogisticLasersConsumption"}, ": ", Util.toRNumber(MF:getLaserItemDrain()*_mfBaseItemEnergyConsumption), "W"}, _mfGreen)
+		GAPI.addLabel(table, "LogisticLasersSpeed", infosFrame, {"", {"gui-description.LogisticLasersSpeed"}, ": [color=yellow]", Util.toRNumber(MF:getLaserItemDrain()), "i/s[/color]"}, _mfGreen)
+		GAPI.addLabel(table, "LogisticLasersConsumption", infosFrame, {"", {"gui-description.LogisticLasersConsumption"}, ": [color=yellow]", Util.toRNumber(MF:getLaserItemDrain()*_mfBaseItemEnergyConsumption), "W[/color]"}, _mfGreen)
 	end
 
 	-------------------------------------------------------- Update Upgrades Information --------------------------------------------------------
@@ -212,9 +214,9 @@ function GUI.updateMFInfos(table)
 	GAPI.addSubtitle(table, "upgradeFrame", infosFrame, {"gui-description.Upgrades"})
 
 	-- Add Labels --
-	GAPI.addLabel(table, "PowerModuleUpgrade", infosFrame, {"", {"gui-description.PowerModuleUpgrade"}, ": ", MF.laserRadiusMultiplier})
-	GAPI.addLabel(table, "EfficiencyModuleUpgrade", infosFrame, {"", {"gui-description.EfficiencyModuleUpgrade"}, ": ", MF.laserDrainMultiplier})
-	GAPI.addLabel(table, "FocusModuleUpgrade", infosFrame, {"", {"gui-description.FocusModuleUpgrade"}, ": ", MF.laserNumberMultiplier})
+	GAPI.addLabel(table, "PowerModuleUpgrade", infosFrame, {"", {"gui-description.PowerModuleUpgrade"}, ": [color=yellow]", MF.laserRadiusMultiplier, "[/color]"}, _mfOrange)
+	GAPI.addLabel(table, "EfficiencyModuleUpgrade", infosFrame, {"", {"gui-description.EfficiencyModuleUpgrade"}, ": [color=yellow]", MF.laserDrainMultiplier, "[/color]"}, _mfOrange)
+	GAPI.addLabel(table, "FocusModuleUpgrade", infosFrame, {"", {"gui-description.FocusModuleUpgrade"}, ": [color=yellow]", MF.laserNumberMultiplier, "[/color]"}, _mfOrange)
 
 end
 
@@ -344,14 +346,11 @@ function GUI.updateInventoryFrame(table)
 	inventoryScrollPane.clear()
 
 	-- Create the Dual Labels --
-	GAPI.addDualLabel(table, inventoryFlow, {"", {"gui-description.BelongsTo"}, ": "},  MF.player, _mfOrange, _mfGreen)
-	GAPI.addDualLabel(table, inventoryFlow, {"", {"gui-description.InventoryCapacity"}, ": "}, Util.toRNumber(MF.II.usedCapacity) .. "/" .. Util.toRNumber(MF.II.maxCapacity) .. "  (" .. MF.II.usedCapacity .. "/" .. MF.II.maxCapacity .. ")", _mfOrange, _mfGreen)
+	GAPI.addDualLabel(table, inventoryFlow, {"", {"gui-description.BelongsTo"}, ": "},  MF.player, _mfOrange, _mfYellow)
+	GAPI.addDualLabel(table, inventoryFlow, {"", {"gui-description.InventoryCapacity"}, ": "}, Util.toRNumber(MF.II.usedCapacity) .. "/" .. Util.toRNumber(MF.II.maxCapacity) .. "  (" .. MF.II.usedCapacity .. "/" .. MF.II.maxCapacity .. ")", _mfOrange, _mfYellow)
 
 	-- Create the Table --
     local tableList = GAPI.addTable(table, "", inventoryScrollPane, 5)
-
-	-- Create the Inventory List --
-	-- createDNInventoryFrame(GUIObj, inventoryScrollPane, getMFPlayer(MF.playerIndex), "INV", MF.II, 5, true, true, true)
 
 	-- Look for all Deep Tanks --
 	for _, DT in pairs(MF.dataNetwork.DTKTable) do

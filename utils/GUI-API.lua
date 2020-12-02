@@ -319,7 +319,9 @@ function GAPI.addButton(table, name, gui, sprite, hovSprite, tooltip, size, save
     }
     -- Set the Style --
     if style ~= nil then button.style = style end
+        button.style.minimal_width = size
         button.style.maximal_width = size
+        button.style.minimal_height = size
         button.style.maximal_height = size
         button.style.padding = 0
         button.style.margin = 0

@@ -85,18 +85,23 @@ function GUI.updateAllGUIs(force)
 			-- Get the MFPlayer --
 			local MFPlayer = getMFPlayer(player.name)
 
-			-- Update all Progress Bars of the Data Assembler  --
-			if game.tick%_eventTick7 == 0 or force then
-				if MFPlayer.GUI ~= nil and MFPlayer.GUI.MFTooltipGUI ~= nil and MFPlayer.GUI.MFTooltipGUI.DA ~= nil then
-					MFPlayer.GUI.MFTooltipGUI.DA:updatePBars(MFPlayer.GUI.MFTooltipGUI)
-				end
-			end
+			-- Check the MFPlayer --
+			if MFPlayer ~= nil then
 
-			-- Update all GUIs --
-			if game.tick%_eventTick55 == 0 or force then
-			for _, table in pairs(MFPlayer.GUI or {}) do
-				if valid(table) then table:update() end
-				if table.gui ~= nil and table.gui.valid == true and GUI["update" .. table.gui.name] ~= nil then GUI["update" .. table.gui.name](table) end
+				-- Update all Progress Bars of the Data Assembler  --
+				if game.tick%_eventTick7 == 0 or force then
+					if MFPlayer.GUI ~= nil and MFPlayer.GUI.MFTooltipGUI ~= nil and MFPlayer.GUI.MFTooltipGUI.DA ~= nil then
+						MFPlayer.GUI.MFTooltipGUI.DA:updatePBars(MFPlayer.GUI.MFTooltipGUI)
+					end
+				end
+
+				-- Update all GUIs --
+				if game.tick%_eventTick55 == 0 or force then
+				for _, table in pairs(MFPlayer.GUI or {}) do
+					if valid(table) then table:update() end
+					if table.gui ~= nil and table.gui.valid == true and GUI["update" .. table.gui.name] ~= nil then GUI["update" .. table.gui.name](table) end
+				end
+
 			end
 
 		end
@@ -173,9 +178,9 @@ function GUI.guiClosed(event)
 	end
 
 	-- Close the TP GUI --
-	if event.element.name == "MFTPGUI" then
-		MFPlayer.GUI["MFTPGUI"].destroy()
-		MFPlayer.GUI["MFTPGUI"] = nil
+	if event.element.name == _mfGUIName.TPGUI then
+		MFPlayer.GUI[_mfGUIName.TPGUI].gui.destroy()
+		MFPlayer.GUI[_mfGUIName.TPGUI] = nil
 		return
 	end
 
@@ -257,6 +262,19 @@ function GUI.buttonClicked(event)
 		return
 	end
 
+	-- Jump Drive Button --
+	if event.element.name == "JumpDriveButton" then
+		if MFPlayer.GUI[_mfGUIName.TPGUI] == nil then
+			local table = GUI.createTPGui(player)
+			MFPlayer.GUI[_mfGUIName.TPGUI] = table
+			player.opened = table.gui
+		else
+			MFPlayer.GUI[_mfGUIName.TPGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.TPGUI] = nil
+		end
+		return
+	end
+
 	-- Open the Main GUI --
 	if event.element.name == "MainGUIOpen" then
 		mainGUI.MFPlayer.varTable.MainGUIOpen = true
@@ -268,18 +286,6 @@ function GUI.buttonClicked(event)
 	if event.element.name == "MainGUIClose" then
 		mainGUI.MFPlayer.varTable.MainGUIOpen = false
 		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])
-		return
-	end
-
-	-- Jump Drive Button --
-	if event.element.name == "JumpDriveButton" then
-		if MFPlayer.GUI["MFTPGUI"] == nil then
-			local GUIObj = GUI.createTPGui(player)
-			player.opened = GUIObj.gui
-		else
-			MFPlayer.GUI["MFTPGUI"].destroy()
-			MFPlayer.GUI["MFTPGUI"] = nil
-		end
 		return
 	end
 
@@ -402,10 +408,10 @@ function GUI.buttonClicked(event)
 	end
 
 	-- Close TP GUI Button --
-	if event.element.name == "MFTPGUICloseButton" then
-		if MFPlayer.GUI["MFTPGUI"] ~= nil then
-			MFPlayer.GUI["MFTPGUI"].destroy()
-			MFPlayer.GUI["MFTPGUI"] = nil
+	if event.element.name == _mfGUIName.TPGUI .. "CloseButton" then
+		if MFPlayer.GUI[_mfGUIName.TPGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.TPGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.TPGUI] = nil
 		end
 		return
 	end
@@ -426,31 +432,6 @@ function GUI.buttonClicked(event)
 			MFPlayer.GUI[text].destroy()
 			MFPlayer.GUI[text] = nil
 		end
-		return
-	end
-
-	-- Info GUI Inventory Item Button -> Deep Tank --
-	if string.match(event.element.name, "INVBDT") then
-		-- Get the Fluid --
-		local id = tonumber(split(event.element.name, ",")[2])
-		GUI.updateInventoryInfo(MFPlayer.GUI["MFInfoGUI"], id, "DT")
-		return
-	end
-
-	-- Info GUI Inventory Item Button -> Deep Storage --
-	if string.match(event.element.name, "INVBDSR") then
-		-- Get the Item --
-		local id = tonumber(split(event.element.name, ",")[2])
-		GUI.updateInventoryInfo(MFPlayer.GUI["MFInfoGUI"], id, "DSR")
-		return
-	end
-
-	-- Info GUI Inventory Item Button -> Inventory --
-	if string.match(event.element.name, "INVBINV") then
-		-- Get the Item --
-		local item = split(event.element.name, ",")[2]
-		local amount = split(event.element.name, ",")[3]
-		GUI.updateInventoryInfo(MFPlayer.GUI["MFInfoGUI"], nil, "INV", item, amount)
 		return
 	end
 
@@ -523,19 +504,6 @@ function GUI.buttonClicked(event)
 		end
 		return
 	end
-
-	-- If this is a Wireless Data Transmitter Button -> Show WDR --
-	-- if string.match(event.element.name, "WDTCam") then
-	-- 	-- Get the Object --
-	-- 	local objId = tonumber(split(event.element.name, ",")[2])
-	-- 	local ent = global.wirelessDataReceiverTable[objId].ent
-	-- 	if ent ~= nil and ent.valid == true then
-	-- 		local cameraObj = GUI.createCamera(getMFPlayer(player.name), ent.unit_number, ent, 250, 0.5)
-	-- 		cameraObj:addDualLabel(cameraObj.gui, {"", {"gui-description.Position"}, ":"}, "{".. ent.position.x .. ";" .. ent.position.y .. "}", _mfOrange, _mfGreen)
-	-- 		player.opened = cameraObj.gui
-	-- 	end
-	-- 	return
-	-- end
 
 	-- If this is a Network Explorer --
 	if string.match(event.element.name, "NE") then
@@ -658,12 +626,13 @@ function GUI.buttonClicked(event)
 	if string.match(event.element.name, "TPGUI") and event.element.type == "sprite-button" then
 		-- If a location is added --
 		if string.match(event.element.name, "TPGUIAddLoc") then
-			local GUIObj = MFPlayer.GUI["MFTPGUI"]
-			local jumpDrive = currentMF.jumpDriveObj
-			jumpDrive:addLocation(GUIObj.AddLocName.text, GUIObj.AddLocFilter.elem_value)
+			local table = MFPlayer.GUI["MFTPGUI"]
+			if table.vars.AddLocName ~= nil and table.vars.AddLocName ~= "" then
+				local jumpDrive = currentMF.jumpDriveObj
+				jumpDrive:addLocation(table.vars.AddLocName.text, table.vars.AddLocFilter.elem_value)
+			end
 		end
 		if string.match(event.element.name, "TPGUILoc") then
-			local GUIObj = MFPlayer.GUI["MFTPGUI"]
 			local jumpDrive = currentMF.jumpDriveObj
 			local location = string.sub(event.element.name, string.len("TPGUILoc,")+1 )
 			-- Start the Jump --

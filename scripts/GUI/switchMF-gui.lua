@@ -79,7 +79,7 @@ function GUI.updateMFSwitchMFGUI(table, justCreated)
 
         -- Change the Button if the Player is not allowed to use this Mobile Factory --
         if Util.canUse(table.MFPlayer, MF2) == false then
-            buttonStyle = "shortcut_bar_button_red"
+            buttonStyle = "MF_Fake_Button_Red"
             buttonTooltip = {"gui-description.SelectMFTT2"}
         end
         local icon = (MF2.ent ~= nil and MF2.ent.valid == true) and MF2.ent.name or "MobileFactory"
@@ -94,11 +94,11 @@ function GUI.updateMFSwitchMFGUI(table, justCreated)
         nameLabel.style.top_margin = 0
 
         -- Add the Position --
-        local mfPositionText = {"", {"gui-description.mfPosition"}, ": ", {"gui-description.Unknow"}}
+        local mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
         if MF2.ent ~= nil and MF2.ent.valid == true then
-            mfPositionText = {"", {"gui-description.mfPosition"}, ": ", math.floor(MF2.ent.position.x), " , ", math.floor(MF2.ent.position.y), " - ", MF2.ent.surface.name}
+            mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow](", math.floor(MF2.ent.position.x), " ; ", math.floor(MF2.ent.position.y), ")  ", MF2.ent.surface.name, "[/color]"}
         end
-        local posLabel = GAPI.addLabel(table, "PositionLabel", InfoTable, mfPositionText, _mfGreen, "Mobile Factory")
+        local posLabel = GAPI.addLabel(table, "PositionLabel", InfoTable, mfPositionText, _mfOrange, "Mobile Factory")
         posLabel.style.top_padding = 0
         posLabel.style.top_margin = 0
 

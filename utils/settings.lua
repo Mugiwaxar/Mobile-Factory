@@ -194,7 +194,8 @@ _mfGUIName =
 {
 	MainGUI = "MFMainGUI",
 	InfoGUI = "MFInfoGUI",
-	SwitchMF = "MFSwitchMFGUI"
+	SwitchMF = "MFSwitchMFGUI",
+	TPGUI = "MFTPGUI"
 }
 
 -- Entity GUI --

@@ -1,103 +1,114 @@
 -- Create the TP GUI --
 function GUI.createTPGui(player)
 
-	-- Create the GUI --
-	local GUIObj = GUI.createGUI("MFTPGUI", getMFPlayer(player.name), "vertical", true, 0, 0)
-    local TPGUI = GUIObj.gui
+    -- Get the MFPlayer --
+	local MFPlayer = getMFPlayer(player.name)
+
+    -- Create the GUI --
+    local table = GAPI.createBaseWindows(_mfGUIName.TPGUI,{"gui-description.MFTPGUITitle"}, MFPlayer, true, true, false, "vertical", "horizontal")
+    table.gui.style.maximal_height = 600
+    local mainFrame = table.vars.MainFrame
+
+    -- Create the Frames --
+    local infoFrame = GAPI.addFrame(table, "InfoFrame", mainFrame, "vertical", true)
+    local locFrame = GAPI.addFrame(table, "LocFrame", mainFrame, "vertical", true)
+    local addLocFrame = GAPI.addFrame(table, "AddLocFrame", mainFrame, "vertical", true)
+
+    infoFrame.style = "MFFrame1"
+	locFrame.style = "MFFrame1"
+	addLocFrame.style = "MFFrame1"
     
-    -- Create the top Bar --
-    GUI.createTopBar(GUIObj, 200, {"", {"gui-description.MFTPGUITitle"}, " ", getCurrentMF(player.name).name})
+    infoFrame.style.left_padding = 7
+	infoFrame.style.right_padding = 7
+	locFrame.style.left_padding = 7
+	locFrame.style.right_padding = 7
+	addLocFrame.style.left_padding = 7
+    addLocFrame.style.right_padding = 7
+    
+    infoFrame.style.vertically_stretchable = true
+	locFrame.style.vertically_stretchable = true
+    addLocFrame.style.vertically_stretchable = true
 
-    -- Create the Main Frame --
-    local mainFrame = GUIObj:addFrame("MainFrame", TPGUI, "horizontal")
+    -- Add the Location Title --
+    GAPI.addSubtitle(table, "", locFrame, {"gui-description.JumpLocation"})
+    GAPI.addSubtitle(table, "", addLocFrame, {"gui-description.AddLocation"})
 
-    -- Create the Information Title and Flow --
-    local infoTitle = GUIObj:addTitledFrame("InformationTitle", mainFrame, "vertical", {"gui-description.Information"}, _mfOrange)
-    GUIObj:addFlow("InformationFlow", infoTitle, "vertical", true)
-
-    -- Create the Location Title and Scroll Pane --
-    local localtionTitle = GUIObj:addTitledFrame("LocationTitle", mainFrame, "vertical", {"gui-description.JumpLocation"}, _mfOrange)
-    local locPane = GUIObj:addScrollPane("LocationPane", localtionTitle, 500, true, "MF_JD_scroll_pan")
-    locPane.style.minimal_height = 500
+    -- Create the Location ScroolPane --
+    local locPane = GAPI.addScrollPane(table, "LocScrollPane", locFrame, 700, true, "MF_TPGUI_scroll_pan")
+    locPane.style.minimal_height = 350
     locPane.style.minimal_width = 250
-    locPane.style.vertically_stretchable = true
 
-    -- Create the Add Location Title and Flow --
-    local addLocaltionTitle = GUIObj:addTitledFrame("AddLocationTitle", mainFrame, "vertical", {"gui-description.AddLocation"}, _mfOrange)
-    GUIObj:addFlow("AddLocationFlow", addLocaltionTitle, "vertical", true)
-    GUIObj.addLocationFlowCreated = false
+    -- Add the Close Button --
+    GAPI.addCloseButton(table)
 
-	-- Center the GUI --
-    TPGUI.force_auto_center()
-    
     -- Update the GUI --
-    GUI.updateMFTPGUI(GUIObj)
+    GUI.updateMFTPGUI(table, true)
 
-	-- Return the GUI Object --
-	return GUIObj
+    -- Return the Table --
+    return table
 
 end
 
 -- Update the TP GUI --
-function GUI.updateMFTPGUI(GUIObj)
-    GUI.updateInfo(GUIObj)
-    GUI.updateLocation(GUIObj)
-    GUI.updateAddLocation(GUIObj)
+function GUI.updateMFTPGUI(table, justCreated)
+    GUI.updateInfo(table)
+    GUI.updateLocation(table)
+    if justCreated == true then GUI.updateAddLocation(table) end
 end
 
 -- Update the Information --
-function GUI.updateInfo(GUIObj)
+function GUI.updateInfo(table)
 
     -- Get all Variables --
-    local infoFlow = GUIObj.InformationFlow
-    local MF = getCurrentMF(GUIObj.MFPlayer)
+    local infoFrame = table.vars.InfoFrame
+    local MF = getCurrentMF(table.MFPlayer)
 
     -- Clear the Flow --
-    infoFlow.clear()
+    infoFrame.clear()
+
+    -- Add the Title --
+    GAPI.addSubtitle(table, "", infoFrame, {"gui-description.Information"})
 
     -- Check the Mobile Factory --
     if MF.ent == nil or MF.ent.valid == false then
-        GUIObj:addLabel("", infoFlow, {"gui-description.MFNotFound"}, _mfRed)
+        GAPI.addLabel(table, "", infoFrame, {"gui-description.MFNotFound"}, _mfRed)
         return
     end
 
-    -- Add Line --
-    GUIObj:addLine("", infoFlow, "horizontal")
+    -- Add the Jump Drive Subtitle --
+    GAPI.addLabel(table, "", infoFrame, {"gui-description.JumpDriveSubTitle"}, nil, nil, false, nil, "yellow_label")
 
     -- Add the Jump Drive Statue --
-    GUIObj:addDualLabel(infoFlow, {"",{"gui-description.JumpDriveStatue"}, ":"}, MF.jumpDriveObj.charge .. "/" .. MF.jumpDriveObj.maxCharge .. " (+" .. MF.jumpDriveObj.chargeRate .. "/s)", _mfOrange, _mfGreen)
+    GAPI.addDualLabel(table, infoFrame, {"",{"gui-description.JumpDriveStatue"}, ":"}, MF.jumpDriveObj.charge .. "/" .. MF.jumpDriveObj.maxCharge .. " (+" .. MF.jumpDriveObj.chargeRate .. "/s)", _mfOrange, _mfYellow)
 
     -- Add the Jump Charger Count --
-    GUIObj:addDualLabel(infoFlow, {"",{"gui-description.JumpChargerCount"}, ":"}, table_size(MF.jumpDriveObj.jumpChargerTable), _mfOrange, _mfGreen)
+    GAPI.addDualLabel(table, infoFrame, {"",{"gui-description.JumpChargerCount"}, ":"}, table_size(MF.jumpDriveObj.jumpChargerTable), _mfOrange, _mfYellow)
 
     -- Add the Jump Drive Consumption --
-    GUIObj:addDualLabel(infoFlow, {"",{"gui-description.JumpDriveConsumption"}, ":"}, Util.toRNumber(MF.jumpDriveObj.chargeRate * _mfJumpEnergyDrain) .. "W" , _mfOrange, _mfGreen)
+    GAPI.addDualLabel(table, infoFrame, {"",{"gui-description.JumpDriveConsumption"}, ":"}, Util.toRNumber(MF.jumpDriveObj.chargeRate * _mfJumpEnergyDrain) .. "W" , _mfOrange, _mfYellow)
 
-     -- Add Line --
-     GUIObj:addLine("", infoFlow, "horizontal")
+    -- Add the Mobile Factory Subtitle --
+    GAPI.addLabel(table, "", infoFrame, {"gui-description.MobileFactorySubtitle"}, nil, nil, false, nil, "yellow_label")
 
     -- Add the World Position --
-    GUIObj:addDualLabel(infoFlow, {"",{"gui-description.World"}, ":"}, MF.ent.surface.name, _mfOrange, _mfGreen)
+    GAPI.addDualLabel(table, infoFrame, {"",{"gui-description.World"}, ":"}, MF.ent.surface.name, _mfOrange, _mfYellow)
 
     -- Add the Position X --
-    GUIObj:addDualLabel(infoFlow, {"",{"gui-description.PosX"}, ":"}, MF.ent.position.x, _mfOrange, _mfGreen)
+    GAPI.addDualLabel(table, infoFrame, {"",{"gui-description.PosX"}, ":"}, MF.ent.position.x, _mfOrange, _mfYellow)
 
     -- Add the Position Y --
-    GUIObj:addDualLabel(infoFlow, {"",{"gui-description.PosY"}, ":"}, MF.ent.position.y, _mfOrange, _mfGreen)
-
-     -- Add Line --
-     GUIObj:addLine("", infoFlow, "horizontal")
+    GAPI.addDualLabel(table, infoFrame, {"",{"gui-description.PosY"}, ":"}, MF.ent.position.y, _mfOrange, _mfYellow)
 
 end
 
 -- Update the Location --
-function GUI.updateLocation(GUIObj)
+function GUI.updateLocation(table)
 
     -- Get all Variables --
-    local locPane = GUIObj.LocationPane
-    local MF = getCurrentMF(GUIObj.MFPlayer)
+    local locPane = table.vars.LocScrollPane
+    local MF = getCurrentMF(table.MFPlayer)
 
-    -- Clear the Pane --
+    -- Clear the ScrollPane --
     locPane.clear()
 
     -- Look for all Locations --
@@ -116,38 +127,34 @@ function GUI.updateLocation(GUIObj)
         local canTP = MF.jumpDriveObj:canTP(loc)
 
         -- Create the Frame --
-        local frame = GUIObj:addFrame("", locPane, "vertical")
+        local frame = GAPI.addFrame(table, "", locPane, "horizontal")
 
-        -- Create the Name Frame and Flow --
-        local nameFrame = GUIObj:addFrame("", frame, "horizontal")
-        local nameFlow = GUIObj:addFlow("", nameFrame, "horizontal")
-        nameFlow.style.horizontal_align = "center"
-
-        -- Add the Location Name --
-        GUIObj:addLabel("", nameFlow, name, _mfOrange, "", false, "LabelFont2")
-
-        -- Create the Information Flow --
-        local infoFlow = GUIObj:addFlow("", frame, "horizontal")
+        -- Create the Flow --
+        local flow = GAPI.addFlow(table, "", frame, "horizontal")
+        flow.style.vertical_align = "center"
 
         -- Add the TP Button --
         local icon = loc.filter ~= nil and ("recipe/" .. loc.filter) or "MFJDIcon"
-        local button = GUIObj:addButton("TPGUILoc," .. name, infoFlow, icon, icon, {"gui-description.StartJump"}, 40)
+        local button = GAPI.addButton(table, "TPGUILoc," .. name, flow, icon, icon, {"gui-description.StartJump"}, 50)
         button.style = canTP == true and "shortcut_bar_button_green" or "MF_Fake_Button_Red"
         button.style.padding = 0
-	    button.style.margin = 0
+        button.style.margin = 0
 
-        -- Create the Position Flow --
-        local posFlow = GUIObj:addFlow("", infoFlow, "vertical")
+        -- Create the Information Table --
+        local infoTable = GAPI.addTable(table, "", flow, 1)
+        
+        -- Add the Location Name --
+        GAPI.addLabel(table, "", infoTable, name, nil, "", false, nil, "yellow_label")
 
         -- Add the Position --
-        GUIObj:addDualLabel(posFlow, {"", {"gui-description.Position"}, ":"}, loc.surface.name .. " (" .. math.ceil(loc.posX) .. " ; " .. math.ceil(loc.posY) .. ")", _mfOrange, _mfGreen)
+        GAPI.addDualLabel(table, infoTable, {"", {"gui-description.Position"}, ":"}, loc.surface.name .. " (" .. math.ceil(loc.posX) .. " ; " .. math.ceil(loc.posY) .. ")", _mfOrange, _mfYellow)
 
         -- Add the Cost --
         local cost = {"",tostring(distance), " ", {"gui-description.JumpCharge"}}
         if MF.ent.surface ~= loc.surface then
             cost = {"",tostring(distance), " ", {"gui-description.JumpCharge"}, " [color=purple]+1000[/color]"}
         end
-        GUIObj:addDualLabel(posFlow, {"", {"gui-description.JumpCost"}, ":"}, cost, _mfOrange, _mfGreen)
+        GAPI.addDualLabel(table, infoTable, {"", {"gui-description.JumpCost"}, ":"}, cost, _mfOrange, _mfYellow)
 
         ::continue::
 
@@ -156,50 +163,42 @@ function GUI.updateLocation(GUIObj)
 end
 
 -- Update the Add Location --
-function GUI.updateAddLocation(GUIObj)
+function GUI.updateAddLocation(table)
 
     -- Get all Variables --
-    local locFlow = GUIObj.AddLocationFlow
-    local MF = getCurrentMF(GUIObj.MFPlayer)
+    local locFrame = table.vars.AddLocFrame
+    local MF = getCurrentMF(table.MFPlayer)
 
     -- Check the Mobile Factory --
     if MF.ent == nil or MF.ent.valid == false then
-        -- Clear the Flow --
-        locFlow.clear()
-        -- Remove the content --
-        GUIObj:addLabel("", locFlow, {"gui-description.MFNotFound"}, _mfRed)
-        GUIObj.addLocationFlowCreated = false
-    elseif GUIObj.addLocationFlowCreated == false then
-
-        -- Clear the Flow --
-        locFlow.clear()
-        GUIObj.addLocationFlowCreated = true
-
-        -- Add the Location Label --
-        GUIObj:addLabel("", locFlow, {"gui-description.AddLocationL"}, _mfOrange)
-
-        -- Create the Add Location Flow --
-        local addLocFlow = GUIObj:addFlow("", locFlow, "horizontal")
-
-        -- Create the Add Location Text Field --
-        local textField = GUIObj:addTextField("AddLocName", addLocFlow, "", {"gui-description.AddLocationTextTT"}, true)
-        textField.style.width = 125
-
-        -- Create the Add Location Filter --
-        local filter = GUIObj:addFilter("AddLocFilter", addLocFlow, {"gui-description.AddLocationFilterTT"}, true, "recipe", 28)
-
-        -- Create the Add Location Button --
-        GUIObj:addButton("TPGUIAddLoc,", addLocFlow, "PlusIcon", "PlusIcon", {"gui-description.AddLocationButtonTT"}, 28)
-
-        -- Add Line --
-        GUIObj:addLine("", locFlow, "horizontal")
-
-        -- Add all Information --
-        GUIObj:addLabel("", locFlow, {"gui-description.Info1"}, _mfGreen)
-        GUIObj:addLabel("", locFlow, {"gui-description.Info2"}, _mfGreen)
-        GUIObj:addLabel("", locFlow, {"gui-description.Info3"}, _mfGreen)
-        GUIObj:addLabel("", locFlow, {"gui-description.Info4"}, _mfGreen)
-
-
+        -- Add the Mobile Factory no found Label --
+        GAPI.addLabel(table, "", locFrame, {"gui-description.MFNotFound"}, _mfRed)
+        return
     end
+
+    -- Add the Location Label --
+    GAPI.addLabel(table, "", locFrame, {"gui-description.AddLocationL"}, _mfOrange)
+
+    -- Create the Add Location Flow --
+    local addLocFlow = GAPI.addFlow(table, "", locFrame, "horizontal")
+
+    -- Create the Add Location Text Field --
+    local textField = GAPI.addTextField(table, "AddLocName", addLocFlow, "", {"gui-description.AddLocationTextTT"}, true)
+    textField.style.width = 125
+
+    -- Create the Add Location Filter --
+    GAPI.addFilter(table, "AddLocFilter", addLocFlow, {"gui-description.AddLocationFilterTT"}, true, "recipe", 28)
+
+    -- Create the Add Location Button --
+    GAPI.addButton(table, "TPGUIAddLoc", addLocFlow, "PlusIcon", "PlusIcon", {"gui-description.AddLocationButtonTT"}, 28)
+
+    -- Add Line --
+    GAPI.addLine(table, "", locFrame, "horizontal")
+
+    -- Add all Information --
+    GAPI.addLabel(table, "", locFrame, {"gui-description.Info1"}, _mfWhite)
+    GAPI.addLabel(table, "", locFrame, {"gui-description.Info2"}, _mfWhite)
+    GAPI.addLabel(table, "", locFrame, {"gui-description.Info3"}, _mfWhite)
+    GAPI.addLabel(table, "", locFrame, {"gui-description.Info4"}, _mfWhite)
+
 end

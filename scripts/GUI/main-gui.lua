@@ -23,7 +23,7 @@ function GUI.createMFMainGUI(player)
 
 	-- Create the Main GUI --
 	local table = GAPI.createBaseWindows(_mfGUIName.MainGUI, "", MFPlayer, false, false, false, "vertical")
-	GAPI.setLocation(table.gui, pos.x, pos.y)
+	GAPI.setLocation(table.gui, pos[1], pos[2])
 	table.vars.visible = true
 	visible = table.vars.visible
 	local gui = table.gui
@@ -123,7 +123,7 @@ function GUI.updateMFMainGUI(table)
 	end
 
 	-------------------------------------------------------- Get Information Variables --------------------------------------------------------
-	local mfPositionText = {"", {"gui-description.mfPosition"}, ": ", {"gui-description.Unknow"}}
+	local mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
 	local time = Util.getRealTime(player.surface.daytime)
 	local temperature = "Unknow"
 	local mfHealthValue = 0
@@ -138,7 +138,7 @@ function GUI.updateMFMainGUI(table)
 	local mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": ", {"gui-description.Unknow"}}
 
 	if MF.ent ~= nil and MF.ent.valid == true then
-		mfPositionText = {"", {"gui-description.mfPosition"}, ": ", math.floor(MF.ent.position.x), " , ", math.floor(MF.ent.position.y), " - ", MF.ent.surface.name}
+		mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow](", math.floor(MF.ent.position.x), " ; ", math.floor(MF.ent.position.y), ")  ", MF.ent.surface.name, "[/color]"}
 		mfHealthValue = MF.ent.health / MF.ent.prototype.max_health
 		mfHealthText = {"", {"gui-description.mfHealth"}, ": ", math.floor(MF.ent.health), "/", MF.ent.prototype.max_health}
 		mfShielValue = 0
@@ -164,7 +164,7 @@ function GUI.updateMFMainGUI(table)
 
 	-- Show Values and Bars --
 	if MFPlayer.varTable.MainGUIShowPositions ~= false then
-		GAPI.addLabel(table, "PositionLabel", table.vars.InfoFrame, mfPositionText, _mfGreen, "Mobile Factory")
+		GAPI.addLabel(table, "PositionLabel", table.vars.InfoFrame, mfPositionText, _mfOrange, "Mobile Factory")
 	end
 	if MFPlayer.varTable.MainGUIShowTime == true then
 		GAPI.addLabel(table, "TimeLabel", table.vars.InfoFrame, time, _mfGreen, "Mobile Factory")
