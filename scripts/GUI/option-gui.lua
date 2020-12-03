@@ -100,6 +100,7 @@ function GUI.updateOptionGUIMFTab(GUITable)
 	end
 
 	-- Add the Allowed Player Option --
+	GAPI.addSubtitle(GUITable, "", flow, {"gui-description.MFTabCoreSetting"})
 	local modSettingLabel = GAPI.addLabel(GUITable, "", flow, {"gui-description.OtpGUIModSettingLabel"}, _mfWhite)
 	modSettingLabel.style.maximal_width = 340
 	modSettingLabel.style.single_line = false
@@ -149,12 +150,12 @@ function GUI.updateOptionGUIGUITab(GUITable)
 	end
 
 	-- Add the Main Buttons size Selector --
-	GAPI.addLabel(GUITable, "", flow, {"gui-description.MainButtonSizeTitle"}, nil, nil, false, nil, _mfLabelType.yellowTitle)
-	GAPI.addDropDown(GUITable, "MainButtonsSize", flow, {1,2,3,4,5,6,7,8,9,10}, MFPlayer.varTable.MainButtonsSize or 5, true, {"gui-description.MainButtonSizeSelectorTT"})
+	GAPI.addLabel(GUITable, "", flow, {"gui-description.MainButtonSizeTitle"}, nil, {"gui-description.MainButtonSizeSelectorTT"}, false, nil, _mfLabelType.yellowTitle)
+	GAPI.addDropDown(GUITable, "MainButtonsSize", flow, {1,2,3,4,5,6,7,8,9,10}, MFPlayer.varTable.MainButtonsSize or 5, true)
 
 	-- Add the Buttons per Line Selector --
-	GAPI.addLabel(GUITable, "", flow, {"gui-description.MainGUIButtonsLineTitle"}, nil, nil, false, nil, _mfLabelType.yellowTitle)
-	GAPI.addDropDown(GUITable, "MainGUIButtonsPerLine", flow, {1,2,3,4,5,6,7,8,9,10}, MFPlayer.varTable.mainGUIButtonsPerLine or 5, true, {"gui-description.MainGUIButtonsPerLineTT"})
+	GAPI.addLabel(GUITable, "", flow, {"gui-description.MainGUIButtonsLineTitle"}, nil, {"gui-description.MainGUIButtonsPerLineTT"}, false, nil, _mfLabelType.yellowTitle)
+	GAPI.addDropDown(GUITable, "MainGUIButtonsPerLine", flow, {1,2,3,4,5,6,7,8,9,10}, MFPlayer.varTable.mainGUIButtonsPerLine or 5, true)
 
 	-- Add a CheckBox for every Information --
 	GAPI.addLabel(GUITable, "", flow, {"gui-description.MainGUIInformationTitle"}, nil, nil, false, nil, _mfLabelType.yellowTitle)
@@ -240,11 +241,12 @@ function GUI.updateOptionGUISystemTab(GUITable)
 
 	-- Add Performances Options --
 	GAPI.addSubtitle(GUITable, "", flow, {"gui-description.PerfOpt"})
-	GAPI.addLabel(GUITable, "", flow, {"gui-description.SystemPerfEntsPerTick"}, nil, nil, false, nil, _mfLabelType.yellowTitle)
-	local tickTextField = GAPI.addTextField(GUITable, "UpdatePerTickOpt", flow, global.entsUpPerTick or 100, {"gui-description.SystemPerfEntsPerTickTT"}, true, true, false, false)
+	GAPI.addLabel(GUITable, "", flow, {"gui-description.SystemPerfEntsPerTick"}, nil, {"gui-description.SystemPerfEntsPerTickTT"}, false, nil, _mfLabelType.yellowTitle)
+	local tickTextField = GAPI.addTextField(GUITable, "UpdatePerTickOpt", flow, global.entsUpPerTick or 100, nil, true, true, false, false)
 	tickTextField.enabled = MFPlayer.ent.admin
 
-	local checkbox = GAPI.addCheckBox(GUITable, "useVanillaChooseElem", flow, {"gui-description.UseVanillaChooseElem"}, {"gui-description.UseVanillaChooseElemTT"}, global.useVanillaChooseElem)
+	GAPI.addLabel(GUITable, "", flow, {"gui-description.UseVanillaRecipeLabel"}, nil, {"gui-description.UseVanillaRecipeLabelTT"}, false, nil, _mfLabelType.yellowTitle)
+	local checkbox = GAPI.addCheckBox(GUITable, "useVanillaChooseElem", flow, {"gui-description.UseVanillaChooseElem"}, nil, global.useVanillaChooseElem)
 	checkbox.enabled = MFPlayer.ent.admin
 
 end

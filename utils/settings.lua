@@ -190,13 +190,15 @@ _mfMainGUIPosY = 0
 _mfInfoGUIButtonsSize = 25
 
 -- GUI Name List --
-_mfGUIName = 
+_mfGUIName =
 {
 	MainGUI = "MFMainGUI",
 	InfoGUI = "MFInfoGUI",
 	OptionGUI = "MFOptionGUI",
+	TooltipGUI = "MFTooltipGUI",
 	SwitchMF = "MFSwitchMFGUI",
-	TPGUI = "MFTPGUI"
+	TPGUI = "MFTPGUI",
+	RecipeGUI = "MFRecipeGUI"
 }
 
 -- Entity GUI --

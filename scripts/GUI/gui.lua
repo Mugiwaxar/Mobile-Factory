@@ -372,15 +372,6 @@ function GUI.buttonClicked(event)
 		end
 	end
 
-	-- Close Recipe GUI Button --
-	if event.element.name == "RecipeGUICloseButton" then
-		if MFPlayer.GUI["RecipeGUI"] ~= nil then
-			MFPlayer.GUI["RecipeGUI"].destroy()
-			MFPlayer.GUI["RecipeGUI"] = nil
-		end
-		return
-	end
-
 	-- Close Info GUI Button --
 	if event.element.name == _mfGUIName.InfoGUI .. "CloseButton" then
 		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
@@ -422,6 +413,15 @@ function GUI.buttonClicked(event)
 		if MFPlayer.GUI[_mfGUIName.SwitchMF] ~= nil then
 			MFPlayer.GUI[_mfGUIName.SwitchMF].gui.destroy()
 			MFPlayer.GUI[_mfGUIName.SwitchMF] = nil
+		end
+		return
+	end
+
+	-- Close the SwitchMF GUI --
+	if event.element.name == _mfGUIName.RecipeGUI .. "CloseButton" then
+		if MFPlayer.GUI[_mfGUIName.RecipeGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.RecipeGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.RecipeGUI] = nil
 		end
 		return
 	end
@@ -541,38 +541,38 @@ function GUI.buttonClicked(event)
 		return
 	end
 
-	-- Recipe Selector
-	if string.match(event.element.name, "RS") then
-		if string.match(event.element.name, "RSCat") then
-			local GUIObj = MFPlayer.GUI["RecipeGUI"]
-			local Category = tonumber(split(event.element.name, ",")[2]) or 1
-			GUIObj["RSCat," .. GUIObj.selectedCategory].enabled = true
-			GUIObj["RSCat," .. Category].enabled = false
-			GUIObj.selectedCategory = Category
-			GUI.doUpdateRecipeGUI(GUIObj)
-			return
+	-- Recipe Selector Category Button --
+	if string.match(event.element.name, "RSCategoryButton") then
+		local GUITable = MFPlayer.GUI[_mfGUIName.RecipeGUI]
+		local Category = tonumber(split(event.element.name, ",")[2]) or 1
+		GUITable.vars["RSCategoryButton," .. GUITable.vars.selectedCategory].enabled = true
+		GUITable.vars["RSCategoryButton," .. Category].enabled = false
+		GUITable.vars.selectedCategory = Category
+		GUI.updateMFRecipeGUI(GUITable, true)
+		return
+	end
+
+	-- Recipe Selector Recipe Button --
+	if string.match(event.element.name, "RSRecipeButton") then
+		local tGUI = MFPlayer.GUI[_mfGUIName.TooltipGUI]
+		if tGUI ~= nil and tGUI.DA ~= nil then
+			tGUI.DARecipe.elem_value = split(event.element.name, ",")[2]
 		end
-		if string.match(event.element.name, "RSSel") then
-			local GUIObj = MFPlayer.GUI["RecipeGUI"]
-			local tGUI = MFPlayer.GUI["MFTooltipGUI"]
-			if tGUI ~= nil and tGUI.DA ~= nil then
-				tGUI.DARecipe.elem_value = split(event.element.name, ",")[2]
-			end
-			MFPlayer.GUI["RecipeGUI"].destroy()
-			MFPlayer.GUI["RecipeGUI"] = nil
-			GUI.updateAllGUIs(true)
-		  return
-		end
+		MFPlayer.GUI[_mfGUIName.RecipeGUI].gui.destroy()
+		MFPlayer.GUI[_mfGUIName.RecipeGUI] = nil
+		GUI.updateAllGUIs(true)
+		return
 	end
 
 	-- If this is a Data Assembler --
 	-- Select Recipe --
 	if event.element.name == "DARecipe" and global.useVanillaChooseElem == false then
-		if MFPlayer.GUI["RecipeGUI"] ~= nil then
-			MFPlayer.GUI["RecipeGUI"].destroy()
-			MFPlayer.GUI["RecipeGUI"] = nil
+		if MFPlayer.GUI[_mfGUIName.RecipeGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.RecipeGUI].destroy()
+			MFPlayer.GUI[_mfGUIName.RecipeGUI] = nil
 		end
-		GUI.createRecipeGUI(player)
+		local GUITable = GUI.createRecipeGUI(player)
+		MFPlayer.GUI[_mfGUIName.RecipeGUI] = GUITable
 		return
 	end
 	if string.match(event.element.name, "DA") and event.element.type == "sprite-button" then
@@ -710,7 +710,6 @@ function GUI.onGuiElemChanged(event)
 			GUI.updateAllGUIs(true)
 			return
 		end
-
 
 		-- If this is a Matter Interactor --
 		if string.match(id, "MIFilter") then

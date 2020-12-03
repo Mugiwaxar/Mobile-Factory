@@ -1,27 +1,28 @@
 -- Create the Recipe GUI --
 function GUI.createRecipeGUI(player)
+
+	-- Get the MFPlayer --
+	local MFPlayer = getMFPlayer(player.name)
+
 	-- Create the GUI --
-	local GUIObj = GUI.createGUI("RecipeGUI", getMFPlayer(player.name), "vertical")
+	local GUITable = GAPI.createBaseWindows(_mfGUIName.RecipeGUI, {"gui-description.RecipeGUITitle"}, MFPlayer, true, true, false, "vertical", "vertical")
+	GUITable.gui.style.minimal_height = 100
+	GUITable.gui.style.minimal_width = 100
+	local mainFrame = GUITable.vars.MainFrame
 
-	-- Create the Menu Bar --
-	local topBarFlow = GUIObj:addFlow("", GUIObj.gui, "horizontal")
-	topBarFlow.style.vertical_align = "center"
-	GUIObj:addLabel("", topBarFlow, {"gui-assembling-machine.choose-recipe"}, _mfOrange, nil, false, "TitleFont")
-	GUIObj:addEmptyWidget("", topBarFlow, GUIObj.gui, 20, nil)
-	local textField = GUIObj:addTextField("RSSearchTextField", topBarFlow, "", {"gui-description.ItemSearchTextTT"}, true, false, false, false, false)
+	-- Add the Search textField --
+	local textField = GAPI.addTextField(GUITable, "RSSearchTextField", GUITable.vars.topBarFlow, "", {"gui-description.ItemSearchTextTT"}, true, false, false, false, false)
 	textField.style.maximal_width = 100
-	GUIObj:addButton("RecipeGUICloseButton", topBarFlow, "CloseIcon", "CloseIcon", {"gui-description.closeButton"}, 15)
 
-	-- Create the Main Frame --
-	local RSMainFrame = GUIObj:addFrame("RSMainFrame", GUIObj.gui, "vertical")
-	RSMainFrame.style = "filter_scroll_pane_background_frame_no_background"
-
-	local RSGroupTable = GUIObj:addTable("RSGroupTable", RSMainFrame, 6)
+	-- Add the Close Button --
+	GAPI.addCloseButton(GUITable)
+	
+	local RSGroupTable = GAPI.addTable(GUITable, "RSGroupTable", mainFrame, 6)
 	RSGroupTable.style = "filter_group_table"
 
-	local RSScrollPane = GUIObj:addScrollPane("RSScrollPane", RSMainFrame, 445)
+	local RSScrollPane = GAPI.addScrollPane(GUITable, "RSScrollPane", mainFrame, 445)
 	RSScrollPane.style.minimal_height = 445
-	local RSRecipeFrame = GUIObj:addFrame("RSRecipeFrame", RSScrollPane, "vertical", true)
+	local RSRecipeFrame = GAPI.addFrame(GUITable, "RSRecipeFrame", RSScrollPane, "vertical", true)
 	RSRecipeFrame.style = "filter_scroll_pane_background_frame"
 
 	-- Split Recipes by groups --
@@ -35,7 +36,7 @@ function GUI.createRecipeGUI(player)
 				recipeTable[r.group.name][r.subgroup.name] = {}
 			end
 			table.insert(recipeTable[r.group.name][r.subgroup.name], {obj=r})
-			GUIObj.MFPlayer.ent.request_translation(Util.getLocRecipeName(r.name))
+			MFPlayer.ent.request_translation(Util.getLocRecipeName(r.name))
 		end
 	end
 
@@ -66,50 +67,47 @@ function GUI.createRecipeGUI(player)
 
 	-- Draw Categories --
 	for idx, group in ipairs(groupsArray) do
-		local name = "RSCat," .. idx
-		local tab = RSGroupTable.add({type="sprite-button", name=name, style="filter_group_button_tab_selectable"})
-		GUIObj[name] = tab
+		local name = "RSCategoryButton," .. idx
+		local tab = GAPI.addButton(GUITable, name, RSGroupTable, "item-group/" .. group.obj.name, "item-group/" .. group.obj.name, group.obj.localised_name, nil, true)
+		tab.style = "filter_group_button_tab_selectable"
 		if idx == 1 then tab.enabled = false end
-		tab.tooltip = group.obj.localised_name
-		tab.sprite = "item-group/" .. group.obj.name
 
 	end
 
-	GUIObj.sortedRecipes = groupsArray
-	GUIObj.selectedCategory = 1
-	GUIObj.lastSearch = GUIObj.RSSearchTextField.text
+	GUITable.vars.sortedRecipes = groupsArray
+	GUITable.vars.selectedCategory = 1
+	GUITable.vars.lastSearch = GUITable.vars.RSSearchTextField.text
 
-	GUI.doUpdateRecipeGUI(GUIObj)
-
-	-- Center the GUI --
-	GUIObj.force_auto_center()
+	-- Update the GUI --
+	GUI.updateMFRecipeGUI(GUITable, true)
 
 	-- Return the GUI --
-	return GUIObj
+	return GUITable
+
 end
 
+-- Update the Recipe GUI --
+function GUI.updateMFRecipeGUI(GUITable, force)
 
+	-- Update only if the Search Textfield has changed or if forced --
+	if GUITable.vars.RSSearchTextField.text == GUITable.vars.lastSearch and force ~= true then return end
 
-function GUI.updateRecipeGUI(GUIObj)
-	--Auto-update can be slow with huge list of recipes. No need to. Nothing changes here without player input --
-	if GUIObj.RSSearchTextField.text ~= GUIObj.lastSearch then
-		GUIObj.lastSearch = GUIObj.RSSearchTextField.text
-		GUI.doUpdateRecipeGUI(GUIObj)
-	end
-end
+	-- Update the Last Search --
+	GUITable.vars.lastSearch = GUITable.vars.RSSearchTextField.text
 
-function GUI.doUpdateRecipeGUI(GUIObj)
-	-- Clear --
-	GUIObj.RSRecipeFrame.clear()
+	-- Clear the Frame --
+	GUITable.vars.RSRecipeFrame.clear()
 
 	-- Stop here if we have nothing to show --
-	if #GUIObj.sortedRecipes < GUIObj.selectedCategory then return end
+	if #GUITable.vars.sortedRecipes < GUITable.vars.selectedCategory then return end
 
-	local filter = string.lower(GUIObj.lastSearch) or ""
-	local tmpLocal = GUIObj.MFPlayer.varTable.tmpLocal
+	-- Get Variables --
+	local filter = string.lower(GUITable.vars.lastSearch) or ""
+	local tmpLocal = GUITable.MFPlayer.varTable.tmpLocal
+
 	-- Draw Recipes --
-	for _, subgroups in ipairs(GUIObj.sortedRecipes[GUIObj.selectedCategory].list) do
-		local RSRecipeTable = GUIObj:addTable("", GUIObj.RSRecipeFrame, 10)
+	for _, subgroups in ipairs(GUITable.vars.sortedRecipes[GUITable.vars.selectedCategory].list) do
+		local RSRecipeTable = GAPI.addTable(GUITable, "", GUITable.vars.RSRecipeFrame, 10)
 		for _, recipe in ipairs(subgroups.list) do
 			local name = recipe.obj.name
 			-- Check the Filter --
@@ -117,10 +115,12 @@ function GUI.doUpdateRecipeGUI(GUIObj)
 					local locName = tmpLocal[Util.getLocRecipeName(name)[1]]
 					if locName ~= nil and string.match(string.lower(locName), filter) == nil then goto continue end
 			end
-			local button = RSRecipeTable.add({type="choose-elem-button", elem_type="recipe", name="RSSel,"..name, style="recipe_slot_button"})
+			local button = GAPI.addFilter(GUITable, "RSRecipeButton,"..name, RSRecipeTable, nil, true, "recipe")
+			button.style = "recipe_slot_button"
 			button.elem_value = name
 			button.locked = true
 			::continue::
 		end
 	end
+
 end
