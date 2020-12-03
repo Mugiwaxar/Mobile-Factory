@@ -102,6 +102,9 @@ function GUI.doUpdateRecipeGUI(GUIObj)
 	-- Clear --
 	GUIObj.RSRecipeFrame.clear()
 
+	-- Stop here if we have nothing to show --
+	if #GUIObj.sortedRecipes < GUIObj.selectedCategory then return end
+
 	local filter = string.lower(GUIObj.lastSearch) or ""
 	local tmpLocal = GUIObj.MFPlayer.varTable.tmpLocal
 	-- Draw Recipes --
