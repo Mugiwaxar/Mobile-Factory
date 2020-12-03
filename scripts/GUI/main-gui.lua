@@ -22,11 +22,11 @@ function GUI.createMFMainGUI(player)
 	end
 
 	-- Create the Main GUI --
-	local table = GAPI.createBaseWindows(_mfGUIName.MainGUI, "", MFPlayer, false, false, false, "vertical")
-	GAPI.setLocation(table.gui, pos[1], pos[2])
-	table.vars.visible = true
-	visible = table.vars.visible
-	local gui = table.gui
+	local GUITable = GAPI.createBaseWindows(_mfGUIName.MainGUI, "", MFPlayer, false, false, false, "vertical")
+	GAPI.setLocation(GUITable.gui, pos[1], pos[2])
+	GUITable.vars.visible = true
+	visible = GUITable.vars.visible
+	local gui = GUITable.gui
 	GAPI.setSize(gui, 1, 1)
 	GAPI.setMinSize(gui, 1, 1)
 	gui.auto_center = false
@@ -34,11 +34,11 @@ function GUI.createMFMainGUI(player)
 	gui.style.margin = 0
 
 	-- Create the Frames and Flows --
-	local MainFrame = GAPI.addFlow(table, "MainFrame", gui, "vertical", true)
-	local TopBar = GAPI.addFlow(table, "TopBar", MainFrame, "horizontal", true)
-	local ButtonsFrame = GAPI.addFlow(table, "ButtonsFrame", TopBar, "horizontal", true)
-	GAPI.addTable(table, "ButtonsTable" ,ButtonsFrame, table.MFPlayer.varTable.mainGUIButtonsPerLine or 5, true)
-	local InfoFrame = GAPI.addFrame(table, "InfoFrame", MainFrame, "vertical", true)
+	local MainFrame = GAPI.addFlow(GUITable, "MainFrame", gui, "vertical", true)
+	local TopBar = GAPI.addFlow(GUITable, "TopBar", MainFrame, "horizontal", true)
+	local ButtonsFrame = GAPI.addFlow(GUITable, "ButtonsFrame", TopBar, "horizontal", true)
+	GAPI.addTable(GUITable, "ButtonsTable" ,ButtonsFrame, GUITable.MFPlayer.varTable.mainGUIButtonsPerLine or 5, true)
+	local InfoFrame = GAPI.addFrame(GUITable, "InfoFrame", MainFrame, "vertical", true)
 
 	MainFrame.style.horizontal_align  = "right"
 
@@ -57,8 +57,8 @@ function GUI.createMFMainGUI(player)
 	InfoFrame.style.horizontally_stretchable = true
 
 	-- Create the Drag Area --
-	local buttonsSize = 14 + ( table.MFPlayer.varTable.MainButtonsSize or 5)
-	local dragArea = GAPI.addEmptyWidget(table, "MainGUIDragArea", TopBar, gui, buttonsSize, buttonsSize)
+	local buttonsSize = 14 + ( GUITable.MFPlayer.varTable.MainButtonsSize or 5)
+	local dragArea = GAPI.addEmptyWidget(GUITable, "MainGUIDragArea", TopBar, gui, buttonsSize, buttonsSize)
 	dragArea.style.left_margin = 0
 	dragArea.style.right_margin = 0
 
@@ -66,21 +66,21 @@ function GUI.createMFMainGUI(player)
 	InfoFrame.visible = visible
 
 	-- Add the GUI to the Player Table --
-	MFPlayer.GUI[_mfGUIName.MainGUI] = table
+	MFPlayer.GUI[_mfGUIName.MainGUI] = GUITable
 
 	-- Update the GUI and return the Table --
-	GUI.updateMFMainGUI(table)
-	return table
+	GUI.updateMFMainGUI(GUITable)
+	return GUITable
 
 end
 
 -- Update the Main GUI --
-function GUI.updateMFMainGUI(table)
+function GUI.updateMFMainGUI(GUITable)
 
 	-- Get MF, MFPlayer and Player --
-	local MF = getCurrentMF(table.MFPlayer)
-	local MFPlayer = table.MFPlayer
-	local player = table.MFPlayer.ent
+	local MF = getCurrentMF(GUITable.MFPlayer)
+	local MFPlayer = GUITable.MFPlayer
+	local player = GUITable.MFPlayer.ent
 
 	-------------------------------------------------------- Get Buttons Variables --------------------------------------------------------
 	local showCallMFButton = technologyUnlocked("JumpDrive", getForce(player.name))
@@ -97,29 +97,29 @@ function GUI.updateMFMainGUI(table)
 	local showQuatronDrainButton = technologyUnlocked("EnergyDrain1", getForce(player.name)) and technologyUnlocked("QuatronLogistic", getForce(player.name)) and true or false
 	local quatronDrainSprite = MF.quatronLaserActivated == true and "QuatronIcon" or "QuatronIconDisabled"
 
-	GUI.addButtonToMainGui(table, {name="PortOutsideButton", sprite="PortIcon", hovSprite="PortIcon", tooltip={"gui-description.teleportOutsideButton"}, save=false})
-	GUI.addButtonToMainGui(table, {name="JumpDriveButton", sprite="MFJDIcon", hovSprite="MFJDIcon", tooltip={"gui-description.jumpDriveButton"}, save=false, visible=showCallMFButton})
-	GUI.addButtonToMainGui(table, {name="SyncAreaButton", sprite=syncAreaSprite, hovSprite=syncAreaSprite, tooltip={"gui-description.syncAreaButton"}, save=false})
-	GUI.addButtonToMainGui(table, {name="FindMFButton", sprite="MFIconExc", hovSprite="MFIconExc", tooltip={"gui-description.fixMFButton"}, save=false, visible=showFindMFButton})
-	GUI.addButtonToMainGui(table, {name="TPInsideButton", sprite=tpInsideSprite, hovSprite=tpInsideSprite, tooltip={"gui-description.MFTPInside"}, save=false})
-	GUI.addButtonToMainGui(table, {name="LockMFButton", sprite=lockMFSprite, hovSprite=lockMFSprite, tooltip={"gui-description.LockMF"}, save=false})
-	GUI.addButtonToMainGui(table, {name="EnergyDrainButton", sprite=energyDrainSprite, hovSprite=energyDrainSprite, tooltip={"gui-description.mfEnergyDrainButton"}, save=false, visible=showEnergyDrainButton})
-	GUI.addButtonToMainGui(table, {name="FluidDrainButton", sprite=fluidDrainSprite, hovSprite=fluidDrainSprite, tooltip={"gui-description.mfFluidDrainButton"}, save=false, visible=showFluidDrainButton})
-	GUI.addButtonToMainGui(table, {name="ItemDrainButton", sprite=itemDrainSprite, hovSprite=itemDrainSprite, tooltip={"gui-description.mfItemDrainButton"}, save=false, visible=showItemDrainButton})
-	GUI.addButtonToMainGui(table, {name="QuatronDrainButton", sprite=quatronDrainSprite, hovSprite=quatronDrainSprite, tooltip={"gui-description.mfQuatronDrainButton"}, save=false, visible=showQuatronDrainButton})
+	GUI.addButtonToMainGui(GUITable, {name="PortOutsideButton", sprite="PortIcon", hovSprite="PortIcon", tooltip={"gui-description.teleportOutsideButton"}, save=false})
+	GUI.addButtonToMainGui(GUITable, {name="JumpDriveButton", sprite="MFJDIcon", hovSprite="MFJDIcon", tooltip={"gui-description.jumpDriveButton"}, save=false, visible=showCallMFButton})
+	GUI.addButtonToMainGui(GUITable, {name="SyncAreaButton", sprite=syncAreaSprite, hovSprite=syncAreaSprite, tooltip={"gui-description.syncAreaButton"}, save=false})
+	GUI.addButtonToMainGui(GUITable, {name="FindMFButton", sprite="MFIconExc", hovSprite="MFIconExc", tooltip={"gui-description.fixMFButton"}, save=false, visible=showFindMFButton})
+	GUI.addButtonToMainGui(GUITable, {name="TPInsideButton", sprite=tpInsideSprite, hovSprite=tpInsideSprite, tooltip={"gui-description.MFTPInside"}, save=false})
+	GUI.addButtonToMainGui(GUITable, {name="LockMFButton", sprite=lockMFSprite, hovSprite=lockMFSprite, tooltip={"gui-description.LockMF"}, save=false})
+	GUI.addButtonToMainGui(GUITable, {name="EnergyDrainButton", sprite=energyDrainSprite, hovSprite=energyDrainSprite, tooltip={"gui-description.mfEnergyDrainButton"}, save=false, visible=showEnergyDrainButton})
+	GUI.addButtonToMainGui(GUITable, {name="FluidDrainButton", sprite=fluidDrainSprite, hovSprite=fluidDrainSprite, tooltip={"gui-description.mfFluidDrainButton"}, save=false, visible=showFluidDrainButton})
+	GUI.addButtonToMainGui(GUITable, {name="ItemDrainButton", sprite=itemDrainSprite, hovSprite=itemDrainSprite, tooltip={"gui-description.mfItemDrainButton"}, save=false, visible=showItemDrainButton})
+	GUI.addButtonToMainGui(GUITable, {name="QuatronDrainButton", sprite=quatronDrainSprite, hovSprite=quatronDrainSprite, tooltip={"gui-description.mfQuatronDrainButton"}, save=false, visible=showQuatronDrainButton})
 
 	-- Render All Buttons --
-	GUI.renderMainGuiButtons(table)
+	GUI.renderMainGuiButtons(GUITable)
 
 	-- Clear the Frame --
-	table.vars.InfoFrame.clear()
+	GUITable.vars.InfoFrame.clear()
 
 	-- Check if the GUI must be shown --
-	if table.MFPlayer.varTable.MainGUIOpen == false then
-		table.vars.InfoFrame.visible = false
+	if GUITable.MFPlayer.varTable.MainGUIOpen == false then
+		GUITable.vars.InfoFrame.visible = false
 		return
 	else
-		table.vars.InfoFrame.visible = true
+		GUITable.vars.InfoFrame.visible = true
 	end
 
 	-------------------------------------------------------- Get Information Variables --------------------------------------------------------
@@ -163,68 +163,69 @@ function GUI.updateMFMainGUI(table)
 	-------------------------------------------------------- Update Information --------------------------------------------------------
 
 	-- Show Values and Bars --
+	local infoTable = GAPI.addTable(GUITable, "", GUITable.vars.InfoFrame, 1)
 	if MFPlayer.varTable.MainGUIShowPositions ~= false then
-		GAPI.addLabel(table, "PositionLabel", table.vars.InfoFrame, mfPositionText, _mfOrange, "Mobile Factory")
+		GAPI.addLabel(GUITable, "PositionLabel",infoTable, mfPositionText, _mfOrange, "Mobile Factory")
 	end
 	if MFPlayer.varTable.MainGUIShowTime == true then
-		GAPI.addLabel(table, "TimeLabel", table.vars.InfoFrame, time, _mfGreen, "Mobile Factory")
+		GAPI.addLabel(GUITable, "TimeLabel", infoTable, time, _mfGreen, "Mobile Factory")
 	end
 	if MFPlayer.varTable.MainGUIShowTemperature == true then
-		GAPI.addLabel(table, "TempLabel", table.vars.InfoFrame, {"", {"gui-description.temp"}, " ", string.format("%.1f", temperature), " °C"}, _mfGreen, "Mobile Factory")
+		GAPI.addLabel(GUITable, "TempLabel", infoTable, {"", {"gui-description.temp"}, " ", string.format("%.1f", temperature), " °C"}, _mfGreen, "Mobile Factory")
 	end
 	if MFPlayer.varTable.MainGUIShowHealthBar ~= false then
-		GAPI.addProgressBar(table, "HealBar", table.vars.InfoFrame, "", mfHealthText, false, _mfRed, mfHealthValue)
+		GAPI.addProgressBar(GUITable, "HealBar", GUITable.vars.InfoFrame, "", mfHealthText, false, _mfRed, mfHealthValue)
 	end
 	if MFPlayer.varTable.MainGUIShowShieldBar ~= false then
-		GAPI.addProgressBar(table, "ShieldBar", table.vars.InfoFrame, "", mfShieldText, false, _mfBlue, mfShielValue)
+		GAPI.addProgressBar(GUITable, "ShieldBar", GUITable.vars.InfoFrame, "", mfShieldText, false, _mfBlue, mfShielValue)
 	end
 	if MFPlayer.varTable.MainGUIShowEnergyBar ~= false then
-		GAPI.addProgressBar(table, "EnergyBar", table.vars.InfoFrame, "", mfEnergyText, false, _mfYellow, mfEnergyValue)
+		GAPI.addProgressBar(GUITable, "EnergyBar", GUITable.vars.InfoFrame, "", mfEnergyText, false, _mfYellow, mfEnergyValue)
 	end
 	if MFPlayer.varTable.MainGUIShowQuatronBar ~= false then
-		GAPI.addProgressBar(table, "QuatronBar", table.vars.InfoFrame, "", mfQuatronText, false, _mfPurple, mfQuatronValue)
+		GAPI.addProgressBar(GUITable, "QuatronBar", GUITable.vars.InfoFrame, "", mfQuatronText, false, _mfPurple, mfQuatronValue)
 	end
 	if MFPlayer.varTable.MainGUIShowJumpCharge ~= false then
-		GAPI.addProgressBar(table, "JumpDriveBar", table.vars.InfoFrame, "", mfJumpDriveText, false, _mfOrange, mfJumpDriveValue)
+		GAPI.addProgressBar(GUITable, "JumpDriveBar", GUITable.vars.InfoFrame, "", mfJumpDriveText, false, _mfOrange, mfJumpDriveValue)
 	end
 
 end
 
 -- Add a Button to the Main GUI --
-function GUI.addButtonToMainGui(table, button)
-	if table.vars.buttonsTable == nil then table.vars.buttonsTable = {} end
-	table.vars.buttonsTable[button.name] = button
+function GUI.addButtonToMainGui(GUITable, button)
+	if GUITable.vars.buttonsTable == nil then GUITable.vars.buttonsTable = {} end
+	GUITable.vars.buttonsTable[button.name] = button
 end
 
 -- Render all Buttons of the Main GUI --
-function GUI.renderMainGuiButtons(table)
+function GUI.renderMainGuiButtons(GUITable)
 	-- Get the Flow --
-	local flow = table.vars.ButtonsTable
+	local flow = GUITable.vars.ButtonsTable
 	-- Clear the Flow --
 	flow.clear()
 	-- Get the Buttons Size --
-	local buttonsSize = 14 + ( table.MFPlayer.varTable.MainButtonsSize or 5)
+	local buttonsSize = 14 + ( GUITable.MFPlayer.varTable.MainButtonsSize or 5)
 	-- Itinerate the Buttons Table --
-	for _, button in pairs(table.vars.buttonsTable or {}) do
+	for _, button in pairs(GUITable.vars.buttonsTable or {}) do
 		if button.visible == false then goto continue end
-		if table.MFPlayer.varTable["Show" .. button.name] == false then goto continue end
+		if GUITable.MFPlayer.varTable["Show" .. button.name] == false then goto continue end
 		-- Add the Button --
-		GAPI.addButton(table, button.name, flow, button.sprite, button.hovSprite, button.tooltip, buttonsSize, button.save, true, nil, "frame_action_button")
+		GAPI.addButton(GUITable, button.name, flow, button.sprite, button.hovSprite, button.tooltip, buttonsSize, button.save, true, nil, "frame_action_button")
 		::continue::
 	end
 	-- Add the GUI Buttons --
 	local arrowButtonSprite = "ArrowIconUp"
 	local arrowButtonName = "MainGUIClose"
-	if table.MFPlayer.varTable.MainGUIOpen == false then
+	if GUITable.MFPlayer.varTable.MainGUIOpen == false then
 		arrowButtonSprite = "ArrowIconDown"
 		arrowButtonName = "MainGUIOpen"
 	end
 	
 	-- Create the Right Buttons table --
-	local buttonTable = GAPI.addTable(table, "RightButtonsTable", table.vars.ButtonsFrame, 3)
+	local buttonTable = GAPI.addTable(GUITable, "RightButtonsTable", GUITable.vars.ButtonsFrame, 3)
 
-	GAPI.addButton(table, "MainGUIInfosButton", buttonTable, "MFIconI", "MFIconI", {"gui-description.MFInfosButton"}, buttonsSize, false, true, nil, "frame_action_button")
-	GAPI.addButton(table, "MainGUIOptionButton", buttonTable, "OptionIcon", "OptionIcon", {"gui-description.optionButton"}, buttonsSize, false, true, nil, "frame_action_button")
-	GAPI.addButton(table, arrowButtonName, buttonTable, arrowButtonSprite, arrowButtonSprite, {"gui-description.reduceButton"}, buttonsSize, false, true, nil, "frame_action_button")
+	GAPI.addButton(GUITable, "MainGUIInfosButton", buttonTable, "MFIconI", "MFIconI", {"gui-description.MFInfosButton"}, buttonsSize, false, true, nil, "frame_action_button")
+	GAPI.addButton(GUITable, "MainGUIOptionButton", buttonTable, "OptionIcon", "OptionIcon", {"gui-description.optionButton"}, buttonsSize, false, true, nil, "frame_action_button")
+	GAPI.addButton(GUITable, arrowButtonName, buttonTable, arrowButtonSprite, arrowButtonSprite, {"gui-description.reduceButton"}, buttonsSize, false, true, nil, "frame_action_button")
 
 end

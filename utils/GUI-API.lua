@@ -5,26 +5,26 @@ function GAPI.createBaseWindows(name, title, MFPlayer, showTitle, showMainFrame,
     if MFPlayer == nil then return end
     if MFPlayer.ent.gui.screen[name] ~= nil and MFPlayer.ent.gui.screen[name].valid == true then MFPlayer.ent.gui.screen[name].destroy() end
     if MFPlayer.ent.gui.screen[name] ~= nil and MFPlayer.ent.gui.screen[name].valid == false then MFPlayer.ent.gui.screen[name] = nil end
-    local table = {title=title, MFPlayer=MFPlayer, vars={}}
-    table.gui = MFPlayer.ent.gui.screen.add{type="frame", name=name, direction=windowsDirection or "vertical"}
-    table.gui.style.padding = 5
-    table.gui.style.top_padding = 0
-    table.gui.style.margin = 0
-    if showTitle ~= false then GAPI.createTitle(table) end
+    local GUITable = {title=title, MFPlayer=MFPlayer, vars={}}
+    GUITable.gui = MFPlayer.ent.gui.screen.add{type="frame", name=name, direction=windowsDirection or "vertical"}
+    GUITable.gui.style.padding = 5
+    GUITable.gui.style.top_padding = 0
+    GUITable.gui.style.margin = 0
+    if showTitle ~= false then GAPI.createTitle(GUITable) end
     if showMainFrame ~= false then
         local mainFrame = nil
         if isScroolPane ~= true then
-            mainFrame = GAPI.addFrame(table, "MainFrame", table.gui, mainFrameDirection or "vertical", true)
+            mainFrame = GAPI.addFrame(GUITable, "MainFrame", GUITable.gui, mainFrameDirection or "vertical", true)
             mainFrame.style = "invisible_frame"
         else
-            mainFrame = GAPI.addScrollPane(table, "MainFrame", table.gui, nil, true)
+            mainFrame = GAPI.addScrollPane(GUITable, "MainFrame", GUITable.gui, nil, true)
             -- mainFrame.style = "tab_scroll_pane_with_extra_padding"
         end
         mainFrame.style.vertically_stretchable = true
     end
-    GAPI.setGeometry(table.gui, nil, nil, _mfDefaultGuiHeight, _mfDefaultGuiWidth)
-    GAPI.centerWindow(table.gui)
-    return table
+    GAPI.setGeometry(GUITable.gui, nil, nil, _mfDefaultGuiHeight, _mfDefaultGuiWidth)
+    GAPI.centerWindow(GUITable.gui)
+    return GUITable
 end
 
 -- Set the Element Geometry --
@@ -80,30 +80,30 @@ function GAPI.centerWindow(Gui)
 end
 
 -- Add the Title to the Window --
-function GAPI.createTitle(table)
+function GAPI.createTitle(GUITable)
     -- Create the Menu Bar --
-    local topBarFlow = GAPI.addFlow(table, "topBarFlow", table.gui, "horizontal", true)
+    local topBarFlow = GAPI.addFlow(GUITable, "topBarFlow", GUITable.gui, "horizontal", true)
     topBarFlow.style.vertical_align = "center"
     topBarFlow.style.padding = 0
     topBarFlow.style.margin = 0
 	-- Add the Title Label --
-	local barTitle = table.title or {"gui-description." .. table.gui.name .. "Title"}
-	GAPI.addLabel(table, "", topBarFlow, barTitle, _mfOrange, nil, false, "TitleFont")
+	local barTitle = GUITable.title or {"gui-description." .. GUITable.gui.name .. "Title"}
+	GAPI.addLabel(GUITable, "", topBarFlow, barTitle, _mfOrange, nil, false, "TitleFont")
 	-- Add the Draggable Area --
-    local dragArea = GAPI.addEmptyWidget(table, "", topBarFlow, table.gui, _mfGUIDragAreaSize)
+    local dragArea = GAPI.addEmptyWidget(GUITable, "", topBarFlow, GUITable.gui, _mfGUIDragAreaSize)
     dragArea.style.left_margin = 8
     dragArea.style.right_margin = 8
     dragArea.style.minimal_width = 30
 end
 
 -- Add a close Button --
-function GAPI.addCloseButton(table)
-    local button = GAPI.addButton(table, table.gui.name.. "CloseButton", table.vars.topBarFlow, "CloseIcon", "CloseIcon", {"gui-description.closeButton"}, _mfGUICloseButtonSize)
+function GAPI.addCloseButton(GUITable)
+    local button = GAPI.addButton(GUITable, GUITable.gui.name.. "CloseButton", GUITable.vars.topBarFlow, "CloseIcon", "CloseIcon", {"gui-description.closeButton"}, _mfGUICloseButtonSize)
     button.style = "frame_action_button"
 end
 
 -- Add a new Frame --
-function GAPI.addFrame(table, name, gui, direction, save)
+function GAPI.addFrame(GUITable, name, gui, direction, save)
     -- Check if this Element doesn't exist --
     if name ~= nil and name ~= "" and gui[name] ~= nil then gui[name].destroy() end
     -- Create the frame --
@@ -113,36 +113,36 @@ function GAPI.addFrame(table, name, gui, direction, save)
     frame.style.margin = 0
     frame.style.horizontally_stretchable = true
     -- Save the Frame inside the elements Table --
-    if table ~= nil and save == true then
-        table.vars[name] = frame
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = frame
     end
     return frame
 end
 
 -- Create a Title Label --
-function GAPI.addTitledFrame(table, name, gui, direction, text, color, save)
-    local titleFrame = GAPI.addFrame(table, nil, gui, "horizontal")
+function GAPI.addTitledFrame(GUITable, name, gui, direction, text, color, save)
+    local titleFrame = GAPI.addFrame(GUITable, nil, gui, "horizontal")
     titleFrame.style.horizontally_stretchable = true
-    local titleFlow = GAPI.addFlow(table, nil, titleFrame, "horizontal")
-    GAPI.addLabel(table, name .. "Label", titleFlow, text, color, "", save, "TitleFont")
+    local titleFlow = GAPI.addFlow(GUITable, nil, titleFrame, "horizontal")
+    GAPI.addLabel(GUITable, name .. "Label", titleFlow, text, color, "", save, "TitleFont")
     titleFlow.style.horizontal_align = "center"
     return titleFrame
 end
 
 -- Create a Subtitle --
-function GAPI.addSubtitle(table, name, gui, text, save)
-    local flow = GAPI.addFlow(table, name .. "Flow", gui, "vertical", save)
+function GAPI.addSubtitle(GUITable, name, gui, text, save)
+    local flow = GAPI.addFlow(GUITable, "", gui, "vertical", save)
     flow.style.horizontal_align = "center"
     flow.style.vertically_stretchable = false
-    GAPI.addLine(table, "", flow, "horizontal")
-    local label = GAPI.addLabel(table, name .. "Label", flow, text, nil, nil, false, nil, _mfLabelType.yellowTitle)
+    GAPI.addLine(GUITable, "", flow, "horizontal")
+    local label = GAPI.addLabel(GUITable, "", flow, text, nil, nil, false, nil, _mfLabelType.yellowTitle)
     label.style.left_margin = 10
     label.style.right_margin = 10
-    GAPI.addLine(table, "", flow, "horizontal")
+    GAPI.addLine(GUITable, "", flow, "horizontal")
 end
 
 -- Add a new Flow --
-function GAPI.addFlow(table, name, gui, direction, save)
+function GAPI.addFlow(GUITable, name, gui, direction, save)
     -- Check if this Element doesn't exist --
     if name ~= nil and name ~= "" and gui[name] ~= nil then gui[name].destroy() end
     -- Create the Flow --
@@ -152,14 +152,14 @@ function GAPI.addFlow(table, name, gui, direction, save)
     flow.style.margin = 0
     flow.style.horizontally_stretchable = true
     -- Save the Flow inside the elements Table --
-    if table ~= nil and save == true then
-        table.vars[name] = flow
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = flow
     end
     return flow
 end
 
 -- Add a new Scroll Pane --
-function GAPI.addScrollPane(table, name, gui, size, save, style, policy)
+function GAPI.addScrollPane(GUITable, name, gui, size, save, style, policy)
     -- Check if this Element doesn't exist --
     if name ~= nil and name ~= "" and gui[name] ~= nil then gui[name].destroy() end
     -- Create the Scrool Pane --
@@ -170,14 +170,14 @@ function GAPI.addScrollPane(table, name, gui, size, save, style, policy)
     scrollPane.style.margin = 0
     scrollPane.style.maximal_height = size
     scrollPane.style.horizontally_stretchable = true
-    if table ~= nil and save == true then
-        table.vars[name] = scrollPane
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = scrollPane
     end
     return scrollPane
 end
 
 -- Add a Tabbed Pane --
-function GAPI.addTabbedPane(table, name, gui, text, tooltip, save, selectedIndex)
+function GAPI.addTabbedPane(GUITable, name, gui, text, tooltip, save, selectedIndex)
     -- Check if this Element doesn't exist --
     if name ~= nil and name ~= "" and gui[name] ~= nil then gui[name].destroy() end
     -- Create the Tabbed Pane --
@@ -188,14 +188,14 @@ function GAPI.addTabbedPane(table, name, gui, text, tooltip, save, selectedIndex
     -- Set the Selected Tab --
     tabbedPane.selected_tab_index = selectedIndex or 1
     -- Save the Tabbed Pane inside the elements Table --
-    if table ~= nil and save == true then
-        table.vars[name] = tabbedPane
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = tabbedPane
     end
     return tabbedPane
 end
 
 -- Add a Tab --
-function GAPI.addTab(table, name, gui, text, tooltip, save)
+function GAPI.addTab(GUITable, name, gui, text, tooltip, save)
     -- Check if this Element doesn't exist --
     if name ~= nil and name ~= "" and gui[name] ~= nil then gui[name].destroy() end
     -- Create the Tabbed Pane --
@@ -212,14 +212,14 @@ function GAPI.addTab(table, name, gui, text, tooltip, save)
     -- Save the Tab inside the Tabed Pane --
     gui.add_tab(tab, flow)
     -- Save the Tabbed Pane inside the elements Table --
-    if table ~= nil and save == true then
-        table.vars[name] = flow
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = flow
     end
     return flow
 end
 
 -- Add a new Table --
-function GAPI.addTable(table, name, gui, column, save)
+function GAPI.addTable(GUITable, name, gui, column, save)
     -- Check if this Element doesn't exist --
     if name ~= nil and name ~= "" and gui[name] ~= nil then gui[name].destroy() end
     -- Create the Table --
@@ -232,14 +232,14 @@ function GAPI.addTable(table, name, gui, column, save)
     tableGUI.style.horizontal_spacing  = 0
     tableGUI.style.vertical_spacing  = 0
     -- Save the Flow inside the elements Table --
-    if table ~= nil and save == true then
-        table.vars[name] = tableGUI
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = tableGUI
     end
     return tableGUI
 end
 
 -- Add a new Draggable Space --
-function GAPI.addEmptyWidget(table, name, gui, parent, sizeX, sizeY, save)
+function GAPI.addEmptyWidget(GUITable, name, gui, parent, sizeX, sizeY, save)
     -- Check if this Element doesn't exist --
     if name ~= nil and name ~= "" and gui[name] ~= nil then gui[name].destroy() end
     -- Create the Empty Widget --
@@ -252,14 +252,14 @@ function GAPI.addEmptyWidget(table, name, gui, parent, sizeX, sizeY, save)
     emptyWidget.style.margin = 0
     emptyWidget.style.horizontally_stretchable = true
     -- Save the Empty Widget inside the elements Table --
-    if table ~= nil and save == true then
-        table.elements[name] = emptyWidget
+    if GUITable ~= nil and save == true then
+        GUITable.elements[name] = emptyWidget
     end
     return emptyWidget
 end
 
 -- Add a new Label --
-function GAPI.addLabel(table, name, gui, text, color, tooltip, save, font, style)
+function GAPI.addLabel(GUITable, name, gui, text, color, tooltip, save, font, style)
     -- Check if this Element doesn't exist --
     if name ~= nil and name ~= "" and gui[name] ~= nil then gui[name].destroy() end
     -- Create the Label --
@@ -273,37 +273,37 @@ function GAPI.addLabel(table, name, gui, text, color, tooltip, save, font, style
         label.style.font_color = color or _mfBlue
     end
     -- Save the Label inside the elements Table --
-    if table ~= nil and save == true then
-        table.vars[name] = label
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = label
     end
     return label
 end
 
 -- Add a dual Label --
-function GAPI.addDualLabel(table, gui, text1, text2, color1, color2, font, tooltip1, tooltip2, name, save)
+function GAPI.addDualLabel(GUITable, gui, text1, text2, color1, color2, font, tooltip1, tooltip2, name, save)
     -- Create the Frame --
-    local flow = GAPI.addFlow(table, "", gui, "horizontal")
-    GAPI.addLabel(table, "Label1", flow, text1, color1, tooltip1, false, font)
-    GAPI.addLabel(table, "Label2", flow, text2, color2, tooltip2, false, font)
-    if table ~= nil and save == true then
-        table.vars[name] = flow
+    local flow = GAPI.addFlow(GUITable, "", gui, "horizontal")
+    GAPI.addLabel(GUITable, "Label1", flow, text1, color1, tooltip1, false, font)
+    GAPI.addLabel(GUITable, "Label2", flow, text2, color2, tooltip2, false, font)
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = flow
     end
     return flow
 end
 
 -- Add a new Text Field --
-function GAPI.addTextField(table, name, gui, text, tooltip, save, numeric, allowDecimal, allowNegative, isPassword)
+function GAPI.addTextField(GUITable, name, gui, text, tooltip, save, numeric, allowDecimal, allowNegative, isPassword)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
     local textField = gui.add{type="textfield", name=name, text=text, tooltip=tooltip, numeric=numeric or false, allow_decimal=allowDecimal or false, allow_negative=allowNegative or false, is_password=isPassword or false}
-    if table ~= nil and save == true then
-        table.vars[name] = textField
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = textField
     end
     return textField
 end
 
 -- Add a new Button --
-function GAPI.addButton(table, name, gui, sprite, hovSprite, tooltip, size, save, visible, count, style)
+function GAPI.addButton(GUITable, name, gui, sprite, hovSprite, tooltip, size, save, visible, count, style)
     if visible == false then return end
     -- Check if this Element doesn't exist --
     if name ~= nil and name ~= "" and gui[name] ~= nil then gui[name].destroy() end
@@ -326,78 +326,78 @@ function GAPI.addButton(table, name, gui, sprite, hovSprite, tooltip, size, save
         button.style.padding = 0
         button.style.margin = 0
     -- Save the Button inside the elements Table --
-    if table ~= nil and save == true then
-        table.vars[name] = button
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = button
     end
     return button
 end
 
 -- Add a new Simple Button --
-function GAPI.addSimpleButton(table, name, gui, text, tooltip, save)
+function GAPI.addSimpleButton(GUITable, name, gui, text, tooltip, save)
     -- Check if this Element doesn't exist --
     if name ~= nil and name ~= "" and gui[name] ~= nil then gui[name].destroy() end
     local button = gui.add{type="button", name=name, caption=text, tooltip=tooltip}
 
-    if table ~= nil and save == true then
-        table.vars[name] = button
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = button
     end
     return button
 end
 
 -- Add a CheckBox --
-function GAPI.addCheckBox(table, name, gui, text, tooltip, state, save)
+function GAPI.addCheckBox(GUITable, name, gui, text, tooltip, state, save)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
     -- Create the CheckBox --
     local checkBox = gui.add{type="checkbox", name=name, caption=text, tooltip=tooltip, state=state or false}
     -- Save the Check Box inside the elements Table --
-    if table ~= nil and save == true then
-        table.vars[name] = checkBox
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = checkBox
     end
     return checkBox
 end
 
 -- Add a Switch --
-function GAPI.addSwitch(table, name, gui, text1, text2, tooltip1, tooltip2, state, save)
+function GAPI.addSwitch(GUITable, name, gui, text1, text2, tooltip1, tooltip2, state, save)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
     -- Create the Switch --
     local switch = gui.add{type="switch", name=name, switch_state=state or "left", left_label_caption=text1, right_label_caption=text2, left_label_tooltip=tooltip1, right_label_tooltip=tooltip2}
     -- Save the Switch inside the elements Table --
-    if table ~= nil and save == true then
-        table.vars[name] = switch
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = switch
     end
     return switch
 end
 
 -- Add a new Line --
-function GAPI.addLine(table, name, gui, direction, save)
+function GAPI.addLine(GUITable, name, gui, direction, save)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
     -- Create the Line --
     local line = gui.add{type="line", name=name, direction=direction}
     -- Save the Line inside the elements Table --
-    if table ~= nil and save == true then
-        table.vars[name] = line
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = line
     end
     return line
 end
 
 -- Add a Drop Down --
-function GAPI.addDropDown(table, name, gui, items, selected, save, tooltip)
+function GAPI.addDropDown(GUITable, name, gui, items, selected, save, tooltip)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
     local dropDown = gui.add{type="drop-down", name=name, items=items, selected_index=selected, tooltip=tooltip}
     dropDown.style.maximal_width = 200
     -- Save the Drop Down inside the elements Table --
-    if table ~= nil and save == true then
-        table.vars[name] = dropDown
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = dropDown
     end
     return dropDown
 end
 
 -- Add a new Progress Bar --
-function GAPI.addProgressBar(table, name, gui, text, tooltip, save, color, value, size)
+function GAPI.addProgressBar(GUITable, name, gui, text, tooltip, save, color, value, size)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
     -- Create the Progress Bar --
@@ -410,14 +410,14 @@ function GAPI.addProgressBar(table, name, gui, text, tooltip, save, color, value
     -- Set the Progress Bar value --
     if value ~= nil then progressBar.value = value end
     -- Save the Progress Bar inside the elements Table --
-    if table ~= nil and save == true then
-        table.vars[name] = progressBar
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = progressBar
     end
     return progressBar
 end
 
 -- Add a new Filter --
-function GAPI.addFilter(table, name, gui, tooltip, save, elemType, size)
+function GAPI.addFilter(GUITable, name, gui, tooltip, save, elemType, size)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
     -- Create the Filter --
@@ -425,14 +425,14 @@ function GAPI.addFilter(table, name, gui, tooltip, save, elemType, size)
     filter.style.height = size
     filter.style.width = size
     -- Save the Filter inside the elements Table --
-    if table ~= nil and save == true then
-        table.vars[name] = filter
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = filter
     end
     return filter
 end
 
 -- Add a new Sprite --
-function GAPI.addSprite(table, name, gui, path, tooltip, save)
+function GAPI.addSprite(GUITable, name, gui, path, tooltip, save)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
     -- Create the Sprite --
@@ -440,14 +440,14 @@ function GAPI.addSprite(table, name, gui, path, tooltip, save)
     sprite.style.padding = 0
     sprite.style.margin = 0
     -- Save the Spite inside the elements Table --
-    if table ~= nil and save == true then
-        table.vars[name] = sprite
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = sprite
     end
     return sprite
 end
 
 -- Create Item Frame --
-function GAPI.addItemFrame(table, name, item, amount, gui, save)
+function GAPI.addItemFrame(GUITable, name, item, amount, gui, save)
     -- Create the Frame --
     local frame = GAPI.addFrame(name, gui, "horizontal")
     -- Create the Sprite --
@@ -455,8 +455,8 @@ function GAPI.addItemFrame(table, name, item, amount, gui, save)
     -- Create the amount Label --
     GAPI.addLabel("", frame, Util.toRNumber(amount))
     -- Save the Spite inside the elements Table --
-    if table ~= nil and save == true then
-        table.vars[name] = frame
+    if GUITable ~= nil and save == true then
+        GUITable.vars[name] = frame
     end
     return frame
 end

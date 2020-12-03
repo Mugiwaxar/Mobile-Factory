@@ -97,9 +97,9 @@ function GUI.updateAllGUIs(force)
 
 				-- Update all GUIs --
 				if game.tick%_eventTick55 == 0 or force then
-				for _, table in pairs(MFPlayer.GUI or {}) do
-					if valid(table) then table:update() end
-					if table.gui ~= nil and table.gui.valid == true and GUI["update" .. table.gui.name] ~= nil then GUI["update" .. table.gui.name](table) end
+				for _, GUItable in pairs(MFPlayer.GUI or {}) do
+					if valid(GUItable) then GUItable:update() end
+					if GUItable.gui ~= nil and GUItable.gui.valid == true and GUI["update" .. GUItable.gui.name] ~= nil then GUI["update" .. GUItable.gui.name](GUItable) end
 				end
 
 			end
@@ -227,9 +227,9 @@ function GUI.buttonClicked(event)
 	-- Open Info GUI Button --
 	if event.element.name == "MainGUIInfosButton" then
 		if MFPlayer.GUI[_mfGUIName.InfoGUI] == nil then
-			local table = GUI.createInfoGui(player)
-			MFPlayer.GUI[_mfGUIName.InfoGUI] = table
-			player.opened = table.gui
+			local GUITable = GUI.createInfoGui(player)
+			MFPlayer.GUI[_mfGUIName.InfoGUI] = GUITable
+			player.opened = GUITable.gui
 		else
 			MFPlayer.GUI[_mfGUIName.InfoGUI].gui.destroy()
 			MFPlayer.GUI[_mfGUIName.InfoGUI] = nil
@@ -240,9 +240,9 @@ function GUI.buttonClicked(event)
 	-- Open Options GUI Button --
 	if event.element.name == "MainGUIOptionButton" then
 		if MFPlayer.GUI[_mfGUIName.OptionGUI] == nil then
-			local table = GUI.createOptionGUI(player)
-			MFPlayer.GUI[_mfGUIName.OptionGUI] = table
-			player.opened = table.gui
+			local GUITable = GUI.createOptionGUI(player)
+			MFPlayer.GUI[_mfGUIName.OptionGUI] = GUITable
+			player.opened = GUITable.gui
 		else
 			MFPlayer.GUI[_mfGUIName.OptionGUI].gui.destroy()
 			MFPlayer.GUI[_mfGUIName.OptionGUI] = nil
@@ -253,9 +253,9 @@ function GUI.buttonClicked(event)
 	-- Open the SwitchMF Button --
 	if event.element.name == "SwitchMFButton" then
 		if MFPlayer.GUI[_mfGUIName.SwitchMF] == nil then
-			local table = GUI.createSwitchMFGUI(player)
-			MFPlayer.GUI[_mfGUIName.SwitchMF] = table
-			player.opened = table.gui
+			local GUITable = GUI.createSwitchMFGUI(player)
+			MFPlayer.GUI[_mfGUIName.SwitchMF] = GUITable
+			player.opened = GUITable.gui
 		else
 			MFPlayer.GUI[_mfGUIName.SwitchMF].gui.destroy()
 			MFPlayer.GUI[_mfGUIName.SwitchMF] = nil
@@ -266,9 +266,9 @@ function GUI.buttonClicked(event)
 	-- Jump Drive Button --
 	if event.element.name == "JumpDriveButton" then
 		if MFPlayer.GUI[_mfGUIName.TPGUI] == nil then
-			local table = GUI.createTPGui(player)
-			MFPlayer.GUI[_mfGUIName.TPGUI] = table
-			player.opened = table.gui
+			local GUITable = GUI.createTPGui(player)
+			MFPlayer.GUI[_mfGUIName.TPGUI] = GUITable
+			player.opened = GUITable.gui
 		else
 			MFPlayer.GUI[_mfGUIName.TPGUI].gui.destroy()
 			MFPlayer.GUI[_mfGUIName.TPGUI] = nil
@@ -627,10 +627,10 @@ function GUI.buttonClicked(event)
 	if string.match(event.element.name, "TPGUI") and event.element.type == "sprite-button" then
 		-- If a location is added --
 		if string.match(event.element.name, "TPGUIAddLoc") then
-			local table = MFPlayer.GUI["MFTPGUI"]
-			if table.vars.AddLocName ~= nil and table.vars.AddLocName ~= "" then
+			local GUITable = MFPlayer.GUI["MFTPGUI"]
+			if GUITable.vars.AddLocName ~= nil and GUITable.vars.AddLocName ~= "" then
 				local jumpDrive = currentMF.jumpDriveObj
-				jumpDrive:addLocation(table.vars.AddLocName.text, table.vars.AddLocFilter.elem_value)
+				jumpDrive:addLocation(GUITable.vars.AddLocName.text, GUITable.vars.AddLocFilter.elem_value)
 			end
 		end
 		if string.match(event.element.name, "TPGUILoc") then

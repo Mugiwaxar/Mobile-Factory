@@ -2,70 +2,70 @@
 function GUI.createSwitchMFGUI(player)
     
     -- Create the Main Window --
-    local table = GAPI.createBaseWindows(_mfGUIName.SwitchMF, {"gui-description.MFSwitchMFGUITitle"}, getMFPlayer(player.name), true, false)
-    GAPI.setMinSize(table.gui, 600)
+    local GUITable = GAPI.createBaseWindows(_mfGUIName.SwitchMF, {"gui-description.MFSwitchMFGUITitle"}, getMFPlayer(player.name), true, false)
+    GAPI.setMinSize(GUITable.gui, 600)
 
     -- Add the Close Button --
-    GAPI.addCloseButton(table)
+    GAPI.addCloseButton(GUITable)
 
     -- Create the List Information --
-    local infoLabel = GAPI.addLabel(table, "", table.gui, {"gui-description.SwitchMFInfo"}, _mfWhite)
+    local infoLabel = GAPI.addLabel(GUITable, "", GUITable.gui, {"gui-description.SwitchMFInfo"}, _mfWhite)
     infoLabel.style.single_line = false
     infoLabel.style.maximal_width = 270
 
     -- Create the Line --
-    GAPI.addLine(table, "", table.gui, "horizontal")
+    GAPI.addLine(GUITable, "", GUITable.gui, "horizontal")
 
     -- Create the Change Name Frame --
-    local changeNameFlow = GAPI.addFlow(table, "", table.gui, "horizontal")
+    local changeNameFlow = GAPI.addFlow(GUITable, "", GUITable.gui, "horizontal")
     changeNameFlow.style.horizontally_stretchable = true
     changeNameFlow.style.horizontal_align = "center"
     changeNameFlow.style.bottom_margin = 3
 
     -- Create the Change Name Textfield --
-    local textField = GAPI.addTextField(table, "SwitchMFChangeNameTextField", changeNameFlow, table.MFPlayer.MF.name or "", {"gui-description.MFChangeNameTT"}, true)
+    local textField = GAPI.addTextField(GUITable, "SwitchMFChangeNameTextField", changeNameFlow, GUITable.MFPlayer.MF.name or "", {"gui-description.MFChangeNameTT"}, true)
     textField.style.horizontally_stretchable = true
 
     -- Create the Change Name Button --
-    local button = GAPI.addSimpleButton(table, "SwitchMFChangeNameButton", changeNameFlow, {"gui-description.Change"})
+    local button = GAPI.addSimpleButton(GUITable, "SwitchMFChangeNameButton", changeNameFlow, {"gui-description.Change"})
     button.style.width = 78
     button.style.top_margin = 1
 
     -- Create the Main Frame --
-    local mainFrame = GAPI.addFrame(table, "MainFrame", table.gui, "vertical", true)
+    local mainFrame = GAPI.addFrame(GUITable, "MainFrame", GUITable.gui, "vertical", true)
     mainFrame.style = "MFFrame2"
 
     -- Create the Mobile Factory List Scroll Pane --
-    local listScrollPane = GAPI.addScrollPane(table, "MFListScrollPane", mainFrame, nil, true, nil, "auto")
+    local listScrollPane = GAPI.addScrollPane(GUITable, "MFListScrollPane", mainFrame, nil, true, nil, "auto")
     listScrollPane.style = "MF_SwtichGUI_scroll_pan"
     listScrollPane.style.top_padding = 3
     listScrollPane.style.vertically_stretchable = true
 
     -- Update the GUI --
-    GUI.updateMFSwitchMFGUI(table, true)
+    GUI.updateMFSwitchMFGUI(GUITable, true)
     
     -- Return the Gui Table --
-    return table
+    return GUITable
 end
 
 -- Update the SwitchMF GUI --
-function GUI.updateMFSwitchMFGUI(table, justCreated)
+function GUI.updateMFSwitchMFGUI(GUITable, justCreated)
 
     -- Get the Mobile Factory List Frame --
-    local listFrame = table.vars.MFListScrollPane
+    local listFrame = GUITable.vars.MFListScrollPane
 
     -- Clear the Frame --
     listFrame.clear()
 
     -- Create the List Table --
-    local listTable = GAPI.addTable(table, "ListTable", listFrame, 1)
+    local listTable = GAPI.addTable(GUITable, "ListTable", listFrame, 1)
 
     -- Create the List --
     for k, MF2 in pairs(global.MFTable) do
 
         -- Create the Frame and the Flow --
-        local frame = GAPI.addFrame(table, "", listTable, "horizontal")
-        local flow = GAPI.addFlow(table, "", frame, "horizontal")
+        local frame = GAPI.addFrame(GUITable, "", listTable, "horizontal")
+        local flow = GAPI.addFlow(GUITable, "", frame, "horizontal")
         frame.style.left_margin = 3
         frame.style.right_margin = 3
         flow.style.vertical_align = "center"
@@ -75,18 +75,18 @@ function GUI.updateMFSwitchMFGUI(table, justCreated)
         local buttonTooltip = {"gui-description.SelectMFTT1"}
 
         -- Change the Button if the Player is not allowed to use this Mobile Factory --
-        if Util.canUse(table.MFPlayer, MF2) == false then
+        if Util.canUse(GUITable.MFPlayer, MF2) == false then
             buttonStyle = "MF_Fake_Button_Red"
             buttonTooltip = {"gui-description.SelectMFTT2"}
         end
         local icon = (MF2.ent ~= nil and MF2.ent.valid == true) and MF2.ent.name or "MobileFactory"
-        GAPI.addButton(table, "SwitchMFSwitchButton," .. k, flow, "item/" .. icon, "item/" .. icon, buttonTooltip, 50, false, true, nil, buttonStyle)
+        GAPI.addButton(GUITable, "SwitchMFSwitchButton," .. k, flow, "item/" .. icon, "item/" .. icon, buttonTooltip, 50, false, true, nil, buttonStyle)
 
         -- Create the Info Table --
-        local InfoTable = GAPI.addTable(table, "", flow, 1)
+        local InfoTable = GAPI.addTable(GUITable, "", flow, 1)
 
         --Add the Name --
-        local nameLabel = GAPI.addLabel(table, "", InfoTable, MF2.name, _mfBlue, MF2.player, false, nil, _mfLabelType.yellowTitle)
+        local nameLabel = GAPI.addLabel(GUITable, "", InfoTable, MF2.name, _mfBlue, MF2.player, false, nil, _mfLabelType.yellowTitle)
         nameLabel.style.top_padding = 0
         nameLabel.style.top_margin = 0
 
@@ -95,12 +95,12 @@ function GUI.updateMFSwitchMFGUI(table, justCreated)
         if MF2.ent ~= nil and MF2.ent.valid == true then
             mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow](", math.floor(MF2.ent.position.x), " ; ", math.floor(MF2.ent.position.y), ")  ", MF2.ent.surface.name, "[/color]"}
         end
-        local posLabel = GAPI.addLabel(table, "PositionLabel", InfoTable, mfPositionText, _mfOrange, "Mobile Factory")
+        local posLabel = GAPI.addLabel(GUITable, "PositionLabel", InfoTable, mfPositionText, _mfOrange, "Mobile Factory")
         posLabel.style.top_padding = 0
         posLabel.style.top_margin = 0
 
         -- Add all Information Bars --
-        local barsTable = GAPI.addTable(table, "", InfoTable, 5)
+        local barsTable = GAPI.addTable(GUITable, "", InfoTable, 5)
         barsTable.style.horizontally_stretchable = false
         barsTable.style.bottom_padding = 3
 
@@ -132,11 +132,11 @@ function GUI.updateMFSwitchMFGUI(table, justCreated)
             mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": ", MF2.jumpDriveObj.charge, "/", MF2.jumpDriveObj.maxCharge, " (", MF2.jumpDriveObj.chargeRate, "/s)"}
         end
 
-        local bar1 = GAPI.addProgressBar(table, "HealBar", barsTable, "", mfHealthText, false, _mfRed, mfHealthValue)
-        local bar2 = GAPI.addProgressBar(table, "ShieldBar", barsTable, "", mfShieldText, false, _mfBlue, mfShielValue)
-        local bar3 = GAPI.addProgressBar(table, "EnergyBar", barsTable, "", mfEnergyText, false, _mfYellow, mfEnergyValue)
-        local bar4 = GAPI.addProgressBar(table, "QuatronBar", barsTable, "", mfQuatronText, false, _mfPurple, mfQuatronValue)
-        local bar5 = GAPI.addProgressBar(table, "JumpDriveBar", barsTable, "", mfJumpDriveText, false, _mfOrange, mfJumpDriveValue)
+        local bar1 = GAPI.addProgressBar(GUITable, "HealBar", barsTable, "", mfHealthText, false, _mfRed, mfHealthValue)
+        local bar2 = GAPI.addProgressBar(GUITable, "ShieldBar", barsTable, "", mfShieldText, false, _mfBlue, mfShielValue)
+        local bar3 = GAPI.addProgressBar(GUITable, "EnergyBar", barsTable, "", mfEnergyText, false, _mfYellow, mfEnergyValue)
+        local bar4 = GAPI.addProgressBar(GUITable, "QuatronBar", barsTable, "", mfQuatronText, false, _mfPurple, mfQuatronValue)
+        local bar5 = GAPI.addProgressBar(GUITable, "JumpDriveBar", barsTable, "", mfJumpDriveText, false, _mfOrange, mfJumpDriveValue)
 
         bar1.style.width = 40
         bar2.style.width = 40
