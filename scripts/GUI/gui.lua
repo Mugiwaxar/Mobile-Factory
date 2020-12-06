@@ -576,6 +576,13 @@ function GUI.onGuiElemChanged(event)
 	------- Read if the Element came from the Option GUI -------
 	GUI.readOptions(event.element, player)
 	if event.element == nil or event.element.valid == false then return end
+
+	-- If this is a Deep Storage --
+	if string.match(event.element.name, "D.S.R.") then
+		DSR.interaction(event, MFPlayer)
+		GUI.updateAllGUIs(true)
+		return
+	end
 	
 	------- Save the filter -------
 	if event.element.type == "choose-elem-button" and event.element.get_mod() == "Mobile_Factory" then
@@ -593,22 +600,6 @@ function GUI.onGuiElemChanged(event)
 				global.deepTankTable[id].filter = event.element.elem_value
 			else
 				global.deepTankTable[id].filter = nil
-			end
-			GUI.updateAllGUIs(true)
-			return
-		end
-
-		-- If this is a Deep Storage --
-		if string.match(id, "DSRF") then
-			if MFPlayer.GUI["MFInfoGUI"] ~= nil then
-				MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeStorageGUI = false
-			end
-			id = tonumber(split(id, "DSRF")[1])
-			if global.deepStorageTable[id] == nil then return end
-			if event.element.elem_value ~= nil then
-				global.deepStorageTable[id].filter = event.element.elem_value
-			else
-				global.deepStorageTable[id].filter = nil
 			end
 			GUI.updateAllGUIs(true)
 			return

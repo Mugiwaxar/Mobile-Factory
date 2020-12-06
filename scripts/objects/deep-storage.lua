@@ -92,35 +92,52 @@ function DSR:update()
 end
 
 -- Tooltip Infos --
-function DSR:getTooltipInfos(GUIObj, gui, justCreated)
+function DSR:getTooltipInfos(GUITable, mainFrame, justCreated)
 
-	-- Get the Flow --
-	local inventoryFlow = GUIObj.InventoryFlow
 
 	if justCreated == true then
-		
-		-- Create the Inventory Title --
-		local inventoryTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
-		inventoryFlow = GUIObj:addFlow("InventoryFlow", inventoryTitle, "vertical", true)
 
-		-- Create the Settings Title --
-		local settingTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Settings"}, _mfOrange)
+		-- Create the Inventory Frame --
+		local inventoryFrame = GAPI.addFrame(GUITable, "InventoryFrame", mainFrame, "vertical", true)
+		inventoryFrame.style = "MFFrame1"
+		inventoryFrame.style.vertically_stretchable = true
+		inventoryFrame.style.left_padding = 3
+		inventoryFrame.style.right_padding = 3
+		inventoryFrame.style.left_margin = 3
+		inventoryFrame.style.right_margin = 3
 
-		-- Create the Filter Selection Label and Filter --
-		GUIObj:addLabel("", settingTitle, {"gui-description.ChangeFilter"}, _mfOrange)
-		GUIObj:addFilter("DSRF" .. tostring(self.ent.unit_number), settingTitle, {"gui-description.FilterSelect"}, true, "item", 40)
+		-- Add the Title --
+		GAPI.addSubtitle(GUITable, "", inventoryFrame, {"gui-description.Inventory"})
+
+		-- Create the Inventory Table --
+		GAPI.addTable(GUITable, "InventoryTable", inventoryFrame, 1, true)
+
+
+		-- Create the Settings Frame --
+		local settingsFrame = GAPI.addFrame(GUITable, "SettingsFrame", mainFrame, "vertical", true)
+		settingsFrame.style = "MFFrame1"
+		settingsFrame.style.vertically_stretchable = true
+		settingsFrame.style.left_padding = 3
+		settingsFrame.style.right_padding = 3
+		settingsFrame.style.right_margin = 3
+
+		-- Add the Title --
+		GAPI.addSubtitle(GUITable, "", settingsFrame, {"gui-description.Settings"})
+
+		-- Create the Filter Selection --
+		GAPI.addLabel(GUITable, "", settingsFrame, {"", {"gui-description.FilterSelect"}, ":"}, nil, {"gui-description.TargetedStorage"}, false, nil, _mfLabelType.yellowTitle)
+		local filter = GAPI.addFilter(GUITable, "D.S.R.Filter," .. tostring(self.ent.unit_number), settingsFrame, nil, true, "item", 40)
+		GUITable.vars.filter = filter
 
 	end
 
-	-- Clear the Flow --
-	inventoryFlow.clear()
+	-- Get the Table --
+	local inventoryTable = GUITable.vars.InventoryTable
 
-	-- Create the Item Frame --
-	if self.inventoryItem ~= nil or self.filter ~= nil then
-		Util.itemToFrame(self.inventoryItem or self.filter, self.inventoryCount or 0, GUIObj, inventoryFlow)
-	end
+	-- Clear the Frame --
+	inventoryTable.clear()
 
-	-- Create the Item Name Label --
+	-- Get the Item Name --
 	local itemName = nil
 	if self.inventoryItem ~= nil then
 		itemName = Util.getLocItemName(self.inventoryItem)
@@ -130,20 +147,18 @@ function DSR:getTooltipInfos(GUIObj, gui, justCreated)
 		itemName = {"gui-description.Empty"}
 	end
 
-	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.ItemName"}, ":"}, itemName, _mfOrange, _mfGreen)
+	-- Create the Item Name Label --
+	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTItemName", itemName}, _mfOrange)
 
 	-- Create the Item Amount Label --
-	local itemAmount = self.inventoryCount or 0
-	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.Amount"}, ":"}, Util.toRNumber(itemAmount), _mfOrange, _mfGreen, nil, nil, itemAmount)
+	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTItemAmount", Util.toRNumber(self.inventoryCount or 0)}, _mfOrange)
 
 	-- Create the Filter Label --
 	local filterName = self.filter ~= nil and Util.getLocItemName(self.filter) or {"gui-description.None"}
-	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.Filter"}, ":"}, filterName, _mfOrange, _mfGreen)
+	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTFilter", filterName}, _mfOrange)
 
 	-- Update the Filter --
-	if self.filter ~= nil and GUIObj["DSRF" .. tostring(self.ent.unit_number)] ~= nil then
-		GUIObj["DSRF" .. tostring(self.ent.unit_number)].elem_value = self.filter
-	end
+	GUITable.vars.filter.elem_value = self.filter
 
 end
 
@@ -207,5 +222,21 @@ function DSR:validate()
 	-- Remove the Item Filter if it doesn't exist anymore --
 	if self.filter ~= nil and game.item_prototypes[self.filter] == nil then
 		self.filter = nil
+	end
+end
+
+-- Called if the Player interacted with the GUI --
+function DSR.interaction(event, MFPlayer)
+	-- If this is a Deep Storage Filter --
+	if string.match(event.element.name, "D.S.R.Filter") then
+		id = tonumber(split(event.element.name, ",")[2])
+		if global.deepStorageTable[id] == nil then return end
+		if event.element.elem_value ~= nil then
+			global.deepStorageTable[id].filter = event.element.elem_value
+		else
+			global.deepStorageTable[id].filter = nil
+		end
+		GUI.updateAllGUIs(true)
+		return
 	end
 end
