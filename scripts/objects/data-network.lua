@@ -69,6 +69,64 @@ function DN:update()
 
 end
 
+-- Create a Data Network Frame --
+function DN.addDataNetworkFrame(GUITable, mainFrame, obj, justCreated)
+
+	if justCreated == true then
+
+		-- Clear the Main Frame --
+		mainFrame.clear()
+
+		-- Create the Frame --
+		local frame = GAPI.addFrame(GUITable, "", mainFrame, "vertical")
+		frame.style = "MFFrame1"
+		frame.style.vertically_stretchable = true
+		frame.style.left_padding = 3
+		frame.style.right_padding = 3
+
+		-- Add the Title --
+		GAPI.addSubtitle(GUITable, "", frame, {"gui-description.NetworkAccessPoint"})
+
+		-- Add the Select Data Network Dropdown --
+		local networks = {}
+		local selected = 1
+		local total = 0
+		for _, MF in pairs(global.MFTable) do
+			if Util.canUse(GUITable.MFPlayer, MF) then
+				table.insert(networks, MF.player)
+				total = total + 1
+				if obj.dataNetwork.ID == MF.dataNetwork.ID then selected = total end
+			end
+		end
+
+		-- Create the Select Data Network Label --
+		GAPI.addLabel(GUITable, "", frame, {"", {"gui-description.DataNetwork"}, ":"}, nil, {"gui-description.SelectDataNetworkLabelTT"}, false, nil, _mfLabelType.yellowTitle)
+
+		-- Create the Select Network Drop Down --
+		if table_size(networks) > 0 then
+			GAPI.addDropDown(GUITable, "DNSelect," .. obj.ent.unit_number, frame, networks, selected, true)
+		end
+
+		-- Create the Information Flow --
+		GAPI.addFlow(GUITable, "DAInfoFlow", frame, "vertical", true)
+
+	end
+
+	-- Get the Information Flow --
+	local infoFlow = GUITable.vars.DAInfoFlow
+
+	-- Clear the Flow --
+	infoFlow.clear()
+
+	-- Add the Connected Statue --
+	if valid(obj.networkAccessPoint) == false then
+		GAPI.addLabel(GUITable, "", infoFlow, {"gui-description.NotLinked"}, _mfRed)
+	else
+		obj.dataNetwork:getTooltipInfos(obj, infoFlow, obj)
+    end
+
+end
+
 -- Get the Tooltip --
 function DN:getTooltipInfos(GUITable, flow, obj)
 
@@ -76,16 +134,19 @@ function DN:getTooltipInfos(GUITable, flow, obj)
 	GAPI.addLabel(GUITable, "", flow, {"", {"gui-description.NetworkAccessPoint"}, ": "}, nil, nil, false, nil, _mfLabelType.yellowTitle)
 
 	-- Create the Connected to Label --
-	GAPI.addLabel(GUITable, "", flow, {"gui-description.ConnectedToDN", obj.dataNetwork.MF.name}, _mfOrange)
+	GAPI.addLabel(GUITable, "", flow, {"gui-description.ConnectedToDN", obj.dataNetwork.MF.name}, _mfOrange, {"gui-description.ConnectedToDNTT"})
 
 	-- Create the Total Quatron Label --
-	GAPI.addLabel(GUITable, "", flow, {"gui-description.DNTotalQuatron", Util.toRNumber(obj.networkAccessPoint.quatronCharge)}, _mfOrange)
+	GAPI.addLabel(GUITable, "", flow, {"gui-description.DNTotalQuatron", Util.toRNumber(obj.networkAccessPoint.quatronCharge)}, _mfOrange, {"gui-description.DNTotalQuatronTT"})
+
+	-- Create the Quatron Putiry Label --
+	GAPI.addLabel(GUITable, "", flow, {"gui-description.DNQuatronPutiry", string.format("%.3f", obj.networkAccessPoint.quatronLevel)}, _mfOrange, {"gui-description.DNQuatronPutiryTT"})
 
 	-- Create the Consumption Label --
-	GAPI.addLabel(GUITable, "", flow, {"gui-description.DNTotalConsumption", Util.toRNumber(obj.networkAccessPoint.totalConsumption)}, _mfOrange)
+	GAPI.addLabel(GUITable, "", flow, {"gui-description.DNTotalConsumption", Util.toRNumber(obj.networkAccessPoint.totalConsumption)}, _mfOrange, {"gui-description.DNTotalConsumptionTT"})
 
 	-- Create the own Consumtion Label --
-	GAPI.addLabel(GUITable, "", flow, {"gui-description.DNSelfConsumption", obj.consumption}, _mfOrange)
+	GAPI.addLabel(GUITable, "", flow, {"gui-description.DNSelfConsumption", obj.consumption}, _mfOrange, {"gui-description.DNSelfConsumptionTT"})
 
 	-- Create the Out Of Power Label --
 	if obj.networkAccessPoint.quatronCharge <= 0 then
@@ -233,59 +294,4 @@ function DN:addFluid(fluid, amount, temperature)
 	end
 	-- Return the amount added --
 	return amount - amountLeft
-end
-
--- Create a Data Network Frame --
-function DN.addDataNetworkFrame(GUITable, mainFrame, obj, justCreated)
-
-	if justCreated == true then
-
-		-- Create the Frame --
-		local frame = GAPI.addFrame(GUITable, "", mainFrame, "vertical")
-		frame.style = "MFFrame1"
-		frame.style.vertically_stretchable = true
-		frame.style.left_padding = 3
-		frame.style.right_padding = 3
-
-		-- Add the Title --
-		GAPI.addSubtitle(GUITable, "", frame, {"gui-description.NetworkAccessPoint"})
-
-		-- Add the Select Data Network Dropdown --
-		local networks = {}
-		local selected = 1
-		local total = 0
-		for _, MF in pairs(global.MFTable) do
-			if Util.canUse(GUITable.MFPlayer, MF) then
-				table.insert(networks, MF.player)
-				total = total + 1
-				if obj.dataNetwork.ID == MF.dataNetwork.ID then selected = total end
-			end
-		end
-
-		-- Create the Select Data Network Label --
-		GAPI.addLabel(GUITable, "", frame, {"", {"gui-description.DataNetwork"}, ":"}, nil, {"gui-description.SelectDataNetworkLabelTT"}, false, nil, _mfLabelType.yellowTitle)
-
-		-- Create the Select Network Drop Down --
-		if table_size(networks) > 0 then
-			GAPI.addDropDown(GUITable, "DNSelect," .. obj.ent.unit_number, frame, networks, selected, true)
-		end
-
-		-- Create the Information Flow --
-		GAPI.addFlow(GUITable, "DAInfoFlow", frame, "vertical", true)
-
-	end
-
-	-- Get the Information Flow --
-	local infoFlow = GUITable.vars.DAInfoFlow
-
-	-- Clear the Flow --
-	infoFlow.clear()
-
-	-- Add the Connected Statue --
-	if valid(obj.networkAccessPoint) == false then
-		GAPI.addLabel(GUITable, "", infoFlow, {"gui-description.NotLinked"}, _mfRed)
-	else
-		obj.dataNetwork:getTooltipInfos(obj, infoFlow, obj)
-    end
-
 end

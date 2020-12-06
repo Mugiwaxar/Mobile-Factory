@@ -207,7 +207,7 @@ function DA:getTooltipInfos(GUITable, mainFrame, justCreated)
 	infoFlow.clear()
 
 	-- Create the Quatron Charge Dual Label --
-	GAPI.addLabel(GUITable,"", infoFlow, {"gui-description.DAQuatronCharge", math.floor(self.quatronCharge)}, _mfOrange)
+	GAPI.addLabel(GUITable,"", infoFlow, {"gui-description.QuatronCharge", math.floor(self.quatronCharge)}, _mfOrange)
 
 	-- Create the Quatron level Dual Label --
 	GAPI.addLabel(GUITable,"", infoFlow, {"gui-description.Quatronlevel", string.format("%.3f", self.quatronLevel)}, _mfOrange)
@@ -258,7 +258,7 @@ function DA:createFrame(GUITable, recipeTable, recipe, recipeID)
 	infoButton.style.left_margin = 25
 
 	-- Create the Recipe Processing Label --
-	local processingText = DA.isProcessing(recipe) and {"gui-description.Running"} or {"gui-description.Paused"}
+	local processingText = DA.isProcessing(recipe) and {"gui-description.Running"} or {"gui-description.Stopped"}
 	local color = DA.isProcessing(recipe) and _mfGreen or _mfYellow
 	GAPI.addLabel(GUITable, "", infoTable, processingText, color)
 

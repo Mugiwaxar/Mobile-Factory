@@ -108,37 +108,82 @@ function NAP:update()
 end
 
 -- Tooltip Infos --
-function NAP:getTooltipInfos(GUIObj, gui, justCreated)
+function NAP:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	-- Create the Data Network Frame --
-    GUIObj:addDataNetworkFrame(gui, self, justCreated)
+	DN.addDataNetworkFrame(GUITable, mainFrame, self, justCreated)
 
-    -- Get the Flow --
-    local informationFlow = GUIObj.InformationFlow
-    
-    if justCreated == true then
-        
-        -- Create the Information Title --
-        local informationTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
+	if justCreated == true then
 
-        -- Create the Area Show/Hide Switch --
-        GUIObj:addLabel("", informationTitle, {"", {"gui-description.ShowNAPArea"}, ":"}, _mfOrange)
-        GUIObj:addSwitch("NAPAreaSwitch," .. self.ent.unit_number, informationTitle, {"gui-description.Off"}, {"gui-description.On"}, "", "", self.showArea == true and "right")
+		-- Set the Main Frame Height --
+		mainFrame.style.height = 450
+		
+		-- Create the Information Frame --
+		local infoFrame = GAPI.addFrame(GUITable, "", mainFrame, "vertical")
+		infoFrame.style = "MFFrame1"
+		infoFrame.style.vertically_stretchable = true
+		infoFrame.style.minimal_width = 200
+		infoFrame.style.left_margin = 3
+		infoFrame.style.left_padding = 3
+		infoFrame.style.right_padding = 3
 
-        -- Create the Information Flow --
-        informationFlow = GUIObj:addFlow("InformationFlow", informationTitle, "vertical", true)
-    end
+		-- Create the Tite --
+		GAPI.addSubtitle(GUITable, "", infoFrame, {"gui-description.Information"})
 
-    -- Clear the Flow --
-    informationFlow.clear()
+		-- Create the Show Area Label --
+		GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.ShowNAPArea"}, nil, nil, false, nil, _mfLabelType.yellowTitle)
+		GAPI.addSwitch(GUITable, "NAPAreaSwitch," .. self.ent.unit_number, infoFrame, {"gui-description.Off"}, {"gui-description.On"}, "", "", self.showArea == true and "right")
+
+		-- Create the Information Flow --
+		GAPI.addFlow(GUITable, "InformationFlow", infoFrame, "vertical", true)
+		
+		-- Create the Connected Structures Frame --
+		local conStructuresFrame = GAPI.addFrame(GUITable, "", mainFrame, "vertical")
+		conStructuresFrame.style = "MFFrame1"
+		conStructuresFrame.style.vertically_stretchable = true
+		conStructuresFrame.style.minimal_width = 200
+		conStructuresFrame.style.left_margin = 3
+		conStructuresFrame.style.left_padding = 3
+		conStructuresFrame.style.right_padding = 3
+
+		-- Create the Tite --
+		GAPI.addSubtitle(GUITable, "", conStructuresFrame, {"gui-description.NAPConnectedStructures"})
+
+		-- Create the Scroll Pane --
+		local conStructuresSC = GAPI.addScrollPane(GUITable, "", conStructuresFrame, nil, false)
+		conStructuresSC.style.vertically_stretchable = true
+		conStructuresSC.style.bottom_margin = 3
+
+		-- Create the Connected Structures Table --
+		GAPI.addTable(GUITable, "ConnectedStructuresTable", conStructuresSC, 1, true)
+
+	end
+
+	-- Get the Information flow and the Connected Structures Table --
+	local infoFlow = GUITable.vars.InformationFlow
+	local conStructuresTable = GUITable.vars.ConnectedStructuresTable
+
+	-- Clear the Flow and the Table --
+	infoFlow.clear()
+	conStructuresTable.clear()
 
     -- Add the Quatron Charge --
-    GUIObj:addLabel("", informationFlow, {"", {"gui-description.QuatronCharge"}, ":"}, _mfOrange)
-	GUIObj:addProgressBar("", informationFlow, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+    GAPI.addLabel(GUITable, "", infoFlow, {"gui-description.QuatronCharge", self.quatronCharge}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", infoFlow, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
 	
 	-- Create the Quatron Purity --
-	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Purity"}, ": "}, string.format("%.3f", self.quatronLevel), _mfOrange, _mfGreen)
-	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronLevel/20, 100)
+	GAPI.addLabel(GUITable, "", infoFlow, {"gui-description.Quatronlevel", string.format("%.3f", self.quatronLevel)}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", infoFlow, "", "", false, _mfPurple, self.quatronLevel/20, 100)
+
+	-- Show the Connected Structures List --
+	for _, obj in pairs(self.objTable) do
+		-- Check the Structure --
+		if valid(obj) == true then
+			-- Create the Label --
+			GAPI.addLabel(GUITable, "", conStructuresTable, {"", Util.getLocEntityName(obj.ent.name), " (", {"gui-description.mfPosition"}, ": ", obj.ent.position.x, ";", obj.ent.position.y, ")"}, _mfYellow)
+		end
+
+	end
 
 end
 
