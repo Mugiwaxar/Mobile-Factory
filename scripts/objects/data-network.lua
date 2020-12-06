@@ -83,9 +83,10 @@ function DN.addDataNetworkFrame(GUITable, mainFrame, obj, justCreated)
 		frame.style.vertically_stretchable = true
 		frame.style.left_padding = 3
 		frame.style.right_padding = 3
+		frame.style.minimal_width = 250
 
 		-- Add the Title --
-		GAPI.addSubtitle(GUITable, "", frame, {"gui-description.NetworkAccessPoint"})
+		GAPI.addSubtitle(GUITable, "", frame, {"gui-description.DNTitle"})
 
 		-- Add the Select Data Network Dropdown --
 		local networks = {}
@@ -100,7 +101,7 @@ function DN.addDataNetworkFrame(GUITable, mainFrame, obj, justCreated)
 		end
 
 		-- Create the Select Data Network Label --
-		GAPI.addLabel(GUITable, "", frame, {"", {"gui-description.DataNetwork"}, ":"}, nil, {"gui-description.SelectDataNetworkLabelTT"}, false, nil, _mfLabelType.yellowTitle)
+		GAPI.addLabel(GUITable, "", frame, {"", {"gui-description.DNSelectDataNetwork"}, ":"}, nil, {"gui-description.DNSelectDataNetworkLabelTT"}, false, nil, _mfLabelType.yellowTitle)
 
 		-- Create the Select Network Drop Down --
 		if table_size(networks) > 0 then
@@ -134,7 +135,7 @@ function DN:getTooltipInfos(GUITable, flow, obj)
 	GAPI.addLabel(GUITable, "", flow, {"", {"gui-description.NetworkAccessPoint"}, ": "}, nil, nil, false, nil, _mfLabelType.yellowTitle)
 
 	-- Create the Connected to Label --
-	GAPI.addLabel(GUITable, "", flow, {"gui-description.ConnectedToDN", obj.dataNetwork.MF.name}, _mfOrange, {"gui-description.ConnectedToDNTT"})
+	GAPI.addLabel(GUITable, "", flow, {"gui-description.DNConnectedTo", obj.dataNetwork.MF.name}, _mfOrange, {"gui-description.DNConnectedToDNTT"})
 
 	-- Create the Total Quatron Label --
 	GAPI.addLabel(GUITable, "", flow, {"gui-description.DNTotalQuatron", Util.toRNumber(obj.networkAccessPoint.quatronCharge)}, _mfOrange, {"gui-description.DNTotalQuatronTT"})
