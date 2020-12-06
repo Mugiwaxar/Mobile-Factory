@@ -424,7 +424,7 @@ function GO:addDataNetworkFrame(gui, obj, justCreated)
     dataNetworkFlow.clear()
 
     if valid(obj.networkAccessPoint) == false then
-        self.DataNetworkTitleLabel.caption = {"gui-description.DNNoLinked"}
+        self.DataNetworkTitleLabel.caption = {"gui-description.NotLinked"}
         self.DataNetworkTitleLabel.style.font_color = _mfRed
     else
         self.DataNetworkTitleLabel.caption = {"gui-description.NetworkAccessPoint"}

@@ -3,7 +3,7 @@ function GUI.createSwitchMFGUI(player)
     
     -- Create the Main Window --
     local GUITable = GAPI.createBaseWindows(_mfGUIName.SwitchMF, {"gui-description.MFSwitchMFGUITitle"}, getMFPlayer(player.name), true, false)
-    GAPI.setMinSize(GUITable.gui, 600)
+    GAPI.setSize(GUITable.gui, 100, 100)
 
     -- Add the Close Button --
     GAPI.addCloseButton(GUITable)
@@ -36,10 +36,10 @@ function GUI.createSwitchMFGUI(player)
     mainFrame.style = "MFFrame2"
 
     -- Create the Mobile Factory List Scroll Pane --
-    local listScrollPane = GAPI.addScrollPane(GUITable, "MFListScrollPane", mainFrame, nil, true, nil, "auto")
+    local listScrollPane = GAPI.addScrollPane(GUITable, "MFListScrollPane", mainFrame, nil, true)
     listScrollPane.style = "MF_SwtichGUI_scroll_pan"
     listScrollPane.style.top_padding = 3
-    listScrollPane.style.vertically_stretchable = true
+    listScrollPane.style.height = 400
 
     -- Update the GUI --
     GUI.updateMFSwitchMFGUI(GUITable, true)
@@ -72,12 +72,12 @@ function GUI.updateMFSwitchMFGUI(GUITable, justCreated)
 
         -- Add the Select Button --
         local buttonStyle = "shortcut_bar_button_green"
-        local buttonTooltip = {"gui-description.SelectMFTT1"}
+        local buttonTooltip = {"", "[color=green]", {"gui-description.SelectMFTT1"}, "[/color]"}
 
         -- Change the Button if the Player is not allowed to use this Mobile Factory --
         if Util.canUse(GUITable.MFPlayer, MF2) == false then
             buttonStyle = "MF_Fake_Button_Red"
-            buttonTooltip = {"gui-description.SelectMFTT2"}
+            buttonTooltip = {"", "[color=red]", {"gui-description.SelectMFTT2"}, "[/color]"}
         end
         local icon = (MF2.ent ~= nil and MF2.ent.valid == true) and MF2.ent.name or "MobileFactory"
         GAPI.addButton(GUITable, "SwitchMFSwitchButton," .. k, flow, "item/" .. icon, "item/" .. icon, buttonTooltip, 50, false, true, nil, buttonStyle)

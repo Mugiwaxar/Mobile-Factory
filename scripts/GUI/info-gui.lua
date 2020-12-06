@@ -6,8 +6,6 @@ function GUI.createInfoGui(player)
 
 	-- Create the GUI --
 	local GUITable = GAPI.createBaseWindows(_mfGUIName.InfoGUI, getCurrentMF(MFPlayer).name, MFPlayer, true, false, false, "vertical", "horizontal")
-	GUITable.gui.style.maximal_height = 800
-	GUITable.gui.style.maximal_width = 1500
 
 	-- Add the Switch Button --
 	GAPI.addButton(GUITable, "SwitchMFButton", GUITable.vars.topBarFlow, "SwitchIcon", "SwitchIcon", {"gui-description.SwitchMFButton"}, 20, false, true, nil, "frame_action_button")
@@ -38,6 +36,8 @@ function GUI.createInfoGui(player)
 	inventoryFrame.style = "MFFrame1"
 
 	infoFrame.style.top_padding = 1
+	infoFrame.style.left_padding = 3
+	infoFrame.style.right_padding = 3
 	infoFrame.style.bottom_padding = 5
 	infoFrame.style.right_margin = 3
 	tankFrame.style.top_padding = 1

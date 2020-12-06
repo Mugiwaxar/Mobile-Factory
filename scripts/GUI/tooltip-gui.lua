@@ -1,33 +1,26 @@
 -- Create the Tooltip GUI --
 function GUI.createTooltipGUI(player, obj)
-	-- Check the Entity --
+
+	-- -- Check the Entity --
 	if valid(obj) == false then return end
 
+	-- Get the MFPlayer --
+	local MFPlayer = getMFPlayer(player.name)
+
 	-- Create the GUI --
-	local GUIObj = GUI.createGUI("MFTooltipGUI", getMFPlayer(player.name), "vertical", true)
+	local GUITable = GAPI.createBaseWindows(_mfGUIName.TooltipGUI, getCurrentMF(MFPlayer).name, MFPlayer, true, true, false, "vertical", "horizontal")
+
+	-- Add the Close Button --
+	GAPI.addCloseButton(GUITable)
 
 	-- Save the Object --
-	GUIObj.currentObject = obj
-
-	-- Create the top Bar --
-	GUI.createTopBar(GUIObj, 50, Util.getLocEntityName(obj.ent.name))
-
-	-- Add the Main Scroll Pane --
-	local mainSrollPane = GUIObj:addScrollPane("MainScrollPane", GUIObj.gui, 350, true)
-	GUIObj.MainScrollPane.style.minimal_height = 50
-	GUIObj.MainScrollPane.style.maximal_height = 800
-
-	-- Add the Main Flow --
-	GUIObj:addFlow("MainFlow", mainSrollPane, "horizontal", true)
+	GUITable.vars.currentObject = obj
 
 	-- Update the GUI --
-	GUI.updateMFTooltipGUI(GUIObj, true)
-
-	-- Center the GUI --
-	GUIObj.force_auto_center()
+	GUI.updateMFTooltipGUI(GUITable, true)
 
 	-- Return the GUI --
-	return GUIObj
+	return GUITable
 	
 end
 
@@ -35,14 +28,9 @@ end
 function GUI.updateMFTooltipGUI(GUIObj, justCreated)
 
 	-- Check the Object --
-	if valid(GUIObj.currentObject) == false or GUIObj.currentObject.getTooltipInfos == nil then return end
-
-	-- Clear the Info Flow Pane --
-	if justCreated == true then
-		GUIObj.MainFlow.clear()
-	end
+	if valid(GUIObj.vars.currentObject) == false or GUIObj.vars.currentObject.getTooltipInfos == nil then return end
 
 	-- Add the Object GUI --
-	GUIObj.currentObject:getTooltipInfos(GUIObj, GUIObj.MainFlow, justCreated)
+	GUIObj.vars.currentObject:getTooltipInfos(GUIObj, GUIObj.vars.MainFrame, justCreated)
 
 end

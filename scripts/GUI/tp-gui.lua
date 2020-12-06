@@ -6,7 +6,6 @@ function GUI.createTPGui(player)
 
     -- Create the GUI --
     local GUITable = GAPI.createBaseWindows(_mfGUIName.TPGUI,{"gui-description.MFTPGUITitle"}, MFPlayer, true, true, false, "vertical", "horizontal")
-    GUITable.gui.style.maximal_height = 600
     local mainFrame = GUITable.vars.MainFrame
 
     -- Create the Frames --

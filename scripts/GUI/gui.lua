@@ -8,74 +8,29 @@ require("scripts/GUI/switchMF-gui.lua")
 require("scripts/GUI/recipe-gui.lua")
 require("utils/functions.lua")
 
--- Create a new GUI --
-function GUI.createGUI(name, MFPlayer, direction, visible, posX, posY)
-	if visible == nil then visible = false end
-	if posX == nil then posX = 0 end
-	if posY == nil then posY = 0 end
-	local newGUIObj = GO:new(name, MFPlayer, direction)
-	newGUIObj.gui.location = {posX,posY}
-	newGUIObj.gui.style.margin = 0
-	newGUIObj.gui.style.padding = 0
-	return newGUIObj
-end
-
--- Create a top Bar --
-function GUI.createTopBar(GUIObj, minimalWidth, title, switchIcon)
-
-	-- Create the Menu Bar --
-	local topBar = GUIObj:addFrame("", GUIObj.gui, "vertical")
-	local topBarFlow = GUIObj:addFlow("", topBar, "horizontal")
-	topBarFlow.style.vertical_align = "center"
-
-	-- Add the Draggable Area 1 --
-	local dragArea1 = GUIObj:addEmptyWidget("", topBarFlow, GUIObj.gui, 20, nil)
-	dragArea1.style.minimal_width = minimalWidth
-
-	-- Add the Title Label --
-	local barTitle = title or {"gui-description." .. GUIObj.gui.name .. "Title"}
-	GUIObj:addLabel("", topBarFlow, barTitle, _mfOrange, nil, false, "TitleFont")
-
-	-- Add the Draggable Area 2 --
-	local dragArea2 = GUIObj:addEmptyWidget("", topBarFlow, GUIObj.gui, 20, nil)
-	dragArea2.style.minimal_width = minimalWidth
-
-	-- Add the Switch Icon if needed --
-	if switchIcon == true then
-		GUIObj:addButton("SwitchMFButton", topBarFlow, "SwitchIcon", "SwitchIcon", {"gui-description.SwitchMFButton"}, 20)
-	end
-
-	-- Add the Close Button --
-	GUIObj:addButton(GUIObj.gui.name.. "CloseButton", topBarFlow, "CloseIcon", "CloseIcon", {"gui-description.closeButton"}, 20)
-
-	-- Return the TopBar --
-	return topBar
-
-end
-
 -- Create a Camera Frame --
-function GUI.createCamera(MFPlayer, name, ent, size, zoom)
+-- function GUI.createCamera(MFPlayer, name, ent, size, zoom)
 
-	-- Create the Frame --
-	local frameObj = GUI.createGUI("Camera" .. name, MFPlayer, "vertical", true)
-	frameObj.style.width = size
-	frameObj.style.height = size
+-- 	-- Create the Frame --
+-- 	local frameObj = GUI.createGUI("Camera" .. name, MFPlayer, "vertical", true)
+-- 	frameObj.style.width = size
+-- 	frameObj.style.height = size
 	
-	-- Add the Top Bar --
-	GUI.createTopBar(frameObj, nil, name)
+-- 	-- Add the Top Bar --
+-- 	GUI.createTopBar(frameObj, nil, name)
 	
-	-- Create the Camera --
-    local camera = frameObj.gui.add{type="camera", position=ent.position, surface=ent.surface, zoom=zoom or 1}
-    camera.style.vertically_stretchable = true
-	camera.style.horizontally_stretchable = true
+-- 	-- Create the Camera --
+--     local camera = frameObj.gui.add{type="camera", position=ent.position, surface=ent.surface, zoom=zoom or 1}
+--     camera.style.vertically_stretchable = true
+-- 	camera.style.horizontally_stretchable = true
 
-	-- Center the Frame --
-	frameObj.force_auto_center()
+-- 	-- Center the Frame --
+-- 	frameObj.force_auto_center()
 
-	-- Return the Frame --
-	return frameObj
+-- 	-- Return the Frame --
+-- 	return frameObj
 	
-end
+-- end
 
 -- Update all GUIs --
 function GUI.updateAllGUIs(force)
@@ -120,6 +75,9 @@ function GUI.guiOpened(event)
 	-- Check the Player --
 	if player == nil or player.valid == false then return end
 
+	-- Get the MFPlayer --
+	local MFPlayer = getMFPlayer(player.index)
+
 	-- Do not open custom GUI if player is connecting wires --
 	local cursorStack = player.cursor_stack
 	if cursorStack and cursorStack.valid_for_read then
@@ -127,8 +85,8 @@ function GUI.guiOpened(event)
 	end
 
 	-- Check the Bypass --
-	if getMFPlayer(player.index).varTable.bypassGUI == true then
-		getMFPlayer(player.index).varTable.bypassGUI = false
+	if MFPlayer.varTable.bypassGUI == true then
+		MFPlayer.varTable.bypassGUI = false
 		return
 	end
 
@@ -139,10 +97,12 @@ function GUI.guiOpened(event)
 	if valid(obj) == false or obj.getTooltipInfos == nil then return end
 
 	-- Check Permissions --
-	if Util.canUse(getMFPlayer(event.player_index), obj) == false then return end
+	if Util.canUse(MFPlayer, obj) == false then return end
 
 	-- Create and save the Tooltip gui --
-	player.opened = GUI.createTooltipGUI(player, obj).gui
+	local GUITable = GUI.createTooltipGUI(player, obj)
+	player.opened = GUITable.gui
+	MFPlayer.GUI[_mfGUIName.TooltipGUI] = GUITable
 
 end
 
@@ -171,9 +131,9 @@ function GUI.guiClosed(event)
 	end
 
 	-- Close the Tootip GUI --
-	if event.element.name == "MFTooltipGUI" then
-		MFPlayer.GUI["MFTooltipGUI"].destroy()
-		MFPlayer.GUI["MFTooltipGUI"] = nil
+	if event.element.name == _mfGUIName.TooltipGUI then
+		MFPlayer.GUI[_mfGUIName.TooltipGUI].gui.destroy()
+		MFPlayer.GUI[_mfGUIName.TooltipGUI] = nil
 		return
 	end
 
@@ -276,6 +236,93 @@ function GUI.buttonClicked(event)
 		return
 	end
 
+	-- If this is a Info GUI Deep Tank Filter --
+	if string.match(event.element.name, "DTF") then
+		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeTankGUI = true
+		end
+	end
+
+	-- If this is a Info GUI Deep Storage Filter --
+	if string.match(event.element.name, "DSRF") then
+		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeStorageGUI = true
+		end
+	end
+
+	-- Close Info GUI Button --
+	if event.element.name == _mfGUIName.InfoGUI .. "CloseButton" then
+		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.InfoGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.InfoGUI] = nil
+		end
+		return
+	end
+
+	-- Close Option GUI Button --
+	if event.element.name == _mfGUIName.OptionGUI .. "CloseButton" then
+		if MFPlayer.GUI[_mfGUIName.OptionGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.OptionGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.OptionGUI] = nil
+		end
+		return
+	end
+
+	-- Close Tooltip GUI Button --
+	if event.element.name == _mfGUIName.TooltipGUI .. "CloseButton" then
+		if MFPlayer.GUI[_mfGUIName.TooltipGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.TooltipGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.TooltipGUI] = nil
+		end
+		return
+	end
+
+	-- Close TP GUI Button --
+	if event.element.name == _mfGUIName.TPGUI .. "CloseButton" then
+		if MFPlayer.GUI[_mfGUIName.TPGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.TPGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.TPGUI] = nil
+		end
+		return
+	end
+
+	-- Close the SwitchMF GUI --
+	if event.element.name == _mfGUIName.SwitchMF .. "CloseButton" then
+		if MFPlayer.GUI[_mfGUIName.SwitchMF] ~= nil then
+			MFPlayer.GUI[_mfGUIName.SwitchMF].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.SwitchMF] = nil
+		end
+		return
+	end
+
+	-- Close the Recipe GUI --
+	if event.element.name == _mfGUIName.RecipeGUI .. "CloseButton" then
+		if MFPlayer.GUI[_mfGUIName.RecipeGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.RecipeGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.RecipeGUI] = nil
+		end
+		return
+	end
+
+	-- Close the Recipe Information GUI --
+	if event.element.name == _mfGUIName.RecipeInfoGUI .. "CloseButton" then
+		if MFPlayer.GUI[_mfGUIName.RecipeInfoGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.RecipeInfoGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.RecipeInfoGUI] = nil
+		end
+		return
+	end
+
+	-- Close Camera Button --
+	if string.match(event.element.name, "Camera") then
+		local text = string.gsub(event.element.name, "CloseButton", "")
+		if MFPlayer.GUI[text] ~= nil then
+			MFPlayer.GUI[text].destroy()
+			MFPlayer.GUI[text] = nil
+		end
+		return
+	end
+
 	-- Open the Main GUI --
 	if event.element.name == "MainGUIOpen" then
 		mainGUI.MFPlayer.varTable.MainGUIOpen = true
@@ -355,84 +402,6 @@ function GUI.buttonClicked(event)
 		if currentMF.quatronLaserActivated == true then currentMF.quatronLaserActivated = false
 		elseif currentMF.quatronLaserActivated == false then currentMF.quatronLaserActivated = true end
 		GUI.updateAllGUIs(true)
-		return
-	end
-
-	-- If this is a Info GUI Deep Tank Filter --
-	if string.match(event.element.name, "DTF") then
-		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
-			MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeTankGUI = true
-		end
-	end
-
-	-- If this is a Info GUI Deep Storage Filter --
-	if string.match(event.element.name, "DSRF") then
-		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
-			MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeStorageGUI = true
-		end
-	end
-
-	-- Close Info GUI Button --
-	if event.element.name == _mfGUIName.InfoGUI .. "CloseButton" then
-		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
-			MFPlayer.GUI[_mfGUIName.InfoGUI].gui.destroy()
-			MFPlayer.GUI[_mfGUIName.InfoGUI] = nil
-		end
-		return
-	end
-
-	-- Close Option GUI Button --
-	if event.element.name == _mfGUIName.OptionGUI .. "CloseButton" then
-		if MFPlayer.GUI[_mfGUIName.OptionGUI] ~= nil then
-			MFPlayer.GUI[_mfGUIName.OptionGUI].gui.destroy()
-			MFPlayer.GUI[_mfGUIName.OptionGUI] = nil
-		end
-		return
-	end
-
-	-- Close Tooltip GUI Button --
-	if event.element.name == "MFTooltipGUICloseButton" then
-		if MFPlayer.GUI["MFTooltipGUI"] ~= nil then
-			MFPlayer.GUI["MFTooltipGUI"].destroy()
-			MFPlayer.GUI["MFTooltipGUI"] = nil
-		end
-		return
-	end
-
-	-- Close TP GUI Button --
-	if event.element.name == _mfGUIName.TPGUI .. "CloseButton" then
-		if MFPlayer.GUI[_mfGUIName.TPGUI] ~= nil then
-			MFPlayer.GUI[_mfGUIName.TPGUI].gui.destroy()
-			MFPlayer.GUI[_mfGUIName.TPGUI] = nil
-		end
-		return
-	end
-
-	-- Close the SwitchMF GUI --
-	if event.element.name == _mfGUIName.SwitchMF .. "CloseButton" then
-		if MFPlayer.GUI[_mfGUIName.SwitchMF] ~= nil then
-			MFPlayer.GUI[_mfGUIName.SwitchMF].gui.destroy()
-			MFPlayer.GUI[_mfGUIName.SwitchMF] = nil
-		end
-		return
-	end
-
-	-- Close the SwitchMF GUI --
-	if event.element.name == _mfGUIName.RecipeGUI .. "CloseButton" then
-		if MFPlayer.GUI[_mfGUIName.RecipeGUI] ~= nil then
-			MFPlayer.GUI[_mfGUIName.RecipeGUI].gui.destroy()
-			MFPlayer.GUI[_mfGUIName.RecipeGUI] = nil
-		end
-		return
-	end
-
-	-- Close Camera Button --
-	if string.match(event.element.name, "Camera") then
-		local text = string.gsub(event.element.name, "CloseButton", "")
-		if MFPlayer.GUI[text] ~= nil then
-			MFPlayer.GUI[text].destroy()
-			MFPlayer.GUI[text] = nil
-		end
 		return
 	end
 
@@ -555,8 +524,8 @@ function GUI.buttonClicked(event)
 	-- Recipe Selector Recipe Button --
 	if string.match(event.element.name, "RSRecipeButton") then
 		local tGUI = MFPlayer.GUI[_mfGUIName.TooltipGUI]
-		if tGUI ~= nil and tGUI.DA ~= nil then
-			tGUI.DARecipe.elem_value = split(event.element.name, ",")[2]
+		if tGUI ~= nil and tGUI.vars.DA ~= nil then
+			tGUI.vars["D.A.RecipeFilter"].elem_value = split(event.element.name, ",")[2]
 		end
 		MFPlayer.GUI[_mfGUIName.RecipeGUI].gui.destroy()
 		MFPlayer.GUI[_mfGUIName.RecipeGUI] = nil
@@ -565,46 +534,8 @@ function GUI.buttonClicked(event)
 	end
 
 	-- If this is a Data Assembler --
-	-- Select Recipe --
-	if event.element.name == "DARecipe" and global.useVanillaChooseElem == false then
-		if MFPlayer.GUI[_mfGUIName.RecipeGUI] ~= nil then
-			MFPlayer.GUI[_mfGUIName.RecipeGUI].destroy()
-			MFPlayer.GUI[_mfGUIName.RecipeGUI] = nil
-		end
-		local GUITable = GUI.createRecipeGUI(player)
-		MFPlayer.GUI[_mfGUIName.RecipeGUI] = GUITable
-		return
-	end
-	if string.match(event.element.name, "DA") and event.element.type == "sprite-button" then
-		-- If a Recipe must be added --
-		if string.match(event.element.name, "DAAddR") then
-			local GUIObj = MFPlayer.GUI["MFTooltipGUI"]
-			local objID = tonumber(split(event.element.name, ",")[2])
-			local obj = global.dataAssemblerTable[objID]
-			if valid(obj) == false then return end
-			local recipe = GUIObj.DARecipe.elem_value
-			local amount = GUIObj.DAAmount.text
-			GUIObj.DARecipe.elem_value = nil
-			GUIObj.DAAmount.text = ""
-			obj:addRecipe(recipe, amount)
-		end
-		if string.match(event.element.name, "DARem") and event.button == defines.mouse_button_type.right then
-			local objID = tonumber(split(event.element.name, ",")[2])
-			local obj = global.dataAssemblerTable[objID]
-			local recipeID = tonumber(split(event.element.name, ",")[3])
-			if valid(obj) == false then return end
-			obj:removeRecipe(recipeID)
-		end
-		if string.match(event.element.name, "DASwap") then
-			local objID = tonumber(split(event.element.name, ",")[2])
-			local obj = global.dataAssemblerTable[objID]
-			local recipeID = tonumber(split(event.element.name, ",")[3])
-			local productID = tonumber(split(event.element.name, ",")[4])
-			if valid(obj) == false then return end
-			local products = obj.recipeTable[recipeID].products
-			products[1], products[productID] = products[productID], products[1]
-		end
-		-- Update all GUIs --
+	if string.match(event.element.name, "D.A.") then
+		DA.interaction(event, MFPlayer)
 		GUI.updateAllGUIs(true)
 		return
 	end
@@ -615,7 +546,7 @@ function GUI.buttonClicked(event)
 		local objID = tonumber(split(event.element.name, ",")[2])
 		local obj = global.networkAccessPointTable[objID]
 		if valid(obj) == false then return end
-		if event.element.switch_state == "left" then 
+		if event.element.switch_state == "left" then
 			obj.showArea = false
 		else
 			obj.showArea = true

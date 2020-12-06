@@ -183,8 +183,8 @@ _mfQuatronAndMF = merge{_mfQuatronShare, _mfMobileFactories}
 _GUIButtonsSize = 15
 _mfGUIDragAreaSize = 25
 _mfGUICloseButtonSize = 20
-_mfDefaultGuiHeight = 300
-_mfDefaultGuiWidth = 300
+_mfDefaultGuiHeight = 10
+_mfDefaultGuiWidth = 10
 _mfMainGUIPosX = 300
 _mfMainGUIPosY = 0
 _mfInfoGUIButtonsSize = 25
@@ -198,7 +198,8 @@ _mfGUIName =
 	TooltipGUI = "MFTooltipGUI",
 	SwitchMF = "MFSwitchMFGUI",
 	TPGUI = "MFTPGUI",
-	RecipeGUI = "MFRecipeGUI"
+	RecipeGUI = "MFRecipeGUI",
+	RecipeInfoGUI = "MFRecipeInfoGUI"
 }
 
 -- Entity GUI --

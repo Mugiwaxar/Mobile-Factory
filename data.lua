@@ -830,7 +830,7 @@ data.raw["gui-style"].default.MF_DA_scroll_pan =
 	{
 		position = {282, 17},
 		corner_size = 8,
-		overall_tiling_vertical_size = 53,
+		overall_tiling_vertical_size = 58,
 		overall_tiling_vertical_spacing = 0,
 		overall_tiling_vertical_padding = 0,
 		overall_tiling_horizontal_padding = 0

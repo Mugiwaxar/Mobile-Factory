@@ -225,7 +225,7 @@ function FE:extractFluids(event)
 	-- Check the Quatron Charge --
 	if self.quatronCharge < 100 then return end
 	-- Check the Resource --
-	if self.resource == nil or self.listProducts == nil then
+	if self.resource == nil or self.resource.valid == false or self.listProducts == nil then
 		-- Get the Resources under the Fluid Extractor
 		local resources = self.ent.surface.find_entities_filtered{position=self.ent.position, radius=1, type="resource"}
 		for _, resource in pairs(resources or {}) do
@@ -245,7 +245,7 @@ function FE:extractFluids(event)
 	end
 
 	-- Check if a Ressource was found --
-	if self.resource == nil or self.listProducts == nil then return end
+	if self.resource == nil or self.resource.valid == false or self.listProducts == nil then return end
 
 	-- Check the selected Inventory --
 	if self.selectedInv ~= nil then
@@ -257,9 +257,8 @@ function FE:extractFluids(event)
 	local deepStorages = {}
 	local fluidExtracted = math.min(self:fluidPerExtraction(), self.resource.amount)
 	for _, product in pairs(self.listProducts) do
-		-- Check if product is fluid --
+		-- Check if the product is a Fluid --
 		if product.type ~= 'fluid' then return end
-
 		if self.selectedInv then
 			-- Deep Storage is assigned, check if it fits
 			if self.selectedInv:canAccept({name = product.name, amount = fluidExtracted * product.amount}) then

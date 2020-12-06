@@ -18,11 +18,10 @@ function GAPI.createBaseWindows(name, title, MFPlayer, showTitle, showMainFrame,
             mainFrame.style = "invisible_frame"
         else
             mainFrame = GAPI.addScrollPane(GUITable, "MainFrame", GUITable.gui, nil, true)
-            -- mainFrame.style = "tab_scroll_pane_with_extra_padding"
         end
         mainFrame.style.vertically_stretchable = true
     end
-    GAPI.setGeometry(GUITable.gui, nil, nil, _mfDefaultGuiHeight, _mfDefaultGuiWidth)
+    GAPI.setSize(GUITable.gui, _mfDefaultGuiHeight, _mfDefaultGuiWidth)
     GAPI.centerWindow(GUITable.gui)
     return GUITable
 end
@@ -459,4 +458,57 @@ function GAPI.addItemFrame(GUITable, name, item, amount, gui, save)
         GUITable.vars[name] = frame
     end
     return frame
+end
+
+-- Create a Data Network Frame --
+function GAPI.addDataNetworkFrame(gui, obj, justCreated)
+
+    -- Get the Title and the Flow --
+    local dataNetworkTitle = self.DataNetworkTitle
+    local selectNetworkFlow = self.SelectNetworkFlow
+    local dataNetworkFlow = self.DataNetworkFlow
+
+    if dataNetworkTitle == nil or dataNetworkTitle.valid == false or dataNetworkFlow == nil or dataNetworkFlow.valid == false then
+        -- Create the Title and the Flow --
+        dataNetworkTitle = self:addTitledFrame("DataNetworkTitle", gui, "vertical", {"gui-description.NetworkAccessPoint"}, _mfOrange, true)
+        selectNetworkFlow = self:addFlow("SelectNetworkFlow", dataNetworkTitle, "vertical", true)
+        dataNetworkFlow = self:addFlow("DataNetworkFlow", dataNetworkTitle, "vertical", true)
+    end
+
+    -- Clear the Flow --
+    dataNetworkFlow.clear()
+
+    if valid(obj.networkAccessPoint) == false then
+        self.DataNetworkTitleLabel.caption = {"gui-description.NotLinked"}
+        self.DataNetworkTitleLabel.style.font_color = _mfRed
+    else
+        self.DataNetworkTitleLabel.caption = {"gui-description.NetworkAccessPoint"}
+        self.DataNetworkTitleLabel.style.font_color = _mfOrange
+    end
+
+    -- Create the Select Network Table --
+	if justCreated == true then
+		local networks = {}
+		local selected = 1
+		local total = 0
+		for _, MF in pairs(global.MFTable) do
+			if Util.canUse(self.MFPlayer, MF) then
+				table.insert(networks, MF.player)
+				total = total + 1
+				if obj.dataNetwork.ID == MF.dataNetwork.ID then selected = total end
+			end
+		end
+
+		-- Create the Select Network Drop Down --
+		if table_size(networks) > 0 then
+			self:addDropDown("DNSelect," .. obj.ent.unit_number, selectNetworkFlow, networks, selected, true, {"gui-description.SelectDataNetwork"})
+		end
+	end
+
+    if valid(obj.networkAccessPoint) == true then
+        obj.dataNetwork:getTooltipInfos(self, dataNetworkFlow, obj, justCreated)
+    end
+
+    return dataNetworkFlow
+    
 end
