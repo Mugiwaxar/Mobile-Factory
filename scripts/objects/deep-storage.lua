@@ -112,7 +112,6 @@ function DSR:getTooltipInfos(GUITable, mainFrame, justCreated)
 		-- Create the Inventory Table --
 		GAPI.addTable(GUITable, "InventoryTable", inventoryFrame, 1, true)
 
-
 		-- Create the Settings Frame --
 		local settingsFrame = GAPI.addFrame(GUITable, "SettingsFrame", mainFrame, "vertical", true)
 		settingsFrame.style = "MFFrame1"
@@ -226,7 +225,7 @@ function DSR:validate()
 end
 
 -- Called if the Player interacted with the GUI --
-function DSR.interaction(event, MFPlayer)
+function DSR.interaction(event)
 	-- If this is a Deep Storage Filter --
 	if string.match(event.element.name, "D.S.R.Filter") then
 		id = tonumber(split(event.element.name, ",")[2])

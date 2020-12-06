@@ -579,7 +579,14 @@ function GUI.onGuiElemChanged(event)
 
 	-- If this is a Deep Storage --
 	if string.match(event.element.name, "D.S.R.") then
-		DSR.interaction(event, MFPlayer)
+		DSR.interaction(event)
+		GUI.updateAllGUIs(true)
+		return
+	end
+
+	-- If this is a Deep Tank --
+	if string.match(event.element.name, "D.T.") then
+		DSR.interaction(event)
 		GUI.updateAllGUIs(true)
 		return
 	end
@@ -587,24 +594,6 @@ function GUI.onGuiElemChanged(event)
 	------- Save the filter -------
 	if event.element.type == "choose-elem-button" and event.element.get_mod() == "Mobile_Factory" then
 		local id = event.element.name
-
-		-- If this is a Deep Tank --
-		if string.match(id, "DTF") then
-			if MFPlayer.GUI["MFInfoGUI"] ~= nil then
-				MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeTankGUI = false
-			end
-			-- Get the Deep Tank ID --
-			id = tonumber(split(id, "DTF")[1])
-			if global.deepTankTable[id] == nil then return end
-			if event.element.elem_value ~= nil then
-				global.deepTankTable[id].filter = event.element.elem_value
-			else
-				global.deepTankTable[id].filter = nil
-			end
-			GUI.updateAllGUIs(true)
-			return
-		end
-
 		-- If this is a Matter Interactor --
 		if string.match(id, "MIFilter") then
 			id = tonumber(split(id, "MIFilter")[1])

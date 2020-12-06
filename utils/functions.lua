@@ -555,9 +555,9 @@ function Util.itemToFrame(name, count, GUIObj, gui)
 end
 
 -- Util: Create a frame from a Fluid --
-function Util.fluidToFrame(name, count, GUIObj, gui)
+function Util.fluidToFrame(name, count, GUITable, gui)
 	-- Create the Button --
-	local button = GUIObj:addButton("", gui, "fluid/" .. name, "fluid/" .. name, {"", Util.getLocFluidName(name), ": ", Util.toRNumber(count)}, 37, true, true, count)
+	local button = GAPI.addButton(GUITable, "", gui, "fluid/" .. name, "fluid/" .. name, {"", Util.getLocFluidName(name), ": ", Util.toRNumber(count)}, 37, true, true, count)
 	button.style = "MF_Fake_Button_Purple"
 	button.style.padding = 0
 	button.style.margin = 0
