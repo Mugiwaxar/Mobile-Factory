@@ -115,6 +115,9 @@ function NAP:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	if justCreated == true then
 
+		-- Set the GUI Title --
+		GUITable.vars.GUITitle.caption = {"gui-description.NetworkAccessPoint"}
+
 		-- Set the Main Frame Height --
 		mainFrame.style.height = 450
 		

@@ -129,7 +129,7 @@ end
 function FI:getTooltipInfos(GUIObj, gui, justCreated)
 
 	-- Create the Data Network Frame --
-	GUIObj:addDataNetworkFrame(gui, self, justCreated)
+	DN.addDataNetworkFrame(GUITable, mainFrame, self, justCreated)
 	
     -- Check if the Parameters can be modified --
 	if justCreated ~= true or valid(self.dataNetwork) == false then return end

@@ -109,49 +109,49 @@ function DN.addDataNetworkFrame(GUITable, mainFrame, obj, justCreated)
 		end
 
 		-- Create the Information Flow --
-		GAPI.addFlow(GUITable, "DAInfoFlow", frame, "vertical", true)
+		GAPI.addTable(GUITable, "DAInfoTable", frame, 1, true)
 
 	end
 
-	-- Get the Information Flow --
-	local infoFlow = GUITable.vars.DAInfoFlow
+	-- Get the Information Table --
+	local infoTable = GUITable.vars.DAInfoTable
 
-	-- Clear the Flow --
-	infoFlow.clear()
+	-- Clear the Table --
+	infoTable.clear()
 
 	-- Add the Connected Statue --
 	if valid(obj.networkAccessPoint) == false then
-		GAPI.addLabel(GUITable, "", infoFlow, {"gui-description.NotLinked"}, _mfRed)
+		GAPI.addLabel(GUITable, "", infoTable, {"gui-description.NotLinked"}, _mfRed)
 	else
-		obj.dataNetwork:getTooltipInfos(obj, infoFlow, obj)
+		obj.dataNetwork:getTooltipInfos(obj, infoTable, obj)
     end
 
 end
 
 -- Get the Tooltip --
-function DN:getTooltipInfos(GUITable, flow, obj)
+function DN:getTooltipInfos(GUITable, infoTable, obj)
 
 	-- Create the Network Access Point Label --
-	GAPI.addLabel(GUITable, "", flow, {"", {"gui-description.NetworkAccessPoint"}, ": "}, nil, nil, false, nil, _mfLabelType.yellowTitle)
+	GAPI.addLabel(GUITable, "", infoTable, {"", {"gui-description.NetworkAccessPoint"}, ": "}, nil, nil, false, nil, _mfLabelType.yellowTitle)
 
 	-- Create the Connected to Label --
-	GAPI.addLabel(GUITable, "", flow, {"gui-description.DNConnectedTo", obj.dataNetwork.MF.name}, _mfOrange, {"gui-description.DNConnectedToDNTT"})
+	GAPI.addLabel(GUITable, "", infoTable, {"gui-description.DNConnectedTo", obj.dataNetwork.MF.name}, _mfOrange, {"gui-description.DNConnectedToDNTT"})
 
 	-- Create the Total Quatron Label --
-	GAPI.addLabel(GUITable, "", flow, {"gui-description.DNTotalQuatron", Util.toRNumber(obj.networkAccessPoint.quatronCharge)}, _mfOrange, {"gui-description.DNTotalQuatronTT"})
+	GAPI.addLabel(GUITable, "", infoTable, {"gui-description.DNTotalQuatron", Util.toRNumber(obj.networkAccessPoint.quatronCharge)}, _mfOrange, {"gui-description.DNTotalQuatronTT"})
 
 	-- Create the Quatron Putiry Label --
-	GAPI.addLabel(GUITable, "", flow, {"gui-description.DNQuatronPutiry", string.format("%.3f", obj.networkAccessPoint.quatronLevel)}, _mfOrange, {"gui-description.DNQuatronPutiryTT"})
+	GAPI.addLabel(GUITable, "", infoTable, {"gui-description.DNQuatronPutiry", string.format("%.3f", obj.networkAccessPoint.quatronLevel)}, _mfOrange, {"gui-description.DNQuatronPutiryTT"})
 
 	-- Create the Consumption Label --
-	GAPI.addLabel(GUITable, "", flow, {"gui-description.DNTotalConsumption", Util.toRNumber(obj.networkAccessPoint.totalConsumption)}, _mfOrange, {"gui-description.DNTotalConsumptionTT"})
+	GAPI.addLabel(GUITable, "", infoTable, {"gui-description.DNTotalConsumption", Util.toRNumber(obj.networkAccessPoint.totalConsumption)}, _mfOrange, {"gui-description.DNTotalConsumptionTT"})
 
 	-- Create the own Consumtion Label --
-	GAPI.addLabel(GUITable, "", flow, {"gui-description.DNSelfConsumption", obj.consumption}, _mfOrange, {"gui-description.DNSelfConsumptionTT"})
+	GAPI.addLabel(GUITable, "", infoTable, {"gui-description.DNSelfConsumption", obj.consumption}, _mfOrange, {"gui-description.DNSelfConsumptionTT"})
 
 	-- Create the Out Of Power Label --
 	if obj.networkAccessPoint.quatronCharge <= 0 then
-		GAPI.addLabel(GUITable, "", flow, {"gui-description.OutOfQuatron"}, _mfRed)
+		GAPI.addLabel(GUITable, "", infoTable, {"gui-description.OutOfQuatron"}, _mfRed)
 	end
 
 end

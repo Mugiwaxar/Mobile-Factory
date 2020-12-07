@@ -100,6 +100,9 @@ function DTK:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	if justCreated == true then
 
+		-- Set the GUI Title --
+		GUITable.vars.GUITitle.caption = {"", {"gui-description.DeepTank"}, " ", self.ID}
+
 		-- Create the Inventory Frame --
 		local inventoryFrame = GAPI.addFrame(GUITable, "InventoryFrame", mainFrame, "vertical", true)
 		inventoryFrame.style = "MFFrame1"
@@ -161,23 +164,6 @@ function DTK:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	-- Update the Filter --
 	GUITable.vars.filter.elem_value = self.filter
-
-	if true then return end
-
-	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.FluidName"}, ":"}, fluidName, _mfOrange, _mfGreen)
-
-	-- Create the Fluid Amount Label --
-	local fluidAmount = self.inventoryCount or 0
-	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.Amount"}, ":"}, Util.toRNumber(fluidAmount) .. "/" .. Util.toRNumber(_dtMaxFluid), _mfOrange, _mfGreen, nil, nil, fluidAmount .. "/" .. _dtMaxFluid)
-
-	-- Create the Filter Label --
-	local filterName = self.filter ~= nil and Util.getLocFluidName(self.filter) or {"gui-description.None"}
-	GUIObj:addDualLabel(inventoryFlow, {"", {"gui-description.Filter"}, ":"}, filterName, _mfOrange, _mfGreen)
-
-	-- Update the Filter --
-	if self.filter ~= nil and GUIObj["TF" .. tostring(self.ent.unit_number)] ~= nil then
-		GUIObj["TF" .. tostring(self.ent.unit_number)].elem_value = self.filter
-	end
 
 end
 
@@ -254,7 +240,7 @@ function DTK:validate()
 end
 
 -- Called if the Player interacted with the GUI --
-function DSR.interaction(event)
+function DTK.interaction(event)
 	-- If this is a Filter --
 	if string.match(event.element.name, "D.T.Filter") then
 		-- Get the Deep Tank ID --

@@ -87,7 +87,7 @@ function GAPI.createTitle(GUITable)
     topBarFlow.style.margin = 0
 	-- Add the Title Label --
 	local barTitle = GUITable.title or {"gui-description." .. GUITable.gui.name .. "Title"}
-	GAPI.addLabel(GUITable, "", topBarFlow, barTitle, _mfOrange, nil, false, "TitleFont")
+	GAPI.addLabel(GUITable, "GUITitle", topBarFlow, barTitle, _mfOrange, nil, true, "TitleFont")
 	-- Add the Draggable Area --
     local dragArea = GAPI.addEmptyWidget(GUITable, "", topBarFlow, GUITable.gui, _mfGUIDragAreaSize)
     dragArea.style.left_margin = 8

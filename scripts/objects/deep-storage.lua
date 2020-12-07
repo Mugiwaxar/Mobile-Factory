@@ -97,6 +97,9 @@ function DSR:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	if justCreated == true then
 
+		-- Set the GUI Title --
+		GUITable.vars.GUITitle.caption = {"", {"gui-description.DeepStorage"}, " ", self.ID}
+
 		-- Create the Inventory Frame --
 		local inventoryFrame = GAPI.addFrame(GUITable, "InventoryFrame", mainFrame, "vertical", true)
 		inventoryFrame.style = "MFFrame1"
@@ -133,7 +136,7 @@ function DSR:getTooltipInfos(GUITable, mainFrame, justCreated)
 	-- Get the Table --
 	local inventoryTable = GUITable.vars.InventoryTable
 
-	-- Clear the Frame --
+	-- Clear the Table --
 	inventoryTable.clear()
 
 	-- Get the Item Name --

@@ -115,95 +115,145 @@ function MI:update()
 end
 
 -- Tooltip Infos --
-function MI:getTooltipInfos(GUIObj, gui, justCreated)
+function MI:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	-- Create the Data Network Frame --
-	GUIObj:addDataNetworkFrame(gui, self, justCreated)
+	DN.addDataNetworkFrame(GUITable, mainFrame, self, justCreated)
 
-	-- Update the Filter --
-	if self.selectedFilter ~= nil and GUIObj["MIFilter" .. tostring(self.ent.unit_number)] ~= nil and GUIObj["MIFilter" .. tostring(self.ent.unit_number)].valid == true then
-		GUIObj["MIFilter" .. tostring(self.ent.unit_number)].elem_value = self.selectedFilter
+	if justCreated == true then
+
+		-- Set the GUI Title --
+		GUITable.vars.GUITitle.caption = {"gui-description.MatterInteractor"}
+
+		-- Set the Main Frame Height --
+		mainFrame.style.height = 350
+
+		-- Create the Network Inventory Frame --
+		local inventoryFrame = GAPI.addFrame(GUITable, "InventoryFrame", mainFrame, "vertical", true)
+		inventoryFrame.style = "MFFrame1"
+		inventoryFrame.style.vertically_stretchable = true
+		inventoryFrame.style.left_padding = 3
+		inventoryFrame.style.right_padding = 3
+		inventoryFrame.style.left_margin = 3
+		inventoryFrame.style.right_margin = 3
+		inventoryFrame.style.minimal_width = 200
+
+		-- Add the Title --
+		GAPI.addSubtitle(GUITable, "", inventoryFrame, {"gui-description.Inventory"})
+
+		-- Create the Inventory Flow and Button --
+		local inventoryFlow = GAPI.addFlow(GUITable, "", inventoryFrame, "horizontal")
+		inventoryFlow.style.horizontal_align = "center"
+		GAPI.addSimpleButton(GUITable, "M.I.OpenInvButton," .. tostring(self.ent.unit_number), inventoryFlow, {"gui-description.OpenInventory"})
+
+		-- Create the Inventory Table --
+		GAPI.addTable(GUITable, "InventoryTable", inventoryFrame, 1, true)
+
+		-- Check if the Parameters can be modified --
+		if valid(self.dataNetwork) == false then return end
+
+		-- Create the Parameters Frame --
+		local parametersFrame = GAPI.addFrame(GUITable, "ParametersFrame", mainFrame, "vertical", true)
+		parametersFrame.style = "MFFrame1"
+		parametersFrame.style.vertically_stretchable = true
+		parametersFrame.style.left_padding = 3
+		parametersFrame.style.right_padding = 3
+		parametersFrame.style.right_margin = 3
+
+		-- Add the Title --
+		GAPI.addSubtitle(GUITable, "", parametersFrame, {"gui-description.Settings"})
+
+		-- Add the Filter Selection --
+		GAPI.addLabel(GUITable, "", parametersFrame, {"gui-description.MIFIChangeFilter"}, nil, {"gui-description.MIFIChangeFilterItemTT"}, false, nil, _mfLabelType.yellowTitle)
+		local filter = GAPI.addFilter(GUITable, "M.I.Filter," .. tostring(self.ent.unit_number), parametersFrame, "", true, "item", 40)
+		GUITable.vars.filter = filter
+		if self.selectedFilter ~= nil then filter.elem_value = self.selectedFilter end
+
+		-- Add the Mode Selection --
+		GAPI.addLabel(GUITable, "", parametersFrame, {"gui-description.MIFIChangeMod"}, nil, {"gui-description.MIFIChangeModMITT"}, false, nil, _mfLabelType.yellowTitle)
+		local state = "left"
+		if self.selectedMode == "output" then state = "right" end
+		GAPI.addSwitch(GUITable, "M.I.ModeSwitch," .. self.ent.unit_number, parametersFrame, {"gui-description.Input"}, {"gui-description.Output"}, "", "", state)
+
+		-- Prevent to store Item with Tags --
+		if self.selectedMode == "input" and filter.elem_value ~= nil and game.item_prototypes[filter.elem_value].type == "item-with-tags" then
+			game.print("Inputing an item-with-tags ([item="..filter.elem_value.."]) erases tags (dangerous!). Clearing Matter Interactor values.")
+			filter.elem_value = nil
+			self.selectedFilter = nil
+			self.selectedInv = nil --may not be necessary? assigning anyway
+		end
+
+		-- Create the Inventory Selection Label --
+		GAPI.addLabel(GUITable, "", parametersFrame, {"gui-description.MIFITargetedInv"}, nil, {"gui-description.MIFITargetedInvMITT"}, false, nil, _mfLabelType.yellowTitle)
+
+		-- Initialise the Inventory List --
+		local invs = {}
+		invs[1] = {"", "[img=entity/MobileFactory] ", self.dataNetwork.invObj.name, " - ", 0}
+
+		-- Create the Inventory List --
+		local selectedIndex = 1
+		if self.selectedInv and type(self.selectedInv) == "table" and not self.selectedInv.ID then selectedIndex = 2 end
+		local i = 2
+		for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
+			if deepStorage ~= nil and deepStorage.ent ~= nil then
+				i = i + 1
+				local item
+				if deepStorage.filter ~= nil then
+					item = deepStorage.filter
+				elseif deepStorage.inventoryItem ~= nil then
+					item = deepStorage.inventoryItem
+				end
+
+				if item then
+					invs[k+2] = {"", "[img=item/"..item.."] ", game.item_prototypes[item].localised_name, " - ", deepStorage.ID}
+				else
+					invs[k+2] = {"", "", {"gui-description.Empty"}, " - ", deepStorage.ID}
+				end
+
+				if self.selectedInv and type(self.selectedInv) == "table" and self.selectedInv.entID == deepStorage.entID then
+					selectedIndex = i
+				end
+			end
+		end
+
+		-- Create the DropDown --
+		if selectedIndex > table_size(invs) then selectedIndex = nil end
+		GAPI.addDropDown(GUITable, "M.I.TargetDD," .. self.ent.unit_number, parametersFrame, invs, selectedIndex)
+
 	end
 
-	if justCreated ~= true then return end
+	-- Get the Table --
+	local inventoryTable = GUITable.vars.InventoryTable
 
-	-- Create the Inventory Title --
-	local frame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
+	-- Clear the Table --
+	inventoryTable.clear()
+
+	-- Get the Internal Inventory --
+	local inv = self.ent.get_inventory(defines.inventory.chest)
+
+	-- Check if there are Items inside the Inventory --
+	local itemName = {"gui-description.Empty"}
+	local itemCount = 0
+	if inv[1] ~= nil and inv[1].valid_for_read == true then
+ 		itemName = inv[1].name
+		itemCount = inv[1].count
+	end
+
+	-- Create the Item Label --
+	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTItemName", itemName}, _mfOrange)
+
+	-- Create the Amount Label --
+	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTItemAmount", itemCount}, _mfOrange)
 
 	-- Create the Filter Label --
 	local filterName = self.selectedFilter ~= nil and Util.getLocItemName(self.selectedFilter) or {"gui-description.None"}
-	GUIObj:addDualLabel(frame, {"", {"gui-description.Filter"}, ":"}, filterName, _mfOrange, _mfGreen)
+	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.MIFIFilter", filterName}, _mfOrange)
 
-	-- Create the Inventory Button --
-	GUIObj:addSimpleButton("MIOpenI," .. tostring(self.ent.unit_number), frame, {"gui-description.OpenInventory"})
-	
-	-- Check if the Parameters can be modified --
-	if valid(self.dataNetwork) == false then return end
-
-	if self.lastSelectedPlayer ~= self.selectedPlayer then
-		self.lastSelectedPlayer = self.selectedPlayer
-		self.selectedInv = 0
-	end
-	
-	-- Create the Parameters Title --
-	local titleFrame = GUIObj:addTitledFrame("titleFrame"..self.ent.unit_number, gui, "vertical", {"gui-description.Settings"}, _mfOrange)
-
-	-- Create the Filter Selection --
-	GUIObj:addLabel("", titleFrame, {"gui-description.ChangeFilter"}, _mfOrange)
-	local filter = GUIObj:addFilter("MIFilter" .. tostring(self.ent.unit_number), titleFrame, {"gui-description.FilterSelect"}, true, "item", 40)
-	if self.selectedFilter ~= nil then filter.elem_value = self.selectedFilter end
-
-	-- Create the Mode Selection --
-	GUIObj:addLabel("", titleFrame, {"gui-description.SelectMode"}, _mfOrange)
-	local state = "left"
-	if self.selectedMode == "output" then state = "right" end
-	GUIObj:addSwitch("MIMode" .. self.ent.unit_number, titleFrame, {"gui-description.Input"}, {"gui-description.Output"}, {"gui-description.InputTT"}, {"gui-description.OutputTT"}, state)
-
-	--prevent item-with-tags from being stored, allow retrieval (0.0.197+) - workaround until we record tags
-	if self.selectedMode == "input"
-			and filter.elem_value ~= nil
-			and game.item_prototypes[filter.elem_value].type == "item-with-tags"
-		then
-		game.print("Inputing an item-with-tags ([item="..filter.elem_value.."]) erases tags (dangerous!). Clearing Matter Interactor values.")
-		filter.elem_value = nil
-		self.selectedFilter = nil
-		self.selectedInv = nil --may not be necessary? assigning anyway
+	-- Update the Filter --
+	if self.selectedFilter ~= nil then
+		GUITable.vars.filter.elem_value = self.selectedFilter
 	end
 
-	-- Create the Inventory Selection --
-	GUIObj:addLabel("", titleFrame, {"gui-description.MSTarget"}, _mfOrange)
-
-	local invs = {}
-	invs[1] = {"", {"gui-description.None"}} --LuaGuiElement.selected_index returns 0 for no selection, and is a uint
-	invs[2] = {"", "[img=entity/MobileFactory] ", self.dataNetwork.invObj.name, " - ", 0}
-
-	-- Create the Inventory and Deep Storage List --
-	local selectedIndex = 1
-	if self.selectedInv and type(self.selectedInv) == "table" and not self.selectedInv.ID then selectedIndex = 2 end
-	local i = 2
-	for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
-		if deepStorage ~= nil and deepStorage.ent ~= nil then
-			i = i + 1
-			local item
-			if deepStorage.filter ~= nil then
-				item = deepStorage.filter
-			elseif deepStorage.inventoryItem ~= nil then
-				item = deepStorage.inventoryItem
-			end
-
-			if item then
-				invs[k+2] = {"", "[img=item/"..item.."] ", game.item_prototypes[item].localised_name, " - ", deepStorage.ID}
-			else
-				invs[k+2] = {"", "", {"gui-description.Empty"}, " - ", deepStorage.ID}
-			end
-
-			if self.selectedInv and type(self.selectedInv) == "table" and self.selectedInv.entID == deepStorage.entID then
-				selectedIndex = i
-			end
-		end
-	end
-	if selectedIndex > table_size(invs) then selectedIndex = nil end
-	GUIObj:addDropDown("MITarget" .. self.ent.unit_number, titleFrame, invs, selectedIndex)
 end
 
 -- Change the Mode --
@@ -287,7 +337,8 @@ function MI:updateInventory()
             if amountAdded > 0 then
                 inv.remove({name=item, count=amountAdded})
             end
-        end
+		end
+		
     -- Output mode --
     elseif self.selectedMode == "output" then
         -- Return if the Filter is nil --
@@ -344,4 +395,52 @@ function MI:validate()
 	if game.item_prototypes[self.selectedFilter] == nil then
 		self.selectedFilter = nil
 	end
+end
+
+-- Called if the Player interacted with the GUI --
+function MI.interaction(event, player)
+
+	-- Open Inventory --
+	if string.match(event.element.name, "M.I.OpenInvButton") then
+		local objId = tonumber(split(event.element.name, ",")[2])
+		local obj = global.matterInteractorTable[objId]
+		local ent = (obj and obj.ent) or nil
+		if ent ~= nil and ent.valid == true then
+			getMFPlayer(player.name).varTable.bypassGUI = true
+			player.opened = ent
+		end
+		return
+	end
+
+	-- Change the Filter --
+	if string.match(event.element.name, "M.I.Filter") then
+		id = tonumber(split(event.element.name, ",")[2])
+		if global.matterInteractorTable[id] == nil then return end
+		if event.element.elem_value ~= nil then
+			global.matterInteractorTable[id].selectedFilter = event.element.elem_value
+		else
+			global.matterInteractorTable[id].selectedFilter = nil
+		end
+		GUI.updateAllGUIs(true)
+		return
+	end
+
+	-- Change the Mode --
+	if string.match(event.element.name, "M.I.ModeSwitch") then
+		local objId = tonumber(split(event.element.name, ",")[2])
+		local obj = global.matterInteractorTable[objId]
+		if obj == nil then return end
+		obj:changeMode(event.element.switch_state)
+		return
+	end
+
+	-- Change the Tareget --
+	if string.match(event.element.name, "M.I.TargetDD") then
+		local objId = tonumber(split(event.element.name, ",")[2])
+		local obj = global.matterInteractorTable[objId]
+		if obj == nil then return end
+		obj:changeInventory(tonumber(event.element.items[event.element.selected_index][5]))
+		return
+	end
+
 end

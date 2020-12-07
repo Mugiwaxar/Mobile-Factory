@@ -137,6 +137,9 @@ function DA:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	if justCreated == true then
 
+		-- Set the GUI Title --
+		GUITable.vars.GUITitle.caption = {"gui-description.DataAssembler"}
+
 		-- Add the Data Assembler to the GUI --
 		GUITable.vars.DA = self
 
