@@ -108,27 +108,49 @@ end
 
 
 -- Tooltip Infos --
-function QC:getTooltipInfos(GUIObj, gui, justCreated)
-
-	-- Get the Flow --
-	local informationFlow = GUIObj.InformationFlow
+function QC:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	if justCreated == true then
-		-- Create the Information Title --
-		local informationTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
-		informationFlow = GUIObj:addFlow("InformationFlow", informationTitle, "vertical", true)
+
+		-- Set the GUI Title --
+		GUITable.vars.GUITitle.caption = {"gui-description.QuatronCube"}
+
+		-- Set the Main Frame Height --
+		-- mainFrame.style.height = 100
+		
+		-- Create the Information Frame --
+		local infoFrame = GAPI.addFrame(GUITable, "InformationFrame", mainFrame, "vertical", true)
+		infoFrame.style = "MFFrame1"
+		infoFrame.style.vertically_stretchable = true
+		infoFrame.style.minimal_width = 200
+		infoFrame.style.left_margin = 3
+		infoFrame.style.left_padding = 3
+		infoFrame.style.right_padding = 3
+
+		-- Create the Tite --
+		GAPI.addSubtitle(GUITable, "", infoFrame, {"gui-description.Information"})
+	
 	end
 
-	-- Clear the Flow --
-	informationFlow.clear()
+	-- Get the Frame --
+	local infoFrame = GUITable.vars.InformationFrame
 
-	-- Create the Quatron Charge --
-	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Charge"}, ": "}, math.floor(self.quatronCharge), _mfOrange, _mfGreen)
-	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+	-- Clear the Frame --
+	infoFrame.clear()
 
+	-- Add the Quatron Charge --
+    GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronCharge", Util.toRNumber(self.quatronCharge)}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", infoFrame, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+	
 	-- Create the Quatron Purity --
-	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Purity"}, ": "}, string.format("%.3f", self.quatronLevel), _mfOrange, _mfGreen)
-	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronLevel/20, 100)
+	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.Quatronlevel", string.format("%.3f", self.quatronLevel)}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", infoFrame, "", "", false, _mfPurple, self.quatronLevel/20, 100)
+
+	-- Add the Input/Output Speed Label --
+	local inputLabel = GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronInputSpeed", Util.toRNumber(self:maxInput())}, _mfOrange)
+	inputLabel.style.top_margin = 10
+	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronOutputSpeed", Util.toRNumber(self:maxOutput())}, _mfOrange)
+
 end
 
 

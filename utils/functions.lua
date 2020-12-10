@@ -301,7 +301,6 @@ function getCurrentMF(player)
 	elseif type(player) == "number" then return global.playersTable[game.players[player].name].currentMF or global.playersTable[game.players[player].name].MF
 	elseif type(player) == "string" then return global.playersTable[player].currentMF or global.playersTable[player].MF
 	elseif type(player) == "table" then return player.currentMF or player.MF end
-	dprint(type(player))
 end
 
 -- Return the MFPlayer Object --

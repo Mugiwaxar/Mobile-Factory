@@ -27,7 +27,6 @@ function JC:new(object)
 	t.lightID = rendering.draw_light{sprite="JumpChargerL", target=object, surface=object.surface, minimum_darkness=0}
 	-- Save the Jump Charger inside the Jump Drive Table --
 	t.MF.jumpDriveObj.jumpChargerTable[object.unit_number] = t
-	dprint(table_size(t.MF.jumpDriveObj.jumpChargerTable))
 	UpSys.addObj(t)
 	return t
 end

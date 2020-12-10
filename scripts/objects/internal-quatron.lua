@@ -110,14 +110,13 @@ end
 -- Tooltip Infos --
 function IQC:getTooltipInfos(GUITable, mainFrame, justCreated)
 
-
 	if justCreated == true then
 
 		-- Set the GUI Title --
 		GUITable.vars.GUITitle.caption = {"gui-description.InternalQuatronCube"}
 
 		-- Set the Main Frame Height --
-		mainFrame.style.height = 200
+		-- mainFrame.style.height = 100
 		
 		-- Create the Information Frame --
 		local infoFrame = GAPI.addFrame(GUITable, "InformationFrame", mainFrame, "vertical", true)

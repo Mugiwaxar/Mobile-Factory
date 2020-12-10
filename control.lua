@@ -119,17 +119,7 @@ function onLoad(event)
 
 	-- Add Warptorio Compatibility --
 	warptorio()
-
-	-- Debug --
-	--[[
-	for k, j in pairs(global) do
-		if type(j) == "table" then
-			dprint(k .. ":" .. table_size(j))
-		else
-			dprint(k)
-		end
-	end
-	--]]
+	
 end
 
 -- Filters --
