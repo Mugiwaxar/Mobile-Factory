@@ -456,15 +456,10 @@ function GUI.buttonClicked(event)
 		player.print({"", {"gui-description.CurrentMFChanged"}, " ", MFPlayer.currentMF.name})
 	end
 
-	-- If this is a Mobile Factory Button -> Open Inventory --
-	if string.match(event.element.name, "MFOpenI") then
-		-- Get the Object --
-		local objId = split(event.element.name, ",")[2] or ""
-		local ent = global.MFTable[objId].ent
-		if ent ~= nil and ent.valid == true then
-			getMFPlayer(player.name).varTable.bypassGUI = true
-			player.opened = ent
-		end
+	-- If this is a Mobile Factory --
+	if string.match(event.element.name, "M.F.") then
+		MF.interaction(event, player, MFPlayer)
+		GUI.updateAllGUIs(true)
 		return
 	end
 
@@ -583,6 +578,13 @@ function GUI.onGuiElemChanged(event)
 	GUI.readOptions(event.element, player)
 	if event.element == nil or event.element.valid == false then return end
 
+	-- If this is a Mobile Factory --
+	if string.match(event.element.name, "M.F.") then
+		MF.interaction(event)
+		GUI.updateAllGUIs(true)
+		return
+	end
+
 	-- If this is a Deep Storage --
 	if string.match(event.element.name, "D.S.R.") then
 		DSR.interaction(event)
@@ -657,62 +659,6 @@ function GUI.onGuiElemChanged(event)
 		-- Update the Tooltip GUI --
 		GUI.updateMFTooltipGUI(MFPlayer.GUI["MFTooltipGUI"], true)
 		return
-	end
-	
-	------- Read if the Element comes from The Mobile Factory Energy Laser -------
-	if string.match(event.element.name, "MFPL") then
-		-- Look for the Mobile Factory ID --
-		local ID = split(event.element.name, "MFPL")
-		ID = tonumber(ID[1])
-		if ID == nil then return end
-		local MF2 = getMF(ID)
-		-- Change the Energy Laser to Drain/Send --
-		if event.element.switch_state == "left" then
-			MF2.selectedEnergyLaserMode = "input"
-		else
-			MF2.selectedEnergyLaserMode = "output"
-		end
-	end
-
-	------- Read if the Element comes from The Mobile Factory Quatron Laser -------
-	if string.match(event.element.name, "MFQL") then
-		-- Look for the Mobile Factory ID --
-		local ID = split(event.element.name, "MFQL")
-		ID = tonumber(ID[1])
-		if ID == nil then return end
-		local MF2 = getMF(ID)
-		-- Change the Matter Serializer targeted Inventory --
-		if event.element.switch_state == "left" then
-			MF2.selectedQuatronLaserMode = "input"
-		else
-			MF2.selectedQuatronLaserMode = "output"
-		end
-	end
-
-	------- Read if the Element comes from the Mobile Factory Fluid Laser mode -------
-	if string.match(event.element.name, "MFFMode") then
-		-- Look for the Mobile Factory ID --
-		local ID = split(event.element.name, "MFFMode")
-		ID = tonumber(ID[1])
-		if ID == nil then return end
-		local MF2 = getMF(ID)
-		-- Change the Mode --
-		if event.element.switch_state == "left" then
-			MF2.selectedFluidLaserMode = "input"
-		else
-			MF2.selectedFluidLaserMode = "output"
-		end
-	end
-
-	------- Read if the Element comes from the Mobile Factory Fluid Laser Target -------
-	if string.match(event.element.name, "MFFTarget") then
-		-- Look for the Mobile Factory ID --
-		local ID = split(event.element.name, "MFFTarget")
-		ID = tonumber(ID[1])
-		if ID == nil then return end
-		local MF2 = getMF(ID)
-		-- Change the Fluid Interactor Target --
-		MF2:fluidLaserTarget(tonumber(event.element.items[event.element.selected_index][4]))
 	end
 
 end

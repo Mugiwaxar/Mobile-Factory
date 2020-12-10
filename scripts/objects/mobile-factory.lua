@@ -131,46 +131,68 @@ function MF:valid()
 end
 
 -- Tooltip Infos --
-function MF:getTooltipInfos(GUIObj, gui, justCreated)
+function MF:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	if justCreated == true then
 
-		-- Create the Inventory Title --
-		local inventoryTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Inventory"}, _mfOrange)
+		-- Set the GUI Title --
+		GUITable.vars.GUITitle.caption = {"gui-description.MobileFactory"}
 
-		-- Create the Inventory Button --
-		GUIObj:addSimpleButton("MFOpenI," ..self.player, inventoryTitle, {"gui-description.OpenInventory"})
+		-- Set the Main Frame Height --
+		-- mainFrame.style.height = 200
 
-		-- Create the Lasers Title --
-		local LasersFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Lasers"}, _mfOrange)
+		-- Create the Network Inventory Frame --
+		local inventoryFrame = GAPI.addFrame(GUITable, "InventoryFrame", mainFrame, "vertical", true)
+		inventoryFrame.style = "MFFrame1"
+		inventoryFrame.style.vertically_stretchable = true
+		inventoryFrame.style.left_padding = 3
+		inventoryFrame.style.right_padding = 3
+		inventoryFrame.style.left_margin = 3
+		inventoryFrame.style.right_margin = 3
 
-		-- Create the Energy Lasers Settings --
+		-- Add the Title --
+		GAPI.addSubtitle(GUITable, "", inventoryFrame, {"gui-description.Inventory"})
+
+		-- Create the Inventory Flow and Button --
+		local inventoryFlow = GAPI.addFlow(GUITable, "", inventoryFrame, "horizontal")
+		inventoryFlow.style.horizontal_align = "center"
+		GAPI.addSimpleButton(GUITable, "M.F.OpenInvButton," .. self.player, inventoryFlow, {"gui-description.OpenInventory"})
+
+		-- Create the Parameters Frame --
+		local laserFrame = GAPI.addFrame(GUITable, "LaserFrame", mainFrame, "vertical", true)
+		laserFrame.style = "MFFrame1"
+		laserFrame.style.vertically_stretchable = true
+		laserFrame.style.left_padding = 3
+		laserFrame.style.right_padding = 3
+		laserFrame.style.right_margin = 3
+
+		-- Add the Title --
+		GAPI.addSubtitle(GUITable, "", laserFrame, {"gui-description.MFEnergyLaser"})
+
+		-- Energy Lasers Settings --
 		if technologyUnlocked("EnergyDrain1", getForce(self.player)) then
-			LasersFrame.visible = true
-			GUIObj:addLabel("", LasersFrame, {"", {"gui-description.EnergyLaser"}}, _mfOrange)
+			GAPI.addLabel(GUITable, "", laserFrame, {"gui-description.MFEnergyLaser"}, nil, "", false, nil, _mfLabelType.yellowTitle)
 			local state = "left"
 			if self.selectedEnergyLaserMode == "output" then state = "right" end
-			GUIObj:addSwitch("MFPL" .. self.playerIndex, LasersFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.DrainTT"}, {"gui-description.SendTT"}, state)
+			GAPI.addSwitch(GUITable, "M.F.EnergyLasersSwitch," .. self.playerIndex, laserFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.MFDrainTT"}, {"gui-description.MFSendTT"}, state)
 		end
 
-		-- Create the Quatron Lasers Settings --
+		-- Quatron Lasers Settings --
 		if technologyUnlocked("EnergyDrain1", getForce(self.player)) then
-			LasersFrame.visible = true
-			GUIObj:addLabel("", LasersFrame, {"", {"gui-description.QuatronLaser"}}, _mfOrange)
+			GAPI.addLabel(GUITable, "", laserFrame, {"gui-description.MFQuatronLaser"}, nil, "", false, nil, _mfLabelType.yellowTitle)
 			local state = "left"
 			if self.selectedQuatronLaserMode == "output" then state = "right" end
-			GUIObj:addSwitch("MFQL" .. self.playerIndex, LasersFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.DrainTT"}, {"gui-description.SendTT"}, state)
+			GAPI.addSwitch(GUITable, "M.F.QuatronLasersSwitch," .. self.playerIndex, laserFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.MFDrainTT"}, {"gui-description.MFSendTT"}, state)
 		end
 
-		-- Create the Fluid Lasers Settings --
+		-- Fluid Lasers Settings --
 		if technologyUnlocked("FluidDrain1", getForce(self.player)) then
-			LasersFrame.visible = true
-			GUIObj:addLabel("", LasersFrame, {"", {"gui-description.FluidLaser"}}, _mfOrange)
+			-- Send/Drain --
+			GAPI.addLabel(GUITable, "", laserFrame, {"gui-description.MFFluidLaser"}, nil, "", false, nil, _mfLabelType.yellowTitle)
 			local state = "left"
 			if self.selectedFluidLaserMode == "output" then state = "right" end
-			GUIObj:addSwitch("MFFMode" .. self.playerIndex, LasersFrame, {"gui-description.Input"}, {"gui-description.Output"}, {"gui-description.InputTT"}, {"gui-description.OutputTT"}, state)
-			GUIObj:addLabel("", LasersFrame, {"", {"gui-description.MSTarget"}}, _mfOrange)
-			-- Create the Target List --
+			GAPI.addSwitch(GUITable, "M.F.FluidLasersSwitch," .. self.playerIndex, laserFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.MFDrainTT"}, {"gui-description.MFSendTT"}, state)
+			-- Target --
 			local invs = {{"", {"gui-description.None"}}}
 			local selectedIndex = 1
 			local i = 1
@@ -190,9 +212,11 @@ function MF:getTooltipInfos(GUIObj, gui, justCreated)
 				end
 			end
 			if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-			GUIObj:addDropDown("MFFTarget" .. self.playerIndex, LasersFrame, invs, selectedIndex)
+			GAPI.addDropDown(GUITable, "M.F.FluidLasersTargetDD," .. self.playerIndex, laserFrame, invs, selectedIndex, false, {"gui-description.MFFluidLasersTargetTT"})
 		end
+
 	end
+
 end
 
 -- Change the Fluid Laser Targeted Inventory --
@@ -388,7 +412,7 @@ end
 function MF:updateQuatronLaser(entity)
 	local obj = global.entsTable[entity.unit_number]
 	----------------------- Drain Quatron -------------------------
-	if self.selectedQuatronLaserMode == "input" and obj.quatronCharge > 0 then
+	if self.selectedQuatronLaserMode == "input" and self.internalQuatronObj.ent ~= nil and self.internalQuatronObj.ent.valid == true and  obj.quatronCharge > 0 then
 		-- Missing Internal Quatron or Structure Quatron or LaserDrain Caparity --
 		local drainedQuatron = math.min(self.internalQuatronObj.quatronMax - self.internalQuatronObj.quatronCharge, obj.quatronCharge, self:getLaserQuatronDrain())
 		-- Test if some Quatron was drained --
@@ -403,7 +427,7 @@ function MF:updateQuatronLaser(entity)
 			return true
 		end
 	----------------------- Send Quatron -------------------------
-	elseif self.selectedQuatronLaserMode == "output" and obj.quatronCharge < obj.quatronMax then
+	elseif self.selectedQuatronLaserMode == "output" and self.internalQuatronObj.ent ~= nil and self.internalQuatronObj.ent.valid == true and  obj.quatronCharge < obj.quatronMax then
 			-- Structure missing Quatron or Laser Power or Mobile Factory Quatron --
 		local quatronSend = math.min(obj.quatronMax - obj.quatronCharge, self:getLaserQuatronDrain(), self.internalQuatronObj.quatronCharge)
 		-- Check if Quatron can be send --
@@ -423,7 +447,7 @@ end
 -------------------------------------------- Energy Laser --------------------------------------------
 function MF:updateEnergyLaser(entity)
 	----------------------- Drain Energy -------------------------
-	if self.selectedEnergyLaserMode == "input" and entity.energy > 0 then
+	if self.selectedEnergyLaserMode == "input" and self.internalEnergyObj.ent ~= nil and self.internalEnergyObj.ent.valid == true and entity.energy > 0 then
 		-- Missing Internal Energy or Structure Energy or LaserDrain Caparity --
 		local drainedEnergy = math.min(self.internalEnergyObj:maxEnergy() - self.internalEnergyObj:energy(), entity.energy, self:getLaserEnergyDrain())
 		-- Test if some Energy was drained --
@@ -438,7 +462,7 @@ function MF:updateEnergyLaser(entity)
 			return true
 		end
 	----------------------- Send Energy -------------------------
-	elseif self.selectedEnergyLaserMode == "output" and entity.energy < entity.electric_buffer_size then
+	elseif self.selectedEnergyLaserMode == "output" and self.internalEnergyObj.ent ~= nil and self.internalEnergyObj.ent.valid == true and  entity.energy < entity.electric_buffer_size then
 		-- Structure missing Energy or Laser Power or Mobile Factory Energy --
 		local energySend = math.min(entity.electric_buffer_size - entity.energy, self:getLaserEnergyDrain(), self.internalEnergyObj:energy())
 		-- Check if Energy can be send --
@@ -1185,5 +1209,76 @@ function MF:validate()
 		if game.item_prototypes[item] == nil then
 			self.II.inventory[item] = nil
 		end
+	end
+end
+
+-- Called if the Player interacted with the GUI --
+function MF.interaction(event, player, MFPlayer)
+	-- Open Inventory --
+	if string.match(event.element.name, "M.F.OpenInvButton") then
+		-- Get the Object --
+		local objId = split(event.element.name, ",")[2] or ""
+		local ent = global.MFTable[objId].ent
+		if ent ~= nil and ent.valid == true then
+			MFPlayer.varTable.bypassGUI = true
+			player.opened = ent
+		end
+		return
+	end
+	-- Energy Lasers --
+	if string.match(event.element.name, "M.F.EnergyLasersSwitch") then
+		-- Look for the Mobile Factory ID --
+		local ID = split(event.element.name, ",")
+		ID = tonumber(ID[2])
+		if ID == nil then return end
+		local MF = getMF(ID)
+		-- Change the Energy Laser to Drain/Send --
+		if event.element.switch_state == "left" then
+			MF.selectedEnergyLaserMode = "input"
+		else
+			MF.selectedEnergyLaserMode = "output"
+		end
+		return
+	end
+	-- Quatron Lasers --
+	if string.match(event.element.name, "M.F.QuatronLasersSwitch") then
+		-- Look for the Mobile Factory ID --
+		local ID = split(event.element.name, ",")
+		ID = tonumber(ID[2])
+		if ID == nil then return end
+		local MF = getMF(ID)
+		-- Change the Matter Serializer targeted Inventory --
+		if event.element.switch_state == "left" then
+			MF.selectedQuatronLaserMode = "input"
+		else
+			MF.selectedQuatronLaserMode = "output"
+		end
+		return
+	end
+	-- Fluid Lasers --
+	if string.match(event.element.name, "M.F.FluidLasersSwitch") then
+		-- Look for the Mobile Factory ID --
+		local ID = split(event.element.name, ",")
+		ID = tonumber(ID[2])
+		if ID == nil then return end
+		local MF = getMF(ID)
+		-- Change the Mode --
+		if event.element.switch_state == "left" then
+			MF.selectedFluidLaserMode = "input"
+		else
+			MF.selectedFluidLaserMode = "output"
+		end
+		return
+	end
+	-- Fluid Lasers Target --
+	if string.match(event.element.name, "M.F.FluidLasersTargetDD") then
+		-- Look for the Mobile Factory ID --
+		local ID = split(event.element.name, ",")
+		ID = tonumber(ID[2])
+		if ID == nil then return end
+		local MF = getMF(ID)
+		-- Change the Fluid Interactor Target --
+		MF:fluidLaserTarget(tonumber(event.element.items[event.element.selected_index][4]))
+		return
 	end
 end
