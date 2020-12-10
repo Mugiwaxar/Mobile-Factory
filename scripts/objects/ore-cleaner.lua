@@ -205,7 +205,7 @@ function OC:getTooltipInfos(GUITable, mainFrame, justCreated)
 	informationTable.clear()
 
 	-- Add the Quatron Charge --
-    GAPI.addLabel(GUITable, "", informationTable, {"gui-description.QuatronCharge", self.quatronCharge}, _mfOrange)
+    GAPI.addLabel(GUITable, "", informationTable, {"gui-description.QuatronCharge", Util.toRNumber(self.quatronCharge) }, _mfOrange)
 	GAPI.addProgressBar(GUITable, "", informationTable, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
 	
 	-- Create the Quatron Purity --

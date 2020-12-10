@@ -171,7 +171,7 @@ function NAP:getTooltipInfos(GUITable, mainFrame, justCreated)
 	conStructuresTable.clear()
 
     -- Add the Quatron Charge --
-    GAPI.addLabel(GUITable, "", infoFlow, {"gui-description.QuatronCharge", self.quatronCharge}, _mfOrange)
+    GAPI.addLabel(GUITable, "", infoFlow, {"gui-description.QuatronCharge", Util.toRNumber(self.quatronCharge)}, _mfOrange)
 	GAPI.addProgressBar(GUITable, "", infoFlow, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
 	
 	-- Create the Quatron Purity --

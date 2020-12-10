@@ -19,7 +19,7 @@ DA = {
 	recipeTable = nil, -- [id]{recipePrototype, sprite, progress, paused, ingredients{name, type, amount, sprite, missing, tooltip}, products{name, type, amount, max, probability, sprite, tooltip, toManyInInventory}, missingIngredient, inventoryFull, toManyInInventory}
 	quatronLevel = 0,
 	quatronCharge = 0,
-	quatronMax = 1000;
+	quatronMax = 100;
 	lastRecipeUpdatedID = 1
 }
 
@@ -207,7 +207,7 @@ function DA:getTooltipInfos(GUITable, mainFrame, justCreated)
 	GAPI.addLabel(GUITable, "", DNInfoTable, {"", {"gui-description.DataAssembler"} , ":"}, nil, "", false, nil, _mfLabelType.yellowTitle)
 
 	-- Add the Quatron Charge --
-    GAPI.addLabel(GUITable, "", DNInfoTable, {"gui-description.QuatronCharge", self.quatronCharge}, _mfOrange)
+    GAPI.addLabel(GUITable, "", DNInfoTable, {"gui-description.QuatronCharge", Util.toRNumber(self.quatronCharge)}, _mfOrange)
 	GAPI.addProgressBar(GUITable, "", DNInfoTable, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
 	
 	-- Create the Quatron Purity --

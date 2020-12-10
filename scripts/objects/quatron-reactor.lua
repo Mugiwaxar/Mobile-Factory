@@ -106,6 +106,7 @@ function QR:getTooltipInfos(GUIObj, gui, justCreated)
 	-- Create the Quatron Purity --
 	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Purity"}, ": "}, string.format("%.3f", self.quatronLevel), _mfOrange, _mfGreen)
 	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronLevel/20, 100)
+	
 end
 
 -- Transform the Fluid inside into Quatron --

@@ -616,13 +616,13 @@ end
 -- Transform big numbers to readable numbers --
 function Util.toRNumber(number)
 	if number == nil then return 0 end
-	local rNumber = number .. " "
+	local rNumber = string.format("%.2f", number)
 	if number >= 1000 and number < 1000000 then
-		rNumber = tostring(math.floor(number/10)/100) .. " k"
+		rNumber = string.format("%.2f", number/1000) .. " k"
 	elseif number >= 1000000 and number < 1000000000 then
-		rNumber = tostring(math.floor(number/10000)/100) .. " M"
+		rNumber = string.format("%.2f", number/1000000) .. " M"
 	elseif number >= 1000000000 then
-		rNumber = tostring(math.floor(number/10000000)/100) .. " G"
+		rNumber = string.format("%.2f", number/1000000000) .. " G"
 	end
 	return rNumber
 end
