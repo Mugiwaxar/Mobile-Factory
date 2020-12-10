@@ -99,29 +99,52 @@ function FE:update(event)
 end
 
 -- Tooltip Infos --
-function FE:getTooltipInfos(GUIObj, gui, justCreated)
-
-	-- Get the Flow --
-	local informationFlow = GUIObj.InformationFlow
+function FE:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	if justCreated == true then
 
-		-- Create the Information Title --
-		local informationTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
-		informationFlow = GUIObj:addFlow("InformationFlow", informationTitle, "vertical", true)
+		-- Set the GUI Title --
+		GUITable.vars.GUITitle.caption = {"gui-description.FluidExtractor"}
 
-		-- Create the Settings Title --
-		local settingsTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Settings"}, _mfOrange)
+		-- Set the Main Frame Height --
+		mainFrame.style.height = 350
+
+		-- Create the Information Frame --
+		local informationFrame = GAPI.addFrame(GUITable, "InformationFrame", mainFrame, "vertical", true)
+		informationFrame.style = "MFFrame1"
+		informationFrame.style.vertically_stretchable = true
+		informationFrame.style.left_padding = 3
+		informationFrame.style.right_padding = 3
+		informationFrame.style.left_margin = 3
+		informationFrame.style.right_margin = 3
+		informationFrame.style.minimal_width = 200
+
+		-- Add the Title --
+		GAPI.addSubtitle(GUITable, "", informationFrame, {"gui-description.Information"})
+
+		-- Create the Information Table --
+		GAPI.addTable(GUITable, "InformationTable", informationFrame, 1, true)
+
+		-- Create the Parameters Frame --
+		local parametersFrame = GAPI.addFrame(GUITable, "ParametersFrame", mainFrame, "vertical", true)
+		parametersFrame.style = "MFFrame1"
+		parametersFrame.style.vertically_stretchable = true
+		parametersFrame.style.left_padding = 3
+		parametersFrame.style.right_padding = 3
+		parametersFrame.style.right_margin = 3
+
+		-- Add the Title --
+		GAPI.addSubtitle(GUITable, "", parametersFrame, {"gui-description.Settings"})
 
 		-- Create the Select Data Network Label --
-		GUIObj:addLabel("", settingsTitle, {"", {"gui-description.OCFESelectDataNetwork"}}, _mfBlue, nil, false, "LabelFont2")
+		GAPI.addLabel(GUITable, "", parametersFrame, {"", {"gui-description.DNSelectDataNetwork"}, ":"}, nil, {"gui-description.DNSelectDataNetworkLabelTT"}, false, nil, _mfLabelType.yellowTitle)
 
 		-- Create the Select Network Table --
 		local networks = {}
 		local selected = 1
 		local total = 0
 		for _, MF in pairs(global.MFTable) do
-			if Util.canUse(GUIObj.MFPlayer, MF) then
+			if Util.canUse(GUITable.MFPlayer, MF) then
 				table.insert(networks, MF.player)
 				total = total + 1
 				if self.dataNetwork.ID == MF.dataNetwork.ID then selected = total end
@@ -130,14 +153,14 @@ function FE:getTooltipInfos(GUIObj, gui, justCreated)
 
 		-- Create the Select Network Drop Down --
 		if table_size(networks) > 0 then
-			GUIObj:addDropDown("DNFESelect" .. self.ent.unit_number, settingsTitle, networks, selected, true, {"gui-description.SelectDataNetwork"})
+			GAPI.addDropDown(GUITable, "F.E.DNSelect," .. self.ent.unit_number, parametersFrame, networks, selected, true)
 		end
 
 		-- Create the Select Tank Label --
-		GUIObj:addLabel("", settingsTitle, {"", {"gui-description.TargetedTank"}}, _mfBlue, nil, false, "LabelFont2")
+		GAPI.addLabel(GUITable, "", parametersFrame, {"gui-description.OCFETargetedStorage"}, nil, "", false, nil, _mfLabelType.yellowTitle)
 
 		-- Create the Tank List --
-		local invs = {{"", {"gui-description.All"}}}
+		local invs = {{"", {"gui-description.Auto"}}}
 		local selectedIndex = 1
 		local i = 1
 		for k, deepTank in pairs(self.dataNetwork.DTKTable) do
@@ -158,39 +181,43 @@ function FE:getTooltipInfos(GUIObj, gui, justCreated)
 			end
 		end
 		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-		GUIObj:addDropDown("FE" .. self.ent.unit_number, settingsTitle, invs, selectedIndex)
+
+		-- Add the Selected Deep Tank Drop Down --
+		GAPI.addDropDown(GUITable, "FE" .. self.ent.unit_number, parametersFrame, invs, selectedIndex)
 
 	end
+	
 
-	-- Clear the Flow --
-	informationFlow.clear()
+	-- Get the Table --
+	local informationTable = GUITable.vars.InformationTable
 
-	-- Create the Quatron Charge --
-	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Charge"}, ": "}, math.floor(self.quatronCharge), _mfOrange, _mfGreen)
-	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronCharge/_mfFEMaxCharge, 100)
+	-- Clear the Table --
+	informationTable.clear()
 
+	-- Add the Quatron Charge --
+    GAPI.addLabel(GUITable, "", informationTable, {"gui-description.QuatronCharge", self.quatronCharge}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", informationTable, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+	
 	-- Create the Quatron Purity --
-	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Purity"}, ": "}, string.format("%.3f", self.quatronLevel), _mfOrange, _mfGreen)
-	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronLevel/20, 100)
+	GAPI.addLabel(GUITable, "", informationTable, {"gui-description.Quatronlevel", string.format("%.3f", self.quatronLevel)}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", informationTable, "", "", false, _mfPurple, self.quatronLevel/20, 100)
 
 	-- Create the Speed --
-	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Speed"}, ": "}, self:fluidPerExtraction() .. " u/s", _mfOrange, _mfGreen)
-
-	-- Check the Resource --
+	local speedLabel = GAPI.addLabel(GUITable, "", informationTable, {"gui-description.OCFESpeedFE", self:fluidPerExtraction()}, _mfOrange)
+	speedLabel.style.top_margin = 10
+	
+	-- Create the Resource Label --
 	if self.resource ~= nil and self.resource.valid == true then
 		for _, product in pairs(self.resource.prototype.mineable_properties.products) do
 			if product.type == "fluid" then
-				-- Create the Resource Type --
-				GUIObj:addDualLabel(informationFlow, {"", {"gui-description.ResouceType"}, ": "}, Util.getLocFluidName(product.name), _mfOrange, _mfGreen)
-				-- Create the Resource Amount --
-				GUIObj:addDualLabel(informationFlow, {"", {"gui-description.ResourceAmount"}, ": "}, self.resource.amount, _mfOrange, _mfGreen)
+				GAPI.addLabel(GUITable, "", informationTable, {"", Util.getLocFluidName(product.name), ": [color=yellow]", self.resource.amount, "[/color]"}, _mfPurple)
 			end
 		end
 	end
 
 	-- Create the Mobile Factory Too Far Label --
 	if self.MFTooFar == true then
-		GUIObj:addLabel("", informationFlow, {"", {"gui-description.MFTooFar"}}, _mfRed)
+		GAPI.addLabel(GUITable, "", informationTable, {"gui-description.OCFEMFTooFar"}, _mfRed)
 	end
 
 end
@@ -220,10 +247,7 @@ end
 
 -- Extract Fluids --
 function FE:extractFluids(event)
-	-- Test if the Mobile Factory is valid --
-	if valid(self.MF) == false then return end
-	-- Check the Quatron Charge --
-	if self.quatronCharge < 100 then return end
+
 	-- Check the Resource --
 	if self.resource == nil or self.resource.valid == false or self.listProducts == nil then
 		-- Get the Resources under the Fluid Extractor
@@ -247,6 +271,12 @@ function FE:extractFluids(event)
 	-- Check if a Ressource was found --
 	if self.resource == nil or self.resource.valid == false or self.listProducts == nil then return end
 
+	-- Test if the Mobile Factory is valid --
+	if valid(self.MF) == false then return end
+
+	-- Check the Quatron Charge --
+	if self.quatronCharge < 100 then return end
+
 	-- Check the selected Inventory --
 	if self.selectedInv ~= nil then
 		-- Check Selected Inventory
@@ -258,7 +288,7 @@ function FE:extractFluids(event)
 	local fluidExtracted = math.min(self:fluidPerExtraction(), self.resource.amount)
 	for _, product in pairs(self.listProducts) do
 		-- Check if the product is a Fluid --
-		if product.type ~= 'fluid' then return end
+		if product.type ~= "fluid" then return end
 		if self.selectedInv then
 			-- Deep Storage is assigned, check if it fits
 			if self.selectedInv:canAccept({name = product.name, amount = fluidExtracted * product.amount}) then

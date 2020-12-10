@@ -109,12 +109,12 @@ function DN.addDataNetworkFrame(GUITable, mainFrame, obj, justCreated)
 		end
 
 		-- Create the Information Flow --
-		GAPI.addTable(GUITable, "DAInfoTable", frame, 1, true)
+		GAPI.addTable(GUITable, "DNInfoTable", frame, 1, true)
 
 	end
 
 	-- Get the Information Table --
-	local infoTable = GUITable.vars.DAInfoTable
+	local infoTable = GUITable.vars.DNInfoTable
 
 	-- Clear the Table --
 	infoTable.clear()

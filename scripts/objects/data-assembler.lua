@@ -19,6 +19,7 @@ DA = {
 	recipeTable = nil, -- [id]{recipePrototype, sprite, progress, paused, ingredients{name, type, amount, sprite, missing, tooltip}, products{name, type, amount, max, probability, sprite, tooltip, toManyInInventory}, missingIngredient, inventoryFull, toManyInInventory}
 	quatronLevel = 0,
 	quatronCharge = 0,
+	quatronMax = 1000;
 	lastRecipeUpdatedID = 1
 }
 
@@ -181,7 +182,6 @@ function DA:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 		-- Create the Add Recipe Flow --
 		local addRFlow = GAPI.addFlow(GUITable, "", infoFrame, "horizontal", false)
-		addRFlow.style.bottom_padding = 10
 
 		-- Create the Recipe selector --
 		local recipeSelector = GAPI.addFilter(GUITable, "D.A.RecipeFilter", addRFlow, {"gui-description.AddRecipeFilterTT"}, true, "recipe", 28)
@@ -189,9 +189,6 @@ function DA:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 		-- Create the Add Recipe Button --
 		GAPI.addButton(GUITable, "D.A.AddRecipeButton," .. self.entID, addRFlow, "PlusIcon", "PlusIcon", {"gui-description.AddRecipeButtonTT"}, 28)
-
-		-- Create the Information FLow --
-		GAPI.addFlow(GUITable, "InformatioFLow", infoFrame, "vertical", true)
 
 		-- Add the Line --
 		GAPI.addLine(GUITable, "", infoFrame, "horizontal")
@@ -203,17 +200,19 @@ function DA:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	end
 
-	-- Get the Information Flow --
-	local infoFlow = GUITable.vars.InformatioFLow
+	-- Get the Data Network Information Table --
+	local DNInfoTable = GUITable.vars.DNInfoTable
 
-	-- Clear the Flow --
-	infoFlow.clear()
+	-- Add the Data Assembler Title --
+	GAPI.addLabel(GUITable, "", DNInfoTable, {"", {"gui-description.DataAssembler"} , ":"}, nil, "", false, nil, _mfLabelType.yellowTitle)
 
-	-- Create the Quatron Charge Dual Label --
-	GAPI.addLabel(GUITable,"", infoFlow, {"gui-description.QuatronCharge", math.floor(self.quatronCharge)}, _mfOrange)
-
-	-- Create the Quatron level Dual Label --
-	GAPI.addLabel(GUITable,"", infoFlow, {"gui-description.Quatronlevel", string.format("%.3f", self.quatronLevel)}, _mfOrange)
+	-- Add the Quatron Charge --
+    GAPI.addLabel(GUITable, "", DNInfoTable, {"gui-description.QuatronCharge", self.quatronCharge}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", DNInfoTable, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+	
+	-- Create the Quatron Purity --
+	GAPI.addLabel(GUITable, "", DNInfoTable, {"gui-description.Quatronlevel", string.format("%.3f", self.quatronLevel)}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", DNInfoTable, "", "", false, _mfPurple, self.quatronLevel/20, 100)
 
 	-- Get the Recipe Table --
 	local DARecipeTable = GUITable.vars.DARecipeTable
