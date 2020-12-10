@@ -192,8 +192,7 @@ function MI:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 		-- Create the Inventory List --
 		local selectedIndex = 1
-		if self.selectedInv and type(self.selectedInv) == "table" and not self.selectedInv.ID then selectedIndex = 2 end
-		local i = 2
+		local i = 1
 		for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
 			if deepStorage ~= nil and deepStorage.ent ~= nil then
 				i = i + 1
@@ -205,9 +204,9 @@ function MI:getTooltipInfos(GUITable, mainFrame, justCreated)
 				end
 
 				if item then
-					invs[k+2] = {"", "[img=item/"..item.."] ", game.item_prototypes[item].localised_name, " - ", deepStorage.ID}
+					invs[k+1] = {"", "[img=item/"..item.."] ", game.item_prototypes[item].localised_name, " - ", deepStorage.ID}
 				else
-					invs[k+2] = {"", "", {"gui-description.Empty"}, " - ", deepStorage.ID}
+					invs[k+1] = {"", "", {"gui-description.Empty"}, " - ", deepStorage.ID}
 				end
 
 				if self.selectedInv and type(self.selectedInv) == "table" and self.selectedInv.entID == deepStorage.entID then
@@ -434,7 +433,7 @@ function MI.interaction(event, player)
 		return
 	end
 
-	-- Change the Tareget --
+	-- Change the Target --
 	if string.match(event.element.name, "M.I.TargetDD") then
 		local objId = tonumber(split(event.element.name, ",")[2])
 		local obj = global.matterInteractorTable[objId]

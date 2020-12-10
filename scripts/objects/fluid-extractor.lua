@@ -107,7 +107,7 @@ function FE:getTooltipInfos(GUITable, mainFrame, justCreated)
 		GUITable.vars.GUITitle.caption = {"gui-description.FluidExtractor"}
 
 		-- Set the Main Frame Height --
-		mainFrame.style.height = 350
+		-- mainFrame.style.height = 200
 
 		-- Create the Information Frame --
 		local informationFrame = GAPI.addFrame(GUITable, "InformationFrame", mainFrame, "vertical", true)

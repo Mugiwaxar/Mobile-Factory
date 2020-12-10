@@ -120,7 +120,7 @@ function OC:getTooltipInfos(GUITable, mainFrame, justCreated)
 		GUITable.vars.GUITitle.caption = {"gui-description.OreCleaner"}
 
 		-- Set the Main Frame Height --
-		mainFrame.style.height = 350
+		mainFrame.style.height = 200
 
 		-- Create the Information Frame --
 		local informationFrame = GAPI.addFrame(GUITable, "InformationFrame", mainFrame, "vertical", true)
@@ -130,7 +130,7 @@ function OC:getTooltipInfos(GUITable, mainFrame, justCreated)
 		informationFrame.style.right_padding = 3
 		informationFrame.style.left_margin = 3
 		informationFrame.style.right_margin = 3
-		informationFrame.style.minimal_width = 200
+		-- informationFrame.style.minimal_width = 200
 
 		-- Add the Title --
 		GAPI.addSubtitle(GUITable, "", informationFrame, {"gui-description.Information"})
@@ -217,7 +217,7 @@ function OC:getTooltipInfos(GUITable, mainFrame, justCreated)
 	speedLabel.style.top_margin = 10
 
 	-- Create the Resource Label --
-	GAPI.addLabel(GUITable, "", informationTable, {"", {"gui-description.OCFENumberOfOrePath"}, ": [color=yellow]", table_size(self.oreTable), "[/color]"}, _mfOrange)
+	GAPI.addLabel(GUITable, "", informationTable, {"", {"gui-description.OCFENumberOfOrePath"}, " [color=yellow]", table_size(self.oreTable), "[/color]"}, _mfOrange)
 
 	-- Create the Mobile Factory Too Far Label --
 	if self.MFTooFar == true then

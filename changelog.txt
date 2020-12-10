@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.3.0
+Date: 03/12/2020
+  Gui:
+    - Full rework of all GUIs (Visual and Script)
+  Scripting:
+    - Created a new GUI API (G-API), all GUIs were changed to this API
+    - Removed the old GUI API
+  Bugfixes:
+    - Fixed a crash with the Data Assembler GUI (Volch)
+    - Fixed a crash with the Fluid Extractor
+---------------------------------------------------------------------------------------------------
 Version: 0.2.4
 Date: 30/11/2020
   Changes:
