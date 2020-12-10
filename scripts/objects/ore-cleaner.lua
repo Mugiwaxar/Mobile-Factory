@@ -112,29 +112,52 @@ function OC:update(event)
 end
 
 -- Tooltip Infos --
-function OC:getTooltipInfos(GUIObj, gui, justCreated)
-
-	-- Get the Flow --
-	local informationFlow = GUIObj.InformationFlow
+function OC:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	if justCreated == true then
 
-		-- Create the Information Title --
-		local informationTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Information"}, _mfOrange)
-		informationFlow = GUIObj:addFlow("InformationFlow", informationTitle, "vertical", true)
+		-- Set the GUI Title --
+		GUITable.vars.GUITitle.caption = {"gui-description.OreCleaner"}
 
-		-- Create the Settings Title --
-		local settingsTitle = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Settings"}, _mfOrange)
+		-- Set the Main Frame Height --
+		mainFrame.style.height = 350
+
+		-- Create the Information Frame --
+		local informationFrame = GAPI.addFrame(GUITable, "InformationFrame", mainFrame, "vertical", true)
+		informationFrame.style = "MFFrame1"
+		informationFrame.style.vertically_stretchable = true
+		informationFrame.style.left_padding = 3
+		informationFrame.style.right_padding = 3
+		informationFrame.style.left_margin = 3
+		informationFrame.style.right_margin = 3
+		informationFrame.style.minimal_width = 200
+
+		-- Add the Title --
+		GAPI.addSubtitle(GUITable, "", informationFrame, {"gui-description.Information"})
+
+		-- Create the Information Table --
+		GAPI.addTable(GUITable, "InformationTable", informationFrame, 1, true)
+
+		-- Create the Parameters Frame --
+		local parametersFrame = GAPI.addFrame(GUITable, "ParametersFrame", mainFrame, "vertical", true)
+		parametersFrame.style = "MFFrame1"
+		parametersFrame.style.vertically_stretchable = true
+		parametersFrame.style.left_padding = 3
+		parametersFrame.style.right_padding = 3
+		parametersFrame.style.right_margin = 3
+
+		-- Add the Title --
+		GAPI.addSubtitle(GUITable, "", parametersFrame, {"gui-description.Settings"})
 
 		-- Create the Select Data Network Label --
-		GUIObj:addLabel("", settingsTitle, {"", {"gui-description.OCFESelectDataNetwork"}}, _mfBlue, nil, false, "LabelFont2")
+		GAPI.addLabel(GUITable, "", parametersFrame, {"", {"gui-description.DNSelectDataNetwork"}, ":"}, nil, {"gui-description.DNSelectDataNetworkLabelTT"}, false, nil, _mfLabelType.yellowTitle)
 
 		-- Create the Select Network Table --
 		local networks = {}
 		local selected = 1
 		local total = 0
 		for _, MF in pairs(global.MFTable) do
-			if Util.canUse(GUIObj.MFPlayer, MF) then
+			if Util.canUse(GUITable.MFPlayer, MF) then
 				table.insert(networks, MF.player)
 				total = total + 1
 				if self.dataNetwork.ID == MF.dataNetwork.ID then selected = total end
@@ -143,14 +166,14 @@ function OC:getTooltipInfos(GUIObj, gui, justCreated)
 
 		-- Create the Select Network Drop Down --
 		if table_size(networks) > 0 then
-			GUIObj:addDropDown("DNOCSelect" .. self.ent.unit_number, settingsTitle, networks, selected, true, {"gui-description.SelectDataNetwork"})
+			GAPI.addDropDown(GUITable, "O.C.DNSelect," .. self.ent.unit_number, parametersFrame, networks, selected, true)
 		end
 
 		-- Create the Select Storage Label --
-		GUIObj:addLabel("", settingsTitle, {"", {"gui-description.OCFETargetedStorage"}}, _mfBlue, nil, false, "LabelFont2")
+		GAPI.addLabel(GUITable, "", parametersFrame, {"gui-description.OCFETargetedStorage"}, nil, "", false, nil, _mfLabelType.yellowTitle)
 
 		-- Create the Storage List --
-		local invs = {{"gui-description.All"}}
+		local invs = {{"gui-description.Auto"}}
 		local selectedIndex = 1
 		local i = 1
 		for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
@@ -169,30 +192,36 @@ function OC:getTooltipInfos(GUIObj, gui, justCreated)
 			end
 		end
 		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-		GUIObj:addDropDown("OC" .. self.ent.unit_number, settingsTitle, invs, selectedIndex)
+
+		-- Add the Selected Deep Tank Drop Down --
+		GAPI.addDropDown(GUITable, "O.C.TargetDD," .. self.ent.unit_number, parametersFrame, invs, selectedIndex)
 
 	end
 
-	-- Clear the Flow --
-	informationFlow.clear()
-	
-	-- Create the Quatron Charge --
-	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Charge"}, ": "}, math.floor(self.quatronCharge), _mfOrange, _mfGreen)
-	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronCharge/_mfOreCleanerMaxCharge, 100)
+	-- Get the Table --
+	local informationTable = GUITable.vars.InformationTable
 
+	-- Clear the Table --
+	informationTable.clear()
+
+	-- Add the Quatron Charge --
+    GAPI.addLabel(GUITable, "", informationTable, {"gui-description.QuatronCharge", self.quatronCharge}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", informationTable, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+	
 	-- Create the Quatron Purity --
-	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Purity"}, ": "}, string.format("%.3f", self.quatronLevel), _mfOrange, _mfGreen)
-	GUIObj:addProgressBar("", informationFlow, "", "", false, _mfPurple, self.quatronCharge/20, 100)
+	GAPI.addLabel(GUITable, "", informationTable, {"gui-description.Quatronlevel", string.format("%.3f", self.quatronLevel)}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", informationTable, "", "", false, _mfPurple, self.quatronLevel/20, 100)
 
 	-- Create the Speed --
-	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.Speed"}, ": "}, self:orePerExtraction() .. " ore/s", _mfOrange, _mfGreen)
+	local speedLabel = GAPI.addLabel(GUITable, "", informationTable, {"gui-description.OCFESpeedOC", self:orePerExtraction()}, _mfOrange)
+	speedLabel.style.top_margin = 10
 
 	-- Create the Resource Label --
-	GUIObj:addDualLabel(informationFlow, {"", {"gui-description.NumberOfOrePath"}, ": "}, table_size(self.oreTable), _mfOrange, _mfGreen)
+	GAPI.addLabel(GUITable, "", informationTable, {"", {"gui-description.OCFENumberOfOrePath"}, ": [color=yellow]", table_size(self.oreTable), "[/color]"}, _mfOrange)
 
 	-- Create the Mobile Factory Too Far Label --
 	if self.MFTooFar == true then
-		GUIObj:addLabel("", informationFlow, {"", {"gui-description.MFTooFar"}}, _mfRed)
+		GAPI.addLabel(GUITable, "", informationTable, {"gui-description.OCFEMFTooFar"}, _mfRed)
 	end
 
 end
@@ -419,4 +448,35 @@ end
 -- Return the max output flow --
 function OC:maxOutput()
 	return self.quatronMaxOutput
+end
+
+-- Called if the Player interacted with the GUI --
+function OC.interaction(event, MFPlayer)
+
+	-- Select Data Network --
+	if string.match(event.element.name, "O.C.DNSelect") then
+		local objId = tonumber(split(event.element.name, ",")[2])
+		local obj = global.oreCleanerTable[objId]
+		if obj == nil then return end
+		-- Get the Mobile Factory --
+		local selectedMF = getMF(event.element.items[event.element.selected_index])
+		if selectedMF == nil then return end
+		-- Set the New Data Network --
+		obj.dataNetwork = selectedMF.dataNetwork
+		-- Remove the Selected Inventory --
+		obj.selectedInv = nil
+		-- Update the Tooltip GUI --
+		GUI.updateMFTooltipGUI(MFPlayer.GUI["MFTooltipGUI"], true)
+		return
+	end
+
+	-- Select Targed --
+	if string.match(event.element.name, "O.C.TargetDD") then
+		local objId = tonumber(split(event.element.name, ",")[2])
+		local obj = global.oreCleanerTable[objId]
+		if obj == nil then return end
+		-- Change the Ore Cleaner targeted Deep Storage --
+		obj:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
+	end
+
 end

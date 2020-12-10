@@ -606,7 +606,21 @@ function GUI.onGuiElemChanged(event)
 
 	-- If this is a Fluid Interactor --
 	if string.match(event.element.name, "F.I.") then
-		FI.interaction(event, player)
+		FI.interaction(event)
+		GUI.updateAllGUIs(true)
+		return
+	end
+
+	-- If this is a Fluid Extractor --
+	if string.match(event.element.name, "F.E.") then
+		FE.interaction(event, MFPlayer)
+		GUI.updateAllGUIs(true)
+		return
+	end
+
+	-- If this is a Ore Cleaner --
+	if string.match(event.element.name, "O.C.") then
+		OC.interaction(event, MFPlayer)
 		GUI.updateAllGUIs(true)
 		return
 	end
@@ -643,92 +657,6 @@ function GUI.onGuiElemChanged(event)
 		-- Update the Tooltip GUI --
 		GUI.updateMFTooltipGUI(MFPlayer.GUI["MFTooltipGUI"], true)
 		return
-	end
-	
-	------- Read if the Element comes from an Ore Cleaner -------
-	-- Select Data Network --
-	if string.match(event.element.name, "DNOCSelect") then
-		-- Find the Ore Cleaner ID --
-		local ID = split(event.element.name, "DNOCSelect")
-		ID = tonumber(ID[1])
-		-- Check the ID --
-		if ID == nil then return end
-		-- Find the Ore Cleaner --
-		local obj = global.entsTable[ID]
-		-- Check if a Ore Cleaner was found --
-		if obj == nil then return end
-		-- Get the Mobile Factory --
-		local selectedMF = getMF(event.element.items[event.element.selected_index])
-		if selectedMF == nil then return end
-		-- Set the New Data Network --
-		obj.dataNetwork = selectedMF.dataNetwork
-		-- Remove the Selected Inventory --
-		obj.selectedInv = nil
-		-- Update the Tooltip GUI --
-		GUI.updateMFTooltipGUI(MFPlayer.GUI["MFTooltipGUI"], true)
-		return
-	end
-	-- Select Targed --
-	if string.match(event.element.name, "OC") then
-		-- Find the Ore Cleaner ID --
-		local ID = split(event.element.name, "OC")
-		ID = tonumber(ID[1])
-		-- Check the ID --
-		if ID == nil then return end
-		-- Find the Ore Cleaner --
-		local oreCleaner = nil
-		for k, oc in pairs(global.oreCleanerTable) do
-			if valid(oc) == true and oc.ent.unit_number == ID then
-				oreCleaner = oc
-			end
-		end
-		-- Check if a Ore Cleaner was found --
-		if oreCleaner == nil then return end
-		-- Change the Ore Cleaner targeted Deep Storage --
-		oreCleaner:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
-	end
-	
-	------- Read if the Element comes from a Fluid Extractor -------
-	-- Select Data Network --
-	if string.match(event.element.name, "DNFESelect") then
-		-- Find the Fluid Extractor ID --
-		local ID = split(event.element.name, "DNFESelect")
-		ID = tonumber(ID[1])
-		-- Check the ID --
-		if ID == nil then return end
-		-- Find the Fluid Extractor --
-		local obj = global.entsTable[ID]
-		-- Check if a Fluid Extractor was found --
-		if obj == nil then return end
-		-- Get the Mobile Factory --
-		local selectedMF = getMF(event.element.items[event.element.selected_index])
-		if selectedMF == nil then return end
-		-- Set the New Data Network --
-		obj.dataNetwork = selectedMF.dataNetwork
-		-- Remove the Selected Inventory --
-		obj.selectedInv = nil
-		-- Update the Tooltip GUI --
-		GUI.updateMFTooltipGUI(MFPlayer.GUI["MFTooltipGUI"], true)
-		return
-	end
-	-- Select the Target --
-	if string.match(event.element.name, "FE") then
-		-- Find the Fluid Extractor ID --
-		local ID = split(event.element.name, "FE")
-		ID = tonumber(ID[1])
-		-- Check the ID --
-		if ID == nil then return end
-		-- Find the Fluid Extractor --
-		local fluidExtractor = nil
-		for k, fe in pairs(global.fluidExtractorTable) do
-			if valid(fe) == true and fe.ent.unit_number == ID then
-				fluidExtractor = fe
-			end
-		end
-		-- Check if a Fluid Extractor was found --
-		if fluidExtractor == nil then return end
-		-- Change the Fluid Extractor targeted Dimensional Tank --
-		fluidExtractor:changeDimTank(tonumber(event.element.items[event.element.selected_index][4]))
 	end
 	
 	------- Read if the Element comes from The Mobile Factory Energy Laser -------

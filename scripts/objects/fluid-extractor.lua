@@ -183,11 +183,10 @@ function FE:getTooltipInfos(GUITable, mainFrame, justCreated)
 		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
 
 		-- Add the Selected Deep Tank Drop Down --
-		GAPI.addDropDown(GUITable, "FE" .. self.ent.unit_number, parametersFrame, invs, selectedIndex)
+		GAPI.addDropDown(GUITable, "F.E.TargetDD," .. self.ent.unit_number, parametersFrame, invs, selectedIndex)
 
 	end
 	
-
 	-- Get the Table --
 	local informationTable = GUITable.vars.InformationTable
 
@@ -404,4 +403,36 @@ end
 -- Return the max output flow --
 function FE:maxOutput()
 	return self.quatronMaxOutput
+end
+
+-- Called if the Player interacted with the GUI --
+function FE.interaction(event, MFPlayer)
+
+	-- Select Data Network --
+	if string.match(event.element.name, "F.E.DNSelect") then
+		local objId = tonumber(split(event.element.name, ",")[2])
+		local obj = global.fluidExtractorTable[objId]
+		if obj == nil then return end
+		-- Get the Mobile Factory --
+		local selectedMF = getMF(event.element.items[event.element.selected_index])
+		if selectedMF == nil then return end
+		-- Set the New Data Network --
+		obj.dataNetwork = selectedMF.dataNetwork
+		-- Remove the Selected Inventory --
+		obj.selectedInv = nil
+		-- Force recreate the Tooltip GUI --
+		GUI.updateMFTooltipGUI(MFPlayer.GUI["MFTooltipGUI"], true)
+		return
+	end
+
+	-- Select the Target --
+	if string.match(event.element.name, "F.E.TargetDD") then
+		local objId = tonumber(split(event.element.name, ",")[2])
+		local obj = global.fluidExtractorTable[objId]
+		if obj == nil then return end
+		-- Change the Fluid Extractor targeted Dimensional Tank --
+		obj:changeDimTank(tonumber(event.element.items[event.element.selected_index][4]))
+		return
+	end
+
 end
