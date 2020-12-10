@@ -153,7 +153,7 @@ function DSR:getTooltipInfos(GUITable, mainFrame, justCreated)
 	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTItemName", itemName}, _mfOrange)
 
 	-- Create the Item Amount Label --
-	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTItemAmount", Util.toRNumber(self.inventoryCount or 0)}, _mfOrange)
+	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTAmount", Util.toRNumber(self.inventoryCount or 0)}, _mfOrange)
 
 	-- Create the Filter Label --
 	local filterName = self.filter ~= nil and Util.getLocItemName(self.filter) or {"gui-description.None"}

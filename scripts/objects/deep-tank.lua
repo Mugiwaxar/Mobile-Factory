@@ -156,7 +156,7 @@ function DTK:getTooltipInfos(GUITable, mainFrame, justCreated)
 	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTFluidName", fluidName}, _mfOrange)
 
 	-- Create the Fluid Amount Label --
-	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTItemAmount", Util.toRNumber(self.inventoryCount or 0)}, _mfOrange)
+	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTAmount", Util.toRNumber(self.inventoryCount or 0)}, _mfOrange)
 
 	-- Create the Filter Label --
 	local filterName = self.filter ~= nil and Util.getLocFluidName(self.filter) or {"gui-description.None"}

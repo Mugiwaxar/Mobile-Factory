@@ -126,55 +126,121 @@ function FI:update()
 end
 
 -- Tooltip Infos --
-function FI:getTooltipInfos(GUIObj, gui, justCreated)
+function FI:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	-- Create the Data Network Frame --
 	DN.addDataNetworkFrame(GUITable, mainFrame, self, justCreated)
-	
-    -- Check if the Parameters can be modified --
-	if justCreated ~= true or valid(self.dataNetwork) == false then return end
-	
-	-- Create the Parameters Title --
-	local titleFrame = GUIObj:addTitledFrame("", gui, "vertical", {"gui-description.Settings"}, _mfOrange)
 
-	-- Create the Mode Selection --
-	GUIObj:addLabel("", titleFrame, {"gui-description.SelectMode"}, _mfOrange)
-	local state = "left"
-	if self.selectedMode == "output" then state = "right" end
-	GUIObj:addSwitch("FIMode" .. self.ent.unit_number, titleFrame, {"gui-description.Input"}, {"gui-description.Output"}, {"gui-description.InputTT"}, {"gui-description.OutputTT"}, state)
+	if justCreated == true then
 
-	-- Create the Inventory Selection --
-	GUIObj:addLabel("", titleFrame, {"gui-description.MSTarget"}, _mfOrange)
-	
-	local invs = {{"", {"gui-description.None"}}}
+		-- Set the GUI Title --
+		GUITable.vars.GUITitle.caption = {"gui-description.FluidInteractor"}
 
+		-- Set the Main Frame Height --
+		mainFrame.style.height = 350
 
-	-- Create the Deep Tank List --
-	local selectedIndex = 1
-	local i = 1
-	for k, deepTank in pairs(self.dataNetwork.DTKTable) do
-		if deepTank ~= nil and deepTank.ent ~= nil then
-			i = i + 1
-			local fluid
-			if deepTank.filter ~= nil then
-				fluid = deepTank.filter
-			elseif deepTank.inventoryFluid ~= nil then
-				fluid = deepTank.inventoryFluid
-			end
+		-- Create the Network Inventory Frame --
+		local inventoryFrame = GAPI.addFrame(GUITable, "InventoryFrame", mainFrame, "vertical", true)
+		inventoryFrame.style = "MFFrame1"
+		inventoryFrame.style.vertically_stretchable = true
+		inventoryFrame.style.left_padding = 3
+		inventoryFrame.style.right_padding = 3
+		inventoryFrame.style.left_margin = 3
+		inventoryFrame.style.right_margin = 3
+		inventoryFrame.style.minimal_width = 200
 
-			if fluid then
-				invs[k+1] = {"", "[img=fluid/"..fluid.."] ", game.fluid_prototypes[fluid].localised_name, " - ", deepTank.ID}
-			else
-				invs[k+1] = {"", "", {"gui-description.Empty"}, "", " - ", deepTank.ID}
-			end
+		-- Add the Title --
+		GAPI.addSubtitle(GUITable, "", inventoryFrame, {"gui-description.Inventory"})
 
-			if self.selectedInv and type(self.selectedInv) == "table" and self.selectedInv.entID == deepTank.entID then
-				selectedIndex = i
+		-- Create the Inventory Table --
+		GAPI.addTable(GUITable, "InventoryTable", inventoryFrame, 1, true)
+
+		-- Check if the Parameters can be modified --
+		if valid(self.dataNetwork) == false then return end
+
+		-- Create the Parameters Frame --
+		local parametersFrame = GAPI.addFrame(GUITable, "ParametersFrame", mainFrame, "vertical", true)
+		parametersFrame.style = "MFFrame1"
+		parametersFrame.style.vertically_stretchable = true
+		parametersFrame.style.left_padding = 3
+		parametersFrame.style.right_padding = 3
+		parametersFrame.style.right_margin = 3
+
+		-- Add the Title --
+		GAPI.addSubtitle(GUITable, "", parametersFrame, {"gui-description.Settings"})
+
+		-- Add the Mode Selection --
+		GAPI.addLabel(GUITable, "", parametersFrame, {"gui-description.MIFIChangeMod"}, nil, {"gui-description.MIFIChangeModMITT"}, false, nil, _mfLabelType.yellowTitle)
+		local state = "left"
+		if self.selectedMode == "output" then state = "right" end
+		GAPI.addSwitch(GUITable, "F.I.ModeSwitch," .. self.ent.unit_number, parametersFrame, {"gui-description.Input"}, {"gui-description.Output"}, "", "", state)
+
+		-- Create the Inventory Selection Label --
+		GAPI.addLabel(GUITable, "", parametersFrame, {"gui-description.MIFITargetedInv"}, nil, {"gui-description.MIFITargetedInvMITT"}, false, nil, _mfLabelType.yellowTitle)
+
+		-- Initialise the Inventory List --
+		local invs = {{"", {"gui-description.None"}}}
+
+		-- Create the Deep Tank List --
+		local selectedIndex = 1
+		local i = 1
+		for k, deepTank in pairs(self.dataNetwork.DTKTable) do
+			if deepTank ~= nil and deepTank.ent ~= nil then
+				i = i + 1
+				local fluid
+				if deepTank.inventoryFluid ~= nil then
+					fluid = deepTank.inventoryFluid
+				elseif  deepTank.filter ~= nil then
+					fluid = deepTank.filter
+				end
+
+				if fluid then
+					invs[k+1] = {"", "[img=fluid/"..fluid.."] ", game.fluid_prototypes[fluid].localised_name, " - ", deepTank.ID}
+				else
+					invs[k+1] = {"", "", {"gui-description.Empty"}, "", " - ", deepTank.ID}
+				end
+
+				if self.selectedInv and type(self.selectedInv) == "table" and self.selectedInv.entID == deepTank.entID then
+					selectedIndex = i
+				end
 			end
 		end
+
+		-- Create the DropDown --
+		if selectedIndex > table_size(invs) then selectedIndex = nil end
+		GAPI.addDropDown(GUITable, "F.I.TargetDD," .. self.ent.unit_number, parametersFrame, invs, selectedIndex)
+
 	end
-	if selectedIndex > table_size(invs) then selectedIndex = nil end
-	GUIObj:addDropDown("FITarget" .. self.ent.unit_number, titleFrame, invs, selectedIndex)
+
+	-- Get the Table --
+	local inventoryTable = GUITable.vars.InventoryTable
+
+	-- Clear the Table --
+	inventoryTable.clear()
+
+	-- Get the Fluid inside --
+	local fluidName = {"gui-description.Empty"}
+	local fluidCount = 0
+	for name, amount in pairs(self.ent.get_fluid_contents() or {}) do
+			fluidName = name
+			fluidCount = amount
+	end
+
+	-- Create the Fluid Label --
+	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTFluidName", fluidName}, _mfOrange)
+
+	-- Create the Amount Label --
+	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTAmount", fluidCount}, _mfOrange)
+
+	-- Create the Filter Label --
+	local filterName = self.selectedFilter ~= nil and Util.getLocFluidName(self.selectedFilter) or {"gui-description.None"}
+	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.MIFIFilter", filterName}, _mfOrange)
+
+	-- Update the Filter --
+	if self.selectedFilter ~= nil then
+		GUITable.vars.filter.elem_value = self.selectedFilter
+	end
+
 end
 
 -- Change the Mode --
@@ -293,4 +359,26 @@ function FI:blueprintTagsToSettings(tags)
 	end
 	-- be careful of a nil selectedMode
 	if tags["selectedMode"] then self.selectedMode = tags["selectedMode"] end
+end
+
+-- Called if the Player interacted with the GUI --
+function FI.interaction(event)
+
+	-- Change the Mode --
+	if string.match(event.element.name, "F.I.ModeSwitch,") then
+		local objId = tonumber(split(event.element.name, ",")[2])
+		local obj = global.fluidInteractorTable[objId]
+		if obj == nil then return end
+		obj:changeMode(event.element.switch_state)
+	end
+
+	-- Change the Target --
+	if string.match(event.element.name, "F.I.TargetDD,") then
+		local objId = tonumber(split(event.element.name, ",")[2])
+		local obj = global.fluidInteractorTable[objId]
+		if obj == nil then return end
+		obj:changeInventory(tonumber(event.element.items[event.element.selected_index][5]))
+		return
+	end
+
 end

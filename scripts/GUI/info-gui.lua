@@ -256,8 +256,8 @@ function GUI.updateDeepTankFrame(GUITable)
 
 		-- Create the Deep Tank Variables --
 		local sprite = deepTank.filter or deepTank.inventoryFluid
-		local fName = Util.getLocFluidName(deepTank.inventoryFluid) or Util.getLocFluidName(deepTank.filter) or {"", {"gui-description.DeepTank"}, " ", deepTank.ID}
-		local fAmount = deepTank.inventoryCount or 0
+		local name = Util.getLocFluidName(deepTank.inventoryFluid) or Util.getLocFluidName(deepTank.filter) or {"", {"gui-description.DeepTank"}, " ", deepTank.ID}
+		local amount = deepTank.inventoryCount or 0
 		local tCapacity = _dtMaxFluid
 		local color = _mfPurple
 
@@ -269,18 +269,18 @@ function GUI.updateDeepTankFrame(GUITable)
 			color = game.fluid_prototypes[deepTank.inventoryFluid].base_color
 		end
 		local buttonText = {"", {"gui-description.FilterSelect"}, "\n", {"gui-description.Filter"}, ": [color=purple]", (Util.getLocFluidName(deepTank.filter) or {"gui-description.None"}), "[/color]" }
-		local button = GAPI.addFilter(GUITable, "DTF" .. tostring(deepTank.ent.unit_number), frame, buttonText, true, "fluid", 50)
+		local button = GAPI.addFilter(GUITable, "D.T.Filter," .. tostring(deepTank.ent.unit_number), frame, buttonText, true, "fluid", 50)
 		button.elem_value = sprite
 
 		-- Create the table Flow --
 		local flow = GAPI.addTable(GUITable, "", frame, 1)
 
 		-- Create the Labels --
-		GAPI.addLabel(GUITable, "", flow, fName, nil, "", false, nil, _mfLabelType.yellowTitle)
-		GAPI.addLabel(GUITable, "", flow, Util.toRNumber(fAmount) .. "/" .. Util.toRNumber(tCapacity), _mfYellow)
+		GAPI.addLabel(GUITable, "", flow, name, nil, "", false, nil, _mfLabelType.yellowTitle)
+		GAPI.addLabel(GUITable, "", flow, Util.toRNumber(amount) .. "/" .. Util.toRNumber(tCapacity), _mfYellow)
 
 		-- Create the Progress Bar --
-		local bar = GAPI.addProgressBar(GUITable, "", flow, "", "", false, color, fAmount/tCapacity)
+		local bar = GAPI.addProgressBar(GUITable, "", flow, "", "", false, color, amount/tCapacity)
 		bar.style.horizontally_stretchable = true
 
 		::continue::
@@ -314,27 +314,23 @@ function GUI.updateDeepStorageFrame(GUITable)
 
 		-- Create the Storage Variables --
 		local sprite = deepStorage.filter or deepStorage.inventoryItem
-		local fName = Util.getLocItemName(deepStorage.inventoryItem) or Util.getLocItemName(deepStorage.filter) or {"", {"gui-description.DeepStorage"}, " ", deepStorage.ID}
-		local fAmount = deepStorage.inventoryCount or 0
+		local name = Util.getLocItemName(deepStorage.inventoryItem) or Util.getLocItemName(deepStorage.filter) or {"", {"gui-description.DeepStorage"}, " ", deepStorage.ID}
+		local amount = deepStorage.inventoryCount or 0
 
 		-- Create the Frame --
 		local frame = GAPI.addFrame(GUITable, "", storageTable, "horizontal")
 
 		-- Create the Button --
-		local buttonText = {"", {"gui-description.FilterSelect"}, "\n", {"gui-description.Filter"}, ": [color=green]", (Util.getLocFluidName(deepStorage.filter) or {"gui-description.None"}), "[/color]" }
-		local button = GAPI.addFilter(GUITable, "DSRF" .. tostring(deepStorage.ent.unit_number), frame, buttonText, true, "item", 50)
+		local buttonText = {"", {"gui-description.FilterSelect"}, "\n", {"gui-description.Filter"}, ": [color=green]", (Util.getLocItemName(deepStorage.filter) or {"gui-description.None"}), "[/color]" }
+		local button = GAPI.addFilter(GUITable, "D.S.R.Filter," .. tostring(deepStorage.ent.unit_number), frame, buttonText, true, "item", 50)
 		button.elem_value = sprite
 
 		-- Create the table flow --
 		local flow = GAPI.addTable(GUITable, "", frame, 1)
 
 		-- Create the Label --
-		GAPI.addLabel(GUITable, "", flow, fName, nil, "", false, nil, _mfLabelType.yellowTitle)
-		GAPI.addLabel(GUITable, "", flow, fAmount, _mfYellow)
-		-- label1.style.width = 70
-		-- label1.style.height = 15
-		-- label2.style.width = 70
-		-- label2.style.height = 15
+		GAPI.addLabel(GUITable, "", flow, name, nil, "", false, nil, _mfLabelType.yellowTitle)
+		GAPI.addLabel(GUITable, "", flow, amount, _mfYellow)
 
 		::continue::
 

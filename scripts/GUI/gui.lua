@@ -180,6 +180,12 @@ function GUI.buttonClicked(event)
 	-- Get the Main GUI Object --
 	local mainGUI = MFPlayer.GUI["MFMainGUI"]
 
+	-- Unfreeze the Info GUI --
+	if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
+		MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeTankGUI = false
+		MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeStorageGUI = false
+	end
+
 	------- Read if the Element came from the Option GUI -------
 	GUI.readOptions(event.element, player)
 	if event.element == nil or event.element.valid == false then return end
@@ -237,14 +243,14 @@ function GUI.buttonClicked(event)
 	end
 
 	-- If this is a Info GUI Deep Tank Filter --
-	if string.match(event.element.name, "DTF") then
+	if string.match(event.element.name, "D.T.Filter") then
 		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
 			MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeTankGUI = true
 		end
 	end
 
 	-- If this is a Info GUI Deep Storage Filter --
-	if string.match(event.element.name, "DSRF") then
+	if string.match(event.element.name, "D.S.R.Filter") then
 		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
 			MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeStorageGUI = true
 		end
@@ -566,6 +572,12 @@ function GUI.onGuiElemChanged(event)
 	if MF == nil then return end
 	-- Get the Current Mobile Factory --
 	local currentMF = getCurrentMF(player.name) or MF
+
+	-- Unfreeze the Info GUI --
+	if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
+		MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeTankGUI = false
+		MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeStorageGUI = false
+	end
 	
 	------- Read if the Element came from the Option GUI -------
 	GUI.readOptions(event.element, player)
@@ -588,6 +600,13 @@ function GUI.onGuiElemChanged(event)
 	-- If this is a Matter Interactor --
 	if string.match(event.element.name, "M.I.") then
 		MI.interaction(event, player)
+		GUI.updateAllGUIs(true)
+		return
+	end
+
+	-- If this is a Fluid Interactor --
+	if string.match(event.element.name, "F.I.") then
+		FI.interaction(event, player)
 		GUI.updateAllGUIs(true)
 		return
 	end
@@ -712,104 +731,6 @@ function GUI.onGuiElemChanged(event)
 		fluidExtractor:changeDimTank(tonumber(event.element.items[event.element.selected_index][4]))
 	end
 	
-	------- Read if the Element comes from a Matter Serializer -------
-	if string.match(event.element.name, "MS") then
-		-- Find the Matter Serializer ID --
-		local ID = split(event.element.name, "MS")
-		ID = tonumber(ID[1])
-		-- Check the ID --
-		if ID == nil then return end
-		-- Find the Matter Serializer --
-		local matterS = nil
-		for k, ms in pairs(global.matterSerializerTable) do
-			if valid(ms) == true and ms.ent.unit_number == ID then
-				matterS = ms
-			end
-		end
-		-- Check if a Matter Serializer was found --
-		if matterS == nil then return end
-		-- Change the Matter Serializer targeted Inventory --
-		matterS:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
-	end
-	
-	------- Read if the Element comes from a Matter Printer -------
-	if string.match(event.element.name, "MP") then
-		-- Find the Matter Printer ID --
-		local ID = split(event.element.name, "MP")
-		ID = tonumber(ID[1])
-		-- Check the ID --
-		if ID == nil then return end
-		-- Find the Matter Printer --
-		local matterP = nil
-		for k, mp in pairs(global.matterPrinterTable) do
-			if valid(mp) == true and mp.ent.unit_number == ID then
-				matterP = mp
-			end
-		end
-		-- Check if a Matter Printer was found --
-		if matterP == nil then return end
-		-- Change the Matter Printer targeted Inventory --
-		matterP:changeInventory(tonumber(event.element.items[event.element.selected_index][4]))
-	end
-
-
-	------- Read if the Element comes from a Matter Interactor Player Target -------
-	if string.match(event.element.name, "MIPlayerTarget") then
-		local ID = split(event.element.name, "MIPlayerTarget")
-		ID = tonumber(ID[1])
-		-- Check the ID --
-		if ID == nil then return end
-		-- Find the Matter Interactor --
-		local matterI = nil
-		for k, mi in pairs(global.matterInteractorTable) do
-			if valid(mi) == true and mi.ent.unit_number == ID then
-				matterI = mi
-			end
-		end
-		-- Check if a Matter Interactor was found --
-		if matterI == nil then return end
-		-- Change the Matter Interactor Player Target --
-		matterI:changePlayer(event.element.items[event.element.selected_index][2])
-	end
-
-	------- Read if the Element comes from a Fluid Interactor Mode -------
-	if string.match(event.element.name, "FIMode") then
-		local ID = split(event.element.name, "FIMode")
-		ID = tonumber(ID[1])
-		-- Check the ID --
-		if ID == nil then return end
-		-- Find the Fluid Manipulator --
-		local fluidI = nil
-		for k, fi in pairs(global.fluidInteractorTable) do
-			if valid(fi) == true and fi.ent.unit_number == ID then
-				fluidI = fi
-			end
-		end
-		-- Check if a Fluid Interactor was found --
-		if fluidI == nil then return end
-		-- Change the Mode --
-		fluidI:changeMode(event.element.switch_state)
-	end
-
-	------- Read if the Element comes from a Fluid Interactor Target -------
-	if string.match(event.element.name, "FITarget") then
-		local ID = split(event.element.name, "FITarget")
-		ID = tonumber(ID[1])
-		-- Check the ID --
-		if ID == nil then return end
-		-- Find the Fluid Manipulator --
-		local fluidI = nil
-		for k, fi in pairs(global.fluidInteractorTable) do
-			if valid(fi) == true and fi.ent.unit_number == ID then
-				fluidI = fi
-			end
-		end
-		-- Check if a Fluid Interactor was found --
-		if fluidI == nil then return end
-		-- Change the Fluid Interactor Target --
-		fluidI:changeInventory(tonumber(event.element.items[event.element.selected_index][5]))
-	end
-
 	------- Read if the Element comes from The Mobile Factory Energy Laser -------
 	if string.match(event.element.name, "MFPL") then
 		-- Look for the Mobile Factory ID --

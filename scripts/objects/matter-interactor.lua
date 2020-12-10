@@ -198,10 +198,10 @@ function MI:getTooltipInfos(GUITable, mainFrame, justCreated)
 			if deepStorage ~= nil and deepStorage.ent ~= nil then
 				i = i + 1
 				local item
-				if deepStorage.filter ~= nil then
-					item = deepStorage.filter
-				elseif deepStorage.inventoryItem ~= nil then
+				if deepStorage.inventoryItem ~= nil then
 					item = deepStorage.inventoryItem
+				elseif deepStorage.filter ~= nil then
+					item = deepStorage.filter
 				end
 
 				if item then
@@ -243,7 +243,7 @@ function MI:getTooltipInfos(GUITable, mainFrame, justCreated)
 	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTItemName", itemName}, _mfOrange)
 
 	-- Create the Amount Label --
-	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTItemAmount", itemCount}, _mfOrange)
+	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTAmount", itemCount}, _mfOrange)
 
 	-- Create the Filter Label --
 	local filterName = self.selectedFilter ~= nil and Util.getLocItemName(self.selectedFilter) or {"gui-description.None"}
