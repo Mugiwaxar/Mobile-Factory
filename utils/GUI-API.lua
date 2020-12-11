@@ -510,5 +510,5 @@ function GAPI.addDataNetworkFrame(gui, obj, justCreated)
     end
 
     return dataNetworkFlow
-    
+
 end

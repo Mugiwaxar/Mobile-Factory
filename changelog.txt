@@ -1,6 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.3.1
+Date: 11/12/2020
+  Bugfixes:
+    - Fixed a loading crash with existing saves
+    - Fixed a crash when oppening a Quatron Structure GUI (Honktown)
+---------------------------------------------------------------------------------------------------
 Version: 0.3.0
-Date: 03/12/2020
+Date: 10/12/2020
   Gui:
     - Full rework of all GUIs (Visual and Script)
   Scripting:
