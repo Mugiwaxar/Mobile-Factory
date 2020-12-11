@@ -138,7 +138,7 @@ function EL:findEntity()
 	self.focusedObj = newFocus
 
 	-- Same target --
-	if oldFocus ~= nil and newFocus ~= nil and oldFocus.entID == newFocus.entID then return end
+	if oldFocus ~= nil and newFocus ~= nil and oldFocus.entID == newFocus.entID and string.match(newFocus.ent.name, "MobileFactory") == false then return end
 
 	-- Create the new Beam --
 	self:getBeamPosition()
@@ -191,22 +191,27 @@ function EL:getBeamPosition()
 	local dir = self.ent.direction
 	local fPosX = nil
 	local fPosY = nil
+	local entWidth = 0
+	local entHeight = 0
 	if valid(self.focusedObj) then
 		fPosX = self.focusedObj.ent.position.x
 		fPosY = self.focusedObj.ent.position.y
+		local entBB = self.focusedObj.ent.bounding_box
+		entWidth = entBB.right_bottom.x - entBB.left_top.x
+		entHeight = entBB.right_bottom.y - entBB.left_top.y
 	end
 	if dir == defines.direction.north then
 		self.beamPosA = {x = pos.x, y = pos.y - 0.5}
-		self.beamPosB = {x = pos.x, y = (fPosY or (pos.y - 64)) - 0.5}
+		self.beamPosB = {x = pos.x, y = (fPosY or (pos.y - 64)) - 0.5 + entHeight/2}
 	elseif dir == defines.direction.east then
 		self.beamPosA = {x = pos.x + 0.2, y = pos.y - 0.2}
-		self.beamPosB = {x = (fPosX or (pos.x + 64)) + 0.2, y = pos.y - 0.2}
+		self.beamPosB = {x = (fPosX or (pos.x + 64)) + 0.2 - entWidth/2, y = pos.y - 0.2}
 	elseif dir ==  defines.direction.south then
 		self.beamPosA = {x = pos.x, y = pos.y}
-		self.beamPosB = {x = pos.x, y = fPosY or (pos.y + 64)}
+		self.beamPosB = {x = pos.x, y = (fPosY or (pos.y + 64)) - entHeight/2}
 	elseif dir == defines.direction.west then
 		self.beamPosA = {x = pos.x - 0.2, y = pos.y - 0.2}
-		self.beamPosB = {x = (fPosX or (pos.x - 64)) - 0.2, y = pos.y - 0.2}
+		self.beamPosB = {x = (fPosX or (pos.x - 64)) - 0.2 + entWidth/2, y = pos.y - 0.2}
 	else
 		self.beamPosA = pos
 		self.beamPosB = pos
