@@ -665,8 +665,12 @@ end
 
 -- Called when a Localized Name is requested --
 function onStringTranslated(event)
+	-- Get the MFPlayer --
+	local MFPlayer = getMFPlayer(event.player_index)
+	-- Check the MFPlayer --
+	if MFPlayer == nil then return end
 	-- Get the Tooltip GUI --
-	local GUITable = getMFPlayer(event.player_index).GUI[_mfGUIName.TooltipGUI]
+	local GUITable = MFPlayer.GUI[_mfGUIName.TooltipGUI]
 	-- Check the GUI --
 	if GUITable == nil or GUITable.gui == nil or GUITable.gui.valid == false then return end
 	-- Check the Localised String --
