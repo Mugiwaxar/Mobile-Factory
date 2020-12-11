@@ -50,6 +50,7 @@ function onInit()
 	global.allowMigration = ( next(global) ~= nil )
 
 	-- Create all MFPlayers if needed --
+	if global.playersTable == nil then global.playersTable = {} end
 	for _, player in pairs(game.players) do
 		initPlayer({player_index = player.index})
 	end
