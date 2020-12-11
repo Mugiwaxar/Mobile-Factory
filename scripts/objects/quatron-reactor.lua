@@ -124,8 +124,9 @@ function QR:getTooltipInfos(GUITable, mainFrame, justCreated)
 	GAPI.addProgressBar(GUITable, "", infoFrame, "", "", false, _mfPurple, self.quatronLevel/20, 100)
 
 	-- Add the Input/Output Speed Label --
-	local outputLabel = GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronOutputSpeed", Util.toRNumber(self:maxOutput())}, _mfOrange)
-	outputLabel.style.top_margin = 10
+	local speedLabel = GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronReactorSpeed", _mfQuatronMaxFluidBurntPerOperation}, _mfOrange)
+	speedLabel.style.top_margin = 10
+	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronOutputSpeed", Util.toRNumber(self:maxOutput())}, _mfOrange)
 
 end
 
