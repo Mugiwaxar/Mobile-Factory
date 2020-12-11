@@ -74,8 +74,6 @@ function onInit()
 		end
 	end
 
-	-- global.eryaIndexedTable = global.eryaIndexedTable or {}
-
 	-- Create the Objects Table --
 	Util.createTableList()
 	-- Migrate all Objects --
