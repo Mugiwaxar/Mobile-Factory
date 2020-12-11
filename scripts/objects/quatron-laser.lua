@@ -37,6 +37,7 @@ function QL:new(object)
 	t.quatronCharge = object.energy
 	t.quatronMax = object.electric_buffer_size
 	t.quatronMaxInput = object.electric_buffer_size
+	t.quatronMaxOutput = object.electric_buffer_size
 	-- Create the Beam --
 	t:getBeamPosition()
 	t.beam = object.surface.create_entity{name="IddleBeam", position=t.beamPosA, target_position=t.beamPosB, source=t.beamPosA}
