@@ -1,5 +1,20 @@
 ---------------------------------------------------------------------------------------------------
-Version: 0.3.2
+Version: 0.3.4
+Date: 11/12/2020
+  Changes:
+    - All Quatron recipes produce now 1000 Liquid Quatron (Instead of 100)
+    - All Quatron Cells can now store 1000 Liquid Quatron (Instead of 100)
+    - The Quatron Reactor now transform 1 Liquid Quatron to 1 Quatron Energy (Instead of 1 Liquid Quatron to 10 Quatron Energy)
+    - The Quatron Reactor can now contain 10000 of Fluid Quatron (Instead of 3000)
+    - The Quatron Reactor can now transfer 5000 Quatron Energy per second (Instead of unlimited)
+    - The Quatron Reactor can now burn 1000 Quatron Fluid per second (Instead of unlimited)
+  Graphics:
+    - Quatron Lasers and Energy Lasers beam visual has been improved
+  Gui:
+    - Added the Burn speed to the Quatron Reactor GUI
+    - Fixed the Quatron Laser Output speed
+---------------------------------------------------------------------------------------------------
+Version: 0.3.3
 Date: 11/12/2020
   Bugfixes:
     - Fixed the Network Controler crash (A GUI will be added later)

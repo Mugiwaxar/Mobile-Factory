@@ -53,7 +53,6 @@ function GUI.updateAllGUIs(force)
 				-- Update all GUIs --
 				if game.tick%_eventTick55 == 0 or force then
 				for _, GUItable in pairs(MFPlayer.GUI or {}) do
-					if valid(GUItable) then GUItable:update() end
 					if GUItable.gui ~= nil and GUItable.gui.valid == true and GUI["update" .. GUItable.gui.name] ~= nil then GUI["update" .. GUItable.gui.name](GUItable) end
 				end
 
