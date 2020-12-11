@@ -131,6 +131,7 @@ end
 
 -- Transform the Fluid inside into Quatron --
 function QR:burnFluid()
+
 	-- Return if the Reactor is full --
 	if self.quatronCharge >= self.quatronMax then return end
 
@@ -147,15 +148,19 @@ function QR:burnFluid()
 	-- Get the amount of Fluid to remove --
 	local fluidToRemove = math.min(fluid.amount, math.floor((self.quatronMax - self.quatronCharge) / _mfQuatronEnergyRate))
 	if fluidToRemove < 1 then return end
+
 	-- Remove the Fluid --
 	local removed = self.ent.remove_fluid{name=fluidName, amount=fluidToRemove}
 	self.ent.force.fluid_production_statistics.on_flow(fluidName, fluidToRemove * -1)
 
+	-- Add the Quatron Energy to the Reactor --
 	self:addQuatron(removed * _mfQuatronEnergyRate, level)
+	
 end
 
 -- Send Quatron to nearby Quatron Users --
 function QR:sendQuatron()
+
 	-- Check Quatron Charge
 	local selfQuatron = self.quatronCharge
 	if selfQuatron <= 0 then return end
@@ -167,7 +172,7 @@ function QR:sendQuatron()
 	local selfQuatronLevel = self.quatronLevel
 
 	-- Check all Entity --
-	for k, ent in pairs(ents) do
+	for _, ent in pairs(ents) do
 		-- Look for valid Object --
 		local obj = global.entsTable[ent.unit_number]
 		if obj ~= nil and obj.entID ~= self.entID then
@@ -189,6 +194,7 @@ function QR:sendQuatron()
 	end
 
 	self.quatronCharge = selfQuatron
+
 end
 
 -- Return the amount of Quatron --

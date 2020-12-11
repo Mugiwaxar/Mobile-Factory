@@ -98,8 +98,10 @@ function onInit()
 	rendering.clear("Mobile_Factory")
 
 	-- Recreate GUIs --
-	for k, MFPlayer in pairs(global.playersTable or {}) do
-		GUI.createMFMainGUI(MFPlayer.ent)
+	for _, MFPlayer in pairs(global.playersTable or {}) do
+		if MFPlayer.ent ~= nil then
+			GUI.createMFMainGUI(MFPlayer.ent)
+		end
 	end
 
 	-- Add Warptorio Compatibility --
