@@ -64,23 +64,4 @@ end
 -- Tooltip Infos --
 function NC:getTooltipInfos(GUIObj, gui, justCreated)
 
-	-- Create the Data Network Frame --
-	-- GUIObj:addDataNetworkFrame(gui, self, justCreated)
-
-	-- Get the ScrollPane --
-	local inventoryScrollPane = GUIObj.inventoryScrollPane
-
-	if justCreated == true then
-
-		-- Create the Inventory Scroll Pane --
-		inventoryScrollPane = GUIObj:addScrollPane("inventoryScrollPane", gui, 400, true)
-
-	end
-
-	-- Clear the ScrollPane --
-	inventoryScrollPane.clear()
-
-	-- Create the Inventory Frame --
-	self.invObj:getTooltipInfos(GUIObj, inventoryScrollPane)
-
 end
