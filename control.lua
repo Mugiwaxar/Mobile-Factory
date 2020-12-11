@@ -49,6 +49,11 @@ function onInit()
 	-- This *need* to be at the very begginng of on_init callback
 	global.allowMigration = ( next(global) ~= nil )
 
+	-- Create all MFPlayers if needed --
+	for _, player in pairs(game.players) do
+		initPlayer({player_index = player.index})
+	end
+
 	-- Update System --
 	global.entsTable = global.entsTable or {}
 	global.upsysTickTable = global.upsysTickTable or {}
