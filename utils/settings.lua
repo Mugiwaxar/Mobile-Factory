@@ -104,7 +104,9 @@ _mfFIQuatronDrainPerUpdate = 8
 _mfNEQuatronDrainPerUpdate = 3
 _mfDAQuatronDrainPerUpdate = 1
 _mfQuatronScalePower = 1.3
-_mfQuatronEnergyRate = 10
+_mfQuatronReactorMaxEnergyCapacity = 25000
+_mfQuatronReactorMaxOutput = 5000
+_mfQuatronMaxFluidBurntPerOperation = 1000
 
 -- Ore Cleaner settings --
 _mfOreCleanerMaxCharge = 1000
@@ -117,28 +119,6 @@ _mfOreCleanerMaxDistance = 100
 _mfFEFluidPerExtraction = 15
 _mfFEMaxCharge = 1000
 _mfFluidExtractorMaxDistance = 100
-
--- Erya --
--- _mfEryaFrostlayer = {}
--- _mfEryaFrostlayer[1] = {{0,0}}
--- _mfEryaFrostlayer[2] = {{-1,-1},{0,-1},{1,-1},{-1,0},{1,0},{-1,1},{0,1},{1,1}}
--- _mfEryaFrostlayer[3] = {{-2,-2},{-2,-1},{-2,0},{-2,1},{-2,2},{-1,-2},{-1,2},{0,-2},{0,2},{1,-2},{1,2},{2,-2},{2,-1},{2,0},{2,1},{2,2}}
--- _mfEryaFrostlayer[4] = {{-3,-3},{-3,-2},{-3,-1},{-3,0},{-3,1},{-3,2},{-3,3},{-2,-3},{-2,3},{-1,-3},{-1,3},{0,-3},{0,3},{1,-3},{1,3},{2,-3},{2,3},{3,-3},{3,-2},{3,-1},{3,0},{3,1},{3,2},{3,3}}
--- _mfEryaFrostlayer[5] = {{-4,-4},{-4,-3},{-4,-2},{-4,-1},{-4,0},{-4,1},{-4,2},{-4,3},{-4,4},{-3,-4},{-3,4},{-2,-4},{-2,4},{-1,-4},{-1,4},{0,-4},{0,4},{1,-4},{1,4},{2,-4},{2,4},{3,-4},{3,4},{4,-4},{4,-3},{4,-2},{4,-1},{4,0},{4,1},{4,2},{4,3},{4,4}}
--- _mfEryaFrostlayer[6] = {{-5,-5},{-5,-4},{-5,-3},{-5,-2},{-5,-1},{-5,0},{-5,1},{-5,2},{-5,3},{-5,4},{-5,5},{-4,-5},{-4,5},{-3,-5},{-3,5},{-2,-5},{-2,5},{-1,-5},{-1,5},{0,-5},{0,5},{1,-5},{1,5},{2,-5},{2,5},{3,-5},{3,5},{4,-5},{4,5},{5,-5},{5,-4},{5,-3},{5,-2},{5,-1},{5,0},{5,1},{5,2},{5,3},{5,4},{5,5}}
-
--- Erya Structure that freeze the Environment --
--- _mfEryaFreezeStructures = {}
--- _mfEryaFreezeStructures["EryaLamp"] = true
--- _mfEryaFreezeStructures["EryaInserter1"] = true
--- _mfEryaFreezeStructures["EryaMiningDrill1"] = true
--- _mfEryaFreezeStructures["EryaPumpjack1"] = true
--- _mfEryaFreezeStructures["EryaAssemblingMachine1"] = true
--- _mfEryaFreezeStructures["EryaPump1"] = true
--- _mfEryaFreezeStructures["EryaRadar1"] = true
--- _mfEryaFreezeStructures["EryaFurnace1"] = true
--- _mfEryaFreezeStructures["EryaRefinery1"] = true
--- _mfEryaFreezeStructures["EryaChemicalPlant1"] = true
 
 -- Unlocked Technology Functions --
 _MFResearches = {}

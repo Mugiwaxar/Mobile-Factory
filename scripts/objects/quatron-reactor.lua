@@ -12,9 +12,9 @@ QR = {
 	lastUpdate = 0,
 	quatronCharge = 0,
 	quatronLevel = 1,
-	quatronMax = 25000,
+	quatronMax = _mfQuatronReactorMaxEnergyCapacity,
 	quatronMaxInput = 0,
-	quatronMaxOutput = 25000
+	quatronMaxOutput = _mfQuatronReactorMaxOutput
 }
 
 -- Constructor --
@@ -146,7 +146,7 @@ function QR:burnFluid()
 	if level == nil then return end
 
 	-- Get the amount of Fluid to remove --
-	local fluidToRemove = math.min(fluid.amount, math.floor((self.quatronMax - self.quatronCharge) / _mfQuatronEnergyRate))
+	local fluidToRemove = math.min(fluid.amount, math.floor((self.quatronMax - self.quatronCharge)), _mfQuatronMaxFluidBurntPerOperation)
 	if fluidToRemove < 1 then return end
 
 	-- Remove the Fluid --
@@ -154,7 +154,7 @@ function QR:burnFluid()
 	self.ent.force.fluid_production_statistics.on_flow(fluidName, fluidToRemove * -1)
 
 	-- Add the Quatron Energy to the Reactor --
-	self:addQuatron(removed * _mfQuatronEnergyRate, level)
+	self:addQuatron(removed, level)
 	
 end
 

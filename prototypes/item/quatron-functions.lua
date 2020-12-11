@@ -41,10 +41,10 @@ lqR.subgroup = "Quatrons"
 lqR.energy_required = level
 lqR.enabled = false
 lqR.ingredients = {}
-for k, i in pairs(ingredients) do
+for _, i in pairs(ingredients) do
 	table.insert(lqR.ingredients, {type=i[1], name=i[2], amount=i[3]})
 end
-lqR.results = {{type="fluid", name="LiquidQuatron" .. tonumber(level), amount=100}}
+lqR.results = {{type="fluid", name="LiquidQuatron" .. tonumber(level), amount=1000}}
 data:extend{lqR}
 
 -- Quatron to Cell Recipe --
@@ -57,7 +57,7 @@ qcR.category = "Elements"
 qcR.subgroup = "QuatronsToCell"
 qcR.energy_required = 2
 qcR.enabled = false
-qcR.ingredients = {{type="fluid", name="LiquidQuatron" .. tonumber(level), amount=100}}
+qcR.ingredients = {{type="fluid", name="LiquidQuatron" .. tonumber(level), amount=1000}}
 qcR.result = "Quatron" .. tonumber(level)
 data:extend{qcR}
 
@@ -72,7 +72,7 @@ clqR.subgroup = "CellToQuatrons"
 clqR.energy_required = 2
 clqR.enabled = false
 clqR.ingredients = {{type="item", name="Quatron" .. tonumber(level), amount=1}}
-clqR.results = {{type="fluid", name="LiquidQuatron" .. tonumber(level), amount=100}}
+clqR.results = {{type="fluid", name="LiquidQuatron" .. tonumber(level), amount=1000}}
 data:extend{clqR}
 
 end

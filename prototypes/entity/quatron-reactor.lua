@@ -25,7 +25,7 @@ qrE.energy_source =
 }
 qrE.fluid_box =
 {
-    base_area = 30,
+    base_area = 100,
     height = 1,
     base_level = -1,
     production_type = "input",
