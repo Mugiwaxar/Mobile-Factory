@@ -289,7 +289,7 @@ function NE:createDNInventory(GUITable, inventoryScrollPane, searchText)
 
 		-- Create the Button --
 		local buttonText = {"", "[color=green]", Util.getLocItemName(DSR.inventoryItem), "[/color]\n[color=yellow]", Util.toRNumber(DSR.inventoryCount), "[/color]"}
-		local button = GAPI.addButton(GUITable, "N.E.DSR," .. DSR.ent.unit_number, tableList, "item/" .. DSR.inventoryItem, "item/" .. DSR.inventoryItem, buttonText, 37, false, true, DSR.inventoryCount)
+		local button = GAPI.addButton(GUITable, "N.E.DSR" .. self.entID, tableList, "item/" .. DSR.inventoryItem, "item/" .. DSR.inventoryItem, buttonText, 37, false, true, DSR.inventoryCount, nil, {ID=DSR.ent.unit_number})
 		button.style = "shortcut_bar_button_green"
 		button.style.padding = 0
 		button.style.margin = 0
@@ -311,7 +311,7 @@ function NE:createDNInventory(GUITable, inventoryScrollPane, searchText)
 
 		-- Create the Button --
 		local buttonText = {"", "[color=blue]", Util.getLocItemName(name), "[/color]\n[color=yellow]", Util.toRNumber(count), "[/color]"}
-		local button = GAPI.addButton(GUITable, "N.E.Inv," .. self.entID .. "," .. name, tableList, "item/" .. name, "item/" .. name, buttonText, 37, false, true, count)
+		local button = GAPI.addButton(GUITable, "N.E.Inv" .. name, tableList, "item/" .. name, "item/" .. name, buttonText, 37, false, true, count, nil, {ID=self.entID, name=name})
 		button.style = "shortcut_bar_button_blue"
 		button.style.padding = 0
 		button.style.margin = 0
@@ -345,7 +345,7 @@ function NE:createPlayerInventory(GUITable, MFPlayer, inventoryScrollPane, searc
 
 		-- Create the Button --
 		local buttonText = {"", "[color=blue]", Util.getLocItemName(name), "[/color]\n[color=yellow]", Util.toRNumber(count), "[/color]"}
-		local button = GAPI.addButton(GUITable, "N.E.PInv," .. self.entID .. "," .. "," .. name, tableList, "item/" .. name, "item/" .. name, buttonText, 37, false, true, count)
+		local button = GAPI.addButton(GUITable, "N.E.PInv" .. name, tableList, "item/" .. name, "item/" .. name, buttonText, 37, false, true, count, nil, {ID=self.entID, name=name})
 		button.style = "shortcut_bar_button_blue"
 		button.style.padding = 0
 		button.style.margin = 0
@@ -472,23 +472,23 @@ function NE.interaction(event, playerIndex)
 	end
 	-- If it's a Deep Storage --
 	if string.match(event.element.name, "N.E.DSR") then
-		local objId = tonumber(split(event.element.name, ",")[2])
+		local objId = event.element.tags.ID
 		local obj = global.deepStorageTable[objId]
 		NE.transferItemsFromDS(obj, getMFPlayer(playerIndex).ent.get_main_inventory(), count)
 		return
 	end
 	-- If it's a Data Network Inventory --
 	if string.match(event.element.name, "N.E.Inv") then
-		local objId = tonumber(split(event.element.name, ",")[2])
+		local objId = event.element.tags.ID
 		local obj = global.networkExplorerTable[objId]
-		NE.transferItemsFromDNInv(obj, getMFPlayer(playerIndex).ent.get_main_inventory(), split(event.element.name, ",")[3], count)
+		NE.transferItemsFromDNInv(obj, getMFPlayer(playerIndex).ent.get_main_inventory(), event.element.tags.name, count)
 		return
 	end
 	-- If it's a player Inventory --
 	if string.match(event.element.name, "N.E.PInv") then
-		local objId = tonumber(split(event.element.name, ",")[2])
+		local objId = event.element.tags.ID
 		local obj = global.networkExplorerTable[objId]
-		NE.transferItemsFromPInv(getMFPlayer(playerIndex).ent.get_main_inventory(), obj, split(event.element.name, ",")[3], count)
+		NE.transferItemsFromPInv(getMFPlayer(playerIndex).ent.get_main_inventory(), obj, event.element.tags.name, count)
 		return
 	end
 end
