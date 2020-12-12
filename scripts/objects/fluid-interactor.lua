@@ -173,7 +173,7 @@ function FI:getTooltipInfos(GUITable, mainFrame, justCreated)
 		GAPI.addLabel(GUITable, "", parametersFrame, {"gui-description.MIFIChangeMod"}, nil, {"gui-description.MIFIChangeModMITT"}, false, nil, _mfLabelType.yellowTitle)
 		local state = "left"
 		if self.selectedMode == "output" then state = "right" end
-		GAPI.addSwitch(GUITable, "F.I.ModeSwitch," .. self.ent.unit_number, parametersFrame, {"gui-description.Input"}, {"gui-description.Output"}, "", "", state)
+		GAPI.addSwitch(GUITable, "F.I.ModeSwitch", parametersFrame, {"gui-description.Input"}, {"gui-description.Output"}, "", "", state, false, {ID=self.ent.unit_number})
 
 		-- Create the Inventory Selection Label --
 		GAPI.addLabel(GUITable, "", parametersFrame, {"gui-description.MIFITargetedInv"}, nil, {"gui-description.MIFITargetedInvMITT"}, false, nil, _mfLabelType.yellowTitle)
@@ -208,7 +208,7 @@ function FI:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 		-- Create the DropDown --
 		if selectedIndex > table_size(invs) then selectedIndex = nil end
-		GAPI.addDropDown(GUITable, "F.I.TargetDD," .. self.ent.unit_number, parametersFrame, invs, selectedIndex)
+		GAPI.addDropDown(GUITable, "F.I.TargetDD", parametersFrame, invs, selectedIndex, false, "", {ID=self.ent.unit_number})
 
 	end
 
@@ -365,16 +365,16 @@ end
 function FI.interaction(event)
 
 	-- Change the Mode --
-	if string.match(event.element.name, "F.I.ModeSwitch,") then
-		local objId = tonumber(split(event.element.name, ",")[2])
+	if string.match(event.element.name, "F.I.ModeSwitch") then
+		local objId = event.element.tags.ID
 		local obj = global.fluidInteractorTable[objId]
 		if obj == nil then return end
 		obj:changeMode(event.element.switch_state)
 	end
 
 	-- Change the Target --
-	if string.match(event.element.name, "F.I.TargetDD,") then
-		local objId = tonumber(split(event.element.name, ",")[2])
+	if string.match(event.element.name, "F.I.TargetDD") then
+		local objId = event.element.tags.ID
 		local obj = global.fluidInteractorTable[objId]
 		if obj == nil then return end
 		obj:changeInventory(tonumber(event.element.items[event.element.selected_index][5]))
