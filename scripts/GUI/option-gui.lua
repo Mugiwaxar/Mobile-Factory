@@ -109,9 +109,9 @@ function GUI.updateOptionGUIMFTab(GUITable)
 	local playersPermissionsFlow = GAPI.addFlow(GUITable, "", flow, "horizontal")
 	local addAllowedPlayerDD = GAPI.addDropDown(GUITable, "AllowedPlayersDD", playersPermissionsFlow, playersList, nil, true)
 	addAllowedPlayerDD.style.horizontally_stretchable = true
-	local addAllowedPlayerButton = GAPI.addSimpleButton(GUITable, "AddAllowedPlayerButton", playersPermissionsFlow, {"gui-description.MFOptAddButton"})
+	local addAllowedPlayerButton = GAPI.addSimpleButton(GUITable, "Opt.GUI.AddAllowedPlayer", playersPermissionsFlow, {"gui-description.MFOptAddButton"})
 	addAllowedPlayerButton.style.maximal_width = 75
-	local removeAllowedPlayerButton = GAPI.addSimpleButton(GUITable, "RemoveAllowedPlayerButton", playersPermissionsFlow, {"gui-description.MFOptRemoveButton"})
+	local removeAllowedPlayerButton = GAPI.addSimpleButton(GUITable, "Opt.GUI.RemoveAllowedPlayer", playersPermissionsFlow, {"gui-description.MFOptRemoveButton"})
 	removeAllowedPlayerButton.style.maximal_width = 75
 
 	-- Add the Allowed Player list --
@@ -146,22 +146,22 @@ function GUI.updateOptionGUIGUITab(GUITable)
 	for _, button in pairs(MFPlayer.GUI["MFMainGUI"].vars.buttonsTable) do
 		local state = true
 		if MFPlayer.varTable["Show" .. button.name] == false then state = false end
-		GAPI.addCheckBox(GUITable, "MGS" .. button.name, flow, {"", {"gui-description.MainGUIButtons"}, "", button.name}, "", state, false, {name=button.name})
+		GAPI.addCheckBox(GUITable, "Opt.GUI.MainGUIButtonsVisible" .. button.name, flow, {"", {"gui-description.MainGUIButtons"}, "", button.name}, "", state, false, {name=button.name})
 	end
 
 	-- Add the Main Buttons size Selector --
 	GAPI.addLabel(GUITable, "", flow, {"gui-description.MainButtonSizeTitle"}, nil, {"gui-description.MainButtonSizeSelectorTT"}, false, nil, _mfLabelType.yellowTitle)
-	GAPI.addDropDown(GUITable, "MainButtonsSize", flow, {1,2,3,4,5,6,7,8,9,10}, MFPlayer.varTable.MainButtonsSize or 5, true)
+	GAPI.addDropDown(GUITable, "Opt.GUI.MainButtonsSize", flow, {1,2,3,4,5,6,7,8,9,10}, MFPlayer.varTable.MainButtonsSize or 5, true)
 
 	-- Add the Buttons per Line Selector --
 	GAPI.addLabel(GUITable, "", flow, {"gui-description.MainGUIButtonsLineTitle"}, nil, {"gui-description.MainGUIButtonsPerLineTT"}, false, nil, _mfLabelType.yellowTitle)
-	GAPI.addDropDown(GUITable, "MainGUIButtonsPerLine", flow, {1,2,3,4,5,6,7,8,9,10}, MFPlayer.varTable.mainGUIButtonsPerLine or 5, true)
+	GAPI.addDropDown(GUITable, "Opt.GUI.MainGUIButtonsPerLine", flow, {1,2,3,4,5,6,7,8,9,10}, MFPlayer.varTable.mainGUIButtonsPerLine or 5, true)
 
 	-- Add a CheckBox for every Information --
 	GAPI.addLabel(GUITable, "", flow, {"gui-description.MainGUIInformationTitle"}, nil, nil, false, nil, _mfLabelType.yellowTitle)
-	GAPI.addCheckBox(GUITable, "MainGUIShowPositions", flow, {"gui-description.MainGUIShowPositions"}, "", MFPlayer.varTable.MainGUIShowPositions == nil and true or MFPlayer.varTable.MainGUIShowPositions)
-	GAPI.addCheckBox(GUITable, "MainGUIShowTime", flow, {"gui-description.MainGUIShowTime"}, "", MFPlayer.varTable.MainGUIShowTime == nil and false or MFPlayer.varTable.MainGUIShowTime)
-	local eryaTemp = GAPI.addCheckBox(GUITable, "MainGUIShowTemperature", flow, {"gui-description.MainGUIShowTemperature"}, {"gui-description.MainGUIShowTemperatureTT"}, MFPlayer.varTable.MainGUIShowTemperature == nil and false or MFPlayer.varTable.MainGUIShowTemperature)
+	GAPI.addCheckBox(GUITable, "Opt.GUI.MainGUIShowPositions", flow, {"gui-description.MainGUIShowPositions"}, "", MFPlayer.varTable.MainGUIShowPositions == nil and true or MFPlayer.varTable.MainGUIShowPositions)
+	GAPI.addCheckBox(GUITable, "Opt.GUI.MainGUIShowTime", flow, {"gui-description.MainGUIShowTime"}, "", MFPlayer.varTable.MainGUIShowTime == nil and false or MFPlayer.varTable.MainGUIShowTime)
+	local eryaTemp = GAPI.addCheckBox(GUITable, "Opt.GUI.MainGUIShowTemperature", flow, {"gui-description.MainGUIShowTemperature"}, {"gui-description.MainGUIShowTemperatureTT"}, MFPlayer.varTable.MainGUIShowTemperature == nil and false or MFPlayer.varTable.MainGUIShowTemperature)
 
 	-- Enable or Disable the Erya Temperature Checkbox --
 	if script.active_mods["Mobile_Factory-Erya"] ~= nil and script.active_mods["Mobile_Factory-Erya"] > "0.1.7" then
@@ -174,11 +174,11 @@ function GUI.updateOptionGUIGUITab(GUITable)
 
 	-- Add a CheckBox for every Progress Bars --
 	GAPI.addLabel(GUITable, "", flow, {"gui-description.MainGUIBarsTitle"}, nil, nil, false, nil, _mfLabelType.yellowTitle)
-	GAPI.addCheckBox(GUITable, "MainGUIShowHealthBar", flow, {"gui-description.MainGUIShowHealthBar"}, "", MFPlayer.varTable.MainGUIShowHealthBar == nil and true or MFPlayer.varTable.MainGUIShowHealthBar)
-	GAPI.addCheckBox(GUITable, "MainGUIShowShieldBar", flow, {"gui-description.MainGUIShowShieldBar"}, "", MFPlayer.varTable.MainGUIShowShieldBar == nil and true or MFPlayer.varTable.MainGUIShowShieldBar)
-	GAPI.addCheckBox(GUITable, "MainGUIShowEnergyBar", flow, {"gui-description.MainGUIShowEnergyBar"}, "", MFPlayer.varTable.MainGUIShowEnergyBar == nil and true or MFPlayer.varTable.MainGUIShowEnergyBar)
-	GAPI.addCheckBox(GUITable, "MainGUIShowQuatronBar", flow, {"gui-description.MainGUIShowQuatronBar"}, "", MFPlayer.varTable.MainGUIShowQuatronBar == nil and true or MFPlayer.varTable.MainGUIShowQuatronBar)
-	GAPI.addCheckBox(GUITable, "MainGUIShowJumpCharge", flow, {"gui-description.MainGUIShowJumpCharge"}, "", MFPlayer.varTable.MainGUIShowJumpCharge == nil and true or MFPlayer.varTable.MainGUIShowJumpCharge)
+	GAPI.addCheckBox(GUITable, "Opt.GUI.MainGUIShowHealthBar", flow, {"gui-description.MainGUIShowHealthBar"}, "", MFPlayer.varTable.MainGUIShowHealthBar == nil and true or MFPlayer.varTable.MainGUIShowHealthBar)
+	GAPI.addCheckBox(GUITable, "Opt.GUI.MainGUIShowShieldBar", flow, {"gui-description.MainGUIShowShieldBar"}, "", MFPlayer.varTable.MainGUIShowShieldBar == nil and true or MFPlayer.varTable.MainGUIShowShieldBar)
+	GAPI.addCheckBox(GUITable, "Opt.GUI.MainGUIShowEnergyBar", flow, {"gui-description.MainGUIShowEnergyBar"}, "", MFPlayer.varTable.MainGUIShowEnergyBar == nil and true or MFPlayer.varTable.MainGUIShowEnergyBar)
+	GAPI.addCheckBox(GUITable, "Opt.GUI.MainGUIShowQuatronBar", flow, {"gui-description.MainGUIShowQuatronBar"}, "", MFPlayer.varTable.MainGUIShowQuatronBar == nil and true or MFPlayer.varTable.MainGUIShowQuatronBar)
+	GAPI.addCheckBox(GUITable, "Opt.GUI.MainGUIShowJumpCharge", flow, {"gui-description.MainGUIShowJumpCharge"}, "", MFPlayer.varTable.MainGUIShowJumpCharge == nil and true or MFPlayer.varTable.MainGUIShowJumpCharge)
 
 end
 
@@ -195,7 +195,7 @@ function GUI.updateOptionGUIGameTab(GUITable)
 
 	-- Add Floor Is Lava Option --
 	GAPI.addSubtitle(GUITable, "", flow, {"gui-description.GameTabGeneral"})
-	local FILOption = GAPI.addCheckBox(GUITable, "FloorIsLavaOpt", flow, {"gui-description.FloorIsLavaOpt"}, {"gui-description.FloorIsLavaOptTT"}, global.floorIsLavaActivated or false)
+	local FILOption = GAPI.addCheckBox(GUITable, "Opt.GUI.FloorIsLavaOpt", flow, {"gui-description.FloorIsLavaOpt"}, {"gui-description.FloorIsLavaOptTT"}, global.floorIsLavaActivated or false)
 	FILOption.enabled = MFPlayer.ent.admin
 
 	-- Create the Category List --
@@ -210,10 +210,10 @@ function GUI.updateOptionGUIGameTab(GUITable)
 	local blacklistFlow = GAPI.addFlow(GUITable, "", flow, "horizontal")
 	local blackListRecipeDD = GAPI.addDropDown(GUITable, "blacklistDAList", blacklistFlow, categoryList, nil, true)
 	blackListRecipeDD.style.horizontally_stretchable = true
-	local add = GAPI.addSimpleButton(GUITable, "blacklistDAAdd", blacklistFlow, {"gui-description.MFOptAddButton"})
+	local add = GAPI.addSimpleButton(GUITable, "Opt.GUI.AddDARecipeToBlackList", blacklistFlow, {"gui-description.MFOptAddButton"})
 	add.style.maximal_width = 75
 	add.enabled = MFPlayer.ent.admin
-	local rem = GAPI.addSimpleButton(GUITable, "blacklistDARem", blacklistFlow, {"gui-description.MFOptRemoveButton"})
+	local rem = GAPI.addSimpleButton(GUITable, "Opt.GUI.RemoveDARecipeFromBlackList", blacklistFlow, {"gui-description.MFOptRemoveButton"})
 	rem.style.maximal_width = 75
 	rem.enabled = MFPlayer.ent.admin
 
@@ -242,31 +242,11 @@ function GUI.updateOptionGUISystemTab(GUITable)
 	-- Add Performances Options --
 	GAPI.addSubtitle(GUITable, "", flow, {"gui-description.PerfOpt"})
 	GAPI.addLabel(GUITable, "", flow, {"gui-description.SystemPerfEntsPerTick"}, nil, {"gui-description.SystemPerfEntsPerTickTT"}, false, nil, _mfLabelType.yellowTitle)
-	local tickTextField = GAPI.addTextField(GUITable, "UpdatePerTickOpt", flow, global.entsUpPerTick or 100, nil, true, true, false, false)
+	local tickTextField = GAPI.addTextField(GUITable, "Opt.GUI.UpdatePerTickOpt", flow, global.entsUpPerTick or 100, nil, true, true, false, false)
 	tickTextField.enabled = MFPlayer.ent.admin
 
 	GAPI.addLabel(GUITable, "", flow, {"gui-description.UseVanillaRecipeLabel"}, nil, {"gui-description.UseVanillaRecipeLabelTT"}, false, nil, _mfLabelType.yellowTitle)
-	local checkbox = GAPI.addCheckBox(GUITable, "useVanillaChooseElem", flow, {"gui-description.UseVanillaChooseElem"}, nil, global.useVanillaChooseElem)
+	local checkbox = GAPI.addCheckBox(GUITable, "Opt.GUI.UseVanillaRecipeSelector", flow, {"gui-description.UseVanillaChooseElem"}, nil, global.useVanillaChooseElem)
 	checkbox.enabled = MFPlayer.ent.admin
-
-end
-
--- Update the SystemTab --
-function GUI.updateOptionGUISystemTabOld(GUIObj)
-
-	local playerIndex = GUIObj.SystemTab.player_index
-
-	-- Create the Scroll Pane --
-	local scrollPane = GUIObj:addScrollPane("MFTabScrollPane", GUIObj.SystemTab, 500)
-	scrollPane.style.minimal_height  = 500
-
-	-- Add Performances Options --
-	GUI.addOption("", scrollPane, "title", false, {text={"gui-description.PerfOpt"}}, playerIndex)
-	local tickOpt = GUI.addOption("UpdatePerTickOpt", scrollPane, "numberfield", false, {text=global.entsUpPerTick or 100, text2={"gui-description.SystemPerfEntsPerTick"}, tooltip={"gui-description.SystemPerfEntsPerTickTT"}}, playerIndex)
-	tickOpt.UpdatePerTickOpt.enabled = GUIObj.MFPlayer.ent.admin
-
-	-- Add Vanilla Elements Option --
-	local checkbox = GUIObj:addCheckBox("useVanillaChooseElem", scrollPane, {"gui-description.UseVanillaChooseElem"}, {"gui-description.UseVanillaChooseElemTT"}, global.useVanillaChooseElem)
-	checkbox.enabled = GUIObj.MFPlayer.ent.admin
 
 end

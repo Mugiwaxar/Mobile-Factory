@@ -177,7 +177,7 @@ function GUI.buttonClicked(event)
 	local currentMF = getCurrentMF(player.name) or MF
 
 	-- Get the Main GUI Object --
-	local mainGUI = MFPlayer.GUI["MFMainGUI"]
+	local mainGUI = MFPlayer.GUI[_mfGUIName.MainGUI]
 
 	-- Unfreeze the Info GUI --
 	if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
@@ -185,9 +185,12 @@ function GUI.buttonClicked(event)
 		MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeStorageGUI = false
 	end
 
-	------- Read if the Element came from the Option GUI -------
-	GUI.readOptions(event.element, player)
-	if event.element == nil or event.element.valid == false then return end
+	-- If this is for the Option GUI --
+	if string.match(event.element.name, "Opt.GUI.") then
+		GUI.readOptions(event.element, player)
+		GUI.updateAllGUIs(true)
+		return
+	end
 
 	-- Open Info GUI Button --
 	if event.element.name == "MainGUIInfosButton" then
