@@ -131,7 +131,7 @@ function DTK:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 		-- Create the Filter Selection --
 		GAPI.addLabel(GUITable, "", settingsFrame, {"", {"gui-description.FilterSelect"}, ":"}, nil, {"gui-description.TargetedStorage"}, false, nil, _mfLabelType.yellowTitle)
-		local filter = GAPI.addFilter(GUITable, "D.T.Filter," .. tostring(self.ent.unit_number), settingsFrame, nil, true, "fluid", 40)
+		local filter = GAPI.addFilter(GUITable, "D.T.Filter", settingsFrame, nil, true, "fluid", 40, {ID=self.ent.unit_number})
 		GUITable.vars.filter = filter
 
 	end
@@ -244,7 +244,7 @@ function DTK.interaction(event)
 	-- If this is a Filter --
 	if string.match(event.element.name, "D.T.Filter") then
 		-- Get the Deep Tank ID --
-		id = tonumber(split(event.element.name, ",")[2])
+		local id = event.element.tags.ID
 		if global.deepTankTable[id] == nil then return end
 		if event.element.elem_value ~= nil then
 			global.deepTankTable[id].filter = event.element.elem_value
