@@ -332,6 +332,13 @@ function GUI.buttonClicked(event)
 		return
 	end
 
+	-- If this is for the TP GUI --
+	if string.match(event.element.name, "TP.GUI.") then
+		GUI.TPMFGUIInteraction(event, player, MFPlayer, currentMF)
+		GUI.updateAllGUIs(true)
+		return
+	end
+
 	-- If this is for the Recipe GUI --
 	if string.match(event.element.name, "Rec.GUI.") then
 		GUI.recipeGUIInteraction(event, MFPlayer)
@@ -446,33 +453,6 @@ function GUI.buttonClicked(event)
 		else
 			obj.showArea = true
 		end
-		return
-	end
-
-	-- If this is The Jump Drive GUI --
-	if string.match(event.element.name, "TPGUI") and event.element.type == "sprite-button" then
-		-- If a location is added --
-		if string.match(event.element.name, "TPGUIAddLoc") then
-			local GUITable = MFPlayer.GUI["MFTPGUI"]
-			if GUITable.vars.AddLocName ~= nil and GUITable.vars.AddLocName ~= "" then
-				local jumpDrive = currentMF.jumpDriveObj
-				jumpDrive:addLocation(GUITable.vars.AddLocName.text, GUITable.vars.AddLocFilter.elem_value)
-			end
-		end
-		if string.match(event.element.name, "TPGUILoc") then
-			local jumpDrive = currentMF.jumpDriveObj
-			local location = string.sub(event.element.name, string.len("TPGUILoc,")+1 )
-			-- Start the Jump --
-			if event.button == defines.mouse_button_type.left then
-				jumpDrive:jump(location)
-			end
-			-- Remove a Location --
-			if event.button == defines.mouse_button_type.right then
-				jumpDrive:removeLocation(location)
-			end
-		end
-		-- Update all GUIs --
-		GUI.updateAllGUIs(true)
 		return
 	end
 

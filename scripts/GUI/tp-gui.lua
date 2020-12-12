@@ -137,7 +137,7 @@ function GUI.updateLocation(GUITable)
 
         -- Add the TP Button --
         local icon = loc.filter ~= nil and ("recipe/" .. loc.filter) or "MFJDIcon"
-        local button = GAPI.addButton(GUITable, "TPGUILoc," .. name, flow, icon, icon, {"gui-description.StartJump"}, 50)
+        local button = GAPI.addButton(GUITable, "TP.GUI.Loc,", flow, icon, icon, {"gui-description.StartJump"}, 50, false, true, nil, nil, {loc=name})
         button.style = canTP == true and "shortcut_bar_button_green" or "MF_Fake_Button_Red"
         button.style.padding = 0
         button.style.margin = 0
@@ -192,7 +192,7 @@ function GUI.updateAddLocation(GUITable)
     GAPI.addFilter(GUITable, "AddLocFilter", addLocFlow, {"gui-description.AddLocationFilterTT"}, true, "recipe", 28)
 
     -- Create the Add Location Button --
-    GAPI.addButton(GUITable, "TPGUIAddLoc", addLocFlow, "PlusIcon", "PlusIcon", {"gui-description.AddLocationButtonTT"}, 28)
+    GAPI.addButton(GUITable, "TP.GUI.AddLoc", addLocFlow, "PlusIcon", "PlusIcon", {"gui-description.AddLocationButtonTT"}, 28)
 
     -- Add Line --
     GAPI.addLine(GUITable, "", locFrame, "horizontal")
@@ -202,5 +202,35 @@ function GUI.updateAddLocation(GUITable)
     GAPI.addLabel(GUITable, "", locFrame, {"gui-description.Info2"}, _mfWhite)
     GAPI.addLabel(GUITable, "", locFrame, {"gui-description.Info3"}, _mfWhite)
     GAPI.addLabel(GUITable, "", locFrame, {"gui-description.Info4"}, _mfWhite)
+
+end
+
+-- If the Player interacted with the GUI --
+function GUI.TPMFGUIInteraction(event, player, MFPlayer, currentMF)
+
+    -- Location Added --
+    if string.match(event.element.name, "TP.GUI.AddLoc") then
+        local GUITable = MFPlayer.GUI["MFTPGUI"]
+        if GUITable.vars.AddLocName ~= nil and GUITable.vars.AddLocName ~= "" then
+            local jumpDrive = currentMF.jumpDriveObj
+            jumpDrive:addLocation(GUITable.vars.AddLocName.text, GUITable.vars.AddLocFilter.elem_value)
+        end
+        return
+    end
+
+    -- Start the Jump --
+    if string.match(event.element.name, "TP.GUI.Loc") then
+        local jumpDrive = currentMF.jumpDriveObj
+        local location = event.element.tags.loc
+        -- Start the Jump --
+        if event.button == defines.mouse_button_type.left then
+            jumpDrive:jump(location)
+        end
+        -- Remove a Location --
+        if event.button == defines.mouse_button_type.right then
+            jumpDrive:removeLocation(location)
+        end
+        return
+    end
 
 end
