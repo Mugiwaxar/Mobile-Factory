@@ -156,7 +156,7 @@ function MF:getTooltipInfos(GUITable, mainFrame, justCreated)
 		-- Create the Inventory Flow and Button --
 		local inventoryFlow = GAPI.addFlow(GUITable, "", inventoryFrame, "horizontal")
 		inventoryFlow.style.horizontal_align = "center"
-		GAPI.addSimpleButton(GUITable, "M.F.OpenInvButton," .. self.player, inventoryFlow, {"gui-description.OpenInventory"})
+		GAPI.addSimpleButton(GUITable, "M.F.OpenInvButton", inventoryFlow, {"gui-description.OpenInventory"}, "", false, {ID=self.player})
 
 		-- Create the Parameters Frame --
 		local laserFrame = GAPI.addFrame(GUITable, "LaserFrame", mainFrame, "vertical", true)
@@ -174,7 +174,7 @@ function MF:getTooltipInfos(GUITable, mainFrame, justCreated)
 			GAPI.addLabel(GUITable, "", laserFrame, {"gui-description.MFEnergyLaser"}, nil, "", false, nil, _mfLabelType.yellowTitle)
 			local state = "left"
 			if self.selectedEnergyLaserMode == "output" then state = "right" end
-			GAPI.addSwitch(GUITable, "M.F.EnergyLasersSwitch," .. self.playerIndex, laserFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.MFDrainTT"}, {"gui-description.MFSendTT"}, state)
+			GAPI.addSwitch(GUITable, "M.F.EnergyLasersSwitch", laserFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.MFDrainTT"}, {"gui-description.MFSendTT"}, state, false, {ID=self.playerIndex})
 		end
 
 		-- Quatron Lasers Settings --
@@ -182,7 +182,7 @@ function MF:getTooltipInfos(GUITable, mainFrame, justCreated)
 			GAPI.addLabel(GUITable, "", laserFrame, {"gui-description.MFQuatronLaser"}, nil, "", false, nil, _mfLabelType.yellowTitle)
 			local state = "left"
 			if self.selectedQuatronLaserMode == "output" then state = "right" end
-			GAPI.addSwitch(GUITable, "M.F.QuatronLasersSwitch," .. self.playerIndex, laserFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.MFDrainTT"}, {"gui-description.MFSendTT"}, state)
+			GAPI.addSwitch(GUITable, "M.F.QuatronLasersSwitch", laserFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.MFDrainTT"}, {"gui-description.MFSendTT"}, state, false, {ID=self.playerIndex})
 		end
 
 		-- Fluid Lasers Settings --
@@ -191,7 +191,7 @@ function MF:getTooltipInfos(GUITable, mainFrame, justCreated)
 			GAPI.addLabel(GUITable, "", laserFrame, {"gui-description.MFFluidLaser"}, nil, "", false, nil, _mfLabelType.yellowTitle)
 			local state = "left"
 			if self.selectedFluidLaserMode == "output" then state = "right" end
-			GAPI.addSwitch(GUITable, "M.F.FluidLasersSwitch," .. self.playerIndex, laserFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.MFDrainTT"}, {"gui-description.MFSendTT"}, state)
+			GAPI.addSwitch(GUITable, "M.F.FluidLasersSwitch", laserFrame, {"gui-description.Drain"}, {"gui-description.Send"}, {"gui-description.MFDrainTT"}, {"gui-description.MFSendTT"}, state, false, {ID=self.playerIndex})
 			-- Target --
 			local invs = {{"", {"gui-description.None"}}}
 			local selectedIndex = 1
@@ -212,7 +212,7 @@ function MF:getTooltipInfos(GUITable, mainFrame, justCreated)
 				end
 			end
 			if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
-			GAPI.addDropDown(GUITable, "M.F.FluidLasersTargetDD," .. self.playerIndex, laserFrame, invs, selectedIndex, false, {"gui-description.MFFluidLasersTargetTT"})
+			GAPI.addDropDown(GUITable, "M.F.FluidLasersTargetDD", laserFrame, invs, selectedIndex, false, {"gui-description.MFFluidLasersTargetTT"}, {ID=self.playerIndex})
 		end
 
 	end
@@ -1217,7 +1217,7 @@ function MF.interaction(event, player, MFPlayer)
 	-- Open Inventory --
 	if string.match(event.element.name, "M.F.OpenInvButton") then
 		-- Get the Object --
-		local objId = split(event.element.name, ",")[2] or ""
+		local objId = event.element.tags.ID
 		local ent = global.MFTable[objId].ent
 		if ent ~= nil and ent.valid == true then
 			MFPlayer.varTable.bypassGUI = true
@@ -1228,10 +1228,8 @@ function MF.interaction(event, player, MFPlayer)
 	-- Energy Lasers --
 	if string.match(event.element.name, "M.F.EnergyLasersSwitch") then
 		-- Look for the Mobile Factory ID --
-		local ID = split(event.element.name, ",")
-		ID = tonumber(ID[2])
-		if ID == nil then return end
-		local MF = getMF(ID)
+		local objId = event.element.tags.ID
+		local MF = getMF(objId)
 		-- Change the Energy Laser to Drain/Send --
 		if event.element.switch_state == "left" then
 			MF.selectedEnergyLaserMode = "input"
@@ -1243,10 +1241,8 @@ function MF.interaction(event, player, MFPlayer)
 	-- Quatron Lasers --
 	if string.match(event.element.name, "M.F.QuatronLasersSwitch") then
 		-- Look for the Mobile Factory ID --
-		local ID = split(event.element.name, ",")
-		ID = tonumber(ID[2])
-		if ID == nil then return end
-		local MF = getMF(ID)
+		local objId = event.element.tags.ID
+		local MF = getMF(objId)
 		-- Change the Matter Serializer targeted Inventory --
 		if event.element.switch_state == "left" then
 			MF.selectedQuatronLaserMode = "input"
@@ -1258,10 +1254,8 @@ function MF.interaction(event, player, MFPlayer)
 	-- Fluid Lasers --
 	if string.match(event.element.name, "M.F.FluidLasersSwitch") then
 		-- Look for the Mobile Factory ID --
-		local ID = split(event.element.name, ",")
-		ID = tonumber(ID[2])
-		if ID == nil then return end
-		local MF = getMF(ID)
+		local objId = event.element.tags.ID
+		local MF = getMF(objId)
 		-- Change the Mode --
 		if event.element.switch_state == "left" then
 			MF.selectedFluidLaserMode = "input"
@@ -1273,10 +1267,8 @@ function MF.interaction(event, player, MFPlayer)
 	-- Fluid Lasers Target --
 	if string.match(event.element.name, "M.F.FluidLasersTargetDD") then
 		-- Look for the Mobile Factory ID --
-		local ID = split(event.element.name, ",")
-		ID = tonumber(ID[2])
-		if ID == nil then return end
-		local MF = getMF(ID)
+		local objId = event.element.tags.ID
+		local MF = getMF(objId)
 		-- Change the Fluid Interactor Target --
 		MF:fluidLaserTarget(tonumber(event.element.items[event.element.selected_index][4]))
 		return
