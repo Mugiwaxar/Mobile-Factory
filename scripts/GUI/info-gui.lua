@@ -8,7 +8,7 @@ function GUI.createInfoGui(player)
 	local GUITable = GAPI.createBaseWindows(_mfGUIName.InfoGUI, getCurrentMF(MFPlayer).name, MFPlayer, true, false, false, "vertical", "horizontal")
 
 	-- Add the Switch Button --
-	GAPI.addButton(GUITable, "SwitchMFButton", GUITable.vars.topBarFlow, "SwitchIcon", "SwitchIcon", {"gui-description.SwitchMFButton"}, 20, false, true, nil, "frame_action_button")
+	GAPI.addButton(GUITable, "Inf.GUI.SwitchMFButton", GUITable.vars.topBarFlow, "SwitchIcon", "SwitchIcon", {"gui-description.SwitchMFButton"}, 20, false, true, nil, "frame_action_button")
 
 	-- Add the Close Button --
 	GAPI.addCloseButton(GUITable)
@@ -249,15 +249,15 @@ function GUI.updateDeepTankFrame(GUITable)
 	local tankTable = GAPI.addTable(GUITable, "", tankScrollPane, 1)
 
 	-- Look for all Deep Tanks --
-	for _, deepTank in pairs(MF.dataNetwork.DTKTable) do
+	for _, DTK in pairs(MF.dataNetwork.DTKTable) do
 
 		-- Check the Deep Tank --
-		if deepTank.ent == nil or deepTank.ent.valid == false then goto continue end
+		if DTK.ent == nil or DTK.ent.valid == false then goto continue end
 
 		-- Create the Deep Tank Variables --
-		local sprite = deepTank.filter or deepTank.inventoryFluid
-		local name = Util.getLocFluidName(deepTank.inventoryFluid) or Util.getLocFluidName(deepTank.filter) or {"", {"gui-description.DeepTank"}, " ", deepTank.ID}
-		local amount = deepTank.inventoryCount or 0
+		local sprite = DTK.filter or DTK.inventoryFluid
+		local name = Util.getLocFluidName(DTK.inventoryFluid) or Util.getLocFluidName(DTK.filter) or {"", {"gui-description.DeepTank"}, " ", DTK.ID}
+		local amount = DTK.inventoryCount or 0
 		local tCapacity = _dtMaxFluid
 		local color = _mfPurple
 
@@ -265,11 +265,11 @@ function GUI.updateDeepTankFrame(GUITable)
 		local frame = GAPI.addFrame(GUITable, "", tankTable, "horizontal")
 
 		-- Create the Button --
-		if deepTank.inventoryFluid ~= nil and game.fluid_prototypes[deepTank.inventoryFluid] ~= nil then
-			color = game.fluid_prototypes[deepTank.inventoryFluid].base_color
+		if DTK.inventoryFluid ~= nil and game.fluid_prototypes[DTK.inventoryFluid] ~= nil then
+			color = game.fluid_prototypes[DTK.inventoryFluid].base_color
 		end
-		local buttonText = {"", {"gui-description.FilterSelect"}, "\n", {"gui-description.Filter"}, ": [color=purple]", (Util.getLocFluidName(deepTank.filter) or {"gui-description.None"}), "[/color]" }
-		local button = GAPI.addFilter(GUITable, "D.T.Filter," .. tostring(deepTank.ent.unit_number), frame, buttonText, true, "fluid", 50)
+		local buttonText = {"", {"gui-description.FilterSelect"}, "\n", {"gui-description.Filter"}, ": [color=purple]", (Util.getLocFluidName(DTK.filter) or {"gui-description.None"}), "[/color]" }
+		local button = GAPI.addFilter(GUITable, "Inf.GUI.DTFilter", frame, buttonText, true, "fluid", 50, {ID=DTK.ent.unit_number})
 		button.elem_value = sprite
 
 		-- Create the table Flow --
@@ -307,22 +307,22 @@ function GUI.updateDeepStorageFrame(GUITable)
 	local storageTable = GAPI.addTable(GUITable, "", storageScrollPane, 1)
 
 	-- Look for all Deep Storage --
-	for _, deepStorage in pairs(MF.dataNetwork.DSRTable) do
+	for _, DSR in pairs(MF.dataNetwork.DSRTable) do
 
 		-- Check the Deep Storage --
-		if deepStorage.ent == nil or deepStorage.ent.valid == false then return end
+		if DSR.ent == nil or DSR.ent.valid == false then return end
 
 		-- Create the Storage Variables --
-		local sprite = deepStorage.filter or deepStorage.inventoryItem
-		local name = Util.getLocItemName(deepStorage.inventoryItem) or Util.getLocItemName(deepStorage.filter) or {"", {"gui-description.DeepStorage"}, " ", deepStorage.ID}
-		local amount = deepStorage.inventoryCount or 0
+		local sprite = DSR.filter or DSR.inventoryItem
+		local name = Util.getLocItemName(DSR.inventoryItem) or Util.getLocItemName(DSR.filter) or {"", {"gui-description.DeepStorage"}, " ", DSR.ID}
+		local amount = DSR.inventoryCount or 0
 
 		-- Create the Frame --
 		local frame = GAPI.addFrame(GUITable, "", storageTable, "horizontal")
 
 		-- Create the Button --
-		local buttonText = {"", {"gui-description.FilterSelect"}, "\n", {"gui-description.Filter"}, ": [color=green]", (Util.getLocItemName(deepStorage.filter) or {"gui-description.None"}), "[/color]" }
-		local button = GAPI.addFilter(GUITable, "D.S.R.Filter," .. tostring(deepStorage.ent.unit_number), frame, buttonText, true, "item", 50)
+		local buttonText = {"", {"gui-description.FilterSelect"}, "\n", {"gui-description.Filter"}, ": [color=green]", (Util.getLocItemName(DSR.filter) or {"gui-description.None"}), "[/color]" }
+		local button = GAPI.addFilter(GUITable, "Inf.GUI.DSRFilter", frame, buttonText, true, "item", 50, {ID=DSR.ent.unit_number})
 		button.elem_value = sprite
 
 		-- Create the table flow --
@@ -336,7 +336,7 @@ function GUI.updateDeepStorageFrame(GUITable)
 
 	end
 end
-	
+
 -- Update the Inventory GUI Frame --
 function GUI.updateInventoryFrame(GUITable)
 
@@ -359,14 +359,14 @@ function GUI.updateInventoryFrame(GUITable)
     local tableList = GAPI.addTable(GUITable, "", inventoryScrollPane, 5)
 
 	-- Look for all Deep Tanks --
-	for _, DT in pairs(MF.dataNetwork.DTKTable) do
+	for _, DTK in pairs(MF.dataNetwork.DTKTable) do
 		
 		-- Check the Deep Tank --
-		if DT.ent == nil or DT.ent.valid == false or DT.inventoryFluid == nil or DT.inventoryCount == nil or DT.inventoryCount == 0 then goto continue end
+		if DTK.ent == nil or DTK.ent.valid == false or DTK.inventoryFluid == nil or DTK.inventoryCount == nil or DTK.inventoryCount == 0 then goto continue end
 
 		-- Create the Button --
-		local buttonText = {"", "[color=purple]", Util.getLocFluidName(DT.inventoryFluid), "[/color]\n[color=yellow]", Util.toRNumber(DT.inventoryCount), "[/color]"}
-		local button = GAPI.addButton(GUITable, "", tableList, "fluid/" .. DT.inventoryFluid, "fluid/" .. DT.inventoryFluid, buttonText, 37, false, true, DT.inventoryCount)
+		local buttonText = {"", "[color=purple]", Util.getLocFluidName(DTK.inventoryFluid), "[/color]\n[color=yellow]", Util.toRNumber(DTK.inventoryCount), "[/color]"}
+		local button = GAPI.addButton(GUITable, "", tableList, "fluid/" .. DTK.inventoryFluid, "fluid/" .. DTK.inventoryFluid, buttonText, 37, false, true, DTK.inventoryCount)
 		button.style = "MF_Fake_Button_Purple"
         button.style.padding = 0
         button.style.margin = 0
@@ -405,6 +405,52 @@ function GUI.updateInventoryFrame(GUITable)
 		
 		::continue::
 
+	end
+
+end
+
+-- If the Player interacted with the GUI --
+function GUI.infoGUIInteraction(event, player, MFPlayer)
+
+	-- Open the SwitchMF Button --
+	if event.element.name == "Inf.GUI.SwitchMFButton" then
+		if MFPlayer.GUI[_mfGUIName.SwitchMF] == nil then
+			local GUITable = GUI.createSwitchMFGUI(player)
+			MFPlayer.GUI[_mfGUIName.SwitchMF] = GUITable
+			player.opened = GUITable.gui
+		else
+			MFPlayer.GUI[_mfGUIName.SwitchMF].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.SwitchMF] = nil
+		end
+		return
+	end
+
+	-- Deep Tank Filter --
+	if string.match(event.element.name, "Inf.GUI.DTFilter") then
+		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeTankGUI = true
+		end
+		local DTK = global.deepStorageTable[event.element.tags.ID]
+		if valid(DTK) == false then return end
+		if event.element.elem_value ~= nil then
+			DTK.filter = event.element.elem_value
+		else
+			DTK.filter = nil
+		end
+	end
+
+	-- If this is a Info GUI Deep Storage Filter --
+	if string.match(event.element.name, "Inf.GUI.DSRFilter") then
+		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeStorageGUI = true
+		end
+		local DSR = global.deepStorageTable[event.element.tags.ID]
+		if valid(DSR) == false then return end
+		if event.element.elem_value ~= nil then
+			DSR.filter = event.element.elem_value
+		else
+			DSR.filter = nil
+		end
 	end
 
 end

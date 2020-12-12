@@ -192,6 +192,13 @@ function GUI.buttonClicked(event)
 		return
 	end
 
+	-- If this is for the Information GUI --
+	if string.match(event.element.name, "Inf.GUI.") then
+		GUI.infoGUIInteraction(event, player, MFPlayer)
+		GUI.updateAllGUIs(true)
+		return
+	end
+
 	-- Open Info GUI Button --
 	if event.element.name == "MainGUIInfosButton" then
 		if MFPlayer.GUI[_mfGUIName.InfoGUI] == nil then
@@ -218,19 +225,6 @@ function GUI.buttonClicked(event)
 		return
 	end
 
-	-- Open the SwitchMF Button --
-	if event.element.name == "SwitchMFButton" then
-		if MFPlayer.GUI[_mfGUIName.SwitchMF] == nil then
-			local GUITable = GUI.createSwitchMFGUI(player)
-			MFPlayer.GUI[_mfGUIName.SwitchMF] = GUITable
-			player.opened = GUITable.gui
-		else
-			MFPlayer.GUI[_mfGUIName.SwitchMF].gui.destroy()
-			MFPlayer.GUI[_mfGUIName.SwitchMF] = nil
-		end
-		return
-	end
-
 	-- Jump Drive Button --
 	if event.element.name == "JumpDriveButton" then
 		if MFPlayer.GUI[_mfGUIName.TPGUI] == nil then
@@ -242,20 +236,6 @@ function GUI.buttonClicked(event)
 			MFPlayer.GUI[_mfGUIName.TPGUI] = nil
 		end
 		return
-	end
-
-	-- If this is a Info GUI Deep Tank Filter --
-	if string.match(event.element.name, "D.T.Filter") then
-		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
-			MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeTankGUI = true
-		end
-	end
-
-	-- If this is a Info GUI Deep Storage Filter --
-	if string.match(event.element.name, "D.S.R.Filter") then
-		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
-			MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeStorageGUI = true
-		end
 	end
 
 	-- Close Info GUI Button --
@@ -554,6 +534,7 @@ end
 
 -- Called when a GUI Element have changed it's state --
 function GUI.onGuiElemChanged(event)
+
 	-- Return if this is not a Mobile Factory element -
 	if event.element.get_mod() ~= "Mobile_Factory" then return end
 	-- Return if the Element is not valid --
@@ -567,18 +548,25 @@ function GUI.onGuiElemChanged(event)
 	-- Get the Mobile Factory --
 	local MF = getMF(player.name)
 	if MF == nil then return end
-	-- Get the Current Mobile Factory --
-	local currentMF = getCurrentMF(player.name) or MF
-
-	-- Unfreeze the Info GUI --
-	if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
-		MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeTankGUI = false
-		MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeStorageGUI = false
-	end
 	
-	------- Read if the Element came from the Option GUI -------
-	GUI.readOptions(event.element, player)
-	if event.element == nil or event.element.valid == false then return end
+	-- If this is for the Option GUI --
+	if string.match(event.element.name, "Opt.GUI.") then
+		GUI.readOptions(event.element, player)
+		GUI.updateAllGUIs(true)
+		return
+	end
+
+	-- If this is for the Information GUI --
+	if string.match(event.element.name, "Inf.GUI.") then
+		GUI.infoGUIInteraction(event, player, MFPlayer)
+		GUI.updateAllGUIs(true)
+		-- Unfreeze the Info GUI --
+		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeTankGUI = false
+			MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeStorageGUI = false
+		end
+		return
+	end
 
 	-- If this is a Mobile Factory --
 	if string.match(event.element.name, "M.F.") then
@@ -627,23 +615,6 @@ function GUI.onGuiElemChanged(event)
 		OC.interaction(event, MFPlayer)
 		GUI.updateAllGUIs(true)
 		return
-	end
-	
-	------- Save the filter -------
-	if event.element.type == "choose-elem-button" and event.element.get_mod() == "Mobile_Factory" then
-		local id = event.element.name
-		-- If this is a Matter Interactor --
-		if string.match(id, "MIFilter") then
-			id = tonumber(split(id, "MIFilter")[1])
-			if global.matterInteractorTable[id] == nil then return end
-			if event.element.elem_value ~= nil then
-				global.matterInteractorTable[id].selectedFilter = event.element.elem_value
-			else
-				global.matterInteractorTable[id].selectedFilter = nil
-			end
-			GUI.updateAllGUIs(true)
-			return
-		end
 	end
 
 	----- Read if the Element comes from a Data Network Drop Down -------

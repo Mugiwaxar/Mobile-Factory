@@ -416,11 +416,11 @@ function GAPI.addProgressBar(GUITable, name, gui, text, tooltip, save, color, va
 end
 
 -- Add a new Filter --
-function GAPI.addFilter(GUITable, name, gui, tooltip, save, elemType, size)
+function GAPI.addFilter(GUITable, name, gui, tooltip, save, elemType, size, tags)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
     -- Create the Filter --
-    local filter = gui.add{type="choose-elem-button", name=name, tooltip=tooltip, elem_type=elemType}
+    local filter = gui.add{type="choose-elem-button", name=name, tooltip=tooltip, elem_type=elemType, tags=tags}
     filter.style.height = size
     filter.style.width = size
     -- Save the Filter inside the elements Table --

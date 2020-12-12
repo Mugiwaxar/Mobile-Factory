@@ -6,7 +6,7 @@ function GUI.readOptions(option, player)
 	local MFPlayer = getMFPlayer(playerIndex)
 	local name = option.name
 	local MF = getMF(player.name)
-	local GUITable = MFPlayer.GUI["MFOptionGUI"]
+	local GUITable = MFPlayer.GUI[_mfGUIName.OptionGUI]
 
 	------------------- MF -------------------
 	if name == "Opt.GUI.AddAllowedPlayer" then

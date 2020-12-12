@@ -12,7 +12,7 @@ function GUI.createOptionGUI(player)
     GAPI.addCloseButton(table)
 	
 	-- Create the Main Tabbed Pane --
-	local mainTabbedPane = GAPI.addTabbedPane(table, "MainTabbedPane", mainFrame, "", "", true, 1)
+	local mainTabbedPane = GAPI.addTabbedPane(table, "Opt.GUI.MainTabbedPane", mainFrame, "", "", true, 1)
 	mainTabbedPane.style = "MF_Options_Tabbed_Pane"
 	mainTabbedPane.style.top_margin = 15
 
@@ -69,8 +69,8 @@ end
 function GUI.updateOptionGUI(GUITable, tabI)
 
 	-- Get the current Tab --
-	local tabIndex = tabI or GUITable.vars.MainTabbedPane.selected_tab_index
-	local tab = GUITable.vars.MainTabbedPane.tabs[tabIndex]
+	local tabIndex = tabI or GUITable.vars["Opt.GUI.MainTabbedPane"].selected_tab_index
+	local tab = GUITable.vars["Opt.GUI.MainTabbedPane"].tabs[tabIndex]
 	if tab == nil then return end
 	local tabName = string.gsub(tab.tab.name, "tab", "")
 
