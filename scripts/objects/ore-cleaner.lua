@@ -166,7 +166,7 @@ function OC:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 		-- Create the Select Network Drop Down --
 		if table_size(networks) > 0 then
-			GAPI.addDropDown(GUITable, "O.C.DNSelect," .. self.ent.unit_number, parametersFrame, networks, selected, true)
+			GAPI.addDropDown(GUITable, "O.C.DNSelect", parametersFrame, networks, selected, true, "", {ID=self.ent.unit_number})
 		end
 
 		-- Create the Select Storage Label --
@@ -194,7 +194,7 @@ function OC:getTooltipInfos(GUITable, mainFrame, justCreated)
 		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
 
 		-- Add the Selected Deep Tank Drop Down --
-		GAPI.addDropDown(GUITable, "O.C.TargetDD," .. self.ent.unit_number, parametersFrame, invs, selectedIndex)
+		GAPI.addDropDown(GUITable, "O.C.TargetDD", parametersFrame, invs, selectedIndex, false, "", {ID=self.ent.unit_number})
 
 	end
 
@@ -455,7 +455,7 @@ function OC.interaction(event, MFPlayer)
 
 	-- Select Data Network --
 	if string.match(event.element.name, "O.C.DNSelect") then
-		local objId = tonumber(split(event.element.name, ",")[2])
+		local objId = event.element.tags.ID
 		local obj = global.oreCleanerTable[objId]
 		if obj == nil then return end
 		-- Get the Mobile Factory --
@@ -472,7 +472,7 @@ function OC.interaction(event, MFPlayer)
 
 	-- Select Targed --
 	if string.match(event.element.name, "O.C.TargetDD") then
-		local objId = tonumber(split(event.element.name, ",")[2])
+		local objId = event.element.tags.ID
 		local obj = global.oreCleanerTable[objId]
 		if obj == nil then return end
 		-- Change the Ore Cleaner targeted Deep Storage --
