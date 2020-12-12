@@ -455,11 +455,10 @@ end
 
 -- Called if the Player interacted with the GUI --
 function NE.interaction(event, playerIndex)
-	-- If this is the Search Text Field --
+	-- If this is the Search Text Field (Used to Update all GUIs)  --
 	if string.match(event.element.name, "N.E.SearchTextField") then
 		return
 	end
-
 	-- If a Item Button is clicked --
 	local count = 1
 	if event.alt == true then count = 10 end

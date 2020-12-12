@@ -302,7 +302,7 @@ function GAPI.addTextField(GUITable, name, gui, text, tooltip, save, numeric, al
 end
 
 -- Add a new Button --
-function GAPI.addButton(GUITable, name, gui, sprite, hovSprite, tooltip, size, save, visible, count, style)
+function GAPI.addButton(GUITable, name, gui, sprite, hovSprite, tooltip, size, save, visible, count, style, tags)
     if visible == false then return end
     -- Check if this Element doesn't exist --
     if name ~= nil and name ~= "" and gui[name] ~= nil then gui[name].destroy() end
@@ -314,7 +314,8 @@ function GAPI.addButton(GUITable, name, gui, sprite, hovSprite, tooltip, size, s
 		hovered_sprite=hovSprite,
 		resize_to_sprite=false,
         tooltip=tooltip,
-        number=count
+        number=count,
+        tags=tags
     }
     -- Set the Style --
     if style ~= nil then button.style = style end

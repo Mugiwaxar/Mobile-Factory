@@ -185,20 +185,6 @@ function GUI.buttonClicked(event)
 		MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeStorageGUI = false
 	end
 
-	-- If this is for the Option GUI --
-	if string.match(event.element.name, "Opt.GUI.") then
-		GUI.readOptions(event.element, player)
-		GUI.updateAllGUIs(true)
-		return
-	end
-
-	-- If this is for the Information GUI --
-	if string.match(event.element.name, "Inf.GUI.") then
-		GUI.infoGUIInteraction(event, player, MFPlayer)
-		GUI.updateAllGUIs(true)
-		return
-	end
-
 	-- Open Info GUI Button --
 	if event.element.name == "MainGUIInfosButton" then
 		if MFPlayer.GUI[_mfGUIName.InfoGUI] == nil then
@@ -322,6 +308,27 @@ function GUI.buttonClicked(event)
 	if event.element.name == "MainGUIClose" then
 		mainGUI.MFPlayer.varTable.MainGUIOpen = false
 		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])
+		return
+	end
+
+	-- If this is for the Option GUI --
+	if string.match(event.element.name, "Opt.GUI.") then
+		GUI.readOptions(event.element, player)
+		GUI.updateAllGUIs(true)
+		return
+	end
+
+	-- If this is for the Information GUI --
+	if string.match(event.element.name, "Inf.GUI.") then
+		GUI.infoGUIInteraction(event, player, MFPlayer)
+		GUI.updateAllGUIs(true)
+		return
+	end
+
+	-- If this is for the Recipe GUI --
+	if string.match(event.element.name, "Rec.GUI.") then
+		GUI.recipeGUIInteraction(event, MFPlayer)
+		GUI.updateAllGUIs(true)
 		return
 	end
 
@@ -452,29 +459,6 @@ function GUI.buttonClicked(event)
 		return
 	end
 
-	-- Recipe Selector Category Button --
-	if string.match(event.element.name, "RSCategoryButton") then
-		local GUITable = MFPlayer.GUI[_mfGUIName.RecipeGUI]
-		local Category = tonumber(split(event.element.name, ",")[2]) or 1
-		GUITable.vars["RSCategoryButton," .. GUITable.vars.selectedCategory].enabled = true
-		GUITable.vars["RSCategoryButton," .. Category].enabled = false
-		GUITable.vars.selectedCategory = Category
-		GUI.updateMFRecipeGUI(GUITable, true)
-		return
-	end
-
-	-- Recipe Selector Recipe Button --
-	if string.match(event.element.name, "RSRecipeButton") then
-		local tGUI = MFPlayer.GUI[_mfGUIName.TooltipGUI]
-		if tGUI ~= nil and tGUI.vars.DA ~= nil then
-			tGUI.vars["D.A.RecipeFilter"].elem_value = split(event.element.name, ",")[2]
-		end
-		MFPlayer.GUI[_mfGUIName.RecipeGUI].gui.destroy()
-		MFPlayer.GUI[_mfGUIName.RecipeGUI] = nil
-		GUI.updateAllGUIs(true)
-		return
-	end
-
 	-- If this is a Data Assembler --
 	if string.match(event.element.name, "D.A.") then
 		DA.interaction(event, MFPlayer)
@@ -568,6 +552,13 @@ function GUI.onGuiElemChanged(event)
 		return
 	end
 
+	-- If this is for the Recipe GUI --
+	if string.match(event.element.name, "Rec.GUI.") then
+		GUI.recipeGUIInteraction(event, player)
+		GUI.updateAllGUIs(true)
+		return
+	end
+
 	-- If this is a Mobile Factory --
 	if string.match(event.element.name, "M.F.") then
 		MF.interaction(event)
@@ -643,7 +634,7 @@ function onStringTranslated(event)
 	-- Check the MFPlayer --
 	if MFPlayer == nil then return end
 	-- Get the Tooltip GUI --
-	local GUITable = MFPlayer.GUI[_mfGUIName.TooltipGUI]
+	local GUITable = MFPlayer.GUI[_mfGUIName.RecipeGUI] or MFPlayer.GUI[_mfGUIName.TooltipGUI]
 	-- Check the GUI --
 	if GUITable == nil or GUITable.gui == nil or GUITable.gui.valid == false then return end
 	-- Check the Localised String --

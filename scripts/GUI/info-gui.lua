@@ -437,6 +437,7 @@ function GUI.infoGUIInteraction(event, player, MFPlayer)
 		else
 			DTK.filter = nil
 		end
+		return
 	end
 
 	-- If this is a Info GUI Deep Storage Filter --
@@ -451,6 +452,7 @@ function GUI.infoGUIInteraction(event, player, MFPlayer)
 		else
 			DSR.filter = nil
 		end
+		return
 	end
 
 end
