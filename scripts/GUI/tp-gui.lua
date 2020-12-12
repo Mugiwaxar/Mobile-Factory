@@ -206,7 +206,7 @@ function GUI.updateAddLocation(GUITable)
 end
 
 -- If the Player interacted with the GUI --
-function GUI.TPMFGUIInteraction(event, player, MFPlayer, currentMF)
+function GUI.TPMFGUIInteraction(event, MFPlayer, currentMF)
 
     -- Location Added --
     if string.match(event.element.name, "TP.GUI.AddLoc") then

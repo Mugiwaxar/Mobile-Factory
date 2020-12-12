@@ -358,11 +358,11 @@ function GAPI.addCheckBox(GUITable, name, gui, text, tooltip, state, save, tags)
 end
 
 -- Add a Switch --
-function GAPI.addSwitch(GUITable, name, gui, text1, text2, tooltip1, tooltip2, state, save)
+function GAPI.addSwitch(GUITable, name, gui, text1, text2, tooltip1, tooltip2, state, save, tags)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
     -- Create the Switch --
-    local switch = gui.add{type="switch", name=name, switch_state=state or "left", left_label_caption=text1, right_label_caption=text2, left_label_tooltip=tooltip1, right_label_tooltip=tooltip2}
+    local switch = gui.add{type="switch", name=name, switch_state=state or "left", left_label_caption=text1, right_label_caption=text2, left_label_tooltip=tooltip1, right_label_tooltip=tooltip2, tags=tags}
     -- Save the Switch inside the elements Table --
     if GUITable ~= nil and save == true then
         GUITable.vars[name] = switch

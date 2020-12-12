@@ -334,7 +334,7 @@ function GUI.buttonClicked(event)
 
 	-- If this is for the TP GUI --
 	if string.match(event.element.name, "TP.GUI.") then
-		GUI.TPMFGUIInteraction(event, player, MFPlayer, currentMF)
+		GUI.TPMFGUIInteraction(event, MFPlayer, currentMF)
 		GUI.updateAllGUIs(true)
 		return
 	end
@@ -421,7 +421,14 @@ function GUI.buttonClicked(event)
 		return
 	end
 
-	-- If this is a Mater Interactor Button -> Open Inventory --
+	-- If this is a Network Explorer --
+	if string.match(event.element.name, "N.A.P.") then
+		NAP.interaction(event)
+		GUI.updateAllGUIs(true)
+		return
+	end
+
+	-- If this is a Mater Interactor Button --
 	if string.match(event.element.name, "M.I.") then
 		MI.interaction(event, player)
 		GUI.updateAllGUIs(true)
@@ -439,20 +446,6 @@ function GUI.buttonClicked(event)
 	if string.match(event.element.name, "N.E.") then
 		NE.interaction(event, playerIndex)
 		GUI.updateAllGUIs(true)
-		return
-	end
-
-	-- If this is a Network Access Point Area Switch --
-	if string.match(event.element.name, "NAPAreaSwitch") then
-		-- Get the Object --
-		local objID = tonumber(split(event.element.name, ",")[2])
-		local obj = global.networkAccessPointTable[objID]
-		if valid(obj) == false then return end
-		if event.element.switch_state == "left" then
-			obj.showArea = false
-		else
-			obj.showArea = true
-		end
 		return
 	end
 

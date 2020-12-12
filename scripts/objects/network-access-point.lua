@@ -135,7 +135,7 @@ function NAP:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 		-- Create the Show Area Label --
 		GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.ShowNAPArea"}, nil, nil, false, nil, _mfLabelType.yellowTitle)
-		GAPI.addSwitch(GUITable, "NAPAreaSwitch," .. self.ent.unit_number, infoFrame, {"gui-description.Off"}, {"gui-description.On"}, "", "", self.showArea == true and "right")
+		GAPI.addSwitch(GUITable, "N.A.P.AreaSwitch,", infoFrame, {"gui-description.Off"}, {"gui-description.On"}, "", "", self.showArea == true and "right", false, {ID=self.ent.unit_number})
 
 		-- Create the Information Flow --
 		GAPI.addFlow(GUITable, "InformationFlow", infoFrame, "vertical", true)
@@ -293,4 +293,24 @@ end
 -- Return the max output flow --
 function NAP:maxOutput()
 	return self.quatronMaxOutput
+end
+
+
+-- Called if the Player interacted with the GUI --
+function NAP.interaction(event)
+
+	-- Show the Area --
+	if string.match(event.element.name, "N.A.P.AreaSwitch") then
+		-- Get the Object --
+		local objID = event.element.tags.ID
+		local obj = global.networkAccessPointTable[objID]
+		if valid(obj) == false then return end
+		if event.element.switch_state == "left" then
+			obj.showArea = false
+		else
+			obj.showArea = true
+		end
+		return
+	end
+
 end
