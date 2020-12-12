@@ -311,6 +311,13 @@ function GUI.buttonClicked(event)
 		return
 	end
 
+	-- If this is for the Information GUI --
+	if string.match(event.element.name, "Inf.GUI.") then
+		GUI.infoGUIInteraction(event, player, MFPlayer)
+		GUI.updateAllGUIs(true)
+		return
+	end
+
 	-- If this is for the Option GUI --
 	if string.match(event.element.name, "Opt.GUI.") then
 		GUI.readOptions(event.element, player)
@@ -318,9 +325,9 @@ function GUI.buttonClicked(event)
 		return
 	end
 
-	-- If this is for the Information GUI --
-	if string.match(event.element.name, "Inf.GUI.") then
-		GUI.infoGUIInteraction(event, player, MFPlayer)
+	-- If this is for the Switch MF GUI --
+	if string.match(event.element.name, "Swi.GUI.") then
+		GUI.switchMFGUIInteraction(event, player, MFPlayer)
 		GUI.updateAllGUIs(true)
 		return
 	end
@@ -398,51 +405,6 @@ function GUI.buttonClicked(event)
 		elseif currentMF.quatronLaserActivated == false then currentMF.quatronLaserActivated = true end
 		GUI.updateAllGUIs(true)
 		return
-	end
-
-	-- SwitchMF GUI Change Name Button --
-	if string.match(event.element.name, "SwitchMFChangeNameButton") then
-		if MFPlayer.GUI[_mfGUIName.SwitchMF].vars.SwitchMFChangeNameTextField ~= nil then
-			-- Get the Name --
-			local text = MFPlayer.GUI[_mfGUIName.SwitchMF].vars.SwitchMFChangeNameTextField.text
-			-- Check if the Name is not the same Name --
-			if text == MF.name then
-				player.print({"gui-description.ChangeNameSameName"})
-				return
-			end
-			-- Check if the Name is more than three Characters and less than 30 Characters --
-			if string.len(text) < 3 or string.len(text) > 30 then
-				player.print({"gui-description.ChangeNameCharNumberError"})
-				return
-			end
-			-- Check if the Name is not already used --
-			for _, MF2 in pairs(global.MFTable) do
-				if MF2.name == text then
-					player.print({"gui-description.ChangeNameAlreadyUsed"})
-					return
-				end
-			end
-			-- Change the Name --
-			MF.name = text
-			player.print({"", {"gui-description.ChangeNameChanged"}, " ", text})
-		end
-	end
-
-	-- SwitchMF GUI Change Mobile Factory --
-	if string.match(event.element.name, "SwitchMFSwitchButton") then
-		-- Get the Mobile Factory ID --
-		local ID = split(event.element.name, ",")
-		-- Check the ID --
-		if ID[2] == nil then return end
-		-- Check if the Player is allowed to use this Mobile Factory --
-		if Util.canUse(MFPlayer, global.MFTable[ID[2]]) == false then
-			player.print({"gui-description.NotAllowedMF"})
-			return
-		end
-		-- Change the Current Mobile Factory --
-		MFPlayer.currentMF = global.MFTable[ID[2]]
-		-- Display the Message --
-		player.print({"", {"gui-description.CurrentMFChanged"}, " ", MFPlayer.currentMF.name})
 	end
 
 	-- If this is a Mobile Factory --
