@@ -128,7 +128,7 @@ function DSR:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 		-- Create the Filter Selection --
 		GAPI.addLabel(GUITable, "", settingsFrame, {"", {"gui-description.FilterSelect"}, ":"}, nil, {"gui-description.TargetedStorage"}, false, nil, _mfLabelType.yellowTitle)
-		local filter = GAPI.addFilter(GUITable, "D.S.R.Filter," .. tostring(self.ent.unit_number), settingsFrame, nil, true, "item", 40)
+		local filter = GAPI.addFilter(GUITable, "D.S.R.Filter", settingsFrame, nil, true, "item", 40, {ID=self.ent.unit_number})
 		GUITable.vars.filter = filter
 
 	end
@@ -231,7 +231,7 @@ end
 function DSR.interaction(event)
 	-- If this is a Deep Storage Filter --
 	if string.match(event.element.name, "D.S.R.Filter") then
-		id = tonumber(split(event.element.name, ",")[2])
+		local id = event.element.tags.ID
 		if global.deepStorageTable[id] == nil then return end
 		if event.element.elem_value ~= nil then
 			global.deepStorageTable[id].filter = event.element.elem_value
