@@ -144,7 +144,7 @@ function MI:getTooltipInfos(GUITable, mainFrame, justCreated)
 		-- Create the Inventory Flow and Button --
 		local inventoryFlow = GAPI.addFlow(GUITable, "", inventoryFrame, "horizontal")
 		inventoryFlow.style.horizontal_align = "center"
-		GAPI.addSimpleButton(GUITable, "M.I.OpenInvButton," .. tostring(self.ent.unit_number), inventoryFlow, {"gui-description.OpenInventory"})
+		GAPI.addSimpleButton(GUITable, "M.I.OpenInvButton", inventoryFlow, {"gui-description.OpenInventory"}, "", false, {ID=self.ent.unit_number})
 
 		-- Create the Inventory Table --
 		GAPI.addTable(GUITable, "InventoryTable", inventoryFrame, 1, true)
@@ -165,7 +165,7 @@ function MI:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 		-- Add the Filter Selection --
 		GAPI.addLabel(GUITable, "", parametersFrame, {"gui-description.MIFIChangeFilter"}, nil, {"gui-description.MIFIChangeFilterItemTT"}, false, nil, _mfLabelType.yellowTitle)
-		local filter = GAPI.addFilter(GUITable, "M.I.Filter," .. tostring(self.ent.unit_number), parametersFrame, "", true, "item", 40)
+		local filter = GAPI.addFilter(GUITable, "M.I.Filter", parametersFrame, "", true, "item", 40, {ID=self.ent.unit_number})
 		GUITable.vars.filter = filter
 		if self.selectedFilter ~= nil then filter.elem_value = self.selectedFilter end
 
@@ -173,7 +173,7 @@ function MI:getTooltipInfos(GUITable, mainFrame, justCreated)
 		GAPI.addLabel(GUITable, "", parametersFrame, {"gui-description.MIFIChangeMod"}, nil, {"gui-description.MIFIChangeModMITT"}, false, nil, _mfLabelType.yellowTitle)
 		local state = "left"
 		if self.selectedMode == "output" then state = "right" end
-		GAPI.addSwitch(GUITable, "M.I.ModeSwitch," .. self.ent.unit_number, parametersFrame, {"gui-description.Input"}, {"gui-description.Output"}, "", "", state)
+		GAPI.addSwitch(GUITable, "M.I.ModeSwitch" , parametersFrame, {"gui-description.Input"}, {"gui-description.Output"}, "", "", state, false, {ID=self.ent.unit_number})
 
 		-- Prevent to store Item with Tags --
 		if self.selectedMode == "input" and filter.elem_value ~= nil and game.item_prototypes[filter.elem_value].type == "item-with-tags" then
@@ -217,7 +217,7 @@ function MI:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 		-- Create the DropDown --
 		if selectedIndex > table_size(invs) then selectedIndex = nil end
-		GAPI.addDropDown(GUITable, "M.I.TargetDD," .. self.ent.unit_number, parametersFrame, invs, selectedIndex)
+		GAPI.addDropDown(GUITable, "M.I.TargetDD", parametersFrame, invs, selectedIndex, false, "", {ID=self.ent.unit_number})
 
 	end
 
@@ -401,7 +401,7 @@ function MI.interaction(event, player)
 
 	-- Open Inventory --
 	if string.match(event.element.name, "M.I.OpenInvButton") then
-		local objId = tonumber(split(event.element.name, ",")[2])
+		local objId = event.element.tags.ID
 		local obj = global.matterInteractorTable[objId]
 		local ent = (obj and obj.ent) or nil
 		if ent ~= nil and ent.valid == true then
@@ -413,12 +413,12 @@ function MI.interaction(event, player)
 
 	-- Change the Filter --
 	if string.match(event.element.name, "M.I.Filter") then
-		id = tonumber(split(event.element.name, ",")[2])
-		if global.matterInteractorTable[id] == nil then return end
+		local objId = event.element.tags.ID
+		if global.matterInteractorTable[objId] == nil then return end
 		if event.element.elem_value ~= nil then
-			global.matterInteractorTable[id].selectedFilter = event.element.elem_value
+			global.matterInteractorTable[objId].selectedFilter = event.element.elem_value
 		else
-			global.matterInteractorTable[id].selectedFilter = nil
+			global.matterInteractorTable[objId].selectedFilter = nil
 		end
 		GUI.updateAllGUIs(true)
 		return
@@ -426,7 +426,7 @@ function MI.interaction(event, player)
 
 	-- Change the Mode --
 	if string.match(event.element.name, "M.I.ModeSwitch") then
-		local objId = tonumber(split(event.element.name, ",")[2])
+		local objId = event.element.tags.ID
 		local obj = global.matterInteractorTable[objId]
 		if obj == nil then return end
 		obj:changeMode(event.element.switch_state)
@@ -435,7 +435,7 @@ function MI.interaction(event, player)
 
 	-- Change the Target --
 	if string.match(event.element.name, "M.I.TargetDD") then
-		local objId = tonumber(split(event.element.name, ",")[2])
+		local objId = event.element.tags.ID
 		local obj = global.matterInteractorTable[objId]
 		if obj == nil then return end
 		obj:changeInventory(tonumber(event.element.items[event.element.selected_index][5]))
