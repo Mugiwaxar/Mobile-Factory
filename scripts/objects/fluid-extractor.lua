@@ -153,7 +153,7 @@ function FE:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 		-- Create the Select Network Drop Down --
 		if table_size(networks) > 0 then
-			GAPI.addDropDown(GUITable, "F.E.DNSelect," .. self.ent.unit_number, parametersFrame, networks, selected, true)
+			GAPI.addDropDown(GUITable, "F.E.DNSelect", parametersFrame, networks, selected, true, "", {ID=self.ent.unit_number})
 		end
 
 		-- Create the Select Tank Label --
@@ -183,7 +183,7 @@ function FE:getTooltipInfos(GUITable, mainFrame, justCreated)
 		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
 
 		-- Add the Selected Deep Tank Drop Down --
-		GAPI.addDropDown(GUITable, "F.E.TargetDD," .. self.ent.unit_number, parametersFrame, invs, selectedIndex)
+		GAPI.addDropDown(GUITable, "F.E.TargetDD", parametersFrame, invs, selectedIndex, false, "", {ID=self.ent.unit_number})
 
 	end
 	
@@ -410,7 +410,7 @@ function FE.interaction(event, MFPlayer)
 
 	-- Select Data Network --
 	if string.match(event.element.name, "F.E.DNSelect") then
-		local objId = tonumber(split(event.element.name, ",")[2])
+		local objId = event.element.tags.ID
 		local obj = global.fluidExtractorTable[objId]
 		if obj == nil then return end
 		-- Get the Mobile Factory --
@@ -427,7 +427,7 @@ function FE.interaction(event, MFPlayer)
 
 	-- Select the Target --
 	if string.match(event.element.name, "F.E.TargetDD") then
-		local objId = tonumber(split(event.element.name, ",")[2])
+		local objId = event.element.tags.ID
 		local obj = global.fluidExtractorTable[objId]
 		if obj == nil then return end
 		-- Change the Fluid Extractor targeted Dimensional Tank --
