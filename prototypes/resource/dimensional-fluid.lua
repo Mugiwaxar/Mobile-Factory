@@ -1,5 +1,7 @@
 -- Create the Dimensional Fluid resource --
 
+local resource_autoplace = require("resource-autoplace")
+
 local dmFR = {}
 dmFR.name = "DimensionalFluid"
 dmFR.type = "resource"

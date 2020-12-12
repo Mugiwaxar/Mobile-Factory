@@ -1,5 +1,7 @@
 -- Create the Dimensional Ore resource --
 
+local resource_autoplace = require("resource-autoplace")
+
 -- Resource --
 local dmOR = {}
 dmOR.name = "DimensionalOre"
@@ -37,7 +39,7 @@ dmOR.autoplace = resource_autoplace.resource_autoplace_settings{
 		name = "DimensionalOre",
         order = "b",
         base_density = 10,
-        has_starting_area_placement = true,        
+        has_starting_area_placement = true,
         regular_rq_factor_multiplier = 1.10,
         starting_rq_factor_multiplier = 1.5
     }
