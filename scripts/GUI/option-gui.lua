@@ -146,7 +146,7 @@ function GUI.updateOptionGUIGUITab(GUITable)
 	for _, button in pairs(MFPlayer.GUI["MFMainGUI"].vars.buttonsTable) do
 		local state = true
 		if MFPlayer.varTable["Show" .. button.name] == false then state = false end
-		GAPI.addCheckBox(GUITable, "MGS," .. button.name, flow, {"", {"gui-description.MainGUIButtons"}, "", button.name}, "", state)
+		GAPI.addCheckBox(GUITable, "MGS" .. button.name, flow, {"", {"gui-description.MainGUIButtons"}, "", button.name}, "", state, false, {name=button.name})
 	end
 
 	-- Add the Main Buttons size Selector --

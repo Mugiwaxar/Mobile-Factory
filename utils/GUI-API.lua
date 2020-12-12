@@ -344,11 +344,11 @@ function GAPI.addSimpleButton(GUITable, name, gui, text, tooltip, save)
 end
 
 -- Add a CheckBox --
-function GAPI.addCheckBox(GUITable, name, gui, text, tooltip, state, save)
+function GAPI.addCheckBox(GUITable, name, gui, text, tooltip, state, save, tags)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
     -- Create the CheckBox --
-    local checkBox = gui.add{type="checkbox", name=name, caption=text, tooltip=tooltip, state=state or false}
+    local checkBox = gui.add{type="checkbox", name=name, caption=text, tooltip=tooltip, state=state or false, tags = tags}
     -- Save the Check Box inside the elements Table --
     if GUITable ~= nil and save == true then
         GUITable.vars[name] = checkBox

@@ -23,7 +23,7 @@ function GUI.readOptions(option, player)
 	------------------- GUI -------------------
 
 	if string.match(name, "MGS") then
-		local buttonName = split(name, ",")[2]
+		local buttonName = option.tags.name
 		GUITable.MFPlayer.varTable["Show" .. buttonName] = option.state
 		GUI.updateMFMainGUI(MFPlayer.GUI["MFMainGUI"])
 	end
