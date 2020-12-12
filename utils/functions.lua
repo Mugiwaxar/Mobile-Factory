@@ -214,7 +214,7 @@ function Util.getRealTime(time)
 	if hour == 0 then AMPM = "AM" end
 	if minute < 10 then minute = 0 .. tostring(minute) else minute = tostring(minute) end
 	if hour < 10 then hour = 0 .. tostring(hour) else hour = tostring(hour) end
-	local realTime = {"", {"gui-description.Time"}, " ", hour, "H", minute, " ", AMPM}
+	local realTime = {"", hour, "H", minute, " ", AMPM}
 	return realTime
 end
 

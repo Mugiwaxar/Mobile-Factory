@@ -124,7 +124,7 @@ function GUI.updateMFMainGUI(GUITable)
 
 	-------------------------------------------------------- Get Information Variables --------------------------------------------------------
 	local mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
-	local time = Util.getRealTime(player.surface.daytime)
+	local time = { "", {"gui-description.Time"}, " [color=yellow]", Util.getRealTime(player.surface.daytime), "[/color]"}
 	local temperature = "Unknow"
 	local mfHealthValue = 0
 	local mfHealthText = {"", {"gui-description.mfHealth"}, ": ", {"gui-description.Unknow"}}
@@ -165,13 +165,13 @@ function GUI.updateMFMainGUI(GUITable)
 	-- Show Values and Bars --
 	local infoTable = GAPI.addTable(GUITable, "", GUITable.vars.InfoFrame, 1)
 	if MFPlayer.varTable.MainGUIShowPositions ~= false then
-		GAPI.addLabel(GUITable, "PositionLabel",infoTable, mfPositionText, _mfOrange, "Mobile Factory")
+		GAPI.addLabel(GUITable, "PositionLabel", infoTable, mfPositionText, _mfOrange, "Mobile Factory")
 	end
 	if MFPlayer.varTable.MainGUIShowTime == true then
-		GAPI.addLabel(GUITable, "TimeLabel", infoTable, time, _mfGreen, "Mobile Factory")
+		GAPI.addLabel(GUITable, "TimeLabel", infoTable, time, _mfOrange, "Mobile Factory")
 	end
 	if MFPlayer.varTable.MainGUIShowTemperature == true then
-		GAPI.addLabel(GUITable, "TempLabel", infoTable, {"", {"gui-description.temp"}, " ", string.format("%.1f", temperature), " °C"}, _mfGreen, "Mobile Factory")
+		GAPI.addLabel(GUITable, "TempLabel", infoTable, {"", {"gui-description.temp"}, " [color=yellow]", string.format("%.1f", temperature), " °C[/color]"}, _mfOrange, "Mobile Factory")
 	end
 	if MFPlayer.varTable.MainGUIShowHealthBar ~= false then
 		GAPI.addProgressBar(GUITable, "HealBar", GUITable.vars.InfoFrame, "", mfHealthText, false, _mfRed, mfHealthValue)
