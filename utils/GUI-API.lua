@@ -333,10 +333,10 @@ function GAPI.addButton(GUITable, name, gui, sprite, hovSprite, tooltip, size, s
 end
 
 -- Add a new Simple Button --
-function GAPI.addSimpleButton(GUITable, name, gui, text, tooltip, save)
+function GAPI.addSimpleButton(GUITable, name, gui, text, tooltip, save, tags)
     -- Check if this Element doesn't exist --
     if name ~= nil and name ~= "" and gui[name] ~= nil then gui[name].destroy() end
-    local button = gui.add{type="button", name=name, caption=text, tooltip=tooltip}
+    local button = gui.add{type="button", name=name, caption=text, tooltip=tooltip, tags=tags}
 
     if GUITable ~= nil and save == true then
         GUITable.vars[name] = button

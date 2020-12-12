@@ -188,7 +188,7 @@ function DA:getTooltipInfos(GUITable, mainFrame, justCreated)
 		recipeSelector.locked = not global.useVanillaChooseElem
 
 		-- Create the Add Recipe Button --
-		GAPI.addButton(GUITable, "D.A.AddRecipeButton," .. self.entID, addRFlow, "PlusIcon", "PlusIcon", {"gui-description.AddRecipeButtonTT"}, 28)
+		GAPI.addButton(GUITable, "D.A.AddRecipeButton", addRFlow, "PlusIcon", "PlusIcon", {"gui-description.AddRecipeButtonTT"}, 28, false, true, nil, nil, {ID=self.entID})
 
 		-- Add the Line --
 		GAPI.addLine(GUITable, "", infoFrame, "horizontal")
@@ -238,7 +238,7 @@ function DA:createFrame(GUITable, recipeTable, recipe, recipeID)
 	frame.style.horizontal_align = "left"
 
 	-- Create the Recipe Icon --
-	local recipeButton = GAPI.addButton(GUITable, "D.A.RecipeButton," .. self.entID .. "," .. recipeID, frame, recipe.sprite, recipe.sprite, {"", "[color=blue]", recipe.recipePrototype.localised_name, "[/color]"}, 50, false, true)
+	local recipeButton = GAPI.addButton(GUITable, "D.A.RecipeButton", frame, recipe.sprite, recipe.sprite, {"", "[color=blue]", recipe.recipePrototype.localised_name, "[/color]"}, 50, false, true, nil, nil, {ID=self.entID, recipeID=recipeID})
 	recipeButton.style = DA.isProcessing(recipe) == true and "MF_Fake_Button_Green" or "MF_Fake_Button_Red"
 
 	-- Create the Info Table --
@@ -256,7 +256,7 @@ function DA:createFrame(GUITable, recipeTable, recipe, recipeID)
 	infoButtonFlow.style.horizontal_align = "right"
 
 	-- Add the Information Button --
-	local infoButton = GAPI.addButton(GUITable, "D.A.RecipeInfoButton," .. self.entID .. "," .. recipeID, infoButtonFlow, "MFIconI", "MFIconI", {"gui-description.DAInfoButton"}, 20, false, true, nil, "frame_action_button")
+	local infoButton = GAPI.addButton(GUITable, "D.A.RecipeInfoButton", infoButtonFlow, "MFIconI", "MFIconI", {"gui-description.DAInfoButton"}, 20, false, true, nil, "frame_action_button", {ID=self.entID, recipeID=recipeID})
 	infoButton.style.left_margin = 25
 
 	-- Create the Recipe Processing Label --
@@ -381,11 +381,11 @@ function DA:createInfoRecipeWindow(MFPlayer, recipeID, recipeTable)
 
 	-- Create the Buttons --
 	if recipeID ~= nil then
-		GAPI.addSimpleButton(GUITable, "D.A.RIRemoveRecipe," .. self.entID .. "," .. (recipeID or 0), buttonFlow, {"gui-description.Remove"})
-		GUITable.vars.pauseButton = GAPI.addSimpleButton(GUITable, "D.A.RIPauseResumeRecipe," .. self.entID .. "," .. (recipeID or 0), buttonFlow, recipe.paused == true and {"gui-description.Resume"} or {"gui-description.Pause"})
-		GAPI.addSimpleButton(GUITable, "D.A.RIChangeRecipe," .. self.entID .. "," .. (recipeID or 0), buttonFlow, {"gui-description.Confirm"})
+		GAPI.addSimpleButton(GUITable, "D.A.RIRemoveRecipe", buttonFlow, {"gui-description.Remove"}, "", false, {ID=self.entID, recipeID=(recipeID or 0)})
+		GUITable.vars.pauseButton = GAPI.addSimpleButton(GUITable, "D.A.RIPauseResumeRecipe", buttonFlow, recipe.paused == true and {"gui-description.Resume"} or {"gui-description.Pause"}, "", false, {ID=self.entID, recipeID=(recipeID or 0)})
+		GAPI.addSimpleButton(GUITable, "D.A.RIChangeRecipe", buttonFlow, {"gui-description.Confirm"}, "", false, {ID=self.entID, recipeID=(recipeID or 0)})
 	else
-		GAPI.addSimpleButton(GUITable, "D.A.RIAddRecipe," .. self.entID .. "," .. (recipeID or 0), buttonFlow, {"gui-description.Confirm"})
+		GAPI.addSimpleButton(GUITable, "D.A.RIAddRecipe", buttonFlow, {"gui-description.Confirm"}, "", false, {ID=self.entID})
 	end
 
 	-- Save the Recipe Table --
@@ -811,7 +811,7 @@ function DA.interaction(event, MFPlayer)
 	-- Add a Recipe --
 	if string.match(event.element.name, "D.A.AddRecipeButton") then
 		local GUITable = MFPlayer.GUI["MFTooltipGUI"]
-		local objID = tonumber(split(event.element.name, ",")[2])
+		local objID = event.element.tags.ID
 		local obj = global.dataAssemblerTable[objID]
 		if valid(obj) == false then return end
 		local recipe = GUITable.vars["D.A.RecipeFilter"].elem_value
@@ -823,9 +823,9 @@ function DA.interaction(event, MFPlayer)
 
 	-- Remove a Recipe - Tooltip GUI --
 	if string.match(event.element.name, "D.A.RecipeButton") and event.button == defines.mouse_button_type.right then
-		local objID = tonumber(split(event.element.name, ",")[2])
+		local objID = event.element.tags.ID
 		local obj = global.dataAssemblerTable[objID]
-		local recipeID = tonumber(split(event.element.name, ",")[3])
+		local recipeID = event.element.tags.recipeID
 		if valid(obj) == false then return end
 		obj:removeRecipe(recipeID)
 		GUI.updateAllGUIs(true)
@@ -834,9 +834,9 @@ function DA.interaction(event, MFPlayer)
 
 	-- Open the Recipe Information GUI --
 	if string.match(event.element.name, "D.A.RecipeInfoButton") then
-		local objID = tonumber(split(event.element.name, ",")[2])
+		local objID = event.element.tags.ID
 		local obj = global.dataAssemblerTable[objID]
-		local recipeID = tonumber(split(event.element.name, ",")[3])
+		local recipeID = event.element.tags.recipeID
 		if valid(obj) == false then return end
 		obj:createInfoRecipeWindow(MFPlayer, recipeID)
 		GUI.updateAllGUIs(true)
@@ -845,9 +845,9 @@ function DA.interaction(event, MFPlayer)
 
 	-- Remove a Recipe - Recipe Information GUI --
 	if string.match(event.element.name, "D.A.RIRemoveRecipe") then
-		local objID = tonumber(split(event.element.name, ",")[2])
+		local objID = event.element.tags.ID
 		local obj = global.dataAssemblerTable[objID]
-		local recipeID = tonumber(split(event.element.name, ",")[3])
+		local recipeID = event.element.tags.recipeID
 		if valid(obj) == false or recipeID == nil or recipeID == 0 then return end
 		obj:removeRecipe(recipeID)
 		MFPlayer.GUI[_mfGUIName.RecipeInfoGUI].gui.destroy()
@@ -858,9 +858,9 @@ function DA.interaction(event, MFPlayer)
 
 	-- Pause a Recipe --
 	if string.match(event.element.name, "D.A.RIPauseResumeRecipe") then
-		local objID = tonumber(split(event.element.name, ",")[2])
+		local objID = event.element.tags.ID
 		local obj = global.dataAssemblerTable[objID]
-		local recipeID = tonumber(split(event.element.name, ",")[3])
+		local recipeID = event.element.tags.recipeID
 		if valid(obj) == false or recipeID == nil or recipeID == 0 then return end
 		if obj.recipeTable[recipeID].paused == true then
 			obj.recipeTable[recipeID].paused = false
@@ -873,9 +873,9 @@ function DA.interaction(event, MFPlayer)
 
 	-- Confirm a Recipe - Change --
 	if string.match(event.element.name, "D.A.RIChangeRecipe") then
-		local objID = tonumber(split(event.element.name, ",")[2])
+		local objID = event.element.tags.ID
 		local obj = global.dataAssemblerTable[objID]
-		local recipeID = tonumber(split(event.element.name, ",")[3])
+		local recipeID = event.element.tags.recipeID
 		if valid(obj) == false or recipeID == nil or recipeID == 0 then return end
 		local GUITable = MFPlayer.GUI[_mfGUIName.RecipeInfoGUI]
 		for _, product in pairs(obj.recipeTable[recipeID].products) do
@@ -889,7 +889,7 @@ function DA.interaction(event, MFPlayer)
 
 	-- Confirm a Recipe - Add --
 	if string.match(event.element.name, "D.A.RIAddRecipe") then
-		local objID = tonumber(split(event.element.name, ",")[2])
+		local objID = event.element.tags.ID
 		local obj = global.dataAssemblerTable[objID]
 		obj:confirmRecipe(MFPlayer)
 		MFPlayer.GUI[_mfGUIName.RecipeInfoGUI].gui.destroy()
