@@ -105,7 +105,7 @@ function DN.addDataNetworkFrame(GUITable, mainFrame, obj, justCreated)
 
 		-- Create the Select Network Drop Down --
 		if table_size(networks) > 0 then
-			GAPI.addDropDown(GUITable, "DNSelect," .. obj.ent.unit_number, frame, networks, selected, true)
+			GAPI.addDropDown(GUITable, "D.N.Select", frame, networks, selected, true, "", {ID=obj.ent.unit_number})
 		end
 
 		-- Create the Information Flow --
@@ -295,4 +295,25 @@ function DN:addFluid(fluid, amount, temperature)
 	end
 	-- Return the amount added --
 	return amount - amountLeft
+end
+
+-- Called if the Player interacted with the GUI --
+function DN.interaction(event, MFPlayer)
+
+	-- Select Network --
+	if string.match(event.element.name, "D.N.Select") then
+		-- Get the Object --
+		local ID = event.element.tags.ID
+		local obj = global.entsTable[ID]
+		if obj == nil then return end
+		-- Get the Mobile Factory --
+		local selectedMF = getMF(event.element.items[event.element.selected_index])
+		if selectedMF == nil then return end
+		-- Set the New Data Network --
+		obj.dataNetwork = selectedMF.dataNetwork
+		-- Update the Tooltip GUI --
+		GUI.updateMFTooltipGUI(MFPlayer.GUI["MFTooltipGUI"], true)
+		return
+	end
+
 end

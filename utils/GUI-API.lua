@@ -384,10 +384,10 @@ function GAPI.addLine(GUITable, name, gui, direction, save)
 end
 
 -- Add a Drop Down --
-function GAPI.addDropDown(GUITable, name, gui, items, selected, save, tooltip)
+function GAPI.addDropDown(GUITable, name, gui, items, selected, save, tooltip, tags)
     -- Check if this Element doesn't exist --
     if gui[name] ~= nil then gui[name].destroy() end
-    local dropDown = gui.add{type="drop-down", name=name, items=items, selected_index=selected, tooltip=tooltip}
+    local dropDown = gui.add{type="drop-down", name=name, items=items, selected_index=selected, tooltip=tooltip, tags=tags}
     dropDown.style.maximal_width = 200
     -- Save the Drop Down inside the elements Table --
     if GUITable ~= nil and save == true then
