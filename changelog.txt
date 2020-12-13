@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.4.2
+Date: 12/12/2020
+  Features:
+    - Quatron Cells have now a Fuel Value (Increased by the Quatron Purity)
+    - Quatron Cells have now an Accelleration Multiplier - this increase the Speed of Vehicles (Increased by the Quatron Purity)
+---------------------------------------------------------------------------------------------------
 Version: 0.4.1
 Date: 12/12/2020
   Scripting:

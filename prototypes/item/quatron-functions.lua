@@ -1,4 +1,5 @@
------------------------------------------ QUATRON FUNCTION ---------------------------
+----------------------------------------- QUATRON FUNCTION -----------------------------------------
+require("utils/settings.lua")
 
 -- Create a Quatron --
 function createQuatron(level, ingredients)
@@ -11,6 +12,10 @@ qI.stack_size = 50
 qI.icon = "__Mobile_Factory_Graphics__/graphics/icones/Quatron.png"
 qI.icon_size = 32
 qI.subgroup = "Quatrons"
+qI.fuel_category = "chemical"
+qI.fuel_value = tostring(5 * (level*_mfQuatronScalePower)) .. "MJ"
+qI.fuel_acceleration_multiplier = level
+qI.fuel_glow_color = {102/255, 0, 102/255}
 if level < 10 then qI.order = "a0" .. tonumber(level) else qI.order = "a" .. tonumber(level) end
 data:extend{qI}
 
