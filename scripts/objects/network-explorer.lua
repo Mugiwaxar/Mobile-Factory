@@ -289,7 +289,7 @@ function NE:createDNInventory(GUITable, inventoryScrollPane, searchText)
 
 		-- Create the Button --
 		local buttonText = {"", "[color=green]", Util.getLocItemName(DSR.inventoryItem), "[/color]\n[color=yellow]", Util.toRNumber(DSR.inventoryCount), "[/color]"}
-		local button = GAPI.addButton(GUITable, "N.E.DSR" .. self.entID, tableList, "item/" .. DSR.inventoryItem, "item/" .. DSR.inventoryItem, buttonText, 37, false, true, DSR.inventoryCount, nil, {ID=DSR.ent.unit_number})
+		local button = GAPI.addButton(GUITable, "N.E.DSR" .. DSR.ent.unit_number, tableList, "item/" .. DSR.inventoryItem, "item/" .. DSR.inventoryItem, buttonText, 37, false, true, DSR.inventoryCount, nil, {ID=DSR.ent.unit_number})
 		button.style = "shortcut_bar_button_green"
 		button.style.padding = 0
 		button.style.margin = 0
