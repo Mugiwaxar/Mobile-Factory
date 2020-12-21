@@ -63,7 +63,7 @@ end
 
 -- Item Tags to Content --
 function FE:itemTagsToContent(tags)
-	self.quatronLevel = tags.purity or 0
+	self.quatronLevel = tags.purity or 1
 	self.quatronCharge = tags.charge or 0
 end
 
