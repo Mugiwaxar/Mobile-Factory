@@ -5,7 +5,6 @@ require("prototypes/entity/dimensional-furnace.lua")
 require("prototypes/entity/crystallizer.lua")
 require("prototypes/entity/dimensional-plant.lua")
 require("prototypes/entity/basic-solar-panel.lua")
--- require("prototypes/entity/wireless-data-receiver.lua")
 require("prototypes/entity/jump-drive.lua")
 require("prototypes/entity/jump-charger.lua")
 require("prototypes/entity/energy-cube.lua")
@@ -16,6 +15,7 @@ require("prototypes/entity/fluid-extractor.lua")
 require("prototypes/entity/resource-catcher.lua")
 require("prototypes/entity/temp-chest.lua")
 require("prototypes/entity/temp-tank.lua")
+require("prototypes/entity/mf-deploy.lua")
 require("prototypes/matter-serialization/network-controller.lua")
 require("prototypes/matter-serialization/network-access-point.lua")
 require("prototypes/matter-serialization/data-storage.lua")
@@ -60,12 +60,6 @@ require("prototypes/gun/tank-guns.lua")
 require("prototypes/animation/shield.lua")
 require("prototypes/animation/red-energy-orb.lua")
 require("prototypes/animation/MFTP.lua")
--- if settings.startup["MF-enable-erya"].value == true then
-	-- require("prototypes/erya/erya-intermediates.lua")
-	-- require("prototypes/erya/erya-collector.lua")
-	-- require("prototypes/erya/erya-structures.lua")
-	-- require("prototypes/winter/snow-tiles.lua")
--- end
 if mods["omnimatter"] then require("utils/omnimatter.lua") end
 
 
