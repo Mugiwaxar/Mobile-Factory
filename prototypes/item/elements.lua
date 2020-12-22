@@ -42,7 +42,6 @@ createElement("mfFluorodinIII", 0, "fluid", {42,234,0})
 createRecipe("mfFluorodin", {{"fluid", "DimensionalFluid", 50}, {"fluid", "mfUranium", 50}, {"item", "mfNanoporeSilicon", 10}}, {{"fluid", "mfFluorodin", 100}},2)
 createTechnology("mfFluorodin", {300, 2, {{"DimensionalSample",1}}}, {"UraniumLiquefaction"}, {"mfFluorodin"})
 
-
 -- FluoroclorodinII -- 
 createRecipe("mfFluorodinII", {{"fluid", "mfFluorodin", 50}, {"fluid", "mfUranium", 50}, {"item", "mfNanoporeSilicon", 5}}, {{"fluid", "mfFluorodinII", 100}},2)
 createTechnology("mfFluorodinII", {300, 2, {{"DimensionalSample",1}}}, {"mfFluorodin"}, {"mfFluorodinII"})
@@ -65,7 +64,7 @@ createTechnology("mfHydroxyclorodin", {300, 2, {{"DimensionalSample",1}}}, {"mfC
 
 -- Electrolyze --
 createRecipe("Electrolyze", {{"fluid", "water", 18}}, {{"fluid", "mfOxygen", 16},{"fluid", "mfHydrogen", 2}},2)
-createRecipe("WaterReaction", {{"fluid", "mfHydrogen", 200}}, {{"fluid", "water", 1000}})
+createRecipe("WaterReaction", {{"fluid", "mfOxygen", 100},{"fluid", "mfHydrogen", 200}}, {{"fluid", "water", 1000}})
 createTechnology("Electrolyze", {300, 2, {{"DimensionalSample",1}}}, {"DimensionalPlant"}, {"Electrolyze", "WaterReaction"})
 
 -- Silicon --
