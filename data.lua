@@ -423,22 +423,32 @@ data:extend{
 data:extend{
     {
         type = "sprite",
-        name = "SyncAreaIcon",
-        filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIconSyncArea.png",
+        name = "MFDeploy",
+        filename = "__Mobile_Factory__/graphics/MFDeployI.png",
         size = 32,
         flags = {"icon"}
     }
 }
 
-data:extend{
-	{
-		type = "sprite",
-		name = "SyncAreaIconDisabled",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIconSyncAreaDisabled.png",
-		size = 32,
-		flags = {"icon"}
-	}
-}
+-- data:extend{
+--     {
+--         type = "sprite",
+--         name = "SyncAreaIcon",
+--         filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIconSyncArea.png",
+--         size = 32,
+--         flags = {"icon"}
+--     }
+-- }
+
+-- data:extend{
+-- 	{
+-- 		type = "sprite",
+-- 		name = "SyncAreaIconDisabled",
+-- 		filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIconSyncAreaDisabled.png",
+-- 		size = 32,
+-- 		flags = {"icon"}
+-- 	}
+-- }
 
 data:extend{
 	{

@@ -51,36 +51,36 @@ _mfMaxFuelValue = 4000000
 _mfFuelMultiplicator = 1
 
 -- Mobile Factory Sync Area settings --
-_mfSyncAreaPosition = {x=0, y=0}
-_mfSyncAreaRadius = 10
-_mfSyncAreaAllowedTypes =
-{
-	resource=true,
-	container=true,
-	["logistic-container"]=true,
-	["storage-tank"]=true,
-	accumulator=true
-}
+-- _mfSyncAreaPosition = {x=0, y=0}
+-- _mfSyncAreaRadius = 10
+-- _mfSyncAreaAllowedTypes =
+-- {
+-- 	resource=true,
+-- 	container=true,
+-- 	["logistic-container"]=true,
+-- 	["storage-tank"]=true,
+-- 	accumulator=true
+-- }
 
 -- Mobile Factory Sync Area extra entity information needed --
-_mfSyncAreaExtraDetails = {
-	["item-entity"] = {["stack"] = "stack"},
-	["entity-ghost"] = {["inner_name"] = "ghost_name"},
-	["tile-ghost"] = {["inner_name"] = "ghost_name"},
-}
+-- _mfSyncAreaExtraDetails = {
+-- 	["item-entity"] = {["stack"] = "stack"},
+-- 	["entity-ghost"] = {["inner_name"] = "ghost_name"},
+-- 	["tile-ghost"] = {["inner_name"] = "ghost_name"},
+-- }
 
 -- Mobile Factory Sync Area, ignored for collision, entity types --
-_mfSyncAreaIgnoredTypes = {
-	beam = true,
-	["flying-text"] = true,
-	["fire"] = true,
-	["particle"] = true,
-    ["projectile"] = true,
-	["highlight-box"] = true,
-	["speech-bubble"] = true,
-	["item-request-proxy"] = true,
-	["sticker"] = true,
-}
+-- _mfSyncAreaIgnoredTypes = {
+-- 	beam = true,
+-- 	["flying-text"] = true,
+-- 	["fire"] = true,
+-- 	["particle"] = true,
+--     ["projectile"] = true,
+-- 	["highlight-box"] = true,
+-- 	["speech-bubble"] = true,
+-- 	["item-request-proxy"] = true,
+-- 	["sticker"] = true,
+-- }
 
 -- Mobile Factory Internal Distrubution --
 _mfBaseEnergyAccSend = 1000000
@@ -178,6 +178,7 @@ _mfGUIName =
 	TooltipGUI = "MFTooltipGUI",
 	SwitchMF = "MFSwitchMFGUI",
 	TPGUI = "MFTPGUI",
+	DeployGUI = "MFDeployGUI",
 	RecipeGUI = "MFRecipeGUI",
 	RecipeInfoGUI = "MFRecipeInfoGUI"
 }
@@ -210,7 +211,7 @@ _mfTooltipGUI =
 _eventTick5=5 -- Teleportation --
 _eventTick7=7 -- Data Assembler GUI Progress Bars --
 _eventTick27=27 -- Mobile Factory Fuel --
-_eventTick30=30 -- Mobile Factory Sync Area
+-- _eventTick30=30 -- Mobile Factory Sync Area
 _eventTick49=49 -- Mobile Factory Lights --
 _eventTick55=55 -- GUI --
 _eventTick60=60 -- Mobile Factory Lasers/Jump Drive --

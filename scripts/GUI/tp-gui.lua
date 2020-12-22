@@ -5,8 +5,11 @@ function GUI.createTPGui(player)
 	local MFPlayer = getMFPlayer(player.name)
 
     -- Create the GUI --
-    local GUITable = GAPI.createBaseWindows(_mfGUIName.TPGUI,{"gui-description.MFTPGUITitle"}, MFPlayer, true, true, false, "vertical", "horizontal")
+    local GUITable = GAPI.createBaseWindows(_mfGUIName.TPGUI, {"gui-description.MFTPGUITitle"}, MFPlayer, true, true, false, "vertical", "horizontal")
     local mainFrame = GUITable.vars.MainFrame
+
+    -- Add the Close Button --
+    GAPI.addCloseButton(GUITable)
 
     -- Create the Frames --
     local infoFrame = GAPI.addFrame(GUITable, "InfoFrame", mainFrame, "vertical", true)
@@ -39,9 +42,6 @@ function GUI.createTPGui(player)
     locPane.style.minimal_height = 350
     locPane.style.minimal_width = 250
     locPane.style.bottom_margin = 3
-
-    -- Add the Close Button --
-    GAPI.addCloseButton(GUITable)
 
     -- Update the GUI --
     GUI.updateMFTPGUI(GUITable, true)

@@ -120,12 +120,12 @@ function somethingWasPlaced(event)
 	if type == "entity-ghost" then return end
 
 	-- If a SyncArea Entity was placed --
-	if _mfSyncAreaAllowedTypes[entity.type] == true and event.destination == nil then
-		local nearestMF = getMF(surfacePlayer) or findNearestMF(entity.surface, entity.position)
-		if nearestMF ~= nil then
-			placedEntityInSyncArea(nearestMF, entity)
-		end
-	end
+	-- if _mfSyncAreaAllowedTypes[entity.type] == true and event.destination == nil then
+	-- 	local nearestMF = getMF(surfacePlayer) or findNearestMF(entity.surface, entity.position)
+	-- 	if nearestMF ~= nil then
+	-- 		placedEntityInSyncArea(nearestMF, entity)
+	-- 	end
+	-- end
 
 	-- -- If a Erya Structure was placed --
 	-- if _mfEryaFreezeStructures[entity.name] == true then
@@ -163,9 +163,9 @@ function somethingWasRemoved(event)
 	if removedEnt == nil or removedEnt.valid == false then return end
 
 	-- Unclone SyncArea --
-	if _mfSyncAreaAllowedTypes[removedEnt.type] then
-		removedSyncEntity(event)
-	end
+	-- if _mfSyncAreaAllowedTypes[removedEnt.type] then
+	-- 	removedSyncEntity(event)
+	-- end
 
 	-- Get and Check the Values --
 	local obj = global.entsTable[removedEnt.unit_number]
@@ -281,22 +281,22 @@ function placedMobileFactory(event, entity, MFPlayer, MF)
 end
 
 -- Called when an Entity is placed inside the SyncArea --
-function placedEntityInSyncArea(MF, entity)
-	-- Check the Mobile Factory --
-	if MF.ent == nil or MF.ent.valid == false or MF.syncAreaEnabled ~= true or MF.ent.speed ~= 0 then return end
-	-- Outside to Inside --
-	if entity.surface == MF.ent.surface and Util.distance(entity.position, MF.ent.position) < _mfSyncAreaRadius
-			and not MF.fS.entity_prototype_collides(entity.name, {_mfSyncAreaPosition.x + (entity.position.x - math.floor(MF.ent.position.x)), _mfSyncAreaPosition.y + (entity.position.y - math.floor(MF.ent.position.y))}, false)
-		then
-		MF:cloneEntity(entity, "in")
-	end
-	-- Inside to Outside --
-	if entity.surface == MF.fS and Util.distance(entity.position, _mfSyncAreaPosition) < _mfSyncAreaRadius
-			and not MF.ent.surface.entity_prototype_collides(entity.name, {math.floor(MF.ent.position.x) + (entity.position.x - _mfSyncAreaPosition.x), math.floor(MF.ent.position.y) + (entity.position.y - _mfSyncAreaPosition.y)}, false)
-		then
-		MF:cloneEntity(entity, "out")
-	end
-end
+-- function placedEntityInSyncArea(MF, entity)
+-- 	-- Check the Mobile Factory --
+-- 	if MF.ent == nil or MF.ent.valid == false or MF.syncAreaEnabled ~= true or MF.ent.speed ~= 0 then return end
+-- 	-- Outside to Inside --
+-- 	if entity.surface == MF.ent.surface and Util.distance(entity.position, MF.ent.position) < _mfSyncAreaRadius
+-- 			and not MF.fS.entity_prototype_collides(entity.name, {_mfSyncAreaPosition.x + (entity.position.x - math.floor(MF.ent.position.x)), _mfSyncAreaPosition.y + (entity.position.y - math.floor(MF.ent.position.y))}, false)
+-- 		then
+-- 		MF:cloneEntity(entity, "in")
+-- 	end
+-- 	-- Inside to Outside --
+-- 	if entity.surface == MF.fS and Util.distance(entity.position, _mfSyncAreaPosition) < _mfSyncAreaRadius
+-- 			and not MF.ent.surface.entity_prototype_collides(entity.name, {math.floor(MF.ent.position.x) + (entity.position.x - _mfSyncAreaPosition.x), math.floor(MF.ent.position.y) + (entity.position.y - _mfSyncAreaPosition.y)}, false)
+-- 		then
+-- 		MF:cloneEntity(entity, "out")
+-- 	end
+-- end
 
 -- Called to know if the Entity is above a Constructible Area --
 function checkCCTile(entity)
@@ -306,53 +306,40 @@ function checkCCTile(entity)
 end
 
 -- Return all Items of all Chest to its original one if the SyncArea is stoped --
-function removedSyncEntity(event)
-	local removedEnt = event.entity
-	local MF = nil
-	for _, MFObj in pairs(global.MFTable) do
-		if MFObj.ent ~= nil and MFObj.ent.valid and MFObj.syncAreaEnabled == true and MFObj.ent.speed == 0
-		and ((removedEnt.surface == MFObj.ent.surface and Util.distance(removedEnt.position, MFObj.ent.position) < _mfSyncAreaRadius)
-				or (removedEnt.surface == MFObj.fS and Util.distance(removedEnt.position, _mfSyncAreaPosition) < _mfSyncAreaRadius))
-			then
-			MF = MFObj
-			break
-		end
-	end
-	if MF == nil then return end
+-- function removedSyncEntity(event)
+-- 	local removedEnt = event.entity
+-- 	local MF = nil
+-- 	for _, MFObj in pairs(global.MFTable) do
+-- 		if MFObj.ent ~= nil and MFObj.ent.valid and MFObj.syncAreaEnabled == true and MFObj.ent.speed == 0
+-- 		and ((removedEnt.surface == MFObj.ent.surface and Util.distance(removedEnt.position, MFObj.ent.position) < _mfSyncAreaRadius)
+-- 				or (removedEnt.surface == MFObj.fS and Util.distance(removedEnt.position, _mfSyncAreaPosition) < _mfSyncAreaRadius))
+-- 			then
+-- 			MF = MFObj
+-- 			break
+-- 		end
+-- 	end
+-- 	if MF == nil then return end
 
-	for i, ents in pairs(MF.clonedResourcesTable) do
-		-- Removed entity always treated as original, adjust if needed
-		if removedEnt == ents.cloned then
-			ents.original, ents.cloned = ents.cloned, ents.original
-		end
-		if removedEnt == ents.original then
-			-- Move chest content to buffer
-			if event.buffer ~= nil and removedEnt.type == "container" or removedEnt.type == "logistic-container" then
-				local inv = ents.cloned.get_inventory(defines.inventory.chest)
-				for i = 1, #inv do
-					local stack = inv[i]
-					if stack.valid_for_read == true then
-						event.buffer.insert(stack)
-					end
-				end
-				inv.clear()
-			end
-			-- Remove from table before unclone, to avoid recursion caused by script_raised_destroy
-			MF.clonedResourcesTable[i] = nil
-			MF:uncloneEntity(ents.original, ents.cloned)
-		end
-	end
-end
-
--- An Erya Structure is placed --
--- function placedEryaStructure(event)
--- 	if global.eryaTable == nil then global.eryaTable  = {} end
--- 	global.eryaTable[event.created_entity.unit_number] = ES:new(event.created_entity)
--- end
-
--- An Erya Structure is removed --
--- function removedEryaStructure(event)
--- 	if global.eryaTable == nil then global.eryaTable = {} return end
--- 	if global.eryaTable[event.entity.unit_number] ~= nil then global.eryaTable[event.entity.unit_number]:remove() end
--- 	global.eryaTable[event.entity.unit_number] = nil
+-- 	for i, ents in pairs(MF.clonedResourcesTable) do
+-- 		-- Removed entity always treated as original, adjust if needed
+-- 		if removedEnt == ents.cloned then
+-- 			ents.original, ents.cloned = ents.cloned, ents.original
+-- 		end
+-- 		if removedEnt == ents.original then
+-- 			-- Move chest content to buffer
+-- 			if event.buffer ~= nil and removedEnt.type == "container" or removedEnt.type == "logistic-container" then
+-- 				local inv = ents.cloned.get_inventory(defines.inventory.chest)
+-- 				for i = 1, #inv do
+-- 					local stack = inv[i]
+-- 					if stack.valid_for_read == true then
+-- 						event.buffer.insert(stack)
+-- 					end
+-- 				end
+-- 				inv.clear()
+-- 			end
+-- 			-- Remove from table before unclone, to avoid recursion caused by script_raised_destroy
+-- 			MF.clonedResourcesTable[i] = nil
+-- 			MF:uncloneEntity(ents.original, ents.cloned)
+-- 		end
+-- 	end
 -- end

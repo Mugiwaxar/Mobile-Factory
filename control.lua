@@ -85,9 +85,9 @@ function onInit()
 		end
 	end
 
-	global.syncTile = global.syncTile or "dirt-7"
+	-- global.syncTile = global.syncTile or "dirt-7"
 	-- Validate the Tile Used for the Sync Area --
-	validateSyncAreaTile()
+	-- validateSyncAreaTile()
 	-- Ensure All Needed Tiles are Present --
 	checkNeededTiles()
 

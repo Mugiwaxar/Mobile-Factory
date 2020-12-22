@@ -197,7 +197,7 @@ end
 
 -- Update all Mobile Factory Internal Lights --
 function updateIndoorLights()
-	for k, MF in pairs(global.MFTable) do
+	for _, MF in pairs(global.MFTable) do
 		if MF.internalEnergyObj:energy() > 0 then
 			MF.fS.daytime = 0
 			MF.ccS.daytime = 0
