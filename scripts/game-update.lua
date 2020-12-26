@@ -169,6 +169,7 @@ end
 -- Called when a Shortcut is pressed --
 function onShortcut(event)
 	local player = getPlayer(event.player_index)
+	local MFPlayer = getMFPlayer(event.player_index)
 	-- Tooltip GUI Key --
 	if event.input_name == "OpenTTGUI" then
 		local ent = player.selected
@@ -176,6 +177,26 @@ function onShortcut(event)
 			event.entity = ent
 			GUI.guiOpened(event)
 		end
+		return
+	end
+	-- Close GUIs --
+	if event.input_name == "CloseGUI" then
+		-- Close Recipe GUI --
+		if MFPlayer.GUI[_mfGUIName.RecipeGUI] ~= nil then
+			if MFPlayer.GUI[_mfGUIName.RecipeGUI].gui ~= nil then MFPlayer.GUI[_mfGUIName.RecipeGUI].gui.destroy() end
+			MFPlayer.GUI[_mfGUIName.RecipeGUI] = nil
+		end
+		-- Close Recipe Info GUI --
+		if MFPlayer.GUI[_mfGUIName.RecipeInfoGUI] ~= nil then
+			if MFPlayer.GUI[_mfGUIName.RecipeInfoGUI].gui ~= nil then MFPlayer.GUI[_mfGUIName.RecipeInfoGUI].gui.destroy() end
+			MFPlayer.GUI[_mfGUIName.RecipeInfoGUI] = nil
+		end
+		-- Close Slot GUI --
+		if MFPlayer.GUI[_mfGUIName.SlotGUI] ~= nil then
+			if MFPlayer.GUI[_mfGUIName.SlotGUI].gui ~= nil then MFPlayer.GUI[_mfGUIName.SlotGUI].gui.destroy() end
+			MFPlayer.GUI[_mfGUIName.SlotGUI] = nil
+		end
+		return
 	end
 end
 

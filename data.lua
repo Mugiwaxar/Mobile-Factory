@@ -16,6 +16,7 @@ require("prototypes/entity/resource-catcher.lua")
 require("prototypes/entity/temp-chest.lua")
 require("prototypes/entity/temp-tank.lua")
 require("prototypes/entity/mf-deploy.lua")
+require("prototypes/entity/dimensional-belt.lua")
 require("prototypes/matter-serialization/network-controller.lua")
 require("prototypes/matter-serialization/network-access-point.lua")
 require("prototypes/matter-serialization/data-storage.lua")
@@ -430,6 +431,17 @@ data:extend{
     }
 }
 
+data:extend{
+    {
+        type = "sprite",
+        name = "MFDeployE",
+        filename = "__Mobile_Factory__/graphics/MobileFactoryE.png",
+        width = 400,
+		height = 600,
+        flags = {"icon"}
+    }
+}
+
 -- data:extend{
 --     {
 --         type = "sprite",
@@ -639,6 +651,14 @@ data:extend{
 	type = "custom-input",
 	name = "OpenTTGUI",
 	key_sequence = "mouse-button-1"
+	}
+}
+
+data:extend{
+	{
+	type = "custom-input",
+	name = "CloseGUI",
+	key_sequence = "ESCAPE"
 	}
 }
 

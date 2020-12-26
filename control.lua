@@ -254,6 +254,7 @@ script.on_event(defines.events.on_player_changed_force, onPlayerChangedForce)
 script.on_event(defines.events.on_player_setup_blueprint, onPlayerSetupBlueprint)
 script.on_event(defines.events.on_string_translated, onStringTranslated)
 script.on_event("OpenTTGUI", onShortcut)
+script.on_event("CloseGUI", onShortcut)
 
 -- Add command to insert Mobile Factory to the player inventory --
 -- commands.add_command("GetMobileFactory", "Add the Mobile Factory to the player inventory", addMobileFactory)
