@@ -7,6 +7,7 @@ dpE1.name = "DimensionalPipe1"
 dpE1.icons = {{icon=dpE1.icon, tint=tint1}}
 dpE1.minable = {mining_time = 0.5}
 dpE1.flags = {}
+dpE1.fast_replaceable_group = nil
 dpE1.fluid_box.pipe_connections[2].max_underground_distance = 1
 dpE1.fluid_box.pipe_covers.north.layers[1].tint = tint1
 dpE1.fluid_box.pipe_covers.north.layers[1].hr_version.tint = tint1
