@@ -8,6 +8,7 @@ mf.equipment_grid = "MFEquipmentGrid"
 mf.minable = {mining_time = 1.5, result = "MobileFactory"}
 mf.inventory_size = 10
 mf.max_health = 2500
+mf.collision_mask = {"item-layer", "object-layer", "player-layer", "water-tile", "layer-52", "not-colliding-with-itself"}
 mf.emissions_per_second = 0.005
 mf.consumption = "700KW"
 mf.weight = 25000
