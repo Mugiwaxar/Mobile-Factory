@@ -106,8 +106,7 @@ function GUI.updateButtonsBar(GUITable)
 	buttonsBar.clear()
 
 	-------------------------------------------------------- Get Buttons Variables --------------------------------------------------------
-	local showCallMFButton = technologyUnlocked("JumpDrive", getForce(MF))
-	local syncAreaSprite = MF.syncAreaEnabled == true and "SyncAreaIcon" or "SyncAreaIconDisabled"
+	-- local syncAreaSprite = MF.syncAreaEnabled == true and "SyncAreaIcon" or "SyncAreaIconDisabled"
 	local showFindMFButton = (MF.ent ~= nil and MF.ent.valid == false) and true or false
 	local tpInsideSprite = MF.tpEnabled == true and "MFTPIcon" or "MFTPIconDisabled"
 	local lockMFSprite = MF.locked == true and "LockMFCIcon" or "LockMFOIcon"
@@ -119,12 +118,13 @@ function GUI.updateButtonsBar(GUITable)
 	local itemDrainSprite = MF.itemLaserActivated == true and "ItemDrainIcon" or "ItemDrainIconDisabled"
 	local showQuatronDrainButton = technologyUnlocked("EnergyDrain1", getForce(MF)) and technologyUnlocked("QuatronLogistic", getForce(MF)) and true or false
 	local quatronDrainSprite = MF.quatronLaserActivated == true and "QuatronIcon" or "QuatronIconDisabled"
+	local showDeployButton = technologyUnlocked("MFDeploy", getForce(MF)) and true or false
+	local showCallMFButton = technologyUnlocked("JumpDrive", getForce(MF)) and true or false
 
 
 	-------------------------------------------------------- Update all Buttons --------------------------------------------------------
 	GAPI.addButton(GUITable, "PortOutsideButton", buttonsBar, "PortIcon", "PortIcon", {"gui-description.teleportOutsideButton"}, _mfInfoGUIButtonsSize, true)
-	GAPI.addButton(GUITable, "JumpDriveButton", buttonsBar, "MFJDIcon", "MFJDIcon", {"gui-description.jumpDriveButton"}, _mfInfoGUIButtonsSize, true, showCallMFButton)
-	GAPI.addButton(GUITable, "SyncAreaButton", buttonsBar, syncAreaSprite, syncAreaSprite, {"gui-description.syncAreaButton"}, _mfInfoGUIButtonsSize, true)
+	-- GAPI.addButton(GUITable, "SyncAreaButton", buttonsBar, syncAreaSprite, syncAreaSprite, {"gui-description.syncAreaButton"}, _mfInfoGUIButtonsSize, true)
 	GAPI.addButton(GUITable, "FindMFButton", buttonsBar, "MFIconExc", "MFIconExc", {"gui-description.fixMFButton"}, _mfInfoGUIButtonsSize, true, showFindMFButton)
 	GAPI.addButton(GUITable, "TPInsideButton", buttonsBar, tpInsideSprite, tpInsideSprite, {"gui-description.MFTPInside"}, _mfInfoGUIButtonsSize, true)
 	GAPI.addButton(GUITable, "LockMFButton", buttonsBar, lockMFSprite, lockMFSprite, {"gui-description.LockMF"}, _mfInfoGUIButtonsSize, true)
@@ -133,6 +133,8 @@ function GUI.updateButtonsBar(GUITable)
 	GAPI.addButton(GUITable, "FluidDrainButton", buttonsBar, fluidDrainSprite, fluidDrainSprite, {"gui-description.mfFluidDrainButton"}, _mfInfoGUIButtonsSize, true, showFluidDrainButton)
 	GAPI.addButton(GUITable, "ItemDrainButton", buttonsBar, itemDrainSprite, itemDrainSprite, {"gui-description.mfItemDrainButton"}, _mfInfoGUIButtonsSize, true, showItemDrainButton)
 	GAPI.addButton(GUITable, "QuatronDrainButton", buttonsBar, quatronDrainSprite, quatronDrainSprite, {"gui-description.mfQuatronDrainButton"}, _mfInfoGUIButtonsSize, true, showQuatronDrainButton)
+	GAPI.addButton(GUITable, "MFDeployButton", buttonsBar, "MFDeploy", "MFDeploy", {"gui-description.DeployButtonTT"}, _mfInfoGUIButtonsSize, true, showDeployButton)
+	GAPI.addButton(GUITable, "JumpDriveButton", buttonsBar, "MFJDIcon", "MFJDIcon", {"gui-description.jumpDriveButton"}, _mfInfoGUIButtonsSize, true, showCallMFButton)
 end
 
 -- Update Information --

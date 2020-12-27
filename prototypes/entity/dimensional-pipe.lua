@@ -32,6 +32,7 @@ local tint2 = {1,0.4,0.4}
 local dpE2 = table.deepcopy(dpE1)
 dpE2.name = "DimensionalPipe2"
 dpE2.icons = {{icon=dpE1.icon, tint=tint2}}
+dpE2.fluid_box.base_area = 10
 dpE2.fluid_box.pipe_covers.north.layers[1].tint = tint2
 dpE2.fluid_box.pipe_covers.north.layers[1].hr_version.tint = tint2
 dpE2.fluid_box.pipe_covers.east.layers[1].tint = tint2
@@ -74,6 +75,7 @@ local tint3 = {0.4,0.6,1}
 local dpE3 = table.deepcopy(dpE2)
 dpE3.name = "DimensionalPipe3"
 dpE3.icons = {{icon=dpE1.icon, tint=tint3}}
+dpE3.fluid_box.base_area = 50
 dpE3.fluid_box.pipe_covers.north.layers[1].tint = tint3
 dpE3.fluid_box.pipe_covers.north.layers[1].hr_version.tint = tint3
 dpE3.fluid_box.pipe_covers.east.layers[1].tint = tint3

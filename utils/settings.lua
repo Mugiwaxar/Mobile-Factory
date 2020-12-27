@@ -179,6 +179,7 @@ _mfGUIName =
 	SwitchMF = "MFSwitchMFGUI",
 	TPGUI = "MFTPGUI",
 	DeployGUI = "MFDeployGUI",
+	SlotGUI = "MFSlotGUI",
 	RecipeGUI = "MFRecipeGUI",
 	RecipeInfoGUI = "MFRecipeInfoGUI"
 }
@@ -210,6 +211,7 @@ _mfTooltipGUI =
 -- Event Tick --
 _eventTick5=5 -- Teleportation --
 _eventTick7=7 -- Data Assembler GUI Progress Bars --
+_eventTick15=15 -- Mobile Factory Deployment --
 _eventTick27=27 -- Mobile Factory Fuel --
 -- _eventTick30=30 -- Mobile Factory Sync Area
 _eventTick49=49 -- Mobile Factory Lights --

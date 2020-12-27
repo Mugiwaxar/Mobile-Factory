@@ -17,6 +17,8 @@ require("prototypes/entity/temp-chest.lua")
 require("prototypes/entity/temp-tank.lua")
 require("prototypes/entity/mf-deploy.lua")
 require("prototypes/entity/dimensional-belt.lua")
+require("prototypes/entity/dimensional-pipe.lua")
+require("prototypes/entity/dimensional-pole.lua")
 require("prototypes/matter-serialization/network-controller.lua")
 require("prototypes/matter-serialization/network-access-point.lua")
 require("prototypes/matter-serialization/data-storage.lua")
@@ -888,7 +890,7 @@ data.raw["gui-style"].default.MF_JD_scroll_pan =
 
 local purpleTint = {150, 50, 160}
 local lightPurpleTint = {200, 120, 220}
-data.raw["gui-style"].default.MF_Purple_Button_Purple =
+data.raw["gui-style"].default.MF_Button_Purple =
 {
 	type = "button_style",
 	parent = "shortcut_bar_button",
@@ -906,6 +908,59 @@ data.raw["gui-style"].default.MF_Purple_Button_Purple =
 	clicked_graphical_set =
 	{
 		base = {position = {363, 759}, corner_size = 8, tint=lightPurpleTint},
+		shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	}
+}
+
+data.raw["gui-style"].default.MF_Button_Blue_GrayWhenDisabled =
+{
+	type = "button_style",
+	parent = "slot_sized_button",
+	default_graphical_set =
+	{
+		base = {position = {312, 760}, corner_size = 8},
+		shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	},
+	disabled_graphical_set =
+	{
+		base = {position = {329, 744}, corner_size = 8},
+		shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	},
+	hovered_graphical_set =
+	{
+		base = {position = {346, 760}, corner_size = 8},
+		shadow = offset_by_2_default_glow(default_dirt_color, 0.5),
+		glow = offset_by_2_default_glow({132, 177, 198, 127}, 0.5)
+	},
+	clicked_graphical_set =
+	{
+		base = {position = {363, 760}, corner_size = 8},
+		shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	}
+}
+
+data.raw["gui-style"].default.MF_Fake_Button_Light_Blue =
+{
+	type = "button_style",
+	parent = "slot_sized_button",
+	default_graphical_set =
+	{
+		base = {position = {363, 760}, corner_size = 8},
+		shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	},
+	disabled_graphical_set =
+	{
+		base = {position = {329, 744}, corner_size = 8},
+        shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	},
+	hovered_graphical_set =
+	{
+		base = {position = {363, 760}, corner_size = 8},
+		shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
+	},
+	clicked_graphical_set =
+	{
+		base = {position = {363, 760}, corner_size = 8},
 		shadow = offset_by_2_default_glow(default_dirt_color, 0.5)
 	}
 }

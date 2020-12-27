@@ -83,23 +83,23 @@ function GUI.updateMFMainGUI(GUITable)
 	local player = GUITable.MFPlayer.ent
 
 	-------------------------------------------------------- Get Buttons Variables --------------------------------------------------------
-	local showCallMFButton = technologyUnlocked("JumpDrive", getForce(player.name))
-	local syncAreaSprite = MF.syncAreaEnabled == true and "SyncAreaIcon" or "SyncAreaIconDisabled"
+	-- local syncAreaSprite = MF.syncAreaEnabled == true and "SyncAreaIcon" or "SyncAreaIconDisabled"
 	local showFindMFButton = (MF.ent ~= nil and MF.ent.valid == false) and true or false
 	local tpInsideSprite = MF.tpEnabled == true and "MFTPIcon" or "MFTPIconDisabled"
 	local lockMFSprite = MF.locked == true and "LockMFCIcon" or "LockMFOIcon"
-	local showEnergyDrainButton = technologyUnlocked("EnergyDrain1", getForce(player.name)) and true or false
+	local showEnergyDrainButton = technologyUnlocked("EnergyDrain1", getForce(MF)) and true or false
 	local energyDrainSprite = MF.energyLaserActivated == true and "EnergyDrainIcon" or "EnergyDrainIconDisabled"
-	local showFluidDrainButton = technologyUnlocked("FluidDrain1", getForce(player.name)) and true or false
+	local showFluidDrainButton = technologyUnlocked("FluidDrain1", getForce(MF)) and true or false
 	local fluidDrainSprite = MF.fluidLaserActivated == true and "FluidDrainIcon" or "FluidDrainIconDisabled"
-	local showItemDrainButton = technologyUnlocked("TechItemDrain", getForce(player.name)) and true or false
+	local showItemDrainButton = technologyUnlocked("TechItemDrain", getForce(MF)) and true or false
 	local itemDrainSprite = MF.itemLaserActivated == true and "ItemDrainIcon" or "ItemDrainIconDisabled"
-	local showQuatronDrainButton = technologyUnlocked("EnergyDrain1", getForce(player.name)) and technologyUnlocked("QuatronLogistic", getForce(player.name)) and true or false
+	local showQuatronDrainButton = technologyUnlocked("EnergyDrain1", getForce(MF)) and technologyUnlocked("QuatronLogistic", getForce(MF)) and true or false
 	local quatronDrainSprite = MF.quatronLaserActivated == true and "QuatronIcon" or "QuatronIconDisabled"
+	local showDeployButton = technologyUnlocked("MFDeploy", getForce(MF)) and true or false
+	local showCallMFButton = technologyUnlocked("JumpDrive", getForce(MF)) and true or false
 
 	GUI.addButtonToMainGui(GUITable, {name="PortOutsideButton", sprite="PortIcon", hovSprite="PortIcon", tooltip={"gui-description.teleportOutsideButton"}, save=false})
-	GUI.addButtonToMainGui(GUITable, {name="JumpDriveButton", sprite="MFJDIcon", hovSprite="MFJDIcon", tooltip={"gui-description.jumpDriveButton"}, save=false, visible=showCallMFButton})
-	GUI.addButtonToMainGui(GUITable, {name="SyncAreaButton", sprite=syncAreaSprite, hovSprite=syncAreaSprite, tooltip={"gui-description.syncAreaButton"}, save=false})
+	-- GUI.addButtonToMainGui(GUITable, {name="SyncAreaButton", sprite=syncAreaSprite, hovSprite=syncAreaSprite, tooltip={"gui-description.syncAreaButton"}, save=false})
 	GUI.addButtonToMainGui(GUITable, {name="FindMFButton", sprite="MFIconExc", hovSprite="MFIconExc", tooltip={"gui-description.fixMFButton"}, save=false, visible=showFindMFButton})
 	GUI.addButtonToMainGui(GUITable, {name="TPInsideButton", sprite=tpInsideSprite, hovSprite=tpInsideSprite, tooltip={"gui-description.MFTPInside"}, save=false})
 	GUI.addButtonToMainGui(GUITable, {name="LockMFButton", sprite=lockMFSprite, hovSprite=lockMFSprite, tooltip={"gui-description.LockMF"}, save=false})
@@ -107,6 +107,8 @@ function GUI.updateMFMainGUI(GUITable)
 	GUI.addButtonToMainGui(GUITable, {name="FluidDrainButton", sprite=fluidDrainSprite, hovSprite=fluidDrainSprite, tooltip={"gui-description.mfFluidDrainButton"}, save=false, visible=showFluidDrainButton})
 	GUI.addButtonToMainGui(GUITable, {name="ItemDrainButton", sprite=itemDrainSprite, hovSprite=itemDrainSprite, tooltip={"gui-description.mfItemDrainButton"}, save=false, visible=showItemDrainButton})
 	GUI.addButtonToMainGui(GUITable, {name="QuatronDrainButton", sprite=quatronDrainSprite, hovSprite=quatronDrainSprite, tooltip={"gui-description.mfQuatronDrainButton"}, save=false, visible=showQuatronDrainButton})
+	GUI.addButtonToMainGui(GUITable, {name="MFDeployButton", sprite="MFDeploy", hovSprite="MFDeploy", tooltip={"gui-description.DeployButtonTT"}, save=false, visible=showDeployButton})
+	GUI.addButtonToMainGui(GUITable, {name="JumpDriveButton", sprite="MFJDIcon", hovSprite="MFJDIcon", tooltip={"gui-description.jumpDriveButton"}, save=false, visible=showCallMFButton})
 
 	-- Render All Buttons --
 	GUI.renderMainGuiButtons(GUITable)

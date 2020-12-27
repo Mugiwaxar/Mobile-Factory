@@ -1,4 +1,5 @@
 -- Remove the SyncArea -- (Unclone all Entities like Chests, Tanks or Accumulors means to much work - they have to be empty, I consider these as a gift)
+game.print("Mobile Factory: The SyncArea has been replaced by the Mobile Factory Deployment. This can be unlocked through its corresponding Technology")
 for _, MF in pairs(global.MFTable or {}) do
     -- Destroy the Cercle Render --
     rendering.destroy(MF.syncAreaID)

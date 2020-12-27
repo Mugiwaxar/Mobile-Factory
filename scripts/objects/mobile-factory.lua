@@ -37,6 +37,9 @@ MF = {
 	QLEntities = nil,
 	FLEntities = nil,
 	ILEntities = nil,
+	deployed = false,
+	slots = nil, -- [slotID]{entity, way}
+	deployedEnts = nil, -- [slotID]{inEntity, outEntity, way}
 	-- syncAreaID = 0,
 	-- syncAreaInsideID = 0,
 	-- syncAreaEnabled = true,
@@ -60,6 +63,8 @@ function MF:new(args)
 	t.varTable = t.varTable or {}
 	t.varTable.tech = t.varTable.tech or {}
 	t.varTable.allowedPlayers = t.varTable.allowedPlayers or {}
+	t.slots = t.slots or {}
+	t.deployedEnts = t.deployedEnts or {}
 
 	if player then
 		global.MFTable[player.name] = t
@@ -258,6 +263,11 @@ function MF:update(event)
 	-- Check the Mobile Factory --
 	if self.ent == nil or self.ent.valid == false then return end
 
+	-- Check if the Deployment should be removed (If the Mobile Factory is moving)
+	if (self.ent.speed ~= 0 or self.ent.orientation ~= 0) and self.deployed == true then
+		self:repack()
+	end
+
 	--Update all lasers --
 	if tick%_eventTick60 == 0 then self:updateLasers() end
 	-- Update the Fuel --
@@ -272,6 +282,8 @@ function MF:update(event)
 	if event.tick%_eventTick5 == 0 then self:factoryTeleportBox() end
 	-- Read Modules inside the Equipment Grid --
 	if event.tick%_eventTick125 == 0 then self:scanModules() end
+	-- Update the Deployment --
+	if event.tick%_eventTick15 == 0 then self:updateDeployment() end
 	-- Update the Sync Area --
 	-- if tick%_eventTick30 == 0 then self:updateSyncArea() end
 end
@@ -1195,6 +1207,66 @@ end
 -- 		Util.syncEnergy(ents.original, ents.cloned)
 -- 	end
 -- end
+
+-- Deploy the Mobile Factory --
+function MF:deploy()
+	-- Check the Mobile Factory --
+	if self.ent == nil or self.ent.valid == false then return end
+	-- Clear the deployedEnts Table --
+	self.deployedEnts = {}
+	-- Read all Slots --
+	for k, slot in pairs(self.slots) do
+		-- Create the Entities --
+		local outEnt = self.ent.surface.create_entity{name=slot.entity, position=Util.slotToPos(k, self.ent.position.x, self.ent.position.y), direction=Util.slotToDirection(k, slot.entity), force=self.ent.force, player=self.playerIndex}
+		local inEnt = self.fS.create_entity{name=slot.entity, position=Util.slotToPos(k, 0, 0), direction=Util.slotToDirection(k, slot.entity), force=self.ent.force, player=self.playerIndex}
+		-- Check if the Entities was correctly deployed --
+		if outEnt ~= nil and outEnt.valid == true and inEnt ~= nil and inEnt.valid == true then
+			self.deployedEnts[k] = {inEntity=inEnt, outEntity=outEnt, way=slot.way}
+			-- If the Entities are Belts --
+			if string.match(slot.entity, "Belt") then
+				if slot.way == "input" then
+					outEnt.linked_belt_type = "input"
+					inEnt.linked_belt_type = "output"
+				elseif slot.way == "output" then
+					outEnt.linked_belt_type = "output"
+					inEnt.linked_belt_type = "input"
+				end
+				inEnt.connect_linked_belts(outEnt)
+			end
+			-- If the Entities are Poles --
+			if string.match(slot.entity, "Pole") then
+				outEnt.connect_neighbour(inEnt)
+			end
+		end
+	end
+	self.deployed = true
+end
+
+-- Repack the Mobile Factory --
+function MF:repack()
+	-- Remove all Entities --
+	for _, dEnt in pairs(self.deployedEnts) do
+		if dEnt.inEntity ~= nil and dEnt.inEntity.valid == true then
+			dEnt.inEntity.destroy()
+		end
+		if dEnt.outEntity ~= nil and dEnt.outEntity.valid == true then
+			dEnt.outEntity.destroy()
+		end
+	end
+	-- Clear the Table --
+	self.deployedEnts = {}
+	self.deployed = false
+end
+
+-- Update the Deployment --
+function MF:updateDeployment()
+	-- Update all Pipes --
+	for _, dEnt in pairs(self.deployedEnts) do
+		if dEnt.inEntity ~= nil and dEnt.inEntity.valid == true and dEnt.outEntity ~= nil and dEnt.outEntity.valid and string.match(dEnt.inEntity.name, "Pipe") then
+			Util.syncPipes(dEnt.outEntity, dEnt.inEntity, dEnt.way)
+		end
+	end
+end
 
 -- Check stored data, and remove invalid record
 function MF:validate()

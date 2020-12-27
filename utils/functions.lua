@@ -174,6 +174,51 @@ function Util.syncQuatron(accu1, accu2)
 	obj2.quatronLevel = effectiveLevel
 end
 
+-- Synchronize the Fluid between two Pipes --
+function Util.syncPipes(outPipe, inPipe, way)
+
+	if way == "input" then
+
+		-- Check the Fluidbox --
+		if outPipe.fluidbox == nil or outPipe.fluidbox[1] == nil then return end
+
+		-- Get the Fluid inside the outPipe --
+		local FName = outPipe.fluidbox[1].name
+		local fAmount = outPipe.fluidbox[1].amount
+		local fTemp = outPipe.fluidbox[1].temperature
+
+		-- Insert the Fluid inside the inPipe --
+		local inserted = inPipe.insert_fluid({name=FName, amount=fAmount, temperature=fTemp})
+
+		-- Remove the Fluid from the outPipe --
+		outPipe.remove_fluid{name=FName, amount=inserted}
+
+		return
+
+	end
+
+	if way == "output" then
+
+		-- Check the Fluidbox --
+		if inPipe.fluidbox == nil or inPipe.fluidbox[1] == nil then return end
+
+		-- Get the Fluid inside the inPipe --
+		local FName = inPipe.fluidbox[1].name
+		local fAmount = inPipe.fluidbox[1].amount
+		local fTemp = inPipe.fluidbox[1].temperature
+
+		-- Insert the Fluid inside the outPipe --
+		local inserted = outPipe.insert_fluid({name=FName, amount=fAmount, temperature=fTemp})
+
+		-- Remove the Fluid from the inPipe --
+		inPipe.remove_fluid{name=FName, amount=inserted}
+
+		return
+
+	end
+
+end
+
 -- Advenced print --
 function dprint(v)
 	game.print(serpent.block(v))
@@ -687,4 +732,60 @@ function mixQuatron(obj, newCharge, newLevel)
 	local effectiveCharge = obj.quatronCharge * math.pow(obj.quatronLevel, _mfQuatronScalePower) + newCharge * math.pow(newLevel, _mfQuatronScalePower)
 	obj.quatronCharge = obj.quatronCharge + newCharge
 	obj.quatronLevel = math.pow(effectiveCharge / obj.quatronCharge, 1/_mfQuatronScalePower)
+end
+
+function Util.slotToPos(slotNumber, x, y)
+	if slotNumber == 1 then return {x-2,y-4} end
+	if slotNumber == 2 then return {x-1,y-4} end
+	if slotNumber == 3 then return {x,y-4} end
+	if slotNumber == 4 then return {x+1,y-4} end
+	if slotNumber == 5 then return {x-3,y-3} end
+	if slotNumber == 6 then return {x-3,y-2} end
+	if slotNumber == 7 then return {x-3,y-1} end
+	if slotNumber == 8 then return {x-3,y} end
+	if slotNumber == 9 then return {x-3,y+1} end
+	if slotNumber == 10 then return {x-3,y+2} end
+	if slotNumber == 11 then return {x+2,y-3} end
+	if slotNumber == 12 then return {x+2,y-2} end
+	if slotNumber == 13 then return {x+2,y-1} end
+	if slotNumber == 14 then return {x+2,y} end
+	if slotNumber == 15 then return {x+2,y+1} end
+	if slotNumber == 16 then return {x+2,y+2} end
+	if slotNumber == 17 then return {x-2,y+3} end
+	if slotNumber == 18 then return {x-1,y+3} end
+	if slotNumber == 19 then return {x,y+3} end
+	if slotNumber == 20 then return {x+1,y+3} end
+end
+
+function Util.slotToDirection(slotNumber, entity)
+	local direction = nil
+	if slotNumber == 1 then direction = defines.direction.north end
+	if slotNumber == 2 then direction = defines.direction.north end
+	if slotNumber == 3 then direction = defines.direction.north end
+	if slotNumber == 4 then direction = defines.direction.north end
+	if slotNumber == 5 then direction = defines.direction.west end
+	if slotNumber == 6 then direction = defines.direction.west end
+	if slotNumber == 7 then direction = defines.direction.west end
+	if slotNumber == 8 then direction = defines.direction.west end
+	if slotNumber == 9 then direction = defines.direction.west end
+	if slotNumber == 10 then direction = defines.direction.west end
+	if slotNumber == 11 then direction = defines.direction.east end
+	if slotNumber == 12 then direction = defines.direction.east end
+	if slotNumber == 13 then direction = defines.direction.east end
+	if slotNumber == 14 then direction = defines.direction.east end
+	if slotNumber == 15 then direction = defines.direction.east end
+	if slotNumber == 16 then direction = defines.direction.east end
+	if slotNumber == 17 then direction = defines.direction.south end
+	if slotNumber == 18 then direction = defines.direction.south end
+	if slotNumber == 19 then direction = defines.direction.south end
+	if slotNumber == 20 then direction = defines.direction.south end
+
+	if string.match(entity, "Belt") then
+		if direction == defines.direction.north then direction = defines.direction.south
+		elseif direction == defines.direction.west then direction = defines.direction.east
+		elseif direction == defines.direction.east then direction = defines.direction.west
+		elseif direction == defines.direction.south then direction = defines.direction.north end
+	end
+
+	return direction
 end

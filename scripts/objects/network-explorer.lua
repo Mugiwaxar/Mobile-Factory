@@ -268,7 +268,7 @@ function NE:createDNInventory(GUITable, inventoryScrollPane, searchText)
 		-- Create the Button --
 		local buttonText = {"", "[color=purple]", Util.getLocFluidName(DT.inventoryFluid), "[/color]\n[color=yellow]", Util.toRNumber(DT.inventoryCount), "[/color]"}
 		local button = GAPI.addButton(GUITable, "N.E.DTK," .. DT.ent.unit_number, tableList, "fluid/" .. DT.inventoryFluid, "fluid/" .. DT.inventoryFluid, buttonText, 37, false, true, DT.inventoryCount)
-		button.style = "MF_Purple_Button_Purple"
+		button.style = "MF_Button_Purple"
 		button.style.padding = 0
 		button.style.margin = 0
 

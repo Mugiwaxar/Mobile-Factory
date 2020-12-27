@@ -30,6 +30,12 @@ function somethingWasPlaced(event)
 		return
 	end
 
+	-- If a Deploy Entity is placed --
+	if entity.name == "MFDeploy" then
+		placedDeploy(entity, MFPlayer, playerMF)
+		return
+	end
+
 	-- Check if the Entity is inside the objTable --
 	local type = entity.type
 	local entName = type == "entity-ghost" and entity.ghost_name or entity.name
@@ -278,6 +284,35 @@ function placedMobileFactory(event, entity, MFPlayer, MF)
 	if entity.valid == false then
 		MFPlayer.ent.get_main_inventory().insert(event.stack)
 	end
+end
+
+-- Called when a Deploy Entity is placed --
+function placedDeploy(ent, MFPlayer, mf)
+	-- Check if the Mobile Factory is here --
+	local ents = ent.surface.find_entities_filtered{type="car", position=ent.position, radius=7}
+	if ents[1] ~= nil and ents[1].valid == true and ents[1].last_user ~= nil and string.match(ents[1].name, "MobileFactory") and getMF(ents[1].last_user.name) ~= nil and getMF(ents[1].last_user.name) == mf then
+		-- Check if the Mobile Factory is not Moving --
+		if ents[1].speed ~= 0 then
+			MFPlayer.ent.create_local_flying_text{text={"gui-description.DPGUIMFMoving"}, position=ent.position}
+			MFPlayer.ent.cursor_stack.set_stack({name="MFDeploy", count=1})
+		else
+			-- Move the Mobile Factory --
+			mf.ent.teleport({ent.position.x, ent.position.y + 0.5})
+			mf.ent.orientation = 0
+			-- Check if the Mobile Factory have to be Repacked first --
+			if mf.deployed == true then
+				mf:repack()
+			end
+			-- Deploy the Mobile Factory --
+			mf:deploy()
+		end
+	else
+		-- None or wrong Mobile Factory --
+		MFPlayer.ent.create_local_flying_text{text={"gui-description.DPGUINoMF", MF.name}, position=ent.position}
+		MFPlayer.ent.cursor_stack.set_stack({name="MFDeploy", count=1})
+	end
+	-- Destroy the Entity --
+	ent.destroy()
 end
 
 -- Called when an Entity is placed inside the SyncArea --
