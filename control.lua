@@ -253,6 +253,7 @@ script.on_event(defines.events.on_force_created, onForceCreated)
 script.on_event(defines.events.on_player_changed_force, onPlayerChangedForce)
 script.on_event(defines.events.on_player_setup_blueprint, onPlayerSetupBlueprint)
 script.on_event(defines.events.on_string_translated, onStringTranslated)
+script.on_event(defines.events.on_player_rotated_entity, entityRotated)
 script.on_event("OpenTTGUI", onShortcut)
 script.on_event("CloseGUI", onShortcut)
 

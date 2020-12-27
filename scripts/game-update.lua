@@ -228,3 +228,76 @@ function updateIndoorLights()
 		end
 	end
 end
+
+-- Called when a Entity is rotated --
+function entityRotated(event)
+
+	-- Get the Values --
+	local player = getPlayer(event.player_index)
+	local ent = event.entity
+
+	-- Check the Entity --
+	if ent == nil or ent.valid == false then return end
+
+	-- Check if this is a Deployed Entity --
+	if string.match(ent.name, "DimensionalBelt") or string.match(ent.name, "DimensionalPipe") then
+
+		-- Find the Entity --
+		local dpMF = nil
+		local slotID = nil
+		local slot = nil
+		local dpEnts = nil
+		for _, mf in pairs(global.MFTable) do
+			for ID, aDPEnts in pairs(mf.deployedEnts) do
+				if aDPEnts.inEntity == ent or aDPEnts.outEntity == ent then
+					dpMF = mf
+					dpEnts = aDPEnts
+					slotID = ID
+					slot = mf.slots[slotID]
+				end
+			end
+		end
+
+		-- Check if the Entity was Found --
+		if dpMF ~= nil and dpEnts ~= nil then
+
+			-- If this is a Belt --
+			if string.match(ent.name, "DimensionalBelt") then
+				if dpEnts.way == "input" then
+					dpEnts.way = "output"
+					dpEnts.outEntity.disconnect_linked_belts()
+					dpEnts.inEntity.linked_belt_type = "input"
+					dpEnts.outEntity.linked_belt_type = "output"
+					dpEnts.inEntity.connect_linked_belts(dpEnts.outEntity)
+					player.create_local_flying_text{text={"gui-description.SendOutside"}, position=ent.position}
+					if slot ~= nil then slot.way = "output" end
+				elseif dpEnts.way == "output" then
+					dpEnts.way = "input"
+					dpEnts.outEntity.disconnect_linked_belts()
+					dpEnts.inEntity.linked_belt_type = "output"
+					dpEnts.outEntity.linked_belt_type = "input"
+					player.create_local_flying_text{text={"gui-description.SendInside"}, position=ent.position}
+					dpEnts.inEntity.connect_linked_belts(dpEnts.outEntity)
+					if slot ~= nil then slot.way = "input" end
+				end
+			end
+
+			-- If this is a Pipe --
+			if string.match(ent.name, "DimensionalPipe") then
+				if dpEnts.way == "input" then
+					dpEnts.way = "output"
+					player.create_local_flying_text{text={"gui-description.SendOutside"}, position=ent.position}
+					if slot ~= nil then slot.way = "output" end
+				elseif dpEnts.way == "output" then
+					dpEnts.way = "input"
+					player.create_local_flying_text{text={"gui-description.SendInside"}, position=ent.position}
+					if slot ~= nil then slot.way = "input" end
+				end
+			end
+
+			-- Unrotate the Entity --
+			ent.direction = Util.slotToDirection(slotID, ent.name)
+
+		end
+	end
+end
