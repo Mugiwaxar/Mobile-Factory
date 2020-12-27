@@ -50,7 +50,7 @@ for id, obj in pairs(global.fluidExtractorTable or {}) do
 	obj.quatronCharge = obj.charge
 	obj.quatronLevel = obj.purity
 end
-for k, MFPlayer in pairs(global.playersTable) do
+for k, MFPlayer in pairs(global.playersTable or {}) do
 	if MFPlayer.varTable then
 		MFPlayer.varTable.ShowSendQuatronButton = nil
 	end
