@@ -3,6 +3,7 @@ require("scripts/GUI/info-gui.lua")
 require("scripts/GUI/option-gui.lua")
 require("scripts/GUI/tooltip-gui.lua")
 require("scripts/GUI/options.lua")
+require("scripts/GUI/deploy-gui.lua")
 require("scripts/GUI/tp-gui.lua")
 require("scripts/GUI/switchMF-gui.lua")
 require("scripts/GUI/recipe-gui.lua")
@@ -136,6 +137,13 @@ function GUI.guiClosed(event)
 		return
 	end
 
+	-- Close the Deploy GUI --
+	if event.element.name == _mfGUIName.DeployGUI then
+		MFPlayer.GUI[_mfGUIName.DeployGUI].gui.destroy()
+		MFPlayer.GUI[_mfGUIName.DeployGUI] = nil
+		return
+	end
+
 	-- Close the TP GUI --
 	if event.element.name == _mfGUIName.TPGUI then
 		MFPlayer.GUI[_mfGUIName.TPGUI].gui.destroy()
@@ -211,6 +219,24 @@ function GUI.buttonClicked(event)
 		return
 	end
 
+	-- Deploy Button --
+	if event.element.name == "MFDeployButton" then
+		if event.button == defines.mouse_button_type.right then
+			player.clear_cursor()
+			player.cursor_stack.set_stack({name="MFDeploy", count=1})
+			return
+		end
+		if MFPlayer.GUI[_mfGUIName.DeployGUI] == nil then
+			local GUITable = GUI.createDeployGUI(player)
+			MFPlayer.GUI[_mfGUIName.DeployGUI] = GUITable
+			player.opened = GUITable.gui
+		else
+			MFPlayer.GUI[_mfGUIName.DeployGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.DeployGUI] = nil
+		end
+		return
+	end
+
 	-- Jump Drive Button --
 	if event.element.name == "JumpDriveButton" then
 		if MFPlayer.GUI[_mfGUIName.TPGUI] == nil then
@@ -247,6 +273,24 @@ function GUI.buttonClicked(event)
 		if MFPlayer.GUI[_mfGUIName.TooltipGUI] ~= nil then
 			MFPlayer.GUI[_mfGUIName.TooltipGUI].gui.destroy()
 			MFPlayer.GUI[_mfGUIName.TooltipGUI] = nil
+		end
+		return
+	end
+
+	-- Close Deploy GUI Button --
+	if event.element.name == _mfGUIName.DeployGUI .. "CloseButton" then
+		if MFPlayer.GUI[_mfGUIName.DeployGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.DeployGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.DeployGUI] = nil
+		end
+		return
+	end
+
+	-- Close Slot GUI Button --
+	if event.element.name == _mfGUIName.SlotGUI .. "CloseButton" then
+		if MFPlayer.GUI[_mfGUIName.SlotGUI] ~= nil then
+			MFPlayer.GUI[_mfGUIName.SlotGUI].gui.destroy()
+			MFPlayer.GUI[_mfGUIName.SlotGUI] = nil
 		end
 		return
 	end
@@ -339,6 +383,13 @@ function GUI.buttonClicked(event)
 		return
 	end
 
+	-- If this is for the Deploy GUI --
+	if string.match(event.element.name, "DP.GUI.") then
+		GUI.MFDPGUIInteraction(event, MFPlayer, currentMF)
+		GUI.updateAllGUIs(true)
+		return
+	end
+
 	-- If this is for the Recipe GUI --
 	if string.match(event.element.name, "Rec.GUI.") then
 		GUI.recipeGUIInteraction(event, MFPlayer)
@@ -352,13 +403,13 @@ function GUI.buttonClicked(event)
 		return
 	end
 
-	-- SyncArea button --
-	if event.element.name == "SyncAreaButton" then
-		if currentMF.syncAreaEnabled == true then currentMF.syncAreaEnabled = false
-		elseif currentMF.syncAreaEnabled == false then currentMF.syncAreaEnabled = true end
-		GUI.updateAllGUIs(true)
-		return
-	end
+	-- -- SyncArea button --
+	-- if event.element.name == "SyncAreaButton" then
+	-- 	if currentMF.syncAreaEnabled == true then currentMF.syncAreaEnabled = false
+	-- 	elseif currentMF.syncAreaEnabled == false then currentMF.syncAreaEnabled = true end
+	-- 	GUI.updateAllGUIs(true)
+	-- 	return
+	-- end
 
 	-- Fix Mobile Factory Button --
 	if event.element.name == "FindMFButton" then
