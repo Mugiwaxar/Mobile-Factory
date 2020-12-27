@@ -1,8 +1,31 @@
 ---------------------------------------------------------------------------------------------------
-Version: 0.4.3
-Date: 13/12/2020
+Version: 0.5.0
+Date: 22/12/2020
+  Major Features:
+    - The Mobile Factory can now be Deployed (Unlocked by a Technology)
+    - This allows to transfer Item/Fluid/Energy between the Ouside and the Inside
+    - This feature is available via a Button inside the Main GUI or the Information GUI (If unlocked)
+    - 4 Slots are available and 16 others can be unlocked by Technology
+  Features:
+    - Added the Dimensional Belt, the Fast Dimensional Belt and the Express Dimensional Belt (Used for the Deployment)
+    - Added the Dimensional Pipe, the Fast Dimensional Pipe and the Express Dimensional Pipe (Used for the Deployment)
+    - Added the Dimensional Pole MK1, the Dimensional Pole MK2 and the Dimensional Pole MK3 (Used for the Deployment)
+    - Added the Deploylment Technology
+    - Added the Fast Dimensional Belt Technology
+    - Added the Express Dimensional Belt Technology
+    - Added the Fast Dimensional Pipe Technology
+    - Added the Express Dimensional Pipe Technology
+    - Added the Dimensional Pole MK2 Technology
+    - Added the Dimensional Pole MK3 Technology
+    - Added the Technologies for all 16 unlockable Slots
+  Gui:
+    - Added the Deployment GUI
+    - The Recipe Window and the Recipe Information Window inside the Data Assembler are now closed when Escape is pressed (The Key can be configured)
+  Changes:
+    - Removed the SyncArea (Replaced by the Deployment)
   Bugfixes:
-    - Fixed the Network Explorer, it shows now all Deep Storage
+    - The Water Reaction Recipe now need Oxygen as intended
+    - Fixed a "nan" error that can happen when opening some Entities GUI (Volch)
 ---------------------------------------------------------------------------------------------------
 Version: 0.4.2
 Date: 13/12/2020
