@@ -51,7 +51,10 @@ function GUI.createDeployGUI(player)
     local slot8 = GAPI.addButton(GUITable, "DP.GUI.Slot8", slotFlow2, nil, nil, {"gui-description.DPSlotTT", 8}, buttonSize, true, true, nil, nil, {slot=8})
     local slot9 = GAPI.addButton(GUITable, "DP.GUI.Slot9", slotFlow2, nil, nil, {"gui-description.DPSlotTT", 9}, buttonSize, true, true, nil, nil, {slot=9})
     local slot10 = GAPI.addButton(GUITable, "DP.GUI.Slot10", slotFlow2, nil, nil, {"gui-description.DPSlotTT", 10}, buttonSize, true, true, nil, nil, {slot=10})
-    GAPI.addSprite(GUITable, "", confTable, "MFDeployE")
+    local sprite = GAPI.addButton(GUITable, "", confTable, "MFDeployE", "MFDeployE")
+    sprite.style = "MF_Fake_Button_Blue"
+    sprite.style.width = 205
+    sprite.style.height = 310
     local slotFlow3 = GAPI.addFlow(GUITable, "SlotFlow3", confTable, "vertical")
     slotFlow3.style.vertically_stretchable = true
     slotFlow3.style.vertical_align = "center"

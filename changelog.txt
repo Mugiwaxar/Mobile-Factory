@@ -1,6 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.5.1
+Date: 27/12/2020
+  Bugfixes:
+    - Fixed a weird behavior with the Mobile Factory Sprite inside the Deploy GUI
+---------------------------------------------------------------------------------------------------
 Version: 0.5.0
-Date: 22/12/2020
+Date: 27/12/2020
   Major Features:
     - The Mobile Factory can now be Deployed (Unlocked by a Technology)
     - This allows to transfer Item/Fluid/Energy between the Ouside and the Inside
