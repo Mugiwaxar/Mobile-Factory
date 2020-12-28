@@ -189,7 +189,7 @@ local function onPlayerSetupBlueprint(event)
 	if bp == nil or bp.valid_for_read == false then return end
 
 	for index, ent in pairs(mapping) do
-		local saveTable = _mfTooltipGUI[ent.name]
+		local saveTable = global.objTable[ent.name].tableName
 		if ent.valid == true and saveTable ~= nil then
 			if global[saveTable] == nil then
 				-- Create Table If Nothing Was Ever Placed --
@@ -230,7 +230,7 @@ script.on_event(defines.events.on_robot_mined_tile, onRobotRemoveSomething)
 script.on_event(defines.events.script_raised_destroy, onPlayerRemoveSomethings)
 script.on_event(defines.events.on_entity_died, onEntityIsDestroyed, _mfEntityFilter)
 script.on_event(defines.events.on_post_entity_died, onGhostPlacedByDie, _mfEntityFilter)
-script.on_event(defines.events.on_gui_opened, GUI.guiOpened)
+script.on_event(defines.events.on_gui_opened, guiOpened)
 script.on_event(defines.events.on_gui_closed, GUI.guiClosed)
 script.on_event(defines.events.on_gui_click, GUI.buttonClicked)
 script.on_event(defines.events.on_gui_elem_changed, GUI.onGuiElemChanged)

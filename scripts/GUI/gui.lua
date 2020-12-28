@@ -63,20 +63,11 @@ function GUI.updateAllGUIs(force)
 	end
 end
 
--- A GUI was oppened --
-function GUI.guiOpened(event)
-	
+-- Open the Tooltip GUI --
+function GUI.openTTGui(MFPlayer, player, entity)
+
 	-- Check the Entity --
-	if event.entity == nil or event.entity.valid == false then return end
-
-	-- Get the Player --
-	local player = getPlayer(event.player_index)
-
-	-- Check the Player --
-	if player == nil or player.valid == false then return end
-
-	-- Get the MFPlayer --
-	local MFPlayer = getMFPlayer(player.index)
+	if entity == nil or entity.valid == false then return end
 
 	-- Do not open custom GUI if player is connecting wires --
 	local cursorStack = player.cursor_stack
@@ -91,13 +82,13 @@ function GUI.guiOpened(event)
 	end
 
 	-- Check if a GUI exist --
-	local obj = global.entsTable[event.entity.unit_number]
-	
+	local obj = global.entsTable[entity.unit_number]
+
 	-- Check the Object --
 	if valid(obj) == false or obj.getTooltipInfos == nil then return end
 
 	-- Check Permissions --
-	if Util.canUse(MFPlayer, obj) == false then return end
+	if Util.canUse(MFPlayer, obj) == false then player.opened = nil return end
 
 	-- Create and save the Tooltip gui --
 	local GUITable = GUI.createTooltipGUI(player, obj)

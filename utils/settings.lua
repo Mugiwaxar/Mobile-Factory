@@ -184,28 +184,10 @@ _mfGUIName =
 	RecipeInfoGUI = "MFRecipeInfoGUI"
 }
 
--- Entity GUI --
-_mfTooltipGUI =
+-- Tooltip GUIs that have to be oppened by the Shortcut --
+_mfShortcutGUI =
 {
-    DataStorage = "dataStorageTable",
-    DeepStorage = "deepStorageTable",
-    DeepTank = "deepTankTable",
-    FluidExtractor = "fluidExtractorTable",
-    OreCleaner = "oreCleanerTable",
-    MatterInteractor = "matterInteractorTable",
-    FluidInteractor = "fluidInteractorTable",
-    DataAssembler = "dataAssemblerTable",
-    NetworkExplorer = "networkExplorerTable",
-    -- MiningJetFlagMK1 = "jetFlagTable",
-    -- MiningJetFlagMK2 = "jetFlagTable",
-    -- MiningJetFlagMK3 = "jetFlagTable",
-    -- MiningJetFlagMK4 = "jetFlagTable",
-    -- MiningJet = "miningJetTable",
-    -- ConstructionJet = "constructionJetTable",
-    -- RepairJet = "repairJetTable",
-    -- CombatJet = "combatJetTable",
-	NetworkController = "entsTable",
-	QuatronReactor = "entsTable"
+	QuatronReactor = true
 }
 
 -- Event Tick --

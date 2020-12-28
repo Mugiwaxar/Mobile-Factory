@@ -166,17 +166,23 @@ function settingsPasted(event)
 	end
 end
 
+-- Called when a GUI is Opened --
+function guiOpened(event)
+	-- Check the Entity --
+	if event.entity == nil or event.entity.valid == false then return end
+	local player = getPlayer(event.player_index)
+	local MFPlayer = getMFPlayer(event.player_index)
+	GUI.openTTGui(MFPlayer, player, player.selected)
+end
+
 -- Called when a Shortcut is pressed --
 function onShortcut(event)
 	local player = getPlayer(event.player_index)
 	local MFPlayer = getMFPlayer(event.player_index)
 	-- Tooltip GUI Key --
-	if event.input_name == "OpenTTGUI" then
-		local ent = player.selected
-		if ent ~= nil and ent.valid == true and _mfTooltipGUI[ent.name] ~= nil then
-			event.entity = ent
-			GUI.guiOpened(event)
-		end
+	if event.input_name == "OpenTTGUI" and player.selected ~= nil and player.selected.valid == true and _mfShortcutGUI[player.selected.name] == true then
+		-- Open the GUI --
+		GUI.openTTGui(MFPlayer, player, player.selected)
 		return
 	end
 	-- Close GUIs --
