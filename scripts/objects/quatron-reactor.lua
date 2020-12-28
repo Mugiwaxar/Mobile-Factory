@@ -90,7 +90,7 @@ function QR:getTooltipInfos(GUITable, mainFrame, justCreated)
 	if justCreated == true then
 
 		-- Set the GUI Title --
-		GUITable.vars.GUITitle.caption = {"gui-description.InternalQuatronCube"}
+		GUITable.vars.GUITitle.caption = {"gui-description.QuatronReactor"}
 
 		-- Set the Main Frame Height --
 		-- mainFrame.style.height = 100

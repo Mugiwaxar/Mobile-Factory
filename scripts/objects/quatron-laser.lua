@@ -102,7 +102,7 @@ function QL:getTooltipInfos(GUITable, mainFrame, justCreated)
 	if justCreated == true then
 
 		-- Set the GUI Title --
-		GUITable.vars.GUITitle.caption = {"gui-description.InternalQuatronCube"}
+		GUITable.vars.GUITitle.caption = {"gui-description.QuatronLaser"}
 
 		-- Set the Main Frame Height --
 		-- mainFrame.style.height = 100
