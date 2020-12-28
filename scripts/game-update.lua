@@ -259,7 +259,7 @@ function entityRotated(event)
 		end
 
 		-- Check if the Entity was Found --
-		if dpMF ~= nil and dpEnts ~= nil then
+		if dpMF ~= nil and dpEnts ~= nil and dpEnts.outEntity ~= nil and dpEnts.inEntity ~= nil and dpEnts.outEntity.valid == true and dpEnts.inEntity.valid == true then
 
 			-- If this is a Belt --
 			if string.match(ent.name, "DimensionalBelt") then
@@ -280,6 +280,8 @@ function entityRotated(event)
 					dpEnts.inEntity.connect_linked_belts(dpEnts.outEntity)
 					if slot ~= nil then slot.way = "input" end
 				end
+				ent.direction = (event.previous_direction + 4) % 8
+				return
 			end
 
 			-- If this is a Pipe --
@@ -293,10 +295,9 @@ function entityRotated(event)
 					player.create_local_flying_text{text={"gui-description.SendInside"}, position=ent.position}
 					if slot ~= nil then slot.way = "input" end
 				end
+				ent.direction = event.previous_direction
+				return
 			end
-
-			-- Unrotate the Entity --
-			ent.direction = Util.slotToDirection(slotID, ent.name)
 
 		end
 	end
