@@ -189,17 +189,19 @@ local function onPlayerSetupBlueprint(event)
 	if bp == nil or bp.valid_for_read == false then return end
 
 	for index, ent in pairs(mapping) do
-		local saveTable = global.objTable[ent.name].tableName
-		if ent.valid == true and saveTable ~= nil then
-			if global[saveTable] == nil then
-				-- Create Table If Nothing Was Ever Placed --
-				global[saveTable] = {}
-			end
-			saveTable = global[saveTable]
-			local tags = entityToBlueprintTags(ent, saveTable)
-			if tags ~= nil then
-				for tag, value in pairs(tags) do
-					bp.set_blueprint_entity_tag(index, tag, value)
+		if global.objTable[ent.name] ~= nil then
+			local saveTable = global.objTable[ent.name].tableName
+			if ent.valid == true and saveTable ~= nil then
+				if global[saveTable] == nil then
+					-- Create Table If Nothing Was Ever Placed --
+					global[saveTable] = {}
+				end
+				saveTable = global[saveTable]
+				local tags = entityToBlueprintTags(ent, saveTable)
+				if tags ~= nil then
+					for tag, value in pairs(tags) do
+						bp.set_blueprint_entity_tag(index, tag, value)
+					end
 				end
 			end
 		end
@@ -223,12 +225,12 @@ script.on_event(defines.events.script_raised_revive, somethingWasPlaced)
 script.on_event(defines.events.on_robot_built_entity, somethingWasPlaced)
 script.on_event(defines.events.on_robot_built_tile, somethingWasPlaced)
 script.on_event(defines.events.on_entity_cloned, somethingWasCloned)
-script.on_event(defines.events.on_player_mined_entity, onPlayerRemoveSomethings)
-script.on_event(defines.events.on_player_mined_tile, onPlayerRemoveSomethings)
-script.on_event(defines.events.on_robot_mined_entity, onRobotRemoveSomething)
-script.on_event(defines.events.on_robot_mined_tile, onRobotRemoveSomething)
-script.on_event(defines.events.script_raised_destroy, onPlayerRemoveSomethings)
-script.on_event(defines.events.on_entity_died, onEntityIsDestroyed, _mfEntityFilter)
+script.on_event(defines.events.on_player_mined_entity, somethingWasRemoved)
+script.on_event(defines.events.on_player_mined_tile, somethingWasRemoved)
+script.on_event(defines.events.on_robot_mined_entity, somethingWasRemoved)
+script.on_event(defines.events.on_robot_mined_tile, somethingWasRemoved)
+script.on_event(defines.events.script_raised_destroy, somethingWasRemoved)
+script.on_event(defines.events.on_entity_died, somethingWasRemoved, _mfEntityFilter)
 script.on_event(defines.events.on_post_entity_died, onGhostPlacedByDie, _mfEntityFilter)
 script.on_event(defines.events.on_gui_opened, guiOpened)
 script.on_event(defines.events.on_gui_closed, GUI.guiClosed)

@@ -912,6 +912,32 @@ data.raw["gui-style"].default.MF_Button_Purple =
 	}
 }
 
+data.raw["gui-style"].default.MF_Fake_Button_invisible =
+{
+	type = "button_style",
+	parent = "slot_sized_button",
+	default_graphical_set =
+	{
+		base = {position = {312, 744}, corner_size = 8, tint={0,0,0,0,}},
+        shadow = {}
+	},
+	disabled_graphical_set =
+	{
+		base = {position = {312, 744}, corner_size = 8, tint={0,0,0,0,}},
+        shadow = {}
+	},
+	hovered_graphical_set =
+	{
+		base = {position = {312, 744}, corner_size = 8, tint={0,0,0,0,}},
+        shadow = {}
+	},
+	clicked_graphical_set =
+	{
+		base = {position = {312, 744}, corner_size = 8, tint={0,0,0,0,}},
+        shadow = {}
+	}
+}
+
 data.raw["gui-style"].default.MF_Button_Blue_GrayWhenDisabled =
 {
 	type = "button_style",

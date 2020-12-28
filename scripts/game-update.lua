@@ -105,21 +105,6 @@ function initPlayer(event)
 	end
 end
 
--- When a player remove something --
-function onPlayerRemoveSomethings(event)
-	somethingWasRemoved(event)
-end
-
--- When a robot remove something --
-function onRobotRemoveSomething(event)
-	somethingWasRemoved(event)
-end
-
--- When an Entity is destroyed --
-function onEntityIsDestroyed(event)
-	somethingWasRemoved(event)
-end
-
 -- Watch damages --
 function onEntityDamaged(event)
 	if event.entity.force.name == "enemy" or event.entity.force.name == "neutral" then return end
@@ -181,9 +166,13 @@ function onShortcut(event)
 	local MFPlayer = getMFPlayer(event.player_index)
 	-- Tooltip GUI Key --
 	if event.input_name == "OpenTTGUI" and player.selected ~= nil and player.selected.valid == true and _mfShortcutGUI[player.selected.name] == true then
-		-- Open the GUI --
-		GUI.openTTGui(MFPlayer, player, player.selected)
-		return
+		if player.can_reach_entity(player.selected) then
+			-- Open the GUI --
+			GUI.openTTGui(MFPlayer, player, player.selected)
+			return
+		else
+			player.create_local_flying_text{text={"gui-description.CannnotReach"}, position=player.selected.position}
+		end
 	end
 	-- Close GUIs --
 	if event.input_name == "CloseGUI" then
