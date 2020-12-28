@@ -3,8 +3,8 @@ if global.allowMigration == false then return end
 game.print("Mobile Factory: The SyncArea has been replaced by the Mobile Factory Deployment. This can be unlocked through its corresponding Technology")
 for _, MF in pairs(global.MFTable or {}) do
     -- Destroy the Cercle Render --
-    rendering.destroy(MF.syncAreaID)
-	rendering.destroy(MF.syncAreaInsideID)
+    rendering.destroy(MF.syncAreaID or 0)
+	rendering.destroy(MF.syncAreaInsideID or 0)
     -- Unclone all Ressources --
     for _, ents in pairs(MF.clonedResourcesTable) do
         local ent = ents.cloned
