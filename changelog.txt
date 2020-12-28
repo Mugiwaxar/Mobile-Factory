@@ -1,11 +1,31 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.5.2
+Date: 28/12/2020
+  Features:
+    - Dimensional Belts and Pipes can now change Input/Output direction by rotating them (R key by default)
+  Gui:
+    - Added the Jump Drive GUI
+    - Added the Jump Charger GUI
+    - Added the Internal Energy Cube GUI
+    - Added the Energy Cube GUI
+    - Added the Energy Laser GUI
+    - Added the Data Storage GUI
+    - Added the Network Controller GUI
+  Bugfixes:
+    - Fixed a compatibility issue with the Space Exploration Mod and the Mobile Factory Deployment
+    - Fixed a crash when a Space Exploration Space Ship is moved with a Mobile Factory inside
+    - The Hovering Mobile Factory can now move backward
+    - Fixed a crash that can happen while removing the old SyncArea
+  Scripting:
+    - Removed the Warptorio compatibility script (Warptorio correctly move the Mobile Factory now, not needed anymore)
+---------------------------------------------------------------------------------------------------
 Version: 0.5.1
 Date: 27/12/2020
   Bugfixes:
     - Fixed a weird behavior with the Mobile Factory Sprite inside the Deploy GUI
 ---------------------------------------------------------------------------------------------------
 Version: 0.5.0
-Date: 27/12/2020
+Date: 26/12/2020
   Major Features:
     - The Mobile Factory can now be Deployed (Unlocked by a Technology)
     - This allows to transfer Item/Fluid/Energy between the Ouside and the Inside
