@@ -75,7 +75,28 @@ function DS:update()
 end
 
 -- Tooltip Infos --
-function DS:getTooltipInfos(GUIObj, gui)
-	-- -- Create the Data Network Frame --
-	-- GUIObj:addDataNetworkFrame(gui, self, justCreated)
+function DS:getTooltipInfos(GUITable, mainFrame, justCreated)
+
+	if justCreated == true then
+
+		-- Set the GUI Title --
+		GUITable.vars.GUITitle.caption = {"gui-description.JDTitle"}
+
+		-- Create the Information Frame --
+		local infoFrame = GAPI.addFrame(GUITable, "InformationFrame", mainFrame, "vertical", true)
+		infoFrame.style = "MFFrame1"
+		infoFrame.style.vertically_stretchable = true
+		infoFrame.style.minimal_width = 200
+		infoFrame.style.left_margin = 3
+		infoFrame.style.left_padding = 3
+		infoFrame.style.right_padding = 3
+
+		-- Create the Tite --
+		GAPI.addSubtitle(GUITable, "", infoFrame, {"gui-description.Information"})
+
+		-- Add the Capacity added --
+		GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.DSAddedCapacity", _mfDataStorageCapacity}, _mfOrange)
+
+	end
+
 end
