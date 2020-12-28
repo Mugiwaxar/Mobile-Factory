@@ -122,7 +122,7 @@ function IEC:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	-- Add the Energy level --
     GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.EnergyLevel", Util.toRNumber(self:energy())}, _mfOrange)
-	GAPI.addProgressBar(GUITable, "", infoFrame, "", math.floor(self:energy()) .. "/" .. self:maxEnergy(), false, _mfPurple, self:energy()/self:maxEnergy(), 100)
+	GAPI.addProgressBar(GUITable, "", infoFrame, "", math.floor(self:energy()) .. "/" .. self:maxEnergy(), false, _mfBlue, self:energy()/self:maxEnergy(), 100)
 
 	-- Add the Input/Output Speed Label --
 	local inputLabel = GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.EnergyInputSpeed", Util.toRNumber(self:maxInput())}, _mfOrange)
