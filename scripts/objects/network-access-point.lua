@@ -183,9 +183,8 @@ function NAP:getTooltipInfos(GUITable, mainFrame, justCreated)
 		-- Check the Structure --
 		if valid(obj) == true then
 			-- Create the Label --
-			GAPI.addLabel(GUITable, "", conStructuresTable, {"", Util.getLocEntityName(obj.ent.name), " (", {"gui-description.mfPosition"}, ": ", obj.ent.position.x, ";", obj.ent.position.y, ")"}, _mfYellow)
+			GAPI.addLabel(GUITable, "", conStructuresTable, {"", Util.getLocEntityName(obj.ent.name)}, nil, {"", {"gui-description.mfPosition"}, ": ", obj.ent.position.x, ";", obj.ent.position.y, " - ", obj.ent.surface.name})
 		end
-
 	end
 
 end

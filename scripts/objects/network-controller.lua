@@ -62,6 +62,51 @@ function NC:update()
 end
 
 -- Tooltip Infos --
-function NC:getTooltipInfos(GUIObj, gui, justCreated)
+function NC:getTooltipInfos(GUITable, mainFrame, justCreated)
+
+	if justCreated == true then
+
+		-- Set the GUI Title --
+		GUITable.vars.GUITitle.caption = {"gui-description.NetworkController"}
+
+		-- Set the Main Frame Height --
+		mainFrame.style.height = 450
+
+		-- Create the Connected Structures Frame --
+		local conStructuresFrame = GAPI.addFrame(GUITable, "", mainFrame, "vertical")
+		conStructuresFrame.style = "MFFrame1"
+		conStructuresFrame.style.vertically_stretchable = true
+		conStructuresFrame.style.minimal_width = 200
+		conStructuresFrame.style.left_margin = 3
+		conStructuresFrame.style.left_padding = 3
+		conStructuresFrame.style.right_padding = 3
+
+		-- Create the Tite --
+		GAPI.addSubtitle(GUITable, "", conStructuresFrame, {"gui-description.NCConnectedNAP"})
+
+		-- Create the Scroll Pane --
+		local conStructuresSC = GAPI.addScrollPane(GUITable, "", conStructuresFrame, nil, false)
+		conStructuresSC.style.vertically_stretchable = true
+		conStructuresSC.style.bottom_margin = 3
+
+		-- Create the Connected Structures Table --
+		GAPI.addTable(GUITable, "ConnectedStructuresTable", conStructuresSC, 1, true)
+
+	end
+
+	-- Get the Connected Structures Table --
+	local conStructuresTable = GUITable.vars.ConnectedStructuresTable
+
+	-- Clear the Table --
+	conStructuresTable.clear()
+
+	-- Show the Connected Structures List --
+	for _, obj in pairs(self.dataNetwork.networkAccessPointTable) do
+		-- Check the Structure --
+		if valid(obj) == true then
+			-- Create the Label --
+			GAPI.addLabel(GUITable, "", conStructuresTable, {"", obj.player, " ", Util.getLocEntityName(obj.ent.name)}, nil, {"", {"gui-description.mfPosition"}, ": ", obj.ent.position.x, ";", obj.ent.position.y, " - ", obj.ent.surface.name})
+		end
+	end
 
 end
