@@ -25,3 +25,9 @@ elseif settings.startup["MF-lab-science-packs"].value == "add vanilla" then
 elseif settings.startup["MF-lab-science-packs"].value == "dimensional only" then
 	-- Do Nothing --
 end
+
+-- Space Exploration is breaking all Mobiles Factories Collision Mask, fixing that here --
+if mods["space-exploration"] then
+	log("Fixing Space Exploration Collition Mask")
+	data.raw["simple-entity-with-owner"].MFDeploy.collision_mask = {"item-layer", "object-layer", "player-layer", "water-tile", "layer-52", "not-colliding-with-itself", "layer-15"}
+end

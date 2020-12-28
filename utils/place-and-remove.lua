@@ -162,6 +162,27 @@ function somethingWasPlaced(event)
 	end
 end
 
+-- When something is cloned --
+function somethingWasCloned(event)
+	-- If a Mobile Factory was cloned --
+	if event.source  ~= nil and event.source.valid == true and event.destination ~= nil and event.destination.valid == true and string.match(event.source.name, "MobileFactory") then
+		-- Find the Mobile Factory --
+		for _, mf in pairs(global.MFTable) do
+			if mf.ent ~= nil and mf.ent.valid == true and mf.ent == event.source then
+				-- Teleport the Mobile Factory --
+				mf.ent.teleport(event.destination.position, event.destination.surface)
+				-- Destory the Clone --
+				event.destination.destroy()
+				-- Show the Message --
+				game.print({"gui-description.DPGUIClone"})
+				return
+			end
+		end
+	end
+	-- Else call the normal Event --
+	somethingWasPlaced(event)
+end
+
 -- When something is removed or destroyed --
 function somethingWasRemoved(event)
 	-- Get and Check the Entity --
@@ -266,7 +287,9 @@ function placedMobileFactory(event, entity, MFPlayer, MF)
 	local MFFloor = getMFFloor(entity.surface.name)
 	-- If the Mobile Factory already exist for this Player --
 	if MF ~= nil and MF.ent ~= nil and MF.ent.valid == true then
-		MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
+		if event.stack ~= nil and event.stack.valid_for_read == true then
+			MFPlayer.ent.print({"", {"gui-description.MaxPlaced"}, " ", {"item-name." .. event.stack.name }})
+		end
 		entity.destroy()
 	-- If the Mobile Factory is placed inside the Mobile Factory --
 	elseif MFFloor then
@@ -281,7 +304,7 @@ function placedMobileFactory(event, entity, MFPlayer, MF)
 		newMobileFactory(entity)
 	end
 	-- Get the Item back to the Player if the Entity was destroyed --
-	if entity.valid == false then
+	if entity.valid == false and event.stack ~= nil and event.stack.valid_for_read == true then
 		MFPlayer.ent.get_main_inventory().insert(event.stack)
 	end
 end
