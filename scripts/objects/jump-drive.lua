@@ -100,8 +100,45 @@ function JD:update()
 end
  
 -- Tooltip Infos --
--- function JD:getTooltipInfos(GUI)
--- end
+function JD:getTooltipInfos(GUITable, mainFrame, justCreated)
+
+	if justCreated == true then
+
+		-- Set the GUI Title --
+		GUITable.vars.GUITitle.caption = {"gui-description.JDTitle"}
+
+		-- Create the Information Frame --
+		local infoFrame = GAPI.addFrame(GUITable, "InformationFrame", mainFrame, "vertical", true)
+		infoFrame.style = "MFFrame1"
+		infoFrame.style.vertically_stretchable = true
+		infoFrame.style.minimal_width = 200
+		infoFrame.style.left_margin = 3
+		infoFrame.style.left_padding = 3
+		infoFrame.style.right_padding = 3
+
+	end
+
+	-- Get the Frame --
+	local infoFrame = GUITable.vars.InformationFrame
+
+	-- Clear the Frame --
+	infoFrame.clear()
+
+	-- Create the Tite --
+	GAPI.addSubtitle(GUITable, "", infoFrame, {"gui-description.Information"})
+
+	-- Add the Jump Charge --
+	GAPI.addLabel(GUITable, "ChargeLabel", infoFrame, {"gui-description.JDCharge", self.charge, self.maxCharge}, _mfOrange, nil, true)
+	GAPI.addProgressBar(GUITable, "ChargeBar", infoFrame, "", self.charge .. "/" .. self.maxCharge, true, _mfOrange, self.charge/self.maxCharge, 100)
+
+	-- Add the Jump Charger count --
+	local label = GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.JDJCCount", table_size(self.jumpChargerTable)}, _mfOrange)
+	label.style.top_margin = 10
+
+	-- Add the Charge Rate --
+	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.JDChargeRate", self.chargeRate}, _mfOrange)
+
+end
 
 -- Add a Location --
 function JD:addLocation(name, filter)
