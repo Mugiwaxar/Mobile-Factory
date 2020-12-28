@@ -103,9 +103,6 @@ function QR:getTooltipInfos(GUITable, mainFrame, justCreated)
 		infoFrame.style.left_margin = 3
 		infoFrame.style.left_padding = 3
 		infoFrame.style.right_padding = 3
-
-		-- Create the Tite --
-		GAPI.addSubtitle(GUITable, "", infoFrame, {"gui-description.Information"})
 	
 	end
 
@@ -114,6 +111,9 @@ function QR:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	-- Clear the Frame --
 	infoFrame.clear()
+
+	-- Create the Tite --
+	GAPI.addSubtitle(GUITable, "", infoFrame, {"gui-description.Information"})
 
 	-- Add the Quatron Charge --
     GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronCharge", Util.toRNumber(self.quatronCharge)}, _mfOrange)
