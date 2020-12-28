@@ -10,7 +10,6 @@ require("utils/settings.lua")
 require("utils/functions.lua")
 require("utils/surface.lua")
 require("utils/cc-extension.lua")
-require("utils/warptorio.lua")
 require("utils/remote.lua")
 require("utils/GUI-API.lua")
 require("scripts/GUI/gui.lua")
@@ -106,9 +105,6 @@ function onInit()
 			GUI.createMFMainGUI(MFPlayer.ent)
 		end
 	end
-
-	-- Add Warptorio Compatibility --
-	warptorio()
 end
 
 function onLoad(event)
@@ -121,9 +117,6 @@ function onLoad(event)
 			end
 		end
 	end
-
-	-- Add Warptorio Compatibility --
-	warptorio()
 	
 end
 
@@ -229,7 +222,7 @@ script.on_event(defines.events.script_raised_built, somethingWasPlaced)
 script.on_event(defines.events.script_raised_revive, somethingWasPlaced)
 script.on_event(defines.events.on_robot_built_entity, somethingWasPlaced)
 script.on_event(defines.events.on_robot_built_tile, somethingWasPlaced)
-script.on_event(defines.events.on_entity_cloned, somethingWasPlaced)
+script.on_event(defines.events.on_entity_cloned, somethingWasCloned)
 script.on_event(defines.events.on_player_mined_entity, onPlayerRemoveSomethings)
 script.on_event(defines.events.on_player_mined_tile, onPlayerRemoveSomethings)
 script.on_event(defines.events.on_robot_mined_entity, onRobotRemoveSomething)
