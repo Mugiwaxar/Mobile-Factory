@@ -92,8 +92,43 @@ end
 
 
 -- Tooltip Infos --
--- function EC:getTooltipInfos(GUI)
--- end
+function EC:getTooltipInfos(GUITable, mainFrame, justCreated)
+
+	if justCreated == true then
+
+		-- Set the GUI Title --
+		GUITable.vars.GUITitle.caption = {"gui-description.EnergyCube"}
+
+		-- Create the Information Frame --
+		local infoFrame = GAPI.addFrame(GUITable, "InformationFrame", mainFrame, "vertical", true)
+		infoFrame.style = "MFFrame1"
+		infoFrame.style.vertically_stretchable = true
+		infoFrame.style.minimal_width = 200
+		infoFrame.style.left_margin = 3
+		infoFrame.style.left_padding = 3
+		infoFrame.style.right_padding = 3
+
+	end
+
+	-- Get the Frame --
+	local infoFrame = GUITable.vars.InformationFrame
+
+	-- Clear the Frame --
+	infoFrame.clear()
+
+	-- Create the Tite --
+	GAPI.addSubtitle(GUITable, "", infoFrame, {"gui-description.Information"})
+
+	-- Add the Energy level --
+    GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.EnergyLevel", Util.toRNumber(self:energy())}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", infoFrame, "", math.floor(self:energy()) .. "/" .. self:maxEnergy(), false, _mfPurple, self:energy()/self:maxEnergy(), 100)
+
+	-- Add the Input/Output Speed Label --
+	local inputLabel = GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.EnergyInputSpeed", Util.toRNumber(self:maxInput())}, _mfOrange)
+	inputLabel.style.top_margin = 10
+	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.EnergyOutputSpeed", Util.toRNumber(self:maxOutput())}, _mfOrange)
+
+end
 
 
 -- Balance the Energy with neighboring Cubes --
