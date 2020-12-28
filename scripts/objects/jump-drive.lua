@@ -84,10 +84,10 @@ function JD:update()
 	end
 
 	-- Calculate the Capacity --
-	self.maxCharge = _mfMaxJumpCharge + (table_size(self.jumpChargerTable)*150)
+	self.maxCharge = _mfMaxJumpCharge + (table_size(self.jumpChargerTable)*_chargeAddedPerJumpCharger)
 
 	-- Calculate the Charge rate --
-	self.chargeRate = 1 + table_size(self.jumpChargerTable)
+	self.chargeRate = 1 + (table_size(self.jumpChargerTable)*_chargeRateAddedPerJumpCharger)
 
 	-- Update the Jump Drives --
 	if self.charge < self.maxCharge and self.MF.internalEnergyObj:energy() > (_mfJumpEnergyDrain * self.chargeRate) then

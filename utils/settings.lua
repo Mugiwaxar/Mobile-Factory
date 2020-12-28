@@ -44,6 +44,8 @@ _mfBaseItemEnergyConsumption = 1000
 
 -- Mobile Factory Jump Drive settings --
 _mfMaxJumpCharge = 500
+_chargeAddedPerJumpCharger = 150
+_chargeRateAddedPerJumpCharger = 1
 _mfJumpEnergyDrain = 300000
 
 -- Mobile Factory Fuel Burner settings --
