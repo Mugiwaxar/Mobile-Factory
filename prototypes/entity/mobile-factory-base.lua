@@ -211,6 +211,27 @@ mfR.ingredients =
 mfR.result = "MobileFactory"
 data:extend{mfR}
 
+-- Create the Mobile Factory Technology --
+local mfT = {}
+mfT.name = "MobileFactory"
+mfT.type = "technology"
+mfT.icon = "__Mobile_Factory_Graphics__/graphics/mobile- factory/tank.png"
+mfT.icon_size = 32
+mfT.unit = {
+	count=250,
+	time=1,
+	ingredients={
+	{"DimensionalSample", 1}
+	}
+}
+mfT.prerequisites = {"DimensionalOre"}
+mfT.effects = {
+  {type="unlock-recipe", recipe="MobileFactory"},
+  {type="unlock-recipe", recipe="DimensionalTile"},
+}
+data:extend{mfT}
+
+-- Create a new Mobile Factory --
 function createNewMF(name, color, size, order, icon)
 	local nMFE = table.deepcopy(data.raw.car.MobileFactory)
 	nMFE.name = name

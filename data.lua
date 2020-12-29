@@ -1,8 +1,5 @@
 require("prototypes/entity/mobile-factory.lua")
-require("prototypes/entity/dimensional-lab.lua")
 require("prototypes/entity/dimensional-substation.lua")
-require("prototypes/entity/dimensional-furnace.lua")
-require("prototypes/entity/crystallizer.lua")
 require("prototypes/entity/dimensional-plant.lua")
 require("prototypes/entity/basic-solar-panel.lua")
 require("prototypes/entity/jump-drive.lua")
@@ -28,19 +25,11 @@ require("prototypes/matter-serialization/fluid-interactor.lua")
 require("prototypes/matter-serialization/matter-interactor.lua")
 require("prototypes/matter-serialization/data-assembler.lua")
 require("prototypes/matter-serialization/network-explorer.lua")
-require("prototypes/resource/dimensional-ore.lua")
-require("prototypes/resource/dimensional-fluid.lua")
-require("prototypes/item/dimensional-sample.lua")
-require("prototypes/item/dimensional-plate.lua")
-require("prototypes/item/dimensional-crystal.lua")
-require("prototypes/item/dimensional-electronic.lua")
-require("prototypes/item/machine-frame.lua")
 require("prototypes/item/oxycoal.lua")
 require("prototypes/item/hydrocoal.lua")
 require("prototypes/item/elements.lua")
 require("prototypes/item/quatron.lua")
 require("prototypes/item/shield.lua")
-require("prototypes/item/energy-core.lua")
 require("prototypes/tile/lab-tile.lua")
 require("prototypes/tile/void-tile.lua")
 require("prototypes/tile/dimensional-tile.lua")
@@ -74,7 +63,10 @@ data:extend{
 		icon="__Mobile_Factory_Graphics__/graphics/icones/MFIcon.png",
 		icon_size="32",
 		order="x"
-	},
+	}
+}
+
+data:extend{
 	{
 		type="item-group",
 		name="Elements",
@@ -234,27 +226,12 @@ data:extend{
 }
 
 -------------------- ADD RECIPE CATEGORY ------------------
-data:extend{
-	{
-		type="recipe-category",
-		name="DimensionalSmelting",
-		order="a"
-	}
-}
-
-data:extend{
-	{
-		type="recipe-category",
-		name="DimensionalCrystallizaton",
-		order="b"
-	}
-}	
 
 data:extend{
 	{
 		type="recipe-category",
 		name="Elements",
-		order="c"
+		order="a"
 	}
 }
 

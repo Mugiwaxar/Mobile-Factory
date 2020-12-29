@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.6.0
+Date: 29/12/2020
+  Major Features:
+    - Creation of the MF: Base Mod
+    - Some Prototypes and Scripts will be transfered to this Mod
+    - This will allows the current and future extensions or Mods to not longer depend on the Mobile Factory Mod
+---------------------------------------------------------------------------------------------------
 Version: 0.5.3
 Date: 28/12/2020
   Bugfixes:

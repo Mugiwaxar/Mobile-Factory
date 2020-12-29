@@ -11,7 +11,7 @@ ldT.unit = {
 		{"DimensionalSample", 1}
 	}
 }
-ldT.prerequisites = {"DimensionalOre"}
+ldT.prerequisites = {"MobileFactory"}
 ldT.effects = {{type="nothing", effect_description={"description.EnergyDrain1"}}}
 data:extend{ldT}
 

@@ -196,7 +196,9 @@ function DA:getTooltipInfos(GUITable, mainFrame, justCreated)
 		-- Add the help Label --
 		GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.DataAssemblerHelp1"}, _mfWhite)
 		GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.DataAssemblerHelp2"}, _mfWhite)
-		GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.DataAssemblerHelp3"}, _mfWhite)
+		local label3 = GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.DataAssemblerHelp3"}, _mfWhite)
+		label3.style.single_line = false
+		label3.style.width = 250
 
 	end
 

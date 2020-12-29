@@ -13,7 +13,7 @@ CC.unit = {
 		{"DimensionalSample", 1}
 	}
 }
-CC.prerequisites = {"DimensionalOre"}
+CC.prerequisites = {"MobileFactory"}
 CC.effects = {
 	{type="nothing", effect_description={"description.ControlCenter"}},
 	{type="unlock-recipe", recipe="InternalEnergyCube"},
