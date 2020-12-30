@@ -116,6 +116,11 @@ function GUI.readOptions(option, player)
 		global.useVanillaChooseElem = option.state
 	end
 
+	if name == "Opt.GUI.EryaDebugOption" then
+		MFPlayer.varTable.EryaDebug = option.state
+		remote.call("EryaCom", "showDebug", option.state)
+	end
+
 	------------------- Update the Option GUI -------------------
 	if GUITable ~= nil and GUITable.gui ~= nil and GUITable.gui.valid == true and option.type ~= "textfield" and option.type ~= "drop-down" then
 		GUI.updateOptionGUI(GUITable)

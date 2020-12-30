@@ -141,7 +141,7 @@ function GUI.updateOptionGUIGUITab(GUITable)
 	-- Add Buttons on Main GUI Options --
 	GAPI.addSubtitle(GUITable, "", flow, {"gui-description.MainGUIOpt"})
 
-	-- Add a CheckBox every Buttons --
+	-- Add a CheckBox for every Buttons --
 	GAPI.addLabel(GUITable, "", flow, {"gui-description.MainGUIButtonsTitle"}, nil, nil, false, nil, _mfLabelType.yellowTitle)
 	for _, button in pairs(MFPlayer.GUI["MFMainGUI"].vars.buttonsTable) do
 		local state = true
@@ -164,7 +164,7 @@ function GUI.updateOptionGUIGUITab(GUITable)
 	local eryaTemp = GAPI.addCheckBox(GUITable, "Opt.GUI.MainGUIShowTemperature", flow, {"gui-description.MainGUIShowTemperature"}, {"gui-description.MainGUIShowTemperatureTT"}, MFPlayer.varTable.MainGUIShowTemperature == nil and false or MFPlayer.varTable.MainGUIShowTemperature)
 
 	-- Enable or Disable the Erya Temperature Checkbox --
-	if script.active_mods["Mobile_Factory-Erya"] ~= nil and script.active_mods["Mobile_Factory-Erya"] > "0.1.7" then
+	if script.active_mods["Mobile_Factory-Erya"] ~= nil and script.active_mods["Mobile_Factory-Erya"] >= "0.1.8" then
 		eryaTemp.enabled = true
 	else
 		eryaTemp.enabled = false
@@ -245,8 +245,16 @@ function GUI.updateOptionGUISystemTab(GUITable)
 	local tickTextField = GAPI.addTextField(GUITable, "Opt.GUI.UpdatePerTickOpt", flow, global.entsUpPerTick or 100, nil, true, true, false, false)
 	tickTextField.enabled = MFPlayer.ent.admin
 
-	GAPI.addLabel(GUITable, "", flow, {"gui-description.UseVanillaRecipeLabel"}, nil, {"gui-description.UseVanillaRecipeLabelTT"}, false, nil, _mfLabelType.yellowTitle)
-	local checkbox = GAPI.addCheckBox(GUITable, "Opt.GUI.UseVanillaRecipeSelector", flow, {"gui-description.UseVanillaChooseElem"}, nil, global.useVanillaChooseElem)
-	checkbox.enabled = MFPlayer.ent.admin
+	-- Ad the Option to use the Vanilla Recipe Selector inside the Data Assembler --
+	GAPI.addLabel(GUITable, "", flow, {"gui-description.UseVanillaRecipeLabel"}, nil, "", false, nil, _mfLabelType.yellowTitle)
+	local DAcheckbox = GAPI.addCheckBox(GUITable, "Opt.GUI.UseVanillaRecipeSelector", flow, {"gui-description.UseVanillaChooseElem"}, {"gui-description.UseVanillaChooseElemTT"}, global.useVanillaChooseElem)
+	DAcheckbox.enabled = MFPlayer.ent.admin
+
+	-- Add the Erya Tech Debug Option --
+	GAPI.addLabel(GUITable, "", flow, {"gui-description.EryaTech"}, nil, "", false, nil, _mfLabelType.yellowTitle)
+	local EryaDebugCheckbox = GAPI.addCheckBox(GUITable, "Opt.GUI.EryaDebugOption", flow, {"gui-description.EryaDebugOption"}, {"gui-description.EryaDebugOptionTT"}, MFPlayer.varTable.EryaDebug)
+	if script.active_mods["Mobile_Factory-Erya"] == nil or script.active_mods["Mobile_Factory-Erya"] < "0.4.0" or MFPlayer.ent.admin == false then
+		EryaDebugCheckbox.enabled = false
+	end
 
 end

@@ -159,7 +159,7 @@ function GUI.updateMFMainGUI(GUITable)
 
 	-- Update Chunk Temperature --
 	if MFPlayer.varTable.MainGUIShowTemperature == true and remote.interfaces["EryaCom"]["getChunkTemp"] ~= nil then
-		temperature = remote.call("EryaCom", "getChunkTemp", player.surface.index, math.floor(player.position.x / 32), math.floor(player.position.y / 32))
+		temperature = remote.call("EryaCom", "getChunkTemp", player.surface.index, player.position.x, player.position.y)
 	end
 
 	-------------------------------------------------------- Update Information --------------------------------------------------------
