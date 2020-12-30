@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.6.2
+Date: 30/12/2020
+  Bugfixes:
+    - fixed error with "add vanilla" with modded packs (Angels bio processing)
+        note: adds basic lab science packs, not explicitly vanilla science packs
+---------------------------------------------------------------------------------------------------
 Version: 0.6.1
 Date: 30/12/2020
   Features:
