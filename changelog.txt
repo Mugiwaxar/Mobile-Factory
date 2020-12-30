@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.6.1
+Date: 30/12/2020
+  Features:
+    - Added compatibility with the New Erya Tech Script
+    - Added a Button the Option GUI (System) to Show/Hide Erya Tech Debug information
+  Bugfixes:
+    - The Mobile Factory will no longer break Rails or Gates
+---------------------------------------------------------------------------------------------------
 Version: 0.6.0
 Date: 29/12/2020
   Major Features:
