@@ -87,16 +87,16 @@ function GUI.updateMFMainGUI(GUITable)
 	local showFindMFButton = (MF.ent ~= nil and MF.ent.valid == false) and true or false
 	local tpInsideSprite = MF.tpEnabled == true and "MFTPIcon" or "MFTPIconDisabled"
 	local lockMFSprite = MF.locked == true and "LockMFCIcon" or "LockMFOIcon"
-	local showEnergyDrainButton = technologyUnlocked("EnergyDrain1", getForce(MF)) and true or false
+	local showEnergyDrainButton = Util.technologyUnlocked("EnergyDrain1", getForce(MF)) and true or false
 	local energyDrainSprite = MF.energyLaserActivated == true and "EnergyDrainIcon" or "EnergyDrainIconDisabled"
-	local showFluidDrainButton = technologyUnlocked("FluidDrain1", getForce(MF)) and true or false
+	local showFluidDrainButton = Util.technologyUnlocked("FluidDrain1", getForce(MF)) and true or false
 	local fluidDrainSprite = MF.fluidLaserActivated == true and "FluidDrainIcon" or "FluidDrainIconDisabled"
-	local showItemDrainButton = technologyUnlocked("TechItemDrain", getForce(MF)) and true or false
+	local showItemDrainButton = Util.technologyUnlocked("TechItemDrain", getForce(MF)) and true or false
 	local itemDrainSprite = MF.itemLaserActivated == true and "ItemDrainIcon" or "ItemDrainIconDisabled"
-	local showQuatronDrainButton = technologyUnlocked("EnergyDrain1", getForce(MF)) and technologyUnlocked("QuatronLogistic", getForce(MF)) and true or false
+	local showQuatronDrainButton = Util.technologyUnlocked("EnergyDrain1", getForce(MF)) and Util.technologyUnlocked("QuatronLogistic", getForce(MF)) and true or false
 	local quatronDrainSprite = MF.quatronLaserActivated == true and "QuatronIcon" or "QuatronIconDisabled"
-	local showDeployButton = technologyUnlocked("MFDeploy", getForce(MF)) and true or false
-	local showCallMFButton = technologyUnlocked("JumpDrive", getForce(MF)) and true or false
+	local showDeployButton = Util.technologyUnlocked("MFDeploy", getForce(MF)) and true or false
+	local showCallMFButton = Util.technologyUnlocked("JumpDrive", getForce(MF)) and true or false
 
 	GUI.addButtonToMainGui(GUITable, {name="PortOutsideButton", sprite="PortIcon", hovSprite="PortIcon", tooltip={"gui-description.teleportOutsideButton"}, save=false})
 	-- GUI.addButtonToMainGui(GUITable, {name="SyncAreaButton", sprite=syncAreaSprite, hovSprite=syncAreaSprite, tooltip={"gui-description.syncAreaButton"}, save=false})

@@ -78,7 +78,7 @@ function createControlRoom(MF)
 	-- Apply Technologies if Needed --
 	local force = getForce(MF.player)
 	for research, func in pairs(_MFResearches) do
-		if research ~= "ControlCenter" and technologyUnlocked(research, force) then
+		if research ~= "ControlCenter" and Util.technologyUnlocked(research, force) then
 			_G[func](MF)
 		end
 	end

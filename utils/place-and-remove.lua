@@ -1,5 +1,5 @@
 -- Called when something is placed --
-function somethingWasPlaced(event)
+function Event.somethingWasPlaced(event)
 
 	-- If Tiles was placed --
 	if event.tile ~= nil or event.created_entity ~= nil and event.created_entity.name == "tile-ghost" then
@@ -163,7 +163,7 @@ function somethingWasPlaced(event)
 end
 
 -- When something is cloned --
-function somethingWasCloned(event)
+function Event.somethingWasCloned(event)
 	-- If a Mobile Factory was cloned --
 	if event.source  ~= nil and event.source.valid == true and event.destination ~= nil and event.destination.valid == true and string.match(event.source.name, "MobileFactory") then
 		-- Find the Mobile Factory --
@@ -184,7 +184,7 @@ function somethingWasCloned(event)
 end
 
 -- When something is removed or destroyed --
-function somethingWasRemoved(event)
+function Event.somethingWasRemoved(event)
 	-- Get and Check the Entity --
 	local removedEnt = event.entity
 	if removedEnt == nil or removedEnt.valid == false then return end
@@ -262,7 +262,7 @@ function tilesWasPlaced(event)
 	if event.tiles ~= nil and MFFloor == _mfControlSurfaceName then
 		-- Remove the Tiles --
 		for k, tile in pairs(event.tiles) do
-			createTilesAtPosition(tile.position, 1, surface, tile.old_tile.name, true)
+			Util.createTilesAtPosition(tile.position, 1, surface, tile.old_tile.name, true)
 		end
 		-- Try to send a message to the Player --
 		if MFPlayer ~= nil and event.stack ~= nil and event.stack.valid_for_read == true then

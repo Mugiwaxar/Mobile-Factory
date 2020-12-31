@@ -26,7 +26,7 @@ function DSR:new(object)
 	t.player = object.last_user.name
 	t.MF = getMFBySurface(object.surface)
 	t.entID = object.unit_number
-	t.ID = Util.getEntID(global.deepStorageTable)
+	t.ID = getEntID(global.deepStorageTable)
 	t.MF.dataNetwork.DSRTable[object.unit_number] = t
 	UpSys.addObj(t)
 	return t

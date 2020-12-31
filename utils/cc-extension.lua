@@ -38,7 +38,7 @@ function updateFactoryFloorForCC(MF)
 		createControlRoom(MF)
 	end
 
-	if technologyUnlocked("ControlCenter", getForce(MF.player)) == true then
+	if Util.technologyUnlocked("ControlCenter", getForce(MF.player)) == true then
 		--will overwrite other tiles that are placed
 		createTilesSurface(MF.fS, -3, -34, 3, -32, "refined-hazard-concrete-left")
 		-- Validate the Technology --

@@ -27,7 +27,7 @@ function DTK:new(object)
 	t.player = object.last_user.name
 	t.MF = getMFBySurface(object.surface)
 	t.entID = object.unit_number
-	t.ID = Util.getEntID(global.deepTankTable)
+	t.ID = getEntID(global.deepTankTable)
 	if t.MF and t.MF.dataNetwork then
 		t.MF.dataNetwork.DTKTable[object.unit_number] = t
 	end

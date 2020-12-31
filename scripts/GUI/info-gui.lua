@@ -110,16 +110,16 @@ function GUI.updateButtonsBar(GUITable)
 	local showFindMFButton = (MF.ent ~= nil and MF.ent.valid == false) and true or false
 	local tpInsideSprite = MF.tpEnabled == true and "MFTPIcon" or "MFTPIconDisabled"
 	local lockMFSprite = MF.locked == true and "LockMFCIcon" or "LockMFOIcon"
-	local showEnergyDrainButton = technologyUnlocked("EnergyDrain1", getForce(MF)) and true or false
+	local showEnergyDrainButton = Util.technologyUnlocked("EnergyDrain1", getForce(MF)) and true or false
 	local energyDrainSprite = MF.energyLaserActivated == true and "EnergyDrainIcon" or "EnergyDrainIconDisabled"
-	local showFluidDrainButton = technologyUnlocked("FluidDrain1", getForce(MF)) and true or false
+	local showFluidDrainButton = Util.technologyUnlocked("FluidDrain1", getForce(MF)) and true or false
 	local fluidDrainSprite = MF.fluidLaserActivated == true and "FluidDrainIcon" or "FluidDrainIconDisabled"
-	local showItemDrainButton = technologyUnlocked("TechItemDrain", getForce(MF)) and true or false
+	local showItemDrainButton = Util.technologyUnlocked("TechItemDrain", getForce(MF)) and true or false
 	local itemDrainSprite = MF.itemLaserActivated == true and "ItemDrainIcon" or "ItemDrainIconDisabled"
-	local showQuatronDrainButton = technologyUnlocked("EnergyDrain1", getForce(MF)) and technologyUnlocked("QuatronLogistic", getForce(MF)) and true or false
+	local showQuatronDrainButton = Util.technologyUnlocked("EnergyDrain1", getForce(MF)) and Util.technologyUnlocked("QuatronLogistic", getForce(MF)) and true or false
 	local quatronDrainSprite = MF.quatronLaserActivated == true and "QuatronIcon" or "QuatronIconDisabled"
-	local showDeployButton = technologyUnlocked("MFDeploy", getForce(MF)) and true or false
-	local showCallMFButton = technologyUnlocked("JumpDrive", getForce(MF)) and true or false
+	local showDeployButton = Util.technologyUnlocked("MFDeploy", getForce(MF)) and true or false
+	local showCallMFButton = Util.technologyUnlocked("JumpDrive", getForce(MF)) and true or false
 
 
 	-------------------------------------------------------- Update all Buttons --------------------------------------------------------
@@ -198,25 +198,25 @@ function GUI.updateMFInfos(GUITable)
 	GAPI.addSubtitle(GUITable, "lasersFrame", infosFrame, {"gui-description.Lasers"})
 
 	-- Number of Lasers --
-	if technologyUnlocked("EnergyDrain1", getForce(MF)) or technologyUnlocked("FluidDrain1", getForce(MF)) or technologyUnlocked("TechItemDrain", getForce(MF)) then
+	if Util.technologyUnlocked("EnergyDrain1", getForce(MF)) or Util.technologyUnlocked("FluidDrain1", getForce(MF)) or Util.technologyUnlocked("TechItemDrain", getForce(MF)) then
 		GAPI.addLabel(GUITable, "LasersNumberLabel", infosFrame,{"", {"gui-description.LaserNumber"}, ": [color=yellow]", MF:getLaserNumber(), "[/color]"}, _mfOrange)
 		GAPI.addLabel(GUITable, "LasersRadiusLabel", infosFrame, {"", {"gui-description.LaserRadius"}, ": [color=yellow]", MF:getLaserRadius(), " tiles[/color]"}, _mfOrange)
 		GAPI.addLabel(GUITable, "LasersMultiplierLabel", infosFrame, {"", {"gui-description.LaserEfficiency"}, ": [color=yellow]", MF:getLaserPower(), "[/color]"}, _mfOrange)
 	end
 
 	-- Energy Lasers --
-	if technologyUnlocked("EnergyDrain1", getForce(MF)) then
+	if Util.technologyUnlocked("EnergyDrain1", getForce(MF)) then
 		GAPI.addLabel(GUITable, "EnergyLasersSpeed", infosFrame, {"", {"gui-description.EnergyLasersSpeed"}, ": [color=yellow]", Util.toRNumber(MF:getLaserEnergyDrain()), "W[/color]"}, _mfYellow)
 	end
 
 	-- Fluid Lasers --
-	if technologyUnlocked("FluidDrain1", getForce(MF)) then
+	if Util.technologyUnlocked("FluidDrain1", getForce(MF)) then
 		GAPI.addLabel(GUITable, "FluidLasersSpeed", infosFrame, {"", {"gui-description.FluidLasersSpeed"}, ": [color=yellow]", Util.toRNumber(MF:getLaserFluidDrain()), "u/s[/color]"}, _mfPurple)
 		GAPI.addLabel(GUITable, "FluidLasersConsumption", infosFrame, {"", {"gui-description.FluidLasersConsumption"}, ": [color=yellow]", Util.toRNumber(MF:getLaserFluidDrain()*_mfFluidConsomption), "W[/color]"},_mfPurple)
 	end
 
 	-- Logistic Lasers --
-	if technologyUnlocked("TechItemDrain", getForce(MF)) then
+	if Util.technologyUnlocked("TechItemDrain", getForce(MF)) then
 		GAPI.addLabel(GUITable, "LogisticLasersSpeed", infosFrame, {"", {"gui-description.LogisticLasersSpeed"}, ": [color=yellow]", Util.toRNumber(MF:getLaserItemDrain()), "i/s[/color]"}, _mfGreen)
 		GAPI.addLabel(GUITable, "LogisticLasersConsumption", infosFrame, {"", {"gui-description.LogisticLasersConsumption"}, ": [color=yellow]", Util.toRNumber(MF:getLaserItemDrain()*_mfBaseItemEnergyConsumption), "W[/color]"}, _mfGreen)
 	end

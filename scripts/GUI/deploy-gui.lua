@@ -77,22 +77,22 @@ function GUI.createDeployGUI(player)
     GAPI.addFlow(GUITable, "", confTable, "vertical")
 
     -- Disable not unlocked Slots --
-    if technologyUnlocked("MFDSlot5", getForce(MF)) == false then slot5.enabled = false end
-    if technologyUnlocked("MFDSlot6", getForce(MF)) == false then slot6.enabled = false end
-    if technologyUnlocked("MFDSlot7", getForce(MF)) == false then slot7.enabled = false end
-    if technologyUnlocked("MFDSlot8", getForce(MF)) == false then slot8.enabled = false end
-    if technologyUnlocked("MFDSlot9", getForce(MF)) == false then slot9.enabled = false end
-    if technologyUnlocked("MFDSlot10", getForce(MF)) == false then slot10.enabled = false end
-    if technologyUnlocked("MFDSlot11", getForce(MF)) == false then slot11.enabled = false end
-    if technologyUnlocked("MFDSlot12", getForce(MF)) == false then slot12.enabled = false end
-    if technologyUnlocked("MFDSlot13", getForce(MF)) == false then slot13.enabled = false end
-    if technologyUnlocked("MFDSlot14", getForce(MF)) == false then slot14.enabled = false end
-    if technologyUnlocked("MFDSlot15", getForce(MF)) == false then slot15.enabled = false end
-    if technologyUnlocked("MFDSlot16", getForce(MF)) == false then slot16.enabled = false end
-    if technologyUnlocked("MFDSlot17", getForce(MF)) == false then slot17.enabled = false end
-    if technologyUnlocked("MFDSlot18", getForce(MF)) == false then slot18.enabled = false end
-    if technologyUnlocked("MFDSlot19", getForce(MF)) == false then slot19.enabled = false end
-    if technologyUnlocked("MFDSlot20", getForce(MF)) == false then slot20.enabled = false end
+    if Util.technologyUnlocked("MFDSlot5", getForce(MF)) == false then slot5.enabled = false end
+    if Util.technologyUnlocked("MFDSlot6", getForce(MF)) == false then slot6.enabled = false end
+    if Util.technologyUnlocked("MFDSlot7", getForce(MF)) == false then slot7.enabled = false end
+    if Util.technologyUnlocked("MFDSlot8", getForce(MF)) == false then slot8.enabled = false end
+    if Util.technologyUnlocked("MFDSlot9", getForce(MF)) == false then slot9.enabled = false end
+    if Util.technologyUnlocked("MFDSlot10", getForce(MF)) == false then slot10.enabled = false end
+    if Util.technologyUnlocked("MFDSlot11", getForce(MF)) == false then slot11.enabled = false end
+    if Util.technologyUnlocked("MFDSlot12", getForce(MF)) == false then slot12.enabled = false end
+    if Util.technologyUnlocked("MFDSlot13", getForce(MF)) == false then slot13.enabled = false end
+    if Util.technologyUnlocked("MFDSlot14", getForce(MF)) == false then slot14.enabled = false end
+    if Util.technologyUnlocked("MFDSlot15", getForce(MF)) == false then slot15.enabled = false end
+    if Util.technologyUnlocked("MFDSlot16", getForce(MF)) == false then slot16.enabled = false end
+    if Util.technologyUnlocked("MFDSlot17", getForce(MF)) == false then slot17.enabled = false end
+    if Util.technologyUnlocked("MFDSlot18", getForce(MF)) == false then slot18.enabled = false end
+    if Util.technologyUnlocked("MFDSlot19", getForce(MF)) == false then slot19.enabled = false end
+    if Util.technologyUnlocked("MFDSlot20", getForce(MF)) == false then slot20.enabled = false end
 
     -- Add the Line --
     GAPI.addLine(GUITable, "", confFrame, "horizontal")
@@ -188,11 +188,11 @@ function GUI.MFDPOpenSlotGUI(DPGUITable, MFPlayer, currentMF, slotNumber)
     local button3 = GAPI.addButton(GUITable, "DP.GUI.EntButton3", inputBeltsTable, "entity/DimensionalBelt3", "entity/DimensionalBelt3", { "", Util.getLocEntityName("DimensionalBelt3"), " [color=yellow]", {"gui-description.Input"}, "[/color]"}, buttonSize, false, true, nil, "MF_Button_Blue_GrayWhenDisabled", {slot=slotNumber, entity="DimensionalBelt3", way="input"})
 
     -- Disable needed Buttons --
-    if technologyUnlocked("DimensionalBelt2", getForce(currentMF)) == false then
+    if Util.technologyUnlocked("DimensionalBelt2", getForce(currentMF)) == false then
         button2.enabled = false
         button2.tooltip =  { "", Util.getLocEntityName("DimensionalBelt2"), " [color=yellow]", {"gui-description.Input"}, "[/color]", "\n[color=red]", {"gui-description.SlotGUINotUnlocked"}, "[/color]"}
     end
-    if technologyUnlocked("DimensionalBelt3", getForce(currentMF)) == false then
+    if Util.technologyUnlocked("DimensionalBelt3", getForce(currentMF)) == false then
         button3.enabled = false
         button3.tooltip = { "", Util.getLocEntityName("DimensionalBelt3"), " [color=yellow]", {"gui-description.Input"}, "[/color]", "\n[color=red]", {"gui-description.SlotGUINotUnlocked"}, "[/color]"}
     end
@@ -204,11 +204,11 @@ function GUI.MFDPOpenSlotGUI(DPGUITable, MFPlayer, currentMF, slotNumber)
     button4.style.left_margin = 8
 
     -- Disable needed Buttons --
-    if technologyUnlocked("DimensionalBelt2", getForce(currentMF)) == false then
+    if Util.technologyUnlocked("DimensionalBelt2", getForce(currentMF)) == false then
         button5.enabled = false
         button5.tooltip =  { "", Util.getLocEntityName("DimensionalBelt2"), " [color=yellow]", {"gui-description.Output"}, "[/color]", "\n[color=red]", {"gui-description.SlotGUINotUnlocked"}, "[/color]"}
     end
-    if technologyUnlocked("DimensionalBelt3", getForce(currentMF)) == false then
+    if Util.technologyUnlocked("DimensionalBelt3", getForce(currentMF)) == false then
         button6.enabled = false
         button6.tooltip = { "", Util.getLocEntityName("DimensionalBelt3"), " [color=yellow]", {"gui-description.Output"}, "[/color]", "\n[color=red]", {"gui-description.SlotGUINotUnlocked"}, "[/color]"}
     end
@@ -223,11 +223,11 @@ function GUI.MFDPOpenSlotGUI(DPGUITable, MFPlayer, currentMF, slotNumber)
     local button9 = GAPI.addButton(GUITable, "DP.GUI.EntButton9", inputPipesTable, "entity/DimensionalPipe3", "entity/DimensionalPipe3", { "", Util.getLocEntityName("DimensionalPipe3"), " [color=yellow]", {"gui-description.Input"}, "[/color]"}, buttonSize, false, true, nil, "MF_Button_Blue_GrayWhenDisabled", {slot=slotNumber, entity="DimensionalPipe3", way="input"})
 
     -- Disable needed Buttons --
-    if technologyUnlocked("DimensionalPipe2", getForce(currentMF)) == false then
+    if Util.technologyUnlocked("DimensionalPipe2", getForce(currentMF)) == false then
         button8.enabled = false
         button8.tooltip =  { "", Util.getLocEntityName("DimensionalPipe2"), " [color=yellow]", {"gui-description.Input"}, "[/color]", "\n[color=red]", {"gui-description.SlotGUINotUnlocked"}, "[/color]"}
     end
-    if technologyUnlocked("DimensionalPipe3", getForce(currentMF)) == false then
+    if Util.technologyUnlocked("DimensionalPipe3", getForce(currentMF)) == false then
         button9.enabled = false
         button9.tooltip = { "", Util.getLocEntityName("DimensionalPipe3"), " [color=yellow]", {"gui-description.Input"}, "[/color]", "\n[color=red]", {"gui-description.SlotGUINotUnlocked"}, "[/color]"}
     end
@@ -239,11 +239,11 @@ function GUI.MFDPOpenSlotGUI(DPGUITable, MFPlayer, currentMF, slotNumber)
     button10.style.left_margin = 8
 
     -- Disable needed Buttons --
-    if technologyUnlocked("DimensionalPipe2", getForce(currentMF)) == false then
+    if Util.technologyUnlocked("DimensionalPipe2", getForce(currentMF)) == false then
         button11.enabled = false
         button11.tooltip =  { "", Util.getLocEntityName("DimensionalPipe2"), " [color=yellow]", {"gui-description.Output"}, "[/color]", "\n[color=red]", {"gui-description.SlotGUINotUnlocked"}, "[/color]"}
     end
-    if technologyUnlocked("DimensionalPipe3", getForce(currentMF)) == false then
+    if Util.technologyUnlocked("DimensionalPipe3", getForce(currentMF)) == false then
         button12.enabled = false
         button12.tooltip = { "", Util.getLocEntityName("DimensionalPipe3"), " [color=yellow]", {"gui-description.Output"}, "[/color]", "\n[color=red]", {"gui-description.SlotGUINotUnlocked"}, "[/color]"}
     end
@@ -258,11 +258,11 @@ function GUI.MFDPOpenSlotGUI(DPGUITable, MFPlayer, currentMF, slotNumber)
     local button15 = GAPI.addButton(GUITable, "DP.GUI.EntButton15", inputPolesTable, "entity/DimensionalPole3", "entity/DimensionalPole3", { "", Util.getLocEntityName("DimensionalPole3")}, buttonSize, false, true, nil, "MF_Button_Blue_GrayWhenDisabled", {slot=slotNumber, entity="DimensionalPole3", way="input"})
 
     -- Disable needed Buttons --
-    if technologyUnlocked("DimensionalPole2", getForce(currentMF)) == false then
+    if Util.technologyUnlocked("DimensionalPole2", getForce(currentMF)) == false then
         button14.enabled = false
         button14.tooltip =  { "", Util.getLocEntityName("DimensionalPole2"), "\n[color=red]", {"gui-description.SlotGUINotUnlocked"}, "[/color]"}
     end
-    if technologyUnlocked("DimensionalPole3", getForce(currentMF)) == false then
+    if Util.technologyUnlocked("DimensionalPole3", getForce(currentMF)) == false then
         button15.enabled = false
         button15.tooltip = { "", Util.getLocEntityName("DimensionalPole3"), "\n[color=red]", {"gui-description.SlotGUINotUnlocked"}, "[/color]"}
     end

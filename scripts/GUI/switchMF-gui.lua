@@ -75,7 +75,7 @@ function GUI.updateMFSwitchMFGUI(GUITable, justCreated)
         local buttonTooltip = {"", "[color=green]", {"gui-description.SelectMFTT1"}, "[/color]"}
 
         -- Change the Button if the Player is not allowed to use this Mobile Factory --
-        if Util.canUse(GUITable.MFPlayer, MF2) == false then
+        if canUse(GUITable.MFPlayer, MF2) == false then
             buttonStyle = "MF_Fake_Button_Red"
             buttonTooltip = {"", "[color=red]", {"gui-description.SelectMFTT2"}, "[/color]"}
         end
@@ -182,7 +182,7 @@ function GUI.switchMFGUIInteraction(event, player, MFPlayer)
 		-- Get the Mobile Factory ID --
 		local ID = event.element.tags.ID
 		-- Check if the Player is allowed to use this Mobile Factory --
-		if Util.canUse(MFPlayer, global.MFTable[ID]) == false then
+		if canUse(MFPlayer, global.MFTable[ID]) == false then
 			player.print({"gui-description.NotAllowedMF"})
 			return
 		end

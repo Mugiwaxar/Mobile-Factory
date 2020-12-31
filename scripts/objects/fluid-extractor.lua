@@ -144,7 +144,7 @@ function FE:getTooltipInfos(GUITable, mainFrame, justCreated)
 		local selected = 1
 		local total = 0
 		for _, MF in pairs(global.MFTable) do
-			if Util.canUse(GUITable.MFPlayer, MF) then
+			if canUse(GUITable.MFPlayer, MF) then
 				table.insert(networks, MF.player)
 				total = total + 1
 				if self.dataNetwork.ID == MF.dataNetwork.ID then selected = total end

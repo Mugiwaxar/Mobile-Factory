@@ -175,7 +175,7 @@ function MF:getTooltipInfos(GUITable, mainFrame, justCreated)
 		GAPI.addSubtitle(GUITable, "", laserFrame, {"gui-description.MFEnergyLaser"})
 
 		-- Energy Lasers Settings --
-		if technologyUnlocked("EnergyDrain1", getForce(self.player)) then
+		if Util.technologyUnlocked("EnergyDrain1", getForce(self.player)) then
 			GAPI.addLabel(GUITable, "", laserFrame, {"gui-description.MFEnergyLaser"}, nil, "", false, nil, _mfLabelType.yellowTitle)
 			local state = "left"
 			if self.selectedEnergyLaserMode == "output" then state = "right" end
@@ -183,7 +183,7 @@ function MF:getTooltipInfos(GUITable, mainFrame, justCreated)
 		end
 
 		-- Quatron Lasers Settings --
-		if technologyUnlocked("EnergyDrain1", getForce(self.player)) then
+		if Util.technologyUnlocked("EnergyDrain1", getForce(self.player)) then
 			GAPI.addLabel(GUITable, "", laserFrame, {"gui-description.MFQuatronLaser"}, nil, "", false, nil, _mfLabelType.yellowTitle)
 			local state = "left"
 			if self.selectedQuatronLaserMode == "output" then state = "right" end
@@ -191,7 +191,7 @@ function MF:getTooltipInfos(GUITable, mainFrame, justCreated)
 		end
 
 		-- Fluid Lasers Settings --
-		if technologyUnlocked("FluidDrain1", getForce(self.player)) then
+		if Util.technologyUnlocked("FluidDrain1", getForce(self.player)) then
 			-- Send/Drain --
 			GAPI.addLabel(GUITable, "", laserFrame, {"gui-description.MFFluidLaser"}, nil, "", false, nil, _mfLabelType.yellowTitle)
 			local state = "left"
@@ -342,28 +342,28 @@ function MF:scanEnt()
 	local selfPosition = self.ent.position
 
 	-- Look for Energy Laser targets
-	if self.energyLaserActivated and technologyUnlocked("EnergyDrain1", selfForce) then
+	if self.energyLaserActivated and Util.technologyUnlocked("EnergyDrain1", selfForce) then
 		self.ELEntities = selfSurface.find_entities_filtered{position=selfPosition, force=selfForce, radius=selfRadius, name=_mfEnergyShare}
 	else
 		self.ELEntities = nil
 	end
 
 	-- Look for Quatron Laser targets
-	if self.quatronLaserActivated and technologyUnlocked("EnergyDrain1", selfForce) and technologyUnlocked("QuatronLogistic", selfForce) then
+	if self.quatronLaserActivated and Util.technologyUnlocked("EnergyDrain1", selfForce) and Util.technologyUnlocked("QuatronLogistic", selfForce) then
 		self.QLEntities = selfSurface.find_entities_filtered{position=selfPosition, force=selfForce, radius=selfRadius, name=_mfQuatronShare}
 	else
 		self.QLEntities = nil
 	end
 
 	-- Look for Quatron Laser targets
-	if self.fluidLaserActivated and technologyUnlocked("FluidDrain1", selfForce) then
+	if self.fluidLaserActivated and Util.technologyUnlocked("FluidDrain1", selfForce) then
 		self.FLEntities = selfSurface.find_entities_filtered{position=selfPosition, force=selfForce, radius=selfRadius, type="storage-tank"}
 	else
 		self.FLEntities = nil
 	end
 
 	-- Look for Logistic Laser targets
-	if self.itemLaserActivated and technologyUnlocked("TechItemDrain", selfForce) then
+	if self.itemLaserActivated and Util.technologyUnlocked("TechItemDrain", selfForce) then
 		self.ILEntities = selfSurface.find_entities_filtered{position=selfPosition, force=selfForce, radius=selfRadius, type={"container", "logistic-container"}}
 	else
 		self.ILEntities = nil
@@ -685,14 +685,14 @@ function MF:factoryTeleportBox()
 		end
 	end
 	-- Factory to Control Center --
-	if technologyUnlocked("ControlCenter", getForce(self.player)) ~= false and self.fS ~= nil then
+	if Util.technologyUnlocked("ControlCenter", getForce(self.player)) ~= false and self.fS ~= nil then
 		local entities = self.fS.find_entities_filtered{area={{-3,-34},{3,-32}}, type="character"}
 		for k, entity in pairs(entities) do
 			teleportPlayerToControlCenter(entity.player, self)
 		end
 	end
 	-- Control Center to Factory --
-	if technologyUnlocked("ControlCenter", getForce(self.player)) ~= false and self.ccS ~= nil and self.fS ~= nil then
+	if Util.technologyUnlocked("ControlCenter", getForce(self.player)) ~= false and self.ccS ~= nil and self.fS ~= nil then
 		local entities = self.ccS.find_entities_filtered{area={{-3,5},{3,8}}, type="character"}
 		for k, entity in pairs(entities) do
 			teleportPlayerToFactory(entity.player, self)
@@ -703,7 +703,7 @@ end
 -- Scan modules inside the Equipment Grid --
 function MF:scanModules()
 	-- Check if the Technology is unlocked --
-	if technologyUnlocked("EnergyPowerModule", getForce(self.player)) == nil then return end
+	if Util.technologyUnlocked("EnergyPowerModule", getForce(self.player)) == nil then return end
 	-- Init Variables --
 	self.laserRadiusMultiplier = 0
 	self.laserDrainMultiplier = 0
@@ -1198,13 +1198,13 @@ end
 -- 		Util.syncChest(ents.original, ents.cloned)
 -- 	elseif ents.original.type == "storage-tank" then
 -- 		-- If the Entity is a Storage Tank --
--- 		Util.syncTank(ents.original, ents.cloned)
+-- 		syncTank(ents.original, ents.cloned)
 -- 	elseif ents.original.name == "QuatronCubeMK1" then
 -- 		-- If the Entity is a Quatron Cube --
--- 		Util.syncQuatron(ents.original, ents.cloned)
+-- 		syncQuatron(ents.original, ents.cloned)
 -- 	elseif ents.original.type == "accumulator" then
 -- 		-- If the Entity is an Accumulator --
--- 		Util.syncEnergy(ents.original, ents.cloned)
+-- 		syncEnergy(ents.original, ents.cloned)
 -- 	end
 -- end
 
@@ -1217,8 +1217,8 @@ function MF:deploy()
 	-- Read all Slots --
 	for k, slot in pairs(self.slots) do
 		-- Create the Entities --
-		local outEnt = self.ent.surface.create_entity{name=slot.entity, position=Util.slotToPos(k, self.ent.position.x, self.ent.position.y), direction=Util.slotToDirection(k, slot.entity), force=self.ent.force, player=self.playerIndex}
-		local inEnt = self.fS.create_entity{name=slot.entity, position=Util.slotToPos(k, 0, 0), direction=Util.slotToDirection(k, slot.entity), force=self.ent.force, player=self.playerIndex}
+		local outEnt = self.ent.surface.create_entity{name=slot.entity, position=slotToPos(k, self.ent.position.x, self.ent.position.y), direction=slotToDirection(k, slot.entity), force=self.ent.force, player=self.playerIndex}
+		local inEnt = self.fS.create_entity{name=slot.entity, position=slotToPos(k, 0, 0), direction=slotToDirection(k, slot.entity), force=self.ent.force, player=self.playerIndex}
 		-- Check if the Entities was correctly deployed --
 		if outEnt ~= nil and outEnt.valid == true and inEnt ~= nil and inEnt.valid == true then
 			self.deployedEnts[k] = {inEntity=inEnt, outEntity=outEnt, way=slot.way}

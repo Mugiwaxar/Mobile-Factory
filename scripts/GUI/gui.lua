@@ -88,13 +88,22 @@ function GUI.openTTGui(MFPlayer, player, entity)
 	if valid(obj) == false or obj.getTooltipInfos == nil then return end
 
 	-- Check Permissions --
-	if Util.canUse(MFPlayer, obj) == false then player.opened = nil return end
+	if canUse(MFPlayer, obj) == false then player.opened = nil return end
 
 	-- Create and save the Tooltip gui --
 	local GUITable = GUI.createTooltipGUI(player, obj)
 	player.opened = GUITable.gui
 	MFPlayer.GUI[_mfGUIName.TooltipGUI] = GUITable
 
+end
+
+-- A GUI is Opened --
+function GUI.guiOpened(event)
+	-- Check the Entity --
+	if event.entity == nil or event.entity.valid == false then return end
+	local player = getPlayer(event.player_index)
+	local MFPlayer = getMFPlayer(event.player_index)
+	GUI.openTTGui(MFPlayer, player, player.selected)
 end
 
 -- A GUI was closed --
@@ -493,7 +502,7 @@ function GUI.buttonClicked(event)
 
 end
 
--- Called when a GUI Element have changed it's state --
+-- When a GUI Element changed --
 function GUI.onGuiElemChanged(event)
 
 	-- Return if this is not a Mobile Factory element -
@@ -597,7 +606,7 @@ function GUI.onGuiElemChanged(event)
 end
 
 -- Called when a Localized Name is requested --
-function onStringTranslated(event)
+function GUI.onStringTranslated(event)
 	-- Get the MFPlayer --
 	local MFPlayer = getMFPlayer(event.player_index)
 	-- Check the MFPlayer --
