@@ -4,8 +4,8 @@ for k, ore in pairs(data.raw.resource) do
 end
 
 -- Make Dimensional Lab accept all materials --
-local inputsTable = {}
 if settings.startup["MF-lab-science-packs"].value == "all" then
+	local inputsTable = {}
 	for k, lab in pairs(data.raw.lab) do
 		for k2, name in pairs(lab.inputs) do
 			inputsTable[name] = name
@@ -14,10 +14,15 @@ if settings.startup["MF-lab-science-packs"].value == "all" then
 	data.raw.lab.DimensionalLab.inputs = inputsTable
 
 elseif settings.startup["MF-lab-science-packs"].value == "add vanilla" then
+	local inputsTable = {}
 	if data.raw.lab.lab then
-		for k2, name in pairs(data.raw.lab.lab.inputs) do
-			table.insert(data.raw.lab.DimensionalLab.inputs, name)
+		for _, name in pairs(data.raw.lab.DimensionalLab.inputs) do
+			inputsTable[name] = name
 		end
+		for _, name in pairs(data.raw.lab.lab.inputs) do
+			inputsTable[name] = name
+		end
+		data.raw.lab.DimensionalLab.inputs = inputsTable
 	else
 		log("Basic lab is missing, couldn't add science packs to Dimensional Lab.")
 	end
