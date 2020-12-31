@@ -1,19 +1,19 @@
 pcall(require,'__debugadapter__/debugadapter.lua')
 
-GUI = {}
-GAPI = {}
-Util = {}
-UpSys = {}
+GUI = GUI or {}
+UpSys = UpSys or {}
+Event = Event or {}
 
 require("utils/profiler.lua")
 require("utils/settings.lua")
-require("utils/functions.lua")
+require("__MF_Base__/scripts/Util.lua")
 require("utils/surface.lua")
 require("utils/cc-extension.lua")
 require("utils/remote.lua")
-require("utils/GUI-API.lua")
+require("__MF_Base__/scripts/GUI-API.lua")
 require("scripts/GUI/gui.lua")
 require("scripts/game-update.lua")
+require("scripts/events.lua")
 require("scripts/objects/mobile-factory.lua")
 require("scripts/objects/ore-cleaner.lua")
 require("scripts/objects/fluid-extractor.lua")
@@ -67,7 +67,7 @@ function onInit()
 	end
 
 	-- Create the Objects Table --
-	Util.createTableList()
+	createTableList()
 	-- Migrate all Objects --
 	for _, obj in pairs(global.objTable) do
 		if obj.tableName and obj.tag then
@@ -96,7 +96,7 @@ function onInit()
 	-- Create all MFPlayers if needed --
 	if global.playersTable == nil then global.playersTable = {} end
 	for _, player in pairs(game.players) do
-		initPlayer({player_index = player.index})
+		Event.initPlayer({player_index = player.index})
 	end
 
 	-- Recreate GUIs --
@@ -105,19 +105,20 @@ function onInit()
 			GUI.createMFMainGUI(MFPlayer.ent)
 		end
 	end
+
 end
 
 function onLoad(event)
-	
+
 	-- Rebuild all Objects --
-	for k, obj in pairs(global.objTable) do
+	for _, obj in pairs(global.objTable) do
 		if obj.tableName ~= nil and obj.tag ~= nil and _G[obj.tag] ~= nil then
 			for objKey, entry in pairs(global[obj.tableName] or {}) do
 				_G[obj.tag]:rebuild(entry)
 			end
 		end
 	end
-	
+
 end
 
 -- Filters --
@@ -139,121 +140,162 @@ _mfEntityFilterWithCBJ = {
 	{filter = "type", type = "fish", mode = "and", invert = true}
 }
 
-local function onForceCreated(event)
-  local force = event.force
-
-  if force.valid and settings.startup["MF-initial-research-complete"] and settings.startup["MF-initial-research-complete"].value == true then
-    force.technologies["DimensionalOre"].researched = true
-  end
+-- When a player join the game --
+function initAPlayer(event)
+	mfCall(Event.initPlayer, event)
 end
 
-local function onPlayerChangedForce(event)
-	local player = getPlayer(event.player_index)
-    if not (player and player.valid) then return end
-
-    local MFPlayer = getMFPlayer(player.name)
-    if not (MFPlayer and MFPlayer:valid()) then return end
-
-    local MF = getMF(player.name)
-    if not (MF and MF:valid()) then return end
-
-    if MF.ent and MF.ent.valid then MF.ent.force = player.force end
-    if MF.fS and MF.fS.valid then
-      local oldForceEntities = MF.fS.find_entities_filtered{force = event.force}
-      local newForce = player.force
-      for _, ent in pairs(oldForceEntities) do
-        ent.force = newForce
-      end
-    end
-
-    if MF.ccS and MF.ccS.valid then
-      local oldForceEntities = MF.ccS.find_entities_filtered{force = event.force}
-      local newForce = player.force
-      for _, ent in pairs(oldForceEntities) do
-        ent.force = newForce 
-      end
-    end
+-- If player entered or living a vehicle --
+function onPlayerDriveStatChange(event)
+	mfCall(Event.playerDriveStatChange, event)
 end
 
-local function onPlayerSetupBlueprint(event)
-	local player = game.players[event.player_index]
-	local mapping = event.mapping.get()
-	local bp = player.blueprint_to_setup
-	if bp.valid_for_read == false then
-		local cursor = player.cursor_stack
-		if cursor and cursor.valid_for_read and cursor.name == "blueprint" then
-			bp = cursor
-			--return
-		end
-	end
-	if bp == nil or bp.valid_for_read == false then return end
+-- On every Tick --
+function onTick(event)
+	mfCall(Event.tick, event)
+end
 
-	for index, ent in pairs(mapping) do
-		if global.objTable[ent.name] ~= nil then
-			local saveTable = global.objTable[ent.name].tableName
-			if ent.valid == true and saveTable ~= nil then
-				if global[saveTable] == nil then
-					-- Create Table If Nothing Was Ever Placed --
-					global[saveTable] = {}
-				end
-				saveTable = global[saveTable]
-				local tags = entityToBlueprintTags(ent, saveTable)
-				if tags ~= nil then
-					for tag, value in pairs(tags) do
-						bp.set_blueprint_entity_tag(index, tag, value)
-					end
-				end
-			end
-		end
-	end
+-- Watch damages --
+function onEntityDamaged(event)
+	mfCall(Event.entityDamaged, event)
+end
+
+-- Called when something is placed --
+function whenSomethingWasPlaced(event)
+	mfCall(Event.somethingWasPlaced, event)
+end
+
+-- When something is cloned --
+function whenSomethingWasCloned(event)
+	mfCall(Event.somethingWasCloned, event)
+end
+
+-- When something is removed or destroyed --
+function whenSomethingWasRemoved(event)
+	mfCall(Event.somethingWasRemoved, event)
+end
+
+-- Called after an Entity die --
+function onGhostPlacedByDie(event)
+	mfCall(Event.ghostPlacedByDie, event)
+end
+
+-- Called when a GUI is Opened --
+function onGuiOpened(event)
+	mfCall(GUI.guiOpened, event)
+end
+
+-- A GUI was closed --
+function onGuiClosed(event)
+	mfCall(GUI.guiClosed, event)
+end
+
+-- When a GUI Button is clicked --
+function onButtonClicked(event)
+	mfCall(GUI.buttonClicked, event)
+end
+
+-- When a GUI Element changed --
+function onGuiElemChanged(event)
+	mfCall(GUI.onGuiElemChanged, event)
+end
+
+-- When a technology is finished --
+function onTechnologyFinished(event)
+	mfCall(Event.technologyFinished, event)
+end
+
+-- Called when a Player select an Entity --
+function onSelectedEntityChanged(event)
+	mfCall(Event.selectedEntityChanged, event)
+end
+
+-- Called when a Setting is pasted --
+function onSettingsPasted(event)
+	mfCall(Event.settingsPasted, event)
+end
+
+-- Called when a new Force is created --
+function onForceCreated(event)
+	mfCall(Event.forceCreated, event)
+end
+
+-- Called when a Player changed his team --
+function onPlayerChangedForce(event)
+	mfCall(Event.playerChangedForce, event)
+end
+
+-- Called when a Player settup a Blueprint --
+function onPlayerSetupBlueprint(event)
+	mfCall(Event.playerSetupBlueprint, event)
+end
+
+-- Called when a Localized Name is requested --
+function onStringTranslated(event)
+	mfCall(GUI.onStringTranslated, event)
+end
+
+-- Called when a Entity is rotated --
+function onEntityRotated(event)
+	mfCall(Event.entityRotated, event)
+end
+
+-- Called when a Shortcut is pressed --
+function onShortcutPressed(event)
+	mfCall(Event.onShortcut, event)
+end
+
+-- Called when the MFCleanGUI is sent --
+function cleanAllGUI(event)
+	mfCall(Event.cleanGUI, event)
 end
 
 -- Events --
 script.on_init(onInit)
 script.on_configuration_changed(onInit)
 script.on_load(onLoad)
-script.on_event(defines.events.on_cutscene_cancelled, initPlayer)
-script.on_event(defines.events.on_player_created, initPlayer)
-script.on_event(defines.events.on_player_joined_game, initPlayer)
-script.on_event(defines.events.on_player_driving_changed_state, playerDriveStatChange)
+script.on_event(defines.events.on_cutscene_cancelled, initAPlayer)
+script.on_event(defines.events.on_player_created, initAPlayer)
+script.on_event(defines.events.on_player_joined_game, initAPlayer)
+script.on_event(defines.events.on_player_driving_changed_state, onPlayerDriveStatChange)
 script.on_event(defines.events.on_tick, onTick)
 script.on_event(defines.events.on_entity_damaged, onEntityDamaged, _mfEntityFilterWithCBJ)
-script.on_event(defines.events.on_built_entity, somethingWasPlaced)
-script.on_event(defines.events.on_player_built_tile, somethingWasPlaced)
-script.on_event(defines.events.script_raised_built, somethingWasPlaced)
-script.on_event(defines.events.script_raised_revive, somethingWasPlaced)
-script.on_event(defines.events.on_robot_built_entity, somethingWasPlaced)
-script.on_event(defines.events.on_robot_built_tile, somethingWasPlaced)
-script.on_event(defines.events.on_entity_cloned, somethingWasCloned)
-script.on_event(defines.events.on_player_mined_entity, somethingWasRemoved)
-script.on_event(defines.events.on_player_mined_tile, somethingWasRemoved)
-script.on_event(defines.events.on_robot_mined_entity, somethingWasRemoved)
-script.on_event(defines.events.on_robot_mined_tile, somethingWasRemoved)
-script.on_event(defines.events.script_raised_destroy, somethingWasRemoved)
-script.on_event(defines.events.on_entity_died, somethingWasRemoved, _mfEntityFilter)
+script.on_event(defines.events.on_built_entity, whenSomethingWasPlaced)
+script.on_event(defines.events.on_player_built_tile, whenSomethingWasPlaced)
+script.on_event(defines.events.script_raised_built, whenSomethingWasPlaced)
+script.on_event(defines.events.script_raised_revive, whenSomethingWasPlaced)
+script.on_event(defines.events.on_robot_built_entity, whenSomethingWasPlaced)
+script.on_event(defines.events.on_robot_built_tile, whenSomethingWasPlaced)
+script.on_event(defines.events.on_entity_cloned, whenSomethingWasCloned)
+script.on_event(defines.events.on_player_mined_entity, whenSomethingWasRemoved)
+script.on_event(defines.events.on_player_mined_tile, whenSomethingWasRemoved)
+script.on_event(defines.events.on_robot_mined_entity, whenSomethingWasRemoved)
+script.on_event(defines.events.on_robot_mined_tile, whenSomethingWasRemoved)
+script.on_event(defines.events.script_raised_destroy, whenSomethingWasRemoved)
+script.on_event(defines.events.on_entity_died, whenSomethingWasRemoved, _mfEntityFilter)
 script.on_event(defines.events.on_post_entity_died, onGhostPlacedByDie, _mfEntityFilter)
-script.on_event(defines.events.on_gui_opened, guiOpened)
-script.on_event(defines.events.on_gui_closed, GUI.guiClosed)
-script.on_event(defines.events.on_gui_click, GUI.buttonClicked)
-script.on_event(defines.events.on_gui_elem_changed, GUI.onGuiElemChanged)
-script.on_event(defines.events.on_gui_checked_state_changed, GUI.onGuiElemChanged)
-script.on_event(defines.events.on_gui_selection_state_changed, GUI.onGuiElemChanged)
-script.on_event(defines.events.on_gui_text_changed, GUI.onGuiElemChanged)
-script.on_event(defines.events.on_gui_switch_state_changed, GUI.onGuiElemChanged)
-script.on_event(defines.events.on_gui_selected_tab_changed, GUI.onGuiElemChanged)
-script.on_event(defines.events.on_research_finished, technologyFinished)
-script.on_event(defines.events.on_selected_entity_changed, selectedEntityChanged)
-script.on_event(defines.events.on_entity_settings_pasted, settingsPasted)
+script.on_event(defines.events.on_gui_opened, onGuiOpened)
+script.on_event(defines.events.on_gui_closed, onGuiClosed)
+script.on_event(defines.events.on_gui_click, onButtonClicked)
+script.on_event(defines.events.on_gui_elem_changed, onGuiElemChanged)
+script.on_event(defines.events.on_gui_checked_state_changed, onGuiElemChanged)
+script.on_event(defines.events.on_gui_selection_state_changed, onGuiElemChanged)
+script.on_event(defines.events.on_gui_text_changed, onGuiElemChanged)
+script.on_event(defines.events.on_gui_switch_state_changed, onGuiElemChanged)
+script.on_event(defines.events.on_gui_selected_tab_changed, onGuiElemChanged)
+script.on_event(defines.events.on_research_finished, onTechnologyFinished)
+script.on_event(defines.events.on_selected_entity_changed, onSelectedEntityChanged)
+script.on_event(defines.events.on_entity_settings_pasted, onSettingsPasted)
 script.on_event(defines.events.on_force_created, onForceCreated)
 script.on_event(defines.events.on_player_changed_force, onPlayerChangedForce)
 script.on_event(defines.events.on_player_setup_blueprint, onPlayerSetupBlueprint)
 script.on_event(defines.events.on_string_translated, onStringTranslated)
-script.on_event(defines.events.on_player_rotated_entity, entityRotated)
-script.on_event("OpenTTGUI", onShortcut)
-script.on_event("CloseGUI", onShortcut)
+script.on_event(defines.events.on_player_rotated_entity, onEntityRotated)
+script.on_event("OpenTTGUI", onShortcutPressed)
+script.on_event("CloseGUI", onShortcutPressed)
 
--- Add command to insert Mobile Factory to the player inventory --
--- commands.add_command("GetMobileFactory", "Add the Mobile Factory to the player inventory", addMobileFactory)
+-- Add the Clean GUI Command --
+commands.add_command("MFCleanGUI", "Clean all Mobile Factory GUIs", cleanAllGUI)
 
 -- Debug Commands --
 local addDebugCommands = true
@@ -280,7 +322,7 @@ local function MFResetGUIs(event)
 			end
 			GUI.createMFMainGUI(player)
 		else
-			logString = logString.."\nPlayer does not have an MFPlayer."			
+			logString = logString.."\nPlayer does not have an MFPlayer."		
 		end
 		log(logString)
 	end
