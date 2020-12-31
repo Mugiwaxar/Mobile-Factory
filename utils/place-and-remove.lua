@@ -180,7 +180,7 @@ function Event.somethingWasCloned(event)
 		end
 	end
 	-- Else call the normal Event --
-	somethingWasPlaced(event)
+	Event.somethingWasPlaced(event)
 end
 
 -- When something is removed or destroyed --

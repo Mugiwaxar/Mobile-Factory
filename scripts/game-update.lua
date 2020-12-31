@@ -23,7 +23,7 @@ end
 function Event.ghostPlacedByDie(event)
 	-- Raise event if a Blueprint is placed --
 	if event.ghost ~= nil and event.ghost.valid == true then
-		somethingWasPlaced({entity=event.ghost})
+		Event.somethingWasPlaced({entity=event.ghost})
 	end
 end
 
