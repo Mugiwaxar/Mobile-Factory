@@ -78,7 +78,7 @@ function GUI.updateOptionGUI(GUITable, tabI)
 	if GUI["updateOptionGUI" .. tabName] ~= nil then
 		GUI["updateOptionGUI" .. tabName](GUITable)
 	end
-	
+
 end
 
 -- Update the MFTab --

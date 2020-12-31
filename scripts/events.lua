@@ -12,11 +12,18 @@ function Event.initPlayer(event)
 		createControlRoom(MF)
 		global.playersTable[player.name].MF = MF
 		------------------- Can't get the Player Inventory when the Mod Init since the Factorio 1.0 Version -------------------
-		addMobileFactory(player)
+		if mfCall(addMobileFactory, player) == true then
+			player.print({"gui-description.initPlayer_AddMFFailed"})
+		end
 		setPlayerVariable(player.name, "GotInventory", true)
-		GUI.createMFMainGUI(player)
-		
-		if remote.interfaces["dangOreus"] then 
+		if mfCall(GUI.createMFMainGUI, player) == true then
+			player.print({"gui-description.initPlayer_CreateMainGUIFailed"})
+			if global.playersTable[player.name].GUI[_mfGUIName.MainGUI] ~= nil then global.playersTable[player.name].GUI[_mfGUIName.MainGUI] = nil end
+			if player.gui.screen[_mfGUIName.MainGUI] ~= nil and player.gui.screen[_mfGUIName.MainGUI].valid == true then
+				player.gui.screen[_mfGUIName.MainGUI].destroy()
+			end
+		end
+		if remote.interfaces["dangOreus"] then
 			remote.call("dangOreus","toggle",MF.fS)
 			remote.call("dangOreus","toggle",MF.ccS)
 		end
@@ -306,17 +313,23 @@ function Event.onShortcut(event)
 end
 
 -- Called when the MFCleanGUI is sent --
-function Event.cleanGUI(event)
+function Event.clearGUI(event)
 
 	-- Get the Player --
 	local player = getPlayer(event.player_index)
 
 	-- Clean all Mobile Factory GUI --
 	for _, gui in pairs(player.gui.screen.children) do
-		if gui ~= nil and gui.valid == true then
+		if gui ~= nil and gui.valid == true and gui.get_mod() == "Mobile_Factory" and gui.name ~= "MFBaseErrorWindows" then
 			gui.destroy()
 		end
 	end
+
+	-- Clear the GUITable --
+	getMFPlayer(event.player_index).GUI = nil
+
+	-- Clear the Opened GUI --
+	player.opened = nil
 
 	-- Recreate the Main GUI --
 	GUI.createMFMainGUI(player)

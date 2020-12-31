@@ -160,6 +160,7 @@ function Event.somethingWasPlaced(event)
 			obj:validate()
 		end
 	end
+	
 end
 
 -- When something is cloned --

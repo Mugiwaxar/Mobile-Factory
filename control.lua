@@ -113,7 +113,7 @@ function onLoad(event)
 	-- Rebuild all Objects --
 	for _, obj in pairs(global.objTable) do
 		if obj.tableName ~= nil and obj.tag ~= nil and _G[obj.tag] ~= nil then
-			for objKey, entry in pairs(global[obj.tableName] or {}) do
+			for _, entry in pairs(global[obj.tableName] or {}) do
 				_G[obj.tag]:rebuild(entry)
 			end
 		end
@@ -142,7 +142,13 @@ _mfEntityFilterWithCBJ = {
 
 -- When a player join the game --
 function initAPlayer(event)
-	mfCall(Event.initPlayer, event)
+	if mfCall(Event.initPlayer, event) == true then
+		if event.player_index ~= nil and game.players[event.player_index] ~= nil and game.players[event.player_index].name ~= nil then
+			game.print({"gui-description.initAPlayer_PlayerInitFailed", game.players[event.player_index].name})
+		else
+			game.print({"gui-description.initAPlayer_PlayerInitFailed", {"gui-description.Unknow"}})
+		end
+	end
 end
 
 -- If player entered or living a vehicle --
@@ -162,7 +168,13 @@ end
 
 -- Called when something is placed --
 function whenSomethingWasPlaced(event)
-	mfCall(Event.somethingWasPlaced, event)
+	if mfCall(Event.somethingWasPlaced, event) == true then
+		game.print({"gui-description.whenSomethingWasPlaced_Failled"})
+		local entity = event.created_entity or event.entity or event.destination
+		if entity ~= nil and entity.valid == true then
+			entity.destroy()
+		end
+	end
 end
 
 -- When something is cloned --
@@ -177,7 +189,12 @@ end
 
 -- Called after an Entity die --
 function onGhostPlacedByDie(event)
-	mfCall(Event.ghostPlacedByDie, event)
+	if mfCall(Event.ghostPlacedByDie, event) == true then
+		game.print({"gui-description.onGhostPlacedByDie_Failled"})
+		if event.ghost ~= nil and event.ghost.valid == true then
+			event.ghost.destroy()
+		end
+	end
 end
 
 -- Called when a GUI is Opened --
@@ -192,12 +209,18 @@ end
 
 -- When a GUI Button is clicked --
 function onButtonClicked(event)
-	mfCall(GUI.buttonClicked, event)
+	if mfCall(GUI.buttonClicked, event) == true then
+		getPlayer(event.player_index).print({"gui-description.updatingGUI_Failled"})
+		mfCall(Event.clearGUI, event)
+	end
 end
 
 -- When a GUI Element changed --
 function onGuiElemChanged(event)
-	mfCall(GUI.onGuiElemChanged, event)
+	if mfCall(GUI.onGuiElemChanged, event) == true then
+		getPlayer(event.player_index).print({"gui-description.updatingGUI_Failled"})
+		mfCall(Event.clearGUI, event)
+	end
 end
 
 -- When a technology is finished --
@@ -246,8 +269,8 @@ function onShortcutPressed(event)
 end
 
 -- Called when the MFCleanGUI is sent --
-function cleanAllGUI(event)
-	mfCall(Event.cleanGUI, event)
+function clearAllGUI(event)
+	mfCall(Event.clearGUI, event)
 end
 
 -- Events --
@@ -295,7 +318,7 @@ script.on_event("OpenTTGUI", onShortcutPressed)
 script.on_event("CloseGUI", onShortcutPressed)
 
 -- Add the Clean GUI Command --
-commands.add_command("MFCleanGUI", "Clean all Mobile Factory GUIs", cleanAllGUI)
+commands.add_command("MFClearGUI", "Clean all Mobile Factory GUIs", clearAllGUI)
 
 -- Debug Commands --
 local addDebugCommands = true

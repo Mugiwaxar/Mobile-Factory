@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.7.2
+Date: 31/12/2020
+  Scripting:
+    - Add an Error handler for initAPlayer.Event.initPlayer
+    - Add an Error handler for Event.initPlayer.addMobileFactory
+    - Add an Error handler for Event.initPlayer.GUI.createMFMainGUI
+    - Add an Error handler for whenSomethingWasPlaced.somethingWasPlaced
+    - Add an Error handler for onGhostPlacedByDie.ghostPlacedByDie
+    - Add an Error handler for guiOpened.ghostPlacedByDie.GUI.openTTGui
+    - Add an Error handler for onButtonClicked.GUI.buttonClicked
+    - Add an Error handler for onGuiElemChanged.GUI.onGuiElemChanged
+---------------------------------------------------------------------------------------------------
 Version: 0.7.1
 Date: 31/12/2020
   Bugfixes:
@@ -7,7 +19,7 @@ Date: 31/12/2020
 Version: 0.7.0
 Date: 31/12/2020
   Features:
-    - Added the /MFCleanGUI command to clean all GUIs
+    - Added the /MFClearGUI command to clean all GUIs
   Scripting:
     - Transfered the API-GUI to the MF: Base Mod
     - Transfered a lot of Functions (Util) to the MF: Base Mod

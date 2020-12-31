@@ -103,7 +103,10 @@ function GUI.guiOpened(event)
 	if event.entity == nil or event.entity.valid == false then return end
 	local player = getPlayer(event.player_index)
 	local MFPlayer = getMFPlayer(event.player_index)
-	GUI.openTTGui(MFPlayer, player, player.selected)
+	if mfCall(GUI.openTTGui, MFPlayer, player, player.selected) == true then
+		getPlayer(event.player_index).print({"gui-description.openTTGui_Failled"})
+		Event.clearGUI(event)
+	end
 end
 
 -- A GUI was closed --
