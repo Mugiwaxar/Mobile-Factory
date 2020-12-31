@@ -1,33 +1,33 @@
 -- Create all Objects Table --
-function Util.createTableList()
+function createTableList()
 	global.objTable = {}
-	Util.addObject{tableName="playersTable", tag="MFP", objName="MFPlayer", noPlaced=true, noUpsys=true}
-	Util.addObject{tableName="MFTable", tag="MF", objName="MF", noPlaced=true}
-	-- Util.addObject{tableName="eryaTable", tag="ES", objName="Erya"}
-	Util.addObject{tableName="matterInteractorTable", tag="MI", objName="MatterInteractor"}
-	Util.addObject{tableName="fluidInteractorTable", tag="FI", objName="FluidInteractor"}
-	Util.addObject{tableName="dataAssemblerTable", tag="DA", objName="DataAssembler"}
-	Util.addObject{tableName="networkExplorerTable", tag="NE", objName="NetworkExplorer"}
-	Util.addObject{tableName="dataStorageTable", tag="DS", objName="DataStorage", canInCC=true}
-	Util.addObject{tableName="jumpChargerTable", tag="JC", objName="JumpCharger", canInCC=true}
-	Util.addObject{tableName="networkAccessPointTable", tag="NAP", objName="NetworkAccessPoint"}
-	Util.addObject{tableName="energyCubesTable", tag="EC", objName="EnergyCubeMK1"}
-	Util.addObject{tableName="energyLaserTable", tag="EL", objName="EnergyLaser1"}
-	Util.addObject{tableName="quatronCubesTable", tag="QC", objName="QuatronCubeMK1"}
-	Util.addObject{tableName="quatronLaserTable", tag="QL", objName="QuatronLaser1"}
-	Util.addObject{tableName="quatronReactorTable", tag="QR", objName="QuatronReactor"}
-	Util.addObject{tableName="deepStorageTable", tag="DSR", objName="DeepStorage", canInCC=true}
-	Util.addObject{tableName="deepTankTable", tag="DTK", objName="DeepTank", canInCC=true}
-	Util.addObject{tableName="oreCleanerTable", tag="OC", objName="OreCleaner", noInside=true}
-	Util.addObject{tableName="fluidExtractorTable", tag="FE", objName="FluidExtractor", noInside=true}
-	Util.addObject{tableName="resourceCatcher", tag="RC", objName="ResourceCatcher"}
-	Util.addObject{objName="InternalEnergyCube", noUpsys=true, canInCCAnywhere=true, noOutside=true}
-	Util.addObject{objName="InternalQuatronCube", noUpsys=true, canInCCAnywhere=true, noOutside=true}
+	addObject{tableName="playersTable", tag="MFP", objName="MFPlayer", noPlaced=true, noUpsys=true}
+	addObject{tableName="MFTable", tag="MF", objName="MF", noPlaced=true}
+	-- addObject{tableName="eryaTable", tag="ES", objName="Erya"}
+	addObject{tableName="matterInteractorTable", tag="MI", objName="MatterInteractor"}
+	addObject{tableName="fluidInteractorTable", tag="FI", objName="FluidInteractor"}
+	addObject{tableName="dataAssemblerTable", tag="DA", objName="DataAssembler"}
+	addObject{tableName="networkExplorerTable", tag="NE", objName="NetworkExplorer"}
+	addObject{tableName="dataStorageTable", tag="DS", objName="DataStorage", canInCC=true}
+	addObject{tableName="jumpChargerTable", tag="JC", objName="JumpCharger", canInCC=true}
+	addObject{tableName="networkAccessPointTable", tag="NAP", objName="NetworkAccessPoint"}
+	addObject{tableName="energyCubesTable", tag="EC", objName="EnergyCubeMK1"}
+	addObject{tableName="energyLaserTable", tag="EL", objName="EnergyLaser1"}
+	addObject{tableName="quatronCubesTable", tag="QC", objName="QuatronCubeMK1"}
+	addObject{tableName="quatronLaserTable", tag="QL", objName="QuatronLaser1"}
+	addObject{tableName="quatronReactorTable", tag="QR", objName="QuatronReactor"}
+	addObject{tableName="deepStorageTable", tag="DSR", objName="DeepStorage", canInCC=true}
+	addObject{tableName="deepTankTable", tag="DTK", objName="DeepTank", canInCC=true}
+	addObject{tableName="oreCleanerTable", tag="OC", objName="OreCleaner", noInside=true}
+	addObject{tableName="fluidExtractorTable", tag="FE", objName="FluidExtractor", noInside=true}
+	addObject{tableName="resourceCatcher", tag="RC", objName="ResourceCatcher"}
+	addObject{objName="InternalEnergyCube", noUpsys=true, canInCCAnywhere=true, noOutside=true}
+	addObject{objName="InternalQuatronCube", noUpsys=true, canInCCAnywhere=true, noOutside=true}
 end
 
 -- Add an Object to the System --
 -- {tableName, tag, objName, noUpsys, noOutside, noInside, canInCC, canInCCAnywhere, noPlaced} --
-function Util.addObject(table)
+function addObject(table)
 	-- Check the objTable --
 	if global.objTable == nil then global.objTable = {} end
 	-- Add the Object --
@@ -37,7 +37,7 @@ function Util.addObject(table)
 end
 
 -- Transfer Chest1 to Chest2 --
-function Util.syncChest(chest1, chest2)
+function syncChest(chest1, chest2)
 	local itemsDiff = {}
 	-- Get the Inventories --
 	local inv1 = chest1.get_inventory(defines.inventory.chest)
@@ -103,7 +103,7 @@ function Util.syncChest(chest1, chest2)
 end
 
 -- Transfer Tank1 to Tank2 --
-function Util.syncTank(tank1, tank2)
+function syncTank(tank1, tank2)
 	-- Check the Tanks --
 	if tank1.fluidbox[1] == nil and tank2.fluidbox[1] == nil then return end
 	-- Get Tanks Fluid --
@@ -149,7 +149,7 @@ function Util.syncTank(tank1, tank2)
 end
 
 -- Equilize the Energy between two Accumulators --
-function Util.syncEnergy(accu1, accu2)
+function syncEnergy(accu1, accu2)
 	-- Calcul the total energy --
 	local totalEnergy = accu1.energy + accu2.energy
 	-- Set the Energy of the Accumulators --
@@ -158,7 +158,7 @@ function Util.syncEnergy(accu1, accu2)
 end
 
 -- Equilize the Quatron between two Accumulators --
-function Util.syncQuatron(accu1, accu2)
+function syncQuatron(accu1, accu2)
 	local obj1 = global.entsTable[accu1.unit_number]
 	local obj2 = global.entsTable[accu2.unit_number]
 	-- Calcul the total quatron --
@@ -174,132 +174,6 @@ function Util.syncQuatron(accu1, accu2)
 	obj2.quatronLevel = effectiveLevel
 end
 
--- Synchronize the Fluid between two Pipes --
-function Util.syncPipes(outPipe, inPipe, way)
-
-	if way == "input" then
-
-		-- Check the Fluidbox --
-		if outPipe.fluidbox == nil or outPipe.fluidbox[1] == nil then return end
-
-		-- Get the Fluid inside the outPipe --
-		local FName = outPipe.fluidbox[1].name
-		local fAmount = outPipe.fluidbox[1].amount
-		local fTemp = outPipe.fluidbox[1].temperature
-
-		-- Insert the Fluid inside the inPipe --
-		local inserted = inPipe.insert_fluid({name=FName, amount=fAmount, temperature=fTemp})
-
-		-- Remove the Fluid from the outPipe --
-		outPipe.remove_fluid{name=FName, amount=inserted}
-
-		return
-
-	end
-
-	if way == "output" then
-
-		-- Check the Fluidbox --
-		if inPipe.fluidbox == nil or inPipe.fluidbox[1] == nil then return end
-
-		-- Get the Fluid inside the inPipe --
-		local FName = inPipe.fluidbox[1].name
-		local fAmount = inPipe.fluidbox[1].amount
-		local fTemp = inPipe.fluidbox[1].temperature
-
-		-- Insert the Fluid inside the outPipe --
-		local inserted = outPipe.insert_fluid({name=FName, amount=fAmount, temperature=fTemp})
-
-		-- Remove the Fluid from the inPipe --
-		inPipe.remove_fluid{name=FName, amount=inserted}
-
-		return
-
-	end
-
-end
-
--- Advenced print --
-function dprint(v)
-	game.print(serpent.block(v))
-end
-
--- Print all Keys --
-function dprintKeys(t)
-	dprint("--- KEYS ---")
-	for k, j in pairs(t) do
-		dprint(k)
-	end
-	dprint("------------")
-end
-
--- Round a Number --
-function round(n)
-	return n % 1 >= 0.5 and math.ceil(n) or math.floor(n)
-end
-	
-
--- Return a splitted table of a string --
-function split(str, char)
-	char = "[^" .. char .."]+"
-	local parts = {__index = table.insert}
-	setmetatable(parts, parts)
-	str:gsub(char, parts)
-	setmetatable(parts, nil)
-	parts.__index = nil
-	return parts
-end
-
--- Return a comprehensible time --
-function Util.getRealTime(time)
-	local second = time * 86400
-	local minute = math.floor(second / 60) % 60
-	local hour = math.floor(second/3600)
-	local AMPM = hour > 12 and "AM" or "PM"
-	if hour == 12 then hour = 0 elseif hour == 0 then hour = 12 end
-	if hour > 12 then hour = hour - 12 end
-	if hour == 0 then AMPM = "AM" end
-	if minute < 10 then minute = 0 .. tostring(minute) else minute = tostring(minute) end
-	if hour < 10 then hour = 0 .. tostring(hour) else hour = tostring(hour) end
-	local realTime = {"", hour, "H", minute, " ", AMPM}
-	return realTime
-end
-
--- Return the localised Entity Name --
-function Util.getLocEntityName(entName)
-	if game.entity_prototypes[entName] ~= nil then
-		return game.entity_prototypes[entName].localised_name
-	end
-end
-
--- Return the localised Item Name --
-function Util.getLocItemName(itemName)
-	if game.item_prototypes[itemName] ~= nil then
-		return game.item_prototypes[itemName].localised_name
-	end
-end
-
--- Return the localised Fluid Name --
-function Util.getLocFluidName(fluidName)
-	if game.fluid_prototypes[fluidName] ~= nil then
-		return game.fluid_prototypes[fluidName].localised_name
-	end
-end
-
--- Return the localised Recipe Name --
-function Util.getLocRecipeName(recipeName)
-	if game.recipe_prototypes[recipeName] ~= nil then
-		return game.recipe_prototypes[recipeName].localised_name
-	end
-end
-
--- Reset an Animation --
-function Util.resetAnimation(animId, totalFrame)
-	local animSpeed = rendering.get_animation_speed(animId)
-	local currentFrame = math.floor((game.tick * animSpeed) % totalFrame)
-	rendering.set_animation_offset(animId, 0 - currentFrame)
-end
-
 -- Check if an Object is valid --
 function valid(obj)
 	if obj == nil then return false end
@@ -308,30 +182,6 @@ function valid(obj)
 	if type(obj.valid) == "boolean" then return obj.valid end
 	if obj:valid() ~= true then return false end
 	return true
-end
-
--- Unlock a recipe for all Players --
-function unlockRecipeForAll(recipeName, techCondition)
-	if recipeName == nil then return end
-	for k, force in pairs(game.forces) do
-		if techCondition ~= nil and technologyUnlocked(techCondition, force) == true then
-			force.recipes[recipeName].enabled = true
-		end
-	end
-end
-
--- Test if player have this technologie unlocked --
-function technologyUnlocked(name, force)
-	if force == nil then force = game.forces["player"] end
-	if force == nil then return false end
-	if force.technologies[name] ~= nil and force.technologies[name].researched then return true end
-	return false
-end
-
--- Return the player object with his id --
-function getPlayer(id)
-	local player = nil
-	return game.players[id]
 end
 
 -- Return the Player Mobile Factory --
@@ -400,7 +250,7 @@ function findNearestMF(surface, position)
 	return nearestMFObj
 end
 
-function Util.valueToObj(inTable, key, value)
+function valueToObj(inTable, key, value)
 	if type(inTable) ~= "table" or key == nil or value == nil then return end
 	for _, obj in pairs(inTable) do
 		if obj[key] == value then
@@ -541,38 +391,10 @@ function fixMB(event, MF)
 	end
 end
 
--- Create Tiles at the given position and radius --
-function createTilesAtPosition(position, radius, surface, tileName, force)
-	-- Check all variables --
-	if position == nil or radius == nil or surface == nil then return end
-	if tileName == nil then tileName = "tutorial-grid" end
-	-- Ajust the radius --
-	radius = radius - 1
-	-- Create all tiles --
-	local tilesTable = {}
-	for x = 0 - radius, radius do
-		for y = 0 - radius, radius do
-			posX = math.floor(position.x) + x
-			posY = math.floor(position.y) + y
-			tilesFind = surface.find_tiles_filtered{area={{posX, posY},{posX+1, posY+1}}}
-			local replace = true
-			for k, tile in pairs(tilesFind) do
-				-- this check can somehow destroy Equalizer and kill player. See knownbugs.txt[1]
-				if tileName == "tutorial-grid" and tile.name ~= "VoidTile" then
-					replace = false
-				end
-			end
-			if force == true or replace == true then
-				table.insert(tilesTable, {name=tileName, position={posX, posY}})
-			end
-		end
-	end
-	-- Set tiles --
-	if table_size(tilesTable) > 0 then surface.set_tiles(tilesTable) end
-end
+
 
 -- Add a Mobile Factory to a player inventory --
-function Util.addMobileFactory(player)
+function addMobileFactory(player)
 	-- Get the Player Inventory --
 	local inv = player.get_main_inventory()
 	-- Give player Mobile Factory at start --
@@ -591,39 +413,12 @@ function Util.addMobileFactory(player)
 	inv.insert({name="DimensionalTile", count=300})
 end
 
--- Util: Create a frame from an Item --
-function Util.itemToFrame(name, count, GUIObj, gui)
-	-- Create the Button --
-	local button = GUIObj:addButton("", gui, "item/" .. name, "item/" .. name, {"", Util.getLocItemName(name), ": ", Util.toRNumber(count)}, 37, true, true, count)
-	button.style = "MF_Fake_Button_Blue"
-	button.style.padding = 0
-	button.style.margin = 0
-end
-
--- Util: Create a frame from a Fluid --
-function Util.fluidToFrame(name, count, GUITable, gui)
-	-- Create the Button --
-	local button = GAPI.addButton(GUITable, "", gui, "fluid/" .. name, "fluid/" .. name, {"", Util.getLocFluidName(name), ": ", Util.toRNumber(count)}, 37, true, true, count)
-	button.style = "MF_Fake_Button_Purple"
-	button.style.padding = 0
-	button.style.margin = 0
-end
-
--- Util: Randomize Table --
-function Util.shuffle(array)
-	for i = table_size(array), 2, -1 do
-		local j = math.random(i)
-		array[i], array[j] = array[j], array[i]
-	end
-	return array
-end
-
--- Util: Get Object ID --
-function Util.getEntID(array)
+-- Get Object ID --
+function getEntID(array)
 	local tmpArray = {}
 	local id = 0
 	local highId = 0
-	for k, obj in pairs(array) do
+	for _, obj in pairs(array) do
 		tmpArray[obj.ID] = obj
 		if obj.ID > highId then
 			highId = obj.ID
@@ -641,49 +436,8 @@ function Util.getEntID(array)
 	return id
 end
 
--- Calcule the Distance between two Positions --
-function Util.distance(position1, position2)
-	local x1 = position1[1] or position1.x
-	local y1 = position1[2] or position1.y
-	local x2 = position2[1] or position2.x
-	local y2 = position2[2] or position2.y
-	return ((x1 - x2) ^ 2 + (y1 - y2) ^ 2) ^ 0.5
-end
-
--- Calcule the distance in Tiles between two Positions --
-function Util.distanceByTiles(position1, position2)
-	local x1 = position1[1] or position1.x
-	local y1 = position1[2] or position1.y
-	local x2 = position2[1] or position2.x
-	local y2 = position2[2] or position2.y
-	return math.max(math.abs(x1-x2), math.abs(y1-y2))
-end
-
--- Transform big numbers to readable numbers --
-function Util.toRNumber(number)
-	if number == nil then return 0 end
-	local rNumber = string.format("%.2f", number)
-	if number >= 1000 and number < 1000000 then
-		rNumber = string.format("%.2f", number/1000) .. " k"
-	elseif number >= 1000000 and number < 1000000000 then
-		rNumber = string.format("%.2f", number/1000000) .. " M"
-	elseif number >= 1000000000 then
-		rNumber = string.format("%.2f", number/1000000000) .. " G"
-	end
-	return rNumber
-end
-
--- Copy a Table --
-function Util.copyTable(t1)
-	local t2 = {}
-	for k, j in pairs(t1 or {}) do
-		t2[k] = j
-	end
-	return t2
-end
-
 -- Return true if the Player is not inside a Mobile Factory --
-function Util.isOutside(player)
+function isOutside(player)
 	if player == nil then return true end
 	if string.match(player.surface.name, _mfSurfaceName) then return false end
 	if string.match(player.surface.name, _mfControlSurfaceName) then return false end
@@ -691,7 +445,7 @@ function Util.isOutside(player)
 end
 
 -- Check if the Player can interact with the Structure --
-function Util.canUse(MFPlayer, obj)
+function canUse(MFPlayer, obj)
 	if obj.player == MFPlayer.name then return true end
 	if obj.MF then
 		if obj.MF.varTable.allowedPlayers[MFPlayer.index] == true then return true end
@@ -734,7 +488,7 @@ function mixQuatron(obj, newCharge, newLevel)
 	obj.quatronLevel = math.pow(effectiveCharge / obj.quatronCharge, 1/_mfQuatronScalePower)
 end
 
-function Util.slotToPos(slotNumber, x, y)
+function slotToPos(slotNumber, x, y)
 	if slotNumber == 1 then return {x-2,y-4} end
 	if slotNumber == 2 then return {x-1,y-4} end
 	if slotNumber == 3 then return {x,y-4} end
@@ -757,7 +511,7 @@ function Util.slotToPos(slotNumber, x, y)
 	if slotNumber == 20 then return {x+1,y+3} end
 end
 
-function Util.slotToDirection(slotNumber, entity)
+function slotToDirection(slotNumber, entity)
 	local direction = nil
 	if slotNumber == 1 then direction = defines.direction.north end
 	if slotNumber == 2 then direction = defines.direction.north end
