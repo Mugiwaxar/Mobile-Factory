@@ -299,7 +299,7 @@ function FE:extractFluids(event)
 			end
 		else
 			-- Try to find a Deep Storage if the Selected Inventory is All --
-			for k, dp in pairs(self.dataNetwork.DTKTable) do
+			for _, dp in pairs(self.dataNetwork.DTKTable) do
 				if dp:canAccept({name = product.name, amount = fluidExtracted * product.amount}) == true then
 					deepStorages[product.name] = dp
 					break

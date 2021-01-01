@@ -9,30 +9,6 @@ require("scripts/GUI/switchMF-gui.lua")
 require("scripts/GUI/recipe-gui.lua")
 require("utils/functions.lua")
 
--- Create a Camera Frame --
--- function GUI.createCamera(MFPlayer, name, ent, size, zoom)
-
--- 	-- Create the Frame --
--- 	local frameObj = GUI.createGUI("Camera" .. name, MFPlayer, "vertical", true)
--- 	frameObj.style.width = size
--- 	frameObj.style.height = size
-	
--- 	-- Add the Top Bar --
--- 	GUI.createTopBar(frameObj, nil, name)
-	
--- 	-- Create the Camera --
---     local camera = frameObj.gui.add{type="camera", position=ent.position, surface=ent.surface, zoom=zoom or 1}
---     camera.style.vertically_stretchable = true
--- 	camera.style.horizontally_stretchable = true
-
--- 	-- Center the Frame --
--- 	frameObj.force_auto_center()
-
--- 	-- Return the Frame --
--- 	return frameObj
-	
--- end
-
 -- Update all GUIs --
 function GUI.updateAllGUIs(force)
 	
@@ -340,12 +316,11 @@ function GUI.buttonClicked(event)
 	end
 
 	-- Close Camera Button --
-	if string.match(event.element.name, "Camera") then
-		local text = string.gsub(event.element.name, "CloseButton", "")
-		if MFPlayer.GUI[text] ~= nil then
-			MFPlayer.GUI[text].destroy()
-			MFPlayer.GUI[text] = nil
-		end
+	if string.match(event.element.name, "MFCameraGUICloseButton") then
+		if MFPlayer.GUI[_mfGUIName.CameraGUI] ~= nil and MFPlayer.GUI[_mfGUIName.CameraGUI].gui ~= nil and MFPlayer.GUI[_mfGUIName.CameraGUI].gui.valid == true then
+            MFPlayer.GUI[_mfGUIName.CameraGUI].gui.destroy()
+            MFPlayer.GUI[_mfGUIName.CameraGUI] = nil
+        end
 		return
 	end
 
@@ -407,8 +382,12 @@ function GUI.buttonClicked(event)
 
 	-- PortOutside button --
 	if event.element.name == "PortOutsideButton" then
-		teleportPlayerOutside(player)
+		if event.button == defines.mouse_button_type.right then
+			teleportPlayerToDriverSeat(player)
+		else
+			teleportPlayerOutside(player)
 		return
+		end
 	end
 
 	-- -- SyncArea button --

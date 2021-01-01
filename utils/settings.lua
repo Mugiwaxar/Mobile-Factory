@@ -183,7 +183,8 @@ _mfGUIName =
 	DeployGUI = "MFDeployGUI",
 	SlotGUI = "MFSlotGUI",
 	RecipeGUI = "MFRecipeGUI",
-	RecipeInfoGUI = "MFRecipeInfoGUI"
+	RecipeInfoGUI = "MFRecipeInfoGUI",
+	CameraGUI = "MFCameraGUI"
 }
 
 -- Tooltip GUIs that have to be oppened by the Shortcut --

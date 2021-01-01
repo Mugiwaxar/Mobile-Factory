@@ -40,6 +40,7 @@ function GUI.createInfoGui(player)
 	infoFrame.style.right_padding = 3
 	infoFrame.style.bottom_padding = 5
 	infoFrame.style.right_margin = 3
+	infoFrame.style.minimal_width = 250
 	tankFrame.style.top_padding = 1
 	tankFrame.style.bottom_padding = 5
 	tankFrame.style.right_margin = 3
@@ -70,7 +71,7 @@ function GUI.createInfoGui(player)
 	InvScrollPane.style.vertically_stretchable = true
 	DTScrollPane.style.minimal_width = 198
 	DSScrollPane.style.minimal_width = 198
-	InvScrollPane.style.minimal_width = 198
+	InvScrollPane.style.minimal_width = 308
 	DTScrollPane.style.left_margin = 5
 	DTScrollPane.style.right_margin = 5
 	DSScrollPane.style.left_margin = 5
@@ -260,7 +261,7 @@ function GUI.updateDeepTankFrame(GUITable)
 		local sprite = DTK.filter or DTK.inventoryFluid
 		local name = Util.getLocFluidName(DTK.inventoryFluid) or Util.getLocFluidName(DTK.filter) or {"", {"gui-description.DeepTank"}, " ", DTK.ID}
 		local amount = DTK.inventoryCount or 0
-		local tCapacity = _dtMaxFluid
+		local tCapacity = DTK.max or _dtMaxFluid
 		local color = _mfPurple
 
 		-- Create the Frame --
@@ -279,10 +280,10 @@ function GUI.updateDeepTankFrame(GUITable)
 
 		-- Create the Labels --
 		GAPI.addLabel(GUITable, "", flow, name, nil, "", false, nil, _mfLabelType.yellowTitle)
-		GAPI.addLabel(GUITable, "", flow, Util.toRNumber(amount) .. "/" .. Util.toRNumber(tCapacity), _mfYellow)
+		GAPI.addLabel(GUITable, "", flow, Util.toRNumber(amount) .. "/" .. Util.toRNumber(tCapacity), _mfYellow, amount .. "/" .. tCapacity)
 
 		-- Create the Progress Bar --
-		local bar = GAPI.addProgressBar(GUITable, "", flow, "", "", false, color, amount/tCapacity)
+		local bar = GAPI.addProgressBar(GUITable, "", flow, "", "", false, color, amount/_dtMaxFluid)
 		bar.style.horizontally_stretchable = true
 
 		::continue::
@@ -318,6 +319,7 @@ function GUI.updateDeepStorageFrame(GUITable)
 		local sprite = DSR.filter or DSR.inventoryItem
 		local name = Util.getLocItemName(DSR.inventoryItem) or Util.getLocItemName(DSR.filter) or {"", {"gui-description.DeepStorage"}, " ", DSR.ID}
 		local amount = DSR.inventoryCount or 0
+		local max = DSR.max
 
 		-- Create the Frame --
 		local frame = GAPI.addFrame(GUITable, "", storageTable, "horizontal")
@@ -332,7 +334,11 @@ function GUI.updateDeepStorageFrame(GUITable)
 
 		-- Create the Label --
 		GAPI.addLabel(GUITable, "", flow, name, nil, "", false, nil, _mfLabelType.yellowTitle)
-		GAPI.addLabel(GUITable, "", flow, amount, _mfYellow)
+		if max ~= nil then
+			GAPI.addLabel(GUITable, "", flow, Util.toRNumber(amount) .. "/" .. Util.toRNumber(max), _mfYellow, amount .. "/" .. max)
+		else
+			GAPI.addLabel(GUITable, "", flow, Util.toRNumber(amount), _mfYellow, amount)
+		end
 
 		::continue::
 
@@ -358,7 +364,7 @@ function GUI.updateInventoryFrame(GUITable)
 	GAPI.addDualLabel(GUITable, inventoryFlow, {"", {"gui-description.InventoryCapacity"}, ": "}, Util.toRNumber(MF.II.usedCapacity) .. "/" .. Util.toRNumber(MF.II.maxCapacity) .. "  (" .. MF.II.usedCapacity .. "/" .. MF.II.maxCapacity .. ")", _mfOrange, _mfYellow)
 
 	-- Create the Table --
-    local tableList = GAPI.addTable(GUITable, "", inventoryScrollPane, 5)
+    local tableList = GAPI.addTable(GUITable, "", inventoryScrollPane, 8)
 
 	-- Look for all Deep Tanks --
 	for _, DTK in pairs(MF.dataNetwork.DTKTable) do

@@ -434,16 +434,17 @@ function NE.transferItemsFromPInv(PInv, NE, item, count)
 	if amount <= 0 then amount = 1 end
 
 	-- Try to send the Items to a Deep Storage --
-	for k, deepStorage in pairs(NE.dataNetwork.DSRTable) do
-		if deepStorage:canAccept(item) then
-			inserted = deepStorage:addItem(item, amount)
-			break
+	for _, deepStorage in pairs(NE.dataNetwork.DSRTable) do
+		local availableSpace = deepStorage:availableSpace()
+		if availableSpace > 0 and deepStorage:canAccept(item, availableSpace) then
+			inserted = deepStorage:addItem(item, math.min(availableSpace, amount))
+			amount = amount - inserted
 		end
 	end
 
 	-- Try to send the Items to the Data Network inventory --
-	if inserted == 0 then
-		inserted = DNInv:addItem(item, amount)
+	if amount > 0 then
+		inserted = inserted + DNInv:addItem(item, amount)
 	end
 
 	-- Remove the Item from the Player Inventory --

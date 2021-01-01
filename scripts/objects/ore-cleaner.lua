@@ -296,6 +296,9 @@ function OC:collectOres(event)
 		if table_size(listProducts) > 1 then return end
 	end
 
+	-- Calculate the amout of Ore that will be extracted --
+	local oreExtracted = math.min(self:orePerExtraction(), orePath.amount)
+
 	-- Check if there is a room for all products
 	local deepStorages = {}
 	for _, product in pairs(listProducts) do
@@ -308,7 +311,7 @@ function OC:collectOres(event)
 
 		if self.selectedInv then
 			-- Deep Storage is assigned, check if it fits
-			if self.selectedInv:canAccept(product.name) then
+			if self.selectedInv:canAccept(product.name, oreExtracted) then
 				-- Selected inventory matches product, proceed
 				deepStorages[product.name] = self.selectedInv
 			else
@@ -317,8 +320,8 @@ function OC:collectOres(event)
 			end
 		else
 			-- Try to find a Deep Storage if the Selected Inventory is All --
-			for k, dp in pairs(self.dataNetwork.DSRTable) do
-				if dp:canAccept(product.name) == true then
+			for _, dp in pairs(self.dataNetwork.DSRTable) do
+				if dp:canAccept(product.name, oreExtracted) == true then
 					deepStorages[product.name] = dp
 					break
 				end
@@ -330,7 +333,6 @@ function OC:collectOres(event)
 
 	-- Extract Ore --
 	local stats = self.ent.force.item_production_statistics
-	local oreExtracted = math.min(self:orePerExtraction(), orePath.amount)
 	for _, product in pairs(listProducts) do
 		if product.probability == 1 or product.probability > math.random() then
 			-- Add Ore to the Inventory --

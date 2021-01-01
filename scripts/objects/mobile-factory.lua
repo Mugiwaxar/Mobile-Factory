@@ -418,7 +418,7 @@ function MF:updateLasers()
 	local laserNumber = self:getLaserNumber()
 
 	if self.energyLaserActivated then
-		for k, entity in pairs(self.ELEntities or {}) do
+		for _, entity in pairs(self.ELEntities or {}) do
 			if entity ~= nil and entity.valid == true then
 				if self:updateEnergyLaser(entity) == true then
 					laserUsed = laserUsed + 1
@@ -429,7 +429,7 @@ function MF:updateLasers()
 	end
 
 	if self.quatronLaserActivated then
-		for k, entity in pairs(self.QLEntities or {}) do
+		for _, entity in pairs(self.QLEntities or {}) do
 			if entity ~= nil and entity.valid == true then
 				if self:updateQuatronLaser(entity) == true then
 					laserUsed = laserUsed + 1
@@ -440,7 +440,7 @@ function MF:updateLasers()
 	end
 
 	if self.fluidLaserActivated then
-		for k, entity in pairs(self.FLEntities or {}) do
+		for _, entity in pairs(self.FLEntities or {}) do
 			if entity ~= nil and entity.valid == true then
 				if self:updateFluidLaser(entity) == true then
 					laserUsed = laserUsed + 1
@@ -451,7 +451,7 @@ function MF:updateLasers()
 	end
 
 	if self.itemLaserActivated then
-		for k, entity in pairs(self.ILEntities or {}) do
+		for _, entity in pairs(self.ILEntities or {}) do
 			if entity ~= nil and entity.valid == true then
 				if self:updateLogisticLaser(entity) == true then
 					laserUsed = laserUsed + 1
@@ -591,8 +591,6 @@ function MF:updateLogisticLaser(entity)
 	if self.internalEnergyObj:energy() > _mfBaseItemEnergyConsumption * self:getLaserItemDrain() then
 		-- Get Chest Inventory --
 		local inv = entity.get_inventory(defines.inventory.chest)
-		-- Get the Internal Inventory --
-		local dataInv = self.II
 		if inv ~= nil and inv.valid == true then
 			-- Create the Laser Capacity variable --
 			local capItems = math.min(self:getLaserItemDrain(), self.internalEnergyObj:energy() * _mfBaseItemEnergyConsumption)
@@ -602,7 +600,7 @@ function MF:updateLogisticLaser(entity)
 				local stack = inv[i]
 				-- Move only items with no uniq data(excluding items with tags, inventory, blueprints, etc)
 				if stack.valid_for_read == true and stack.item_number == nil then
-					local moved = dataInv:addItem(stack.name, math.min(stack.count, canMove))
+					local moved = self.dataNetwork:addItems(stack.name, math.min(stack.count, canMove))
 					if moved > 0 then
 						-- Remove Items from the Chest --
 						inv.remove{name=stack.name, count=moved}

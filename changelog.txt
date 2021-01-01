@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.7.4
+Date: 01/01/2021
+  Features:
+    - Right-Clicking the Teleport Outside Button will now teleport you to the Driver Seat of the Mobile Factory you are inside of (Or the Passenger Seat if the Drive Seat is already taken)
+    - Right-Clicking a Mobile Factory inside the Switch GUI will open a Camera centered on it
+    - You can now set an Items limit for the Deep Storage (Can be set inside the Deep Storage GUI)
+    - You can now set an Fluid limit for the Deep Tank (Can be set inside the Deep Tank GUI)
+---------------------------------------------------------------------------------------------------
 Version: 0.7.3
 Date: 01/01/2021
   Scripting:
