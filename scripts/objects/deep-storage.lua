@@ -11,7 +11,8 @@ DSR = {
 	inventoryItem = nil,
 	inventoryCount = 0,
 	ID = 0,
-	filter = nil
+	filter = nil,
+	max = nil
 }
 
 -- Constructor --
@@ -108,6 +109,7 @@ function DSR:getTooltipInfos(GUITable, mainFrame, justCreated)
 		inventoryFrame.style.right_padding = 3
 		inventoryFrame.style.left_margin = 3
 		inventoryFrame.style.right_margin = 3
+		inventoryFrame.style.width = 160
 
 		-- Add the Title --
 		GAPI.addSubtitle(GUITable, "", inventoryFrame, {"gui-description.Inventory"})
@@ -122,6 +124,7 @@ function DSR:getTooltipInfos(GUITable, mainFrame, justCreated)
 		settingsFrame.style.left_padding = 3
 		settingsFrame.style.right_padding = 3
 		settingsFrame.style.right_margin = 3
+		settingsFrame.style.width = 160
 
 		-- Add the Title --
 		GAPI.addSubtitle(GUITable, "", settingsFrame, {"gui-description.Settings"})
@@ -130,6 +133,12 @@ function DSR:getTooltipInfos(GUITable, mainFrame, justCreated)
 		GAPI.addLabel(GUITable, "", settingsFrame, {"", {"gui-description.FilterSelect"}, ":"}, nil, {"gui-description.TargetedStorage"}, false, nil, _mfLabelType.yellowTitle)
 		local filter = GAPI.addFilter(GUITable, "D.S.R.Filter", settingsFrame, nil, true, "item", 40, {ID=self.ent.unit_number})
 		GUITable.vars.filter = filter
+
+		-- Create the Max amout Textfield --
+		GAPI.addLabel(GUITable, "", settingsFrame, {"gui-description.DSDTMaxItemsAmount"}, nil, {"gui-description.DSDTMaxItemsAmountTT"}, false, nil, _mfLabelType.yellowTitle)
+		local textfield = GAPI.addTextField(GUITable, "D.S.R.Max", settingsFrame, self.max, "", false, true, false, false, false, {ID=self.ent.unit_number})
+		textfield.style.bottom_margin = 5
+		textfield.style.width = 120
 
 	end
 
@@ -153,7 +162,11 @@ function DSR:getTooltipInfos(GUITable, mainFrame, justCreated)
 	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTItemName", itemName}, _mfOrange)
 
 	-- Create the Item Amount Label --
-	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTAmount", Util.toRNumber(self.inventoryCount or 0)}, _mfOrange)
+	local text = {"gui-description.DSDTAmount", Util.toRNumber(self.inventoryCount or 0)}
+	if self.max ~= nil then
+		text = {"gui-description.DSDTAmount2", Util.toRNumber(self.inventoryCount or 0), Util.toRNumber(self.max)}
+	end
+	GAPI.addLabel(GUITable, "", inventoryTable, text, _mfOrange)
 
 	-- Create the Filter Label --
 	local filterName = self.filter ~= nil and Util.getLocItemName(self.filter) or {"gui-description.None"}
@@ -173,19 +186,26 @@ function DSR:hasItem(name)
 end
 
 -- Return if the Item can be accepted --
-function DSR:canAccept(name)
+function DSR:canAccept(name, count)
 	if self.filter == nil then return false end
 	if self.filter ~= nil and self.filter ~= name then return false end
 	if self.inventoryItem ~= nil and self.inventoryItem ~= name then return false end
+	if self.max ~= nil and self.max < self.inventoryCount + count then return false end
 	return true
+end
+
+-- Return the amount of space available --
+function DSR:availableSpace()
+	return (self.max or 999999999999999999999999999) - self.inventoryCount
 end
 
 -- Add Items --
 function DSR:addItem(name, count)
-	if self:canAccept(name) == true then
+	if self:canAccept(name, count) == true then
+		local inserted = math.min(count, self:availableSpace())
 		self.inventoryItem = name
-		self.inventoryCount = self.inventoryCount + count
-		return count
+		self.inventoryCount = self.inventoryCount + inserted
+		return inserted
 	end
 	return 0
 end
@@ -237,6 +257,18 @@ function DSR.interaction(event)
 			global.deepStorageTable[id].filter = event.element.elem_value
 		else
 			global.deepStorageTable[id].filter = nil
+		end
+		GUI.updateAllGUIs(true)
+		return
+	end
+	-- If this is a Max Textfield --
+	if string.match(event.element.name, "D.S.R.Max") then
+		local id = event.element.tags.ID
+		if global.deepStorageTable[id] == nil then return end
+		if event.element.text ~= nil and event.element.text ~= "" and event.element.text ~= "0" then
+			global.deepStorageTable[id].max = tonumber(event.element.text)
+		else
+			global.deepStorageTable[id].max = nil
 		end
 		GUI.updateAllGUIs(true)
 		return
