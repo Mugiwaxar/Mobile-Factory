@@ -12,7 +12,8 @@ DTK = {
 	inventoryCount = 0,
 	inventoryTemperature = 15,
 	ID = 0,
-	filter = nil
+	filter = nil,
+	max = _dtMaxFluid
 }
 
 -- Constructor --
@@ -111,6 +112,7 @@ function DTK:getTooltipInfos(GUITable, mainFrame, justCreated)
 		inventoryFrame.style.right_padding = 3
 		inventoryFrame.style.left_margin = 3
 		inventoryFrame.style.right_margin = 3
+		inventoryFrame.style.width = 160
 
 		-- Add the Title --
 		GAPI.addSubtitle(GUITable, "", inventoryFrame, {"gui-description.Inventory"})
@@ -125,6 +127,7 @@ function DTK:getTooltipInfos(GUITable, mainFrame, justCreated)
 		settingsFrame.style.left_padding = 3
 		settingsFrame.style.right_padding = 3
 		settingsFrame.style.right_margin = 3
+		settingsFrame.style.width = 160
 
 		-- Add the Title --
 		GAPI.addSubtitle(GUITable, "", settingsFrame, {"gui-description.Settings"})
@@ -133,6 +136,12 @@ function DTK:getTooltipInfos(GUITable, mainFrame, justCreated)
 		GAPI.addLabel(GUITable, "", settingsFrame, {"", {"gui-description.FilterSelect"}, ":"}, nil, {"gui-description.TargetedStorage"}, false, nil, _mfLabelType.yellowTitle)
 		local filter = GAPI.addFilter(GUITable, "D.T.Filter", settingsFrame, nil, true, "fluid", 40, {ID=self.ent.unit_number})
 		GUITable.vars.filter = filter
+
+		-- Create the Max amout Textfield --
+		GAPI.addLabel(GUITable, "", settingsFrame, {"gui-description.DSDTMaxFluidAmount"}, nil, {"gui-description.DSDTMaxFluidAmountTT"}, false, nil, _mfLabelType.yellowTitle)
+		local textfield = GAPI.addTextField(GUITable, "D.T.Max", settingsFrame, self.max, "", false, true, false, false, false, {ID=self.ent.unit_number})
+		textfield.style.bottom_margin = 5
+		textfield.style.width = 120
 
 	end
 
@@ -156,7 +165,7 @@ function DTK:getTooltipInfos(GUITable, mainFrame, justCreated)
 	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTFluidName", fluidName}, _mfOrange)
 
 	-- Create the Fluid Amount Label --
-	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTAmount", Util.toRNumber(self.inventoryCount or 0)}, _mfOrange)
+	GAPI.addLabel(GUITable, "", inventoryTable, {"gui-description.DSDTAmount2", Util.toRNumber(self.inventoryCount or 0), Util.toRNumber(self.max or _dtMaxFluid)}, _mfOrange)
 
 	-- Create the Filter Label --
 	local filterName = self.filter ~= nil and Util.getLocFluidName(self.filter) or {"gui-description.None"}
@@ -180,8 +189,8 @@ function DTK:canAccept(fluid)
 	if self.filter == nil then return false end
 	if self.filter ~= nil and self.filter ~= fluid.name then return false end
     if self.inventoryFluid ~= nil and self.inventoryFluid ~= fluid.name then return false end
-	if self.inventoryCount >= _dtMaxFluid then return false end
-	if fluid.amount ~= nil and fluid.amount > _dtMaxFluid - self.inventoryCount then return false end
+	if self.inventoryCount >= (self.max or _dtMaxFluid) then return false end
+	if fluid.amount ~= nil and fluid.amount > (self.max or _dtMaxFluid) - self.inventoryCount then return false end
 	return true
 end
 
@@ -189,7 +198,7 @@ end
 function DTK:addFluid(fluid)
 	if self:canAccept(fluid) == true then
         self.inventoryFluid = fluid.name
-        local maxAdded = _dtMaxFluid - self.inventoryCount
+        local maxAdded = (self.max or _dtMaxFluid) - self.inventoryCount
         local added = math.min(fluid.amount, maxAdded)
 		-- fluid.temperature should always be non-nil, 15 is default temperature
 		self.inventoryTemperature = (self.inventoryTemperature * self.inventoryCount + added * fluid.temperature) / (self.inventoryCount + added)
@@ -250,6 +259,18 @@ function DTK.interaction(event)
 			global.deepTankTable[id].filter = event.element.elem_value
 		else
 			global.deepTankTable[id].filter = nil
+		end
+		GUI.updateAllGUIs(true)
+		return
+	end
+	-- If this is a Max Textfield --
+	if string.match(event.element.name, "D.T.Max") then
+		local id = event.element.tags.ID
+		if global.deepTankTable[id] == nil then return end
+		if event.element.text ~= nil and event.element.text ~= "" and event.element.text ~= 0 then
+			global.deepTankTable[id].max = math.min(tonumber(event.element.text), _dtMaxFluid)
+		else
+			global.deepTankTable[id].max = _dtMaxFluid
 		end
 		GUI.updateAllGUIs(true)
 		return
