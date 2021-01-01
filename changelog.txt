@@ -1,15 +1,30 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.7.3
+Date: 01/01/2021
+  Scripting:
+    - Added an Error handler for UpSys.update.obj.update
+    - Added an Error handler for GUI.updateAllGUIs.GUI.update...
+    - Added an Error handler for MF:update.II.rescan
+    - Added an Error handler for MF:update.MF.repack
+    - Added an Error handler for MF:update.MF.updateFuel
+    - Added an Error handler for MF:update.MF.scanEnt
+    - Added an Error handler for MF:update.MF.updateShield
+    - Added an Error handler for MF:update.MF.updatePollution
+    - Added an Error handler for MF:update.MF.factoryTeleportBox
+    - Added an Error handler for MF:update.MF.scanModules
+    - Added an Error handler for MF:update.MF.updateDeployment
+---------------------------------------------------------------------------------------------------
 Version: 0.7.2
 Date: 31/12/2020
   Scripting:
-    - Add an Error handler for initAPlayer.Event.initPlayer
-    - Add an Error handler for Event.initPlayer.addMobileFactory
-    - Add an Error handler for Event.initPlayer.GUI.createMFMainGUI
-    - Add an Error handler for whenSomethingWasPlaced.somethingWasPlaced
-    - Add an Error handler for onGhostPlacedByDie.ghostPlacedByDie
-    - Add an Error handler for guiOpened.ghostPlacedByDie.GUI.openTTGui
-    - Add an Error handler for onButtonClicked.GUI.buttonClicked
-    - Add an Error handler for onGuiElemChanged.GUI.onGuiElemChanged
+    - Added an Error handler for initAPlayer.Event.initPlayer
+    - Added an Error handler for Event.initPlayer.addMobileFactory
+    - Added an Error handler for Event.initPlayer.GUI.createMFMainGUI
+    - Added an Error handler for whenSomethingWasPlaced.somethingWasPlaced
+    - Added an Error handler for onGhostPlacedByDie.ghostPlacedByDie
+    - Added an Error handler for guiOpened.ghostPlacedByDie.GUI.openTTGui
+    - Added an Error handler for onButtonClicked.GUI.buttonClicked
+    - Added an Error handler for onGuiElemChanged.GUI.onGuiElemChanged
 ---------------------------------------------------------------------------------------------------
 Version: 0.7.1
 Date: 31/12/2020
@@ -23,7 +38,7 @@ Date: 31/12/2020
   Scripting:
     - Transfered the API-GUI to the MF: Base Mod
     - Transfered a lot of Functions (Util) to the MF: Base Mod
-    - Add the compatibility with MF: Base Errors handling that will try to avoid Crashes
+    - Added the compatibility with MF: Base Errors handling that will try to avoid Crashes
 ---------------------------------------------------------------------------------------------------
 Version: 0.6.2
 Date: 30/12/2020

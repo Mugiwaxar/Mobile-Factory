@@ -19,7 +19,7 @@ function GUI.createTPGui(player)
     infoFrame.style = "MFFrame1"
 	locFrame.style = "MFFrame1"
 	addLocFrame.style = "MFFrame1"
-    
+
     infoFrame.style.left_padding = 7
     infoFrame.style.right_padding = 7
     infoFrame.style.right_margin = 3
@@ -28,7 +28,7 @@ function GUI.createTPGui(player)
     locFrame.style.right_margin = 3
 	addLocFrame.style.left_padding = 7
     addLocFrame.style.right_padding = 7
-    
+
     infoFrame.style.vertically_stretchable = true
 	locFrame.style.vertically_stretchable = true
     addLocFrame.style.vertically_stretchable = true

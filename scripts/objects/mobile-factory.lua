@@ -244,6 +244,7 @@ end
 
 -- Update the Mobile Factory --
 function MF:update(event)
+
 	if self.fS ~= nil and self.fS.valid == false then
 		self.fS = nil
 	end
@@ -253,11 +254,19 @@ function MF:update(event)
 
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
+
 	-- Get the current tick --
 	local tick = event.tick
 
+	-- Get the Player --
+	local player = getPlayer(self.playerIndex)
+
 	-- Update the Internal Inventory capacity --
-	if tick%_eventTick80 == 0 then self.II:rescan() end
+	if tick%_eventTick80 == 0 then
+		if mfCall(self.II.rescan, self.II) then
+			player.print({"gui-description.UpdateMF_IIRescanFailed", self.name})
+		end
+	end
 	-- Check if the Mobile Factory has to TP --
 	if self.onTP and game.tick - self.tpCurrentTick > 30 then self:TPMobileFactoryPart2() end
 	-- Check the Mobile Factory --
@@ -265,25 +274,57 @@ function MF:update(event)
 
 	-- Check if the Deployment should be removed (If the Mobile Factory is moving)
 	if (self.ent.speed ~= 0 or self.ent.orientation ~= 0) and self.deployed == true then
-		self:repack()
+		if mfCall(MF.repack, self) == true then
+			player.print({"gui-description.UpdateMF_MFRepackFailed", self.name})
+		end
 	end
 
 	--Update all lasers --
-	if tick%_eventTick60 == 0 then self:updateLasers() end
+	if tick%_eventTick60 == 0 then
+		if mfCall(MF.updateLasers, self) then
+			player.print({"gui-description.UpdateMF_UpdateLasersFailed", self.name})
+		end
+	end
 	-- Update the Fuel --
-	if tick%_eventTick27 == 0 then self:updateFuel() end
+	if tick%_eventTick27 == 0 then
+		if mfCall(MF.updateFuel, self) == true then
+			player.print({"gui-description.UpdateMF_UpdateFuelFailed", self.name})
+		end
+	end
 	-- Scan Entities Around --
-	if tick%_eventTick90 == 0 then self:scanEnt() end
+	if tick%_eventTick90 == 0 then
+		if mfCall(MF.scanEnt, self) == true then
+			player.print({"gui-description.UpdateMF_ScanEntitiesFailed", self.name})
+		end
+	end
 	-- Update the Shield --
-	self:updateShield(event)
+	if mfCall(MF.updateShield, self, event) then
+		player.print({"gui-description.UpdateMF_UpdateShieldFailed", self.name})
+	end
 	-- Update Pollution --
-	if event.tick%_eventTick1200 == 0 then self:updatePollution() end
+	if event.tick%_eventTick1200 == 0 then
+		if mfCall(MF.updatePollution, self) == true then
+			player.print({"gui-description.UpdateMF_UpdatePollutionFailed", self.name})
+		end
+	end
 	-- Update Teleportation Box --
-	if event.tick%_eventTick5 == 0 then self:factoryTeleportBox() end
+	if event.tick%_eventTick5 == 0 then
+		if mfCall(MF.factoryTeleportBox, self) == true then
+			player.print({"gui-description.UpdateMF_UpdateTPFailed", self.name})
+		end
+	end
 	-- Read Modules inside the Equipment Grid --
-	if event.tick%_eventTick125 == 0 then self:scanModules() end
+	if event.tick%_eventTick125 == 0 then
+		if mfCall(MF.scanModules, self) == true then
+			player.print({"gui-description.UpdateMF_UpdateScanModulesFailed", self.name})
+		end
+	end
 	-- Update the Deployment --
-	if event.tick%_eventTick15 == 0 then self:updateDeployment() end
+	if event.tick%_eventTick15 == 0 then
+		if mfCall(MF.updateDeployment, self) == true then
+			player.print({"gui-description.UpdateMF_UpdateDeploymentFailed", self.name})
+		end
+	end
 	-- Update the Sync Area --
 	-- if tick%_eventTick30 == 0 then self:updateSyncArea() end
 end
@@ -673,7 +714,7 @@ function MF:factoryTeleportBox()
 	if self.tpEnabled == true then
 		local mfB = self.ent.bounding_box
 		local entities = self.ent.surface.find_entities_filtered{area={{mfB.left_top.x-0.5,mfB.left_top.y-0.5},{mfB.right_bottom.x+0.5, mfB.right_bottom.y+0.5}}, type="character"}
-		for k, entity in pairs(entities) do
+		for _, entity in pairs(entities) do
 			teleportPlayerInside(entity.player, self)
 		end
 	end
@@ -709,7 +750,7 @@ function MF:scanModules()
 	self.laserDrainMultiplier = 0
 	self.laserNumberMultiplier = 0
 	-- Look for Modules --
-	for k, equipment in pairs(self.ent.grid.equipment) do
+	for _, equipment in pairs(self.ent.grid.equipment) do
 		if equipment.name == "EnergyPowerModule" then
 			self.laserRadiusMultiplier = self.laserRadiusMultiplier + 1
 		end

@@ -54,7 +54,12 @@ function GUI.updateAllGUIs(force)
 				-- Update all GUIs --
 				if game.tick%_eventTick55 == 0 or force then
 				for _, GUItable in pairs(MFPlayer.GUI or {}) do
-					if GUItable.gui ~= nil and GUItable.gui.valid == true and GUI["update" .. GUItable.gui.name] ~= nil then GUI["update" .. GUItable.gui.name](GUItable) end
+					if GUItable.gui ~= nil and GUItable.gui.valid == true and GUI["update" .. GUItable.gui.name] ~= nil then
+						if mfCall(GUI["update" .. GUItable.gui.name],GUItable) == true then
+							player.print({"gui-description.updatingGUI_Failed"})
+							mfCall(Event.clearGUI, {player_index=player.index})
+						end
+					end
 				end
 
 			end
@@ -104,7 +109,7 @@ function GUI.guiOpened(event)
 	local player = getPlayer(event.player_index)
 	local MFPlayer = getMFPlayer(event.player_index)
 	if mfCall(GUI.openTTGui, MFPlayer, player, player.selected) == true then
-		getPlayer(event.player_index).print({"gui-description.openTTGui_Failled"})
+		getPlayer(event.player_index).print({"gui-description.openTTGui_Failed"})
 		Event.clearGUI(event)
 	end
 end

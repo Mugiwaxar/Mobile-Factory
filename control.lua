@@ -169,7 +169,7 @@ end
 -- Called when something is placed --
 function whenSomethingWasPlaced(event)
 	if mfCall(Event.somethingWasPlaced, event) == true then
-		game.print({"gui-description.whenSomethingWasPlaced_Failled"})
+		game.print({"gui-description.whenSomethingWasPlaced_Failed"})
 		local entity = event.created_entity or event.entity or event.destination
 		if entity ~= nil and entity.valid == true then
 			entity.destroy()
@@ -190,7 +190,7 @@ end
 -- Called after an Entity die --
 function onGhostPlacedByDie(event)
 	if mfCall(Event.ghostPlacedByDie, event) == true then
-		game.print({"gui-description.onGhostPlacedByDie_Failled"})
+		game.print({"gui-description.onGhostPlacedByDie_Failed"})
 		if event.ghost ~= nil and event.ghost.valid == true then
 			event.ghost.destroy()
 		end
@@ -210,7 +210,7 @@ end
 -- When a GUI Button is clicked --
 function onButtonClicked(event)
 	if mfCall(GUI.buttonClicked, event) == true then
-		getPlayer(event.player_index).print({"gui-description.updatingGUI_Failled"})
+		getPlayer(event.player_index).print({"gui-description.updatingGUI_Failed"})
 		mfCall(Event.clearGUI, event)
 	end
 end
@@ -218,7 +218,7 @@ end
 -- When a GUI Element changed --
 function onGuiElemChanged(event)
 	if mfCall(GUI.onGuiElemChanged, event) == true then
-		getPlayer(event.player_index).print({"gui-description.updatingGUI_Failled"})
+		getPlayer(event.player_index).print({"gui-description.updatingGUI_Failed"})
 		mfCall(Event.clearGUI, event)
 	end
 end
