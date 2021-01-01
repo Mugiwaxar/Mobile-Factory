@@ -177,6 +177,25 @@ function GUI.switchMFGUIInteraction(event, player, MFPlayer)
         return
 	end
 
+    -- Open the Camera GUI --
+    if string.match(event.element.name, "Swi.GUI.SwitchButton") and event.button == defines.mouse_button_type.right then
+        -- Get the Mobile Factory ID --
+		local ID = event.element.tags.ID
+        -- Check if the Player is allowed to use this Mobile Factory --
+		if canUse(MFPlayer, global.MFTable[ID]) == false then
+			player.print({"gui-description.NotAllowedMF"})
+			return
+		end
+        -- Check if another Camera have to be closed --
+        if MFPlayer.GUI[_mfGUIName.CameraGUI] ~= nil and MFPlayer.GUI[_mfGUIName.CameraGUI].gui ~= nil and MFPlayer.GUI[_mfGUIName.CameraGUI].gui.valid == true then
+            MFPlayer.GUI[_mfGUIName.CameraGUI].gui.destroy()
+            MFPlayer.GUI[_mfGUIName.CameraGUI] = nil
+        end
+        -- Create the Camera Windows --
+        MFPlayer.GUI[_mfGUIName.CameraGUI] = GAPI.createCamera(MFPlayer, _mfGUIName.CameraGUI, global.MFTable[ID].name, global.MFTable[ID].ent, 300, 0.5)
+        return
+    end
+
     -- Change the current Mobile Factory --
     if string.match(event.element.name, "Swi.GUI.SwitchButton") then
 		-- Get the Mobile Factory ID --
