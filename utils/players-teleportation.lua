@@ -45,7 +45,7 @@ end
 function teleportPlayerOutside(player)
 	-- Find the Mobile Factory --
 	local MF = nil
-	for k, mf in pairs(global.MFTable) do
+	for _, mf in pairs(global.MFTable) do
 		if mf.fS ~= nil and mf.fS.valid == true and mf.fS.name == player.surface.name then
 			MF = mf
 		end
@@ -54,13 +54,10 @@ function teleportPlayerOutside(player)
 		end
 	end
 	if MF == nil then return end
-	-- Check if the Player is on the right Surface --
-	if string.match(player.surface.name, _mfSurfaceName) == nil and string.match(player.surface.name, _mfControlSurfaceName) == nil then return end
-	if MF == nil then return end
 	-- Check if the Mobile Factory Vehicle is valid --
 	if MF.ent == nil or MF.ent.valid == false then
 		-- Unable to find the Mobile Factory --
-		player.print({"", {"gui-description.MFTeleportToLastPos"}}) 
+		player.print({"", {"gui-description.MFTeleportToLastPos"}})
 		if MF.lastSurface ~= nil then
 			-- Teleport the Player to the last know position --
 			player.teleport({MF.lastPosX,MF.lastPosY}, MF.lastSurface)
@@ -97,6 +94,41 @@ function teleportPlayerOutside(player)
 	end
 	-- Play the sound --
 	player.surface.play_sound{path="MFLeave", position=player.position}
+end
+
+-- Teleport the Player to the Driver Seat --
+function teleportPlayerToDriverSeat(player)
+-- Find the Mobile Factory --
+	local MF = nil
+	for _, mf in pairs(global.MFTable) do
+		if mf.fS ~= nil and mf.fS.valid == true and mf.fS.name == player.surface.name then
+			MF = mf
+		end
+		if mf.ccS ~= nil and mf.ccS.valid == true and mf.ccS.name == player.surface.name then
+			MF = mf
+		end
+	end
+	if MF == nil then return end
+	-- Check if the Mobile Factory Vehicle is valid --
+	if MF.ent == nil or MF.ent.valid == false then
+		-- Unable to find the Mobile Factory --
+		player.print({"", {"gui-description.TPDriverSeatMFNoFound"}})
+		return
+	end
+	-- Check the Mobile Factory Seats --
+	if MF.ent.get_driver() ~= nil and MF.ent.get_passenger() ~= nil then
+		-- There are already a Driver and a Passenger --
+		player.print({"", {"gui-description.TPDriverSeatAlreadyInUse"}})
+		return
+	elseif MF.ent.get_driver() ~= nil and MF.ent.get_passenger() == nil then
+		-- Send the Player to the Passenger Seat --
+		player.teleport({0,0}, MF.ent.surface)
+		MF.ent.set_passenger(player)
+	else
+		-- Send the Driver to the Passenger Seat --
+		player.teleport({0,0}, MF.ent.surface)
+		MF.ent.set_driver(player)
+	end
 end
 
 -- Teleport the player from the Factory to the Control Center --
