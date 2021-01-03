@@ -267,7 +267,7 @@ function DTK.interaction(event)
 	if string.match(event.element.name, "D.T.Max") then
 		local id = event.element.tags.ID
 		if global.deepTankTable[id] == nil then return end
-		if event.element.text ~= nil and event.element.text ~= "" and event.element.text ~= 0 then
+		if event.element.text ~= nil and event.element.text ~= "" and event.element.text ~= "0" then
 			global.deepTankTable[id].max = math.min(tonumber(event.element.text), _dtMaxFluid)
 		else
 			global.deepTankTable[id].max = _dtMaxFluid
