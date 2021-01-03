@@ -7,22 +7,26 @@ end
 if settings.startup["MF-lab-science-packs"].value == "all" then
 	local inputsTable = {}
 	for k, lab in pairs(data.raw.lab) do
-		for k2, name in pairs(lab.inputs) do
-			inputsTable[name] = name
+		if lab.inputs then
+			for k2, name in pairs(lab.inputs) do
+				inputsTable[name] = name
+			end
 		end
 	end
 	data.raw.lab.DimensionalLab.inputs = inputsTable
 
 elseif settings.startup["MF-lab-science-packs"].value == "add vanilla" then
 	local inputsTable = {}
-	if data.raw.lab.lab then
-		for _, name in pairs(data.raw.lab.DimensionalLab.inputs) do
+	local basicLab = data.raw.lab.lab
+	local dimLab = data.raw.lab.DimensionalLab
+	if basicLab and basicLab.inputs then
+		for _, name in pairs(dimLab.inputs) do
 			inputsTable[name] = name
 		end
-		for _, name in pairs(data.raw.lab.lab.inputs) do
+		for _, name in pairs(basicLab.inputs) do
 			inputsTable[name] = name
 		end
-		data.raw.lab.DimensionalLab.inputs = inputsTable
+		dimLab.inputs = inputsTable
 	else
 		log("Basic lab is missing, couldn't add science packs to Dimensional Lab.")
 	end
