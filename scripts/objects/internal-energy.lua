@@ -30,9 +30,6 @@ function IEC:setEnt(object)
 	if object.last_user == nil then return end
 	self.ent = object
 	self.entID = object.unit_number
-	-- Draw the Sprite --
-	self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite0", x_scale=1/2.25, y_scale=1/2.25, target=object, surface=object.surface, render_layer=130}
-	self.lightID = rendering.draw_light{sprite="EnergyCubeMK1Sprite0", scale=1/2.25, target=object, surface=object.surface, minimum_darkness=0}
 	-- Update the UpSys --
 	--UpSys.scanObjs() -- Make old save crash --
 	UpSys.addObject(self)
@@ -82,11 +79,10 @@ function IEC:update()
 	end
 
 	-- Update the Sprite --
-	local spriteNumber = math.ceil(self.ent.energy/self.ent.prototype.electric_energy_source_prototype.buffer_capacity*10)
+	local spriteNumber = math.ceil(self.ent.energy/self.ent.prototype.electric_energy_source_prototype.buffer_capacity*16)
 	rendering.destroy(self.spriteID)
 	rendering.destroy(self.lightID)
-	self.spriteID = rendering.draw_sprite{sprite="EnergyCubeMK1Sprite" .. spriteNumber, x_scale=1/2.25, y_scale=1/2.25, target=self.ent, surface=self.ent.surface, render_layer=130}
-	self.lightID = rendering.draw_light{sprite="EnergyCubeMK1Sprite" .. spriteNumber, scale=1/2.25, target=self.ent, surface=self.ent.surface, minimum_darkness=0}
+	self.spriteID = rendering.draw_sprite{sprite="CubeChargeSprite" .. spriteNumber, x_scale=1/2.25, y_scale=1/2.25, target=self.ent, surface=self.ent.surface, render_layer=130}
 
 	-- Balance the Energy with neighboring Cubes --
 	self:balance()

@@ -62,18 +62,13 @@ function JD:update()
     -- Set the Entity Energy --
     self.ent.energy = math.min(self.ent.prototype.electric_energy_source_prototype.buffer_capacity, self.charge / self.maxCharge * 100)
 
-    -- Draw the Light Sprite --
-    if rendering.is_valid(self.lightID) == false then
-        self.lightID = rendering.draw_light{sprite="JumpDriveL", target=self.ent, surface=self.ent.surface, minimum_darkness=0}
-    end
-
     -- Update the Charge Sprite --
 	local spriteNumber = math.ceil(self.ent.energy/self.ent.prototype.electric_energy_source_prototype.buffer_capacity*16)
 	rendering.destroy(self.chargeSpriteID)
     rendering.destroy(self.chargeLightID)
     if spriteNumber ~= 0 then
-		self.chargeSpriteID = rendering.draw_sprite{sprite="JumpDriveSprite" .. spriteNumber, target=self.ent, surface=self.ent.surface, render_layer=130}
-		self.chargeLightID = rendering.draw_light{sprite="JumpDriveSprite" .. spriteNumber, target=self.ent, surface=self.ent.surface, minimum_darkness=0}
+		rendering.destroy(self.spriteID or 0)
+		self.spriteID = rendering.draw_sprite{sprite="CubeChargeSprite" .. spriteNumber, x_scale=1/2.25, y_scale=1/2.25, target=self.ent, surface=self.ent.surface, render_layer=130}
 	end
 
 	-- Check the jumpChargerTable --

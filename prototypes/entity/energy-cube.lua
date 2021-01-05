@@ -23,10 +23,10 @@ ec1E.default_output_signal = {type = "virtual", name = "signal-A"}
 ec1E.energy_source =
 {
   type = "electric",
-  buffer_capacity = "20MJ",
+  buffer_capacity = "2MJ",
   usage_priority = "tertiary",
-  input_flow_limit = "2MW",
-  output_flow_limit = "2MW",
+  input_flow_limit = "200KW",
+  output_flow_limit = "200KW",
   render_no_power_icon = false,
   render_no_network_icon = false
 }
@@ -41,12 +41,20 @@ ec1E.charge_animation = nil
 ec1E.picture = {
     layers =
     {
+        {
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK1G.png",
+          priority = "high",
+          width = 600,
+          height = 600,
+          shift = {0,-0.3},
+          draw_as_glow = true,
+          scale = 1/7
+      },
       {
           filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK1E.png",
           priority = "high",
           width = 600,
           height = 600,
-          repeat_count = repeat_count,
           shift = {0,-0.3},
 		      scale = 1/7
       },
@@ -55,7 +63,6 @@ ec1E.picture = {
           priority = "high",
           width = 600,
           height = 600,
-          repeat_count = repeat_count,
           shift = {0,-0.3},
           draw_as_shadow = true,
           scale = 1/7
@@ -90,16 +97,154 @@ ec1R.ingredients =
 ec1R.result = "EnergyCubeMK1"
 data:extend{ec1R}
 
--- Create all Sprite --
-for i = 0, 10 do
-	local ec1S = {}
-	ec1S.type = "sprite"
-	ec1S.name = "EnergyCubeMK1Sprite" .. i
-	ec1S.filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeSprite.png"
-	ec1S.size = 600
-  ec1S.x = 600 * i
-	data:extend{ec1S}
-end
+---------------------------------- Energy Cube MK2 ----------------------------------
+local ec2E = table.deepcopy(ec1E)
+ec2E.name = "EnergyCubeMK2"
+ec2E.icon = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK2I.png"
+ec2E.minable = {mining_time = 0.5, result = "EnergyCubeMK2"}
+ec2E.energy_source =
+{
+  type = "electric",
+  buffer_capacity = "15MJ",
+  usage_priority = "tertiary",
+  input_flow_limit = "1500KW",
+  output_flow_limit = "1500KW",
+  render_no_power_icon = false,
+  render_no_network_icon = false
+}
+ec2E.picture = {
+  layers =
+  {
+      {
+        filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK2G.png",
+        priority = "high",
+        width = 600,
+        height = 600,
+        shift = {0,-0.3},
+        draw_as_glow = true,
+        scale = 1/7
+    },
+    {
+        filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK2E.png",
+        priority = "high",
+        width = 600,
+        height = 600,
+        shift = {0,-0.3},
+        scale = 1/7
+    },
+    {
+        filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeS.png",
+        priority = "high",
+        width = 600,
+        height = 600,
+        shift = {0,-0.3},
+        draw_as_shadow = true,
+        scale = 1/7
+    }
+  }
+}
+data:extend{ec2E}
+
+-- Item --
+local ec2I = {}
+ec2I.type = "item-with-tags"
+ec2I.name = "EnergyCubeMK2"
+ec2I.place_result = "EnergyCubeMK2"
+ec2I.icon = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK2I.png"
+ec2I.icon_size = 128
+ec2I.subgroup = "Energy"
+ec2I.order = "b2"
+ec2I.stack_size = 10
+data:extend{ec2I}
+
+-- Recipe --
+local ec2R = {}
+ec2R.type = "recipe"
+ec2R.name = "EnergyCubeMK2"
+ec2R.energy_required = 10
+ec2R.enabled = false
+ec2R.ingredients =
+{
+    {"CrystalizedCircuit", 4},
+    {"MachineFrame3", 4}
+}
+ec2R.result = "EnergyCubeMK2"
+data:extend{ec2R}
+
+---------------------------------- Energy Cube MK3 ----------------------------------
+local ec3E = table.deepcopy(ec2E)
+ec3E.name = "EnergyCubeMK3"
+ec3E.icon = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK3I.png"
+ec3E.minable = {mining_time = 0.5, result = "EnergyCubeMK3"}
+ec3E.energy_source =
+{
+  type = "electric",
+  buffer_capacity = "50MJ",
+  usage_priority = "tertiary",
+  input_flow_limit = "5MW",
+  output_flow_limit = "5MW",
+  render_no_power_icon = false,
+  render_no_network_icon = false
+}
+ec3E.picture = {
+  layers =
+  {
+      {
+        filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK3G.png",
+        priority = "high",
+        width = 600,
+        height = 600,
+        shift = {0,-0.3},
+        draw_as_glow = true,
+        scale = 1/7
+    },
+    {
+        filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK3E.png",
+        priority = "high",
+        width = 600,
+        height = 600,
+        shift = {0,-0.3},
+        scale = 1/7
+    },
+    {
+        filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeS.png",
+        priority = "high",
+        width = 600,
+        height = 600,
+        shift = {0,-0.3},
+        draw_as_shadow = true,
+        scale = 1/7
+    }
+  }
+}
+data:extend{ec3E}
+
+-- Item --
+local ec3I = {}
+ec3I.type = "item-with-tags"
+ec3I.name = "EnergyCubeMK3"
+ec3I.place_result = "EnergyCubeMK3"
+ec3I.icon = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeMK3I.png"
+ec3I.icon_size = 128
+ec3I.subgroup = "Energy"
+ec3I.order = "b3"
+ec3I.stack_size = 10
+data:extend{ec3I}
+
+-- Recipe --
+local ec3R = {}
+ec3R.type = "recipe"
+ec3R.name = "EnergyCubeMK3"
+ec3R.energy_required = 10
+ec3R.enabled = false
+ec3R.ingredients =
+{
+    {"EnergyCore", 1},
+    {"MachineFrame3", 4}
+}
+ec3R.result = "EnergyCubeMK3"
+data:extend{ec3R}
+
 
 ---------------------------------- Quatron Cube MK1 ----------------------------------
 
@@ -126,7 +271,7 @@ qc1E.default_output_signal = {type = "virtual", name = "signal-Q"}
 qc1E.energy_source =
 {
   type = "electric",
-  buffer_capacity = "10KJ",
+  buffer_capacity = "2KJ",
   usage_priority = "tertiary",
   input_flow_limit = "0J",
   output_flow_limit = "0J",
@@ -144,6 +289,15 @@ qc1E.charge_animation = nil
 qc1E.picture = {
     layers =
     {
+        {
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronCubeMK1G.png",
+          priority = "high",
+          width = 600,
+          height = 600,
+          shift = {0,-0.3},
+          draw_as_glow = true,
+          scale = 1/7
+      },
       {
           filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronCubeMK1E.png",
           priority = "high",
@@ -151,7 +305,7 @@ qc1E.picture = {
           height = 600,
           repeat_count = repeat_count,
           shift = {0,-0.3},
-		  scale = 1/7
+		      scale = 1/7
       },
       {
           filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeS.png",
@@ -193,16 +347,160 @@ qc1R.ingredients =
 qc1R.result = "QuatronCubeMK1"
 data:extend{qc1R}
 
--- Create all Sprite --
-for i = 0, 10 do
-	local iqcS = {}
-	iqcS.type = "sprite"
-	iqcS.name = "QuatronCubeSprite" .. i
-	iqcS.filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronCubeSprite.png"
-	iqcS.size = 600
-  iqcS.x = 600 * i
-	data:extend{iqcS}
-end
+
+---------------------------------- Quatron Cube MK2 ----------------------------------
+
+-- Entity --
+local qc2E = table.deepcopy(qc1E)
+qc2E.name = "QuatronCubeMK2"
+qc2E.icon = "__Mobile_Factory_Graphics__/graphics/energy/QuatronCubeMK2I.png"
+qc2E.minable = {mining_time = 0.5, result = "QuatronCubeMK2"}
+qc2E.energy_source =
+{
+  type = "electric",
+  buffer_capacity = "15KJ",
+  usage_priority = "tertiary",
+  input_flow_limit = "0J",
+  output_flow_limit = "0J",
+  render_no_power_icon = false,
+  render_no_network_icon = false
+}
+qc2E.picture = {
+    layers =
+    {
+        {
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronCubeMK2G.png",
+          priority = "high",
+          width = 600,
+          height = 600,
+          shift = {0,-0.3},
+          draw_as_glow = true,
+          scale = 1/7
+      },
+      {
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronCubeMK2E.png",
+          priority = "high",
+          width = 600,
+          height = 600,
+          shift = {0,-0.3},
+		      scale = 1/7
+      },
+      {
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeS.png",
+          priority = "high",
+          width = 600,
+          height = 600,
+          shift = {0,-0.3},
+          draw_as_shadow = true,
+          scale = 1/7
+      }
+    }
+  }
+data:extend{qc2E}
+
+-- Item --
+local qc2I = {}
+qc2I.type = "item-with-tags"
+qc2I.name = "QuatronCubeMK2"
+qc2I.place_result = "QuatronCubeMK2"
+qc2I.icon = "__Mobile_Factory_Graphics__/graphics/energy/QuatronCubeMK2I.png"
+qc2I.icon_size = 128
+qc2I.subgroup = "QuatronLogistic"
+qc2I.order = "b2"
+qc2I.stack_size = 10
+data:extend{qc2I}
+
+-- Recipe --
+local qc2R = {}
+qc2R.type = "recipe"
+qc2R.name = "QuatronCubeMK2"
+qc2R.energy_required = 5
+qc2R.enabled = false
+qc2R.ingredients =
+{
+  {"CrystalizedCircuit", 4},
+  {"MachineFrame3", 4}
+}
+qc2R.result = "QuatronCubeMK2"
+data:extend{qc2R}
+
+
+---------------------------------- Quatron Cube MK3 ----------------------------------
+
+-- Entity --
+local qc3E = table.deepcopy(qc2E)
+qc3E.name = "QuatronCubeMK3"
+qc3E.icon = "__Mobile_Factory_Graphics__/graphics/energy/QuatronCubeMK3I.png"
+qc3E.minable = {mining_time = 0.5, result = "QuatronCubeMK3"}
+qc3E.energy_source =
+{
+  type = "electric",
+  buffer_capacity = "50KJ",
+  usage_priority = "tertiary",
+  input_flow_limit = "0J",
+  output_flow_limit = "0J",
+  render_no_power_icon = false,
+  render_no_network_icon = false
+}
+qc3E.picture = {
+    layers =
+    {
+        {
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronCubeMK3G.png",
+          priority = "high",
+          width = 600,
+          height = 600,
+          shift = {0,-0.3},
+          draw_as_glow = true,
+          scale = 1/7
+      },
+      {
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronCubeMK3E.png",
+          priority = "high",
+          width = 600,
+          height = 600,
+          shift = {0,-0.3},
+		      scale = 1/7
+      },
+      {
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/EnergyCubeS.png",
+          priority = "high",
+          width = 600,
+          height = 600,
+          shift = {0,-0.3},
+          draw_as_shadow = true,
+          scale = 1/7
+      }
+    }
+  }
+data:extend{qc3E}
+
+-- Item --
+local qc3I = {}
+qc3I.type = "item-with-tags"
+qc3I.name = "QuatronCubeMK3"
+qc3I.place_result = "QuatronCubeMK3"
+qc3I.icon = "__Mobile_Factory_Graphics__/graphics/energy/QuatronCubeMK3I.png"
+qc3I.icon_size = 128
+qc3I.subgroup = "QuatronLogistic"
+qc3I.order = "b3"
+qc3I.stack_size = 10
+data:extend{qc3I}
+
+-- Recipe --
+local qc3R = {}
+qc3R.type = "recipe"
+qc3R.name = "QuatronCubeMK3"
+qc3R.energy_required = 5
+qc3R.enabled = false
+qc3R.ingredients =
+{
+  {"EnergyCore", 1},
+  {"MachineFrame3", 4}
+}
+qc3R.result = "QuatronCubeMK3"
+data:extend{qc3R}
+
 
 ---------------------------------- Internal Energy Cube ----------------------------------
 
@@ -233,12 +531,19 @@ iecE.energy_source =
     iecE.picture = {
     layers =
     {
+        {
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/InternalEnergyCubeG.png",
+          priority = "high",
+          width = 600,
+          height = 600,
+          draw_as_glow = true,
+          scale = 1/2.25
+      },
       {
           filename = "__Mobile_Factory_Graphics__/graphics/energy/InternalEnergyCubeE.png",
           priority = "high",
           width = 600,
           height = 600,
-          repeat_count = repeat_count,
           scale = 1/2.25
       },
       {
@@ -246,7 +551,6 @@ iecE.energy_source =
           priority = "high",
           width = 600,
           height = 600,
-          repeat_count = repeat_count,
           draw_as_shadow = true,
           scale = 1/2.25
       }
@@ -280,6 +584,7 @@ iecR.result = "InternalEnergyCube"
 data:extend{iecR}
 
 ---------------------------------- Internal Quatron Cube ----------------------------------
+
 -- Entity --
 local iqcE = table.deepcopy(iecE)
 iqcE.name = "InternalQuatronCube"
@@ -299,12 +604,19 @@ iqcE.energy_source =
     iqcE.picture = {
     layers =
     {
+        {
+          filename = "__Mobile_Factory_Graphics__/graphics/energy/InternalQuatronCubeG.png",
+          priority = "high",
+          width = 600,
+          height = 600,
+          draw_as_glow = true,
+          scale = 1/2.25
+      },
       {
           filename = "__Mobile_Factory_Graphics__/graphics/energy/InternalQuatronCubeE.png",
           priority = "high",
           width = 600,
           height = 600,
-          repeat_count = repeat_count,
           scale = 1/2.25
       },
       {
@@ -312,7 +624,6 @@ iqcE.energy_source =
           priority = "high",
           width = 600,
           height = 600,
-          repeat_count = repeat_count,
           draw_as_shadow = true,
           scale = 1/2.25
       }
@@ -344,3 +655,26 @@ iqcR.ingredients =
 }
 iqcR.result = "InternalQuatronCube"
 data:extend{iqcR}
+
+
+
+
+-- Create Cubes Charge Sprites --
+local x = 0
+local y = 0
+for i = 0, 16 do
+	local chargeS = {}
+	chargeS.type = "sprite"
+	chargeS.name = "CubeChargeSprite" .. i
+	chargeS.filename = "__Mobile_Factory_Graphics__/graphics/energy/ChargeLevel.png"
+  chargeS.size = 600
+  chargeS.draw_as_glow = true
+  chargeS.x = x
+  chargeS.y = y
+    x = x + 600
+    if i == 8 then
+        x = 0
+        y = 600
+    end
+	data:extend{chargeS}
+end

@@ -1,7 +1,31 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.8.0
+Date: 05/01/2021
+  Major Features:
+    - Added two new Tiers for the Energy Structures
+    - The Graphics of all Energy related Structures was refreshed, they use now the new glowing system to allows a better rendering at night
+  Features:
+    - Added the Energy Laser MK2
+    - Added the Energy Laser MK3
+    - Added the Quatron Laser MK2
+    - Added the Quatron Laser MK3
+    - Added the Energy Cube MK2
+    - Added the Energy Cube MK3
+    - Added the Quatron Cube MK2
+    - Added the Quatron Cube MK3
+    - Reworked the Energy Laser MK1 Graphics
+    - Reworked the Quatron Laser MK1 Graphics
+    - Reworked the Energy Cube MK1 Graphics
+    - Reworked the Quatron Cube MK1 Graphics
+    - Reworked the Internal Energy Cube Graphics
+    - Reworked the Internal Quatron Cube Graphics
+    - Reworked the Jump Drive Graphics
+    - Reworked the Jump Charger Graphics
+---------------------------------------------------------------------------------------------------
 Version: 0.7.5
+Date: 02/01/2021
   Bugfixes:
-    - Fixed a loading crash with some others mods related to the Dimensional (lab)
+    - Fixed a loading crash with some others mods related to the Dimensional Analyzer (Honktown)
 ---------------------------------------------------------------------------------------------------
 Version: 0.7.4
 Date: 01/01/2021

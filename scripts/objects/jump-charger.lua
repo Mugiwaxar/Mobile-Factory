@@ -23,8 +23,6 @@ function JC:new(object)
 	t.player = object.last_user.name
 	t.MF = getMFBySurface(object.surface)
 	t.entID = object.unit_number
-	-- Draw the Light Sprite --
-	t.lightID = rendering.draw_light{sprite="JumpChargerL", target=object, surface=object.surface, minimum_darkness=0}
 	-- Save the Jump Charger inside the Jump Drive Table --
 	t.MF.jumpDriveObj.jumpChargerTable[object.unit_number] = t
 	UpSys.addObj(t)
@@ -64,11 +62,6 @@ function JC:update()
 	-- Check the Validity --
 	if self.ent == nil or self.ent.valid == false then
 		return
-    end
-
-    -- Draw the Light Sprite --
-    if rendering.is_valid(self.lightID) == false then
-        self.lightID = rendering.draw_light{sprite="JumpChargerL", target=self.ent, surface=self.ent.surface, minimum_darkness=0}
     end
 
 end

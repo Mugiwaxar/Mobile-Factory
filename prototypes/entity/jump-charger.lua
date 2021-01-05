@@ -22,6 +22,15 @@ jcE.picture =
       layers =
       {
         {
+          filename = "__Mobile_Factory__/graphics/JumpChargerG.png",
+          priority = "extra-high",
+          width = 600,
+          height = 600,
+          shift = {0,-1.7},
+          scale = 1/600*32*6.5,
+          draw_as_glow = true
+        },
+        {
             filename = "__Mobile_Factory__/graphics/JumpChargerE.png",
             priority = "extra-high",
             width = 600,
@@ -92,13 +101,3 @@ ingredients={
 jcT.prerequisites = {"EnergyCore", "JumpDrive"}
 jcT.effects = {{type="unlock-recipe", recipe="JumpCharger"}}
 data:extend{jcT}
-
--- Light Sprite --
-local jcLS = {}
-jcLS.type = "sprite"
-jcLS.name = "JumpChargerL"
-jcLS.filename = "__Mobile_Factory__/graphics/JumpChargerE.png"
-jcLS.size = 600
-jcLS.scale = 1/600*32*6.5
-jcLS.shift = {0,-1.7}
-data:extend{jcLS}

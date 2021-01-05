@@ -11,8 +11,8 @@ jdE.icon_size = 128
 -- jdE.minable = {mining_time = 0.5, result = "EnergyCubeMK1"}
 jdE.max_health = 10000
 jdE.corpse = "accumulator-remnants"
-jdE.collision_box = {{-2.5, -2}, {3.5, 4}}
-jdE.selection_box = jdE.collision_box
+jdE.collision_box = {{-2.9, -2.1}, {2.9, 3.7}}
+jdE.selection_box = {{-3, -2.2}, {3, 3.8}}
 jdE.circuit_wire_connection_point =
 {
     wire = {red={0,-1.2}, green={0,-1.2}},
@@ -43,21 +43,30 @@ jdE.picture = {
     layers =
     {
       {
-          filename = "__Mobile_Factory__/graphics/JumpDriveE.png",
-          priority = "high",
-          width = 600,
-          height = 600,
-          shift = {0.5,-0.3},
-		  scale = 1/600*32*8.7
+        filename = "__Mobile_Factory__/graphics/JumpDriveG.png",
+        priority = "high",
+        width = 600,
+        height = 600,
+        -- shift = {0.5,-0.3},
+        scale = 1/2.25,
+        draw_as_glow = true
+      },
+      {
+        filename = "__Mobile_Factory__/graphics/JumpDriveE.png",
+        priority = "high",
+        width = 600,
+        height = 600,
+        -- shift = {0.5,-0.3},
+        scale = 1/2.25
       },
       {
           filename = "__Mobile_Factory__/graphics/JumpDriveS.png",
           priority = "high",
           width = 600,
           height = 600,
-          shift = {0.5,-0.3},
+          -- shift = {0.5,-0.3},
           draw_as_shadow = true,
-          scale = 1/600*32*8.7
+          scale = 1/2.25
       }
     }
   }
@@ -83,35 +92,3 @@ jdT.effects =
 	{type="nothing", effect_description={"description.JumpDrive"}},
 }
 data:extend{jdT}
-
-
--- Light Sprite --
-local jdLS = {}
-jdLS.type = "sprite"
-jdLS.name = "JumpDriveL"
-jdLS.filename = "__Mobile_Factory__/graphics/JumpDriveE.png"
-jdLS.size = 600
-jdLS.scale = 1/600*32*8.7
-jdLS.shift = {0.5,-0.3}
-data:extend{jdLS}
-
--- Create Charge Sprites --
-local x = 0
-local y = 0
-for i = 1, 16 do
-	local qrS = {}
-	qrS.type = "sprite"
-	qrS.name = "JumpDriveSprite" .. i
-	qrS.filename = "__Mobile_Factory__/graphics/JumpDriveAn.png"
-    qrS.size = 600
-    qrS.scale = 1/600*32*8.7
-    qrS.x = x
-    qrS.y = y
-    qrS.shift = {0.5,-0.3}
-    x = x + 600
-    if i == 8 then
-        x = 0
-        y = 600
-    end
-	data:extend{qrS}
-end

@@ -40,9 +40,6 @@ function IQC:setEnt(object)
 	self.quatronMax = object.electric_buffer_size
 	self.quatronMaxInput = object.electric_buffer_size / 10
 	self.quatronMaxOutput = object.electric_buffer_size / 10
-	-- Draw the Sprite --
-	self.spriteID = rendering.draw_sprite{sprite="QuatronCubeSprite0", x_scale=1/2.25, y_scale=1/2.25, target=object, surface=object.surface, render_layer=130}
-	self.lightID = rendering.draw_light{sprite="QuatronCubeSprite0", scale=1/2.25, target=object, surface=object.surface, minimum_darkness=0}
 	-- Update the UpSys --
 	--UpSys.scanObjs() -- Make old save crash --
 	UpSys.addObject(self)
@@ -97,11 +94,10 @@ function IQC:update()
 	end
 
 	-- Update the Sprite --
-	local spriteNumber = math.ceil(self.quatronCharge/self.quatronMax*10)
+	local spriteNumber = math.ceil(self.quatronCharge/self.quatronMax*16)
 	rendering.destroy(self.spriteID)
 	rendering.destroy(self.lightID)
-	self.spriteID = rendering.draw_sprite{sprite="QuatronCubeSprite" .. spriteNumber, x_scale=1/2.25, y_scale=1/2.25, target=self.ent, surface=self.ent.surface, render_layer=130}
-	self.lightID = rendering.draw_light{sprite="QuatronCubeSprite" .. spriteNumber, scale=1/2.25, target=self.ent, surface=self.ent.surface, minimum_darkness=0}
+	self.spriteID = rendering.draw_sprite{sprite="CubeChargeSprite" .. spriteNumber, x_scale=1/2.25, y_scale=1/2.25, target=self.ent, surface=self.ent.surface, render_layer=130}
 
 	-- Balance the Quatron with neighboring Quatron Users --
 	self:balance()

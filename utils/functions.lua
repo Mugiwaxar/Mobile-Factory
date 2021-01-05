@@ -12,9 +12,17 @@ function createTableList()
 	addObject{tableName="jumpChargerTable", tag="JC", objName="JumpCharger", canInCC=true}
 	addObject{tableName="networkAccessPointTable", tag="NAP", objName="NetworkAccessPoint"}
 	addObject{tableName="energyCubesTable", tag="EC", objName="EnergyCubeMK1"}
+	addObject{tableName="energyCubesTable", tag="EC", objName="EnergyCubeMK2"}
+	addObject{tableName="energyCubesTable", tag="EC", objName="EnergyCubeMK3"}
 	addObject{tableName="energyLaserTable", tag="EL", objName="EnergyLaser1"}
+	addObject{tableName="energyLaserTable", tag="EL", objName="EnergyLaser2"}
+	addObject{tableName="energyLaserTable", tag="EL", objName="EnergyLaser3"}
 	addObject{tableName="quatronCubesTable", tag="QC", objName="QuatronCubeMK1"}
+	addObject{tableName="quatronCubesTable", tag="QC", objName="QuatronCubeMK2"}
+	addObject{tableName="quatronCubesTable", tag="QC", objName="QuatronCubeMK3"}
 	addObject{tableName="quatronLaserTable", tag="QL", objName="QuatronLaser1"}
+	addObject{tableName="quatronLaserTable", tag="QL", objName="QuatronLaser2"}
+	addObject{tableName="quatronLaserTable", tag="QL", objName="QuatronLaser3"}
 	addObject{tableName="quatronReactorTable", tag="QR", objName="QuatronReactor"}
 	addObject{tableName="deepStorageTable", tag="DSR", objName="DeepStorage", canInCC=true}
 	addObject{tableName="deepTankTable", tag="DTK", objName="DeepTank", canInCC=true}

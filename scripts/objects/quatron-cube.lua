@@ -37,8 +37,6 @@ function QC:new(object)
 	t.quatronMaxInput = object.electric_buffer_size / 10
 	t.quatronMaxOutput = object.electric_buffer_size / 10
 	-- Draw the Sprite --
-	t.spriteID = rendering.draw_sprite{sprite="QuatronCubeSprite0", x_scale=1/7, y_scale=1/7, target=object, surface=object.surface, target_offset={0, -0.3}, render_layer=131}
-	t.lightID = rendering.draw_light{sprite="QuatronCubeSprite0", scale=1/7, target=object, surface=object.surface, target_offset={0, -0.3}, minimum_darkness=0}
 	UpSys.addObj(t)
 	return t
 end
@@ -96,11 +94,10 @@ function QC:update()
 	end
 
 	-- Update the Sprite --
-	local spriteNumber = math.ceil(self.quatronCharge/self.quatronMax*10)
+	local spriteNumber = math.ceil(self.quatronCharge/self.quatronMax*16)
 	rendering.destroy(self.spriteID)
 	rendering.destroy(self.lightID)
-	self.spriteID = rendering.draw_sprite{sprite="QuatronCubeSprite" .. spriteNumber, x_scale=1/7, y_scale=1/7, target=self.ent, surface=self.ent.surface, target_offset={0, -0.3}, render_layer=131}
-	self.lightID = rendering.draw_light{sprite="QuatronCubeSprite" .. spriteNumber, scale=1/7, target=self.ent, surface=self.ent.surface, target_offset={0, -0.3}, minimum_darkness=0}
+	self.spriteID = rendering.draw_sprite{sprite="CubeChargeSprite" .. spriteNumber, x_scale=1/7, y_scale=1/7, target=self.ent, surface=self.ent.surface, target_offset={0, -0.3}, render_layer=131}
 
 	-- Balance the Quatron with neighboring Quatron Users --
 	self:balance()
