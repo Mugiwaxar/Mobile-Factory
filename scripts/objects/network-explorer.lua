@@ -80,7 +80,7 @@ function NE:update()
 	end
 
 	-- Set Active or Not --
-	if self.networkAccessPoint ~= nil and self.networkAccessPoint.quatronCharge > 0 then
+	if self.networkAccessPoint ~= nil and EI.energy(self.networkAccessPoint) > 0 then
 		self:setActive(true)
 	else
 		self:setActive(false)

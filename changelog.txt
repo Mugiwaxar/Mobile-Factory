@@ -2,8 +2,9 @@
 Version: 0.8.0
 Date: 05/01/2021
   Major Features:
+    - Added the Energy Dispenser, it can be charger with Energy Lasers/Cubes and distribute Power within a 128x128 area (This replace the Dimensional Substation)
     - Added two new Tiers for the Energy Structures
-    - The Graphics of all Energy related Structures was refreshed, they use now the new glowing system to allows a better rendering at night
+    - The Graphics of all Energy related Structures was refreshed, they use now the new glowing system to allow a better rendering at night
   Features:
     - Added the Energy Laser MK2
     - Added the Energy Laser MK3
@@ -13,6 +14,7 @@ Date: 05/01/2021
     - Added the Energy Cube MK3
     - Added the Quatron Cube MK2
     - Added the Quatron Cube MK3
+    - Added the Energy Dispenser
     - Reworked the Energy Laser MK1 Graphics
     - Reworked the Quatron Laser MK1 Graphics
     - Reworked the Energy Cube MK1 Graphics
@@ -21,6 +23,10 @@ Date: 05/01/2021
     - Reworked the Internal Quatron Cube Graphics
     - Reworked the Jump Drive Graphics
     - Reworked the Jump Charger Graphics
+    - Reworked the Quatron Reactor Graphics
+    - Deployement: Green and Red Signals are now transfered bewteen the Inside/Outside
+  Changes:
+    - Removed the Dimensional Substation Recipe and Technology (The Item and the Entity will be removed soon)
 ---------------------------------------------------------------------------------------------------
 Version: 0.7.5
 Date: 02/01/2021

@@ -12,11 +12,9 @@ FE = {
 	mfTooFar = false,
 	resource = nil,
 	product = nil,
-	quatronCharge = 0,
-	quatronLevel = 1,
-	quatronMax = _mfFEMaxCharge,
-	quatronMaxInput = 100,
-	quatronMaxOutput = 0
+	energyCharge = 0,
+	energyLevel = 1,
+	energyBuffer = _mfFEMaxCharge
 }
 
 -- Constructor --
@@ -63,15 +61,15 @@ end
 
 -- Item Tags to Content --
 function FE:itemTagsToContent(tags)
-	self.quatronLevel = tags.purity or 1
-	self.quatronCharge = tags.charge or 0
+	self.energyCharge = tags.charge or 0
+	self.energyLevel = tags.purity or 1
 end
 
 -- Content to Item Tags --
 function FE:contentToItemTags(tags)
-	if self.quatronCharge > 0 then
-		tags.set_tag("Infos", {purity=self.quatronLevel, charge=self.quatronCharge})
-		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.FluidExtractorC", math.floor(self.quatronCharge), string.format("%.3f", self.quatronLevel)}}
+	if EI.energy(self) > 0 then
+		tags.set_tag("Infos", {charge=EI.energy(self), purity=EI.energyLevel(self)})
+		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.FluidExtractorC", math.floor(EI.energy(self)), string.format("%.3f", EI.energyLevel(self))}}
 	end
 end
 
@@ -194,12 +192,12 @@ function FE:getTooltipInfos(GUITable, mainFrame, justCreated)
 	informationTable.clear()
 
 	-- Add the Quatron Charge --
-    GAPI.addLabel(GUITable, "", informationTable, {"gui-description.QuatronCharge", Util.toRNumber(self.quatronCharge)}, _mfOrange)
-	GAPI.addProgressBar(GUITable, "", informationTable, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+    GAPI.addLabel(GUITable, "", informationTable, {"gui-description.QuatronCharge", Util.toRNumber(EI.energy(self))}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", informationTable, "", EI.energy(self) .. "/" .. EI.maxEnergy(self), false, _mfPurple, EI.energy(self)/EI.maxEnergy(self), 100)
 	
 	-- Create the Quatron Purity --
-	GAPI.addLabel(GUITable, "", informationTable, {"gui-description.Quatronlevel", string.format("%.3f", self.quatronLevel)}, _mfOrange)
-	GAPI.addProgressBar(GUITable, "", informationTable, "", "", false, _mfPurple, self.quatronLevel/20, 100)
+	GAPI.addLabel(GUITable, "", informationTable, {"gui-description.Quatronlevel", string.format("%.3f", EI.energyLevel(self))}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", informationTable, "", "", false, _mfPurple, EI.energyLevel(self)/20, 100)
 
 	-- Create the Speed --
 	local speedLabel = GAPI.addLabel(GUITable, "", informationTable, {"gui-description.OCFESpeedFE", self:fluidPerExtraction()}, _mfOrange)
@@ -230,7 +228,7 @@ function FE:changeDimTank(ID)
 	end
 	-- Select the Ore Silo --
 	self.selectedInv = nil
-	for k, dimTank in pairs(self.dataNetwork.DTKTable) do
+	for _, dimTank in pairs(self.dataNetwork.DTKTable) do
 		if dimTank ~= nil and dimTank.ent ~= nil and dimTank.ent.valid == true then
 			if ID == dimTank.ID then
 				self.selectedInv = dimTank
@@ -241,7 +239,7 @@ end
 
 -- Get the number of Fluid per extraction --
 function FE:fluidPerExtraction()
-	return math.floor(_mfFEFluidPerExtraction * math.pow(self.quatronLevel, _mfQuatronScalePower))
+	return math.floor(_mfFEFluidPerExtraction * math.pow(EI.energyLevel(self), _mfQuatronScalePower))
 end
 
 -- Extract Fluids --
@@ -274,7 +272,7 @@ function FE:extractFluids(event)
 	if valid(self.MF) == false then return end
 
 	-- Check the Quatron Charge --
-	if self.quatronCharge < 100 then return end
+	if EI.energy(self) < 100 then return end
 
 	-- Check the selected Inventory --
 	if self.selectedInv ~= nil then
@@ -326,7 +324,7 @@ function FE:extractFluids(event)
 		-- Make a Beam --
 		self.ent.surface.create_entity{name="BigPurpleBeam", duration=59, position=self.ent.position, target=self.dataNetwork.MF.ent.position, source=self.ent.position}
 		-- Remove a charge --
-		self.quatronCharge = self.quatronCharge - 100
+		EI.removeEnergy(self, 100)
 		-- Remove amount from the FluidPath --
 		self.resource.amount = math.max(self.resource.amount - fluidExtracted, 1)
 		-- Remove the FluidPath if amount == 0 --
@@ -364,45 +362,6 @@ function FE:blueprintTagsToSettings(tags)
 			end
 		end
 	end
-end
-
--- Return the amount of Quatron --
-function FE:quatron()
-	return self.quatronCharge
-end
-
--- Return the Quatron Buffer size --
-function FE:maxQuatron()
-	return self.quatronMax
-end
-
--- Add Quatron (Return the amount added) --
-function FE:addQuatron(amount, level)
-	local added = math.min(amount, self.quatronMax - self.quatronCharge)
-	if self.quatronCharge > 0 then
-		mixQuatron(self, added, level)
-	else
-		self.quatronCharge = added
-		self.quatronLevel = level
-	end
-	return added
-end
-
--- Remove Quatron (Return the amount removed) --
-function FE:removeQuatron(amount)
-	local removed = math.min(amount, self.quatronCharge)
-	self.quatronCharge = self.quatronCharge - removed
-	return removed
-end
-
--- Return the max input flow --
-function FE:maxInput()
-	return self.quatronMaxInput
-end
-
--- Return the max output flow --
-function FE:maxOutput()
-	return self.quatronMaxOutput
 end
 
 -- Called if the Player interacted with the GUI --

@@ -5,7 +5,7 @@ local rcE = {}
 rcE.name = "ResourceCatcher"
 rcE.type = "simple-entity-with-force"
 rcE.flags = {"placeable-neutral", "player-creation"}
-rcE.icon = "__Mobile_Factory__/graphics/ResourceCatcherI.png"
+rcE.icon = "__Mobile_Factory_Graphics__/graphics/entity/ResourceCatcherI.png"
 rcE.icon_size = 128
 rcE.minable = {mining_time = 0.2, result = "ResourceCatcher"}
 rcE.max_health = 30
@@ -16,14 +16,14 @@ rcE.selection_box = {{-0.5, -0.5}, {0.5, 0.5}}
 rcE.picture = {
     layers = {
         {
-            filename = "__Mobile_Factory__/graphics/ResourceCatcherRedE.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/entity/ResourceCatcherRedE.png",
             priority = "high",
             width = 200,
             height = 200,
             scale = 1/6
         },
         {
-            filename = "__Mobile_Factory__/graphics/ResourceCatcherS.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/entity/ResourceCatcherS.png",
             priority = "high",
             width = 200,
             height = 200,
@@ -39,7 +39,7 @@ local rcI = {}
 rcI.type = "item"
 rcI.name = "ResourceCatcher"
 rcI.place_result = "ResourceCatcher"
-rcI.icon = "__Mobile_Factory__/graphics/ResourceCatcherI.png"
+rcI.icon = "__Mobile_Factory_Graphics__/graphics/entity/ResourceCatcherI.png"
 rcI.icon_size = 128
 rcI.subgroup = "DimensionalStuff"
 rcI.order = "A1"
@@ -52,7 +52,7 @@ frcI.type = "item-with-tags"
 frcI.name = "FilledResourceCatcher"
 frcI.localised_name = {"item-name.FilledResourceCatcher"}
 frcI.place_result = "ResourceCatcher"
-frcI.icon = "__Mobile_Factory__/graphics/FilledResourceCatcherI.png"
+frcI.icon = "__Mobile_Factory_Graphics__/graphics/entity/ResourceCatcherI.png"
 frcI.icon_size = 128
 frcI.subgroup = "DimensionalStuff"
 frcI.order = "A2"
@@ -77,7 +77,7 @@ data:extend{rcR}
 local rcT = {}
 rcT.name = "ResourceCatcher"
 rcT.type = "technology"
-rcT.icon = "__Mobile_Factory__/graphics/ResourceCatcherI.png"
+rcT.icon = "__Mobile_Factory_Graphics__/graphics/entity/ResourceCatcherI.png"
 rcT.icon_size = 128
 rcT.unit = {
 	count=175,
@@ -94,7 +94,7 @@ data:extend{rcT}
 local rcS = {}
 rcS.type = "sprite"
 rcS.name = "ResourceCatcher"
-rcS.filename = "__Mobile_Factory__/graphics/ResourceCatcherE.png"
+rcS.filename = "__Mobile_Factory_Graphics__/graphics/entity/ResourceCatcherE.png"
 rcS.width = 200
 rcS.height = 200
 rcS.scale = 1/6

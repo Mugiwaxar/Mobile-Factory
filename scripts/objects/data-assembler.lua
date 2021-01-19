@@ -112,7 +112,7 @@ function DA:update()
 	end
 
 	-- Set Active or Not --
-	if self.networkAccessPoint ~= nil and self.networkAccessPoint.quatronCharge > 0 then
+	if self.networkAccessPoint ~= nil and EI.energy(self.networkAccessPoint) > 0 then
 		self:setActive(true)
 	else
 		self:setActive(false)
@@ -121,11 +121,12 @@ function DA:update()
     -- Stop if not active --
 	if self.active == false then return end
 
+	-- Charge the Data Assembler --
 	if self.quatronCharge <= 15 and self.networkAccessPoint ~= nil then
-		local chargeToBorrow = math.min(self.networkAccessPoint.quatronCharge, 100 - self.quatronCharge)
+		local chargeToBorrow = math.min(EI.energy(self.networkAccessPoint), 100 - self.quatronCharge)
 		if chargeToBorrow > 0 then
-			self:addQuatron(chargeToBorrow, self.networkAccessPoint.quatronLevel)
-			self.networkAccessPoint:removeQuatron(chargeToBorrow)
+			self:addQuatron(chargeToBorrow, EI.energyLevel(self.networkAccessPoint))
+			EI.removeEnergy(self.networkAccessPoint, chargeToBorrow)
 		end
 	end
 end
@@ -759,7 +760,7 @@ end
 -- Add Quatron (Return the amount added) --
 function DA:addQuatron(amount, level)
 	if self.quatronCharge > 0 then
-		mixQuatron(self, amount, level)
+		EI.mixQuatron(self, amount, level)
 	else
 		self.quatronCharge = amount
 		self.quatronLevel = level

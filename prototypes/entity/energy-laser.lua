@@ -71,14 +71,14 @@ el1E.energy_source =
 {
     type = "electric",
     usage_priority = "secondary-input",
-    buffer_capacity = "200J",
+    buffer_capacity = "1J",
     output_flow_limit = "0W",
     input_flow_limit = "0W",
     drain = "0W",
     render_no_power_icon = false,
     render_no_network_icon = false
 }
-el1E.energy_usage = "200KJ"
+el1E.energy_usage = "1J"
 el1E.fluid_boxes = {
     {
         base_level = 1,
@@ -176,14 +176,14 @@ el2E.energy_source =
 {
     type = "electric",
     usage_priority = "secondary-input",
-    buffer_capacity = "1500KJ",
+    buffer_capacity = "1J",
     output_flow_limit = "0W",
     input_flow_limit = "0W",
     drain = "0W",
     render_no_power_icon = false,
     render_no_network_icon = false
 }
-el2E.energy_usage = "1500KJ"
+el2E.energy_usage = "1J"
 data:extend{el2E}
 
 -- Item --
@@ -268,14 +268,14 @@ el3E.energy_source =
 {
     type = "electric",
     usage_priority = "secondary-input",
-    buffer_capacity = "5MJ",
+    buffer_capacity = "1J",
     output_flow_limit = "0W",
     input_flow_limit = "0W",
     drain = "0W",
     render_no_power_icon = false,
     render_no_network_icon = false
 }
-el3E.energy_usage = "5MJ"
+el3E.energy_usage = "1J"
 data:extend{el3E}
 
 -- Item --
@@ -378,14 +378,14 @@ ql1E.energy_source =
 {
     type = "electric",
     usage_priority = "secondary-input",
-    buffer_capacity = "200J",
+    buffer_capacity = "1J",
     output_flow_limit = "0W",
     input_flow_limit = "0W",
     drain = "0W",
     render_no_power_icon = false,
     render_no_network_icon = false
 }
-ql1E.energy_usage = "200J"
+ql1E.energy_usage = "1J"
 ql1E.fluid_boxes = {
     {
         base_level = 1,
@@ -484,14 +484,14 @@ ql2E.energy_source =
 {
     type = "electric",
     usage_priority = "secondary-input",
-    buffer_capacity = "1500J",
+    buffer_capacity = "1J",
     output_flow_limit = "0W",
     input_flow_limit = "0W",
     drain = "0W",
     render_no_power_icon = false,
     render_no_network_icon = false
 }
-ql2E.energy_usage = "1500J"
+ql2E.energy_usage = "1J"
 data:extend{ql2E}
 
 -- Item --
@@ -576,14 +576,14 @@ ql3E.energy_source =
 {
     type = "electric",
     usage_priority = "secondary-input",
-    buffer_capacity = "5KJ",
+    buffer_capacity = "1J",
     output_flow_limit = "0W",
     input_flow_limit = "0W",
     drain = "0W",
     render_no_power_icon = false,
     render_no_network_icon = false
 }
-ql3E.energy_usage = "5KJ"
+ql3E.energy_usage = "1J"
 data:extend{ql3E}
 
 -- Item --

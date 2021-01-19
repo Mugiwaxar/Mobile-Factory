@@ -3,7 +3,7 @@
 -- Entity --
 feE = table.deepcopy(data.raw["mining-drill"]["pumpjack"])
 feE.name = "FluidExtractor"
-feE.icon = "__Mobile_Factory_Graphics__/graphics/icones/FluidExtractor.png"
+feE.icon = "__Mobile_Factory_Graphics__/graphics/icons/FluidExtractor.png"
 feE.icon_size = 32
 feE.icon_mipmaps = 1
 feE.minable = {mining_time = 0.5, result = "FluidExtractor"}
@@ -71,7 +71,7 @@ local feI = {}
 feI.type = "item-with-tags"
 feI.name = "FluidExtractor"
 feI.place_result = "FluidExtractor"
-feI.icon = "__Mobile_Factory_Graphics__/graphics/icones/FluidExtractor.png"
+feI.icon = "__Mobile_Factory_Graphics__/graphics/icons/FluidExtractor.png"
 feI.icon_size = 32
 feI.subgroup = "DimensionalStuff"
 feI.order = "h"
@@ -96,7 +96,7 @@ data:extend{feR}
 local feT = {}
 feT.name = "FluidExtractor"
 feT.type = "technology"
-feT.icon = "__Mobile_Factory_Graphics__/graphics/icones/FluidExtractor.png"
+feT.icon = "__Mobile_Factory_Graphics__/graphics/icons/FluidExtractor.png"
 feT.icon_size = 32
 feT.unit = {
 	count=15,

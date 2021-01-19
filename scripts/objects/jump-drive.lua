@@ -85,9 +85,9 @@ function JD:update()
 	self.chargeRate = 1 + (table_size(self.jumpChargerTable)*_chargeRateAddedPerJumpCharger)
 
 	-- Update the Jump Drives --
-	if self.charge < self.maxCharge and self.MF.internalEnergyObj:energy() > (_mfJumpEnergyDrain * self.chargeRate) then
+	if self.charge < self.maxCharge and EI.energy(self.MF.internalEnergyObj) > (_mfJumpEnergyDrain * self.chargeRate) then
 		self.charge = self.charge + self.chargeRate
-		self.MF.internalEnergyObj:removeEnergy(_mfJumpEnergyDrain * self.chargeRate)
+		EI.removeEnergy(self.MF.internalEnergyObj, _mfJumpEnergyDrain * self.chargeRate)
 		self.charge = math.min(self.charge, self.maxCharge)
 	end
 
@@ -166,7 +166,7 @@ function JD:canTP(location)
 	-- Check the Jump Charge --
 	if distance > self.charge then return false end
 	-- Check the World --
-	if self.MF.ent.surface ~= location.surface and self.MF.internalQuatronObj.quatronCharge < 1000 then return false end
+	if self.MF.ent.surface ~= location.surface and EI.energe(self.MF.internalQuatronObj) < 1000 then return false end
 	-- All is OK --
 	return true
 end

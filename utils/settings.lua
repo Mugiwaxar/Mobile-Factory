@@ -132,34 +132,25 @@ _MFResearches["ConstructibleArea2"] = "createConstructibleArea2"
 _MFResearches["MatterSerialization"] = "createNetworkControllerArea"
 _MFResearches["JumpDrive"] = "createJumpDriveArea"
 
--- Entity Lists --
-_mfEnergyShare =
+
+-- Energy Laser --
+_mfEnergyLaserTargets =
 {
-	"InternalEnergyCube",
 	"EnergyCubeMK1",
-	"EnergyLaser1"
+	"EnergyCubeMK2",
+	"EnergyCubeMK3"
 }
 
-_mfQuatronShare =
+-- Quatron Laser --
+_mfQuatronLaserTargets =
 {
-	"InternalQuatronCube",
 	"QuatronCubeMK1",
-	"QuatronLaser1",
-	"QuatronReactor",
+	"QuatronCubeMK2",
+	"QuatronCubeMK3",
 	"NetworkAccessPoint",
 	"OreCleaner",
 	"FluidExtractor"
 }
-
-_mfMobileFactories =
-{
-	"MobileFactory",
-	"GTMobileFactory",
-	"HMobileFactory"
-}
-
-_mfEnergyAndMF = merge{_mfEnergyShare, _mfMobileFactories}
-_mfQuatronAndMF = merge{_mfQuatronShare, _mfMobileFactories}
 
 -- GUI Settings --
 _GUIButtonsSize = 15

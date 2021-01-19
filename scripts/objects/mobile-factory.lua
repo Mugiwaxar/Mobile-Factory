@@ -124,9 +124,6 @@ end
 -- Destructor --
 function MF:remove()
 	self.ent = nil
-	-- self.internalEnergyObj:removeEnergy(self.internalEnergyObj:energy())
-	-- self.internalQuatronObj:removeQuatron(self.internalQuatronObj:quatron())
-	-- self.jumpDriveObj.charge = 0
 	-- self:removeSyncArea()
 end
 
@@ -384,14 +381,14 @@ function MF:scanEnt()
 
 	-- Look for Energy Laser targets
 	if self.energyLaserActivated and Util.technologyUnlocked("EnergyDrain1", selfForce) then
-		self.ELEntities = selfSurface.find_entities_filtered{position=selfPosition, force=selfForce, radius=selfRadius, name=_mfEnergyShare}
+		self.ELEntities = selfSurface.find_entities_filtered{position=selfPosition, force=selfForce, radius=selfRadius, name=_mfEnergyLaserTargets}
 	else
 		self.ELEntities = nil
 	end
 
 	-- Look for Quatron Laser targets
 	if self.quatronLaserActivated and Util.technologyUnlocked("EnergyDrain1", selfForce) and Util.technologyUnlocked("QuatronLogistic", selfForce) then
-		self.QLEntities = selfSurface.find_entities_filtered{position=selfPosition, force=selfForce, radius=selfRadius, name=_mfQuatronShare}
+		self.QLEntities = selfSurface.find_entities_filtered{position=selfPosition, force=selfForce, radius=selfRadius, name=_mfQuatronLaserTargets}
 	else
 		self.QLEntities = nil
 	end
@@ -463,32 +460,34 @@ function MF:updateLasers()
 end
 
 function MF:updateQuatronLaser(entity)
+	-- Get the Object --
 	local obj = global.entsTable[entity.unit_number]
+	if obj == nil or obj.ent == nil or obj.ent.valid == false then return end
 	----------------------- Drain Quatron -------------------------
-	if self.selectedQuatronLaserMode == "input" and self.internalQuatronObj.ent ~= nil and self.internalQuatronObj.ent.valid == true and  obj.quatronCharge > 0 then
+	if self.selectedQuatronLaserMode == "input" and self.internalQuatronObj.ent ~= nil and self.internalQuatronObj.ent.valid == true and EI.energy(obj) > 0 then
 		-- Missing Internal Quatron or Structure Quatron or LaserDrain Caparity --
-		local drainedQuatron = math.min(self.internalQuatronObj.quatronMax - self.internalQuatronObj.quatronCharge, obj.quatronCharge, self:getLaserQuatronDrain())
+		local drainedQuatron = math.min(EI.maxEnergy(self.internalQuatronObj) - EI.energy(self.internalQuatronObj), EI.energy(obj), self:getLaserQuatronDrain(), EI.speed(obj))
 		-- Test if some Quatron was drained --
 		if drainedQuatron > 0 then
 			-- Add the Quatron to the Mobile Factory Batteries --
-			self.internalQuatronObj:addQuatron(drainedQuatron, obj.quatronLevel)
+			EI.addEnergy(self.internalQuatronObj, drainedQuatron, EI.energyLevel(obj))
 			-- Remove the Quatron from the Structure --
-			obj.quatronCharge = obj.quatronCharge - drainedQuatron
+			EI.removeEnergy(obj, drainedQuatron)
 			-- Create the Beam --
 			self.ent.surface.create_entity{name="PurpleQuatronBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
 			-- One less Beam to the Beam capacity --
 			return true
 		end
 	----------------------- Send Quatron -------------------------
-	elseif self.selectedQuatronLaserMode == "output" and self.internalQuatronObj.ent ~= nil and self.internalQuatronObj.ent.valid == true and  obj.quatronCharge < obj.quatronMax then
+	elseif self.selectedQuatronLaserMode == "output" and self.internalQuatronObj.ent ~= nil and self.internalQuatronObj.ent.valid == true and  EI.energy(obj) < EI.maxEnergy(obj) then
 			-- Structure missing Quatron or Laser Power or Mobile Factory Quatron --
-		local quatronSend = math.min(obj.quatronMax - obj.quatronCharge, self:getLaserQuatronDrain(), self.internalQuatronObj.quatronCharge)
+		local quatronSend = math.min(EI.maxEnergy(obj) - EI.energy(obj), self:getLaserQuatronDrain(), EI.energy(self.internalQuatronObj), EI.speed(obj))
 		-- Check if Quatron can be send --
 		if quatronSend > 0 then
 			-- Add the Quatron to the Entity --
-			obj:addQuatron(quatronSend, self.internalQuatronObj.quatronLevel)
+			EI.addEnergy(obj, quatronSend, EI.energyLevel(self.internalQuatronObj))
 			-- Remove the Quatron from the Mobile Factory --
-			self.internalQuatronObj.quatronCharge = self.internalQuatronObj.quatronCharge - quatronSend
+			EI.removeEnergy(self.internalQuatronObj, quatronSend)
 			-- Create the Beam --
 			self.ent.surface.create_entity{name="PurpleQuatronBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
 			-- One less Beam to the Beam capacity --
@@ -499,31 +498,34 @@ end
 
 -------------------------------------------- Energy Laser --------------------------------------------
 function MF:updateEnergyLaser(entity)
+	-- Get the Object --
+	local obj = global.entsTable[entity.unit_number]
+	if obj == nil or obj.ent == nil or obj.ent.valid == false then return end
 	----------------------- Drain Energy -------------------------
 	if self.selectedEnergyLaserMode == "input" and self.internalEnergyObj.ent ~= nil and self.internalEnergyObj.ent.valid == true and entity.energy > 0 then
 		-- Missing Internal Energy or Structure Energy or LaserDrain Caparity --
-		local drainedEnergy = math.min(self.internalEnergyObj:maxEnergy() - self.internalEnergyObj:energy(), entity.energy, self:getLaserEnergyDrain())
+		local drainedEnergy = math.min(EI.maxEnergy(self.internalEnergyObj) - EI.energy(self.internalEnergyObj), entity.energy, self:getLaserEnergyDrain(), EI.speed(obj))
 		-- Test if some Energy was drained --
 		if drainedEnergy > 0 then
 			-- Add the Energy to the Mobile Factory Batteries --
-			self.internalEnergyObj:addEnergy(drainedEnergy)
+			EI.addEnergy(self.internalEnergyObj, drainedEnergy)
 			-- Remove the Energy from the Structure --
-			entity.energy = entity.energy - drainedEnergy
+			EI.removeEnergy(obj, drainedEnergy)
 			-- Create the Beam --
 			self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
 			-- One less Beam to the Beam capacity --
 			return true
 		end
 	----------------------- Send Energy -------------------------
-	elseif self.selectedEnergyLaserMode == "output" and self.internalEnergyObj.ent ~= nil and self.internalEnergyObj.ent.valid == true and  entity.energy < entity.electric_buffer_size then
+	elseif self.selectedEnergyLaserMode == "output" and self.internalEnergyObj.ent ~= nil and self.internalEnergyObj.ent.valid == true and entity.energy < entity.electric_buffer_size then
 		-- Structure missing Energy or Laser Power or Mobile Factory Energy --
-		local energySend = math.min(entity.electric_buffer_size - entity.energy, self:getLaserEnergyDrain(), self.internalEnergyObj:energy())
+		local energySend = math.min(entity.electric_buffer_size - entity.energy, self:getLaserEnergyDrain(), EI.energy(self.internalEnergyObj), EI.speed(obj))
 		-- Check if Energy can be send --
 		if energySend > 0 then
 			-- Add the Energy to the Entity --
-			entity.energy = entity.energy + energySend
+			EI.addEnergy(obj, energySend)
 			-- Remove the Energy from the Mobile Factory --
-			self.internalEnergyObj:removeEnergy(energySend)
+			EI.removeEnergy(self.internalEnergyObj, energySend)
 			-- Create the Beam --
 			self.ent.surface.create_entity{name="BlueBeam", duration=60, position=self.ent.position, target_position=entity.position, source_position={self.ent.position.x,self.ent.position.y}}
 			-- One less Beam to the Beam capacity --
@@ -562,7 +564,7 @@ function MF:updateFluidLaser(entity)
 			-- Create the Laser --
 			self.ent.surface.create_entity{name="PurpleBeam", duration=60, position=self.ent.position, target=localTank.position, source=self.ent.position}
 			-- Drain Energy --
-			self.internalEnergyObj:removeEnergy(_mfFluidConsomption*amountAdded)
+			EI.removeEnergy(self.internalEnergyObj, _mfFluidConsomption*amountAdded)
 			-- One less Beam to the Beam capacity --
 			return true
 		end
@@ -578,7 +580,7 @@ function MF:updateFluidLaser(entity)
 			-- Create the Laser --
 			self.ent.surface.create_entity{name="PurpleBeam", duration=60, position=self.ent.position, target=localTank.position, source=self.ent.position}
 			-- Drain Energy --
-			self.internalEnergyObj:removeEnergy(_mfFluidConsomption*amountAdded)
+			EI.removeEnergy(self.internalEnergyObj, _mfFluidConsomption*amountAdded)
 			-- One less Beam to the Beam capacity --
 			return true
 		end
@@ -588,12 +590,12 @@ end
 -------------------------------------------- Logistic Laser --------------------------------------------
 function MF:updateLogisticLaser(entity)
 	-- Create the Laser --
-	if self.internalEnergyObj:energy() > _mfBaseItemEnergyConsumption * self:getLaserItemDrain() then
+	if EI.energy(self.internalEnergyObj) > _mfBaseItemEnergyConsumption * self:getLaserItemDrain() then
 		-- Get Chest Inventory --
 		local inv = entity.get_inventory(defines.inventory.chest)
 		if inv ~= nil and inv.valid == true then
 			-- Create the Laser Capacity variable --
-			local capItems = math.min(self:getLaserItemDrain(), self.internalEnergyObj:energy() * _mfBaseItemEnergyConsumption)
+			local capItems = math.min(self:getLaserItemDrain(), EI.energy(self.internalEnergyObj) * _mfBaseItemEnergyConsumption)
 			local canMove = capItems
 			-- Retrieve Items from the Inventory --
 			for i=1, #inv do
@@ -618,7 +620,7 @@ function MF:updateLogisticLaser(entity)
 			if canMove < capItems then
 				-- Create the laser and remove energy --
 				self.ent.surface.create_entity{name="GreenBeam", duration=60, position=self.ent.position, target=entity.position, source=self.ent.position}
-				self.internalEnergyObj:removeEnergy((capItems - canMove) * _mfBaseItemEnergyConsumption)
+				EI.removeEnergy(self.internalEnergyObj, (capItems - canMove) * _mfBaseItemEnergyConsumption)
 				-- One less Beam to the Beam capacity --
 				return true
 			end
@@ -637,19 +639,19 @@ function MF:updateFuel()
 			if fuel == nil then return end
 			if burner.currently_burning == nil then
 				-- Insert coal in case of the Tank is off --
-				if (fuel ~= nil) and (self.internalEnergyObj:energy() >= fuel.fuel_value/_mfFuelMultiplicator) then
+				if (fuel ~= nil) and (EI.energy(self.internalEnergyObj) >= fuel.fuel_value/_mfFuelMultiplicator) then
 					burner.currently_burning = fuel
-					self.internalEnergyObj:removeEnergy(fuel.fuel_value/_mfFuelMultiplicator)
+					EI.removeEnergy(self.internalEnergyObj, fuel.fuel_value/_mfFuelMultiplicator)
 				end
 			elseif burner.currently_burning == fuel then
 				-- Calcule the missing Fuel amount --
 				local remainingFuelValue = burner.remaining_burning_fuel
 				local missingFuelValue = math.floor(fuel.fuel_value - remainingFuelValue)
-				if missingFuelValue > 0 and self.internalEnergyObj:energy() >= missingFuelValue/_mfFuelMultiplicator then
+				if missingFuelValue > 0 and EI.energy(self.internalEnergyObj) >= missingFuelValue/_mfFuelMultiplicator then
 					-- Add the missing Fuel to the Tank --
 					burner.remaining_burning_fuel = remainingFuelValue + missingFuelValue
 					-- Drain energy --
-					self.internalEnergyObj:removeEnergy(missingFuelValue/_mfFuelMultiplicator)
+					EI.removeEnergy(self.internalEnergyObj, missingFuelValue/_mfFuelMultiplicator)
 				end
 			end
 		end
@@ -671,19 +673,19 @@ function MF:updateShield(event)
 	end
 	-- Charge the Shield --
 	local chargeSpeed = 10
-	if tick%60 == 0 and self.internalEnergyObj:energy() > 0 then
+	if tick%60 == 0 and EI.energy(self.internalEnergyObj) > 0 then
 		-- Get the Shield --
-		for k, equipment in pairs(self.ent.grid.equipment) do
+		for _, equipment in pairs(self.ent.grid.equipment) do
 			-- Check if this is a Shield --
 			if equipment.name == "mfShieldEquipment" then
 				local missingCharge = equipment.max_shield - equipment.shield
 				local chargeAmount = math.min(missingCharge, chargeSpeed)
 				-- Check if the Shield can be charged --
-				if chargeAmount > 0 and chargeAmount*_mfShieldComsuption <= self.internalEnergyObj:energy() then
+				if chargeAmount > 0 and chargeAmount*_mfShieldComsuption <= EI.energy(self.internalEnergyObj) then
 					 -- Charge the Shield --
 					 equipment.shield = equipment.shield + chargeAmount
 					 -- Remove the energy --
-					 self.internalEnergyObj:removeEnergy(chargeAmount*_mfShieldComsuption)
+					 EI.removeEnergy(self.internalEnergyObj, chargeAmount*_mfShieldComsuption)
 				end
 			end
 		end
@@ -1275,6 +1277,8 @@ function MF:deploy()
 			-- If the Entities are Poles --
 			if string.match(slot.entity, "Pole") then
 				outEnt.connect_neighbour(inEnt)
+				outEnt.connect_neighbour({wire=defines.wire_type.green, target_entity=inEnt})
+				outEnt.connect_neighbour({wire=defines.wire_type.red, target_entity=inEnt})
 			end
 		end
 	end
@@ -1331,7 +1335,6 @@ function MF.interaction(event, player, MFPlayer)
 		local objId = event.element.tags.ID
 		local ent = global.MFTable[objId].ent
 		if ent ~= nil and ent.valid == true then
-			MFPlayer.varTable.bypassGUI = true
 			player.opened = ent
 		end
 		return

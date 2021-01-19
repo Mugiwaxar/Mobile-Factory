@@ -124,10 +124,10 @@ function GUI.updateMFSwitchMFGUI(GUITable, justCreated)
                 mfShielValue = MF2:shield() / MF2:maxShield()
                 mfShieldText = {"", {"gui-description.mfShield"}, ": ", math.floor(MF2:shield()), "/", MF2:maxShield()}
             end
-            mfEnergyValue = 1 - (math.floor(100 - MF2.internalEnergyObj:energy() / MF2.internalEnergyObj:maxEnergy() * 100)) / 100
-            mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF2.internalEnergyObj:energy()), "J/", Util.toRNumber(MF2.internalEnergyObj:maxEnergy()), "J"}
-            mfQuatronValue = 1 - (math.floor(100 - MF2.internalQuatronObj.quatronCharge / MF2.internalQuatronObj.quatronMax * 100)) / 100
-            mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", Util.toRNumber(MF2.internalQuatronObj.quatronCharge), "/", Util.toRNumber(MF2.internalQuatronObj.quatronMax), " (", {"gui-description.mQuatronPurity"}, ": ",  string.format("%.3f", MF2.internalQuatronObj.quatronLevel), ")"}
+            mfEnergyValue = 1 - (math.floor(100 - EI.energy(MF2.internalEnergyObj) / EI.maxEnergy(MF2.internalEnergyObj) * 100)) / 100
+            mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(EI.energy(MF2.internalEnergyObj)), "J/", Util.toRNumber(EI.maxEnergy(MF2.internalEnergyObj)), "J"}
+            mfQuatronValue = 1 - (math.floor(100 - EI.energy(MF2.internalQuatronObj) / EI.maxEnergy(MF2.internalQuatronObj) * 100)) / 100
+            mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", Util.toRNumber(EI.energy(MF2.internalQuatronObj)), "/", Util.toRNumber(EI.maxEnergy(MF2.internalQuatronObj)), " (", {"gui-description.mQuatronPurity"}, ": ",  string.format("%.3f", EI.energy(MF2.internalQuatronObj)), ")"}
             mfJumpDriveValue = (math.floor(MF2.jumpDriveObj.charge / MF2.jumpDriveObj.maxCharge * 100)) / 100
             mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": ", MF2.jumpDriveObj.charge, "/", MF2.jumpDriveObj.maxCharge, " (", MF2.jumpDriveObj.chargeRate, "/s)"}
         end

@@ -149,10 +149,10 @@ function GUI.updateMFMainGUI(GUITable)
 			mfShielValue = MF:shield() / MF:maxShield()
 			mfShieldText = {"", {"gui-description.mfShield"}, ": ", math.floor(MF:shield()), "/", MF:maxShield()}
 		end
-		mfEnergyValue = 1 - (math.floor(100 - MF.internalEnergyObj:energy() / MF.internalEnergyObj:maxEnergy() * 100)) / 100
-		mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(MF.internalEnergyObj:energy()), "J/", Util.toRNumber(MF.internalEnergyObj:maxEnergy()), "J"}
-		mfQuatronValue = 1 - (math.floor(100 - MF.internalQuatronObj.quatronCharge / MF.internalQuatronObj.quatronMax * 100)) / 100
-		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", Util.toRNumber(MF.internalQuatronObj.quatronCharge), "/", Util.toRNumber(MF.internalQuatronObj.quatronMax), " (", {"gui-description.mQuatronPurity"}, ": ",  string.format("%.3f", MF.internalQuatronObj.quatronLevel), ")"}
+		mfEnergyValue = 1 - (math.floor(100 - EI.energy(MF.internalEnergyObj) / EI.maxEnergy(MF.internalEnergyObj) * 100)) / 100
+		mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", Util.toRNumber(EI.energy(MF.internalEnergyObj)), "J/", Util.toRNumber(EI.maxEnergy(MF.internalEnergyObj)), "J"}
+		mfQuatronValue = 1 - (math.floor(100 - EI.energy(MF.internalQuatronObj) / EI.maxEnergy(MF.internalQuatronObj) * 100)) / 100
+		mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", Util.toRNumber(EI.energy(MF.internalQuatronObj)), "/", Util.toRNumber(EI.maxEnergy(MF.internalQuatronObj)), " (", {"gui-description.mQuatronPurity"}, ": ",  string.format("%.3f", EI.energyLevel(MF.internalQuatronObj)), ")"}
 		mfJumpDriveValue = (math.floor(MF.jumpDriveObj.charge / MF.jumpDriveObj.maxCharge * 100)) / 100
 		mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": ", MF.jumpDriveObj.charge, "/", MF.jumpDriveObj.maxCharge, " (", MF.jumpDriveObj.chargeRate, "/s)"}
 	end

@@ -4,7 +4,7 @@
 local mfDE = {}
 mfDE.type = "simple-entity-with-owner"
 mfDE.name = "MFDeploy"
-mfDE.icone = "__Mobile_Factory__/graphics/MFDeployI.png"
+mfDE.icone = "__Mobile_Factory_Graphics__/graphics/icons/MFDeployI.png"
 mfDE.icon_size = 32
 mfDE.minable = {mining_time=1}
 mfDE.collision_mask = {"player-layer", "train-layer", "consider-tile-transitions", "layer-52", "not-colliding-with-itself"}
@@ -12,7 +12,7 @@ mfDE.collision_box = {{-3.5, -3.5}, {2.5, 4.5}}
 mfDE.selection_box = mfDE.collision_box
 mfDE.flags = {"not-rotatable"}
 mfDE.picture = {
-        filename = "__Mobile_Factory__/graphics/MFDeployE.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icons/MFDeployE.png",
         priority = "high",
         width = 600,
         height = 800,
@@ -24,7 +24,7 @@ data:extend{mfDE}
 local mfdI = {}
 mfdI.type = "item"
 mfdI.name = "MFDeploy"
-mfdI.icon = "__Mobile_Factory__/graphics/MFDeployI.png"
+mfdI.icon = "__Mobile_Factory_Graphics__/graphics/icons/MFDeployI.png"
 mfdI.place_result = "MFDeploy"
 mfdI.icon_size = 32
 mfdI.stack_size = 1
@@ -35,7 +35,7 @@ data:extend{mfdI}
 local mfDT = {}
 mfDT.name = "MFDeploy"
 mfDT.type = "technology"
-mfDT.icon = "__Mobile_Factory__/graphics/MFDeployT.png"
+mfDT.icon = "__Mobile_Factory_Graphics__/graphics/icons/MFDeployT.png"
 mfDT.icon_size = 600
 mfDT.unit = {
 	count=1,
@@ -53,7 +53,7 @@ for i = 5, 20 do
   local mfDTS = {}
   mfDTS.name = "MFDSlot" .. i
   mfDTS.type = "technology"
-  mfDTS.icon = "__Mobile_Factory__/graphics/DPSlotT.png"
+  mfDTS.icon = "__Mobile_Factory_Graphics__/graphics/icons/DPSlotT.png"
   mfDTS.icon_size = 64
   mfDTS.unit = {
     count=1*i,

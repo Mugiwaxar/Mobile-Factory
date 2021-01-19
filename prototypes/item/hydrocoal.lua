@@ -4,7 +4,7 @@
 local hcI = {}
 hcI.type = "item"
 hcI.name = "Hydrocoal"
-hcI.icon = "__Mobile_Factory_Graphics__/graphics/icones/Hydrocoal.png"
+hcI.icon = "__Mobile_Factory_Graphics__/graphics/icons/Hydrocoal.png"
 hcI.icon_size = 32
 hcI.fuel_category = "chemical"
 hcI.fuel_value = "15MJ"
@@ -32,7 +32,7 @@ data:extend{hcR}
 local hcT = {}
 hcT.name = "Hydrocoal"
 hcT.type = "technology"
-hcT.icon = "__Mobile_Factory_Graphics__/graphics/icones/Hydrocoal.png"
+hcT.icon = "__Mobile_Factory_Graphics__/graphics/icons/Hydrocoal.png"
 hcT.icon_size = 32
 hcT.unit = {
 	count=800,

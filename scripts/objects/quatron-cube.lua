@@ -7,16 +7,11 @@ QC = {
 	MF = nil,
 	entID = 0,
 	spriteID = 0,
-	lightID = 0,
 	consumption = 0,
 	updateTick = 60,
 	lastUpdate = 0,
 	dataNetwork = nil,
-	quatronCharge = 0,
-	quatronLevel = 1,
-	quatronMax = 1,
-	quatronMaxInput = 0,
-	quatronMaxOutput = 0
+	energyLevel = 1
 }
 
 -- Constructor --
@@ -31,11 +26,6 @@ function QC:new(object)
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
 	t.entID = object.unit_number
-	-- Get prototype data
-	t.quatronCharge = object.energy
-	t.quatronMax = object.electric_buffer_size
-	t.quatronMaxInput = object.electric_buffer_size / 10
-	t.quatronMaxOutput = object.electric_buffer_size / 10
 	-- Draw the Sprite --
 	UpSys.addObj(t)
 	return t
@@ -53,7 +43,6 @@ end
 function QC:remove()
 	-- Destroy the Sprite --
 	rendering.destroy(self.spriteID)
-	rendering.destroy(self.lightID)
 	-- Remove from the Update System --
 	UpSys.removeObj(self)
 	-- Remove from the Data Network --
@@ -70,20 +59,20 @@ end
 
 -- Item Tags to Content --
 function QC:itemTagsToContent(tags)
-	self.quatronCharge = tags.energy or 0
-	self.quatronLevel = tags.purity or 1
-	self.ent.energy = self.quatronCharge
+	self.ent.energy = tags.energy or 0
+	self.energyLevel = tags.purity or 1
 end
 
 -- Content to Item Tags --
 function QC:contentToItemTags(tags)
-	if self.quatronCharge <= 0 then return end
-	tags.set_tag("Infos", {energy=self.quatronCharge, purity=self.quatronLevel})
-	tags.custom_description = {"", tags.prototype.localised_description, {"item-description.QuatronCubeC", math.floor(self.quatronCharge), string.format("%.3f", self.quatronLevel)}}
+	if EI.energy(self) <= 0 then return end
+	tags.set_tag("Infos", {energy=self.ent.energy, purity=EI.energyLevel(self)})
+	tags.custom_description = {"", tags.prototype.localised_description, {"item-description.QuatronCubeC", math.floor(self.ent.energy), string.format("%.3f", EI.energyLevel(self))}}
 end
 
 -- Update --
 function QC:update()
+
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 
@@ -94,13 +83,13 @@ function QC:update()
 	end
 
 	-- Update the Sprite --
-	local spriteNumber = math.ceil(self.quatronCharge/self.quatronMax*16)
+	local spriteNumber = math.ceil(EI.energy(self)/EI.maxEnergy(self)*16)
 	rendering.destroy(self.spriteID)
-	rendering.destroy(self.lightID)
 	self.spriteID = rendering.draw_sprite{sprite="CubeChargeSprite" .. spriteNumber, x_scale=1/7, y_scale=1/7, target=self.ent, surface=self.ent.surface, target_offset={0, -0.3}, render_layer=131}
 
 	-- Balance the Quatron with neighboring Quatron Users --
-	self:balance()
+	EI.shareEnergy(self)
+
 end
 
 
@@ -136,93 +125,16 @@ function QC:getTooltipInfos(GUITable, mainFrame, justCreated)
 	GAPI.addSubtitle(GUITable, "", infoFrame, {"gui-description.Information"})
 
 	-- Add the Quatron Charge --
-    GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronCharge", Util.toRNumber(self.quatronCharge)}, _mfOrange)
-	GAPI.addProgressBar(GUITable, "", infoFrame, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+    GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronCharge", Util.toRNumber(EI.energy(self))}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", infoFrame, "", EI.energy(self) .. "/" .. EI.maxEnergy(self), false, _mfPurple, EI.energy(self)/EI.maxEnergy(self), 100)
 	
 	-- Create the Quatron Purity --
-	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.Quatronlevel", string.format("%.3f", self.quatronLevel)}, _mfOrange)
-	GAPI.addProgressBar(GUITable, "", infoFrame, "", "", false, _mfPurple, self.quatronLevel/20, 100)
+	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.Quatronlevel", string.format("%.3f", EI.energyLevel(self))}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", infoFrame, "", "", false, _mfPurple, EI.energyLevel(self)/20, 100)
 
 	-- Add the Input/Output Speed Label --
-	local inputLabel = GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronInputSpeed", Util.toRNumber(self:maxInput())}, _mfOrange)
+	local inputLabel = GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronInputSpeed", Util.toRNumber(EI.speed(self))}, _mfOrange)
 	inputLabel.style.top_margin = 10
-	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronOutputSpeed", Util.toRNumber(self:maxOutput())}, _mfOrange)
+	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronOutputSpeed", Util.toRNumber(EI.speed(self))}, _mfOrange)
 
-end
-
-
--- Balance the Quatron with neighboring Quatron Users --
-function QC:balance()
-	-- Get all Accumulator arount --
-	local area = {{self.ent.position.x-1.5, self.ent.position.y-1.5},{self.ent.position.x+1.5,self.ent.position.y+1.5}}
-	local ents = self.ent.surface.find_entities_filtered{area=area, name=_mfQuatronShare}
-
-	local selfMaxOutFlow = self.quatronMaxOutput
-	local selfQuatron = self.quatronCharge
-	local selfQuatronLevel = self.quatronLevel
-
-	-- Check all Accumulator --
-	for k, ent in pairs(ents) do
-		-- Look for valid Quatron User --
-		local obj = global.entsTable[ent.unit_number]
-		if obj ~= nil and obj.entID ~= self.entID then
-			local isAcc = ent.type == "accumulator"
-			local objQuatron = obj.quatronCharge
-			local objMaxQuatron = obj.quatronMax
-			local objMaxInFlow = obj.quatronMaxInput
-			local shareThreshold = isAcc and objQuatron or 0
-			if selfQuatron > shareThreshold and objQuatron < objMaxQuatron and objMaxInFlow > 0 then
-				-- Calcule max flow --
-				local quatronVariance = isAcc and math.floor((selfQuatron - objQuatron) / 2) or selfQuatron
-				local missingQuatron = objMaxQuatron - objQuatron
-				local quatronTransfer = math.min(quatronVariance, missingQuatron, selfMaxOutFlow, objMaxInFlow)
-				-- Transfer Quatron --
-				quatronTransfer = obj:addQuatron(quatronTransfer, selfQuatronLevel)
-				-- Remove Quatron --
-				selfQuatron = selfQuatron - quatronTransfer
-			end
-		end
-	end
-
-	self.quatronCharge = selfQuatron
-	self.ent.energy = selfQuatron
-end
-
--- Return the amount of Quatron --
-function QC:quatron()
-	return self.quatronCharge
-end
-
--- Return the Quatron Buffer size --
-function QC:maxQuatron()
-	return self.quatronMax
-end
-
--- Add Quatron (Return the amount added) --
-function QC:addQuatron(amount, level)
-	local added = math.min(amount, self.quatronMax - self.quatronCharge)
-	if self.quatronCharge > 0 then
-		mixQuatron(self, added, level)
-	else
-		self.quatronCharge = added
-		self.quatronLevel = level
-	end
-	return added
-end
-
--- Remove Quatron (Return the amount removed) --
-function QC:removeQuatron(amount)
-	local removed = math.min(amount, self.quatronCharge)
-	self.quatronCharge = self.quatronCharge - removed
-	return removed
-end
-
--- Return the max input flow --
-function QC:maxInput()
-	return self.quatronMaxInput
-end
-
--- Return the max output flow --
-function QC:maxOutput()
-	return self.quatronMaxOutput
 end

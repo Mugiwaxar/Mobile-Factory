@@ -65,7 +65,7 @@ function createControlRoom(MF)
 		iec.last_user = MF.player
 		if valid(MF.internalEnergyObj) == false then MF.internalEnergyObj = IEC:new(MF) end
 		MF.internalEnergyObj:setEnt(iec)
-		MF.internalEnergyObj:addEnergy(.5 * _mfInternalEnergyMax)
+		EI.addEnergy(MF.internalEnergyObj, 0.5 * _mfInternalEnergyMax)
 		-- Create Internal Quatron Cubes --
 		local iqc = createEntity(newSurface, -7, 6, "InternalQuatronCube", getMFPlayer(MF.playerIndex).ent.force)
 		iqc.last_user = MF.player

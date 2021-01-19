@@ -138,10 +138,10 @@ function DN:getTooltipInfos(GUITable, infoTable, obj)
 	GAPI.addLabel(GUITable, "", infoTable, {"gui-description.DNConnectedTo", obj.dataNetwork.MF.name}, _mfOrange, {"gui-description.DNConnectedToDNTT"})
 
 	-- Create the Total Quatron Label --
-	GAPI.addLabel(GUITable, "", infoTable, {"gui-description.DNTotalQuatron", Util.toRNumber(obj.networkAccessPoint.quatronCharge)}, _mfOrange, {"gui-description.DNTotalQuatronTT"})
+	GAPI.addLabel(GUITable, "", infoTable, {"gui-description.DNTotalQuatron", Util.toRNumber(EI.energy(obj.networkAccessPoint))}, _mfOrange, {"gui-description.DNTotalQuatronTT"})
 
 	-- Create the Quatron Putiry Label --
-	GAPI.addLabel(GUITable, "", infoTable, {"gui-description.DNQuatronPutiry", string.format("%.3f", obj.networkAccessPoint.quatronLevel)}, _mfOrange, {"gui-description.DNQuatronPutiryTT"})
+	GAPI.addLabel(GUITable, "", infoTable, {"gui-description.DNQuatronPutiry", string.format("%.3f", EI.energyLevel(obj.networkAccessPoint))}, _mfOrange, {"gui-description.DNQuatronPutiryTT"})
 
 	-- Create the Consumption Label --
 	GAPI.addLabel(GUITable, "", infoTable, {"gui-description.DNTotalConsumption", Util.toRNumber(obj.networkAccessPoint.totalConsumption)}, _mfOrange, {"gui-description.DNTotalConsumptionTT"})
@@ -150,7 +150,7 @@ function DN:getTooltipInfos(GUITable, infoTable, obj)
 	GAPI.addLabel(GUITable, "", infoTable, {"gui-description.DNSelfConsumption", obj.consumption}, _mfOrange, {"gui-description.DNSelfConsumptionTT"})
 
 	-- Create the Out Of Power Label --
-	if obj.networkAccessPoint.quatronCharge <= 0 then
+	if EI.energy(obj.networkAccessPoint) <= 0 then
 		GAPI.addLabel(GUITable, "", infoTable, {"gui-description.OutOfQuatron"}, _mfRed)
 	end
 

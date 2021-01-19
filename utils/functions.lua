@@ -3,7 +3,6 @@ function createTableList()
 	global.objTable = {}
 	addObject{tableName="playersTable", tag="MFP", objName="MFPlayer", noPlaced=true, noUpsys=true}
 	addObject{tableName="MFTable", tag="MF", objName="MF", noPlaced=true}
-	-- addObject{tableName="eryaTable", tag="ES", objName="Erya"}
 	addObject{tableName="matterInteractorTable", tag="MI", objName="MatterInteractor"}
 	addObject{tableName="fluidInteractorTable", tag="FI", objName="FluidInteractor"}
 	addObject{tableName="dataAssemblerTable", tag="DA", objName="DataAssembler"}
@@ -31,6 +30,7 @@ function createTableList()
 	addObject{tableName="resourceCatcher", tag="RC", objName="ResourceCatcher"}
 	addObject{objName="InternalEnergyCube", noUpsys=true, canInCCAnywhere=true, noOutside=true}
 	addObject{objName="InternalQuatronCube", noUpsys=true, canInCCAnywhere=true, noOutside=true}
+	addObject{tableName= "energyDispenserTable", tag="ED", objName="EnergyDispenser"}
 end
 
 -- Add an Object to the System --
@@ -170,16 +170,16 @@ function syncQuatron(accu1, accu2)
 	local obj1 = global.entsTable[accu1.unit_number]
 	local obj2 = global.entsTable[accu2.unit_number]
 	-- Calcul the total quatron --
-	local totalCharge = obj1.quatronCharge + obj2.quatronCharge
+	local totalCharge = EI.energy(obj1) + EI.energy(obj2)
 	if totalCharge <= 0 then return end
 
-	local effectiveCharge = obj1.quatronCharge * math.pow(obj1.quatronLevel, _mfQuatronScalePower) + obj2.quatronCharge * math.pow(obj2.quatronLevel, _mfQuatronScalePower)
+	local effectiveCharge = EI.energy(obj1) * math.pow(EI.energy(obj1), _mfQuatronScalePower) + EI.energy(obj2) * math.pow(EI.energy(obj2), _mfQuatronScalePower)
 	local effectiveLevel = math.pow(effectiveCharge / totalCharge, 1/_mfQuatronScalePower)
 	-- Set the Quatron of the Accumulators --
-	obj1.quatronCharge = math.ceil(totalCharge / 2)
-	obj2.quatronCharge = math.floor(totalCharge / 2)
-	obj1.quatronLevel = effectiveLevel
-	obj2.quatronLevel = effectiveLevel
+	accu1.energy = math.ceil(totalCharge / 2)
+	accu2.energy = math.floor(totalCharge / 2)
+	obj1.energyLevel = effectiveLevel
+	obj2.energyLevel = effectiveLevel
 end
 
 -- Check if an Object is valid --
@@ -488,12 +488,6 @@ function entityToBlueprintTags(entity, fromTable)
 	end
 
 	return tags
-end
-
-function mixQuatron(obj, newCharge, newLevel)
-	local effectiveCharge = obj.quatronCharge * math.pow(obj.quatronLevel, _mfQuatronScalePower) + newCharge * math.pow(newLevel, _mfQuatronScalePower)
-	obj.quatronCharge = obj.quatronCharge + newCharge
-	obj.quatronLevel = math.pow(effectiveCharge / obj.quatronCharge, 1/_mfQuatronScalePower)
 end
 
 function slotToPos(slotNumber, x, y)

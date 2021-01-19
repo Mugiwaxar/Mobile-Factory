@@ -17,11 +17,9 @@ NAP = {
 	objTable = nil,
 	updateTick = 60,
 	lastUpdate = 0,
-	quatronCharge = 0,
-	quatronLevel = 1,
-	quatronMax = _mfNAPQuatronCapacity,
-	quatronMaxInput = 999999,
-	quatronMaxOutput = 0
+	energyCharge = 0,
+	energyLevel = 1,
+	energyBuffer = _mfNAPQuatronCapacity
 }
 
 -- Constructor --
@@ -72,6 +70,7 @@ end
 
 -- Update --
 function NAP:update()
+
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 
@@ -82,10 +81,10 @@ function NAP:update()
 	end
 
 	-- Render the Animation --
-	if self.quatronCharge <= 0 and rendering.is_valid(self.noQuatronSpriteID) == false then
+	if EI.energy(self) <= 0 and rendering.is_valid(self.noQuatronSpriteID) == false then
 		self.noQuatronSpriteID = rendering.draw_sprite{sprite="QuatronIconDisabled", render_layer=131, target=self.ent, surface=self.ent.surface}
 		rendering.destroy(self.animID)
-	elseif self.quatronCharge > 0 and rendering.is_valid(self.animID) == false then
+	elseif EI.energy(self) > 0 and rendering.is_valid(self.animID) == false then
 		self.animID = rendering.draw_animation{animation="NetworkAccessPointA", target={self.ent.position.x,self.ent.position.y-0.9}, surface=self.ent.surface, render_layer=131}
 		rendering.destroy(self.noQuatronSpriteID)
 	end
@@ -171,12 +170,12 @@ function NAP:getTooltipInfos(GUITable, mainFrame, justCreated)
 	conStructuresTable.clear()
 
     -- Add the Quatron Charge --
-    GAPI.addLabel(GUITable, "", infoFlow, {"gui-description.QuatronCharge", Util.toRNumber(self.quatronCharge)}, _mfOrange)
-	GAPI.addProgressBar(GUITable, "", infoFlow, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+    GAPI.addLabel(GUITable, "", infoFlow, {"gui-description.QuatronCharge", Util.toRNumber(EI.energy(self))}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", infoFlow, "", EI.energy(self) .. "/" .. EI.maxEnergy(self), false, _mfPurple, EI.energy(self)/EI.maxEnergy(self), 100)
 	
 	-- Create the Quatron Purity --
-	GAPI.addLabel(GUITable, "", infoFlow, {"gui-description.Quatronlevel", string.format("%.3f", self.quatronLevel)}, _mfOrange)
-	GAPI.addProgressBar(GUITable, "", infoFlow, "", "", false, _mfPurple, self.quatronLevel/20, 100)
+	GAPI.addLabel(GUITable, "", infoFlow, {"gui-description.Quatronlevel", string.format("%.3f", EI.energyLevel(self))}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", infoFlow, "", "", false, _mfPurple, EI.energyLevel(self)/20, 100)
 
 	-- Show the Connected Structures List --
 	for _, obj in pairs(self.objTable) do
@@ -205,7 +204,7 @@ function NAP:createDNSignals()
 	end
 
 	-- Create the Deep Storages Signals --
-	for k, ds in pairs(self.dataNetwork.DSRTable) do
+	for _, ds in pairs(self.dataNetwork.DSRTable) do
 		-- Create and send the Signal --
 		if ds.inventoryItem ~= nil then
 			local signal = {signal={type="item", name=ds.inventoryItem}, count=math.min(ds.inventoryCount, 2e9)}
@@ -218,7 +217,7 @@ function NAP:createDNSignals()
 	end
 
 	-- Create the Deep Tanks Signals --
-	for k, dtk in pairs(self.dataNetwork.DTKTable) do
+	for _, dtk in pairs(self.dataNetwork.DTKTable) do
 		-- Create and send the Signal --
 		if dtk.inventoryFluid ~= nil then
 			local signal = {signal={type="fluid", name=dtk.inventoryFluid} ,count=dtk.inventoryCount}
@@ -242,58 +241,18 @@ function NAP:updateTotalConsumption()
 			end
 	end
 	-- TODO: NAP doesn't get better with levels, so just reducing consumption for now
-	self.totalConsumption = math.ceil(totalConsumption / math.pow(self.quatronLevel, _mfQuatronScalePower))
+	self.totalConsumption = math.ceil(totalConsumption / math.pow(EI.energyLevel(self), _mfQuatronScalePower))
 end
 
 -- Remove the Quatron Consumed --
 function NAP:removeConsumption()
 	-- Check and Remove Quatron --
-	if self.totalConsumption >= self.quatronCharge then
-		self.quatronCharge = 0
+	if self.totalConsumption >= EI.energy(self) then
+		self.energyCharge = 0
 	else
-		self.quatronCharge = self.quatronCharge - self.totalConsumption
+		self.energyCharge = EI.energy(self) - self.totalConsumption
 	end
 end
-
--- Return the amount of Quatron --
-function NAP:quatron()
-	return self.quatronCharge
-end
-
--- Return the Quatron Buffer size --
-function NAP:maxQuatron()
-	return self.quatronMax
-end
-
--- Add Quatron (Return the amount added) --
-function NAP:addQuatron(amount, level)
-	local added = math.min(amount, self.quatronMax - self.quatronCharge)
-	if self.quatronCharge > 0 then
-		mixQuatron(self, added, level)
-	else
-		self.quatronCharge = added
-		self.quatronLevel = level
-	end
-	return added
-end
-
--- Remove Quatron (Return the amount removed) --
-function NAP:removeQuatron(amount)
-	local removed = math.min(amount, self.quatronCharge)
-	self.quatronCharge = self.quatronCharge - removed
-	return removed
-end
-
--- Return the max input flow --
-function NAP:maxInput()
-	return self.quatronMaxInput
-end
-
--- Return the max output flow --
-function NAP:maxOutput()
-	return self.quatronMaxOutput
-end
-
 
 -- Called if the Player interacted with the GUI --
 function NAP.interaction(event)

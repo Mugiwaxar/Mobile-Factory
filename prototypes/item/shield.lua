@@ -50,7 +50,7 @@ data:extend{shR}
 local shT = {}
 shT.name = "MFShield"
 shT.type = "technology"
-shT.icon = "__Mobile_Factory_Graphics__/graphics/icones/shield.png"
+shT.icon = "__Mobile_Factory_Graphics__/graphics/icons/shield.png"
 shT.icon_size = 64
 shT.unit = {
 	count = 5,

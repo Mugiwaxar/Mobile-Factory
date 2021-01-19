@@ -28,7 +28,7 @@ data:extend{msT}
 local idT = {}
 idT.name = "TechItemDrain"
 idT.type = "technology"
-idT.icon = "__Mobile_Factory_Graphics__/graphics/icones/TechItemDrain.png"
+idT.icon = "__Mobile_Factory_Graphics__/graphics/icons/TechItemDrain.png"
 idT.icon_size = 32
 idT.unit = {
 	count=5,

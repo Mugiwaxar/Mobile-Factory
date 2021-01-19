@@ -4,7 +4,7 @@
 dsE = {}
 dsE.type = "container"
 dsE.name = "DeepStorage"
-dsE.icon = "__Mobile_Factory_Graphics__/graphics/icones/DeepStorageI.png"
+dsE.icon = "__Mobile_Factory_Graphics__/graphics/icons/DeepStorageI.png"
 dsE.icon_size = 256
 dsE.flags = {"placeable-neutral", "player-creation"}
 dsE.minable = {mining_time = 0.8, result = "DeepStorage"}
@@ -51,7 +51,7 @@ data:extend{dsE}
 local dsI = {}
 dsI.type = "item-with-tags"
 dsI.name = "DeepStorage"
-dsI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DeepStorageI.png"
+dsI.icon = "__Mobile_Factory_Graphics__/graphics/icons/DeepStorageI.png"
 dsI.icon_size = 256
 dsI.place_result = "DeepStorage"
 dsI.subgroup = "DataSerialization"
@@ -77,7 +77,7 @@ data:extend{dsR}
 local dsT = {}
 dsT.name = "DeepStorage"
 dsT.type = "technology"
-dsT.icon = "__Mobile_Factory_Graphics__/graphics/icones/DeepStorageI.png"
+dsT.icon = "__Mobile_Factory_Graphics__/graphics/icons/DeepStorageI.png"
 dsT.icon_size = 256
 dsT.unit = {
 	count=20,

@@ -89,7 +89,7 @@ function FI:update()
     -- Update the level Sprite --
     local amount = nil
     local capacity = self.ent.fluidbox.get_capacity(1)
-    for k3, i in pairs(self.ent.get_fluid_contents()) do
+    for _, i in pairs(self.ent.get_fluid_contents()) do
         amount = math.floor(i)
     end
     rendering.destroy(self.levelSprite)
@@ -112,7 +112,7 @@ function FI:update()
 	end
 
 	-- Set Active or Not --
-	if self.networkAccessPoint ~= nil and self.networkAccessPoint.quatronCharge > 0 then
+	if self.networkAccessPoint ~= nil and EI.energy(self.networkAccessPoint) > 0 then
 		self:setActive(true)
 	else
 		self:setActive(false)

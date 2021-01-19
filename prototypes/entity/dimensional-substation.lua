@@ -4,7 +4,7 @@
 local dS = {}
 dS.type = "electric-pole"
 dS.name = "DimensionalSubstation"
-dS.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalSubstation.png"
+dS.icon = "__Mobile_Factory_Graphics__/graphics/icons/DimensionalSubstation.png"
 dS.icon_size = 32
 dS.flags = {"placeable-neutral", "player-creation"}
 dS.minable = {mining_time = 1, result = "DimensionalSubstation"}
@@ -123,41 +123,9 @@ local dsI = {}
 dsI.type = "item"
 dsI.name = "DimensionalSubstation"
 dsI.place_result = "DimensionalSubstation"
-dsI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalSubstation.png"
+dsI.icon = "__Mobile_Factory_Graphics__/graphics/icons/DimensionalSubstation.png"
 dsI.icon_size = 32
 dsI.subgroup = "Energy"
 dsI.order = "z"
 dsI.stack_size = 1
 data:extend{dsI}
-
--- Crafting --
-local dsC = {}
-dsC.type = "recipe"
-dsC.name = "DimensionalSubstation"
-dsC.energy_required = 5
-dsC.enabled = false
-dsC.ingredients =
-    {
-		{"DimensionalCircuit", 8},
-		{"MachineFrame2", 4}
-    }
-dsC.result = "DimensionalSubstation"
-data:extend{dsC}
-
-
--- Technologie --
-local dsT = {}
-dsT.name = "ElectricityInfusion"
-dsT.type = "technology"
-dsT.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalSubstation.png"
-dsT.icon_size = 32
-dsT.unit = {
-	count=600,
-	time=2,
-	ingredients={
-		{"DimensionalSample", 1}
-	}
-}
-dsT.prerequisites = {"DimensionalElectronic"}
-dsT.effects = {{type="unlock-recipe", recipe="DimensionalSubstation"}}
-data:extend{dsT}

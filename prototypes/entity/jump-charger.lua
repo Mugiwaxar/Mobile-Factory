@@ -4,7 +4,7 @@
 local jcE = {}
 jcE.type = "container"
 jcE.name = "JumpCharger"
-jcE.icon = "__Mobile_Factory__/graphics/JumpChargerI.png"
+jcE.icon = "__Mobile_Factory_Graphics__/graphics/entity/JumpChargerI.png"
 jcE.icon_size = 128
 jcE.flags = {"placeable-neutral", "player-creation"}
 jcE.minable = {mining_time = 0.4, result = "JumpCharger"}
@@ -22,7 +22,7 @@ jcE.picture =
       layers =
       {
         {
-          filename = "__Mobile_Factory__/graphics/JumpChargerG.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/entity/JumpChargerG.png",
           priority = "extra-high",
           width = 600,
           height = 600,
@@ -31,7 +31,7 @@ jcE.picture =
           draw_as_glow = true
         },
         {
-            filename = "__Mobile_Factory__/graphics/JumpChargerE.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/entity/JumpChargerE.png",
             priority = "extra-high",
             width = 600,
             height = 600,
@@ -39,7 +39,7 @@ jcE.picture =
             scale = 1/600*32*6.5
         },
         {
-            filename = "__Mobile_Factory__/graphics/JumpChargerS.png",
+            filename = "__Mobile_Factory_Graphics__/graphics/entity/JumpChargerS.png",
             priority = "high",
             width = 600,
             height = 600,
@@ -62,7 +62,7 @@ data:extend{jcE}
 local jcI = {}
 jcI.type = "item"
 jcI.name = "JumpCharger"
-jcI.icon = "__Mobile_Factory__/graphics/JumpChargerI.png"
+jcI.icon = "__Mobile_Factory_Graphics__/graphics/entity/JumpChargerI.png"
 jcI.icon_size = 128
 jcI.place_result = "JumpCharger"
 jcI.subgroup = "MobileFactory"
@@ -89,7 +89,7 @@ data:extend{jcR}
 local jcT = {}
 jcT.name = "JumpCharger"
 jcT.type = "technology"
-jcT.icon = "__Mobile_Factory__/graphics/JumpChargerI.png"
+jcT.icon = "__Mobile_Factory_Graphics__/graphics/entity/JumpChargerI.png"
 jcT.icon_size = 128
 jcT.unit = {
 count=15,

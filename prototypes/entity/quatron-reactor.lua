@@ -40,27 +40,39 @@ qrE.horizontal_animation =
     layers =
     {
         {
-        frame_count = 1,
-        filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronReactorE.png",
-        priority = "extra-high",
-        width = 600,
-        height = 600,
-        animation_speed = 1,
-        line_length = 1,
-        shift = {0,-0.85},
-        scale = 0.30
+            frame_count = 1,
+            filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronReactorE.png",
+            priority = "extra-high",
+            width = 600,
+            height = 600,
+            animation_speed = 1,
+            line_length = 1,
+            shift = {0,-0.85},
+            scale = 0.30,
+            draw_as_glow = true
         },
         {
-        frame_count = 1,
-        filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronReactorS.png",
-        priority = "extra-high",
-        width = 600,
-        height = 600,
-        animation_speed = 1,
-        line_length = 1,
-        shift = {0.2,-0.50},
-        scale = 0.30,
-        draw_as_shadow = true
+            frame_count = 1,
+            filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronReactorE.png",
+            priority = "extra-high",
+            width = 600,
+            height = 600,
+            animation_speed = 1,
+            line_length = 1,
+            shift = {0,-0.85},
+            scale = 0.30
+        },
+        {
+            frame_count = 1,
+            filename = "__Mobile_Factory_Graphics__/graphics/energy/QuatronReactorS.png",
+            priority = "extra-high",
+            width = 600,
+            height = 600,
+            animation_speed = 1,
+            line_length = 1,
+            shift = {0.4,-0.2},
+            scale = 0.30,
+            draw_as_shadow = true
         }
     }
 }
@@ -99,7 +111,7 @@ data:extend{ec1R}
 -- Create all Sprites --
 local x = 0
 local y = 0
-for i = 0, 13 do
+for i = 0, 9 do
 	local qrS = {}
 	qrS.type = "sprite"
 	qrS.name = "QuatronReactorSprite" .. i
@@ -110,7 +122,7 @@ for i = 0, 13 do
     qrS.y = y
     qrS.shift = {0,-0.85}
     x = x + 600
-    if i == 6 then
+    if i == 4 then
         x = 0
         y = 600
     end

@@ -7,6 +7,7 @@ require("prototypes/entity/jump-charger.lua")
 require("prototypes/entity/energy-cube.lua")
 require("prototypes/entity/energy-laser.lua")
 require("prototypes/entity/quatron-reactor.lua")
+require("prototypes/entity/energy-dispenser.lua")
 require("prototypes/entity/ore-cleaner.lua")
 require("prototypes/entity/fluid-extractor.lua")
 require("prototypes/entity/resource-catcher.lua")
@@ -60,7 +61,7 @@ data:extend{
 	{
 		type="item-group",
 		name="MobileFactory",
-		icon="__Mobile_Factory_Graphics__/graphics/icones/MFIcon.png",
+		icon="__Mobile_Factory_Graphics__/graphics/icons/MFIcon.png",
 		icon_size="32",
 		order="x"
 	}
@@ -70,7 +71,7 @@ data:extend{
 	{
 		type="item-group",
 		name="Elements",
-		icon="__Mobile_Factory_Graphics__/graphics/icones/Elements.png",
+		icon="__Mobile_Factory_Graphics__/graphics/icons/Elements.png",
 		icon_size="32",
 		order="z"
 	}
@@ -303,28 +304,8 @@ data:extend{
 data:extend{
     {
         type = "sprite",
-        name = "LockIcon",
-        filename = "__Mobile_Factory_Graphics__/graphics/icones/LockI.png",
-        size = 32,
-        flags = {"icon"}
-    }
-}
-
-data:extend{
-    {
-        type = "sprite",
-        name = "LockIconReed",
-        filename = "__Mobile_Factory_Graphics__/graphics/icones/LockIReed.png",
-        size = 32,
-        flags = {"icon"}
-    }
-}
-
-data:extend{
-    {
-        type = "sprite",
         name = "ArrowIconUp",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconUp.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/ArrowIconUp.png",
         size = 32,
         flags = {"icon"}
     }
@@ -334,7 +315,7 @@ data:extend{
     {
         type = "sprite",
         name = "ArrowIconDown",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/ArrowIconDown.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/ArrowIconDown.png",
         size = 32,
         flags = {"icon"}
     }
@@ -344,7 +325,7 @@ data:extend{
     {
         type = "sprite",
         name = "PlusIcon",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/PlusIcon.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/PlusIcon.png",
         size = 32,
         flags = {"icon"}
     }
@@ -354,7 +335,7 @@ data:extend{
     {
         type = "sprite",
         name = "OptionIcon",
-        filename = "__Mobile_Factory_Graphics__/graphics/icones/OptionIcon.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icons/OptionIcon.png",
         size = 32,
         flags = {"icon"}
     }
@@ -364,7 +345,7 @@ data:extend{
     {
         type = "sprite",
         name = "CloseIcon",
-        filename = "__Mobile_Factory_Graphics__/graphics/icones/CloseIcon.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icons/CloseIcon.png",
         size = 32,
         flags = {"icon"}
     }
@@ -374,7 +355,7 @@ data:extend{
     {
         type = "sprite",
         name = "SwitchIcon",
-        filename = "__Mobile_Factory__/graphics/SwtichArrows.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icons/SwtichArrows.png",
         size = 32,
         flags = {"icon"}
     }
@@ -384,7 +365,7 @@ data:extend{
     {
         type = "sprite",
         name = "MFJDIcon",
-        filename = "__Mobile_Factory__/graphics/JumpDriveI.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/entity/JumpDriveI.png",
         size = 128,
         flags = {"icon"}
     }
@@ -394,7 +375,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "MFIconExc",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIconExc.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/MFIconExc.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -404,7 +385,7 @@ data:extend{
     {
         type = "sprite",
         name = "MFDeploy",
-        filename = "__Mobile_Factory__/graphics/MFDeployI.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icons/MFDeployI.png",
         size = 32,
         flags = {"icon"}
     }
@@ -414,7 +395,7 @@ data:extend{
     {
         type = "sprite",
         name = "MFDeployE",
-        filename = "__Mobile_Factory__/graphics/MobileFactoryE.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icons/MobileFactoryE.png",
         width = 400,
 		height = 600,
         flags = {"icon"}
@@ -425,7 +406,7 @@ data:extend{
 --     {
 --         type = "sprite",
 --         name = "SyncAreaIcon",
---         filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIconSyncArea.png",
+--         filename = "__Mobile_Factory_Graphics__/graphics/icons/MFIconSyncArea.png",
 --         size = 32,
 --         flags = {"icon"}
 --     }
@@ -435,7 +416,7 @@ data:extend{
 -- 	{
 -- 		type = "sprite",
 -- 		name = "SyncAreaIconDisabled",
--- 		filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIconSyncAreaDisabled.png",
+-- 		filename = "__Mobile_Factory_Graphics__/graphics/icons/MFIconSyncAreaDisabled.png",
 -- 		size = 32,
 -- 		flags = {"icon"}
 -- 	}
@@ -445,7 +426,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "MFTPIcon",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/MFTPIcon.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/MFTPIcon.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -455,7 +436,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "MFTPIconDisabled",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/MFTPIconDisabled.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/MFTPIconDisabled.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -465,7 +446,7 @@ data:extend{
     {
         type = "sprite",
         name = "MFIconI",
-        filename = "__Mobile_Factory_Graphics__/graphics/icones/MFIconI.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/icons/MFIconI.png",
         size = 32,
         flags = {"icon"}
     }
@@ -475,7 +456,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "PortIcon",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/PortIcon.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/PortIcon.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -485,7 +466,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "LockMFCIcon",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/LockMFC.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/LockMFC.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -495,7 +476,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "LockMFOIcon",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/LockMFO.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/LockMFO.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -505,7 +486,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "EnergyDrainIcon",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/TecEnergyDrain1.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/TecEnergyDrain1.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -515,7 +496,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "EnergyDrainIconDisabled",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/EnergyDrainDisabled.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/EnergyDrainDisabled.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -525,7 +506,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "FluidDrainIcon",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/TecFluidDrain1.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/TecFluidDrain1.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -535,7 +516,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "FluidDrainIconDisabled",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/FluidDrainDisabled.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/FluidDrainDisabled.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -545,7 +526,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "ItemDrainIcon",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/TechItemDrain.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/TechItemDrain.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -555,7 +536,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "ItemDrainIconDisabled",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/ItemDrainDisabled.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/ItemDrainDisabled.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -565,7 +546,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "QuatronIcon",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/Quatron.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/Quatron.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -575,7 +556,7 @@ data:extend{
 	{
 		type = "sprite",
 		name = "QuatronIconDisabled",
-		filename = "__Mobile_Factory_Graphics__/graphics/icones/QuatronDisabled.png",
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/QuatronDisabled.png",
 		size = 32,
 		flags = {"icon"}
 	}
@@ -605,7 +586,7 @@ data:extend{
 	type = "sound",
 	name = "MFSimpleTP",
 	category = "game-effect",
-	filename = "__Mobile_Factory__/graphics/SimpleTP.ogg",
+	filename = "__Mobile_Factory_Graphics__/sounds/SimpleTP.ogg",
 	preload = true
 	}
 }

@@ -19,7 +19,7 @@ data:extend{dtE}
 local dtI = {}
 dtI.type = "item"
 dtI.name = "DimensionalTile"
-dtI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalTileI.png"
+dtI.icon = "__Mobile_Factory_Graphics__/graphics/icons/DimensionalTileI.png"
 dtI.icon_size = 64
 dtI.subgroup = "Tiles"
 dtI.order = "c"

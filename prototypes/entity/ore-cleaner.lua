@@ -6,7 +6,7 @@ ocE.type = "mining-drill"
 ocE.name = "OreCleaner"
 ocE.graphics_set = nil
 ocE.wet_mining_graphics_set = nil
-ocE.icon = "__Mobile_Factory_Graphics__/graphics/icones/OreCleaner.png"
+ocE.icon = "__Mobile_Factory_Graphics__/graphics/icons/OreCleaner.png"
 ocE.icon_size = 32
 ocE.flags = {"placeable-neutral", "player-creation", "not-rotatable"}
 ocE.minable = {mining_time = 1, result = "OreCleaner"}
@@ -46,7 +46,7 @@ ocE.radius_visualization_picture =
 ocE.animations =
 {
 	frame_count = 60,
-	filename = "__Mobile_Factory_Graphics__/graphics/animations/OreCleaner.png",
+	filename = "__Mobile_Factory_Graphics__/graphics/entity/OreCleaner.png",
 	priority = "extra-high",
 	width = 290,
 	height = 400,
@@ -58,7 +58,7 @@ ocE.animations =
 ocE.shadow_animations =
 {
 	frame_count = 1,
-	filename = "__Mobile_Factory_Graphics__/graphics/animations/OreCleanerShadow.png",
+	filename = "__Mobile_Factory_Graphics__/graphics/entity/OreCleanerShadow.png",
 	priority = "extra-high",
 	width = 200,
 	height = 150,
@@ -88,7 +88,7 @@ data:extend{ocE}
 local ocI = {}
 ocI.type = "item-with-tags"
 ocI.name = "OreCleaner"
-ocI.icon = "__Mobile_Factory_Graphics__/graphics/icones/OreCleaner.png"
+ocI.icon = "__Mobile_Factory_Graphics__/graphics/icons/OreCleaner.png"
 ocI.icon_size = 64
 ocI.place_result = "OreCleaner"
 ocI.subgroup = "DimensionalStuff"
@@ -115,7 +115,7 @@ data:extend{ocR}
 local ocT = {}
 ocT.name = "OreCleaner"
 ocT.type = "technology"
-ocT.icon = "__Mobile_Factory_Graphics__/graphics/icones/OreCleanerTech.png"
+ocT.icon = "__Mobile_Factory_Graphics__/graphics/icons/OreCleanerTech.png"
 ocT.icon_size = 512
 ocT.unit = {
 	count=15,

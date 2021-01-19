@@ -4,7 +4,7 @@
 local jdE = {}
 jdE.type = "accumulator"
 jdE.name = "JumpDrive"
-jdE.icon = "__Mobile_Factory__/graphics/JumpDriveI.png"
+jdE.icon = "__Mobile_Factory_Graphics__/graphics/entity/JumpDriveI.png"
 jdE.order = "JumpDrive"
 jdE.icon_size = 128
 -- jdE.flags = {"placeable-neutral", "player-creation"}
@@ -43,7 +43,7 @@ jdE.picture = {
     layers =
     {
       {
-        filename = "__Mobile_Factory__/graphics/JumpDriveG.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/entity/JumpDriveG.png",
         priority = "high",
         width = 600,
         height = 600,
@@ -52,7 +52,7 @@ jdE.picture = {
         draw_as_glow = true
       },
       {
-        filename = "__Mobile_Factory__/graphics/JumpDriveE.png",
+        filename = "__Mobile_Factory_Graphics__/graphics/entity/JumpDriveE.png",
         priority = "high",
         width = 600,
         height = 600,
@@ -60,7 +60,7 @@ jdE.picture = {
         scale = 1/2.25
       },
       {
-          filename = "__Mobile_Factory__/graphics/JumpDriveS.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/entity/JumpDriveS.png",
           priority = "high",
           width = 600,
           height = 600,
@@ -76,7 +76,7 @@ data:extend{jdE}
 local jdT = {}
 jdT.name = "JumpDrive"
 jdT.type = "technology"
-jdT.icon = "__Mobile_Factory__/graphics/JumpDriveI.png"
+jdT.icon = "__Mobile_Factory_Graphics__/graphics/entity/JumpDriveI.png"
 jdT.icon_size = 128
 jdT.unit = {
 	count=10,

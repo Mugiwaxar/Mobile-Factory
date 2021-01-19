@@ -32,7 +32,7 @@ end
 -- Return a MF Energy from its owner name --
 function getMFEnergy(name)
     if global.MFTable[name] ~= nil then
-        return global.MFTable[name].internalEnergyObj:energy()
+        return EI.energy(global.MFTable[name].internalEnergyObj)
     end
     return 0
 end
@@ -40,7 +40,7 @@ end
 -- Remove Energy from a MF from its owner name --
 function removeMFEnergy(name, amount)
     if global.MFTable[name] ~= nil then
-        return global.MFTable[name].internalEnergyObj:removeEnergy(amount)
+        return EI.removeEnergy(global.MFTable[name].internalEnergyObj, amount)
     end
     return 0
 end

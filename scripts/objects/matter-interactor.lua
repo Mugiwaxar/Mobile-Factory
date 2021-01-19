@@ -100,7 +100,7 @@ function MI:update()
 	end
 
 	-- Set Active or Not --
-	if self.networkAccessPoint ~= nil and self.networkAccessPoint.quatronCharge > 0 then
+	if self.networkAccessPoint ~= nil and EI.energy(self.networkAccessPoint) > 0 then
 		self:setActive(true)
 	else
 		self:setActive(false)
@@ -405,7 +405,6 @@ function MI.interaction(event, player)
 		local obj = global.matterInteractorTable[objId]
 		local ent = (obj and obj.ent) or nil
 		if ent ~= nil and ent.valid == true then
-			getMFPlayer(player.name).varTable.bypassGUI = true
 			player.opened = ent
 		end
 		return

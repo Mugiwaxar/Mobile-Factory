@@ -56,12 +56,6 @@ function GUI.openTTGui(MFPlayer, player, entity)
 		if cursorStack.name == "green-wire" or cursorStack.name == "red-wire" or cursorStack.type == "repair-tool" then return end
 	end
 
-	-- Check the Bypass --
-	if MFPlayer.varTable.bypassGUI == true then
-		MFPlayer.varTable.bypassGUI = false
-		return
-	end
-
 	-- Check if a GUI exist --
 	local obj = global.entsTable[entity.unit_number]
 

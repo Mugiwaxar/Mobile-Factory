@@ -3,7 +3,7 @@ local pMI = {}
 pMI.type = "item"
 pMI.name = "EnergyPowerModule"
 pMI.placed_as_equipment_result = "EnergyPowerModule"
-pMI.icon = "__Mobile_Factory_Graphics__/graphics/icones/EnergyPowerModule.png"
+pMI.icon = "__Mobile_Factory_Graphics__/graphics/icons/EnergyPowerModule.png"
 pMI.icon_size = 32
 pMI.subgroup = "Modules1"
 pMI.order = "a"
@@ -15,7 +15,7 @@ local pmE = {}
 pmE.name = "EnergyPowerModule"
 pmE.type = "battery-equipment"
 pmE.categories = {"mfEquipments"}
-pmE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/icones/EnergyPowerModule.png", size=32}
+pmE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/icons/EnergyPowerModule.png", size=32}
 pmE.shape = {width=2, height=2, type="full"}
 pmE.energy_source =
 {
@@ -48,7 +48,7 @@ local eMI = {}
 eMI.type = "item"
 eMI.name = "EnergyEfficiencyModule"
 eMI.placed_as_equipment_result = "EnergyEfficiencyModule"
-eMI.icon = "__Mobile_Factory_Graphics__/graphics/icones/EnergyEfficiencyModule.png"
+eMI.icon = "__Mobile_Factory_Graphics__/graphics/icons/EnergyEfficiencyModule.png"
 eMI.icon_size = 32
 eMI.subgroup = "Modules1"
 eMI.order = "b"
@@ -60,7 +60,7 @@ local emE = {}
 emE.name = "EnergyEfficiencyModule"
 emE.type = "battery-equipment"
 emE.categories = {"mfEquipments"}
-emE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/icones/EnergyEfficiencyModule.png", size=32}
+emE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/icons/EnergyEfficiencyModule.png", size=32}
 emE.shape = {width=2, height=2, type="full"}
 emE.energy_source =
 {
@@ -93,7 +93,7 @@ local fMI = {}
 fMI.type = "item"
 fMI.name = "EnergyFocusModule"
 fMI.placed_as_equipment_result = "EnergyFocusModule"
-fMI.icon = "__Mobile_Factory_Graphics__/graphics/icones/EnergyFocusModule.png"
+fMI.icon = "__Mobile_Factory_Graphics__/graphics/icons/EnergyFocusModule.png"
 fMI.icon_size = 32
 fMI.subgroup = "Modules1"
 fMI.order = "c"
@@ -105,7 +105,7 @@ local fmE = {}
 fmE.name = "EnergyFocusModule"
 fmE.type = "battery-equipment"
 fmE.categories = {"mfEquipments"}
-fmE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/icones/EnergyFocusModule.png", size=32}
+fmE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/icons/EnergyFocusModule.png", size=32}
 fmE.shape = {width=2, height=2, type="full"}
 fmE.energy_source =
 {
@@ -137,7 +137,7 @@ data:extend{fMR}
 local pMT = {}
 pMT.name = "EnergyPowerModule"
 pMT.type = "technology"
-pMT.icon = "__Mobile_Factory_Graphics__/graphics/icones/EnergyPowerModule.png"
+pMT.icon = "__Mobile_Factory_Graphics__/graphics/icons/EnergyPowerModule.png"
 pMT.icon_size = 32
 pMT.unit = {
 	count=400,

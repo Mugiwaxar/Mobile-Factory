@@ -13,12 +13,7 @@ QL = {
 	beam = nil,
 	beamPosA = nil,
 	beamPosB = nil,
-	focusedObj = nil,
-	quatronCharge = 0,
-	quatronLevel = 1,
-	quatronMax = 0,
-	quatronMaxInput = 0,
-	quatronMaxOutput = 0
+	focusedObj = nil
 }
 
 -- Constructor --
@@ -33,11 +28,6 @@ function QL:new(object)
 	t.player = object.last_user.name
 	t.MF = getMF(t.player)
 	t.entID = object.unit_number
-	-- Get prototype data
-	t.quatronCharge = object.energy
-	t.quatronMax = object.electric_buffer_size
-	t.quatronMaxInput = object.electric_buffer_size
-	t.quatronMaxOutput = object.electric_buffer_size
 	-- Create the Beam --
 	t:getBeamPosition()
 	t.beam = object.surface.create_entity{name="IddleBeam", position=t.beamPosA, target_position=t.beamPosB, source=t.beamPosA}
@@ -80,20 +70,15 @@ function QL:update()
 		return
 	end
 
-	-- Update Quatron indication
-	self.ent.energy = self.quatronCharge
-
 	-- Look for an Entity to recharge --
 	if self.checkTick < game.tick - self.lastCheck then
 		self.lastCheck = game.tick
 		self:findEntity()
 	end
 
-	-- Only Act If QL Has More Than 100 J --
-	if self.quatronCharge < 100 then return end
-
 	-- Send Quatron to the Focused Entity --
-	self:sendQuatron()
+	self:nextLaser()
+
 end
 
 -- Tooltip Infos --
@@ -127,132 +112,135 @@ function QL:getTooltipInfos(GUITable, mainFrame, justCreated)
 	-- Create the Tite --
 	GAPI.addSubtitle(GUITable, "", infoFrame, {"gui-description.Information"})
 
-	-- Add the Quatron Charge --
-    GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronCharge", Util.toRNumber(self.quatronCharge)}, _mfOrange)
-	GAPI.addProgressBar(GUITable, "", infoFrame, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
-	
-	-- Create the Quatron Purity --
-	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.Quatronlevel", string.format("%.3f", self.quatronLevel)}, _mfOrange)
-	GAPI.addProgressBar(GUITable, "", infoFrame, "", "", false, _mfPurple, self.quatronLevel/20, 100)
-
 	-- Add the Input/Output Speed Label --
-	local inputLabel = GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronInputSpeed", Util.toRNumber(self:maxInput())}, _mfOrange)
-	inputLabel.style.top_margin = 10
-	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronOutputSpeed", Util.toRNumber(self:maxOutput())}, _mfOrange)
+	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronInputSpeed", Util.toRNumber(EI.speed(self))}, _mfOrange)
+	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronOutputSpeed", Util.toRNumber(EI.speed(self))}, _mfOrange)
 
-end
-
--- Send Quatron to the Focused Entity --
-function QL:sendQuatron()
-	-- Check the Entity --
-	local obj = self.focusedObj
-	-- Internal cubes can be valid, but still nil
-	if valid(obj) == false or obj.ent == nil then return end
-	if string.match(obj.ent.name, "MobileFactory") then obj = obj.internalQuatronObj end
-	if obj.quatronCharge >= obj.quatronMax then return end
-
-	-- Send Quatron to the Entity --
-	local quatronTransfer = math.min(self.quatronCharge, obj.quatronMax - obj.quatronCharge, obj.quatronMaxInput)
-	if quatronTransfer > 0 then
-		-- Add the Quatron --
-		quatronTransfer = obj:addQuatron(quatronTransfer, self.quatronLevel)
-		-- Remove Quatron --
-		self.quatronCharge = self.quatronCharge - quatronTransfer
-		-- Create the Beam --
-		self.ent.surface.create_entity{name="MK1QuatronSendBeam", duration=5, position=self.beamPosA, target_position=self.beamPosB, source=self.beamPosA}
-	end
 end
 
 -- Look for an Entity to recharge --
 function QL:findEntity()
-	-- Save and Remove the Focused Entity --
-	local oldFocus = self.focusedObj
-	local newFocus = nil
 
 	-- Get all Entities inside the Area to scan --
 	local area = self:getCheckArea()
-	local ents = self.ent.surface.find_entities_filtered{area=area, name=_mfQuatronAndMF}
+	local ents = self.ent.surface.find_entities_filtered{area=area}
 
 	local selfPosition = self.ent.position
-	local focusedPosition = nil
+	local nearestEnt = nil
 
-	-- Get the closest --
-	for k, ent in pairs(ents) do
-		local obj = global.entsTable[ent.unit_number]
-		if obj ~= nil then
-			if newFocus == nil or Util.distance(selfPosition, ent.position) < Util.distance(selfPosition, focusedPosition) then
-				newFocus = obj
-				focusedPosition = newFocus.ent.position
+	-- Get the closest Entity --
+	for _, ent in pairs(ents) do
+		if ent ~= nil and ent.valid == true then
+			if (nearestEnt == nil or Util.distance(selfPosition, ent.position) < Util.distance(selfPosition, nearestEnt.position)) and string.match(ent.name, "Beam") == nil then
+				nearestEnt = ent
 			end
 		end
 	end
-	self.focusedObj = newFocus
 
-	-- Same target --
-	if oldFocus ~= nil and newFocus ~= nil and oldFocus.entID == newFocus.entID and string.match(newFocus.ent.name, "MobileFactory") == false then return end
-
-	-- Create the new Beam --
-	self:getBeamPosition()
-	if self.focusedObj == nil then
-		self.beam.destroy()
-		self.beam = self.ent.surface.create_entity{name="IddleBeam", position=self.beamPosA, target_position=self.beamPosB, source=self.beamPosA}
-	else
+	if nearestEnt ~= nil and global.entsTable[nearestEnt.unit_number] ~= nil and ((_mfQuatronStructures[nearestEnt.name] ~= nil and _mfQuatronStructures[nearestEnt.name].canAccept == true) or string.match(nearestEnt.name, "MobileFactory") or string.match(nearestEnt.name, "QuatronLaser") ) then
+		-- Get the Object --
+		local obj = global.entsTable[nearestEnt.unit_number]
+		-- Same target --
+		if self.focusedObj ~= nil and self.focusedObj.entID == obj.entID and string.match(obj.ent.name, "MobileFactory") == false then return end
+		-- Save the Object --
+		self.focusedObj = obj
+		-- Create the new Beam --
+		self:getBeamPosition(obj.ent)
 		self.beam.destroy()
 		self.beam = self.ent.surface.create_entity{name="MK1QuatronConnectedBeam", position=self.beamPosA, target_position=self.beamPosB, source=self.beamPosA}
+	elseif nearestEnt~= nil then
+		-- Remove the old focused Entity --
+		self.focusedObj = nil
+		-- Create the Beam --
+		self:getBeamPosition(nearestEnt)
+		self.beam.destroy()
+		self.beam = self.ent.surface.create_entity{name="IddleBeam", position=self.beamPosA, target_position=self.beamPosB, source=self.beamPosA}
+	elseif nearestEnt == nil then
+		-- Remove the old focused Entity --
+		self.focusedObj = nil
+		-- Create the Beam --
+		self:getBeamPosition()
+		self.beam.destroy()
+		self.beam = self.ent.surface.create_entity{name="IddleBeam", position=self.beamPosA, target_position=self.beamPosB, source=self.beamPosA}
 	end
+
 end
 
--- Return the amount of Quatron --
-function QL:quatron()
-	return self.quatronCharge
-end
+-- Send Energy to the next Laser --
+function QL:nextLaser(lastLaser, eiFound, slowerLaserSpeed)
 
--- Return the Quatron Buffer size --
-function QL:maxQuatron()
-	return self.quatronMax
-end
+	-- Get the Receiver --
+	local receiver = self.focusedObj
 
--- Add Quatron (Return the amount added) --
-function QL:addQuatron(amount, level)
-	local added = math.min(amount, self.quatronMax - self.quatronCharge)
-	if self.quatronCharge > 0 then
-		mixQuatron(self, added, level)
-	else
-		self.quatronCharge = added
-		self.quatronLevel = level
+	-- Check the Target --
+	if receiver == nil or receiver.ent == nil or receiver.ent.valid == false then return false end
+
+	-- Check if this is a Mobile Factory --
+    if receiver ~= nil and string.match(receiver.ent.name, "MobileFactory") then
+		receiver = receiver.internalQuatronObj
 	end
-	return added
-end
 
--- Remove Quatron (Return the amount removed) --
-function QL:removeQuatron(amount)
-	local removed = math.min(amount, self.quatronCharge)
-	self.quatronCharge = self.quatronCharge - removed
-	return removed
-end
+	-- Get the Target type --
+	local defTable = _mfQuatronStructures[receiver.ent.name]
+	if defTable == nil then return false end
 
--- Return the max input flow --
-function QL:maxInput()
-	return self.quatronMaxInput
-end
+	-- Check if this is the First Laser --
+	if lastLaser == nil then
+		-- Get a EI around --
+		local ei = EI.findEIStructures(self, true)
+		-- Check the EI --
+		if ei == nil or ei.ent == nil or ei.ent.valid == false then return false end
+		-- Set this Laser as the slower --
+		slowerLaserSpeed = EI.speed(self)
+		-- Check the next Target --
+		if defTable.canAccept == true then
+			local sent = EI.sendEnergy(ei, receiver, slowerLaserSpeed)
+			if sent > 0 then
+				self.ent.surface.create_entity{name="MK1QuatronSendBeam", duration=5, position=self.beamPosA, target_position=self.beamPosB, source=self.beamPosA}
+				return true
+			end
+		elseif string.match(receiver.ent.name, "Laser") then
+			if receiver:nextLaser(self, ei, slowerLaserSpeed) then
+				self.ent.surface.create_entity{name="MK1QuatronSendBeam", duration=5, position=self.beamPosA, target_position=self.beamPosB, source=self.beamPosA}
+				return true
+			end
+		end
+	end
 
--- Return the max output flow --
-function QL:maxOutput()
-	return self.quatronMaxOutput
+	-- If this is not the First Laser --
+	if lastLaser ~= nil then
+		-- Set if this is the slower Laser --
+		slowerLaserSpeed = math.min(slowerLaserSpeed, EI.speed(self))
+		-- Check if this is another Laser --
+		if defTable.canAccept == true then
+			if EI.sendEnergy(eiFound, self.focusedObj, slowerLaserSpeed) > 0 then
+				self.ent.surface.create_entity{name="MK1QuatronSendBeam", duration=5, position=self.beamPosA, target_position=self.beamPosB, source=self.beamPosA}
+				return true
+			end
+		elseif string.match(self.focusedObj.ent.name, "Laser") then
+			if self.focusedObj:nextLaser(self, eiFound, slowerLaserSpeed) == true then
+				self.ent.surface.create_entity{name="MK1QuatronSendBeam", duration=5, position=self.beamPosA, target_position=self.beamPosB, source=self.beamPosA}
+				return true
+			end
+		end
+	end
+
+	return false
+
 end
 
 -- Return where the Beam end must be positioned --
-function QL:getBeamPosition()
+function QL:getBeamPosition(focus)
 	local pos = self.ent.position
 	local dir = self.ent.direction
 	local fPosX = nil
 	local fPosY = nil
 	local entWidth = 0
 	local entHeight = 0
-	if valid(self.focusedObj) then
-		fPosX = self.focusedObj.ent.position.x
-		fPosY = self.focusedObj.ent.position.y
-		local entBB = self.focusedObj.ent.bounding_box
+	if focus ~= nil then
+		fPosX = focus.position.x
+		fPosY = focus.position.y
+		local entBB = focus.bounding_box
 		entWidth = entBB.right_bottom.x - entBB.left_top.x
 		entHeight = entBB.right_bottom.y - entBB.left_top.y
 	end

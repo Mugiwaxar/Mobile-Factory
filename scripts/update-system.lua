@@ -22,21 +22,21 @@ function UpSys.scanObjs()
   global.entsTable = {}
 
   -- Clear the Tick Table --
-  for k, j in pairs(global.upsysTickTable) do
+  for k, _ in pairs(global.upsysTickTable) do
     if k < game.tick then
       global.upsysTickTable[k] = nil
     end
   end
 
   -- Add all Objects to --
-  for k, obj in pairs(global.objTable) do
+  for _, obj in pairs(global.objTable) do
     if obj.noUpsys ~= true then
       UpSys.addTable(global[obj.tableName])
     end
   end
 
   -- Add all Internal Energy Cubes and Internal Quatron Cubes --
-  for k, MF in pairs(global.MFTable) do
+  for _, MF in pairs(global.MFTable) do
     UpSys.addObject(MF.dataNetwork)
     UpSys.addObject(MF.networkController)
     UpSys.addObject(MF.internalEnergyObj)
@@ -69,7 +69,7 @@ function UpSys.addObject(obj)
       if obj.ent ~= nil and obj.ent.valid == true then
         global.entsTable[obj.ent.unit_number] = obj
       end
-      -- Check if the Object have to be updated --
+      -- Check if the Object has to be updated --
 	  if obj.updateTick > 0 then
         -- Set Update --
         local nextUpdate = game.tick + (game.tick - obj.lastUpdate)

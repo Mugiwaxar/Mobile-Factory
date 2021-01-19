@@ -3,7 +3,7 @@
 -- Entity --
 dpE = table.deepcopy(data.raw["assembling-machine"]["chemical-plant"])
 dpE.name = "DimensionalPlant"
-dpE.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalPlant.png"
+dpE.icon = "__Mobile_Factory_Graphics__/graphics/icons/DimensionalPlant.png"
 dpE.icon_size = 32
 dpE.icon_mipmaps = 1
 dpE.minable = {mining_time = 0.3, result = "DimensionalPlant"}
@@ -37,7 +37,7 @@ data:extend{dpE}
 local dpI = {}
 dpI.type = "item"
 dpI.name = "DimensionalPlant"
-dpI.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalPlant.png"
+dpI.icon = "__Mobile_Factory_Graphics__/graphics/icons/DimensionalPlant.png"
 dpI.icon_size = 32
 dpI.place_result = "DimensionalPlant"
 dpI.subgroup = "DimensionalStuff"
@@ -63,7 +63,7 @@ data:extend{dpR}
 local dpT = {}
 dpT.name = "DimensionalPlant"
 dpT.type = "technology"
-dpT.icon = "__Mobile_Factory_Graphics__/graphics/icones/DimensionalPlant.png"
+dpT.icon = "__Mobile_Factory_Graphics__/graphics/icons/DimensionalPlant.png"
 dpT.icon_size = 32
 dpT.unit = {
 	count=1200,

@@ -7,14 +7,11 @@ QR = {
 	MF = nil,
 	entID = 0,
 	spriteID = 0,
-	lightID = 0,
 	updateTick = 60,
 	lastUpdate = 0,
-	quatronCharge = 0,
-	quatronLevel = 1,
-	quatronMax = _mfQuatronReactorMaxEnergyCapacity,
-	quatronMaxInput = 0,
-	quatronMaxOutput = _mfQuatronReactorMaxOutput
+	energyCharge = 0,
+	energyLevel = 1,
+	energyBuffer = _mfQuatronReactorMaxOutput
 }
 
 -- Constructor --
@@ -30,9 +27,6 @@ function QR:new(object)
 	t.MF = getMF(t.player)
 	t.entID = object.unit_number
     UpSys.addObj(t)
-    -- Draw the state Sprite --
-	t.spriteID = rendering.draw_sprite{sprite="QuatronReactorSprite0", target=object, surface=object.surface, render_layer=129}
-	t.lightID = rendering.draw_light{sprite="QuatronReactorSprite0", target=object, surface=object.surface, minimum_darkness=0}
 	return t
 end
 
@@ -48,7 +42,6 @@ end
 function QR:remove()
 	-- Destroy the Sprite --
 	rendering.destroy(self.spriteID)
-	rendering.destroy(self.lightID)
 	self.ent = nil
 end
 
@@ -60,6 +53,7 @@ end
 
 -- Update --
 function QR:update()
+
 	-- Set the lastUpdate variable --
 	self.lastUpdate = game.tick
 
@@ -73,18 +67,16 @@ function QR:update()
 	self:burnFluid()
 
 	-- Send Quatron --
-	self:sendQuatron()
+	EI.shareEnergy(self)
 
 	-- Update the Sprite --
-	local spriteNumber = math.ceil(self.quatronCharge/self.quatronMax*12)
+	local spriteNumber = math.ceil(EI.energy(self)/EI.maxEnergy(self)*9)
 	rendering.destroy(self.spriteID)
-	rendering.destroy(self.lightID)
 	self.spriteID = rendering.draw_sprite{sprite="QuatronReactorSprite" .. spriteNumber, target=self.ent, surface=self.ent.surface, render_layer=129}
-	self.lightID = rendering.draw_light{sprite="QuatronReactorSprite" .. spriteNumber, target=self.ent, surface=self.ent.surface, minimum_darkness=0}
+
 end
 
 -- Tooltip Infos --
--- Apparently generator-based entities doesn't fire on_gui_opened on click, so it doesn't work.
 function QR:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 	if justCreated == true then
@@ -116,17 +108,17 @@ function QR:getTooltipInfos(GUITable, mainFrame, justCreated)
 	GAPI.addSubtitle(GUITable, "", infoFrame, {"gui-description.Information"})
 
 	-- Add the Quatron Charge --
-    GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronCharge", Util.toRNumber(self.quatronCharge)}, _mfOrange)
-	GAPI.addProgressBar(GUITable, "", infoFrame, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+    GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronCharge", Util.toRNumber(EI.energy(self))}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", infoFrame, "", EI.energy(self) .. "/" .. EI.maxEnergy(self), false, _mfPurple, EI.energy(self)/EI.maxEnergy(self), 100)
 	
 	-- Create the Quatron Purity --
-	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.Quatronlevel", string.format("%.3f", self.quatronLevel)}, _mfOrange)
-	GAPI.addProgressBar(GUITable, "", infoFrame, "", "", false, _mfPurple, self.quatronLevel/20, 100)
+	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.Quatronlevel", string.format("%.3f", EI.energyLevel(self))}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", infoFrame, "", "", false, _mfPurple, EI.energyLevel(self)/20, 100)
 
 	-- Add the Input/Output Speed Label --
 	local speedLabel = GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronReactorSpeed", _mfQuatronMaxFluidBurntPerOperation}, _mfOrange)
 	speedLabel.style.top_margin = 10
-	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronOutputSpeed", Util.toRNumber(self:maxOutput())}, _mfOrange)
+	GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.QuatronOutputSpeed", Util.toRNumber(EI.speed(self))}, _mfOrange)
 
 end
 
@@ -134,7 +126,7 @@ end
 function QR:burnFluid()
 
 	-- Return if the Reactor is full --
-	if self.quatronCharge >= self.quatronMax then return end
+	if EI.missingEnergy(self) <= 0 then return end
 
 	-- Get the Fluid inside --
 	local fluid = self.ent.fluidbox[1]
@@ -147,7 +139,7 @@ function QR:burnFluid()
 	if level == nil then return end
 
 	-- Get the amount of Fluid to remove --
-	local fluidToRemove = math.min(fluid.amount, math.floor((self.quatronMax - self.quatronCharge)), _mfQuatronMaxFluidBurntPerOperation)
+	local fluidToRemove = math.min(fluid.amount, math.floor((EI.maxEnergy(self) - EI.energy(self))), _mfQuatronMaxFluidBurntPerOperation)
 	if fluidToRemove < 1 then return end
 
 	-- Remove the Fluid --
@@ -155,84 +147,6 @@ function QR:burnFluid()
 	self.ent.force.fluid_production_statistics.on_flow(fluidName, fluidToRemove * -1)
 
 	-- Add the Quatron Energy to the Reactor --
-	self:addQuatron(removed, level)
-	
-end
+	EI.addEnergy(self, removed, level)
 
--- Send Quatron to nearby Quatron Users --
-function QR:sendQuatron()
-
-	-- Check Quatron Charge
-	local selfQuatron = self.quatronCharge
-	if selfQuatron <= 0 then return end
-
-	-- Get all Entities arount --
-	local area = {{self.ent.position.x-2.5, self.ent.position.y-2.5},{self.ent.position.x+2.5,self.ent.position.y+2.5}}
-	local ents = self.ent.surface.find_entities_filtered{area=area, name=_mfQuatronShare}
-
-	local selfQuatronLevel = self.quatronLevel
-
-	-- Check all Entity --
-	for _, ent in pairs(ents) do
-		-- Look for valid Object --
-		local obj = global.entsTable[ent.unit_number]
-		if obj ~= nil and obj.entID ~= self.entID then
-			local objQuatron = obj.quatronCharge
-			local objQuatronLevel = obj.quatronLevel
-			local objMaxQuatron = obj.quatronMax
-			local objMaxInFlow = obj.quatronMaxInput
-			if objQuatron < objMaxQuatron and objMaxInFlow > 0 then
-				-- Calcule max flow --
-				local missingQuatron = objMaxQuatron - objQuatron
-				local quatronTransfer = math.min(selfQuatron, missingQuatron, objMaxInFlow)
-				-- Transfer Quatron --
-				quatronTransfer = obj:addQuatron(quatronTransfer, selfQuatronLevel)
-				-- Remove Quatron --
-				selfQuatron = selfQuatron - quatronTransfer
-				if selfQuatron <= 0 then break end
-			end
-		end
-	end
-
-	self.quatronCharge = selfQuatron
-
-end
-
--- Return the amount of Quatron --
-function QR:quatron()
-	return self.quatronCharge
-end
-
--- Return the Quatron Buffer size --
-function QR:maxQuatron()
-	return self.quatronMax
-end
-
--- Add Quatron (Return the amount added) --
-function QR:addQuatron(amount, level)
-	local added = math.min(amount, self.quatronMax - self.quatronCharge)
-	if self.quatronCharge > 0 then
-		mixQuatron(self, added, level)
-	else
-		self.quatronCharge = added
-		self.quatronLevel = level
-	end
-	return added
-end
-
--- Remove Quatron (Return the amount removed) --
-function QR:removeQuatron(amount)
-	local removed = math.min(amount, self.quatronCharge)
-	self.quatronCharge = self.quatronCharge - removed
-	return removed
-end
-
--- Return the max input flow --
-function QR:maxInput()
-	return self.quatronMaxInput
-end
-
--- Return the max output flow --
-function QR:maxOutput()
-	return self.quatronMaxOutput
 end

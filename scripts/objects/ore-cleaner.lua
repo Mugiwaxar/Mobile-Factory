@@ -14,11 +14,9 @@ OC = {
 	lastUpdate = 0,
 	lastExtraction = 0,
 	mfTooFar = false,
-	quatronCharge = 0,
-	quatronLevel = 1,
-	quatronMax = _mfOreCleanerMaxCharge,
-	quatronMaxInput = 100,
-	quatronMaxOutput = 0
+	energyCharge = 0,
+	energyLevel = 1,
+	energyBuffer = _mfOreCleanerMaxCharge
 }
 
 -- Constructor --
@@ -70,15 +68,15 @@ end
 
 -- Item Tags to Content --
 function OC:itemTagsToContent(tags)
-	self.quatronLevel = tags.purity or 1
-	self.quatronCharge = tags.charge or 0
+	self.energyCharge = tags.charge or 0
+	self.energyLevel = tags.purity or 1
 end
 
 -- Content to Item Tags --
 function OC:contentToItemTags(tags)
-	if self.quatronCharge > 0 then
-		tags.set_tag("Infos", {purity=self.quatronLevel, charge=self.quatronCharge})
-		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.OreCleanerC", math.floor(self.quatronCharge), string.format("%.3f", self.quatronLevel)}}
+	if EI.energy(self) > 0 then
+		tags.set_tag("Infos", {charge=EI.energy(self), purity=EI.energyLevel(self)})
+		tags.custom_description = {"", tags.prototype.localised_description, {"item-description.OreCleanerC", math.floor(EI.energy(self)), string.format("%.3f", EI.energyLevel(self))}}
 	end
 end
 
@@ -205,12 +203,12 @@ function OC:getTooltipInfos(GUITable, mainFrame, justCreated)
 	informationTable.clear()
 
 	-- Add the Quatron Charge --
-    GAPI.addLabel(GUITable, "", informationTable, {"gui-description.QuatronCharge", Util.toRNumber(self.quatronCharge) }, _mfOrange)
-	GAPI.addProgressBar(GUITable, "", informationTable, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+    GAPI.addLabel(GUITable, "", informationTable, {"gui-description.QuatronCharge", Util.toRNumber(EI.energy(self)) }, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", informationTable, "", EI.energy(self) .. "/" .. EI.maxEnergy(self), false, _mfPurple, EI.energy(self)/EI.maxEnergy(self), 100)
 	
 	-- Create the Quatron Purity --
-	GAPI.addLabel(GUITable, "", informationTable, {"gui-description.Quatronlevel", string.format("%.3f", self.quatronLevel)}, _mfOrange)
-	GAPI.addProgressBar(GUITable, "", informationTable, "", "", false, _mfPurple, self.quatronLevel/20, 100)
+	GAPI.addLabel(GUITable, "", informationTable, {"gui-description.Quatronlevel", string.format("%.3f", EI.energyLevel(self))}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", informationTable, "", "", false, _mfPurple, EI.energyLevel(self)/20, 100)
 
 	-- Create the Speed --
 	local speedLabel = GAPI.addLabel(GUITable, "", informationTable, {"gui-description.OCFESpeedOC", self:orePerExtraction()}, _mfOrange)
@@ -235,7 +233,7 @@ function OC:changeInventory(ID)
 	end
 	-- Select the Inventory --
 	self.selectedInv = nil
-	for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
+	for _, deepStorage in pairs(self.dataNetwork.DSRTable) do
 		if valid(deepStorage) == true then
 			if ID == deepStorage.ID then
 				self.selectedInv = deepStorage
@@ -246,7 +244,7 @@ end
 
 -- Get the number of Ores per extraction --
 function OC:orePerExtraction()
-	return math.floor(_mfOreCleanerOrePerExtraction * math.pow(self.quatronLevel, _mfQuatronScalePower))
+	return math.floor(_mfOreCleanerOrePerExtraction * math.pow(EI.energyLevel(self), _mfQuatronScalePower))
 end
 
 -- Scan surronding Ores --
@@ -266,7 +264,7 @@ function OC:collectOres(event)
 	-- Return if the Ore Table is empty --
 	if table_size(self.oreTable) <= 0 then return end
 	-- Return if there are not Quatron Charge remaining --
-	if self.quatronCharge < 10 then return end
+	if EI.energy(self) < 10 then return end
 	-- Create the OrePath and randomNum variable --
 	local orePath = nil
 	local randomNum  = 0
@@ -348,7 +346,7 @@ function OC:collectOres(event)
 		-- Set the lastUpdate variable --
 		self.lastExtraction = event.tick
 		-- Remove a charge --
-		self.quatronCharge = self.quatronCharge - 10
+		EI.removeEnergy(self, 10)
 		-- Remove Ores from the Ore Path --
 		orePath.amount = math.max(orePath.amount - oreExtracted, 1)
 		-- Remove the Ore Path if it is empty --
@@ -411,45 +409,6 @@ function OC:blueprintTagsToSettings(tags)
 			end
 		end
 	end
-end
-
--- Return the amount of Quatron --
-function OC:quatron()
-	return self.quatronCharge
-end
-
--- Return the Quatron Buffer size --
-function OC:maxQuatron()
-	return self.quatronMax
-end
-
--- Add Quatron (Return the amount added) --
-function OC:addQuatron(amount, level)
-	local added = math.min(amount, self.quatronMax - self.quatronCharge)
-	if self.quatronCharge > 0 then
-		mixQuatron(self, added, level)
-	else
-		self.quatronCharge = added
-		self.quatronLevel = level
-	end
-	return added
-end
-
--- Remove Quatron (Return the amount removed) --
-function OC:removeQuatron(amount)
-	local removed = math.min(amount, self.quatronCharge)
-	self.quatronCharge = self.quatronCharge - removed
-	return removed
-end
-
--- Return the max input flow --
-function OC:maxInput()
-	return self.quatronMaxInput
-end
-
--- Return the max output flow --
-function OC:maxOutput()
-	return self.quatronMaxOutput
 end
 
 -- Called if the Player interacted with the GUI --
