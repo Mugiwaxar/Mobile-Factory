@@ -141,7 +141,7 @@ fedE.picture = {
     layers =
     {
       {
-          filename = "__Mobile_Factory_Graphics__/graphics/alpha.png",
+          filename = "__Mobile_Factory_Graphics__/graphics/Alpha.png",
           priority = "high",
           width = 132,
           height = 132,

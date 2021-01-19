@@ -11,7 +11,7 @@ QR = {
 	lastUpdate = 0,
 	energyCharge = 0,
 	energyLevel = 1,
-	energyBuffer = _mfQuatronReactorMaxOutput
+	energyBuffer = _mfQuatronReactorMaxEnergyCapacity
 }
 
 -- Constructor --

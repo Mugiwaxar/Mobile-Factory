@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.8.1
+Date: 19/01/2021
+  Bugfixes:
+    - Fixed a Crash related to the Quatron Reactor
+---------------------------------------------------------------------------------------------------
 Version: 0.8.0
 Date: 05/01/2021
   Major Features:
@@ -24,7 +29,7 @@ Date: 05/01/2021
     - Reworked the Jump Drive Graphics
     - Reworked the Jump Charger Graphics
     - Reworked the Quatron Reactor Graphics
-    - Deployement: Green and Red Signals are now transfered bewteen the Inside/Outside
+    - Deployment: Green and Red Signals are now transferred between the Inside/Outside
   Changes:
     - Removed the Dimensional Substation Recipe and Technology (The Item and the Entity will be removed soon)
 ---------------------------------------------------------------------------------------------------
