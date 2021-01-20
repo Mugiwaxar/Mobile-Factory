@@ -238,13 +238,11 @@ function DTK:validate()
 		self.inventoryFluid = nil
 		self.inventoryCount = 0
 		self.inventoryTemperature = 0
-		return
 	end
 
 	-- Remove the Fluid Filter if it doesn't exist anymore --
 	if self.filter ~= nil and game.fluid_prototypes[self.filter] == nil then
 		self.filter = nil
-		return
 	end
 end
 
