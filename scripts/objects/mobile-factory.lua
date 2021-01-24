@@ -846,10 +846,10 @@ function MF:TPMobileFactoryPart2()
 	-- Get the distance --
 	local distance = Util.distance({self.tpLocation.posX,self.tpLocation.posY}, self.ent.position)
 	-- Remove the Jump Drive Charge --
-	self.jumpDriveObj.charge = math.max(0, self.jumpDriveObj.charge - distance)
+	EI.removeEnergy(self.jumpDriveObj, distance)
 	-- Remove the Quatron --
 	if self.tpLocation.surface ~= self.ent.surface then
-		self.internalQuatronObj:removeQuatron(1000)
+		EI.removeEnergy(self.internalQuatronObj, 1000)
 	end
 	-- Teleport the Mobile Factory to the cords --
 	self.ent.teleport({self.tpLocation.posX, self.tpLocation.posY}, self.tpLocation.surface)

@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.8.4
+Date: 24/01/2021
+  Bugfixes:
+    - Fixed a crash with the Jump Drive when using it between different Surfaces (Second Attempt)
+---------------------------------------------------------------------------------------------------
 Version: 0.8.3
 Date: 24/01/2021
   Bugfixes:
