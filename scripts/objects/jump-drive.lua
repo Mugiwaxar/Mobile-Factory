@@ -166,7 +166,7 @@ function JD:canTP(location)
 	-- Check the Jump Charge --
 	if distance > self.charge then return false end
 	-- Check the World --
-	if self.MF.ent.surface ~= location.surface and EI.energe(self.MF.internalQuatronObj) < 1000 then return false end
+	if self.MF.ent.surface ~= location.surface and EI.energy(self.MF.internalQuatronObj) < 1000 then return false end
 	-- All is OK --
 	return true
 end
