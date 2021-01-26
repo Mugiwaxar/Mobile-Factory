@@ -17,9 +17,9 @@ DA = {
 	networkAccessPoint = nil,
 	recipeID = 0,
 	recipeTable = nil, -- [id]{recipePrototype, sprite, progress, paused, ingredients{name, type, amount, sprite, missing, tooltip}, products{name, type, amount, max, probability, sprite, tooltip, toManyInInventory}, missingIngredient, inventoryFull, toManyInInventory}
-	quatronLevel = 0,
-	quatronCharge = 0,
-	quatronMax = 100;
+	energyCharge = 0,
+	energyLevel = 1,
+	energyBuffer = _mfDAQuatronBufferSize,
 	lastRecipeUpdatedID = 1
 }
 
@@ -122,11 +122,11 @@ function DA:update()
 	if self.active == false then return end
 
 	-- Charge the Data Assembler --
-	if self.quatronCharge <= 15 and self.networkAccessPoint ~= nil then
-		local chargeToBorrow = math.min(EI.energy(self.networkAccessPoint), 100 - self.quatronCharge)
+	if EI.energy(self) <= 15 and self.networkAccessPoint ~= nil then
+		local chargeToBorrow = math.min(EI.energy(self.networkAccessPoint), EI.maxEnergy(self) - EI.energy(self))
 		if chargeToBorrow > 0 then
-			self:addQuatron(chargeToBorrow, EI.energyLevel(self.networkAccessPoint))
-			EI.removeEnergy(self.networkAccessPoint, chargeToBorrow)
+			local added = self:addQuatron(chargeToBorrow, EI.energyLevel(self.networkAccessPoint))
+			EI.removeEnergy(self.networkAccessPoint, added)
 		end
 	end
 end
@@ -210,12 +210,12 @@ function DA:getTooltipInfos(GUITable, mainFrame, justCreated)
 	GAPI.addLabel(GUITable, "", DNInfoTable, {"", {"gui-description.DataAssembler"} , ":"}, nil, "", false, nil, _mfLabelType.yellowTitle)
 
 	-- Add the Quatron Charge --
-    GAPI.addLabel(GUITable, "", DNInfoTable, {"gui-description.QuatronCharge", Util.toRNumber(self.quatronCharge)}, _mfOrange)
-	GAPI.addProgressBar(GUITable, "", DNInfoTable, "", self.quatronCharge .. "/" .. self.quatronMax, false, _mfPurple, self.quatronCharge/self.quatronMax, 100)
+    GAPI.addLabel(GUITable, "", DNInfoTable, {"gui-description.QuatronCharge", Util.toRNumber(EI.energy(self))}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", DNInfoTable, "", EI.energy(self) .. "/" .. EI.maxEnergy(self), false, _mfPurple, EI.energy(self)/EI.maxEnergy(self), 100)
 	
 	-- Create the Quatron Purity --
-	GAPI.addLabel(GUITable, "", DNInfoTable, {"gui-description.Quatronlevel", string.format("%.3f", self.quatronLevel)}, _mfOrange)
-	GAPI.addProgressBar(GUITable, "", DNInfoTable, "", "", false, _mfPurple, self.quatronLevel/20, 100)
+	GAPI.addLabel(GUITable, "", DNInfoTable, {"gui-description.Quatronlevel", string.format("%.3f", EI.energyLevel(self))}, _mfOrange)
+	GAPI.addProgressBar(GUITable, "", DNInfoTable, "", "", false, _mfPurple, EI.energyLevel(self)/20, 100)
 
 	-- Get the Recipe Table --
 	local DARecipeTable = GUITable.vars.DARecipeTable
@@ -268,7 +268,7 @@ function DA:createFrame(GUITable, recipeTable, recipe, recipeID)
 	GAPI.addLabel(GUITable, "", infoTable, processingText, color)
 
 	-- Create the Progress Bar --
-	local barColor = ((self.quatronCharge > 0 and self.active == true) and _mfGreen) or _mfRed
+	local barColor = ((EI.energy(self) > 0 and self.active == true) and _mfGreen) or _mfRed
 	local PBar = GAPI.addProgressBar(GUITable, "", infoTable, "", "", false, barColor, recipe.progress / recipe.recipePrototype.energy)
 	PBar.style.horizontally_stretchable = true
 	if GUITable.vars.PBarsTable == nil then GUITable.vars.PBarsTable = {} end
@@ -466,7 +466,7 @@ end
 
 -- Update all Progress Bars --
 function DA:updatePBars(GUIObj)
-	local barColor = ((self.quatronCharge > 0 and self.active == true) and _mfGreen) or _mfRed
+	local barColor = ((EI.energy(self) > 0 and self.active == true) and _mfGreen) or _mfRed
 	for PBar, recipe in pairs(GUIObj.vars.PBarsTable or {}) do
 		if valid(PBar) == true and recipe ~= nil then
 			PBar.value = recipe.progress / recipe.recipePrototype.energy
@@ -633,7 +633,7 @@ function DA:updateRecipe(recipe, id)
 	end
 
 	-- Check if the Recipe can be processed --
-	if recipe.missingIngredient == true or recipe.progress >= recipe.recipePrototype.energy or self.quatronCharge <= 0 then return end
+	if recipe.missingIngredient == true or recipe.progress >= recipe.recipePrototype.energy or EI.energy(self) <= 0 then return end
 
 	-- Process the Recipe --
 	self:processRecipe(recipe)
@@ -642,9 +642,8 @@ end
 
 -- Process a Recip --
 function DA:processRecipe(recipe)
-	recipe.progress = recipe.progress + (1/12 * math.pow(self.quatronLevel, _mfQuatronScalePower) / 4)
-	self.quatronCharge = self.quatronCharge - 1/12
-	if self.quatronCharge < 0 then self.quatronCharge = 0 end
+	recipe.progress = recipe.progress + (1/12 * math.pow(EI.energyLevel(self), _mfQuatronScalePower) / 4)
+	EI.removeEnergy(self, 1/12)
 end
 
 -- Check if the Recipe can get all Ingredients --
@@ -717,6 +716,17 @@ function DA:toManyInInventory(recipe)
 	recipe.toManyInInventory = maxIngredientReached
 end
 
+-- Add Quatron (Return the amount added) --
+function DA:addQuatron(amount, level)
+	if EI.energy(self) > 0 then
+		EI.mixQuatron(self, amount, level)
+	else
+		self.energyCharge = amount
+		self.energyLevel = level
+	end
+	return amount
+end
+
 -- Settings To Blueprint Tags --
 function DA:settingsToBlueprintTags()
 	local tags = {}
@@ -755,17 +765,6 @@ function DA:blueprintTagsToSettings(tags)
 			self.recipeTable[self.recipeID].products = sortedProducts
 		end
 	end
-end
-
--- Add Quatron (Return the amount added) --
-function DA:addQuatron(amount, level)
-	if self.quatronCharge > 0 then
-		EI.mixQuatron(self, amount, level)
-	else
-		self.quatronCharge = amount
-		self.quatronLevel = level
-	end
-	return amount
 end
 
 -- Check stored data, and remove invalid record

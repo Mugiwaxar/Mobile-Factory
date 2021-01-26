@@ -11,6 +11,7 @@ end
 -- Update System --
 _mfBaseUpdatePerTick = 100
 _mfScanTicks = 100
+_mfScanTicks = 100
 
 -- Mobile Factory Surfaces name --
 _mfSurfaceName = "mfSurface"
@@ -105,6 +106,7 @@ _mfMIQuatronDrainPerUpdate = 8
 _mfFIQuatronDrainPerUpdate = 8
 _mfNEQuatronDrainPerUpdate = 3
 _mfDAQuatronDrainPerUpdate = 1
+_mfDAQuatronBufferSize = 100
 _mfQuatronScalePower = 1.3
 _mfQuatronReactorMaxEnergyCapacity = 25000
 _mfQuatronReactorMaxOutput = 5000
