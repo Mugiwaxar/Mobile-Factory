@@ -229,7 +229,7 @@ function Event.somethingWasRemoved(event)
 	if removedEnt.name == "ResourceCatcher" and obj.filled == true then
 		if event.buffer ~= nil and event.buffer[1] ~= nil then
 			event.buffer.clear()
-			event.buffer.insert("FilledResourceCatcher")
+			event.buffer.insert({name = "FilledResourceCatcher", count = 1})
 			obj:contentToItemTags(event.buffer[1])
 		end
 		obj:remove()
