@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.8.7
+Date: 02/13/2021
+  Bugfixes:
+    - Main gui inventories lost minimum width - caused by GUI style behavior change in Factorio 1.1.7
+    - Data Network Explorer with multiple storages didn't remove player inventory items
+    - Deep Storage with filter reset to 'nothing', by tooltip button, wouldn't clear the sprite / item stored
+---------------------------------------------------------------------------------------------------
 Version: 0.8.6
 Date: 02/02/2021
   Bugfixes:

@@ -125,8 +125,8 @@ function NE:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 		-- Create the Network Inventory Scroll Pane --
 		local inventoryScrollPane = GAPI.addScrollPane(GUITable, "InventoryScrollPane", inventoryFrame, 500, true)
-		inventoryScrollPane.style.minimal_width = 308
 		inventoryScrollPane.style = "MF_Inventory_scroll_pan"
+		inventoryScrollPane.style.minimal_width = 308
 		inventoryScrollPane.style.vertically_stretchable = true
 		inventoryScrollPane.style.bottom_margin = 3
 
@@ -143,8 +143,8 @@ function NE:getTooltipInfos(GUITable, mainFrame, justCreated)
 
 		-- Create the Player Inventory Scroll Pane --
 		local playerInventoryScrollPane = GAPI.addScrollPane(GUITable, "PlayerInventoryScrollPane", playerInventoryFrame, 500, true)
-		playerInventoryScrollPane.style.minimal_width = 308
 		playerInventoryScrollPane.style = "MF_Inventory_scroll_pan"
+		playerInventoryScrollPane.style.minimal_width = 308
 		playerInventoryScrollPane.style.vertically_stretchable = true
 		playerInventoryScrollPane.style.bottom_margin = 3
 
@@ -426,27 +426,28 @@ function NE.transferItemsFromPInv(PInv, NE, item, count)
 	if item == nil then return end
 	local half = (count or 1) < 1 and true or false
 	if count == nil or count <= 0 then count = game.item_prototypes[item].stack_size end
-	local inserted = 0
 
 	-- Try to transfer Items --
 	local amount = math.min(PInv.get_item_count(item), count)
 	if half == true then amount = math.floor(amount/2) end
 	if amount <= 0 then amount = 1 end
 
+	local amountOriginal = amount
+
 	-- Try to send the Items to a Deep Storage --
 	for _, deepStorage in pairs(NE.dataNetwork.DSRTable) do
 		local availableSpace = deepStorage:availableSpace()
 		if availableSpace > 0 and deepStorage:canAccept(item, availableSpace) then
-			inserted = deepStorage:addItem(item, math.min(availableSpace, amount))
-			amount = amount - inserted
+			amount = amount - deepStorage:addItem(item, math.min(availableSpace, amount))
 		end
 	end
 
 	-- Try to send the Items to the Data Network inventory --
 	if amount > 0 then
-		inserted = inserted + DNInv:addItem(item, amount)
+		amount = amount - DNInv:addItem(item, amount)
 	end
 
+	local inserted = amountOriginal - amount
 	-- Remove the Item from the Player Inventory --
 	if inserted > 0 then
 		PInv.remove({name=item, count=inserted})

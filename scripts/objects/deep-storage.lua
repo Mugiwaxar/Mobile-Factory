@@ -252,11 +252,15 @@ function DSR.interaction(event)
 	-- If this is a Deep Storage Filter --
 	if string.match(event.element.name, "D.S.R.Filter") then
 		local id = event.element.tags.ID
-		if global.deepStorageTable[id] == nil then return end
+		local deepStorage = global.deepStorageTable[id]
+		if deepStorage == nil then return end
 		if event.element.elem_value ~= nil then
-			global.deepStorageTable[id].filter = event.element.elem_value
+			deepStorage.filter = event.element.elem_value
 		else
-			global.deepStorageTable[id].filter = nil
+			deepStorage.filter = nil
+			if deepStorage.inventoryCount <= 0 then
+				deepStorage.inventoryItem = nil
+			end
 		end
 		GUI.updateAllGUIs(true)
 		return
@@ -264,11 +268,12 @@ function DSR.interaction(event)
 	-- If this is a Max Textfield --
 	if string.match(event.element.name, "D.S.R.Max") then
 		local id = event.element.tags.ID
-		if global.deepStorageTable[id] == nil then return end
+		local deepStorage = global.deepStorageTable[id]
+		if deepStorage == nil then return end
 		if event.element.text ~= nil and event.element.text ~= "" and event.element.text ~= "0" then
-			global.deepStorageTable[id].max = tonumber(event.element.text)
+			deepStorage.max = tonumber(event.element.text)
 		else
-			global.deepStorageTable[id].max = nil
+			deepStorage.max = nil
 		end
 		GUI.updateAllGUIs(true)
 		return
