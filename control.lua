@@ -108,6 +108,21 @@ function onInit()
 		end
 	end
 
+	-- Validate MF Fuel --
+	global.MFFuel = nil
+	local expectedFuels = _MFVehicleFuelsByName
+	local baseMF = game.entity_prototypes["MobileFactory"]
+	for fuelName in pairs(expectedFuels) do
+		local fuel = game.item_prototypes[fuelName]
+		if fuel ~= nil
+			and fuel.fuel_value and fuel.fuel_value > 0
+			and baseMF ~= nil and baseMF.burner_prototype ~= nil
+			and baseMF.burner_prototype.fuel_categories[fuel.fuel_category]
+		then
+			global.MFFuel = fuel
+			_MFVehicleFuelPrototype = fuel
+		end
+	end
 end
 
 function onLoad(event)
@@ -120,7 +135,7 @@ function onLoad(event)
 			end
 		end
 	end
-
+	_MFVehicleFuelPrototype = global.MFFuel
 end
 
 -- Filters --
@@ -325,33 +340,5 @@ commands.add_command("MFClearGUI", "Clean all Mobile Factory GUIs", clearAllGUI)
 -- Debug Commands --
 local addDebugCommands = true
 if addDebugCommands == true then
-local function MFResetGUIs(event)
-	for playerIndex, player in pairs(game.players) do
-		local logString = "\n"
-		logString = logString.."Checking player: "..player.name
-		if player.connected == true then
-			logString = logString.."\nPlayer is connected."
-		else
-			logString = logString.."\nPlayer is not connected."
-		end
-
-		local MFPlayer = getMFPlayer(playerIndex)
-		if MFPlayer ~= nil then
-			logString = logString.."\nPlayer has an MFPlayer"
-			local MFGui = MFPlayer.GUI["MFMainGUI"]
-			if MFGui ~= nil then
-				logString = logString.."\nMFMainGUI exists, attempting to destroy and recreate."
-				MFGui.destroy()
-			else
-				logString = logString.."\nMFMainGUI does not exist, attempting to recreate."
-			end
-			GUI.createMFMainGUI(player)
-		else
-			logString = logString.."\nPlayer does not have an MFPlayer."		
-		end
-		log(logString)
-	end
-end
-commands.add_command("MF_reset_guis", "reset the GUIS for Mobile Factory players", MFResetGUIs)
 
 end -- end addDebugCommands check

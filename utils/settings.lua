@@ -218,3 +218,10 @@ _mfLabelType =
 
 -- Table of Recipes Unlocked by Initial Research --
 _MFStartingRecipes = {"MobileFactory", "DimensionalTile", "mfStone"}
+
+-- Fuel to use in MF
+_MFVehicleFuelPrototype = nil
+_MFVehicleFuelsByName = {
+	["coal"] = true,
+	["wood"] = true,
+}

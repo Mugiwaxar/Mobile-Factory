@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.8.8
+Date: 02/15/2021
+  General:
+    - removed outdated reset gui command
+  Bugfixes:
+    - Verify coal or wood can be used to power the Mobile Factory
+  Scripting:
+    - fix typo in Mobile Factory object table
+---------------------------------------------------------------------------------------------------
 Version: 0.8.7
 Date: 02/13/2021
   Bugfixes:

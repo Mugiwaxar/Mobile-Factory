@@ -13,7 +13,7 @@ MF = {
 	ccS = nil,
 	II = nil,
 	dataNetwork = nil,
-	netwokController = nil,
+	networkController = nil,
 	internalEnergyObj = nil,
 	internalQuatronObj = nil,
 	jumpDriveObj = nil,
@@ -635,10 +635,10 @@ function MF:updateFuel()
 	if burner ~= nil then
 		local fuelInventory = burner.inventory
 		if fuelInventory.is_empty() == true then
-			local fuel = game.item_prototypes['coal']
+			local fuel = _MFVehicleFuelPrototype
 			if fuel == nil then return end
 			if burner.currently_burning == nil then
-				-- Insert coal in case of the Tank is off --
+				-- Insert fuel in case of the Tank is off --
 				if (fuel ~= nil) and (EI.energy(self.internalEnergyObj) >= fuel.fuel_value/_mfFuelMultiplicator) then
 					burner.currently_burning = fuel
 					EI.removeEnergy(self.internalEnergyObj, fuel.fuel_value/_mfFuelMultiplicator)
