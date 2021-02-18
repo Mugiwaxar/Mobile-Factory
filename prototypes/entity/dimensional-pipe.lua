@@ -17,6 +17,8 @@ local function tintPipeCovers(pipe_covers, tint)
 end
 
 local function tintPictures(pictures, tint)
+	--SHOULD NOT HAVE TO DO THIS - hr_version IS ONLY MISSING WHEN A MOD EDITS THE PIPE IN DATA REEEEEEEEEEEE
+	--like Industrial Revolution 2 version 2.1.2
 	if not pictures then return end
 	local directions = {
 		"up",
@@ -26,8 +28,11 @@ local function tintPictures(pictures, tint)
 	}
 	for _, direction in pairs(directions) do
 		local pictureDirection = pictures[direction]
-		pictureDirection.tint = tint
-		if pictureDirection.hr_version then pictureDirection.hr_version.tint = tint end
+		if pictureDirection then
+			local tableToTint = (pictureDirection.layers and pictureDirection.layers[1]) or pictures[direction]
+			tableToTint.tint = tint
+			if tableToTint.hr_version then pictureDirection.hr_version.tint = tint end
+		end
 	end
 end
 
