@@ -1,6 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.8.9
+Date: 18/02/2021
+  General:
+    - change Dimensional Pipe graphics to account for Industrial Revolution 2 (editing vanilla prototypes in data)
+    - MF Erya doesn't work with IR2 for now, account of above conflict
+    - change a few dates in changelog to match DD/MM/YYYY
+---------------------------------------------------------------------------------------------------
 Version: 0.8.8
-Date: 02/15/2021
+Date: 15/02/2021
   General:
     - removed outdated reset gui command
   Bugfixes:
@@ -9,7 +16,7 @@ Date: 02/15/2021
     - fix typo in Mobile Factory object table
 ---------------------------------------------------------------------------------------------------
 Version: 0.8.7
-Date: 02/13/2021
+Date: 13/02/2021
   Bugfixes:
     - Main gui inventories lost minimum width - caused by GUI style behavior change in Factorio 1.1.7
     - Data Network Explorer with multiple storages didn't remove player inventory items
