@@ -175,6 +175,7 @@ function EL:nextLaser(lastLaser, eiFound, slowerLaserSpeed)
 	-- Check if this is a Mobile Factory --
     if string.match(receiver.ent.name, "MobileFactory") then
 		receiver = receiver.internalEnergyObj
+		if receiver == nil or receiver.valid == false then return false end
 	end
 
 	-- Get the Target type --
