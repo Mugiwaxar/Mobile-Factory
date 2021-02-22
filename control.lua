@@ -103,8 +103,10 @@ function onInit()
 
 	-- Recreate GUIs --
 	for _, MFPlayer in pairs(global.playersTable or {}) do
-		if MFPlayer.ent ~= nil then
+		if MFPlayer.ent ~= nil and MFPlayer.ent.valid == true then
 			GUI.createMFMainGUI(MFPlayer.ent)
+		else
+			--destroy the gui object properly
 		end
 	end
 
@@ -297,6 +299,7 @@ script.on_load(onLoad)
 script.on_event(defines.events.on_cutscene_cancelled, initAPlayer)
 script.on_event(defines.events.on_player_created, initAPlayer)
 script.on_event(defines.events.on_player_joined_game, initAPlayer)
+--script.on_event(defines.events.on_player_removed, RemoveAPlayer)
 script.on_event(defines.events.on_player_driving_changed_state, onPlayerDriveStatChange)
 script.on_event(defines.events.on_tick, onTick)
 script.on_event(defines.events.on_entity_damaged, onEntityDamaged, _mfEntityFilterWithCBJ)
