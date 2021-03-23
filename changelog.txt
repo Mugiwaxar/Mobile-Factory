@@ -1,14 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.9.0
+Date: 23/03/2021
+  Features:
+    - Added HD Icons for some Items
+---------------------------------------------------------------------------------------------------
 Version: 0.8.9
 Date: 18/02/2021
-  General:
+  Changes:
     - change Dimensional Pipe graphics to account for Industrial Revolution 2 (editing vanilla prototypes in data)
     - MF Erya doesn't work with IR2 for now, account of above conflict
     - change a few dates in changelog to match DD/MM/YYYY
 ---------------------------------------------------------------------------------------------------
 Version: 0.8.8
 Date: 15/02/2021
-  General:
+  Features:
     - removed outdated reset gui command
   Bugfixes:
     - Verify coal or wood can be used to power the Mobile Factory
@@ -30,7 +35,7 @@ Date: 02/02/2021
 Version: 0.8.5
 Date: 26/01/2021
   Features:
-    - Added an Energy Interface for the Data Assember
+    - Added an Energy Interface for the Data Assembler
 ---------------------------------------------------------------------------------------------------
 Version: 0.8.4
 Date: 24/01/2021

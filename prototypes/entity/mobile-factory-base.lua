@@ -32,7 +32,7 @@ mf.animation =
 			stripes =
 			{
 				{
-				filename = "__Mobile_Factory_Graphics__/graphics/mobile- factory/mobile-factory.png",
+				filename = "__Mobile_Factory_Graphics__/graphics/mobile-factory/mobile-factory.png",
 				width_in_frames = 10,
 				height_in_frames = 8
 				}
@@ -189,8 +189,8 @@ data:extend{mf}
 local mfI = {}
 mfI.type = "item-with-entity-data"
 mfI.name = "MobileFactory"
-mfI.icon = "__Mobile_Factory_Graphics__/graphics/mobile- factory/tank.png"
-mfI.icon_size = 32
+mfI.icon = "__Mobile_Factory_Graphics__/graphics/mobile-factory/tank.png"
+mfI.icon_size = 256
 mfI.place_result = "MobileFactory"
 mfI.subgroup = "MobileFactory"
 mfI.order = "a"
@@ -215,8 +215,8 @@ data:extend{mfR}
 local mfT = {}
 mfT.name = "MobileFactory"
 mfT.type = "technology"
-mfT.icon = "__Mobile_Factory_Graphics__/graphics/mobile- factory/tank.png"
-mfT.icon_size = 32
+mfT.icon = "__Mobile_Factory_Graphics__/graphics/mobile-factory/tank.png"
+mfT.icon_size = 256
 mfT.unit = {
 	count=250,
 	time=1,
@@ -269,7 +269,7 @@ function createNewMF(name, color, size, order, icon)
 	nMFT.name = name
 	nMFT.type = "technology"
 	nMFT.icon = icon
-	nMFT.icon_size = 32
+	nMFT.icon_size = 256
 	nMFT.unit = {
 		count=1000,
 		time=2,

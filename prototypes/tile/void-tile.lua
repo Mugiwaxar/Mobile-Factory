@@ -10,8 +10,8 @@ data:extend{vtT}
 local vtI = {}
 vtI.type = "item"
 vtI.name = "VoidTile"
-vtI.icon = "__base__/graphics/terrain/out-of-map.png"
-vtI.icon_size = 32
+vtI.icon = "__Mobile_Factory_Graphics__/graphics/icons/VoidTileI.png"
+vtI.icon_size = 128
 vtI.subgroup = "Tiles"
 vtI.order = "b"
 vtI.stack_size = 1000
@@ -40,8 +40,8 @@ data:extend{vtR}
 local vtT = {}
 vtT.name = "VoidTile"
 vtT.type = "technology"
-vtT.icon = "__base__/graphics/terrain/out-of-map.png"
-vtT.icon_size = 32
+vtT.icon = "__Mobile_Factory_Graphics__/graphics/icons/VoidTileI.png"
+vtT.icon_size = 128
 vtT.unit = {
 	count=500,
 	time=2,

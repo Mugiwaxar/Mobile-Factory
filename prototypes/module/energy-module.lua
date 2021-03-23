@@ -3,8 +3,8 @@ local pMI = {}
 pMI.type = "item"
 pMI.name = "EnergyPowerModule"
 pMI.placed_as_equipment_result = "EnergyPowerModule"
-pMI.icon = "__Mobile_Factory_Graphics__/graphics/icons/EnergyPowerModule.png"
-pMI.icon_size = 32
+pMI.icon = "__Mobile_Factory_Graphics__/graphics/icons/MFEnergyPowerModule.png"
+pMI.icon_size = 64
 pMI.subgroup = "Modules1"
 pMI.order = "a"
 pMI.stack_size = 20
@@ -15,7 +15,7 @@ local pmE = {}
 pmE.name = "EnergyPowerModule"
 pmE.type = "battery-equipment"
 pmE.categories = {"mfEquipments"}
-pmE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/icons/EnergyPowerModule.png", size=32}
+pmE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/icons/MFEnergyPowerModule.png", size=64}
 pmE.shape = {width=2, height=2, type="full"}
 pmE.energy_source =
 {
@@ -48,8 +48,8 @@ local eMI = {}
 eMI.type = "item"
 eMI.name = "EnergyEfficiencyModule"
 eMI.placed_as_equipment_result = "EnergyEfficiencyModule"
-eMI.icon = "__Mobile_Factory_Graphics__/graphics/icons/EnergyEfficiencyModule.png"
-eMI.icon_size = 32
+eMI.icon = "__Mobile_Factory_Graphics__/graphics/icons/MFLaserEfficiencyModule.png"
+eMI.icon_size = 64
 eMI.subgroup = "Modules1"
 eMI.order = "b"
 eMI.stack_size = 20
@@ -60,7 +60,7 @@ local emE = {}
 emE.name = "EnergyEfficiencyModule"
 emE.type = "battery-equipment"
 emE.categories = {"mfEquipments"}
-emE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/icons/EnergyEfficiencyModule.png", size=32}
+emE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/icons/MFLaserEfficiencyModule.png", size=64}
 emE.shape = {width=2, height=2, type="full"}
 emE.energy_source =
 {
@@ -93,8 +93,8 @@ local fMI = {}
 fMI.type = "item"
 fMI.name = "EnergyFocusModule"
 fMI.placed_as_equipment_result = "EnergyFocusModule"
-fMI.icon = "__Mobile_Factory_Graphics__/graphics/icons/EnergyFocusModule.png"
-fMI.icon_size = 32
+fMI.icon = "__Mobile_Factory_Graphics__/graphics/icons/MFLaserFocusModule.png"
+fMI.icon_size = 64
 fMI.subgroup = "Modules1"
 fMI.order = "c"
 fMI.stack_size = 20
@@ -105,7 +105,7 @@ local fmE = {}
 fmE.name = "EnergyFocusModule"
 fmE.type = "battery-equipment"
 fmE.categories = {"mfEquipments"}
-fmE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/icons/EnergyFocusModule.png", size=32}
+fmE.sprite = {filename="__Mobile_Factory_Graphics__/graphics/icons/MFLaserFocusModule.png", size=64}
 fmE.shape = {width=2, height=2, type="full"}
 fmE.energy_source =
 {
@@ -137,8 +137,8 @@ data:extend{fMR}
 local pMT = {}
 pMT.name = "EnergyPowerModule"
 pMT.type = "technology"
-pMT.icon = "__Mobile_Factory_Graphics__/graphics/icons/EnergyPowerModule.png"
-pMT.icon_size = 32
+pMT.icon = "__Mobile_Factory_Graphics__/graphics/icons/MFLasersModulesT.png"
+pMT.icon_size = 128
 pMT.unit = {
 	count=400,
 	time=2,

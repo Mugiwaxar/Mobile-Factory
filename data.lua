@@ -486,8 +486,8 @@ data:extend{
 	{
 		type = "sprite",
 		name = "EnergyDrainIcon",
-		filename = "__Mobile_Factory_Graphics__/graphics/icons/TecEnergyDrain1.png",
-		size = 32,
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/EnergyLaserE.png",
+		size = 256,
 		flags = {"icon"}
 	}
 }
@@ -496,8 +496,8 @@ data:extend{
 	{
 		type = "sprite",
 		name = "EnergyDrainIconDisabled",
-		filename = "__Mobile_Factory_Graphics__/graphics/icons/EnergyDrainDisabled.png",
-		size = 32,
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/EnergyLaserD.png",
+		size = 256,
 		flags = {"icon"}
 	}
 }
@@ -506,8 +506,8 @@ data:extend{
 	{
 		type = "sprite",
 		name = "FluidDrainIcon",
-		filename = "__Mobile_Factory_Graphics__/graphics/icons/TecFluidDrain1.png",
-		size = 32,
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/FluidLaserE.png",
+		size = 256,
 		flags = {"icon"}
 	}
 }
@@ -516,8 +516,8 @@ data:extend{
 	{
 		type = "sprite",
 		name = "FluidDrainIconDisabled",
-		filename = "__Mobile_Factory_Graphics__/graphics/icons/FluidDrainDisabled.png",
-		size = 32,
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/FluidLaserD.png",
+		size = 256,
 		flags = {"icon"}
 	}
 }
@@ -526,8 +526,8 @@ data:extend{
 	{
 		type = "sprite",
 		name = "ItemDrainIcon",
-		filename = "__Mobile_Factory_Graphics__/graphics/icons/TechItemDrain.png",
-		size = 32,
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/LogisticLaserE.png",
+		size = 256,
 		flags = {"icon"}
 	}
 }
@@ -536,8 +536,8 @@ data:extend{
 	{
 		type = "sprite",
 		name = "ItemDrainIconDisabled",
-		filename = "__Mobile_Factory_Graphics__/graphics/icons/ItemDrainDisabled.png",
-		size = 32,
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/LogisticLaserD.png",
+		size = 256,
 		flags = {"icon"}
 	}
 }
@@ -546,8 +546,8 @@ data:extend{
 	{
 		type = "sprite",
 		name = "QuatronIcon",
-		filename = "__Mobile_Factory_Graphics__/graphics/icons/Quatron.png",
-		size = 32,
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/QuatronLaserE.png",
+		size = 256,
 		flags = {"icon"}
 	}
 }
@@ -556,8 +556,8 @@ data:extend{
 	{
 		type = "sprite",
 		name = "QuatronIconDisabled",
-		filename = "__Mobile_Factory_Graphics__/graphics/icons/QuatronDisabled.png",
-		size = 32,
+		filename = "__Mobile_Factory_Graphics__/graphics/icons/QuatronLaserD.png",
+		size = 256,
 		flags = {"icon"}
 	}
 }

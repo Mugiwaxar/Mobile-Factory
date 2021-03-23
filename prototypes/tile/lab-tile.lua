@@ -4,8 +4,8 @@
 local ltI = {}
 ltI.type = "item"
 ltI.name = "LabTile"
-ltI.icon = "__base__/graphics/terrain/tutorial-grid/tutorial-grid-o.png"
-ltI.icon_size = 32
+ltI.icon = "__Mobile_Factory_Graphics__/graphics/icons/labTileI.png"
+ltI.icon_size = 128
 ltI.subgroup = "Tiles"
 ltI.order = "a"
 ltI.stack_size = 1000
@@ -34,8 +34,8 @@ data:extend{lbR}
 local lbT = {}
 lbT.name = "LabTile"
 lbT.type = "technology"
-lbT.icon = "__base__/graphics/terrain/tutorial-grid/tutorial-grid-o.png"
-lbT.icon_size = 32
+lbT.icon = "__Mobile_Factory_Graphics__/graphics/icons/labTileI.png"
+lbT.icon_size = 128
 lbT.unit = {
 	count=350,
 	time=2,
@@ -53,4 +53,6 @@ data:extend{lbT}
 local btE = table.deepcopy(data.raw.tile["tutorial-grid"])
 btE.name = "BuildTile"
 btE.tint = {32,165,3}
+btE.icon = "__Mobile_Factory_Graphics__/graphics/icons/CAreaTileI.png"
+btE.icon_size = 128
 data:extend{btE}

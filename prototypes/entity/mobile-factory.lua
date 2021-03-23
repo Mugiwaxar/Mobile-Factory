@@ -2,7 +2,7 @@
 require("prototypes/entity/mobile-factory-base.lua")
 
 -- Mobile Factory GT --
-createNewMF("GTMobileFactory", {1,0.2,0.2}, 0.7, "b", "__Mobile_Factory_Graphics__/graphics/mobile- factory/QuickMF.png")
+createNewMF("GTMobileFactory", {1,0.2,0.2}, 0.7, "b", "__Mobile_Factory_Graphics__/graphics/mobile-factory/QuickMF.png")
 data.raw.car.GTMobileFactory.max_health = 1000
 data.raw.car.GTMobileFactory.consumption = "800KW"
 data.raw.car.GTMobileFactory.weight = 8000
@@ -30,7 +30,7 @@ data.raw.technology.GTMobileFactory.unit =
 }
 
 -- Hovering Factory --
-createNewMF("HMobileFactory", {49,92,255}, 0.9, "c",  "__Mobile_Factory_Graphics__/graphics/mobile- factory/HMF.png")
+createNewMF("HMobileFactory", {49,92,255}, 0.9, "c",  "__Mobile_Factory_Graphics__/graphics/mobile-factory/HMF.png")
 data.raw.car.HMobileFactory.max_health = 2000
 data.raw.car.HMobileFactory.consumption = "550kW"
 data.raw.car.HMobileFactory.weight = 30000

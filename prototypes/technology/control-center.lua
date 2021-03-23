@@ -4,8 +4,8 @@
 local CC = {}
 CC.name = "ControlCenter"
 CC.type = "technology"
-CC.icon = "__Mobile_Factory_Graphics__/graphics/icons/TecControlCenter.png"
-CC.icon_size = 32
+CC.icon = "__Mobile_Factory_Graphics__/graphics/icons/ControlCenterT.png"
+CC.icon_size = 256
 CC.unit = {
 	count=300,
 	time=2,
