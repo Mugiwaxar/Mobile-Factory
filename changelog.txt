@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.9.1
+Date: 24/03/2021
+  Bugfixes:
+    - Fixed the Icons size inside the Information GUI
+    - Fixed the Icons size inside the Network Explorer GUI
+    - Fixed the Icons size of the Network Access Point - Out of Quatron
+---------------------------------------------------------------------------------------------------
 Version: 0.9.0
 Date: 23/03/2021
   Features:
