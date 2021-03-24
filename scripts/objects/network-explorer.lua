@@ -267,10 +267,7 @@ function NE:createDNInventory(GUITable, inventoryScrollPane, searchText)
 
 		-- Create the Button --
 		local buttonText = {"", "[color=purple]", Util.getLocFluidName(DT.inventoryFluid), "[/color]\n[color=yellow]", Util.toRNumber(DT.inventoryCount), "[/color]"}
-		local button = GAPI.addButton(GUITable, "N.E.DTK," .. DT.ent.unit_number, tableList, "fluid/" .. DT.inventoryFluid, "fluid/" .. DT.inventoryFluid, buttonText, 37, false, true, DT.inventoryCount)
-		button.style = "MF_Button_Purple"
-		button.style.padding = 0
-		button.style.margin = 0
+		local button = GAPI.addButton(GUITable, "N.E.DTK," .. DT.ent.unit_number, tableList, "fluid/" .. DT.inventoryFluid, "fluid/" .. DT.inventoryFluid, buttonText, 37, false, true, DT.inventoryCount, "MF_Button_Purple")
 
 		::continue::
 
@@ -289,10 +286,7 @@ function NE:createDNInventory(GUITable, inventoryScrollPane, searchText)
 
 		-- Create the Button --
 		local buttonText = {"", "[color=green]", Util.getLocItemName(DSR.inventoryItem), "[/color]\n[color=yellow]", Util.toRNumber(DSR.inventoryCount), "[/color]"}
-		local button = GAPI.addButton(GUITable, "N.E.DSR" .. DSR.ent.unit_number, tableList, "item/" .. DSR.inventoryItem, "item/" .. DSR.inventoryItem, buttonText, 37, false, true, DSR.inventoryCount, nil, {ID=DSR.ent.unit_number})
-		button.style = "shortcut_bar_button_green"
-		button.style.padding = 0
-		button.style.margin = 0
+		local button = GAPI.addButton(GUITable, "N.E.DSR" .. DSR.ent.unit_number, tableList, "item/" .. DSR.inventoryItem, "item/" .. DSR.inventoryItem, buttonText, 37, false, true, DSR.inventoryCount, "shortcut_bar_button_green", {ID=DSR.ent.unit_number})
 
 		::continue::
 	end
@@ -311,10 +305,7 @@ function NE:createDNInventory(GUITable, inventoryScrollPane, searchText)
 
 		-- Create the Button --
 		local buttonText = {"", "[color=blue]", Util.getLocItemName(name), "[/color]\n[color=yellow]", Util.toRNumber(count), "[/color]"}
-		local button = GAPI.addButton(GUITable, "N.E.Inv" .. name, tableList, "item/" .. name, "item/" .. name, buttonText, 37, false, true, count, nil, {ID=self.entID, name=name})
-		button.style = "shortcut_bar_button_blue"
-		button.style.padding = 0
-		button.style.margin = 0
+		local button = GAPI.addButton(GUITable, "N.E.Inv" .. name, tableList, "item/" .. name, "item/" .. name, buttonText, 37, false, true, count, "shortcut_bar_button_blue", {ID=self.entID, name=name})
 		
 		::continue::
 
@@ -345,10 +336,7 @@ function NE:createPlayerInventory(GUITable, MFPlayer, inventoryScrollPane, searc
 
 		-- Create the Button --
 		local buttonText = {"", "[color=blue]", Util.getLocItemName(name), "[/color]\n[color=yellow]", Util.toRNumber(count), "[/color]"}
-		local button = GAPI.addButton(GUITable, "N.E.PInv" .. name, tableList, "item/" .. name, "item/" .. name, buttonText, 37, false, true, count, nil, {ID=self.entID, name=name})
-		button.style = "shortcut_bar_button_blue"
-		button.style.padding = 0
-		button.style.margin = 0
+		GAPI.addButton(GUITable, "N.E.PInv" .. name, tableList, "item/" .. name, "item/" .. name, buttonText, 37, false, true, count, "shortcut_bar_button_blue", {ID=self.entID, name=name})
 		
 		::continue::
 

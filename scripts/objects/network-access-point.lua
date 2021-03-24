@@ -82,7 +82,7 @@ function NAP:update()
 
 	-- Render the Animation --
 	if EI.energy(self) <= 0 and rendering.is_valid(self.noQuatronSpriteID) == false then
-		self.noQuatronSpriteID = rendering.draw_sprite{sprite="QuatronIconDisabled", render_layer=131, target=self.ent, surface=self.ent.surface}
+		self.noQuatronSpriteID = rendering.draw_sprite{sprite="QuatronIconDisabled", render_layer=131, target=self.ent, surface=self.ent.surface, x_scale=0.25, y_scale=0.25}
 		rendering.destroy(self.animID)
 	elseif EI.energy(self) > 0 and rendering.is_valid(self.animID) == false then
 		self.animID = rendering.draw_animation{animation="NetworkAccessPointA", target={self.ent.position.x,self.ent.position.y-0.9}, surface=self.ent.surface, render_layer=131}

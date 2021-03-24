@@ -374,10 +374,7 @@ function GUI.updateInventoryFrame(GUITable)
 
 		-- Create the Button --
 		local buttonText = {"", "[color=purple]", Util.getLocFluidName(DTK.inventoryFluid), "[/color]\n[color=yellow]", Util.toRNumber(DTK.inventoryCount), "[/color]"}
-		local button = GAPI.addButton(GUITable, "", tableList, "fluid/" .. DTK.inventoryFluid, "fluid/" .. DTK.inventoryFluid, buttonText, 37, false, true, DTK.inventoryCount)
-		button.style = "MF_Fake_Button_Purple"
-        button.style.padding = 0
-        button.style.margin = 0
+		GAPI.addButton(GUITable, "", tableList, "fluid/" .. DTK.inventoryFluid, "fluid/" .. DTK.inventoryFluid, buttonText, 37, false, true, DTK.inventoryCount, "MF_Fake_Button_Purple")
 
 		::continue::
 
@@ -390,10 +387,7 @@ function GUI.updateInventoryFrame(GUITable)
 
 		-- Create the Button --
 		local buttonText = {"", "[color=green]", Util.getLocItemName(DSR.inventoryItem), "[/color]\n[color=yellow]", Util.toRNumber(DSR.inventoryCount), "[/color]"}
-		local button = GAPI.addButton(GUITable, "", tableList, "item/" .. DSR.inventoryItem, "item/" .. DSR.inventoryItem, buttonText, 37, false, true, DSR.inventoryCount)
-		button.style = "MF_Fake_Button_Green"
-        button.style.padding = 0
-        button.style.margin = 0
+		GAPI.addButton(GUITable, "", tableList, "item/" .. DSR.inventoryItem, "item/" .. DSR.inventoryItem, buttonText, 37, false, true, DSR.inventoryCount, "MF_Fake_Button_Green")
 
 		::continue::
 	end
@@ -406,11 +400,8 @@ function GUI.updateInventoryFrame(GUITable)
 
 		-- Create the Button --
 		local buttonText = {"", "[color=blue]", Util.getLocItemName(name), "[/color]\n[color=yellow]", Util.toRNumber(count), "[/color]"}
-		local button = GAPI.addButton(GUITable, "", tableList, "item/" .. name, "item/" .. name, buttonText, 37, false, true, count)
-		button.style = "MF_Fake_Button_Blue"
-        button.style.padding = 0
-		button.style.margin = 0
-		
+		GAPI.addButton(GUITable, "", tableList, "item/" .. name, "item/" .. name, buttonText, 37, false, true, count, "MF_Fake_Button_Blue")
+
 		::continue::
 
 	end
