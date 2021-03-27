@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.9.2
+Date: 27/03/2021
+  Bugfixes:
+    - Fixed an error that can happen when a Internal Energy Cube is removed
+    - Fixed an error that can happen when a Internal Quatron Cube is removed
+---------------------------------------------------------------------------------------------------
 Version: 0.9.1
 Date: 24/03/2021
   Bugfixes:

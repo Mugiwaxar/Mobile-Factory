@@ -44,8 +44,6 @@ end
 
 -- Destructor --
 function IEC:remove()
-	-- Destroy the Sprite --
-	rendering.destroy(self.spriteID)
 	self.ent = nil
 end
 

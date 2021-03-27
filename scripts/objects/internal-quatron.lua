@@ -45,10 +45,6 @@ end
 
 -- Destructor --
 function IQC:remove()
-	-- Purge Quatron, as IQC Object stays valid even without entity
-	self.quatronMax = nil
-	-- Destroy the Sprite --
-	rendering.destroy(self.lightID)
 	self.ent = nil
 end
 
