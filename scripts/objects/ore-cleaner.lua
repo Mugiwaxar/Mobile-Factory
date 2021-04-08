@@ -353,7 +353,7 @@ function OC:collectOres()
 						-- Register the amount inserted if this is the main Product --
 						added = math.max(inserted, added)
 						-- Create the Projectile --
-						self.ent.surface.create_entity{name="OreCleanerProjectile:" .. product.name, position=orePath.position, target=self.ent, speed=0.1, max_range=20}
+						self.ent.surface.create_entity{name="OreCleanerProjectile:" .. product.name, position=orePath.position, target=self.ent, speed=0.1, max_range=999}
 						self.inventoryFull = false
 					else
 						self.inventoryFull = true
