@@ -114,8 +114,8 @@ _mfQuatronMaxFluidBurntPerOperation = 1000
 
 -- Ore Cleaner settings --
 _mfOreCleanerMaxCharge = 1000
-_mfOreCleanerRadius = 25
-_mfOreCleanerOrePerExtraction = 5
+_mfOreCleanerRadius = 50
+_mfOreCleanerOrePerExtraction = 19
 _mfOreCleanerExtractionTicks = 20
 _mfOreCleanerMaxDistance = 100
 

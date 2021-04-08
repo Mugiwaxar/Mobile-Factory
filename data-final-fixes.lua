@@ -1,3 +1,5 @@
+require("prototypes/animation/OreCleanerProjectiles.lua")
+
 -- Highlight Resources --
 for _, ore in pairs(data.raw.resource) do
 	ore.highlight = true
@@ -39,4 +41,23 @@ end
 if mods["space-exploration"] then
 	log("Fixing Space Exploration Collition Mask")
 	data.raw["simple-entity-with-owner"].MFDeploy.collision_mask = {"player-layer", "train-layer", "consider-tile-transitions", "layer-52", "not-colliding-with-itself", "layer-15"}
+end
+
+-- Increate the Stack Size of all Resources --
+for _, resource in pairs(data.raw.resource) do
+	if resource.minable ~= nil then
+		if resource.minable.result ~= nil then
+			if data.raw.item[resource.minable.result] ~= nil then
+				data.raw.item[resource.minable.result].stack_size = 1000
+				log("Increased stack size of " .. resource.minable.result)
+			end
+		elseif resource.minable.results ~= nil then
+			for _, result in pairs(resource.minable.results) do
+				if data.raw.item[result.name] ~= nil then
+					data.raw.item[result.name].stack_size = 1000
+					log("Increased stack size of " .. result.name)
+				end
+			end
+		end
+	end
 end

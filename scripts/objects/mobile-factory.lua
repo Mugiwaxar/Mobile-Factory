@@ -143,7 +143,7 @@ function MF:getTooltipInfos(GUITable, mainFrame, justCreated)
 		-- Set the Main Frame Height --
 		-- mainFrame.style.height = 200
 
-		-- Create the Network Inventory Frame --
+		-- Create the Inventory Frame --
 		local inventoryFrame = GAPI.addFrame(GUITable, "InventoryFrame", mainFrame, "vertical", true)
 		inventoryFrame.style = "MFFrame1"
 		inventoryFrame.style.vertically_stretchable = true

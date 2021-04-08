@@ -9,11 +9,14 @@ feE.icon_mipmaps = 1
 feE.minable = {mining_time = 0.5, result = "FluidExtractor"}
 feE.energy_source =
     {
-		type = "electric",	
+		type = "electric",
 		emissions_per_minute = 0,
 		usage_priority = "secondary-input",
 		render_no_power_icon = false,
-		render_no_network_icon = false
+		render_no_network_icon = false,
+    buffer_capacity = "0J",
+    input_flow_limit = "0J",
+    output_flow_limit = "0J"
     }
 feE.output_fluid_box =
     {

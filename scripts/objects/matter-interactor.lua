@@ -291,7 +291,7 @@ function MI:changeInventory(ID)
 
 	-- Select the Inventory --
 	self.selectedInv = nil
-	for k, deepStorage in pairs(self.dataNetwork.DSRTable) do
+	for _, deepStorage in pairs(self.dataNetwork.DSRTable) do
 		if valid(deepStorage) then
 			if ID == deepStorage.ID then
 				self.selectedInv = deepStorage

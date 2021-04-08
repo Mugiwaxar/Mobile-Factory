@@ -25,7 +25,7 @@ function createTableList()
 	addObject{tableName="quatronReactorTable", tag="QR", objName="QuatronReactor"}
 	addObject{tableName="deepStorageTable", tag="DSR", objName="DeepStorage", canInCC=true}
 	addObject{tableName="deepTankTable", tag="DTK", objName="DeepTank", canInCC=true}
-	addObject{tableName="oreCleanerTable", tag="OC", objName="OreCleaner", noInside=true}
+	addObject{tableName="oreCleanerTable", tag="OC", objName="OreCleaner"}
 	addObject{tableName="fluidExtractorTable", tag="FE", objName="FluidExtractor", noInside=true}
 	addObject{tableName="resourceCatcher", tag="RC", objName="ResourceCatcher"}
 	addObject{objName="InternalEnergyCube", noUpsys=true, canInCCAnywhere=true, noOutside=true}

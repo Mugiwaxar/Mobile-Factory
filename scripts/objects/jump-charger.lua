@@ -90,7 +90,7 @@ function JC:getTooltipInfos(GUITable, mainFrame, justCreated)
 		GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.JCCapacityAdded", _chargeAddedPerJumpCharger}, _mfOrange)
 
 		-- Add the Charge Rate added --
-		GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.JChargeRateAdded", _chargeRateAddedPerJumpCharger}, _mfOrange)
+		GAPI.addLabel(GUITable, "", infoFrame, {"gui-description.JCChargeRateAdded", _chargeRateAddedPerJumpCharger}, _mfOrange)
 
 	end
 

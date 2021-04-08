@@ -1,4 +1,21 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.10.0
+Date: 08/04/2021
+  Major Features:
+    - The Ore Cleaner was fully reworked, it is now more compatible with the others Mods
+    - The graphics was also reworked as well as the Animation
+    - Some changes was done to make it easier to use. It also works like a chest, this allows to use Inserters/Loaders to take Ores
+  Features:
+    - Here the new features related to the Ore Cleaner:
+    - Ore Paths with multiple products are now supported
+    - Ores can now be extracted with Inserters/Loaders
+    - The Mobile Factory is no longer needed (can still be used)
+    - It can now be connected to the Network Access Point, and will try to drain Quatron
+    - The Ores can be send to the Network Access Point, or the Mobile Factory (the closest)
+    - It can now be placed inside the Mobile Factory and doesn't need to be above an Ore Path to work
+  Changes:
+    - Increased the Stack size of all Ores to 1000, this will help the Ore Cleaner to correctly works
+---------------------------------------------------------------------------------------------------
 Version: 0.9.3
 Date: 02/04/2021
   Bugfixes:

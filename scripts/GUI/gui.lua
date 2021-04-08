@@ -481,6 +481,13 @@ function GUI.buttonClicked(event)
 		return
 	end
 
+	-- If this is a Ore Cleaner --
+	if string.match(event.element.name, "O.C.") then
+		OC.interaction(event, MFPlayer)
+		GUI.updateAllGUIs(true)
+		return
+	end
+
 end
 
 -- When a GUI Element changed --

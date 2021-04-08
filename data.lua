@@ -51,7 +51,6 @@ require("prototypes/technology/control-center.lua")
 require("prototypes/technology/matter-serialization.lua")
 require("prototypes/gun/tank-guns.lua")
 require("prototypes/animation/shield.lua")
-require("prototypes/animation/red-energy-orb.lua")
 require("prototypes/animation/MFTP.lua")
 if mods["omnimatter"] then require("utils/omnimatter.lua") end
 
