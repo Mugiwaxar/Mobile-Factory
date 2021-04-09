@@ -7,7 +7,7 @@ OC = {
 	entID = 0,
 	dataNetwork = nil,
 	networkAccessPoint = nil,
-	oreTable = nil,
+	oreTable = nil, -- {ent, products{name, amount, min, max, probability}}
 	selectedInv = nil,
 	lightAnID = nil,
 	updateTick = 20,
@@ -250,17 +250,6 @@ function OC:update(event)
         return
     end
 
-    -- Collect Ores --
-    self:collectOres()
-
-	-- Try to find a Network Access Point if needed --
-	if valid(self.networkAccessPoint) == false or self.dataNetwork ~= self.networkAccessPoint.dataNetwork then
-		self.networkAccessPoint = self.dataNetwork:getCloserNAP(self)
-		if self.networkAccessPoint ~= nil then
-			self.networkAccessPoint.objTable[self.ent.unit_number] = self
-		end
-	end
-
 	-- Try to get Quatron from the Network Access Point --
 	if EI.energy(self) <= 100 and self.networkAccessPoint ~= nil then
 		local chargeToBorrow = math.min(EI.energy(self.networkAccessPoint), EI.maxEnergy(self) - EI.energy(self))
@@ -271,11 +260,22 @@ function OC:update(event)
 		end
 	end
 
-	-- Send to the Data Network --
-	if game.tick - self.lastDNSend > 60 then
-		self.lastDNSend = game.tick
-		self:sendToDN()
+    -- Collect Ores --
+    self:collectOres()
+
+	if game.tick - self.lastDNSend > 60 then return end
+
+	-- Try to find a Network Access Point if needed --
+	if valid(self.networkAccessPoint) == false or self.dataNetwork ~= self.networkAccessPoint.dataNetwork then
+		self.networkAccessPoint = self.dataNetwork:getCloserNAP(self)
+		if self.networkAccessPoint ~= nil then
+			self.networkAccessPoint.objTable[self.ent.unit_number] = self
+		end
 	end
+
+	-- Send to the Data Network --
+	self.lastDNSend = game.tick
+	self:sendToDN()
 
     -- Draw the Animation --
 	if self.inventoryFull == true or self.outOfQuatron == true then
@@ -295,7 +295,24 @@ function OC:scanOres(entity)
 	if entity.surface == nil then return end
 	-- Add all surrounding Ores and add them to the oreTable --
 	local area = {{entity.position.x-_mfOreCleanerRadius,entity.position.y-_mfOreCleanerRadius},{entity.position.x+_mfOreCleanerRadius,entity.position.y+_mfOreCleanerRadius}}
-	self.oreTable = entity.surface.find_entities_filtered{area=area, type="resource"}
+	local ores = entity.surface.find_entities_filtered{area=area, type="resource"}
+	-- Create the Ores Table --
+	for _, orePath in pairs(ores) do
+		-- Get the Products --
+		local productsTable = {}
+		if orePath.prototype ~= nil and orePath.prototype.mineable_properties ~= nil and orePath.prototype.mineable_properties.products ~= nil then
+			for _, product in pairs (orePath.prototype.mineable_properties.products) do
+				-- Check if this is an Item --
+				if product.type == "item" then
+					table.insert(productsTable, {name=product.name, amount=product.amount, min=product.amount_min, max=product.amount_max, probability=product.probability})
+				end
+			end
+		end
+		-- Add the Ore Path information to the Ore Table --
+		if table_size(productsTable) > 0 then
+			table.insert(self.oreTable, {ent=orePath, products=productsTable})
+		end
+	end
 end
 
 -- Collect surrounding Ores --
@@ -329,37 +346,31 @@ function OC:collectOres()
         local orePath = self.oreTable[randOrePath]
 
         -- Check the Path --
-        if orePath == nil or orePath.valid == false then return end
-
-        -- Get the Products List --
-        local productsList = orePath.prototype.mineable_properties.products
+        if orePath.ent == nil or orePath.ent.valid == false then return end
 
         -- Calculate the amout of Ore that will be extracted --
-        local oreExtracted = math.min(toExtract, orePath.amount)
+        local oreExtracted = math.min(toExtract, orePath.ent.amount)
 
         -- Itinerate all Products --
         local added = 0
-        for _, product in pairs(productsList) do
-            -- Check if this is an Item --
-            if product.type == "item" then
-                -- Calculate how many products can be extracted --
-                local amount = product.amount or math.random(product.amount_min, product.amount_max)
-                -- Calculate the Probability --
-                if math.random(0, 100) <= product.probability*100 then
-                    -- Insert the Product --
-                    local inserted = inv.insert({name=product.name, count=amount*oreExtracted})
-					-- Check if something was inserted --
-					if inserted > 0 then
-						-- Register the amount inserted if this is the main Product --
-						added = math.max(inserted, added)
-						-- Create the Projectile --
-						self.ent.surface.create_entity{name="OreCleanerProjectile:" .. product.name, position=orePath.position, target=self.ent, speed=0.1, max_range=999}
-						self.inventoryFull = false
-					else
-						self.inventoryFull = true
-					end
-                end
-            end
+        for _, product in pairs(orePath.products) do
+			-- Calculate how many products can be extracted --
+			local amount = product.amount or math.random(product.min, product.max)
+			-- Calculate the Probability --
+			if math.random(0, 100) <= product.probability*100 then
+				-- Insert the Product --
+				local inserted = inv.insert({name=product.name, count=amount*oreExtracted})
+				-- Check if something was inserted --
+				if inserted > 0 then
+					-- Register the amount inserted if this is the main Product --
+					added = math.max(inserted, added)
+					-- Create the Projectile --
+					self.ent.surface.create_entity{name="OreCleanerProjectile:" .. product.name, position=orePath.ent.position, target=self.ent, speed=0.1, max_range=999}
+					self.inventoryFull = false
+				else
+					self.inventoryFull = true
+				end
+			end
         end
 
         -- Check if something was extrated --
@@ -369,12 +380,13 @@ function OC:collectOres()
         EI.removeEnergy(self, 3)
 
         -- Remove Ores from the Ore Path --
-        orePath.amount = math.max(orePath.amount - added, 1)
+        orePath.ent.amount = math.max(orePath.ent.amount - added, 1)
 
         -- Remove the Ore Path if it is empty --
-        if orePath.amount <= 1 then
-            orePath.deplete()
+        if orePath.ent.amount <= 1 then
+            orePath.ent.deplete()
             table.remove(self.oreTable, randOrePath)
+			tableSize = tableSize - 1
         end
 
     end
