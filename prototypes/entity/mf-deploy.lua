@@ -7,7 +7,7 @@ mfDE.name = "MFDeploy"
 mfDE.icone = "__Mobile_Factory_Graphics__/graphics/icons/MFDeployI.png"
 mfDE.icon_size = 32
 mfDE.minable = {mining_time=1}
-mfDE.collision_mask = {"player-layer", "train-layer", "consider-tile-transitions", "layer-52", "not-colliding-with-itself"}
+mfDE.collision_mask = {} -- mask copied from MobileFactory in DFF
 mfDE.collision_box = {{-3.5, -3.5}, {2.5, 4.5}}
 mfDE.selection_box = mfDE.collision_box
 mfDE.flags = {"not-rotatable"}

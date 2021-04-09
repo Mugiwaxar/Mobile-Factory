@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.10.1
+Date: 09/04/2021
+  Bugfixes:
+    - bug when Ore Cleaner doesn't have any more ores to clean
+  Changes:
+    - copy collision_mask from Mobile Factory to Deployment, for improved compatibility
+    - incorrect text for research description, Dimensional Pole MK2 and MK3
+---------------------------------------------------------------------------------------------------
 Version: 0.10.0
 Date: 08/04/2021
   Major Features:

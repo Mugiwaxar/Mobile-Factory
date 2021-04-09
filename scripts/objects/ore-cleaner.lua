@@ -324,14 +324,13 @@ function OC:collectOres()
     -- Get the Ore Table size --
     local tableSize = table_size(self.oreTable)
 
-    -- Return if the Ore Table is empty --
-    if tableSize <= 0 then return end
-
     -- Get the Inventory --
     local inv = self.ent.get_inventory(defines.inventory.chest)
 
     -- Do the job for each Quatron Level --
     for i=1, math.floor(EI.energyLevel(self)) do
+        -- Return if the Ore Table is empty --
+        if tableSize <= 0 then return end
 
         -- Return if there are not Quatron Charge remaining --
         if EI.energy(self) < 3 then
