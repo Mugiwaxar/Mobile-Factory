@@ -263,7 +263,7 @@ function OC:update(event)
     -- Collect Ores --
     self:collectOres()
 
-	if game.tick - self.lastDNSend > 60 then return end
+	if game.tick - self.lastDNSend < 60 then return end
 
 	-- Try to find a Network Access Point if needed --
 	if valid(self.networkAccessPoint) == false or self.dataNetwork ~= self.networkAccessPoint.dataNetwork then
