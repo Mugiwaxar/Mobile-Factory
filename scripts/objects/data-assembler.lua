@@ -802,7 +802,7 @@ function DA.interaction(event, MFPlayer)
 	-- Select Recipe --
 	if event.element.name == "D.A.RecipeFilter" and global.useVanillaChooseElem == false then
 		if MFPlayer.GUI[_mfGUIName.RecipeGUI] ~= nil then
-			MFPlayer.GUI[_mfGUIName.RecipeGUI].destroy()
+			MFPlayer.GUI[_mfGUIName.RecipeGUI].gui.destroy()
 			MFPlayer.GUI[_mfGUIName.RecipeGUI] = nil
 		end
 		local GUITable = GUI.createRecipeGUI(MFPlayer.ent)

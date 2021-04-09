@@ -9,7 +9,7 @@ IQC = {
 	spriteID = 0,
 	updateTick = 60,
 	lastUpdate = 0,
-	energyLevel = 1,
+	energyLevel = 1
 }
 
 -- Constructor --
