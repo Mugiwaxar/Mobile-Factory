@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.10.3
+Date: 10/04/2021
+  Optimisations:
+    - Optimised the Products Cache: this will reduce the Loading/Save time
+    - Optimised the Ore Cleaner: this will increase the performances and recude the Loading/save time
+---------------------------------------------------------------------------------------------------
 Version: 0.10.2
 Date: 10/04/2021
   Changes:

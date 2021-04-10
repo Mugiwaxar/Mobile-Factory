@@ -13,6 +13,7 @@ OC = {
 	updateTick = 20,
 	lastDNSend = 0,
 	lastUpdate = 0,
+	lastScan = 0,
 	consumption = 0,
 	outOfQuatron = false,
 	inventoryFull = false,
@@ -300,17 +301,24 @@ function OC:update(event)
         self.lightAnID = rendering.draw_animation{animation="OreCleanerAn", target=self.ent.position, surface=self.ent.surface, render_layer=144, animation_speed=0.3}
     end
 
+	if game.tick - self.lastScan > 200 then
+		self.lastScan = game.tick
+		self:scanOres(self.ent)
+	end
+
 end
 
 -- Scan surronding Ores --
 function OC:scanOres(entity)
+	-- Clean the Ores Table --
+	self.oreTable = {}
 	-- Test if the Entity is valid --
 	if entity == nil or entity.valid == false then return end
 	-- Test if the Surface is valid --
 	if entity.surface == nil then return end
 	-- Add all surrounding Ores and add them to the oreTable --
 	local area = {{entity.position.x-_mfOreCleanerRadius,entity.position.y-_mfOreCleanerRadius},{entity.position.x+_mfOreCleanerRadius,entity.position.y+_mfOreCleanerRadius}}
-	local ores = entity.surface.find_entities_filtered{area=area, type="resource"}
+	local ores = entity.surface.find_entities_filtered{area=area, type="resource", limit=math.floor(EI.energyLevel(self))}
 	-- Create the Ores Table --
 	for _, orePath in pairs(ores) do
 		table.insert(self.oreTable, {ent=orePath, name=orePath.prototype.name, infinite=orePath.prototype.infinite_resource})
@@ -323,16 +331,11 @@ function OC:collectOres()
     -- Calcule the amount of Ore to extract --
     local toExtract = math.floor(math.pow(EI.energyLevel(self), _mfQuatronScalePower) + _mfOreCleanerOrePerExtraction)
 
-    -- Get the Ore Table size --
-    local tableSize = table_size(self.oreTable)
-
     -- Get the Inventory --
     local inv = self.ent.get_inventory(defines.inventory.chest)
 
-    -- Do the job for each Quatron Level --
-    for i=1, math.floor(EI.energyLevel(self)) do
-        -- Return if the Ore Table is empty --
-        if tableSize <= 0 then return end
+    -- Do the job for all Ores inside the Table --
+    for _, orePath in pairs(self.oreTable) do
 
         -- Return if there are not Quatron Charge remaining --
         if EI.energy(self) < 3 then
@@ -342,12 +345,8 @@ function OC:collectOres()
 			self.outOfQuatron = false
 		end
 
-        -- Get a random Ore Path --
-        local randOrePath = math.random(1, tableSize)
-        local orePath = self.oreTable[randOrePath]
-
         -- Check the Path --
-        if orePath.ent == nil or orePath.ent.valid == false then return end
+        if orePath.ent == nil or orePath.ent.valid == false then goto continue end
 
         -- Calculate the amout of Ore that will be extracted --
         local oreExtracted = math.min(toExtract, orePath.ent.amount)
@@ -375,7 +374,7 @@ function OC:collectOres()
         end
 
         -- Check if something was extrated --
-        if added <= 0 then return end
+        if added <= 0 then goto continue end
 
         -- Remove a Quatron Charge --
         EI.removeEnergy(self, 3)
@@ -385,12 +384,7 @@ function OC:collectOres()
         	orePath.ent.amount = math.max(orePath.ent.amount - added, 1)
 		end
 
-        -- Remove the Ore Path if it is empty --
-        if orePath.ent.amount <= 1 then
-            orePath.ent.deplete()
-            table.remove(self.oreTable, randOrePath)
-			tableSize = tableSize - 1
-        end
+		::continue::
 
     end
 
