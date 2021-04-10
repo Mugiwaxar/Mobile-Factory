@@ -47,13 +47,13 @@ end
 for _, resource in pairs(data.raw.resource) do
 	if resource.minable ~= nil then
 		if resource.minable.result ~= nil then
-			if data.raw.item[resource.minable.result] ~= nil then
+			if data.raw.item[resource.minable.result] ~= nil and data.raw.item[resource.minable.result].stack_size ~= nil and data.raw.item[resource.minable.result].stack_size < 1000 then
 				data.raw.item[resource.minable.result].stack_size = 1000
 				log("Increased stack size of " .. resource.minable.result)
 			end
 		elseif resource.minable.results ~= nil then
 			for _, result in pairs(resource.minable.results) do
-				if data.raw.item[result.name] ~= nil then
+				if data.raw.item[result.name] ~= nil and data.raw.item[result.name].stack_size ~= nil and data.raw.item[result.name].stack_size < 1000 then
 					data.raw.item[result.name].stack_size = 1000
 					log("Increased stack size of " .. result.name)
 				end

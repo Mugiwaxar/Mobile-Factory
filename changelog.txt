@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.10.2
+Date: 10/04/2021
+  Changes:
+    - The Ore Cleaner default target is now set to Auto instead of none
+    - An Ore Stack size is only modified if the stack size is less than 1000
+  Bugfixes:
+    - The Ore Cleaner will no longer deplete infinite Ore Paths
+    - The flying Ores from the Ore Cleaners animation are no longer displayed on the map/minimap
+    - Fixed a bug when sometime, the Ore Cleaners target Inventory was not save
+---------------------------------------------------------------------------------------------------
 Version: 0.10.1
 Date: 09/04/2021
   Bugfixes:
@@ -24,7 +34,7 @@ Date: 08/04/2021
   Changes:
     - Increased the Stack size of all Ores to 1000, this will help the Ore Cleaner to correctly works
   Bugfixes:
-    - Fixed a crash that happen inside the Data Assembler when you click the select recipe Button and the recipe selection window is already oppened
+    - Fixed a crash that happen inside the Data Assembler when you click the select recipe Button and the recipe selection window is already opened
 ---------------------------------------------------------------------------------------------------
 Version: 0.9.3
 Date: 02/04/2021

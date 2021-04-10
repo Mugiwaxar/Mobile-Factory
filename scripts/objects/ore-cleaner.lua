@@ -7,7 +7,7 @@ OC = {
 	entID = 0,
 	dataNetwork = nil,
 	networkAccessPoint = nil,
-	oreTable = nil, -- {ent, products{name, amount, min, max, probability}}
+	oreTable = nil, -- {ent, products{name, amount, min, max, probability}, infinite}
 	selectedInv = nil,
 	lightAnID = nil,
 	updateTick = 20,
@@ -36,6 +36,7 @@ function OC:new(object)
 	t.dataNetwork = t.MF.dataNetwork
 	t.oreTable = {}
 	t.inventory = {}
+	t.selectedInv = -1
 	t:scanOres(object)
 	UpSys.addObj(t)
 	return t
@@ -164,33 +165,47 @@ function OC:getTooltipInfos(GUITable, mainFrame, justCreated)
 		-- Create the Storage List --
 		local invs = {{"gui-description.None"}, {"gui-description.Auto"}, {"gui-description.DataNetwork"}}
 		local selectedIndex = 1
-		local i = 1
+		-- Change the selected Index --
+		if self.selectedInv == -1 then
+			selectedIndex = 2
+		elseif self.selectedInv == -2 then
+			selectedIndex = 3
+		end
+
+		-- List all Deep Storages --
+		local i = 3
 		for _, deepStorage in pairs(self.dataNetwork.DSRTable) do
+
+			-- Check the Deep Storage --
 			if deepStorage ~= nil and deepStorage.ent ~= nil then
 				i = i + 1
-				local item
+
+				-- Check the Deep Storage Item/Filter --
+				local item = nil
 				if deepStorage.inventoryItem ~= nil then
 					item = deepStorage.inventoryItem
 				elseif deepStorage.filter ~= nil then
 					item = deepStorage.filter
 				end
 
-				if item then
+				-- Create the Name --
+				if item ~= nil then
 					table.insert(invs, {"", "[img=item/"..item.."] ", game.item_prototypes[item].localised_name, " - ", deepStorage.ID})
 				else
 					table.insert(invs, {"", "", {"gui-description.Empty"}, " - ", deepStorage.ID})
 				end
-				if self.selectedInv ~= nil then
-					if self.selectedInv == -1 then
-						selectedIndex = 2
-					elseif self.selectedInv == -2 then
-						selectedIndex = 3
-					elseif self.selectedInv.entID == deepStorage.entID then
-					selectedIndex = i
+
+				-- Check if the Deep Storage is selected --
+				if type(self.selectedInv) == "table" and self.selectedInv.entID ~= nil then
+					if self.selectedInv.entID == deepStorage.entID then
+						selectedIndex = i
 					end
 				end
+
 			end
 		end
+
+		-- Check the selected Index --
 		if selectedIndex ~= nil and selectedIndex > table_size(invs) then selectedIndex = nil end
 
 		-- Add the Selected Deep Tank Drop Down --
@@ -310,7 +325,7 @@ function OC:scanOres(entity)
 		end
 		-- Add the Ore Path information to the Ore Table --
 		if table_size(productsTable) > 0 then
-			table.insert(self.oreTable, {ent=orePath, products=productsTable})
+			table.insert(self.oreTable, {ent=orePath, products=productsTable, infinite=orePath.prototype.infinite_resource})
 		end
 	end
 end
@@ -364,7 +379,7 @@ function OC:collectOres()
 					-- Register the amount inserted if this is the main Product --
 					added = math.max(inserted, added)
 					-- Create the Projectile --
-					self.ent.surface.create_entity{name="OreCleanerProjectile:" .. product.name, position=orePath.ent.position, target=self.ent, speed=0.1, max_range=999}
+					self.ent.surface.create_entity{name="OreCleanerProjectile:" .. product.name, position=orePath.ent.position, target=self.ent, speed=0.1, max_range=999, force=self.ent.force}
 					self.inventoryFull = false
 				else
 					self.inventoryFull = true
@@ -379,7 +394,9 @@ function OC:collectOres()
         EI.removeEnergy(self, 3)
 
         -- Remove Ores from the Ore Path --
-        orePath.ent.amount = math.max(orePath.ent.amount - added, 1)
+		if orePath.infinite ~= true then
+        	orePath.ent.amount = math.max(orePath.ent.amount - added, 1)
+		end
 
         -- Remove the Ore Path if it is empty --
         if orePath.ent.amount <= 1 then
@@ -579,7 +596,7 @@ end
 function OC:createOreBeam(itemName, target)
 	local positionX = self.ent.position.x + (math.random(-200, 200)/100)
 	local positionY = self.ent.position.y + (math.random(-200, 200)/100)
-	self.ent.surface.create_entity{name="OreCleanerProjectile:" .. itemName, position={positionX,positionY}, target=target, speed=0.25, max_range=999}
+	self.ent.surface.create_entity{name="OreCleanerProjectile:" .. itemName, position={positionX,positionY}, target=target, speed=0.25, max_range=999, force=self.ent.force}
 end
 
 -- Add Quatron (Return the amount added) --
