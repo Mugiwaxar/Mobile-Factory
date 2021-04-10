@@ -165,7 +165,7 @@ function initAPlayer(event)
 		if event.player_index ~= nil and game.players[event.player_index] ~= nil and game.players[event.player_index].name ~= nil then
 			game.print({"gui-description.initAPlayer_PlayerInitFailed", game.players[event.player_index].name})
 		else
-			game.print({"gui-description.initAPlayer_PlayerInitFailed", {"gui-description.Unknow"}})
+			game.print({"gui-description.initAPlayer_PlayerInitFailed", {"gui-description.Unknown"}})
 		end
 	end
 end

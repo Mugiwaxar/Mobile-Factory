@@ -310,6 +310,7 @@ end
 
 -- Scan surronding Ores --
 function OC:scanOres(entity)
+	if #self.oreTable > 0 then return end
 	-- Clean the Ores Table --
 	self.oreTable = {}
 	-- Test if the Entity is valid --
@@ -318,10 +319,13 @@ function OC:scanOres(entity)
 	if entity.surface == nil then return end
 	-- Add all surrounding Ores and add them to the oreTable --
 	local area = {{entity.position.x-_mfOreCleanerRadius,entity.position.y-_mfOreCleanerRadius},{entity.position.x+_mfOreCleanerRadius,entity.position.y+_mfOreCleanerRadius}}
-	local ores = entity.surface.find_entities_filtered{area=area, type="resource", limit=math.floor(EI.energyLevel(self))}
+	local ores = entity.surface.find_entities_filtered{area=area, type="resource", limit=2 * math.floor(EI.energyLevel(self))}
 	-- Create the Ores Table --
+	local oreProducts = global.oresProductsTable
 	for _, orePath in pairs(ores) do
-		table.insert(self.oreTable, {ent=orePath, name=orePath.prototype.name, infinite=orePath.prototype.infinite_resource})
+		if table_size(oreProducts[orePath.name]) > 0 then
+			table.insert(self.oreTable, {ent=orePath, name=orePath.prototype.name, infinite=orePath.prototype.infinite_resource})
+		end
 	end
 end
 
@@ -334,10 +338,17 @@ function OC:collectOres()
     -- Get the Inventory --
     local inv = self.ent.get_inventory(defines.inventory.chest)
 
+	local orePaths = self.oreTable
     -- Do the job for all Ores inside the Table --
-    for _, orePath in pairs(self.oreTable) do
+	local L = #orePaths
 
-        -- Return if there are not Quatron Charge remaining --
+	local oreProducts = global.oresProductsTable
+    while L > 0 and toExtract > 0 do
+		local i = math.random(1, L)
+		local orePath = orePaths[i]
+		local oreEnt = orePath.ent
+
+        -- Return if there is no Quatron Charge remaining --
         if EI.energy(self) < 3 then
 			self.outOfQuatron = true
 			return
@@ -345,15 +356,14 @@ function OC:collectOres()
 			self.outOfQuatron = false
 		end
 
-        -- Check the Path --
-        if orePath.ent == nil or orePath.ent.valid == false then goto continue end
-
+        -- Check the Ore --
+        if oreEnt ~= nil and oreEnt.valid == true then
         -- Calculate the amout of Ore that will be extracted --
-        local oreExtracted = math.min(toExtract, orePath.ent.amount)
+        local oreExtracted = math.min(toExtract, oreEnt.amount)
 
         -- Itinerate all Products --
         local added = 0
-        for _, product in pairs(global.oresProductsTable[orePath.name]) do
+        for _, product in pairs(oreProducts[orePath.name]) do
 			-- Calculate how many products can be extracted --
 			local amount = product.amount or math.random(product.min, product.max)
 			-- Calculate the Probability --
@@ -365,7 +375,7 @@ function OC:collectOres()
 					-- Register the amount inserted if this is the main Product --
 					added = math.max(inserted, added)
 					-- Create the Projectile --
-					self.ent.surface.create_entity{name="OreCleanerProjectile:" .. product.name, position=orePath.ent.position, target=self.ent, speed=0.1, max_range=999, force=self.ent.force}
+					self.ent.surface.create_entity{name="OreCleanerProjectile:" .. product.name, position=oreEnt.position, target=self.ent, speed=0.1, max_range=999, force=self.ent.force}
 					self.inventoryFull = false
 				else
 					self.inventoryFull = true
@@ -381,11 +391,25 @@ function OC:collectOres()
 
         -- Remove Ores from the Ore Path --
 		if orePath.infinite ~= true then
-        	orePath.ent.amount = math.max(orePath.ent.amount - added, 1)
+			local amount = orePath.ent.amount - added
+			if amount >= 1 then
+				oreEnt.amount = amount
+			else
+				oreEnt.deplete()
+					goto removeOre
+				end
+			end
+		else
+			goto removeOre
 		end
 
-		::continue::
+		::removeOre::
+		orePaths[i] = orePaths[L]
+		orePaths[L] = nil
+		L = L - 1
 
+		::continue::
+		toExtract = toExtract - 1
     end
 
 end
@@ -396,12 +420,17 @@ function OC:sendToDN()
 	-- Stop if the selected Inventory is None --
 	if self.selectedInv == nil then return end
 
+	local selfEnt = self.ent
+	local MFEnt = self.MF.ent
 	-- Get the Inventory --
     local inv = self.ent.get_inventory(defines.inventory.chest)
 
 	-- Check if the Mobile Factory is close --
 	local MFTooFar = true
-	if self.MF.ent ~= nil and self.MF.ent.valid == true and Util.distance(self.ent.position, self.MF.ent.position) <= _mfOreCleanerMaxDistance then
+	if (MFEnt ~= nil and MFEnt.valid == true)
+			and (selfEnt.surface == MFEnt.surface)
+			and (Util.distance(self.ent.position, self.MF.ent.position) <= _mfOreCleanerMaxDistance)
+		then
 		MFTooFar = false
 	end
 

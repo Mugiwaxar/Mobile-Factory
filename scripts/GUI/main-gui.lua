@@ -125,19 +125,19 @@ function GUI.updateMFMainGUI(GUITable)
 	end
 
 	-------------------------------------------------------- Get Information Variables --------------------------------------------------------
-	local mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
+	local mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow]", {"gui-description.Unknown"}, "[/color]"}
 	local time = { "", {"gui-description.Time"}, " [color=yellow]", Util.getRealTime(player.surface.daytime), "[/color]"}
-	local temperature = "Unknow"
+	local temperature = "Unknown"
 	local mfHealthValue = 0
-	local mfHealthText = {"", {"gui-description.mfHealth"}, ": ", {"gui-description.Unknow"}}
+	local mfHealthText = {"", {"gui-description.mfHealth"}, ": ", {"gui-description.Unknown"}}
 	local mfShielValue = 0
-	local mfShieldText = {"", {"gui-description.mfShield"}, ": ", {"gui-description.Unknow"}}
+	local mfShieldText = {"", {"gui-description.mfShield"}, ": ", {"gui-description.Unknown"}}
 	local mfEnergyValue = 0
-	local mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", {"gui-description.Unknow"}}
+	local mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", {"gui-description.Unknown"}}
 	local mfQuatronValue = 0
-	local mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", {"gui-description.Unknow"}}
+	local mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": ", {"gui-description.Unknown"}}
 	local mfJumpDriveValue = 0
-	local mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": ", {"gui-description.Unknow"}}
+	local mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": ", {"gui-description.Unknown"}}
 
 	if MF.ent ~= nil and MF.ent.valid == true then
 		mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow](", math.floor(MF.ent.position.x), " ; ", math.floor(MF.ent.position.y), ")  ", MF.ent.surface.name, "[/color]"}

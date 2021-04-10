@@ -175,7 +175,7 @@ function NE:getTooltipInfos(GUITable, mainFrame, justCreated)
 		GAPI.addLine(GUITable, "", informationFrame, "horizontal")
 
 		-- Create the Inventory Labels --
-		GAPI.addLabel(GUITable, "DNCapacityLabel", informationFrame, {"gui-description.Unknow"}, _mfOrange, "", true)
+		GAPI.addLabel(GUITable, "DNCapacityLabel", informationFrame, {"gui-description.Unknown"}, _mfOrange, "", true)
 
 		-- Add the Line --
 		GAPI.addLine(GUITable, "", informationFrame, "horizontal")

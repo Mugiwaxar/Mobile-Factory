@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.10.4
+Date: 10/04/2021
+  Bugfixes:
+    - Ore Cleaner infinite ores bug
+    - Ore Cleaner only sends to nearby MF on same surface
+  Changes:
+    - Ore Cleaner cleaning should be a little nicer
+    - Unknow -> Unknown
+---------------------------------------------------------------------------------------------------
 Version: 0.10.3
 Date: 10/04/2021
   Optimisations:

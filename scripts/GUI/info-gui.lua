@@ -149,17 +149,17 @@ function GUI.updateMFInfos(GUITable)
 	infosFrame.clear()
 
 	-------------------------------------------------------- Get Mobile Factory Information Variables --------------------------------------------------------
-	local mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
+	local mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow]", {"gui-description.Unknown"}, "[/color]"}
 	local mfHealthValue = 0
-	local mfHealthText = {"", {"gui-description.mfHealth"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
+	local mfHealthText = {"", {"gui-description.mfHealth"}, ": [color=yellow]", {"gui-description.Unknown"}, "[/color]"}
 	local mfShielValue = 0
-	local mfShieldText = {"", {"gui-description.mfShield"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
+	local mfShieldText = {"", {"gui-description.mfShield"}, ": [color=yellow]", {"gui-description.Unknown"}, "[/color]"}
 	local mfEnergyValue = 0
-	local mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
+	local mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": [color=yellow]", {"gui-description.Unknown"}, "[/color]"}
 	local mfQuatronValue = 0
-	local mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
+	local mfQuatronText = {"", {"gui-description.mQuatronCharge"}, ": [color=yellow]", {"gui-description.Unknown"}, "[/color]"}
 	local mfJumpDriveValue = 0
-	local mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
+	local mfJumpDriveText = {"", {"gui-description.mfJumpCharge"}, ": [color=yellow]", {"gui-description.Unknown"}, "[/color]"}
 
 	if MF.ent ~= nil and MF.ent.valid == true then
 		mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow](", math.floor(MF.ent.position.x), " ; ", math.floor(MF.ent.position.y), ")  ", MF.ent.surface.name, "[/color]"}

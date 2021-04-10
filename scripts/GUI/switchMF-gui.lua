@@ -91,7 +91,7 @@ function GUI.updateMFSwitchMFGUI(GUITable, justCreated)
         nameLabel.style.top_margin = 0
 
         -- Add the Position --
-        local mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow]", {"gui-description.Unknow"}, "[/color]"}
+        local mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow]", {"gui-description.Unknown"}, "[/color]"}
         if MF2.ent ~= nil and MF2.ent.valid == true then
             mfPositionText = {"", {"gui-description.mfPosition"}, ": [color=yellow](", math.floor(MF2.ent.position.x), " ; ", math.floor(MF2.ent.position.y), ")  ", MF2.ent.surface.name, "[/color]"}
         end
@@ -105,9 +105,9 @@ function GUI.updateMFSwitchMFGUI(GUITable, justCreated)
         barsTable.style.bottom_padding = 3
 
         local mfHealthValue = 0
-        local mfHealthText = {"", {"gui-description.mfHealth"}, ": ", {"gui-description.Unknow"}}
+        local mfHealthText = {"", {"gui-description.mfHealth"}, ": ", {"gui-description.Unknown"}}
         local mfShielValue = 0
-        local mfShieldText = {"", {"gui-description.mfShield"}, ": ", {"gui-description.Unknow"}}
+        local mfShieldText = {"", {"gui-description.mfShield"}, ": ", {"gui-description.Unknown"}}
         local mfEnergyValue = 0
         local mfEnergyText = {"", {"gui-description.mfEnergyCharge"}, ": ", {"gui-description.Unknow"}}
         local mfQuatronValue = 0
