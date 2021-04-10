@@ -91,6 +91,7 @@ function onInit()
 	-- validateSyncAreaTile()
 	-- Ensure All Needed Tiles are Present --
 	checkNeededTiles()
+	createProductsList()
 
 	-- Remove Existing Render Objects --
 	rendering.clear("Mobile_Factory")
@@ -128,7 +129,6 @@ function onInit()
 end
 
 function onLoad(event)
-
 	-- Rebuild all Objects --
 	for _, obj in pairs(global.objTable) do
 		if obj.tableName ~= nil and obj.tag ~= nil and _G[obj.tag] ~= nil then

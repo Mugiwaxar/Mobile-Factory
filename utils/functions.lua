@@ -463,7 +463,7 @@ function canUse(MFPlayer, obj)
 	return false
 end
 
--- Check if We Have Necessary Tiles --
+-- Check if we have necessary Tiles --
 function checkNeededTiles()
 	local tilesToCheck = {
 		"BuildTile",
@@ -478,6 +478,23 @@ function checkNeededTiles()
 		end
 	end
 end
+
+-- Create the Ores Products list for the Ore Cleaner --
+function createProductsList()
+	-- Create the Ore Products Table --
+	global.oresProductsTable = {}
+	for _, prototype in pairs(game.entity_prototypes) do
+		if prototype.type == "resource" and prototype.mineable_properties ~= nil and prototype.mineable_properties.products ~= nil then
+			local productsTable = {}
+			for _, product in pairs(prototype.mineable_properties.products) do
+				table.insert(productsTable, {name=product.name, type=product.type, amount=product.amount, min=product.amount_min, max=product.amount_max, probability=product.probability})
+			end
+			global.oresProductsTable[prototype.name] = productsTable
+		end
+	end
+end
+
+
 
 function entityToBlueprintTags(entity, fromTable)
 	local tags = nil

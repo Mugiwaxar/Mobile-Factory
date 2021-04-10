@@ -7,7 +7,7 @@ OC = {
 	entID = 0,
 	dataNetwork = nil,
 	networkAccessPoint = nil,
-	oreTable = nil, -- {ent, products{name, amount, min, max, probability}, infinite}
+	oreTable = nil, -- {ent, infinite?}
 	selectedInv = nil,
 	lightAnID = nil,
 	updateTick = 20,
@@ -313,20 +313,7 @@ function OC:scanOres(entity)
 	local ores = entity.surface.find_entities_filtered{area=area, type="resource"}
 	-- Create the Ores Table --
 	for _, orePath in pairs(ores) do
-		-- Get the Products --
-		local productsTable = {}
-		if orePath.prototype ~= nil and orePath.prototype.mineable_properties ~= nil and orePath.prototype.mineable_properties.products ~= nil then
-			for _, product in pairs (orePath.prototype.mineable_properties.products) do
-				-- Check if this is an Item --
-				if product.type == "item" then
-					table.insert(productsTable, {name=product.name, amount=product.amount, min=product.amount_min, max=product.amount_max, probability=product.probability})
-				end
-			end
-		end
-		-- Add the Ore Path information to the Ore Table --
-		if table_size(productsTable) > 0 then
-			table.insert(self.oreTable, {ent=orePath, products=productsTable, infinite=orePath.prototype.infinite_resource})
-		end
+		table.insert(self.oreTable, {ent=orePath, name=orePath.prototype.name, infinite=orePath.prototype.infinite_resource})
 	end
 end
 
@@ -367,11 +354,11 @@ function OC:collectOres()
 
         -- Itinerate all Products --
         local added = 0
-        for _, product in pairs(orePath.products) do
+        for _, product in pairs(global.oresProductsTable[orePath.name]) do
 			-- Calculate how many products can be extracted --
 			local amount = product.amount or math.random(product.min, product.max)
 			-- Calculate the Probability --
-			if math.random(0, 100) <= product.probability*100 then
+			if product.type == "item" and math.random(0, 100) <= product.probability*100 then
 				-- Insert the Product --
 				local inserted = inv.insert({name=product.name, count=amount*oreExtracted})
 				-- Check if something was inserted --
