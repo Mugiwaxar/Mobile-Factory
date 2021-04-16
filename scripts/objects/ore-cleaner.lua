@@ -358,51 +358,51 @@ function OC:collectOres()
 
         -- Check the Ore --
         if oreEnt ~= nil and oreEnt.valid == true then
-        -- Calculate the amout of Ore that will be extracted --
-        local oreExtracted = math.min(toExtract, oreEnt.amount)
+			-- Calculate the amout of Ore that will be extracted --
+			local oreExtracted = math.min(toExtract, oreEnt.amount)
 
-        -- Itinerate all Products --
-        local added = 0
-        for _, product in pairs(oreProducts[orePath.name]) do
-			-- Calculate how many products can be extracted --
-			local amount = product.amount or math.random(product.min, product.max)
-			-- Calculate the Probability --
-			if product.type == "item" and math.random(0, 100) <= product.probability*100 then
-				-- Insert the Product --
-				local inserted = inv.insert({name=product.name, count=amount*oreExtracted})
-				-- Check if something was inserted --
-				if inserted > 0 then
-					-- Register the amount inserted if this is the main Product --
-					added = math.max(inserted, added)
-					-- Create the Projectile --
-					self.ent.surface.create_entity{name="OreCleanerProjectile:" .. product.name, position=oreEnt.position, target=self.ent, speed=0.1, max_range=999, force=self.ent.force}
-					self.inventoryFull = false
-				else
-					self.inventoryFull = true
+			-- Itinerate all Products --
+			local added = 0
+			for _, product in pairs(oreProducts[orePath.name]) do
+				-- Calculate how many products can be extracted --
+				local amount = product.amount or math.random(product.min, product.max)
+				-- Calculate the Probability --
+				if product.type == "item" and math.random(0, 100) <= product.probability*100 then
+					-- Insert the Product --
+					local inserted = inv.insert({name=product.name, count=amount*oreExtracted})
+					-- Check if something was inserted --
+					if inserted > 0 then
+						-- Register the amount inserted if this is the main Product --
+						added = math.max(inserted, added)
+						-- Create the Projectile --
+						self.ent.surface.create_entity{name="OreCleanerProjectile:" .. product.name, position=oreEnt.position, target=self.ent, speed=0.1, max_range=999, force=self.ent.force}
+						self.inventoryFull = false
+					else
+						self.inventoryFull = true
+					end
 				end
 			end
-        end
 
-        -- Check if something was extrated --
-        if added <= 0 then goto continue end
+			-- Check if something was extrated --
+			if added <= 0 then goto continue end
 
-        -- Remove a Quatron Charge --
-        EI.removeEnergy(self, 3)
+			-- Remove a Quatron Charge --
+			EI.removeEnergy(self, 3)
 
-        -- Remove Ores from the Ore Path --
-		if orePath.infinite ~= true then
-			local amount = orePath.ent.amount - added
-			if amount >= 1 then
-				oreEnt.amount = amount
-			else
-				oreEnt.deplete()
+			-- Remove Ores from the Ore Path --
+			if orePath.infinite ~= true then
+				local amount = oreEnt.amount - added
+				if amount >= 1 then
+					oreEnt.amount = amount
+					goto continue
+				else
+					oreEnt.deplete()
 					goto removeOre
 				end
+			else
+				goto removeOre
 			end
-		else
-			goto removeOre
 		end
-
 		::removeOre::
 		orePaths[i] = orePaths[L]
 		orePaths[L] = nil
@@ -410,8 +410,7 @@ function OC:collectOres()
 
 		::continue::
 		toExtract = toExtract - 1
-    end
-
+	end
 end
 
 -- Send the Ore Inside to the Data Network --
