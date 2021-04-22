@@ -16,8 +16,7 @@ require("scripts/GUI/gui.lua")
 require("scripts/game-update.lua")
 require("scripts/events.lua")
 require("scripts/objects/mobile-factory.lua")
-require("scripts/objects/ore-cleaner.lua")
-require("scripts/objects/fluid-extractor.lua")
+require("scripts/objects/resources-collector.lua")
 require("scripts/objects/data-network.lua")
 require("scripts/objects/network-controller.lua")
 require("scripts/objects/network-access-point.lua")
@@ -54,6 +53,8 @@ function onInit()
 	global.upsysTickTable = global.upsysTickTable or {}
 	global.entsUpPerTick = global.entsUpPerTick or _mfBaseUpdatePerTick
 	global.upSysLastScan = global.upSysLastScan or 0
+	-- Resource Collector --
+	global.ResourceCollectorTable = global.ResourceCollectorTable or {}
 	-- Performance
 	global.useVanillaChooseElem = global.useVanillaChooseElem or false
 	-- Data Network --
@@ -61,6 +62,8 @@ function onInit()
 	global.dataAssemblerBlacklist = global.dataAssemblerBlacklist or {}
 	-- Floor Is Lava --
 	global.floorIsLavaActivated = global.floorIsLavaActivated or false
+	-- Table of all Objects --
+	global.objectsTable = global.objectsTable or {}
 	-- Research --
 	for _, force in pairs(game.forces) do
 		if settings.startup["MF-initial-research-complete"] and settings.startup["MF-initial-research-complete"].value == true then
@@ -126,6 +129,18 @@ function onInit()
 			_MFVehicleFuelPrototype = fuel
 		end
 	end
+
+	-- Check the Objects Table --
+	for k, obj in pairs(global.objectsTable) do
+		if obj.meta ~= nil and _G[obj.meta] ~= nil and _G[obj.meta].valid ~= nil then
+			if _G[obj.meta].valid(obj) == false then
+				global.objectsTable[k] = nil
+			end
+		else
+			global.objectsTable[k] = nil
+		end
+	end
+
 end
 
 function onLoad(event)

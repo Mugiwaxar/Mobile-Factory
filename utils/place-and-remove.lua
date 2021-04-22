@@ -125,18 +125,26 @@ function Event.somethingWasPlaced(event)
 	-- Stop if this is a Ghost --
 	if type == "entity-ghost" then return end
 
-	-- If a SyncArea Entity was placed --
-	-- if _mfSyncAreaAllowedTypes[entity.type] == true and event.destination == nil then
-	-- 	local nearestMF = getMF(surfacePlayer) or findNearestMF(entity.surface, entity.position)
-	-- 	if nearestMF ~= nil then
-	-- 		placedEntityInSyncArea(nearestMF, entity)
-	-- 	end
-	-- end
-
-	-- -- If a Erya Structure was placed --
-	-- if _mfEryaFreezeStructures[entity.name] == true then
-	-- 	placedEryaStructure(event)
-	-- end
+	-- No Metatables placing system --
+	if _mfTagsTable[entity.name] ~= nil then
+		local objTable = _G[_mfTagsTable[entity.name]]
+		local obj = objTable.new(entity)
+		-- Check if there are Blueprint Tags --
+		if event.tags ~= nil and objTable.blueprintTagsToSettings ~= nil then
+			objTable.blueprintTagsToSettings(obj, event.tags)
+		end
+		-- Check if there are Item Tags --
+		if event.stack ~= nil and event.stack.valid_for_read == true and event.stack.type == "item-with-tags" and objTable.itemTagsToContent ~= nil then
+			local tags = event.stack.get_tag("Infos")
+			if tags ~= nil then
+				objTable.itemTagsToContent(obj, tags)
+			end
+		end
+		-- Validate properties taken from Blueprint or Item Tags
+		if objTable.validate ~= nil then
+			objTable.validate(obj)
+		end
+	end
 
 	-- Create the Object --
 	if objInfo ~= nil and objInfo.noPlaced ~= true and objInfo.tag ~= nil then
@@ -186,17 +194,13 @@ end
 
 -- When something is removed or destroyed --
 function Event.somethingWasRemoved(event)
+
 	-- Get and Check the Entity --
 	local removedEnt = event.entity
 	if removedEnt == nil or removedEnt.valid == false then return end
 
-	-- Unclone SyncArea --
-	-- if _mfSyncAreaAllowedTypes[removedEnt.type] then
-	-- 	removedSyncEntity(event)
-	-- end
-
 	-- Get and Check the Values --
-	local obj = global.entsTable[removedEnt.unit_number]
+	local obj = global.entsTable[removedEnt.unit_number] or global.objectsTable[removedEnt.unit_number]
 	if obj == nil then return end
 	local MF = obj.MF
 	if MF == nil then return end
@@ -236,6 +240,18 @@ function Event.somethingWasRemoved(event)
 		return
 	end
 
+	-- No Metatables removing system --
+	if _mfTagsTable[removedEnt.name] ~= nil then
+		local objTable = _G[_mfTagsTable[removedEnt.name]]
+		-- Save the Settings --
+		if objTable.contentToItemTags ~= nil and event.buffer ~= nil and event.buffer[1] ~= nil then
+			objTable.contentToItemTags(obj, event.buffer[1])
+		end
+		-- Remove the Object --
+		objTable.remove(obj)
+		return
+	end
+
 	-- Save the Settings --
 	if obj.contentToItemTags ~= nil and event.buffer ~= nil and event.buffer[1] ~= nil then
 		obj:contentToItemTags(event.buffer[1])
@@ -262,7 +278,7 @@ function tilesWasPlaced(event)
 	-- Prevent to place Tiles inside the Control Center --
 	if event.tiles ~= nil and MFFloor == _mfControlSurfaceName then
 		-- Remove the Tiles --
-		for k, tile in pairs(event.tiles) do
+		for _, tile in pairs(event.tiles) do
 			Util.createTilesAtPosition(tile.position, 1, surface, tile.old_tile.name, true)
 		end
 		-- Try to send a message to the Player --
@@ -339,66 +355,9 @@ function placedDeploy(ent, MFPlayer, mf)
 	ent.destroy()
 end
 
--- Called when an Entity is placed inside the SyncArea --
--- function placedEntityInSyncArea(MF, entity)
--- 	-- Check the Mobile Factory --
--- 	if MF.ent == nil or MF.ent.valid == false or MF.syncAreaEnabled ~= true or MF.ent.speed ~= 0 then return end
--- 	-- Outside to Inside --
--- 	if entity.surface == MF.ent.surface and Util.distance(entity.position, MF.ent.position) < _mfSyncAreaRadius
--- 			and not MF.fS.entity_prototype_collides(entity.name, {_mfSyncAreaPosition.x + (entity.position.x - math.floor(MF.ent.position.x)), _mfSyncAreaPosition.y + (entity.position.y - math.floor(MF.ent.position.y))}, false)
--- 		then
--- 		MF:cloneEntity(entity, "in")
--- 	end
--- 	-- Inside to Outside --
--- 	if entity.surface == MF.fS and Util.distance(entity.position, _mfSyncAreaPosition) < _mfSyncAreaRadius
--- 			and not MF.ent.surface.entity_prototype_collides(entity.name, {math.floor(MF.ent.position.x) + (entity.position.x - _mfSyncAreaPosition.x), math.floor(MF.ent.position.y) + (entity.position.y - _mfSyncAreaPosition.y)}, false)
--- 		then
--- 		MF:cloneEntity(entity, "out")
--- 	end
--- end
-
 -- Called to know if the Entity is above a Constructible Area --
 function checkCCTile(entity)
 	local tile = entity.surface.find_tiles_filtered{position=entity.position, radius=1, limit=1}
 	if tile[1] ~= nil and tile[1].valid == true and tile[1].name == "BuildTile" then return true end
 	return false
 end
-
--- Return all Items of all Chest to its original one if the SyncArea is stoped --
--- function removedSyncEntity(event)
--- 	local removedEnt = event.entity
--- 	local MF = nil
--- 	for _, MFObj in pairs(global.MFTable) do
--- 		if MFObj.ent ~= nil and MFObj.ent.valid and MFObj.syncAreaEnabled == true and MFObj.ent.speed == 0
--- 		and ((removedEnt.surface == MFObj.ent.surface and Util.distance(removedEnt.position, MFObj.ent.position) < _mfSyncAreaRadius)
--- 				or (removedEnt.surface == MFObj.fS and Util.distance(removedEnt.position, _mfSyncAreaPosition) < _mfSyncAreaRadius))
--- 			then
--- 			MF = MFObj
--- 			break
--- 		end
--- 	end
--- 	if MF == nil then return end
-
--- 	for i, ents in pairs(MF.clonedResourcesTable) do
--- 		-- Removed entity always treated as original, adjust if needed
--- 		if removedEnt == ents.cloned then
--- 			ents.original, ents.cloned = ents.cloned, ents.original
--- 		end
--- 		if removedEnt == ents.original then
--- 			-- Move chest content to buffer
--- 			if event.buffer ~= nil and removedEnt.type == "container" or removedEnt.type == "logistic-container" then
--- 				local inv = ents.cloned.get_inventory(defines.inventory.chest)
--- 				for i = 1, #inv do
--- 					local stack = inv[i]
--- 					if stack.valid_for_read == true then
--- 						event.buffer.insert(stack)
--- 					end
--- 				end
--- 				inv.clear()
--- 			end
--- 			-- Remove from table before unclone, to avoid recursion caused by script_raised_destroy
--- 			MF.clonedResourcesTable[i] = nil
--- 			MF:uncloneEntity(ents.original, ents.cloned)
--- 		end
--- 	end
--- end

@@ -194,14 +194,18 @@ function DTK:canAccept(fluid)
 	return true
 end
 
+-- Return the amount of space available --
+function DTK:availableSpace()
+	return (self.max or _dtMaxFluid) - self.inventoryCount
+end
+
 -- Add Fluid --
 function DTK:addFluid(fluid)
 	if self:canAccept(fluid) == true then
         self.inventoryFluid = fluid.name
         local maxAdded = (self.max or _dtMaxFluid) - self.inventoryCount
         local added = math.min(fluid.amount, maxAdded)
-		-- fluid.temperature should always be non-nil, 15 is default temperature
-		self.inventoryTemperature = (self.inventoryTemperature * self.inventoryCount + added * fluid.temperature) / (self.inventoryCount + added)
+		self.inventoryTemperature = (self.inventoryTemperature * self.inventoryCount + added * (fluid.temperature or 15)) / (self.inventoryCount + added)
 		self.inventoryCount = self.inventoryCount + added
 		return added
 	end

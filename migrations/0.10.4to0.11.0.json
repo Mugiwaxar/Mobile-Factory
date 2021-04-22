@@ -1,0 +1,18 @@
+{
+	"entity":
+	[
+		["OreCleaner", "ResourcesCollector"]
+	],
+	"item":
+	[
+		["OreCleaner", "ResourcesCollector"]
+	],
+	"recipe":
+	[
+		["OreCleaner", "ResourcesCollector"]
+	],
+	"technology":
+	[
+		["OreCleaner", "ResourcesCollector"]
+	]
+}

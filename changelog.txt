@@ -1,4 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.11.1
+Date: 21/04/2021
+  Bugfixes:
+    - Fixed an error with the Resources Collector
+---------------------------------------------------------------------------------------------------
+Version: 0.11.0
+Date: 15/04/2021
+  Major Features:
+    - The Ore Cleaner and the Fluid Extractor was mixed to one Structure: The Resources Collector that can extract Ores and Fluids
+    - The Resource Collector contain a Chest and 4 Tanks, this allows to retrieve Ores and Fluids without using the Data Network (Ores and Fluids can still be sent to the Deep Tanks and Deep Storages)
+    - All placed Ore Cleaners will be transformed into Resources Collectors, all Fluid Extractors are lost
+  Features:
+    - Added the Resources Collector
+    - Removed the Ore Cleaner
+    - Removed the Fluid Extractor
+  Bugfixes:
+    - Fixed a bug where the Deep Tank filter is not registered when using the Information GUI
+---------------------------------------------------------------------------------------------------
 Version: 0.10.4
 Date: 10/04/2021
   Bugfixes:
@@ -12,7 +30,7 @@ Version: 0.10.3
 Date: 10/04/2021
   Optimisations:
     - Optimised the Products Cache: this will reduce the Loading/Save time
-    - Optimised the Ore Cleaner: this will increase the performances and recude the Loading/save time
+    - Optimised the Ore Cleaner: this will increase the performances and reduce the Loading/save time
 ---------------------------------------------------------------------------------------------------
 Version: 0.10.2
 Date: 10/04/2021
@@ -369,7 +387,7 @@ Date: 30/11/2020
 Version: 0.2.2
 Date: 27/11/2020
   Bugfixes:
-    - Fixed the Fluid Extractor unable to found ressources
+    - Fixed the Fluid Extractor unable to found resources
     - The Data Network List should now be correctly shown
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.1

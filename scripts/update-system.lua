@@ -123,7 +123,7 @@ function UpSys.update(event)
   -- Update Object --
   for _, obj in pairs(global.upsysTickTable[game.tick]) do
     -- If more objects can be updated --
-	if valid(obj) == true then
+	if valid(obj) == true and obj.update ~= nil then
       if updated <= global.entsUpPerTick then
         if mfCall(obj.update, obj, event) == true then
           game.print({"gui-description.UpSysupdateEntity_Failed", obj.ent.name})

@@ -5,7 +5,7 @@ for _, MF in pairs(global.MFTable or {}) do
     -- Destroy the Cercle Render --
     rendering.destroy(MF.syncAreaID or 0)
 	rendering.destroy(MF.syncAreaInsideID or 0)
-    -- Unclone all Ressources --
+    -- Unclone all Resources --
     for _, ents in pairs(MF.clonedResourcesTable) do
         local ent = ents.cloned
     	if ent ~= nil and ent.valid == true and ent.type == "resource" then

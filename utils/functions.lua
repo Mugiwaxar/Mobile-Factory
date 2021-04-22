@@ -25,8 +25,6 @@ function createTableList()
 	addObject{tableName="quatronReactorTable", tag="QR", objName="QuatronReactor"}
 	addObject{tableName="deepStorageTable", tag="DSR", objName="DeepStorage", canInCC=true}
 	addObject{tableName="deepTankTable", tag="DTK", objName="DeepTank", canInCC=true}
-	addObject{tableName="oreCleanerTable", tag="OC", objName="OreCleaner"}
-	addObject{tableName="fluidExtractorTable", tag="FE", objName="FluidExtractor", noInside=true}
 	addObject{tableName="resourceCatcher", tag="RC", objName="ResourceCatcher"}
 	addObject{objName="InternalEnergyCube", noUpsys=true, canInCCAnywhere=true, noOutside=true}
 	addObject{objName="InternalQuatronCube", noUpsys=true, canInCCAnywhere=true, noOutside=true}
@@ -185,7 +183,16 @@ end
 -- Check if an Object is valid --
 function valid(obj)
 	if obj == nil then return false end
-	if getmetatable(obj) == nil then return false end
+	if type(obj) ~= "table" then return false end
+	if getmetatable(obj) == nil then
+		if _G[obj.meta] ~= nil and _G[obj.meta].valid ~= nil then
+			if _G[obj.meta].valid(obj) == true then
+				return true
+			end
+		else
+			return false
+		end
+	end
 	if obj.valid == nil then return false end
 	if type(obj.valid) == "boolean" then return obj.valid end
 	if obj:valid() ~= true then return false end
@@ -482,14 +489,14 @@ end
 -- Create the Ores Products list for the Ore Cleaner --
 function createProductsList()
 	-- Create the Ore Products Table --
-	global.oresProductsTable = {}
+	global.ResourcesProductsTable = {}
 	for _, prototype in pairs(game.entity_prototypes) do
 		if prototype.type == "resource" and prototype.mineable_properties ~= nil and prototype.mineable_properties.products ~= nil then
 			local productsTable = {}
 			for _, product in pairs(prototype.mineable_properties.products) do
 				table.insert(productsTable, {name=product.name, type=product.type, amount=product.amount, min=product.amount_min, max=product.amount_max, probability=product.probability})
 			end
-			global.oresProductsTable[prototype.name] = productsTable
+			global.ResourcesProductsTable[prototype.name] = productsTable
 		end
 	end
 end
@@ -497,11 +504,18 @@ end
 
 
 function entityToBlueprintTags(entity, fromTable)
-	local tags = nil
-	local obj = fromTable[entity.unit_number]
 
+	local tags = nil
+	local obj = global.entsTable[entity.unit_number] or global.objectsTable[entity.unit_number]
+
+	-- Get the Tags --
 	if obj and obj.settingsToBlueprintTags then
 		tags = obj:settingsToBlueprintTags()
+	end
+
+	-- Get the Tags - No Metatables system --
+	if obj ~= nil and _mfTagsTable[entity.name] ~= nil and _G[_mfTagsTable[entity.name]].settingsToBlueprintTags ~= nil then
+		tags = _G[_mfTagsTable[entity.name]].settingsToBlueprintTags(obj)
 	end
 
 	return tags

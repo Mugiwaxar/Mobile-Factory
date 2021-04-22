@@ -9,6 +9,7 @@ require("utils/place-and-remove.lua")
 function updateEntities(event)
 	-- Update System --
 	UpSys.update(event)
+	updateAllRCL()
 end
 
 -- Check all Technologies of a Player Mobile Factory --
@@ -30,7 +31,7 @@ end
 -- Damage all Players that aren't on a safe position --
 function updateFloorIsLava()
 	-- Take all Players --
-	for k, player in pairs(game.players) do
+	for _, player in pairs(game.players) do
 		-- Check the Player --
 		if player.character == nil then return end
 		-- Check the Surface --
@@ -52,6 +53,15 @@ function updateIndoorLights()
 		else
 			MF.fS.daytime = 0.5
 			MF.ccS.daytime = 0.5
+		end
+	end
+end
+
+-- Update all Resources Collectors --
+function updateAllRCL()
+	for _, rcl in pairs(global.ResourceCollectorTable) do
+		if game.tick - rcl.lastUpdate > _mfRCLUpdateTick then
+			RCL.update(rcl)
 		end
 	end
 end

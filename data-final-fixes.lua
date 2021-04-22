@@ -1,4 +1,4 @@
-require("prototypes/animation/OreCleanerProjectiles.lua")
+require("prototypes/animation/RCLProjectile.lua")
 
 -- Highlight Resources --
 for _, ore in pairs(data.raw.resource) do

@@ -112,10 +112,12 @@ _mfQuatronReactorMaxEnergyCapacity = 25000
 _mfQuatronReactorMaxOutput = 5000
 _mfQuatronMaxFluidBurntPerOperation = 1000
 
--- Ore Cleaner settings --
-_mfOreCleanerMaxCharge = 1000
-_mfOreCleanerRadius = 50
-_mfOreCleanerOrePerExtraction = 19
+-- Resources Collector settings --
+_mfRCLUpdateTick = 20
+_mfRCLMaxCharge = 1000
+_mfRCLRadius = 50
+_mfRCLTankSize = 10000
+_mfOreCleanerResourcesPerExtraction = 19
 _mfOreCleanerExtractionTicks = 20
 _mfOreCleanerMaxDistance = 100
 
@@ -154,6 +156,9 @@ _mfQuatronLaserTargets =
 	"FluidExtractor"
 }
 
+-- Entity name to TAG Table --
+_mfTagsTable = {}
+_mfTagsTable["ResourcesCollector"] = "RCL"
 -- GUI Settings --
 _GUIButtonsSize = 15
 _mfGUIDragAreaSize = 25

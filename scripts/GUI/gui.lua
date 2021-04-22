@@ -57,10 +57,10 @@ function GUI.openTTGui(MFPlayer, player, entity)
 	end
 
 	-- Check if a GUI exist --
-	local obj = global.entsTable[entity.unit_number]
+	local obj = global.entsTable[entity.unit_number] or global.objectsTable[entity.unit_number]
 
 	-- Check the Object --
-	if valid(obj) == false or obj.getTooltipInfos == nil then return end
+	if valid(obj) == false or (obj.getTooltipInfos == nil and _G[obj.meta] == nil and _G[obj.meta].getTooltipInfos == nil ) then return end
 
 	-- Check Permissions --
 	if canUse(MFPlayer, obj) == false then player.opened = nil return end
@@ -384,14 +384,6 @@ function GUI.buttonClicked(event)
 		end
 	end
 
-	-- -- SyncArea button --
-	-- if event.element.name == "SyncAreaButton" then
-	-- 	if currentMF.syncAreaEnabled == true then currentMF.syncAreaEnabled = false
-	-- 	elseif currentMF.syncAreaEnabled == false then currentMF.syncAreaEnabled = true end
-	-- 	GUI.updateAllGUIs(true)
-	-- 	return
-	-- end
-
 	-- Fix Mobile Factory Button --
 	if event.element.name == "FindMFButton" then
 		fixMB(event, currentMF)
@@ -481,9 +473,9 @@ function GUI.buttonClicked(event)
 		return
 	end
 
-	-- If this is a Ore Cleaner --
-	if string.match(event.element.name, "O.C.") then
-		OC.interaction(event, MFPlayer)
+	-- If this is a Resources Collector --
+	if string.match(event.element.name, "R.C.L.") then
+		RCL.interaction(event, MFPlayer)
 		GUI.updateAllGUIs(true)
 		return
 	end
@@ -575,16 +567,9 @@ function GUI.onGuiElemChanged(event)
 		return
 	end
 
-	-- If this is a Fluid Extractor --
-	if string.match(event.element.name, "F.E.") then
-		FE.interaction(event, MFPlayer)
-		GUI.updateAllGUIs(true)
-		return
-	end
-
-	-- If this is a Ore Cleaner --
-	if string.match(event.element.name, "O.C.") then
-		OC.interaction(event, MFPlayer)
+	-- If this is a Resources Collector --
+	if string.match(event.element.name, "R.C.L.") then
+		RCL.interaction(event, MFPlayer)
 		GUI.updateAllGUIs(true)
 		return
 	end

@@ -27,10 +27,14 @@ end
 -- Update the Tooltip GUI --
 function GUI.updateMFTooltipGUI(GUIObj, justCreated)
 
-	-- Check the Object --
-	if valid(GUIObj.vars.currentObject) == false or GUIObj.vars.currentObject.getTooltipInfos == nil then return end
+	-- Update the Object GUI --
+	if valid(GUIObj.vars.currentObject) == true and GUIObj.vars.currentObject.getTooltipInfos ~= nil then
+		GUIObj.vars.currentObject:getTooltipInfos(GUIObj, GUIObj.vars.MainFrame, justCreated)
+	end
 
-	-- Add the Object GUI --
-	GUIObj.vars.currentObject:getTooltipInfos(GUIObj, GUIObj.vars.MainFrame, justCreated)
+	-- Update the Object GUI - No Metatables system --
+	if valid(GUIObj.vars.currentObject) == true and GUIObj.vars.currentObject.meta ~= nil and _G[GUIObj.vars.currentObject.meta].getTooltipInfos ~= nil then
+		_G[GUIObj.vars.currentObject.meta].getTooltipInfos(GUIObj.vars.currentObject, GUIObj, GUIObj.vars.MainFrame, justCreated)
+	end
 
 end

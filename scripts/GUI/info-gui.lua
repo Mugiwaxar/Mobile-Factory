@@ -429,7 +429,7 @@ function GUI.infoGUIInteraction(event, player, MFPlayer)
 		if MFPlayer.GUI[_mfGUIName.InfoGUI] ~= nil then
 			MFPlayer.GUI[_mfGUIName.InfoGUI].vars.freezeTankGUI = true
 		end
-		local DTK = global.deepStorageTable[event.element.tags.ID]
+		local DTK = global.deepTankTable[event.element.tags.ID]
 		if valid(DTK) == false then return end
 		if event.element.elem_value ~= nil then
 			DTK.filter = event.element.elem_value

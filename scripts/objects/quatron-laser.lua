@@ -137,9 +137,9 @@ function QL:findEntity()
 		end
 	end
 
-	if nearestEnt ~= nil and global.entsTable[nearestEnt.unit_number] ~= nil and ((_mfQuatronStructures[nearestEnt.name] ~= nil and _mfQuatronStructures[nearestEnt.name].canAccept == true) or string.match(nearestEnt.name, "MobileFactory") or string.match(nearestEnt.name, "QuatronLaser") ) then
+	if nearestEnt ~= nil and (global.entsTable[nearestEnt.unit_number] ~= nil or global.objectsTable[nearestEnt.unit_number] ~= nil) and ((_mfQuatronStructures[nearestEnt.name] ~= nil and _mfQuatronStructures[nearestEnt.name].canAccept == true) or string.match(nearestEnt.name, "MobileFactory") or string.match(nearestEnt.name, "QuatronLaser") ) then
 		-- Get the Object --
-		local obj = global.entsTable[nearestEnt.unit_number]
+		local obj = global.entsTable[nearestEnt.unit_number] or global.objectsTable[nearestEnt.unit_number]
 		-- Same target --
 		if self.focusedObj ~= nil and self.focusedObj.entID == obj.entID and string.match(obj.ent.name, "MobileFactory") == false then return end
 		-- Save the Object --

@@ -112,14 +112,8 @@ function Event.settingsPasted(event)
 	if event.destination == nil or event.destination.valid == false then return end
 
 	-- Get the Objects --
-	local o1 = nil
-	local o2 = nil
-	for k, obj in pairs(global.entsTable) do
-		if valid(obj) == true and obj.ent ~= nil and obj.ent.valid == true then
-			if obj.ent.unit_number == event.source.unit_number then o1 = obj end
-			if obj.ent.unit_number == event.destination.unit_number then o2 = obj end
-		end
-	end
+	local o1 = global.entsTable[event.source.unit_number] or global.objectsTable[event.source.unit_number]
+	local o2 = global.entsTable[event.destination.unit_number]  or global.objectsTable[event.destination.unit_number]
 
 	-- Check the Objects --
 	if o1 == nil then return end
@@ -129,6 +123,11 @@ function Event.settingsPasted(event)
 	-- Copy the Settings --
 	if o2.copySettings ~= nil then
 		o2:copySettings(o1)
+	end
+
+	-- Copy the Setting - No Metatables system --
+	if o2.meta ~= nil and _G[o2.meta].copySettings ~= nil then
+		_G[o2.meta].copySettings(o2, o1)
 	end
 end
 
@@ -185,20 +184,10 @@ function Event.playerSetupBlueprint(event)
 	if bp == nil or bp.valid_for_read == false then return end
 
 	for index, ent in pairs(mapping) do
-		if global.objTable[ent.name] ~= nil then
-			local saveTable = global.objTable[ent.name].tableName
-			if ent.valid == true and saveTable ~= nil then
-				if global[saveTable] == nil then
-					-- Create Table If Nothing Was Ever Placed --
-					global[saveTable] = {}
-				end
-				saveTable = global[saveTable]
-				local tags = entityToBlueprintTags(ent, saveTable)
-				if tags ~= nil then
-					for tag, value in pairs(tags) do
-						bp.set_blueprint_entity_tag(index, tag, value)
-					end
-				end
+		local tags = entityToBlueprintTags(ent)
+		if tags ~= nil then
+			for tag, value in pairs(tags) do
+				bp.set_blueprint_entity_tag(index, tag, value)
 			end
 		end
 	end
