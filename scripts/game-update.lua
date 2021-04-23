@@ -59,9 +59,16 @@ end
 
 -- Update all Resources Collectors --
 function updateAllRCL()
-	for _, rcl in pairs(global.ResourceCollectorTable) do
-		if game.tick - rcl.lastUpdate > _mfRCLUpdateTick then
-			RCL.update(rcl)
-		end
+	-- Check the Index --
+	if global.RCLUpdateIndex > table_size(global.ResourceCollectorTable) then global.RCLUpdateIndex = 1 end
+	-- Get the next Resources Collector to update --
+	local rcl = global.ResourceCollectorTable[global.RCLUpdateIndex]
+	-- Increase the Index --
+	global.RCLUpdateIndex = global.RCLUpdateIndex + 1
+	-- Check the Resouces Collector --
+	if rcl == nil then return end
+	-- Update if needed --
+	if game.tick - rcl.lastUpdate > _mfRCLUpdateTick then
+		RCL.update(rcl)
 	end
 end

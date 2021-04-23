@@ -1,3 +1,4 @@
+if global.allowMigration == false then return end
 -- Creating the Objects Table --
 global.objectsTable = {}
 
@@ -17,6 +18,8 @@ for _, oc in pairs(global.oreCleanerTable or {}) do
         oc.consumption = 0
         oc.collectOres = true
 	    oc.collectFluids = true
+        oc.energy = oc.energy or 0
+        oc.energyLevel = oc.energyLevel or 1
         oc.energyBuffer = _mfRCLMaxCharge
 
 

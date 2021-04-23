@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.11.3
+Date: 23/04/2021
+  Bugfixes:
+    - The Resources Collector should no longer stop collecting when a Resource Path is removed by another Resources Collector
+    - Fixed a Migration Crash
+---------------------------------------------------------------------------------------------------
+Version: 0.11.2
+Date: 22/04/2021
+  Optimisations:
+    - Optimised the Resources Collector, it should create less lag
+    - If more than 20 Resources Collecters are placed, the number of update will be decreased, this will slow it a little but avoid lag spikes
+  Bugfixes:
+    - Fixed a migration error
+    - Fixed a bug where the Resources Collector doesn't correctly save its settings
+---------------------------------------------------------------------------------------------------
 Version: 0.11.1
 Date: 21/04/2021
   Bugfixes:

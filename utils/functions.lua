@@ -486,19 +486,26 @@ function checkNeededTiles()
 	end
 end
 
--- Create the Ores Products list for the Ore Cleaner --
+-- Create the Resources Products list for the Resources Collector --
 function createProductsList()
-	-- Create the Ore Products Table --
 	global.ResourcesProductsTable = {}
+	global.oreTable = {}
+	global.fluidsTable = {}
 	for _, prototype in pairs(game.entity_prototypes) do
 		if prototype.type == "resource" and prototype.mineable_properties ~= nil and prototype.mineable_properties.products ~= nil then
 			local productsTable = {}
+			if prototype.mineable_properties.products[1] ~= nil and prototype.mineable_properties.products[1].type == "item" then
+				table.insert(global.oreTable, prototype.name)
+			elseif prototype.mineable_properties.products[1] ~= nil and prototype.mineable_properties.products[1].type == "fluid" then
+				table.insert(global.fluidsTable, prototype.name)
+			end
 			for _, product in pairs(prototype.mineable_properties.products) do
 				table.insert(productsTable, {name=product.name, type=product.type, amount=product.amount, min=product.amount_min, max=product.amount_max, probability=product.probability})
 			end
 			global.ResourcesProductsTable[prototype.name] = productsTable
 		end
 	end
+	a=a
 end
 
 

@@ -55,6 +55,7 @@ function onInit()
 	global.upSysLastScan = global.upSysLastScan or 0
 	-- Resource Collector --
 	global.ResourceCollectorTable = global.ResourceCollectorTable or {}
+	global.RCLUpdateIndex = 1
 	-- Performance
 	global.useVanillaChooseElem = global.useVanillaChooseElem or false
 	-- Data Network --

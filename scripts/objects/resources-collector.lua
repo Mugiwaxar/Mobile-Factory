@@ -42,8 +42,8 @@ function RCL.new(ent)
 	t.tank = ent.surface.create_entity{name="ResourcesCollectorTank", position=ent.position, force=ent.force}
 
 	-- Save the Object inside the Tables --
-	global.ResourceCollectorTable[ent.unit_number] = t
 	global.objectsTable[ent.unit_number] = t
+	table.insert(global.ResourceCollectorTable, t)
 
 	-- Scan all Resources around --
 	RCL.scanResources(t, ent)
@@ -63,8 +63,12 @@ function RCL.remove(obj)
 		obj.networkAccessPoint.objTable[obj.ent.unit_number] = nil
 	end
 	-- Remove from the Objects the Tables --
-	global.ResourceCollectorTable[obj.entID] = nil
 	global.objectsTable[obj.entID] = nil
+	for k, rcl in pairs(global.ResourceCollectorTable) do
+		if rcl == obj then
+			table.remove(global.ResourceCollectorTable, k)
+		end
+	end
 end
 
 -- Is valid --
@@ -466,6 +470,12 @@ function RCL.update(obj)
 		RCL.sendFluidToDN(obj)
 	end
 
+	-- Scan Resources around --
+	if game.tick - obj.lastScan > 200 and table_size(obj.resourcesTable) < math.floor(EI.energyLevel(obj)) then
+		obj.lastScan = game.tick
+		RCL.scanResources(obj, obj.ent)
+	end
+
     -- Draw the Animation --
 	if obj.inventoryFull == true or obj.outOfQuatron == true then
 		rendering.destroy(obj.lightAnID or 0)
@@ -473,11 +483,6 @@ function RCL.update(obj)
     elseif obj.lightAnID == nil or rendering.is_valid(obj.lightAnID) == false then
         obj.lightAnID = rendering.draw_animation{animation="ResourcesCollectorAn", target=obj.ent.position, surface=obj.ent.surface, render_layer=144, animation_speed=0.3}
     end
-
-	if game.tick - obj.lastScan > 200 then
-		obj.lastScan = game.tick
-		RCL.scanResources(obj, obj.ent)
-	end
 
 end
 
@@ -501,21 +506,19 @@ function RCL.scanResources(obj, entity)
 	-- Test if the Surface is valid --
 	if entity.surface == nil then return end
 
-	-- Add all surrounding Resources to the Resources Table --
+	-- Calculate the Radius --
 	local area = {{entity.position.x-_mfRCLRadius,entity.position.y-_mfRCLRadius},{entity.position.x+_mfRCLRadius,entity.position.y+_mfRCLRadius}}
-	local resources = entity.surface.find_entities_filtered{area=area, type="resource"}
 
-	-- Create the Resources Table --
-	for _, resourcePath in pairs(resources) do
-		if global.ResourcesProductsTable[resourcePath.name][1].type == "item" and obj.collectOres == true then
-			table.insert(obj.resourcesTable, {ent=resourcePath, name=resourcePath.prototype.name, infinite=resourcePath.prototype.infinite_resource})
-		elseif global.ResourcesProductsTable[resourcePath.name][1].type == "fluid" and obj.collectFluids == true then
-			table.insert(obj.resourcesTable, {ent=resourcePath, name=resourcePath.prototype.name, infinite=resourcePath.prototype.infinite_resource})
-		end
-		-- Stop if the Table is full --
-		if table_size(obj.resourcesTable) >= math.floor(EI.energyLevel(obj)) then
-			break
-		end
+	-- Check what have to be collected --
+	if obj.collectOres == true and obj.collectFluids == true then
+		-- Collect every Resources --
+		obj.resourcesTable = entity.surface.find_entities_filtered{area=area, type="resource", limit=EI.energyLevel(obj)}
+	elseif obj.collectOres == true and obj.collectFluids == false then
+		-- Collect Ores Only --
+		obj.resourcesTable = entity.surface.find_entities_filtered{area=area, type="resource", name=global.oresTable, limit=EI.energyLevel(obj)}
+	elseif obj.collectOres == false and obj.collectFluids == true then
+		-- Collect Fluids Only --
+		obj.resourcesTable = entity.surface.find_entities_filtered{area=area, type="resource", name=global.fluidsTable, limit=EI.energyLevel(obj)}
 	end
 
 end
@@ -524,7 +527,7 @@ end
 function RCL.collectResources(obj)
 
 	-- Get the Energy Level --
-	local energyLevel = EI.energy(obj)
+	local quatron = EI.energy(obj)
 
     -- Calcule the amount of Resources to extract --
     local toExtract = math.floor(math.pow(EI.energyLevel(obj), _mfQuatronScalePower) + _mfOreCleanerResourcesPerExtraction)
@@ -536,7 +539,7 @@ function RCL.collectResources(obj)
     for _, resourcesPath in pairs(obj.resourcesTable) do
 
 		-- Stop if we are out of Quatron --
-		if energyLevel < 3 then
+		if quatron < 3 then
 			obj.outOfQuatron = true
 			break
 		else
@@ -544,10 +547,17 @@ function RCL.collectResources(obj)
 		end
 
         -- Check the Path --
-        if resourcesPath.ent == nil or resourcesPath.ent.valid == false then goto continue end
+        if resourcesPath == nil or resourcesPath.valid == false then
+			for k, op in pairs(obj.resourcesTable) do
+				if op == resourcesPath then
+            		table.remove(obj.resourcesTable, k)
+				end
+			end
+			goto continue
+		end
 
         -- Calculate the amout of Resources that will be extracted --
-        local resourcesExtracted = math.min(toExtract, resourcesPath.ent.amount)
+        local resourcesExtracted = math.min(toExtract, resourcesPath.amount)
 
         -- Itinerate all Products --
         local added = 0
@@ -573,7 +583,7 @@ function RCL.collectResources(obj)
 				-- Register the amount inserted if this is the main Product --
 				added = math.max(inserted, added)
 				-- Create the Projectile --
-				obj.ent.surface.create_entity{name="RCLProjectile:" .. product.name, position=resourcesPath.ent.position, target=obj.ent, speed=0.1, max_range=999, force=obj.ent.force}
+				obj.ent.surface.create_entity{name="RCLProjectile:" .. product.name, position=resourcesPath.position, target=obj.ent, speed=0.1, max_range=999, force=obj.ent.force}
 				obj.inventoryFull = false
 			else
 				obj.inventoryFull = true
@@ -584,16 +594,16 @@ function RCL.collectResources(obj)
         if added <= 0 then goto continue end
 
 		-- Increase the number of Extractions --
-		energyLevel = energyLevel - 3
+		quatron = quatron - 3
 
         -- Remove Resources from the Resources Path --
-		if resourcesPath.infinite ~= true or isFluid == true then
-        	resourcesPath.ent.amount = math.max(resourcesPath.ent.amount - added, 1)
+		if resourcesPath.prototype.infinite_resource ~= true or isFluid == true then
+        	resourcesPath.amount = math.max(resourcesPath.amount - added, 1)
 		end
 
 		-- Remove the Resource Path if it is empty --
-        if resourcesPath.ent.amount <= 1 then
-            resourcesPath.ent.deplete()
+        if resourcesPath.amount <= 1 then
+            resourcesPath.deplete()
 			for k, op in pairs(obj.resourcesTable) do
 				if op == resourcesPath then
             		table.remove(obj.resourcesTable, k)
@@ -606,7 +616,7 @@ function RCL.collectResources(obj)
     end
 
 	-- Remove a Quatron Charge --
-	EI.setEnergy(obj, energyLevel)
+	EI.setEnergy(obj, quatron)
 
 end
 
@@ -792,7 +802,7 @@ function RCL.interaction(event, MFPlayer)
 	if string.match(event.element.name, "R.C.L.OpenInvButton") then
 		-- Get the Object --
 		local objId = event.element.tags.ID
-		local ent = global.ResourceCollectorTable[objId].ent
+		local ent = global.objectsTable[objId].ent
 		if ent ~= nil and ent.valid == true then
 			MFPlayer.ent.opened = ent
 		end
@@ -802,7 +812,7 @@ function RCL.interaction(event, MFPlayer)
 	-- Select Data Network --
 	if string.match(event.element.name, "R.C.L.DNSelect") then
 		local objId = event.element.tags.ID
-		local obj = global.ResourceCollectorTable[objId]
+		local obj = global.objectsTable[objId]
 		if obj == nil then return end
 		-- Get the Mobile Factory --
 		local selectedMF = getMF(event.element.items[event.element.selected_index])
@@ -817,27 +827,29 @@ function RCL.interaction(event, MFPlayer)
 	-- Collect Ores --
 	if string.match(event.element.name, "R.C.L.CollectOres") then
 		local objId = event.element.tags.ID
-		local obj = global.ResourceCollectorTable[objId]
+		local obj = global.objectsTable[objId]
 		if obj == nil then return end
 		-- Change the Collect Ores Setting --
 		local state = event.element.switch_state == "right" and true or false
 		obj.collectOres = state
+		RCL.scanResources(obj, obj.ent)
 	end
 
 	-- Collect Fluids --
 	if string.match(event.element.name, "R.C.L.CollectFluids") then
 		local objId = event.element.tags.ID
-		local obj = global.ResourceCollectorTable[objId]
+		local obj = global.objectsTable[objId]
 		if obj == nil then return end
 		-- Change the Collect Fludis Setting --
 		local state = event.element.switch_state == "right" and true or false
 		obj.collectFluids = state
+		RCL.scanResources(obj, obj.ent)
 	end
 
 	-- Select Deep Storage --
 	if string.match(event.element.name, "R.C.L.TargetDSR") then
 		local objId = event.element.tags.ID
-		local obj = global.ResourceCollectorTable[objId]
+		local obj = global.objectsTable[objId]
 		if obj == nil then return end
 		-- Change the Ore Cleaner targeted Deep Storage --
 		RCL.changeDSR(obj, event.element)
@@ -846,7 +858,7 @@ function RCL.interaction(event, MFPlayer)
 	-- Select Deep Tank --
 	if string.match(event.element.name, "R.C.L.TargetDTK") then
 		local objId = event.element.tags.ID
-		local obj = global.ResourceCollectorTable[objId]
+		local obj = global.objectsTable[objId]
 		if obj == nil then return end
 		-- Change the Ore Cleaner targeted Deep Storage --
 		RCL.changeDTK(obj, event.element)

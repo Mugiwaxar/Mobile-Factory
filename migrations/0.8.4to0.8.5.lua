@@ -1,3 +1,4 @@
+if global.allowMigration == false then return end
 -- Fix all Data Assembler variables --
 for _, da in pairs(global.dataAssemblerTable or {}) do
     da.energyCharge = da.quatronCharge
