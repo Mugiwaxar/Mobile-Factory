@@ -347,6 +347,7 @@ function MI:updateInventory()
         -- Return if there are no Items --
         if returnedItems <= 0 then return end
         -- Insert requested Item inside the local Inventory --
+		if returnedItems > 1000000 then returnedItems = 1000000 end
         local addedItems = inv.insert({name=self.selectedFilter, count=returnedItems})
         -- Remove Item from the Data Inventory --
 	    dataInv:getItem(self.selectedFilter, addedItems)

@@ -118,7 +118,7 @@ function GUI.updateLocation(GUITable)
     for name, loc in pairs(MF.jumpDriveObj.locationTable) do
 
         -- Check the Surface --
-        if loc.surface == nil or game.surfaces[loc.surface.name] == nil then
+        if loc.surface == nil or loc.surface.valid == false or game.surfaces[loc.surface.name] == nil then
             MF.jumpDriveObj.locationTable[name] = nil
             goto continue
         end
