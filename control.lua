@@ -356,6 +356,21 @@ script.on_event("CloseGUI", onShortcutPressed)
 -- Add the Clean GUI Command --
 commands.add_command("MFClearGUI", "Clean all Mobile Factory GUIs", clearAllGUI)
 
+function replace_factory(data)
+	if string.match(data.old_entity.name, "MobileFactory") then
+		local obj = global.entsTable[data.old_entity_unit_number] or global.objectsTable[data.old_entity_unit_number]
+		if obj == nil then return end
+		local MF = obj.MF
+		if MF == nil then return end
+		data.new_entity.last_user = data.old_entity.last_user
+		MF:remove()
+		newMobileFactory(data.new_entity)
+	end
+
+end
+
+remote.add_interface("Mobile_Factory", { on_entity_replaced = function(data) replace_factory(data) end})
+
 -- Debug Commands --
 local addDebugCommands = true
 if addDebugCommands == true then
